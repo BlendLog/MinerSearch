@@ -57,7 +57,7 @@ namespace MinerSearch
 
             Console.ForegroundColor = ConsoleColor.White;
 
-            Console.WriteLine("\t\tby: BlendLog");
+            Console.WriteLine("\t\tby: BlendLog, Spectrum735");
             Console.WriteLine("\t\tbased on: MinerKiller\n\n");
         }
 
