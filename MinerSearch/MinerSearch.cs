@@ -1,12 +1,12 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Management;
-using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
+using Microsoft.Win32;
 
 namespace MinerSearch
 {
@@ -39,7 +39,6 @@ namespace MinerSearch
             "OpenCL.dll"
         };
 
-        //locked av dirs list from miner process
         readonly string[] SuspiciousProgramData_path = new[]
         {
             @"C:\ProgramData\RealtekHD",
@@ -68,7 +67,8 @@ namespace MinerSearch
             @"C:\ProgramData\PuzzleMedia",
             @"C:\ProgramData\ESET",
             @"C:\ProgramData\FingerPrint",
-            @"C:\ProgramData\BookManager"
+            @"C:\ProgramData\BookManager",
+            @"C:\ProgramData\versionApp"
         };
 
         string[] SuspiciousProgramFilesX86_path = new[]
@@ -122,6 +122,8 @@ namespace MinerSearch
             @"C:\FRST"
         };
 
+        List<string> suspiciousFiles_path = new List<string>();
+
         private readonly string[] SystemFileNames = new[]
         {
             "audiodg",
@@ -137,9 +139,11 @@ namespace MinerSearch
             "lsass",
             "dllhost",
             "smss",
-            "wininit"
+            "wininit",
+            "vbc"
 
         };
+
 
         private readonly long[] constantFileSize = new long[]
         {
@@ -156,45 +160,51 @@ namespace MinerSearch
             60544, //lsass
             21312, //dllhost
             155976, //smss
-            420472 //wininit
+            420472, //wininit
+            3235192 //vbc
         };
-
-        [DllImport("kernel32", SetLastError = true)]
-        private static extern bool AttachConsole(uint dwProcessId);
-
-        [DllImport("kernel32.dll")]
-        static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
 
         public List<int> malware_pids = new List<int>();
         public List<string> malware_dirs = new List<string>();
-
+        public bool CleanupHosts = false;
         public int suspiciousObj_count = 0;
 
         public void Scan()
         {
+            string processName = "";
+            string fullPath = "";
+            string args = "";
+            long fileSize = 0;
+            double riskLevel = 0;
+            Stopwatch startTime = Stopwatch.StartNew();
+            List<Connection> cons = new List<Connection>();
+            List<Process> proc = GetProcesses();
 
-            List<Process> processes = GetProcesses();
-
-            foreach (Process p in processes)
+            foreach (Process p in proc)
             {
                 if (!p.HasExited)
                 {
-                    string processName = p.ProcessName;
-                    Logger.Log($@"Scanning: {processName}.exe");
+                    processName = p.ProcessName.ToLower();
+                    Logger.Log($"Scanning: {processName}.exe");
                 }
                 else continue;
-                double riskLevel = 0;
+                riskLevel = 0;
 
-                string fullPath = $@"""{p.MainModule.FileName}""";
-                long fileSize = new FileInfo(p.MainModule.FileName).Length;
+                fullPath = $@"""{p.MainModule.FileName}""".ToLower();
+                fileSize = new FileInfo(p.MainModule.FileName).Length;
+
 
                 for (int i = 0; i < SystemFileNames.Length; i++)
                 {
 
-                    if (p.ProcessName == SystemFileNames[i])
+                    if (processName == SystemFileNames[i])
                     {
 
-                        if (!fullPath.ToLower().Contains("c:\\windows\\system32") && !fullPath.ToLower().Contains("c:\\windows\\syswow64") && !fullPath.ToLower().Contains("c:\\windows\\winsxs\\amd64"))
+                        if (!fullPath.Contains("c:\\windows\\system32")
+                            && !fullPath.Contains("c:\\windows\\syswow64")
+                            && !fullPath.Contains("c:\\windows\\winsxs\\amd64")
+                            && !fullPath.Contains("c:\\windows\\microsoft.net\\framework64")
+                            && !fullPath.Contains("c:\\windows\\microsoft.net\\framework"))
                         {
 
                             Logger.LogWarn($"\tSuspicious path: {fullPath}");
@@ -226,13 +236,13 @@ namespace MinerSearch
 
                 }
 
-                var cons = GetConnections();
-                var tiedConnections = cons.Where(x => x.ProcessId == p.Id);
-                var badPorts = tiedConnections.Where(x => _PortList.Any(y => y == x.RemotePort));
-                foreach (var conn in badPorts)
+                cons = GetConnections();
+                IEnumerable<Connection> tiedConnections = cons.Where(x => x.ProcessId == p.Id);
+                IEnumerable<Connection> badPorts = tiedConnections.Where(x => _PortList.Any(y => y == x.RemotePort));
+                foreach (Connection conn in badPorts)
                 {
                     Logger.LogWarn("\t" + conn);
-                    if (p.ProcessName.ToLower() == "notepad")
+                    if (processName == "notepad")
                     {
                         riskLevel += 1.5;
                     }
@@ -240,53 +250,84 @@ namespace MinerSearch
                 }
 
 
-                var args = GetCommandLine(p);
+                args = GetCommandLine(p);
                 if (args != null)
                 {
-                    foreach (var port in _PortList)
+                    foreach (int port in _PortList)
                     {
                         bool portActive = badPorts.Any(x => x.RemotePort == port);
                         if (portActive && args.Contains(port.ToString()))
                         {
                             riskLevel += 1;
-                            Logger.Log($"\tActive blacklisted port {port} in CMD ARGS");
+                            Logger.LogWarn($"\tActive blacklisted port {port} in CMD ARGS");
                         }
                         else if (args.Contains(port.ToString()))
                         {
                             riskLevel += 0.5;
-                            Logger.Log($"\tBlacklisted port {port} in CMD ARGS");
+                            Logger.LogWarn($"\tBlacklisted port {port} in CMD ARGS");
                         }
                     }
                     if (args.Contains("stratum"))
                     {
                         riskLevel += 2.5;
-                        Logger.Log("\tPresent \"stratum\" in cmd args.");
+                        Logger.LogWarn("\tPresent \"stratum\" in cmd args.");
                     }
-                    if (p.ProcessName.ToLower() == SystemFileNames[3] && !args.ToLower().Contains("\\??\\c:\\"))
+                    if (args.Contains("nanopool") || args.Contains("pool."))
+                    {
+                        riskLevel += 2.5;
+                        Logger.LogWarn("\tPresent \"pool\" in cmd args.");
+                    }
+
+                    if (args.ToLower().Contains("-systemcheck"))
+                    {
+                        riskLevel += 2;
+                        Logger.LogWarn("\tProbably fake system task");
+                        if (fullPath.Contains("appdata") && fullPath.Contains("windows"))
+                        {
+
+                            riskLevel += 0.5;
+                            suspiciousFiles_path.Add(fullPath);
+                        }
+
+                    }
+                    if (processName == "helper" || processName == "helper32" || processName == "helper64")
+                    {
+                        riskLevel += 0.5;
+                    }
+
+                    if (processName == SystemFileNames[3] && !args.ToLower().Contains("\\??\\c:\\"))
                     {
                         Logger.LogWarn($"\tProbably watchdog process. Process ID: {p.Id}");
                         riskLevel += 2.5;
                     }
-
-                    if (p.ProcessName.ToLower() == SystemFileNames[4] && !args.ToLower().Contains($"{SystemFileNames[4]}.exe -k"))
+                    if (processName == SystemFileNames[4] && !args.ToLower().Contains($"{SystemFileNames[4]}.exe -k"))
                     {
-                        Logger.LogWarn($"\tProbably injected process. Process ID: {p.Id}");
+                        Logger.LogWarn($"\tProbably process injection. Process ID: {p.Id}");
                         riskLevel += 2.5;
                     }
-
-                    if (p.ProcessName.ToLower() == SystemFileNames[5] && args.ToLower() != "\"dwm.exe\"")
+                    if (processName == SystemFileNames[5] && args.ToLower() != "\"dwm.exe\"")
                     {
-                        Logger.LogWarn($"\tProbably injected process. Process ID: {p.Id}");
+                        Logger.LogWarn($"\tProbably process injection. Process ID: {p.Id}");
                         riskLevel += 2;
                     }
                 }
 
-                if (p.ProcessName.ToLower() == "rundll" || p.ProcessName.ToLower() == "system" || p.ProcessName.ToLower() == "winserv")
+                if (processName == "rundll" || processName == "system" || processName == "winserv")
                 {
-                    Logger.LogWarn($"\tProbably RAT process: {fullPath.ToLower()} Process ID: {p.Id}");
+                    Logger.LogWarn($"\tProbably RAT process: {fullPath} Process ID: {p.Id}");
+                    suspiciousFiles_path.Add(fullPath);
                     riskLevel += 3;
                 }
 
+                if (p.MainModule.FileVersionInfo.FileDescription != null)
+                {
+                    if (p.MainModule.FileVersionInfo.FileDescription.ToLower().Contains("svhost"))
+                    {
+                        Logger.LogWarn($"\tProbably RAT process: {fullPath} Process ID: {p.Id}");
+                        suspiciousFiles_path.Add(fullPath);
+                        riskLevel += 3;
+                    }
+                }
                 if (riskLevel >= 2.5)
                 {
                     Logger.LogCaution("\tMalicious process found! Risk level: " + riskLevel);
@@ -303,9 +344,14 @@ namespace MinerSearch
                 }
 
             }
+            startTime.Stop();
+            TimeSpan resultTime = startTime.Elapsed;
+            string elapsedTime = $"{resultTime.Hours:00}:{resultTime.Minutes:00}:{resultTime.Seconds:00}.{resultTime.Milliseconds:000}";
+            Console.WriteLine($"\nScan elapsed time: {elapsedTime}");
         }
         public void StaticScan()
         {
+
             Logger.LogHeader("Scanning directories...");
             string[] homedrive = Directory.GetDirectories(@"C:\", "*", SearchOption.TopDirectoryOnly);
             ScanDirectories(homedrive, SuspiciousRoot_path);
@@ -319,11 +365,23 @@ namespace MinerSearch
             string[] programdata = Directory.GetDirectories(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "*", SearchOption.TopDirectoryOnly);
             ScanDirectories(programdata, SuspiciousProgramData_path);
 
+
+            foreach (string file in Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "*.exe", SearchOption.AllDirectories))
+            {
+                suspiciousFiles_path.Add(Path.GetFullPath(file));
+            }
+
+            foreach (string path in suspiciousFiles_path)
+            {
+                Logger.LogWarn($"\tSuspicious file {path}");
+            }
+
             Logger.LogHeader("Scanning registry...");
             ScanRegistry();
             Logger.LogHeader("Scanning hosts file...");
             ScanHosts();
-            suspiciousObj_count += malware_dirs.Count;
+            suspiciousObj_count += malware_dirs.Count + suspiciousFiles_path.Count;
+
 
         }
         public void Clean()
@@ -331,23 +389,29 @@ namespace MinerSearch
 
             if (malware_pids.Count != 0)
             {
+                Logger.LogHeader("Trying to close processes...");
+
                 UnProtect(malware_pids.ToArray());
                 foreach (var id in malware_pids)
                 {
                     Process p = Process.GetProcessById(id);
-                    if (p.HasExited)
-                    {
-                        Logger.LogCaution($"Malicious process {p.ProcessName} - pid:{p.Id} has exited");
-                        continue;
-                    }
-
                     try
                     {
-                        string pname = p.ProcessName;
-                        int pid = p.Id;
-                        p.Kill();
-                        if (p.HasExited)
-                            Logger.LogSuccess($"Malicious process {pname} - pid:{pid} successfully closed");
+                        if (!p.HasExited)
+                        {
+                            string pname = p.ProcessName;
+                            int pid = p.Id;
+                            p.Kill();
+
+                            if (p.HasExited)
+                                Logger.LogSuccess($"Malicious process {pname} - pid:{pid} successfully closed");
+                        }
+                        else
+                        {
+                            Logger.LogCaution($"Malicious process has exited");
+                            continue;
+                        }
+
                     }
                     catch (Exception)
                     {
@@ -357,9 +421,29 @@ namespace MinerSearch
                 }
             }
 
+            if (suspiciousFiles_path.Count > 0)
+            {
+                Logger.LogHeader("Removing malicious files...");
+
+                foreach (string path in suspiciousFiles_path)
+                {
+                    if (File.Exists(path))
+                    {
+                        DeleteLockedFile(path);
+                        if (!File.Exists(path))
+                        {
+                            Logger.LogSuccess($"Malicious file {path} deleted");
+                        }
+                        else Logger.LogError($"Failed to delete {path}");
+                    }
+                }
+            }
+
             if (malware_dirs.Count != 0)
             {
-                foreach (var str in malware_dirs)
+                Logger.LogHeader("Removing malicious dirs...");
+
+                foreach (string str in malware_dirs)
                 {
                     TakeownDelete(str);
                     if (!Directory.Exists(str))
@@ -398,12 +482,12 @@ namespace MinerSearch
         }
         void ScanHosts()
         {
-            var hostsDir = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters");
+            RegistryKey hostsDir = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters");
             int hostsRiskLevel = 0;
             if (hostsDir != null)
             {
                 string hostsPath = hostsDir.GetValue("DataBasePath").ToString();
-                var hostsinfo = new FileInfo(hostsPath + "\\hosts");
+                FileInfo hostsinfo = new FileInfo(hostsPath + "\\hosts");
                 if (hostsinfo.Attributes == (FileAttributes.Hidden | FileAttributes.System | FileAttributes.NotContentIndexed) || hostsinfo.Attributes == (FileAttributes.Hidden | FileAttributes.System) || hostsinfo.Attributes == (FileAttributes.Hidden | FileAttributes.System | FileAttributes.Archive))
                 {
                     Logger.LogWarn($"\tHas \"hidden\" attribute");
@@ -418,7 +502,6 @@ namespace MinerSearch
                 {
 
                     Logger.LogCaution($"\tInfected hosts file. Risk level {hostsRiskLevel}");
-                    suspiciousObj_count++;
                     string answer;
                 answerLabel:
                     Console.WriteLine("\nThe hosts file will be completely overwritten. Continue? [enter \"yes\" to confirm | \"no\" - skip cleaning]:");
@@ -426,10 +509,12 @@ namespace MinerSearch
                     switch (answer)
                     {
                         case "yes":
+                            suspiciousObj_count++;
+                            CleanupHosts = true;
                             Process.Start(new ProcessStartInfo
                             {
                                 FileName = "cmd",
-                                Arguments = $@"/c attrib -s -h ""{hostsPath + "\\hosts"}"" && echo #MinerSearch by BlendLog > ""{hostsPath + "\\hosts"}"" && exit",
+                                Arguments = $@"/c attrib -s -h ""{hostsPath + "\\hosts"}"" && ren ""{hostsPath + "\\hosts"}"" hosts.infected && echo #MinerSearch by BlendLog > ""{hostsPath + "\\hosts"}"" && exit",
                                 UseShellExecute = false,
                                 CreateNoWindow = true
                             }).WaitForExit();
@@ -439,7 +524,7 @@ namespace MinerSearch
                             {
                                 if (hostsRiskLevel >= 1)
                                 {
-                                    Logger.LogSuccess("The hosts file has been successfully cleared");
+                                    Logger.LogSuccess("The hosts file has been successfully cleaned");
                                 }
                             }
                             else Logger.LogError("Failed to clear hosts file");
@@ -451,9 +536,6 @@ namespace MinerSearch
                     }
 
                 }
-
-
-
             }
         }
         void ScanRegistry()
@@ -471,7 +553,7 @@ namespace MinerSearch
                         Logger.LogSuccess("DisallowRun key successfully deleted");
                     }
                 }
-                var DisallowRunSub = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun", true);
+                RegistryKey DisallowRunSub = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun", true);
                 if (DisallowRunSub != null)
                 {
                     DisallowRunKey.DeleteSubKeyTree("DisallowRun");
@@ -487,7 +569,7 @@ namespace MinerSearch
             if (AutorunKey != null)
             {
                 List<string> RunKeys = AutorunKey.GetValueNames().ToList();
-                foreach (var value in RunKeys)
+                foreach (string value in RunKeys)
                 {
                     if (AutorunKey.GetValue(value).ToString().ToLower() == @"c:\programdata\realtekhd\taskhostw.exe" || AutorunKey.GetValue(value).ToString().ToLower() == @"c:\programdata\reaitekhd\taskhostw.exe")
                     {
@@ -512,8 +594,16 @@ namespace MinerSearch
                 CreateNoWindow = true
             }).WaitForExit();
         }
-
-
+        void DeleteLockedFile(string filePath)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "cmd",
+                Arguments = $@"/c takeown /f ""{filePath}"" && icacls ""{filePath}"" /remove:d *S-1-5-18 && icacls ""{filePath}"" /remove:d %username% && del ""{filePath}"" && exit",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }).WaitForExit();
+        }
 
         [Flags]
         public enum ThreadAccess : int
@@ -539,7 +629,7 @@ namespace MinerSearch
 
         private static void SuspendProcess(int pid)
         {
-            var process = Process.GetProcessById(pid); // throws exception if process does not exist
+            Process process = Process.GetProcessById(pid); // throws exception if process does not exist
 
             foreach (ProcessThread pT in process.Threads)
             {
@@ -585,7 +675,6 @@ namespace MinerSearch
             {
                 try
                 {
-                    // Trycatch here to weed out non-accessable processes
                     ProcessModule t = p.Modules[0];
                 }
                 catch (Exception)
@@ -610,25 +699,26 @@ namespace MinerSearch
         }
 
         #region " TCP Connections "
-        // Adapted from
-        // http://www.cheynewallace.com/get-active-ports-and-associated-process-names-in-c/
+
         private List<Connection> GetConnections()
         {
-            var Connections = new List<Connection>();
+            List<Connection> Connections = new List<Connection>();
 
             try
             {
                 using (Process p = new Process())
                 {
 
-                    ProcessStartInfo ps = new ProcessStartInfo();
-                    ps.Arguments = "-a -n -o";
-                    ps.FileName = "netstat.exe";
-                    ps.UseShellExecute = false;
-                    ps.WindowStyle = ProcessWindowStyle.Hidden;
-                    ps.RedirectStandardInput = true;
-                    ps.RedirectStandardOutput = true;
-                    ps.RedirectStandardError = true;
+                    ProcessStartInfo ps = new ProcessStartInfo
+                    {
+                        Arguments = "-a -n -o",
+                        FileName = "netstat.exe",
+                        UseShellExecute = false,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    };
 
                     p.StartInfo = ps;
                     p.Start();
@@ -689,9 +779,9 @@ namespace MinerSearch
         private string GetCommandLine(Process process)
         {
             string cmdLine = null;
-            using (var searcher = new ManagementObjectSearcher("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id))
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id))
             {
-                var matchEnum = searcher.Get().GetEnumerator();
+                ManagementObjectCollection.ManagementObjectEnumerator matchEnum = searcher.Get().GetEnumerator();
                 if (matchEnum.MoveNext())
                 {
                     cmdLine = matchEnum.Current["CommandLine"]?.ToString();
