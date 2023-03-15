@@ -402,6 +402,7 @@ namespace MinerSearch
                 Logger.WriteLog("Trying to close processes...", Logger.head);
 
                 UnProtect(malware_pids.ToArray());
+
                 foreach (var id in malware_pids)
                 {
                     Process p = Process.GetProcessById(id);
@@ -492,11 +493,21 @@ namespace MinerSearch
         }
         void ScanHosts()
         {
+
             RegistryKey hostsDir = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters");
             int hostsRiskLevel = 0;
             if (hostsDir != null)
             {
                 string hostsPath = hostsDir.GetValue("DataBasePath").ToString();
+                if (hostsPath.StartsWith("%"))
+                {
+                    hostsPath = ResolveEnvironmentVariables(hostsPath);
+                }
+                if (!File.Exists(hostsPath + "\\hosts"))
+                {
+                    Logger.WriteLog("[!] Hosts file is missing", Logger.warn);
+                    return;
+                }
                 FileInfo hostsinfo = new FileInfo(hostsPath + "\\hosts");
                 if (hostsinfo.Attributes == (FileAttributes.Hidden | FileAttributes.System | FileAttributes.NotContentIndexed) || hostsinfo.Attributes == (FileAttributes.Hidden | FileAttributes.System) || hostsinfo.Attributes == (FileAttributes.Hidden | FileAttributes.System | FileAttributes.Archive))
                 {
@@ -625,7 +636,7 @@ namespace MinerSearch
                 List<string> RunKeys = AutorunKey.GetValueNames().ToList();
                 foreach (string value in RunKeys)
                 {
-                    string path = GetRegistryValue(AutorunKey, value);
+                    string path = GetFilePathFromRegistry(AutorunKey, value);
                     if (File.Exists(path))
                     {
                         if (WinTrust.VerifyEmbeddedSignature(path) != WinVerifyTrustResult.Success && WinTrust.VerifyEmbeddedSignature(path) != WinVerifyTrustResult.FileNotSigned)
@@ -654,7 +665,7 @@ namespace MinerSearch
                 List<string> RunKeys = AutorunKey.GetValueNames().ToList();
                 foreach (string value in RunKeys)
                 {
-                    string path = GetRegistryValue(AutorunKey, value);
+                    string path = GetFilePathFromRegistry(AutorunKey, value);
                     if (File.Exists(path))
                     {
                         if (WinTrust.VerifyEmbeddedSignature(path) != WinVerifyTrustResult.Success && WinTrust.VerifyEmbeddedSignature(path) != WinVerifyTrustResult.FileNotSigned)
@@ -683,7 +694,7 @@ namespace MinerSearch
                 List<string> RunKeys = AutorunKey.GetValueNames().ToList();
                 foreach (string value in RunKeys)
                 {
-                    string path = GetRegistryValue(AutorunKey, value);
+                    string path = GetFilePathFromRegistry(AutorunKey, value);
                     if (File.Exists(path))
                     {
                         if (WinTrust.VerifyEmbeddedSignature(path) != WinVerifyTrustResult.Success && WinTrust.VerifyEmbeddedSignature(path) != WinVerifyTrustResult.FileNotSigned)
@@ -725,7 +736,7 @@ namespace MinerSearch
                 CreateNoWindow = true
             }).WaitForExit();
         }
-        string GetRegistryValue(RegistryKey key, string keyName)
+        string GetFilePathFromRegistry(RegistryKey key, string keyName)
         {
             string value;
             string substring = "";
@@ -766,6 +777,10 @@ namespace MinerSearch
 
                     if (spaceIndex == -1)
                     {
+                        if (value.StartsWith("%"))
+                        {
+                            return ResolveEnvironmentVariables(value);
+                        }
                         return value;
                     }
 
@@ -782,8 +797,10 @@ namespace MinerSearch
 
                     if (substring.StartsWith("%"))
                     {
-                        substring = Environment.GetEnvironmentVariable(substring);
+                        substring = ResolveEnvironmentVariables(substring);
                     }
+
+
                     #endregion
                 }
             }
@@ -791,9 +808,29 @@ namespace MinerSearch
             return substring;
         }
 
+        string ResolveEnvironmentVariables(string path)
+        {
+            char separator = Path.DirectorySeparatorChar;
 
+            string[] parts = path.Split(separator);
+            for (int i = 0; i < parts.Length; i++)
+            {
+                string part = parts[i];
+                if (part.StartsWith("%") && part.EndsWith("%"))
+                {
+                    string variableName = part.Substring(1, part.Length - 2);
+                    string variableValue = Environment.GetEnvironmentVariable(variableName);
 
-        [Flags]
+                    if (variableValue != null)
+                    {
+                        parts[i] = variableValue;
+                    }
+                }
+            }
+
+            return string.Join(separator.ToString(), parts);
+        }
+
         public enum ThreadAccess : int
         {
             TERMINATE = (0x0001),
