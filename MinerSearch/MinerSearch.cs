@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
-using Microsoft.Win32;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MinerSearch
 {
@@ -169,30 +170,37 @@ namespace MinerSearch
         public bool CleanupHosts = false;
         public int suspiciousObj_count = 0;
 
+
+
         public void Scan()
         {
             string processName = "";
             string fullPath = "";
             string args = "";
-            long fileSize = 0;
             double riskLevel = 0;
+            long fileSize = 0;
+            object lockObject = new object();
             Stopwatch startTime = Stopwatch.StartNew();
             List<Connection> cons = new List<Connection>();
             List<Process> proc = GetProcesses();
-
             foreach (Process p in proc)
             {
                 if (!p.HasExited)
                 {
                     processName = p.ProcessName.ToLower();
-                    Logger.Log($"Scanning: {processName}.exe");
+                    Logger.WriteLog($"Scanning: {processName}.exe", ConsoleColor.White);
                 }
                 else continue;
+
                 riskLevel = 0;
+                if (WinTrust.VerifyEmbeddedSignature(p.MainModule.FileName) != WinVerifyTrustResult.Success && WinTrust.VerifyEmbeddedSignature(p.MainModule.FileName) != WinVerifyTrustResult.FileNotSigned)
+                {
+                    Logger.WriteLog($"\t[!!!] Don't have valid signature in file: {p.MainModule.FileName}", Logger.caution);
+                    riskLevel += 0.5;
+                }
 
                 fullPath = $@"""{p.MainModule.FileName}""".ToLower();
                 fileSize = new FileInfo(p.MainModule.FileName).Length;
-
 
                 for (int i = 0; i < SystemFileNames.Length; i++)
                 {
@@ -207,18 +215,41 @@ namespace MinerSearch
                             && !fullPath.Contains("c:\\windows\\microsoft.net\\framework"))
                         {
 
-                            Logger.LogWarn($"\tSuspicious path: {fullPath}");
+                            Logger.WriteLog($"\t[!] Suspicious path: {fullPath}", Logger.warn);
                             riskLevel += 2.5;
                         }
 
                         if (fileSize >= constantFileSize[i] * 2)
                         {
-                            Logger.LogWarn($"\tSuspicious file size: {Sizer(fileSize)}");
+                            Logger.WriteLog($"\t[!] Suspicious file size: {Sizer(fileSize)}", Logger.warn);
                             riskLevel += 0.5;
                         }
 
                     }
 
+                }
+
+                if (processName.Contains("helper"))
+                {
+                    riskLevel += 0.5;
+                }
+
+                if (processName == "rundll" || processName == "system" || processName == "winserv")
+                {
+                    Logger.WriteLog($"\t[!] Probably RAT process: {fullPath} Process ID: {p.Id}", Logger.warn);
+                    suspiciousFiles_path.Add(fullPath);
+                    riskLevel += 3;
+                }
+
+
+                if (p.MainModule.FileVersionInfo.FileDescription != null)
+                {
+                    if (p.MainModule.FileVersionInfo.FileDescription.ToLower().Contains("svhost"))
+                    {
+                        Logger.WriteLog($"\t[!] Probably RAT process: {fullPath} Process ID: {p.Id}", Logger.warn);
+                        suspiciousFiles_path.Add(fullPath);
+                        riskLevel += 3;
+                    }
                 }
 
                 int modCount = 0;
@@ -231,7 +262,7 @@ namespace MinerSearch
 
                 if (modCount > 2)
                 {
-                    Logger.LogWarn("\tToo much GPU libs usage: " + p.ProcessName + ".exe, Process ID: " + p.Id);
+                    Logger.WriteLog("\t[!] Too much GPU libs usage: " + p.ProcessName + ".exe, Process ID: " + p.Id, Logger.warn);
                     riskLevel += 0.5;
 
                 }
@@ -241,7 +272,7 @@ namespace MinerSearch
                 IEnumerable<Connection> badPorts = tiedConnections.Where(x => _PortList.Any(y => y == x.RemotePort));
                 foreach (Connection conn in badPorts)
                 {
-                    Logger.LogWarn("\t" + conn);
+                    Logger.WriteLog("\t[!] " + conn, Logger.warn);
                     if (processName == "notepad")
                     {
                         riskLevel += 1.5;
@@ -249,8 +280,7 @@ namespace MinerSearch
                     riskLevel += 1;
                 }
 
-
-                args = GetCommandLine(p);
+                args = GetCommandLine(p).ToLower();
                 if (args != null)
                 {
                     foreach (int port in _PortList)
@@ -259,29 +289,29 @@ namespace MinerSearch
                         if (portActive && args.Contains(port.ToString()))
                         {
                             riskLevel += 1;
-                            Logger.LogWarn($"\tActive blacklisted port {port} in CMD ARGS");
+                            Logger.WriteLog($"\t[!] Active blacklisted port {port} in CMD ARGS", Logger.warn);
                         }
                         else if (args.Contains(port.ToString()))
                         {
                             riskLevel += 0.5;
-                            Logger.LogWarn($"\tBlacklisted port {port} in CMD ARGS");
+                            Logger.WriteLog($"\t[!] Blacklisted port {port} in CMD ARGS", Logger.warn);
                         }
                     }
                     if (args.Contains("stratum"))
                     {
                         riskLevel += 2.5;
-                        Logger.LogWarn("\tPresent \"stratum\" in cmd args.");
+                        Logger.WriteLog("\t[!] Present \"stratum\" in cmd args.", Logger.warn);
                     }
                     if (args.Contains("nanopool") || args.Contains("pool."))
                     {
                         riskLevel += 2.5;
-                        Logger.LogWarn("\tPresent \"pool\" in cmd args.");
+                        Logger.WriteLog("\t[!] Present \"pool\" in cmd args.", Logger.warn);
                     }
 
-                    if (args.ToLower().Contains("-systemcheck"))
+                    if (args.Contains("-systemcheck"))
                     {
                         riskLevel += 2;
-                        Logger.LogWarn("\tProbably fake system task");
+                        Logger.WriteLog("\t[!] Probably fake system task", Logger.warn);
                         if (fullPath.Contains("appdata") && fullPath.Contains("windows"))
                         {
 
@@ -290,56 +320,36 @@ namespace MinerSearch
                         }
 
                     }
-                    if (processName == "helper" || processName == "helper32" || processName == "helper64")
-                    {
-                        riskLevel += 0.5;
-                    }
 
-                    if (processName == SystemFileNames[3] && !args.ToLower().Contains("\\??\\c:\\"))
+                    if (processName == SystemFileNames[3] && !args.Contains("\\??\\c:\\"))
                     {
-                        Logger.LogWarn($"\tProbably watchdog process. Process ID: {p.Id}");
+                        Logger.WriteLog($"\t[!] Probably watchdog process. Process ID: {p.Id}", Logger.warn);
                         riskLevel += 2.5;
                     }
-                    if (processName == SystemFileNames[4] && !args.ToLower().Contains($"{SystemFileNames[4]}.exe -k"))
+                    if (processName == SystemFileNames[4] && !args.Contains($"{SystemFileNames[4]}.exe -k"))
                     {
-                        Logger.LogWarn($"\tProbably process injection. Process ID: {p.Id}");
+                        Logger.WriteLog($"\t[!] Probably process injection. Process ID: {p.Id}", Logger.warn);
                         riskLevel += 2.5;
                     }
-                    if (processName == SystemFileNames[5] && args.ToLower() != "\"dwm.exe\"")
+                    if (processName == SystemFileNames[5] && args != "\"dwm.exe\"")
                     {
-                        Logger.LogWarn($"\tProbably process injection. Process ID: {p.Id}");
+                        Logger.WriteLog($"\t[!] Probably process injection. Process ID: {p.Id}", Logger.warn);
                         riskLevel += 2;
                     }
                 }
 
-                if (processName == "rundll" || processName == "system" || processName == "winserv")
-                {
-                    Logger.LogWarn($"\tProbably RAT process: {fullPath} Process ID: {p.Id}");
-                    suspiciousFiles_path.Add(fullPath);
-                    riskLevel += 3;
-                }
-
-                if (p.MainModule.FileVersionInfo.FileDescription != null)
-                {
-                    if (p.MainModule.FileVersionInfo.FileDescription.ToLower().Contains("svhost"))
-                    {
-                        Logger.LogWarn($"\tProbably RAT process: {fullPath} Process ID: {p.Id}");
-                        suspiciousFiles_path.Add(fullPath);
-                        riskLevel += 3;
-                    }
-                }
                 if (riskLevel >= 2.5)
                 {
-                    Logger.LogCaution("\tMalicious process found! Risk level: " + riskLevel);
+                    Logger.WriteLog("\t[!!!] Malicious process found! Risk level: " + riskLevel, Logger.caution);
                     try
                     {
                         SuspendProcess(p.Id);
-                        Logger.LogSuccess($"\tProcess {p.ProcessName}.exe - PID: {p.Id} has been suspended successfully");
+                        Logger.WriteLog($"\t[+] Process {p.ProcessName}.exe - PID: {p.Id} has been suspended", Logger.success);
                         malware_pids.Add(p.Id);
                     }
                     catch (Exception e)
                     {
-                        Logger.LogError("\tFailed to suspend process: " + fullPath + $"{e}\n");
+                        Logger.WriteLog("\t[x] Failed to suspend process: " + fullPath + $"{e}\n", Logger.error);
                     }
                 }
 
@@ -352,7 +362,7 @@ namespace MinerSearch
         public void StaticScan()
         {
 
-            Logger.LogHeader("Scanning directories...");
+            Logger.WriteLog("Scanning directories...", Logger.head);
             string[] homedrive = Directory.GetDirectories(@"C:\", "*", SearchOption.TopDirectoryOnly);
             ScanDirectories(homedrive, SuspiciousRoot_path);
 
@@ -373,12 +383,12 @@ namespace MinerSearch
 
             foreach (string path in suspiciousFiles_path)
             {
-                Logger.LogWarn($"\tSuspicious file {path}");
+                Logger.WriteLog($"\t[!] Suspicious file {path}", Logger.warn);
             }
 
-            Logger.LogHeader("Scanning registry...");
+            Logger.WriteLog("Scanning registry...", Logger.head);
             ScanRegistry();
-            Logger.LogHeader("Scanning hosts file...");
+            Logger.WriteLog("Scanning hosts file...", Logger.head);
             ScanHosts();
             suspiciousObj_count += malware_dirs.Count + suspiciousFiles_path.Count;
 
@@ -389,7 +399,7 @@ namespace MinerSearch
 
             if (malware_pids.Count != 0)
             {
-                Logger.LogHeader("Trying to close processes...");
+                Logger.WriteLog("Trying to close processes...", Logger.head);
 
                 UnProtect(malware_pids.ToArray());
                 foreach (var id in malware_pids)
@@ -404,18 +414,18 @@ namespace MinerSearch
                             p.Kill();
 
                             if (p.HasExited)
-                                Logger.LogSuccess($"Malicious process {pname} - pid:{pid} successfully closed");
+                                Logger.WriteLog($"\t[+] Malicious process {pname} - pid:{pid} successfully closed", Logger.success);
                         }
                         else
                         {
-                            Logger.LogCaution($"Malicious process has exited");
+                            Logger.WriteLog($"\t[!!!] Malicious process has exited", Logger.caution);
                             continue;
                         }
 
                     }
                     catch (Exception)
                     {
-                        Logger.LogError($"Failed to kill malicious process! ProcessID: {p.Id}");
+                        Logger.WriteLog($"\t[x] Failed to kill malicious process! ProcessID: {p.Id}", Logger.error);
                         throw;
                     }
                 }
@@ -423,7 +433,7 @@ namespace MinerSearch
 
             if (suspiciousFiles_path.Count > 0)
             {
-                Logger.LogHeader("Removing malicious files...");
+                Logger.WriteLog("Removing malicious files...", Logger.head);
 
                 foreach (string path in suspiciousFiles_path)
                 {
@@ -432,28 +442,28 @@ namespace MinerSearch
                         DeleteLockedFile(path);
                         if (!File.Exists(path))
                         {
-                            Logger.LogSuccess($"Malicious file {path} deleted");
+                            Logger.WriteLog($"\t[+] Malicious file {path} deleted", Logger.success);
                         }
-                        else Logger.LogError($"Failed to delete {path}");
+                        else Logger.WriteLog($"\t[x] Failed to delete {path}", Logger.error);
                     }
                 }
             }
 
             if (malware_dirs.Count != 0)
             {
-                Logger.LogHeader("Removing malicious dirs...");
+                Logger.WriteLog("Removing malicious dirs...", Logger.head);
 
                 foreach (string str in malware_dirs)
                 {
                     TakeownDelete(str);
                     if (!Directory.Exists(str))
                     {
-                        Logger.LogSuccess($"Directory {str} successfull deleted");
+                        Logger.WriteLog($"\t[+] Directory {str} successfull deleted", Logger.success);
                     }
                     else
                     {
-                        Logger.LogError($"Failed to delete directory: {str}");
-                        Logger.LogCaution($"The directory may be occupied by a malicious process");
+                        Logger.WriteLog($"\t[x] Failed to delete directory: {str}", Logger.error);
+                        Logger.WriteLog($"\t[!!!] The directory may be occupied by a malicious process", Logger.caution);
                     }
                 }
             }
@@ -473,7 +483,7 @@ namespace MinerSearch
                         DirectoryInfo dinfo = new DirectoryInfo(scanDir);
                         if (dinfo.Attributes == (FileAttributes.Directory | FileAttributes.Hidden | FileAttributes.System) || dinfo.Attributes == (FileAttributes.Directory | FileAttributes.Hidden | FileAttributes.System | FileAttributes.NotContentIndexed))
                         {
-                            Logger.LogWarn($"Suspicious hidden directory: \"{scanDir}\"");
+                            Logger.WriteLog($"\t[!] Suspicious hidden directory: \"{scanDir}\"", Logger.warn);
                             malware_dirs.Add(scanDir);
                         }
                     }
@@ -490,18 +500,18 @@ namespace MinerSearch
                 FileInfo hostsinfo = new FileInfo(hostsPath + "\\hosts");
                 if (hostsinfo.Attributes == (FileAttributes.Hidden | FileAttributes.System | FileAttributes.NotContentIndexed) || hostsinfo.Attributes == (FileAttributes.Hidden | FileAttributes.System) || hostsinfo.Attributes == (FileAttributes.Hidden | FileAttributes.System | FileAttributes.Archive))
                 {
-                    Logger.LogWarn($"\tHas \"hidden\" attribute");
+                    Logger.WriteLog($"\t[!] Has \"hidden\" attribute", Logger.warn);
                     hostsRiskLevel += 2;
                 }
                 if (hostsinfo.Length > 1024)
                 {
-                    Logger.LogWarn($"\tSuspicious file size: {Sizer(hostsinfo.Length)}");
+                    Logger.WriteLog($"\t[!] Suspicious file size: {Sizer(hostsinfo.Length)}", Logger.warn);
                     hostsRiskLevel++;
                 }
                 if (hostsRiskLevel >= 1)
                 {
 
-                    Logger.LogCaution($"\tInfected hosts file. Risk level {hostsRiskLevel}");
+                    Logger.WriteLog($"\t[!!!] Infected hosts file. Risk level {hostsRiskLevel}", Logger.caution);
                     string answer;
                 answerLabel:
                     Console.WriteLine("\nThe hosts file will be completely overwritten. Continue? [enter \"yes\" to confirm | \"no\" - skip cleaning]:");
@@ -511,10 +521,14 @@ namespace MinerSearch
                         case "yes":
                             suspiciousObj_count++;
                             CleanupHosts = true;
+                            if (File.Exists(hostsPath + "\\hosts.infected"))
+                            {
+                                File.Delete(hostsPath + "\\hosts.infected");
+                            }
                             Process.Start(new ProcessStartInfo
                             {
                                 FileName = "cmd",
-                                Arguments = $@"/c attrib -s -h ""{hostsPath + "\\hosts"}"" && ren ""{hostsPath + "\\hosts"}"" hosts.infected && echo #MinerSearch by BlendLog > ""{hostsPath + "\\hosts"}"" && exit",
+                                Arguments = $@"/c attrib -s -h ""{hostsPath + "\\hosts"}"" && ren ""{hostsPath + "\\hosts"}"" hosts.infected && echo # > ""{hostsPath + "\\hosts"}"" && exit",
                                 UseShellExecute = false,
                                 CreateNoWindow = true
                             }).WaitForExit();
@@ -524,10 +538,10 @@ namespace MinerSearch
                             {
                                 if (hostsRiskLevel >= 1)
                                 {
-                                    Logger.LogSuccess("The hosts file has been successfully cleaned");
+                                    Logger.WriteLog("\t[+] The hosts file has been successfully cleaned", Logger.success);
                                 }
                             }
-                            else Logger.LogError("Failed to clear hosts file");
+                            else Logger.WriteLog("\t[x] Failed to clear hosts file", Logger.error);
                             break;
                         case "no":
                             break;
@@ -540,17 +554,18 @@ namespace MinerSearch
         }
         void ScanRegistry()
         {
+            #region DisallowRun
             RegistryKey DisallowRunKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", true);
             if (DisallowRunKey != null)
             {
                 if (DisallowRunKey.GetValueNames().Contains("DisallowRun"))
                 {
-                    Logger.LogWarn("Suspicious registry key: DisallowRun - restricts the launch of the specified applications");
+                    Logger.WriteLog("\t[!] Suspicious registry key: DisallowRun - restricts the launch of the specified applications", Logger.warn);
                     suspiciousObj_count++;
                     DisallowRunKey.DeleteValue("DisallowRun");
                     if (!DisallowRunKey.GetValueNames().Contains("DisallowRun"))
                     {
-                        Logger.LogSuccess("DisallowRun key successfully deleted");
+                        Logger.WriteLog("\t[+] DisallowRun key successfully deleted", Logger.success);
                     }
                 }
                 RegistryKey DisallowRunSub = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun", true);
@@ -560,10 +575,49 @@ namespace MinerSearch
                     DisallowRunSub = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun", true);
                     if (DisallowRunSub == null)
                     {
-                        Logger.LogSuccess("DisallowRun hive successfully deleted");
+                        Logger.WriteLog("\t[+] DisallowRun hive successfully deleted", Logger.success);
                     }
                 }
             }
+            #endregion
+
+
+            #region Appinit_dlls
+            RegistryKey appinit_key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", true);
+            if (appinit_key != null)
+            {
+                if (!String.IsNullOrEmpty(appinit_key.GetValue("AppInit_DLLs").ToString()))
+                {
+                    if (appinit_key.GetValue("LoadAppInit_DLLs").ToString() == "1")
+                    {
+                        if (!appinit_key.GetValueNames().Contains("RequireSignedAppInit_DLLs"))
+                        {
+                            Logger.WriteLog("\t[!] AppInit_DLLs is not empty", Logger.warn);
+                            Logger.WriteLog("\t[!!!] RequireSignedAppInit_DLLs key is not found", Logger.caution);
+                            appinit_key.SetValue("RequireSignedAppInit_DLLs", 1, RegistryValueKind.DWord);
+                            if (appinit_key.GetValue("RequireSignedAppInit_DLLs").ToString() == "1")
+                            {
+                                Logger.WriteLog("\t[+] The value was created and set to 1", Logger.success);
+                            }
+                            suspiciousObj_count += 2;
+                        }
+                        else if (appinit_key.GetValue("RequireSignedAppInit_DLLs").ToString() == "0")
+                        {
+                            Logger.WriteLog("\t[!] AppInit_DLLs is not empty", Logger.warn);
+                            Logger.WriteLog("\t[!!!] RequireSignedAppInit_DLLs key set is 0", Logger.caution);
+                            suspiciousObj_count += 2;
+                            appinit_key.SetValue("RequireSignedAppInit_DLLs", 1, RegistryValueKind.DWord);
+                            if (appinit_key.GetValue("RequireSignedAppInit_DLLs").ToString() == "1")
+                            {
+                                Logger.WriteLog("\t[+] The value was set to 1", Logger.success);
+                            }
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region HKLM
 
             RegistryKey AutorunKey = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
             if (AutorunKey != null)
@@ -571,18 +625,85 @@ namespace MinerSearch
                 List<string> RunKeys = AutorunKey.GetValueNames().ToList();
                 foreach (string value in RunKeys)
                 {
-                    if (AutorunKey.GetValue(value).ToString().ToLower() == @"c:\programdata\realtekhd\taskhostw.exe" || AutorunKey.GetValue(value).ToString().ToLower() == @"c:\programdata\reaitekhd\taskhostw.exe")
+                    string path = GetRegistryValue(AutorunKey, value);
+                    if (File.Exists(path))
                     {
-                        Logger.LogWarn($"Suspicious registry key {value}");
-                        suspiciousObj_count++;
-                        AutorunKey.DeleteValue(value);
-                        if (AutorunKey.GetValue(value) == null)
+                        if (WinTrust.VerifyEmbeddedSignature(path) != WinVerifyTrustResult.Success && WinTrust.VerifyEmbeddedSignature(path) != WinVerifyTrustResult.FileNotSigned)
                         {
-                            Logger.LogSuccess($"Successfull deleted registry key {value}");
+                            Logger.WriteLog($"\t[!!!] Don't have valid signature in file: {path} in key {value}", Logger.caution);
                         }
+                        else if (WinTrust.VerifyEmbeddedSignature(path) == WinVerifyTrustResult.FileNotSigned)
+                        {
+                            Logger.WriteLog($"\t[!] File is not signed: {path} in key {value}", Logger.warn);
+                        }
+                    }
+                    else
+                    {
+                        Logger.WriteLog($"\t[!] File is not found: {AutorunKey.GetValue(value)} from Key \"{value}\"", Logger.warn);
                     }
                 }
             }
+
+            #endregion
+
+            #region HKCU
+
+            AutorunKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
+            if (AutorunKey != null)
+            {
+                List<string> RunKeys = AutorunKey.GetValueNames().ToList();
+                foreach (string value in RunKeys)
+                {
+                    string path = GetRegistryValue(AutorunKey, value);
+                    if (File.Exists(path))
+                    {
+                        if (WinTrust.VerifyEmbeddedSignature(path) != WinVerifyTrustResult.Success && WinTrust.VerifyEmbeddedSignature(path) != WinVerifyTrustResult.FileNotSigned)
+                        {
+                            Logger.WriteLog($"\t[!!!] Don't have valid signature in file: {path} in key {value}", Logger.caution);
+                        }
+                        else if (WinTrust.VerifyEmbeddedSignature(path) == WinVerifyTrustResult.FileNotSigned)
+                        {
+                            Logger.WriteLog($"\t[!] File is not signed: {path} in key {value}", Logger.warn);
+                        }
+                    }
+                    else
+                    {
+                        Logger.WriteLog($"\t[!] File is not found: {AutorunKey.GetValue(value)} from Key \"{value}\"", Logger.warn);
+                    }
+                }
+            }
+
+            #endregion
+
+            #region WOW6432Node
+
+            AutorunKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run", true);
+            if (AutorunKey != null)
+            {
+                List<string> RunKeys = AutorunKey.GetValueNames().ToList();
+                foreach (string value in RunKeys)
+                {
+                    string path = GetRegistryValue(AutorunKey, value);
+                    if (File.Exists(path))
+                    {
+                        if (WinTrust.VerifyEmbeddedSignature(path) != WinVerifyTrustResult.Success && WinTrust.VerifyEmbeddedSignature(path) != WinVerifyTrustResult.FileNotSigned)
+                        {
+                            Logger.WriteLog($"\t[!!!] Don't have valid signature in file: {path} in key {value}", Logger.caution);
+                        }
+                        else if (WinTrust.VerifyEmbeddedSignature(path) == WinVerifyTrustResult.FileNotSigned)
+                        {
+                            Logger.WriteLog($"\t[!] File is not signed: {path} in key {value}", Logger.warn);
+                        }
+                    }
+                    else
+                    {
+                        Logger.WriteLog($"\t[!] File is not found: {AutorunKey.GetValue(value)} from Key \"{value}\"", Logger.warn);
+                    }
+                }
+            }
+
+
+            #endregion
         }
         void TakeownDelete(string dir)
         {
@@ -604,6 +725,73 @@ namespace MinerSearch
                 CreateNoWindow = true
             }).WaitForExit();
         }
+        string GetRegistryValue(RegistryKey key, string keyName)
+        {
+            string value;
+            string substring = "";
+
+            if (key != null)
+            {
+                object keyValue = key.GetValue(keyName);
+                if (keyValue != null)
+                {
+                    value = keyValue.ToString();
+
+                    if (value.StartsWith("\"") && value.EndsWith("\""))
+                    {
+                        return value.Replace("\"", "");
+                    }
+
+                    #region Processing strings with quotes, spaces, environment variables, not including arguments
+                    int spaceIndex = -1;
+                    int slashIndex = -1;
+                    //search for slash char
+                    for (int i = value.Length - 1; i > 0; i--) //Read to Left
+                    {
+                        if (value[i] == '\\')
+                        {
+                            slashIndex = i;
+                            break;
+                        }
+                    }
+                    //search for the first space char starting from slash index
+                    for (int i = slashIndex; i < value.Length; i++) //Read to Right
+                    {
+                        if (value[i] == ' ')
+                        {
+                            spaceIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (spaceIndex == -1)
+                    {
+                        return value;
+                    }
+
+                    //Reading entire string before founded space index
+                    StringBuilder sb = new StringBuilder("");
+                    for (int i = 0; i < spaceIndex + 1; i++)
+                    {
+                        sb.Append(value[i]);
+                    }
+
+                    //Delete redudant quotes
+                    substring = sb.ToString().Replace("\"", "");
+
+
+                    if (substring.StartsWith("%"))
+                    {
+                        substring = Environment.GetEnvironmentVariable(substring);
+                    }
+                    #endregion
+                }
+            }
+
+            return substring;
+        }
+
+
 
         [Flags]
         public enum ThreadAccess : int
@@ -621,11 +809,18 @@ namespace MinerSearch
 
         [DllImport("kernel32.dll")]
         static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
+
         [DllImport("kernel32.dll")]
         static extern uint SuspendThread(IntPtr hThread);
+
         [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
         static extern bool CloseHandle(IntPtr handle);
 
+        [DllImport("ntdll.dll", SetLastError = true)]
+        private static extern int NtSetInformationProcess(IntPtr hProcess, int processInformationClass, ref int processInformation, int processInformationLength);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr OpenProcess(uint processAccess, bool bInheritHandle, int processId);
 
         private static void SuspendProcess(int pid)
         {
@@ -633,6 +828,7 @@ namespace MinerSearch
 
             foreach (ProcessThread pT in process.Threads)
             {
+
                 IntPtr pOpenThread = OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint)pT.Id);
 
                 if (pOpenThread == IntPtr.Zero)
@@ -645,12 +841,6 @@ namespace MinerSearch
                 CloseHandle(pOpenThread);
             }
         }
-
-        [DllImport("ntdll.dll", SetLastError = true)]
-        private static extern int NtSetInformationProcess(IntPtr hProcess, int processInformationClass, ref int processInformation, int processInformationLength);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr OpenProcess(uint processAccess, bool bInheritHandle, int processId);
 
         private static void UnProtect(int[] pids)
         {
@@ -731,7 +921,7 @@ namespace MinerSearch
 
                     if (exitStatus != "0")
                     {
-                        Logger.LogError("Failed to read TCP connections.");
+                        Logger.WriteLog("\t[x] Failed to read TCP connections.", Logger.error);
                         return null;
                     }
 
@@ -757,7 +947,7 @@ namespace MinerSearch
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.Message);
+                Logger.WriteLog("\t[x] " + ex.Message, Logger.error);
             }
             return Connections;
         }

@@ -14,6 +14,12 @@ Based on Miner Killer.
 
 NET Framework 4.5 and higher is required to run.
 
+Version 1.3
+
+- Added digital signature verification
+- More additional registry scanning keys (autorun key, appinit_dlls)
+- Changed the logging method. Scan statistics are recorded in parallel to a file in the format MinerSearch_yyyy_mm_dd_hh_ss.log
+- Fixed some minor bugs
 
 # Demo
 

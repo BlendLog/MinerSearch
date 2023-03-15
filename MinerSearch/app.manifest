@@ -16,7 +16,7 @@
             Удалите этот элемент, если виртуализация требуется приложению для обратной
             совместимости.
         -->
-        <requestedExecutionLevel level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel level="highestAvailable" uiAccess="false" />
       </requestedPrivileges>
     </security>
   </trustInfo>

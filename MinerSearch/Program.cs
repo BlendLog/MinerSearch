@@ -3,44 +3,54 @@ using System.Diagnostics;
 
 namespace MinerSearch
 {
-    class Program
+    public class Program
     {
+        public static bool nologs = false;
+
         static void Main(string[] args)
         {
 
-            Console.Title = GetRandomTitle("miner search");
 
+            Console.Title = GetRandomTitle("miner search");
             WaterMark();
+
+            if (args.Length > 0)
+            {
+                if (args[0].ToLower() == "--no-logs")
+                {
+                    nologs = true;
+                }
+                else
+                {
+                    Console.WriteLine("\n Unknown argument");
+                    Console.ReadKey();
+                    return;
+                }
+            }
 
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
             MinerSearch mk = new MinerSearch();
-            Logger.LogHeader("Preparing to scan processes, please wait...");
+            Logger.WriteLog("Preparing to scan processes, please wait...", Logger.head);
 
             mk.Scan();
             Console.WriteLine("\n");
-            Logger.LogHeader("Starting static scan...");
+            Logger.WriteLog("Starting static scan...", Logger.head);
             mk.StaticScan();
 
             if (mk.malware_pids.Count == 0 && mk.suspiciousObj_count == 0 && !mk.CleanupHosts)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("The system is clean. No malicious files or processes have been detected!");
+                Logger.WriteLog("[+] The system is clean. No malicious files or processes have been detected!", Logger.success);
             }
             else
             {
                 if (mk.malware_pids.Count > 0)
                 {
-                    Logger.LogCaution($"Malicious processes: {mk.malware_pids.Count}");
+                    Logger.WriteLog($"\t[!!!] Malicious processes: {mk.malware_pids.Count}", Logger.caution);
                 }
                 if (mk.suspiciousObj_count > 0)
                 {
-                    Logger.LogWarn($"Suspicious objects: {mk.suspiciousObj_count}");
+                    Logger.WriteLog($"\t[!] Suspicious objects: {mk.suspiciousObj_count}", Logger.warn);
                 }
-                Console.BackgroundColor = ConsoleColor.DarkCyan;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("\nPress [ENTER] to start cleanup...");
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ReadLine();
                 mk.Clean();
             }
             Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -76,7 +86,9 @@ namespace MinerSearch
             Console.ForegroundColor = ConsoleColor.White;
 
             Console.WriteLine("\t\tby: BlendLog, Spectrum735");
-            Console.WriteLine("\t\tbased on: MinerKiller\n\n");
+            Console.WriteLine("\t\tbased on: MinerKiller");
+            Console.WriteLine($"\t\tVersion: {new Version(System.Windows.Forms.Application.ProductVersion)}\n");
+            Console.WriteLine($"\tFor disable logging in file use \"--no-logs\" option\n");
         }
 
     }
