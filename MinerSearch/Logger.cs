@@ -12,32 +12,53 @@ namespace MinerSearch
         public static readonly ConsoleColor warn = ConsoleColor.Yellow;
         public static readonly ConsoleColor head = ConsoleColor.Cyan;
         public static readonly ConsoleColor caution = ConsoleColor.Magenta;
+        public static readonly ConsoleColor cautionLow = ConsoleColor.DarkYellow;
+        public static string previousWhiteText = "";
+        public static string previousNonWhiteText = "";
+        public static ConsoleColor previousColor;
 
-
-        public static void WriteLog(string text, ConsoleColor LogLevel)
+        public static void WriteLog(string currentText, ConsoleColor LogLevel)
         {
-            string logMessage = $"[{DateTime.Now}]: {text}";
 
-            Console.ForegroundColor = LogLevel;
-            Console.WriteLine(logMessage);
-            Console.ForegroundColor = ConsoleColor.White;
-
-            if (!Program.nologs)
+            if (currentText == previousWhiteText || currentText == previousNonWhiteText)
             {
-                using (StreamWriter writer = new StreamWriter(logFileName, true))
+                return;
+            }
+
+            try
+            {
+                string logMessage = $"[{DateTime.Now}]: {currentText}";
+
+                Console.ForegroundColor = LogLevel;
+                Console.WriteLine(logMessage);
+                Console.ForegroundColor = ConsoleColor.White;
+
+                if (LogLevel == ConsoleColor.White)
                 {
-                    writer.WriteLine(logMessage);
+                    previousWhiteText = currentText;
+                }
+                if (LogLevel != ConsoleColor.White)
+                {
+                    previousNonWhiteText = currentText;
+                }
+
+                if (!Program.no_logs)
+                {
+                    using (StreamWriter writer = new StreamWriter(logFileName, true))
+                    {
+                        writer.WriteLine(logMessage);
+                    }
                 }
             }
-        }
-
-        public static void Log(string text)
-        {
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.Write($"[{DateTime.Now}]: ");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(text + "\n");
-
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+#if DEBUG
+                Console.Write($"\tLogger error: {ex.Message} \n{ex.StackTrace}");
+#else
+                Console.Write($"\tLogger error: {ex.Message}");
+#endif
+            }
         }
     }
 }
