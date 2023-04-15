@@ -6,6 +6,8 @@ directories, processes, etc. and is NOT an antivirus.
 
 Based on Miner Killer.
 
+NET Framework 4.7.2 is required to run.
+
 Version v1.4
 
 - Redesigned algorithm for checking and removing malicious directories/files
@@ -18,13 +20,6 @@ Version v1.4
 - The text in the log is no longer duplicated
 - Fixed a bug when the input string had an incorrect format
 - Added parent process verification
-- Improved process scanning process;
-- Added static directory scanning;
-- Added the function of automatic cleaning from malicious directories;
-- Destruction of malicious processes (including those marked as critical)
-- Scanning malicious registry keys, etc...
-
-NET Framework 4.7.2 is required to run.
 
 Version 1.3
 
