@@ -14,7 +14,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -26,7 +26,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,6 +35,7 @@
     <ErrorReport>none</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>MinerSearch.Program</StartupObject>
@@ -48,9 +49,6 @@
   <ItemGroup>
     <Reference Include="Microsoft.Win32.TaskScheduler">
       <HintPath>..\..\..\Downloads\SophiApp\SophiApp\Bin\Microsoft.Win32.TaskScheduler.dll</HintPath>
-    </Reference>
-    <Reference Include="SilDev.CSharpLib64">
-      <HintPath>..\..\SilDev_CSharpLib\bin\SilDev.CSharpLib64.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -82,10 +80,9 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\SilDev.CSharpLib64.dll" />
+    <None Include="packages.config" />
     <None Include="Resources\Microsoft.Win32.TaskScheduler.dll" />
     <None Include="bin\Release\Microsoft.Win32.TaskScheduler.dll" />
-    <None Include="bin\Release\SilDev.CSharpLib64.dll" />
     <Content Include="bitcoin-coin-icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +90,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\SecurityCodeScan.VS2019.5.6.7\analyzers\dotnet\SecurityCodeScan.VS2019.dll" />
+    <Analyzer Include="..\packages\SecurityCodeScan.VS2019.5.6.7\analyzers\dotnet\YamlDotNet.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

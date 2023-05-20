@@ -63,16 +63,6 @@ namespace MinerSearch.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] CSharpLib64 {
-            get {
-                object obj = ResourceManager.GetObject("CSharpLib64", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
-        /// </summary>
         internal static byte[] TaskScheduler {
             get {
                 object obj = ResourceManager.GetObject("TaskScheduler", resourceCulture);

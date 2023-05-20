@@ -292,13 +292,7 @@ namespace MinerSearch
                 WinVerifyTrust(IntPtr.Zero, guidAction, wtd);
                 wtd.Dispose();
 
-                if (result == WinVerifyTrustResult.FileNotSigned)
-                {
-                    result = VerifyByCatalog(filePath);
-                }
-
                 string fileName = Path.GetFileName(filePath);
-
                 switch (result)
                 {
                     case WinVerifyTrustResult.ProviderUnknown:
@@ -329,12 +323,12 @@ namespace MinerSearch
                         Logger.WriteLog($"\t[!] {fileName}: Root certificate is not trusted", Logger.warn);
                         break;
                     case WinVerifyTrustResult.Success:
+                        //Logger.WriteLog($"\t[+] {fileName}: Success", Logger.success);
                         break;
                     case WinVerifyTrustResult.FileNotSigned:
-                        Logger.WriteLog($"\t[!] {fileName}: File is not signed", Logger.warn);
+                        result = VerifyByCatalog(filePath);
                         break;
                 }
-
                 return result;
             }
             catch (Exception ex)
