@@ -8,6 +8,13 @@ Based on Miner Killer.
 
 NET Framework 4.7.2 is required to run.
 
+Version v.1.4.1
+
+1) Confirmation of cleaning the hosts file is now in short version
+2) The WinTrust class has been modified to verify the digital signature of files without external dependencies (thanx for Dragokas)
+3) Added full restoration of rights to directories
+4) Added new directories and processes for scanning
+
 Version v1.4
 
 - Redesigned algorithm for checking and removing malicious directories/files
