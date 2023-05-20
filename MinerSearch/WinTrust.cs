@@ -1,9 +1,10 @@
-﻿//Thanx for https://www.pinvoke.net/default.aspx/wintrust.winverifytrust
+//Thanx for https://www.pinvoke.net/default.aspx/wintrust.winverifytrust
 // credit to Alex Dragokas 
 
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Text;
 
 namespace MinerSearch
@@ -76,6 +77,8 @@ namespace MinerSearch
         IntPtr hFile = IntPtr.Zero;             // optional, open handle to FilePath
         IntPtr pgKnownSubject = IntPtr.Zero;    // optional, subject type if it is known
 
+        public WinTrustFileInfo() { }
+
         public WinTrustFileInfo(string _filePath)
         {
             pszFilePath = Marshal.StringToCoTaskMemAuto(_filePath);
@@ -90,10 +93,10 @@ namespace MinerSearch
         }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    public class WinTrustCatalogInfo
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public class WINTRUST_CATALOG_INFO
     {
-        public UInt32 StructSize = (UInt32)Marshal.SizeOf(typeof(WinTrustCatalogInfo));
+        public UInt32 StructSize = (UInt32)Marshal.SizeOf(typeof(WINTRUST_CATALOG_INFO));
         public UInt32 CatalogVersion = 0;
         public string CatalogFilePath;
         public string MemberTag;
@@ -103,6 +106,10 @@ namespace MinerSearch
         public UInt32 cbCalculatedFileHash;
         public IntPtr CatalogContext;
         public IntPtr hCatAdmin;
+
+        public WINTRUST_CATALOG_INFO() { }
+
+        public void Dispose() { }
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -114,19 +121,17 @@ namespace MinerSearch
         public WinTrustDataUIChoice UIChoice = WinTrustDataUIChoice.None;
         public WinTrustDataRevocationChecks RevocationChecks = WinTrustDataRevocationChecks.None;
         public WinTrustDataChoice UnionChoice = WinTrustDataChoice.File; // required: which structure is being passed in?
-        public IntPtr FileInfoPtr;
+        public IntPtr UnionInfoPtr;
         public WinTrustDataStateAction StateAction = WinTrustDataStateAction.Ignore;
         public IntPtr StateData = IntPtr.Zero;
         public String URLReference = null;
-        public WinTrustDataProvFlags ProvFlags = WinTrustDataProvFlags.RevocationCheckNone;
+        public WinTrustDataProvFlags ProvFlags = WinTrustDataProvFlags.RevocationCheckChainExcludeRoot;
         public WinTrustDataUIContext UIContext = WinTrustDataUIContext.Execute;
 
         private void InitFlags()
         {
             // On Win7SP1+, don't allow MD2 or MD4 signatures
-            if ((Environment.OSVersion.Version.Major > 6) ||
-                ((Environment.OSVersion.Version.Major == 6) && (Environment.OSVersion.Version.Minor > 1)) ||
-                ((Environment.OSVersion.Version.Major == 6) && (Environment.OSVersion.Version.Minor == 1) && !String.IsNullOrEmpty(Environment.OSVersion.ServicePack)))
+            if (WinTrust.IsWindows7SP1OrGreater())
             {
                 ProvFlags |= WinTrustDataProvFlags.DisableMD2andMD4;
             }
@@ -136,25 +141,35 @@ namespace MinerSearch
         {
             InitFlags();
             WinTrustFileInfo wtfiData = _fileInfo;
-            FileInfoPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(WinTrustFileInfo)));
-            Marshal.StructureToPtr(wtfiData, FileInfoPtr, false);
+            UnionInfoPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(WinTrustFileInfo)));
+            Marshal.StructureToPtr(wtfiData, UnionInfoPtr, false);
+        }
+
+        public WinTrustData(WINTRUST_CATALOG_INFO _catalogInfo)
+        {
+            InitFlags();
+            UnionChoice = WinTrustDataChoice.Catalog;
+            UnionInfoPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(WINTRUST_CATALOG_INFO)));
+            Marshal.StructureToPtr(_catalogInfo, UnionInfoPtr, false);
         }
 
         public void Dispose()
         {
-            if (FileInfoPtr != IntPtr.Zero)
+            if (UnionInfoPtr != IntPtr.Zero)
             {
-                Marshal.FreeHGlobal(FileInfoPtr);
-                FileInfoPtr = IntPtr.Zero;
-
                 if (UnionChoice == WinTrustDataChoice.File)
                 {
-                    WinTrustFileInfo fileInfo = (WinTrustFileInfo)Marshal.PtrToStructure(FileInfoPtr, typeof(WinTrustFileInfo));
-                    if (fileInfo != null)
-                    {
-                        fileInfo.Dispose();
-                    }
+                    WinTrustFileInfo fileInfo = (WinTrustFileInfo)Marshal.PtrToStructure(UnionInfoPtr, typeof(WinTrustFileInfo));
+                    fileInfo.Dispose();
                 }
+                else if (UnionChoice == WinTrustDataChoice.Catalog)
+                {
+                    WINTRUST_CATALOG_INFO catalog = (WINTRUST_CATALOG_INFO)Marshal.PtrToStructure(UnionInfoPtr, typeof(WINTRUST_CATALOG_INFO));
+                    catalog.Dispose();
+                }
+
+                Marshal.FreeHGlobal(UnionInfoPtr);
+                UnionInfoPtr = IntPtr.Zero;
             }
         }
     }
@@ -187,12 +202,83 @@ namespace MinerSearch
         private const string WINTRUST_ACTION_GENERIC_VERIFY_V2 = "{00AAC56B-CD44-11d0-8CC2-00C04FC295EE}"; // GUID of the action to perform
         private const string DRIVER_ACTION_VERIFY = "{F750E6C3-38EE-11D1-85E5-00C04FC295EE}"; // GUID of the action to perform
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct CATALOG_INFO
+        {
+            public UInt32 cbStruct;
+            [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = MAX_PATH)]
+            public string wszCatalogFile;
+        }
+
+        public const int GENERIC_READ = unchecked((int)0x80000000);
+        public const int FILE_SHARE_READ = 1;
+        public const int FILE_SHARE_WRITE = 2;
+        public const int FILE_SHARE_DELETE = 4;
+        public const int OPEN_EXISTING = 3;
+        public const int FILE_ATTRIBUTE_NORMAL = 0x80;
+        public const int FILE_READ_ATTRIBUTES = 0x80;
+        public const int FILE_READ_DATA = 1;
+        public const int STANDARD_RIGHTS_READ = 0x20000;
+        public const string BCRYPT_SHA256_ALGORITHM = "SHA256";
+        public const int ERROR_INSUFFICIENT_BUFFER = 122;
+
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern IntPtr CreateFile(string lpFileName, int dwDesiredAccess, int dwShareMode, IntPtr lpSecurityAttributes, int dwCreationDisposition, int dwFlagsAndAttributes, IntPtr hTemplateFile);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool CloseHandle(IntPtr hObject);
+
+        [DllImport("Wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern bool CryptCATAdminReleaseCatalogContext(IntPtr hCatAdmin, IntPtr hCatInfo, int dwFlags);
+
+        [DllImport("Wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern bool CryptCATAdminReleaseContext(IntPtr hCatAdmin, int dwFlags);
+
+        [DllImport("Wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern bool CryptCATAdminCalcHashFromFileHandle(
+            IntPtr hFile, 
+            ref uint hashLength,
+            [MarshalAs(UnmanagedType.LPArray)] byte[] pbHash, 
+            uint dwFlags);
+
+        [DllImport("Wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern bool CryptCATAdminCalcHashFromFileHandle2(
+            IntPtr hCatAdmin,
+            IntPtr hFile,
+            ref uint hashLength,
+            [MarshalAs(UnmanagedType.LPArray)] byte[] pbHash,
+            uint dwFlags);
+
+        [DllImport("Wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern IntPtr CryptCATAdminEnumCatalogFromHash(
+            IntPtr hCatAdmin,
+            [In][MarshalAs(UnmanagedType.LPArray)] byte[] pbHash,
+            uint cbHash,
+            uint dwFlags,
+            IntPtr phPrevCatInfo);
+
+        [DllImport("wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern bool CryptCATAdminAcquireContext(out IntPtr phCatAdmin, [In][MarshalAs(UnmanagedType.LPStruct)] Guid pgActionID, int dwFlags);
+
+        [DllImport("wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern bool CryptCATAdminAcquireContext2(
+            out IntPtr phCatAdmin, 
+            [In][MarshalAs(UnmanagedType.LPStruct)] Guid pgActionID,
+            [In][MarshalAs(UnmanagedType.LPWStr)] string pwszHashAlgorithm,
+            IntPtr pStrongHashPolicy,
+            int dwFlags);
+
+        [DllImport("wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern bool CryptCATCatalogInfoFromContext(IntPtr hCatalog, ref CATALOG_INFO psCatInfo, int dwFlags);
+
         [DllImport("wintrust.dll", ExactSpelling = true, SetLastError = true, CharSet = CharSet.Unicode)]
         static extern WinVerifyTrustResult WinVerifyTrust(
             [In] IntPtr hwnd,
             [In][MarshalAs(UnmanagedType.LPStruct)] Guid pgActionID,
             [In] WinTrustData pWVTData
         );
+
 
         public static WinVerifyTrustResult VerifyEmbeddedSignature(string filePath)
         {
@@ -204,8 +290,12 @@ namespace MinerSearch
                 WinVerifyTrustResult result = WinVerifyTrust(INVALID_HANDLE_VALUE, guidAction, wtd);
                 wtd.StateAction = WinTrustDataStateAction.Close;
                 WinVerifyTrust(IntPtr.Zero, guidAction, wtd);
-                trustFileInfo.Dispose();
                 wtd.Dispose();
+
+                if (result == WinVerifyTrustResult.FileNotSigned)
+                {
+                    result = VerifyByCatalog(filePath);
+                }
 
                 string fileName = Path.GetFileName(filePath);
 
@@ -241,17 +331,7 @@ namespace MinerSearch
                     case WinVerifyTrustResult.Success:
                         break;
                     case WinVerifyTrustResult.FileNotSigned:
-                        string fileStatus = SilDev.FileEx.GetSignatureStatus(filePath);
-                        if (fileStatus == "NotSigned")
-                        {
-                            Logger.WriteLog($"\t[!] {fileName}: File is not signed", Logger.warn);
-                            return WinVerifyTrustResult.FileNotSigned;
-                        }
-                        else if (fileStatus == "Valid")
-                        {
-                            return WinVerifyTrustResult.Success;
-                        }
-                        else Logger.WriteLog($"\t[!] {fileName}: {fileStatus}", Logger.warn);
+                        Logger.WriteLog($"\t[!] {fileName}: File is not signed", Logger.warn);
                         break;
                 }
 
@@ -264,5 +344,135 @@ namespace MinerSearch
             }
         }
 
+        public static WinVerifyTrustResult VerifyByCatalog(string fileName)
+        {
+            WinVerifyTrustResult result;
+            try
+            {
+                Guid guidAction = new Guid(WINTRUST_ACTION_GENERIC_VERIFY_V2);
+                Guid driverAction = new Guid(DRIVER_ACTION_VERIFY);
+                IntPtr hCatAdmin = IntPtr.Zero;
+
+                IntPtr hFile = CreateFile(
+                    fileName,
+                    FILE_READ_ATTRIBUTES | FILE_READ_DATA | STANDARD_RIGHTS_READ,
+                    FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 
+                    IntPtr.Zero, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, IntPtr.Zero);
+                if (hFile == IntPtr.Zero)
+                {
+                    return WinVerifyTrustResult.Error;
+                }
+
+                if (IsWindows8OrGreater())
+                {
+                    CryptCATAdminAcquireContext2(out hCatAdmin, driverAction, BCRYPT_SHA256_ALGORITHM, IntPtr.Zero, 0);
+                }
+                if (hCatAdmin == IntPtr.Zero)
+                {
+                    if (!CryptCATAdminAcquireContext(out hCatAdmin, driverAction, 0))
+                        return WinVerifyTrustResult.FileNotSigned;
+                }
+
+                byte[] hash = new byte[1];
+                uint hashLength = 0;
+                bool bRet = false;
+
+                if (IsWindows8OrGreater())
+                {
+                    bRet = CryptCATAdminCalcHashFromFileHandle2(hCatAdmin, hFile, ref hashLength, hash, 0);
+
+                    if (Marshal.GetLastWin32Error() == ERROR_INSUFFICIENT_BUFFER)
+                    {
+                        hash = new byte[hashLength];
+                        bRet = CryptCATAdminCalcHashFromFileHandle2(hCatAdmin, hFile, ref hashLength, hash, 0);
+                    }
+                }
+                if (!bRet || hashLength == 0)
+                {
+                    if (!CryptCATAdminCalcHashFromFileHandle(hFile, ref hashLength, hash, 0))
+                    {
+                        hash = new byte[hashLength];
+                        if (!CryptCATAdminCalcHashFromFileHandle(hFile, ref hashLength, hash, 0))
+                            return WinVerifyTrustResult.FileNotSigned;
+                    }
+                }
+
+                StringBuilder memberTag = new StringBuilder((int)hashLength * 2);
+
+                for (int i = 0; i < hashLength; i++)
+                    memberTag.Append(hash[i].ToString("X2"));
+
+                IntPtr catInfo = CryptCATAdminEnumCatalogFromHash(hCatAdmin, hash, hashLength, 0, IntPtr.Zero);
+
+                if (catInfo == IntPtr.Zero)
+                {
+                    CryptCATAdminReleaseContext(hCatAdmin, 0);
+                    return WinVerifyTrustResult.FileNotSigned;
+                }
+
+                CATALOG_INFO ci = new CATALOG_INFO();
+                ci.cbStruct = (UInt32)Marshal.SizeOf(typeof(CATALOG_INFO));
+
+                if (!CryptCATCatalogInfoFromContext(catInfo, ref ci, 0))
+                {
+                    CryptCATAdminReleaseCatalogContext(hCatAdmin, catInfo, 0);
+                    CryptCATAdminReleaseContext(hCatAdmin, 0);
+                    return WinVerifyTrustResult.FileNotSigned;
+                }
+
+                WINTRUST_CATALOG_INFO wci = new WINTRUST_CATALOG_INFO();
+                wci.CatalogFilePath = ci.wszCatalogFile;
+                wci.MemberFilePath = fileName;
+                wci.hMemberFile = hFile; // you can either pass the file path or already opened file handle
+                wci.hCatAdmin = hCatAdmin;
+                // see: https://www.appsloveworld.com/cplus/100/22/how-do-i-marshal-a-struct-that-contains-a-variable-sized-array-to-c
+                GCHandle pin = GCHandle.Alloc(hash, GCHandleType.Pinned);
+                IntPtr pHash = pin.AddrOfPinnedObject();
+                wci.pbCalculatedFileHash = pHash;
+                wci.cbCalculatedFileHash = hashLength;
+                wci.MemberTag = memberTag.ToString(); // you can either use pre-calculated file hash or MemberTag
+
+                WinTrustData trustData = new WinTrustData(wci);
+
+                try
+                {
+                    result = WinVerifyTrust(IntPtr.Zero, guidAction, trustData);
+                    trustData.StateAction = WinTrustDataStateAction.Close;
+                    WinVerifyTrust(IntPtr.Zero, guidAction, trustData);
+                    //Logger.WriteLog($"\tWinVerifyTrust: " + result.ToString("X"), Logger.error);
+                }
+                finally
+                {
+                    CryptCATAdminReleaseCatalogContext(hCatAdmin, catInfo, 0);
+
+                    trustData.StateAction = WinTrustDataStateAction.Close;
+                    WinVerifyTrust(IntPtr.Zero, guidAction, trustData);
+
+                    CryptCATAdminReleaseContext(hCatAdmin, 0);
+                    CloseHandle(hFile);
+
+                    pin.Free();
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"\t[x] Error verify signature: {ex.Message}", Logger.error);
+                return WinVerifyTrustResult.Error;
+            }
+        }
+
+        public static bool IsWindows8OrGreater()
+        {
+            return Environment.OSVersion.Version.Major > 6 || 
+                (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2);
+        }
+
+        public static bool IsWindows7SP1OrGreater()
+        {
+            return ((Environment.OSVersion.Version.Major > 6) ||
+                ((Environment.OSVersion.Version.Major == 6) && (Environment.OSVersion.Version.Minor > 1)) ||
+                ((Environment.OSVersion.Version.Major == 6) && (Environment.OSVersion.Version.Minor == 1) && !String.IsNullOrEmpty(Environment.OSVersion.ServicePack)));
+        }
     }
 }
