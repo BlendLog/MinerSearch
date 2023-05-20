@@ -27,10 +27,6 @@ namespace MinerSearch
             {
                 File.WriteAllBytes("Microsoft.Win32.TaskScheduler.dll", Resources.TaskScheduler);
             }
-            if (!File.Exists("SilDev.CSharpLib64.dll"))
-            {
-                File.WriteAllBytes("SilDev.CSharpLib64.dll", Resources.CSharpLib64);
-            }
 
             if (args.Length > 0)
             {
