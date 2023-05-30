@@ -660,6 +660,32 @@ namespace MinerSearch
             }
         }
 
+        void FindMalwareFiles(string directoryPath)
+        {
+            try
+            {
+                IEnumerable<string> files = Directory.GetFiles(directoryPath, "*.bat");
+
+                foreach (string file in files)
+                {
+                    malware_files.Add(file);
+                    foreach (var nearExeFile in Directory.GetFiles(Path.GetDirectoryName(file), "*.exe"))
+                    {
+                        malware_files.Add(nearExeFile);
+                    }
+                }
+
+                IEnumerable<string> directories = Directory.EnumerateDirectories(directoryPath);
+                foreach (string directory in directories)
+                {
+                    FindMalwareFiles(directory);
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+            }
+        }
+
         void ScanHosts()
         {
 
