@@ -840,7 +840,6 @@ namespace MinerSearch
                 Logger.WriteLog($"\t[!] Cannot open HKLM\\...\\run: {ex.Message}", Logger.error);
             }
 
-            //TODO: delete malicious win defender exclusions
             #endregion
 
             #region HKCU
