@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Microsoft.Win32.TaskScheduler;
+using MinerSearch.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,6 +12,8 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using NetFwTypeLib;
 
 namespace MinerSearch
 {
@@ -53,27 +56,12 @@ namespace MinerSearch
             @"C:\ProgramData\ESET",
             @"C:\ProgramData\Evernote",
             @"C:\ProgramData\FingerPrint",
-            @"C:\ProgramData\Install",
             @"C:\ProgramData\Kaspersky Lab",
             @"C:\ProgramData\Kaspersky Lab Setup Files",
             @"C:\ProgramData\MB3Install",
             @"C:\ProgramData\Malwarebytes",
             @"C:\ProgramData\McAfee",
-            @"C:\ProgramData\Microsoft\Check",
-            @"C:\ProgramData\Microsoft\Intel",
-            @"C:\ProgramData\Microsoft\clr_optimization_v4.0.30318_64",
-            @"C:\ProgramData\Microsoft\temp",
             @"C:\ProgramData\Norton",
-            @"C:\ProgramData\PuzzleMedia",
-            @"C:\ProgramData\RealtekHD",
-            @"C:\ProgramData\ReaItekHD",
-            @"C:\ProgramData\RobotDemo",
-            @"C:\ProgramData\RunDLL",
-            @"C:\ProgramData\Setup",
-            @"C:\ProgramData\System32",
-            @"C:\ProgramData\WavePad",
-            @"C:\ProgramData\Windows Tasks Service",
-            @"C:\ProgramData\WindowsTask",
             @"C:\ProgramData\grizzly",
             @"C:\Program Files (x86)\Microsoft JDX",
             @"C:\Program Files (x86)\360",
@@ -87,7 +75,8 @@ namespace MinerSearch
             @"C:\Program Files (x86)\IObit\Advanced SystemCare",
             @"C:\Program Files (x86)\IObit\IObit Malware Fighter",
             @"C:\Program Files (x86)\IObit",
-            @"C:\Program Files (x86)\Transmission",
+            @"C:\Program Files (x86)\Moo0",
+            @"C:\Program Files (x86)\SpeedFan",
             @"C:\Program Files\AVAST Software",
             @"C:\Program Files\AVG",
             @"C:\Program Files\Bitdefender Agent",
@@ -100,7 +89,7 @@ namespace MinerSearch
             @"C:\Program Files\DrWeb",
             @"C:\Program Files\ESET",
             @"C:\Program Files\Enigma Software Group",
-            @"C:\Program Files\Internet Explorer\bin",
+            @"C:\Program Files\EnigmaSoft",
             @"C:\Program Files\Kaspersky Lab",
             @"C:\Program Files\Loaris Trojan Remover",
             @"C:\Program Files\Malwarebytes",
@@ -108,11 +97,72 @@ namespace MinerSearch
             @"C:\Program Files\Rainmeter",
             @"C:\Program Files\Ravantivirus",
             @"C:\Program Files\SpyHunter",
+            @"C:\Program Files\Process Hacker 2",
+            @"C:\Program Files\RogueKiller",
+            @"C:\Program Files\SUPERAntiSpyware",
+            @"C:\Program Files\HitmanPro",
+            @"C:\Program Files\RDP Wrapper",
             @"C:\AdwCleaner",
             @"C:\KVRT_Data",
             @"C:\KVRT2020_Data",
-            @"C:\FRST",
-            @"C:\Windows\Fonts\Mysql"
+            @"C:\FRST"
+        };
+
+        public List<string> malware_paths = new List<string>
+        {
+            @"C:\ProgramData\Install",
+            @"C:\ProgramData\Microsoft\Check",
+            @"C:\ProgramData\Microsoft\Intel",
+            @"C:\ProgramData\Microsoft\clr_optimization_v4.0.30318_64",
+            @"C:\ProgramData\Microsoft\temp",
+            @"C:\ProgramData\PuzzleMedia",
+            @"C:\ProgramData\RealtekHD",
+            @"C:\ProgramData\ReaItekHD",
+            @"C:\ProgramData\RobotDemo",
+            @"C:\ProgramData\RunDLL",
+            @"C:\ProgramData\Setup",
+            @"C:\ProgramData\System32",
+            @"C:\ProgramData\WavePad",
+            @"C:\ProgramData\Windows Tasks Service",
+            @"C:\ProgramData\WindowsTask",
+            @"C:\Program Files\Transmission",
+            @"C:\Program Files\Google\Libs",
+            @"C:\Program Files (x86)\Transmission",
+            @"C:\Windows\Fonts\Mysql",
+            @"C:\Program Files\Internet Explorer\bin",
+            @"C:\ProgramData\princeton-produce"
+        };
+
+        public List<string> WD_exclusion_paths = new List<string>()
+        {
+            @"C:\Program Files\RDP Wrapper",
+            @"C:\ProgramData",
+            @"C:\ProgramData\ReaItekHD\taskhost.exe",
+            @"C:\ProgramData\ReaItekHD\taskhostw.exe",
+            @"C:\ProgramData\RealtekHD\taskhost.exe",
+            @"C:\ProgramData\ReaItekHD\taskhostw.exe",
+            @"C:\ProgramData\Windows Tasks Service\winserv.exe",
+            @"C:\ProgramData\WindowsTask\AMD.exe",
+            @"C:\ProgramData\WindowsTask\AppModule.exe",
+            @"C:\ProgramData\WindowsTask\audiodg.exe",
+            @"C:\ProgramData\WindowsTask\MicrosoftHost.exe",
+            @"C:\Windows\System32",
+            @"C:\Windows\SysWOW64\unsecapp.exe"
+        };
+
+        public List<string> WD_exclusion_processes = new List<string>()
+        {
+            @"C:\ProgramData\RDPWinst.exe",
+            @"C:\ProgramData\ReaItekHD\taskhost.exe",
+            @"C:\ProgramData\ReaItekHD\taskhostw.exe",
+            @"C:\ProgramData\RealtekHD\taskhost.exe",
+            @"C:\ProgramData\ReaItekHD\taskhostw.exe",
+            @"C:\ProgramData\Windows Tasks Service\winserv.exe",
+            @"C:\ProgramData\WindowsTask\AMD.exe",
+            @"C:\ProgramData\WindowsTask\AppModule.exe",
+            @"C:\ProgramData\WindowsTask\audiodg.exe",
+            @"C:\ProgramData\WindowsTask\MicrosoftHost.exe",
+            @"C:\Windows\SysWOW64\unsecapp.exe"
         };
 
         List<string> suspiciousFiles_path = new List<string>();
@@ -139,7 +189,19 @@ namespace MinerSearch
 
         public List<string> malware_files = new List<string>()
         {
-            @"C:\ProgramData\Microsoft\win.exe"
+            @"C:\ProgramData\Microsoft\win.exe",
+            @"C:\Program Files\Google\Chrome\updater.exe",
+            @"C:\ProgramData\RDPWinst.exe",
+            @"C:\ProgramData\ReaItekHD\taskhost.exe",
+            @"C:\ProgramData\ReaItekHD\taskhostw.exe",
+            @"C:\ProgramData\RealtekHD\taskhost.exe",
+            @"C:\ProgramData\ReaItekHD\taskhostw.exe",
+            @"C:\ProgramData\Windows Tasks Service\winserv.exe",
+            @"C:\ProgramData\WindowsTask\AMD.exe",
+            @"C:\ProgramData\WindowsTask\AppModule.exe",
+            @"C:\ProgramData\WindowsTask\audiodg.exe",
+            @"C:\ProgramData\WindowsTask\MicrosoftHost.exe",
+            @"C:\Windows\SysWOW64\unsecapp.exe"
         };
 
         private readonly long[] constantFileSize = new long[]
@@ -163,9 +225,9 @@ namespace MinerSearch
         };
 
         public List<int> malware_pids = new List<int>();
-        public List<string> malware_dirs = new List<string>();
+        public List<string> founded_suspiciousLockedPaths = new List<string>();
+        public List<string> founded_malwarePaths = new List<string>();
         public bool CleanupHosts = false;
-        public int suspiciousObj_count = 0;
         public bool RatProcessExists = false;
         public string WindowsVersion = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion").GetValue("ProductName").ToString();
 
@@ -443,9 +505,14 @@ namespace MinerSearch
         public void StaticScan()
         {
 
-            Logger.WriteLog("Scanning directories...", Logger.head);
+            SuspiciousLockedPaths.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToLower(), "autologger"));
+            SuspiciousLockedPaths.Add(Path.Combine(GetDownloadsPath(), "autologger"));
+            SuspiciousLockedPaths.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToLower(), "av_block_remover"));
+            SuspiciousLockedPaths.Add(Path.Combine(GetDownloadsPath(), "av_block_remover"));
 
-            ScanDirectories(SuspiciousLockedPaths);
+            Logger.WriteLog("Scanning directories...", Logger.head);
+            ScanDirectories(SuspiciousLockedPaths, founded_suspiciousLockedPaths);
+            ScanDirectories(malware_paths, founded_malwarePaths);
 
             foreach (string file in Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "*.exe", SearchOption.AllDirectories))
             {
@@ -455,8 +522,6 @@ namespace MinerSearch
             string baseDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Microsoft");
             FindMalwareFiles(baseDirectory);
 
-
-
             foreach (string path in suspiciousFiles_path)
             {
                 Logger.WriteLog($"\t[!] Suspicious file {path}", Logger.warn);
@@ -464,19 +529,30 @@ namespace MinerSearch
 
             Logger.WriteLog("Scanning registry...", Logger.head);
             ScanRegistry();
-            Logger.WriteLog("Scanning hosts file...", Logger.head);
-            ScanHosts();
-            Logger.WriteLog($"Scanning Tasks...", Logger.head);
-            try
+
+            int BootMode = WinApi.GetSystemMetrics(WinApi.SM_CLEANBOOT);
+
+            switch (BootMode)
             {
-                ScanTaskScheduler();
+                case 0:
+                    Logger.WriteLog("Scanning firewall...", Logger.head);
+                    ScanFirewall();
+                    Logger.WriteLog($"Scanning Tasks...", Logger.head);
+                    ScanTaskScheduler();
+                    break;
+                case 1:
+                    Logger.WriteLog("\t[#] Safe boot: no scan tasks and firewall rules", ConsoleColor.Blue);
+                    break;
+                case 2:
+                    Logger.WriteLog("Scanning firewall...", Logger.head);
+                    ScanFirewall();
+                    Logger.WriteLog("\t[#] Safe boot networking: no scan tasks", ConsoleColor.Blue);
+                    break;
+                default:
+                    break;
             }
-            catch (Exception ex)
-            {
-                Logger.WriteLog($"Scan Task error: {ex.Message}", Logger.error);
-            }
-            suspiciousObj_count += malware_dirs.Count + suspiciousFiles_path.Count;
         }
+
         public void Clean()
         {
 
@@ -488,7 +564,6 @@ namespace MinerSearch
 
                 foreach (var id in malware_pids)
                 {
-
                     try
                     {
                         Process p = Process.GetProcessById(id);
@@ -522,7 +597,6 @@ namespace MinerSearch
             if (suspiciousFiles_path.Count > 0)
             {
                 Logger.WriteLog("Removing malicious files...", Logger.head);
-
                 foreach (string path in suspiciousFiles_path)
                 {
                     if (File.Exists(path))
@@ -581,18 +655,17 @@ namespace MinerSearch
 #if DEBUG
                             Logger.WriteLog($"\t[x] cannot delete file {path} | {ex.Message} \n{ex.StackTrace}", Logger.error);
 #else
-                                Logger.WriteLog($"\t[x] cannot delete file {path} | {ex.Message}", Logger.error);
+                            Logger.WriteLog($"\t[x] cannot delete file {path} | {ex.Message}", Logger.error);
 #endif
                         }
                     }
                 }
             }
 
-            if (malware_dirs.Count != 0)
+            if (founded_malwarePaths.Count > 0)
             {
-                Logger.WriteLog("Removing malicious dirs...", Logger.head);
 
-                foreach (string str in malware_dirs)
+                foreach (string str in founded_malwarePaths)
                 {
 
                     UnlockDirectory(str);
@@ -617,20 +690,106 @@ namespace MinerSearch
                 }
             }
 
-
+            if (founded_suspiciousLockedPaths.Count > 0)
+            {
+                foreach (string str in founded_suspiciousLockedPaths)
+                {
+                    UnlockDirectory(str);
+                }
+                Logger.WriteLog("Removing empty folders...", Logger.head);
+                DeleteEmptyFolders(founded_suspiciousLockedPaths);
+            }
+            Logger.WriteLog("Scanning hosts file...", Logger.head);
+            CleanHosts();
         }
 
-        void ScanDirectories(List<string> constDirsArray)
+
+        void DeleteEmptyFolders(List<string> inputList)
         {
-            SuspiciousLockedPaths.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToLower(), "autologger"));
-            SuspiciousLockedPaths.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToLower(), "av_block_remover"));
+            foreach (string folder in inputList)
+            {
+                if (IsDirectoryEmpty(folder))
+                {
+                    try
+                    {
+                        Directory.Delete(folder, recursive: true);
+                        Logger.WriteLog($"[.] Removed empty folder: {folder}", ConsoleColor.White);
+                    }
+                    catch (Exception ex)
+                    {
+
+#if DEBUG
+                        Logger.WriteLog($"\t[x] Failed to delete folder \"{folder}\" | {ex.Message} \n{ex.StackTrace}", Logger.error);
+#else
+                        Logger.WriteLog($"\t[x] Failed to delete folder \"{folder}\" | {ex.Message}", Logger.error);
+#endif
+                    }
+
+                }
+            }
+        }
+
+        static bool IsDirectoryEmpty(string path)
+        {
+            string[] files = Directory.GetFiles(path);
+            string[] subdirectories = Directory.GetDirectories(path);
+
+            if (files.Length > 0 || subdirectories.Length > 0)
+                return false;
+
+            foreach (string subdirectory in subdirectories)
+            {
+                if (!IsDirectoryEmpty(subdirectory))
+                    return false;
+            }
+
+            return true;
+        }
+
+        void ScanDirectories(List<string> constDirsArray, List<string> newList)
+        {
             foreach (string dir in constDirsArray)
             {
                 if (Directory.Exists(dir))
                 {
-                    Logger.WriteLog($"\t[!!] Directory: \"{dir}\"", Logger.cautionLow);
-                    malware_dirs.Add(dir);
+                    newList.Add(dir);
                 }
+            }
+        }
+
+        void ScanFirewall()
+        {
+            try
+            {
+                Type typeFWPolicy2 = Type.GetTypeFromProgID("HNetCfg.FwPolicy2");
+                dynamic fwPolicy2 = Activator.CreateInstance(typeFWPolicy2);
+
+                INetFwRules rules = fwPolicy2.Rules;
+
+                foreach (string programPath in malware_files)
+                {
+                    foreach (INetFwRule rule in rules)
+                    {
+                        if (rule.ApplicationName != null)
+                        {
+                            if (rule.ApplicationName.ToLower() == programPath.ToLower())
+                            {
+                                Logger.WriteLog($"[.] Name: {rule.Name}", ConsoleColor.White);
+                                Logger.WriteLog($"\t[!] Path: {rule.ApplicationName}", Logger.warn);
+
+                                rules.Remove(rule.Name);
+                                Logger.WriteLog($"\t[+] Rule {rule.Name} has been removed", Logger.success);
+                                Logger.WriteLog($"------------------------------", ConsoleColor.White);
+                            }
+                        }
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при получении списка правил: {ex.Message}");
             }
         }
 
@@ -659,8 +818,7 @@ namespace MinerSearch
             {
             }
         }
-
-        void ScanHosts()
+        void CleanHosts()
         {
 
             RegistryKey hostsDir = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters");
@@ -699,7 +857,6 @@ namespace MinerSearch
                     switch (answer)
                     {
                         case "y":
-                            suspiciousObj_count++;
                             CleanupHosts = true;
                             if (File.Exists(Path.Combine(hostsPath, "hosts.infected")))
                             {
@@ -741,7 +898,6 @@ namespace MinerSearch
         void ScanRegistry()
         {
 
-
             #region DisallowRun
             RegistryKey DisallowRunKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", true);
             if (DisallowRunKey != null)
@@ -749,7 +905,6 @@ namespace MinerSearch
                 if (DisallowRunKey.GetValueNames().Contains("DisallowRun"))
                 {
                     Logger.WriteLog("\t[!] Suspicious registry key: DisallowRun - restricts the launch of the specified applications", Logger.warn);
-                    suspiciousObj_count++;
                     DisallowRunKey.DeleteValue("DisallowRun");
                     if (!DisallowRunKey.GetValueNames().Contains("DisallowRun"))
                     {
@@ -769,7 +924,6 @@ namespace MinerSearch
             }
             #endregion
 
-
             #region Appinit_dlls
             RegistryKey appinit_key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows", true);
             if (appinit_key != null)
@@ -787,13 +941,11 @@ namespace MinerSearch
                             {
                                 Logger.WriteLog("\t[+] The value was created and set to 1", Logger.success);
                             }
-                            suspiciousObj_count += 2;
                         }
                         else if (appinit_key.GetValue("RequireSignedAppInit_DLLs").ToString() == "0")
                         {
                             Logger.WriteLog("\t[!] AppInit_DLLs is not empty", Logger.warn);
                             Logger.WriteLog("\t[!!!] RequireSignedAppInit_DLLs key set is 0", Logger.caution);
-                            suspiciousObj_count += 2;
                             appinit_key.SetValue("RequireSignedAppInit_DLLs", 1, RegistryValueKind.DWord);
                             if (appinit_key.GetValue("RequireSignedAppInit_DLLs").ToString() == "1")
                             {
@@ -840,7 +992,64 @@ namespace MinerSearch
                 Logger.WriteLog($"\t[!] Cannot open HKLM\\...\\run: {ex.Message}", Logger.error);
             }
 
+            #region WindowsDefender
 
+            Logger.WriteLog(@"HKLM\Software\Policies\Microsoft\Windows Defender\Exclusions", ConsoleColor.DarkCyan);
+            try
+            {
+                RegistryKey WindowsDefender = Registry.LocalMachine.OpenSubKey(@"Software\Policies\Microsoft\Windows Defender\Exclusions", true);
+                if (WindowsDefender != null)
+                {
+
+                    foreach (string path in WD_exclusion_paths)
+                    {
+                        RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Policies\Microsoft\Windows Defender\Exclusions\Paths", true);
+
+                        if (key != null)
+                        {
+                            string[] valueNames = key.GetValueNames();
+
+                            foreach (string valueName in valueNames)
+                            {
+                                if (valueName.ToString().Equals(path, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    key.DeleteValue(valueName);
+                                    Logger.WriteLog($"[+] Removed {valueName} exclusion", Logger.success);
+                                }
+                            }
+
+                            key.Close();
+                        }
+                    }
+
+                    foreach (string process in WD_exclusion_processes)
+                    {
+                        RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Policies\Microsoft\Windows Defender\Exclusions\Processes", true);
+
+                        if (key != null)
+                        {
+                            string[] valueNames = key.GetValueNames();
+
+                            foreach (string valueName in valueNames)
+                            {
+                                if (valueName.ToString().Equals(process, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    key.DeleteValue(valueName);
+                                    Logger.WriteLog($"[+] Removed {valueName} exclusion", Logger.success);
+                                }
+                            }
+
+                            key.Close();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"\t[!] Cannot open HKLM\\...\\run: {ex.Message}", Logger.error);
+            }
+
+            #endregion
             #endregion
 
             #region HKCU
@@ -886,7 +1095,6 @@ namespace MinerSearch
                     if (tektonit.GetSubKeyNames().Contains("tektonit"))
                     {
                         Logger.WriteLog("\t[!] Suspicious registry key: tektonit", Logger.warn);
-                        suspiciousObj_count++;
                         tektonit.DeleteSubKeyTree("tektonit");
                         if (!tektonit.GetSubKeyNames().Contains("tektonit"))
                         {
@@ -935,12 +1143,11 @@ namespace MinerSearch
             }
             #endregion
         }
-
         void ScanTaskScheduler()
         {
+
             TaskService taskService = new TaskService();
             IEnumerable<Task> Tasks = taskService.AllTasks;
-            HashSet<string> scannedFilePaths = new HashSet<string>();
             foreach (Task task in Tasks.OrderBy(t => t.Name).ToList())
             {
                 if (task != null)
@@ -948,17 +1155,8 @@ namespace MinerSearch
                     foreach (ExecAction action in task.Definition.Actions.OfType<ExecAction>())
                     {
                         string filePath = ResolveEnvironmentVariables(action.Path.Replace("\"", ""));
-                        if (scannedFilePaths.Contains(filePath))
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            scannedFilePaths.Add(filePath);
-                        }
 
-                        Logger.WriteLog($"Scan: {task.Name}", ConsoleColor.White);
-                        Logger.WriteLog($"Location: {task.Folder}", ConsoleColor.White);
+                        Logger.WriteLog($"[#] Scan: {task.Name} | {task.Folder}", ConsoleColor.White);
 
                         if (filePath.Contains(":\\"))
                         {
@@ -980,8 +1178,13 @@ namespace MinerSearch
 
                             }
                             else
-                                Logger.WriteLog($"\t[#] File path: {filePath}", ConsoleColor.Blue);
-
+                            {
+                                Logger.WriteLog($"\t[.] File: {filePath}", ConsoleColor.Gray);
+                                if (WinTrust.VerifyEmbeddedSignature(filePath) == WinVerifyTrustResult.FileNotSigned)
+                                {
+                                    Logger.WriteLog($"\t[!!] File is not signed: {filePath}", Logger.cautionLow);
+                                }
+                            }
                         }
                         else
                         {
@@ -1004,7 +1207,13 @@ namespace MinerSearch
                                 }
                             }
                             else
-                                Logger.WriteLog($"\t[#] File path: {system32Path}", ConsoleColor.Blue);
+                            {
+                                Logger.WriteLog($"\t[.] File: {filePath}", ConsoleColor.Gray);
+                                if (WinTrust.VerifyEmbeddedSignature(filePath) == WinVerifyTrustResult.FileNotSigned)
+                                {
+                                    Logger.WriteLog($"\t[!!] File is not signed: {filePath}", Logger.cautionLow);
+                                }
+                            }
                         }
                     }
                 }
@@ -1020,23 +1229,30 @@ namespace MinerSearch
                 directoryInfo.SetAccessControl(directorySecurity);
                 directorySecurity = directoryInfo.GetAccessControl();
                 AuthorizationRuleCollection acl = directorySecurity.GetAccessRules(true, true, typeof(SecurityIdentifier));
+                bool hasDenyAttribute = false;
+
                 foreach (FileSystemAccessRule ace in acl)
                 {
                     if (ace.AccessControlType == AccessControlType.Deny || (ace.FileSystemRights != FileSystemRights.FullControl && !ace.IsInherited))
                     {
                         directorySecurity.RemoveAccessRule(ace);
+                        hasDenyAttribute = true;
                     }
-
                 }
-                FileSystemAccessRule userRights = new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), FileSystemRights.ReadAndExecute, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit | InheritanceFlags.None, PropagationFlags.None, AccessControlType.Allow);
-                FileSystemAccessRule adminRights = new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null), FileSystemRights.FullControl, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit | InheritanceFlags.None, PropagationFlags.None, AccessControlType.Allow);
-                FileSystemAccessRule systemRights = new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.LocalSystemSid, null), FileSystemRights.FullControl, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit | InheritanceFlags.None, PropagationFlags.None, AccessControlType.Allow);
-                FileSystemAccessRule authRight = new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.AuthenticatedUserSid, null), FileSystemRights.FullControl, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit | InheritanceFlags.None, PropagationFlags.None, AccessControlType.Allow);
-                directorySecurity.AddAccessRule(userRights);
-                directorySecurity.AddAccessRule(adminRights);
-                directorySecurity.AddAccessRule(systemRights);
-                directorySecurity.AddAccessRule(authRight);
-                directoryInfo.SetAccessControl(directorySecurity);
+
+                if (hasDenyAttribute)
+                {
+                    FileSystemAccessRule userRights = new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), FileSystemRights.FullControl, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit | InheritanceFlags.None, PropagationFlags.None, AccessControlType.Allow);
+                    FileSystemAccessRule adminRights = new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null), FileSystemRights.FullControl, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit | InheritanceFlags.None, PropagationFlags.None, AccessControlType.Allow);
+                    FileSystemAccessRule systemRights = new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.LocalSystemSid, null), FileSystemRights.FullControl, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit | InheritanceFlags.None, PropagationFlags.None, AccessControlType.Allow);
+                    FileSystemAccessRule authRight = new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.AuthenticatedUserSid, null), FileSystemRights.FullControl, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit | InheritanceFlags.None, PropagationFlags.None, AccessControlType.Allow);
+                    directorySecurity.AddAccessRule(userRights);
+                    directorySecurity.AddAccessRule(adminRights);
+                    directorySecurity.AddAccessRule(systemRights);
+                    directorySecurity.AddAccessRule(authRight);
+                    directoryInfo.SetAccessControl(directorySecurity);
+                    File.SetAttributes(dir, FileAttributes.Normal);
+                }
             }
             catch (Exception ex)
             {
@@ -1078,13 +1294,32 @@ namespace MinerSearch
                 Logger.WriteLog($"\t[x] Error to unlock file: {ex.Message}", Logger.error);
 #endif
             }
-        }
 
-        string GetHash()
+            try //DisableInheritance
+            {
+                FileInfo fileInfo = new FileInfo(filePath);
+                FileSecurity fileSecurity = fileInfo.GetAccessControl();
+
+                fileSecurity.SetAccessRuleProtection(true, true);
+
+                AuthorizationRuleCollection inheritedRules = fileSecurity.GetAccessRules(true, true, typeof(SecurityIdentifier));
+                foreach (FileSystemAccessRule inheritedRule in inheritedRules)
+                {
+                    fileSecurity.RemoveAccessRule(inheritedRule);
+                }
+
+                fileInfo.SetAccessControl(fileSecurity);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"\t[x] Error disabling inheritance and removing inherited permissions for file: {ex.Message}", Logger.error);
+            }
+
+        }
+        public string GetHash()
         {
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.NewGuid().ToString())).Remove(8);
         }
-
         string GetFilePathFromRegistry(RegistryKey key, string keyName)
         {
             try
@@ -1169,7 +1404,27 @@ namespace MinerSearch
             return string.Join(separator.ToString(), parts);
         }
 
-        private static void SuspendProcess(int pid)
+        static string GetDownloadsPath()
+        {
+            IntPtr pathPtr = IntPtr.Zero;
+
+            try
+            {
+                WinApi.SHGetKnownFolderPath(ref WinApi.FolderDownloads, 0, IntPtr.Zero, out pathPtr);
+                return Marshal.PtrToStringUni(pathPtr);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"Error GetDownloadsPath: {ex.Message}", Logger.error);
+                return "";
+            }
+            finally
+            {
+                Marshal.FreeCoTaskMem(pathPtr);
+            }
+        }
+
+        static void SuspendProcess(int pid)
         {
             try
             {
@@ -1193,7 +1448,7 @@ namespace MinerSearch
 
                 foreach (ProcessThread pT in Threads)
                 {
-                    if (pT.ThreadState == ThreadState.Wait)
+                    if (pT.ThreadState == System.Diagnostics.ThreadState.Wait)
                     {
                         if (pT.WaitReason != ThreadWaitReason.Executive)
                             totalThreads -= 1;
@@ -1223,7 +1478,7 @@ namespace MinerSearch
 
         }
 
-        private static void UnProtect(int[] pids)
+        static void UnProtect(int[] pids)
         {
             try
             {
@@ -1269,7 +1524,7 @@ namespace MinerSearch
             return parentProcessId;
         }
 
-        private List<Process> GetProcesses()
+        List<Process> GetProcesses()
         {
             List<Process> procs = new List<Process>();
             foreach (Process p in Process.GetProcesses())
@@ -1301,7 +1556,7 @@ namespace MinerSearch
 
         #region " TCP Connections "
 
-        private List<Connection> GetConnections()
+        List<Connection> GetConnections()
         {
             List<Connection> Connections = new List<Connection>();
 
@@ -1383,7 +1638,7 @@ namespace MinerSearch
 
         #region " Commandline Args "
 
-        private string GetCommandLine(Process process)
+        string GetCommandLine(Process process)
         {
             string cmdLine = null;
             using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id))
