@@ -8,6 +8,15 @@ Based on Miner Killer.
 
 NET Framework 4.7.2 is required to run.
 
+Version v1.4.2
+
+- Added OS boot definition
+- Added removal of malicious paths from Windows Defender exclusions
+- Added removal of malicious rules from Windows Firewall
+- Deleting directories and restoring rights to them is performed separately
+- The hosts file is now scanned at the end
+- Fixed a bug with missing duplicate tasks in the task scheduler
+
 Version v1.4
 
 - Redesigned algorithm for checking and removing malicious directories/files
