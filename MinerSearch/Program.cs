@@ -23,11 +23,6 @@ namespace MinerSearch
             Console.Title = GetRandomTitle("miner search");
             WaterMark();
 
-            if (!File.Exists("Microsoft.Win32.TaskScheduler.dll"))
-            {
-                File.WriteAllBytes("Microsoft.Win32.TaskScheduler.dll", Resources.TaskScheduler);
-            }
-
             if (args.Length > 0)
             {
                 foreach (var arg in args)
@@ -82,6 +77,19 @@ namespace MinerSearch
 
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
             MinerSearch mk = new MinerSearch();
+
+            if (!File.Exists("Microsoft.Win32.TaskScheduler.dll"))
+            {
+                try
+                {
+                    File.WriteAllBytes("Microsoft.Win32.TaskScheduler.dll", Resources.TaskScheduler);
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLog($"Scan Task error: {ex.Message}", Logger.error);
+                }
+            }
+
             if (!no_runtime)
             {
                 Logger.WriteLog("Preparing to scan processes, please wait...", Logger.head);
@@ -94,7 +102,8 @@ namespace MinerSearch
                 mk.StaticScan();
             }
 
-            if (mk.malware_pids.Count == 0 && mk.suspiciousObj_count == 0 && !mk.CleanupHosts)
+            int warningsCount = mk.malware_pids.Count + mk.founded_malwarePaths.Count + mk.founded_suspiciousLockedPaths.Count;
+            if (warningsCount == 0 && !mk.CleanupHosts)
             {
                 Logger.WriteLog("[+] The system is clean. No malicious files or processes have been detected!", Logger.success);
             }
@@ -103,10 +112,6 @@ namespace MinerSearch
                 if (mk.malware_pids.Count > 0)
                 {
                     Logger.WriteLog($"\t[!!!] Malicious processes: {mk.malware_pids.Count}", Logger.caution);
-                }
-                if (mk.suspiciousObj_count > 0)
-                {
-                    Logger.WriteLog($"\t[!] Suspicious objects: {mk.suspiciousObj_count}", Logger.warn);
                 }
                 if (pause)
                 {
@@ -124,6 +129,7 @@ namespace MinerSearch
             Console.Read();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "SCS0005:Weak random number generator.")]
         static string GetRandomTitle(string inputString)
         {
             Random random = new Random();
@@ -133,7 +139,8 @@ namespace MinerSearch
                 int caseNumber = random.Next(2);
                 if (caseNumber == 0)
                     result += Char.ToLower(chr);
-                else result += Char.ToUpper(chr);
+                else
+                    result += Char.ToUpper(chr);
             }
             return result;
         }
@@ -152,8 +159,8 @@ namespace MinerSearch
             Console.ForegroundColor = ConsoleColor.White;
 
             Console.WriteLine("\t\tby: BlendLog, Spectrum735");
-            Console.WriteLine("\t\tbased on: MinerKiller");
             Console.WriteLine($"\t\tVersion: {new Version(System.Windows.Forms.Application.ProductVersion)}\n");
+            Console.WriteLine($"\t\tRelevant versions on https://github.com/BlendLog/MinerSearch \n");
         }
 
         static void InitPrivileges()
