@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace MinerSearch
 {
@@ -22,6 +23,19 @@ namespace MinerSearch
 
             Console.Title = GetRandomTitle("miner search");
             WaterMark();
+
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+            if (!File.Exists("Microsoft.Win32.TaskScheduler.dll"))
+            {
+                try
+                {
+                    File.WriteAllBytes("Microsoft.Win32.TaskScheduler.dll", Resources.TaskScheduler);
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLog($"Scan Task error: {ex.Message}", Logger.error);
+                }
+            }
 
             if (args.Length > 0)
             {
@@ -77,18 +91,6 @@ namespace MinerSearch
 
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
             MinerSearch mk = new MinerSearch();
-
-            if (!File.Exists("Microsoft.Win32.TaskScheduler.dll"))
-            {
-                try
-                {
-                    File.WriteAllBytes("Microsoft.Win32.TaskScheduler.dll", Resources.TaskScheduler);
-                }
-                catch (Exception ex)
-                {
-                    Logger.WriteLog($"Scan Task error: {ex.Message}", Logger.error);
-                }
-            }
 
             if (!no_runtime)
             {

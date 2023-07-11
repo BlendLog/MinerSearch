@@ -157,7 +157,7 @@ namespace MinerSearch
             @"C:\ProgramData\ReaItekHD\taskhost.exe",
             @"C:\ProgramData\ReaItekHD\taskhostw.exe",
             @"C:\ProgramData\RealtekHD\taskhost.exe",
-            @"C:\ProgramData\ReaItekHD\taskhostw.exe",
+            @"C:\ProgramData\RealtekHD\taskhostw.exe",
             @"C:\ProgramData\Windows Tasks Service\winserv.exe",
             @"C:\ProgramData\WindowsTask\AMD.exe",
             @"C:\ProgramData\WindowsTask\AppModule.exe",
@@ -197,7 +197,7 @@ namespace MinerSearch
             @"C:\ProgramData\ReaItekHD\taskhost.exe",
             @"C:\ProgramData\ReaItekHD\taskhostw.exe",
             @"C:\ProgramData\RealtekHD\taskhost.exe",
-            @"C:\ProgramData\ReaItekHD\taskhostw.exe",
+            @"C:\ProgramData\RealtekHD\taskhostw.exe",
             @"C:\ProgramData\Windows Tasks Service\winserv.exe",
             @"C:\ProgramData\WindowsTask\AMD.exe",
             @"C:\ProgramData\WindowsTask\AppModule.exe",
@@ -615,11 +615,23 @@ namespace MinerSearch
                         {
                             Logger.WriteLog($"\t[!!] Cannot delete file {path}", Logger.cautionLow);
                             Logger.WriteLog($"\t[.] Trying to unlock directory...", ConsoleColor.White);
-                            UnlockDirectory(new FileInfo(path).DirectoryName);
                             try
                             {
+                                UnlockDirectory(new FileInfo(path).DirectoryName);
+                                try
+                                {
+                                    uint processId = GetProcessIdByFilePath(path);
 
-                                UnlockFile(path);
+                                    if (processId != 0)
+                                    {
+                                        Process process = Process.GetProcessById((int)processId);
+                                        if (!process.HasExited)
+                                        {
+                                            process.Kill();
+                                        }
+                                    }
+                                }
+                                catch (Exception) { }
                                 File.Delete(path);
                                 if (!File.Exists(path))
                                 {
@@ -658,11 +670,24 @@ namespace MinerSearch
                         {
                             Logger.WriteLog($"\t[!!] Cannot delete file {path}", Logger.cautionLow);
                             Logger.WriteLog($"\t[.] Trying to unlock directory...", ConsoleColor.White);
-                            UnlockDirectory(new FileInfo(path).DirectoryName);
                             try
                             {
+                                UnlockDirectory(new FileInfo(path).DirectoryName);
 
-                                UnlockFile(path);
+                                try
+                                {
+                                    uint processId = GetProcessIdByFilePath(path);
+
+                                    if (processId != 0)
+                                    {
+                                        Process process = Process.GetProcessById((int)processId);
+                                        if (!process.HasExited)
+                                        {
+                                            process.Kill();
+                                        }
+                                    }
+                                }
+                                catch (Exception) { }
                                 File.Delete(path);
                                 if (!File.Exists(path))
                                 {
@@ -1201,12 +1226,19 @@ namespace MinerSearch
                                 {
                                     string taskName = task.Name;
                                     string taskFolder = task.Folder.ToString();
-
-                                    taskService.GetFolder(task.Folder.ToString()).DeleteTask(task.Name);
-                                    if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                                    try
                                     {
-                                        Logger.WriteLog($"\t[+] Empty Task {taskName} was deleted", Logger.success);
+                                        taskService.GetFolder(task.Folder.ToString()).DeleteTask(task.Name);
+                                        if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                                        {
+                                            Logger.WriteLog($"\t[+] Empty Task {taskName} was deleted", Logger.success);
+                                        }
                                     }
+                                    catch (Exception ex)
+                                    {
+                                        Logger.WriteLog($"\t[+] Cannot delete task {taskFolder}\\{taskName} | {ex.Message}", Logger.error);
+                                    }
+
                                 }
 
                             }
@@ -1232,10 +1264,17 @@ namespace MinerSearch
                                     string taskName = task.Name;
                                     string taskFolder = task.Folder.ToString();
 
-                                    taskService.GetFolder(task.Folder.ToString()).DeleteTask(task.Name);
-                                    if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                                    try
                                     {
-                                        Logger.WriteLog($"\t[+] Empty Task {taskName} was deleted", Logger.success);
+                                        taskService.GetFolder(task.Folder.ToString()).DeleteTask(task.Name);
+                                        if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                                        {
+                                            Logger.WriteLog($"\t[+] Empty Task {taskName} was deleted", Logger.success);
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Logger.WriteLog($"\t[+] Cannot delete task {taskFolder}\\{taskName} | {ex.Message}", Logger.error);
                                     }
                                 }
                             }
@@ -1286,6 +1325,7 @@ namespace MinerSearch
                     directoryInfo.SetAccessControl(directorySecurity);
                     File.SetAttributes(dir, FileAttributes.Normal);
                 }
+
             }
             catch (Exception ex)
             {
@@ -1296,7 +1336,7 @@ namespace MinerSearch
         {
             try
             {
-                FileInfo directoryInfo = new FileInfo(filePath);
+                FileInfo fileInfo = new FileInfo(filePath);
                 FileSecurity fileSecurity = new FileSecurity();
                 fileSecurity.SetOwner(WindowsIdentity.GetCurrent().User);
                 File.SetAccessControl(filePath, fileSecurity);
@@ -1318,6 +1358,7 @@ namespace MinerSearch
                 fileSecurity.AddAccessRule(systemRights);
                 fileSecurity.AddAccessRule(authRight);
                 File.SetAccessControl(filePath, fileSecurity);
+
             }
             catch (Exception ex)
             {
@@ -1328,21 +1369,6 @@ namespace MinerSearch
 #endif
             }
 
-            try
-            {
-                uint processId = GetProcessIdByFilePath(filePath);
-
-                if (processId != 0)
-                {
-                    Process process = Process.GetProcessById((int)processId);
-                    if (!process.HasExited)
-                    {
-                        process.Kill();
-                    }
-                }
-            }
-            catch (Exception) { }
-          
         }
         public string GetHash()
         {
