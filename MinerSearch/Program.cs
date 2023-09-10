@@ -15,14 +15,11 @@ namespace MinerSearch
         public static bool pause = false;
         public static bool help = false;
         public static bool RemoveEmptyTasks = false;
+        public static bool nosignaturescan = false;
 
         static void Main(string[] args)
         {
-
             InitPrivileges();
-
-            Console.Title = GetRandomTitle("miner search");
-            WaterMark();
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
             if (!File.Exists("Microsoft.Win32.TaskScheduler.dll"))
@@ -50,8 +47,10 @@ namespace MinerSearch
                             Console.WriteLine("--no-logs                     Don't write logs in text file");
                             Console.WriteLine("--no-scantime                 Scan processes only");
                             Console.WriteLine("--no-runtime                  Static scan only (Malware dirs, files, registry keys, etc)");
+                            Console.WriteLine("--no-signature-scan           Skip scanning files by signatures");
                             Console.WriteLine("--pause                       Pause before cleanup");
                             Console.WriteLine("--remove-empty-tasks          Delete a task from the Task Scheduler if the application file does not exist in it");
+                            Console.ReadKey();
                             return;
                         case "--no-logs":
                             no_logs = true;
@@ -67,6 +66,9 @@ namespace MinerSearch
                             break;
                         case "--remove-empty-tasks":
                             RemoveEmptyTasks = true;
+                            break;
+                        case "--no-signature-scan":
+                            nosignaturescan = true;
                             break;
                         default:
                             Console.WriteLine("\nUnknown command");
@@ -86,28 +88,33 @@ namespace MinerSearch
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("\nError: you cannot disable both types of scanning");
                 Console.ForegroundColor = ConsoleColor.White;
+                Console.ReadKey();
                 return;
             }
+
+            Console.Title = utils.GetHash();
+            WaterMark();
+
+            utils.CheckWMI();
 
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
             MinerSearch mk = new MinerSearch();
 
             if (!no_runtime)
             {
-                Logger.WriteLog("Preparing to scan processes, please wait...", Logger.head);
+                Logger.WriteLog("\t\tPreparing to scan processes, please wait...", Logger.head, false);
                 mk.Scan();
             }
-            Console.WriteLine("\n");
             if (!no_scantime)
             {
-                Logger.WriteLog("Starting static scan...", Logger.head);
+                Logger.WriteLog("\t\tStarting static scan...", Logger.head, false);
                 mk.StaticScan();
             }
 
             int warningsCount = mk.malware_pids.Count + mk.founded_malwarePaths.Count + mk.founded_suspiciousLockedPaths.Count;
             if (warningsCount == 0 && !mk.CleanupHosts)
             {
-                Logger.WriteLog("[+] The system is clean. No malicious files or processes have been detected!", Logger.success);
+                Logger.WriteLog("\t[+] The system is clean. No malicious files or processes have been detected!", Logger.success, false);
             }
             else
             {
@@ -126,25 +133,8 @@ namespace MinerSearch
                 }
                 mk.Clean();
             }
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("All Done. You can close this window");
+            Logger.WriteLog("\tAll Done. You can close this window", ConsoleColor.DarkCyan, false);
             Console.Read();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "SCS0005:Weak random number generator.")]
-        static string GetRandomTitle(string inputString)
-        {
-            Random random = new Random();
-            string result = "";
-            foreach (char chr in inputString)
-            {
-                int caseNumber = random.Next(2);
-                if (caseNumber == 0)
-                    result += Char.ToLower(chr);
-                else
-                    result += Char.ToUpper(chr);
-            }
-            return result;
         }
 
         private static void WaterMark()
@@ -162,7 +152,9 @@ namespace MinerSearch
 
             Console.WriteLine("\t\tby: BlendLog, Spectrum735");
             Console.WriteLine($"\t\tVersion: {new Version(System.Windows.Forms.Application.ProductVersion)}\n");
-            Console.WriteLine($"\t\tRelevant versions on https://github.com/BlendLog/MinerSearch \n");
+            Console.WriteLine($"\t\tRelevant versions on https://github.com/BlendLog/MinerSearch/releases/latest \n");
+
+            Logger.WriteLog($"\t\tWindows version: {utils.GetWindowsVersion()} {utils.getBitVersion()}\n", ConsoleColor.White, false);
         }
 
         static void InitPrivileges()
@@ -189,17 +181,17 @@ namespace MinerSearch
                             };
                             if (!WinApi.AdjustTokenPrivileges(token, false, ref tokenPrivileges, 0, IntPtr.Zero, IntPtr.Zero))
                             {
-                                Console.WriteLine("Failed to enable both SeSecurityPrivilege and SeTakeOwnershipPrivilege with error code: " + Marshal.GetLastWin32Error());
+                                Logger.WriteLog("Failed to enable both SeSecurityPrivilege and SeTakeOwnershipPrivilege with error code: " + Marshal.GetLastWin32Error(), Logger.error, false);
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Failed to lookup SeTakeOwnershipPrivilege with error code: " + Marshal.GetLastWin32Error());
+                            Logger.WriteLog("Failed to lookup SeTakeOwnershipPrivilege with error code: " + Marshal.GetLastWin32Error(), Logger.error, false);
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Failed to lookup SeSecurityPrivilege with error code: " + Marshal.GetLastWin32Error());
+                        Logger.WriteLog("Failed to lookup SeSecurityPrivilege with error code: " + Marshal.GetLastWin32Error(), Logger.error, false);
                     }
                 }
                 finally

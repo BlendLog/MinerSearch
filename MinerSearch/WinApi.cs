@@ -55,6 +55,44 @@ namespace MinerSearch
         [DllImport("kernel32.dll")]
         public static extern bool Process32Next(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool GetExitCodeProcess(IntPtr hProcess, out uint ExitCode);
+
+        [DllImport("Advapi32.dll")]
+        public static extern IntPtr OpenSCManager(string machineName, string databaseName, int dwAccess);
+
+        [DllImport("Advapi32.dll")]
+        public static extern IntPtr OpenService(IntPtr hSCManager, string lpServiceName, int dwDesiredAccess);
+
+        [DllImport("Advapi32.dll")]
+        public static extern bool QueryServiceConfig(IntPtr hService, IntPtr lpServiceConfig, int cbBufSize, out int pcbBytesNeeded);
+
+        [DllImport("Advapi32.dll")]
+        public static extern bool ChangeServiceConfig(IntPtr hService, int nServiceType, int nStartType, int nErrorControl, string lpBinaryPathName, string lpLoadOrderGroup, IntPtr lpdwTagId, string lpDependencies, string lpServiceStartName, string lpPassword, string lpDisplayName);
+
+        [DllImport("Advapi32.dll")]
+        public static extern bool StartService(IntPtr hService, int dwNumServiceArgs, string[] lpServiceArgVectors);
+
+        [DllImport("Advapi32.dll")]
+        public static extern bool CloseServiceHandle(IntPtr hSCObject);
+
+        // Структура для получения информации о службе
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SERVICE_CONFIG
+        {
+            public uint dwServiceType;
+            public uint dwStartType;
+            public uint dwErrorControl;
+            public uint dwCurrentState;
+            public IntPtr lpBinaryPathName;
+            public IntPtr lpLoadOrderGroup;
+            public uint dwTagId;
+            public IntPtr lpDependencies;
+            public IntPtr lpServiceStartName;
+            public IntPtr lpDisplayName;
+        }
+
+
         [StructLayout(LayoutKind.Sequential)]
         public struct PROCESS_BASIC_INFORMATION
         {
@@ -95,7 +133,7 @@ namespace MinerSearch
             DIRECT_IMPERSONATION = (0x0200)
         }
         public static Guid FolderDownloads = new Guid("374DE290-123F-4565-9164-39C4925E467B");
-        
+
         public const int PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
         public const uint TH32CS_SNAPPROCESS = 0x00000002;
         public const int STATUS_SUCCESS = 0;
@@ -107,6 +145,19 @@ namespace MinerSearch
         public const string SE_TAKE_OWNERSHIP_NAME = "SeTakeOwnershipPrivilege";
 
         public const int SM_CLEANBOOT = 67;
+
+        // Константы для управления службами
+        public const int SC_MANAGER_CONNECT = 0x0001;
+        public const int SC_MANAGER_CREATE_SERVICE = 0x0002;
+        public const int SERVICE_QUERY_CONFIG = 0x0001;
+        public const int SERVICE_CHANGE_CONFIG = 0x0002;
+        public const int SERVICE_START = 0x0010;
+        public const int SERVICE_AUTO_START = 0x0002;
+        public const int SERVICE_NO_CHANGE = -1;
+        public const int SERVICE_QUERY_STATUS = 0x0004;
+        public const int SERVICE_STOP = 0x0020;
+        public const int SERVICE_STOPPED = 0x00000001;
+        public const int SERVICE_RUNNING = 0x00000004;
 
         public struct LUID
         {

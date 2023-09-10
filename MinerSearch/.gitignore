@@ -1,0 +1,15 @@
+﻿################################################################################
+# Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
+################################################################################
+
+*.bak
+/bin/Debug/minersearch_quarantine/previousMalwarePaths_M2I3NjJm.txt
+*.txt
+*.log
+/bin/Debug
+/obj
+/bin/Release
+/FileLockInfo.cs
+/obfuscar.xml
+/Obfuscar.Console.exe
+/MinerSearch_string_confuse.crproj

@@ -4,7 +4,6 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Security.Policy;
 using System.Text;
 
 namespace MinerSearch
@@ -237,9 +236,9 @@ namespace MinerSearch
 
         [DllImport("Wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool CryptCATAdminCalcHashFromFileHandle(
-            IntPtr hFile, 
+            IntPtr hFile,
             ref uint hashLength,
-            [MarshalAs(UnmanagedType.LPArray)] byte[] pbHash, 
+            [MarshalAs(UnmanagedType.LPArray)] byte[] pbHash,
             uint dwFlags);
 
         [DllImport("Wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
@@ -263,7 +262,7 @@ namespace MinerSearch
 
         [DllImport("wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool CryptCATAdminAcquireContext2(
-            out IntPtr phCatAdmin, 
+            out IntPtr phCatAdmin,
             [In][MarshalAs(UnmanagedType.LPStruct)] Guid pgActionID,
             [In][MarshalAs(UnmanagedType.LPWStr)] string pwszHashAlgorithm,
             IntPtr pStrongHashPolicy,
@@ -282,6 +281,7 @@ namespace MinerSearch
 
         public static WinVerifyTrustResult VerifyEmbeddedSignature(string filePath)
         {
+
             try
             {
                 WinTrustFileInfo trustFileInfo = new WinTrustFileInfo(filePath);
@@ -289,7 +289,6 @@ namespace MinerSearch
                 Guid guidAction = new Guid(WINTRUST_ACTION_GENERIC_VERIFY_V2);
                 WinVerifyTrustResult result = WinVerifyTrust(INVALID_HANDLE_VALUE, guidAction, wtd);
                 wtd.StateAction = WinTrustDataStateAction.Close;
-                WinVerifyTrust(IntPtr.Zero, guidAction, wtd);
                 wtd.Dispose();
 
                 string fileName = Path.GetFileName(filePath);
@@ -299,7 +298,7 @@ namespace MinerSearch
                         Logger.WriteLog($"\t[!] {fileName}: Trust provider is not recognized on this system", Logger.warn);
                         break;
                     case WinVerifyTrustResult.ActionUnknown:
-                        Logger.WriteLog($"\t[!] {fileName}: Trust provider does not support the specified action", Logger.warn);
+                        Logger.WriteLog($"\n\t[!] {fileName}: Trust provider does not support the specified action", Logger.warn);
                         break;
                     case WinVerifyTrustResult.SubjectFormUnknown:
                         Logger.WriteLog($"\t[!] {fileName}: Trust provider does not support the form specified for the subject", Logger.warn);
@@ -323,7 +322,6 @@ namespace MinerSearch
                         Logger.WriteLog($"\t[!] {fileName}: Root certificate is not trusted", Logger.warn);
                         break;
                     case WinVerifyTrustResult.Success:
-                        //Logger.WriteLog($"\t[+] {fileName}: Success", Logger.success);
                         break;
                     case WinVerifyTrustResult.FileNotSigned:
                         result = VerifyByCatalog(filePath);
@@ -350,7 +348,7 @@ namespace MinerSearch
                 IntPtr hFile = CreateFile(
                     fileName,
                     FILE_READ_ATTRIBUTES | FILE_READ_DATA | STANDARD_RIGHTS_READ,
-                    FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 
+                    FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
                     IntPtr.Zero, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, IntPtr.Zero);
                 if (hFile == IntPtr.Zero)
                 {
@@ -432,15 +430,12 @@ namespace MinerSearch
                 {
                     result = WinVerifyTrust(IntPtr.Zero, guidAction, trustData);
                     trustData.StateAction = WinTrustDataStateAction.Close;
-                    WinVerifyTrust(IntPtr.Zero, guidAction, trustData);
-                    //Logger.WriteLog($"\tWinVerifyTrust: " + result.ToString("X"), Logger.error);
                 }
                 finally
                 {
                     CryptCATAdminReleaseCatalogContext(hCatAdmin, catInfo, 0);
 
                     trustData.StateAction = WinTrustDataStateAction.Close;
-                    WinVerifyTrust(IntPtr.Zero, guidAction, trustData);
 
                     CryptCATAdminReleaseContext(hCatAdmin, 0);
                     CloseHandle(hFile);
@@ -458,7 +453,7 @@ namespace MinerSearch
 
         public static bool IsWindows8OrGreater()
         {
-            return Environment.OSVersion.Version.Major > 6 || 
+            return Environment.OSVersion.Version.Major > 6 ||
                 (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2);
         }
 
