@@ -4,6 +4,7 @@
 
 *.bak
 /bin/Debug/minersearch_quarantine/previousMalwarePaths_M2I3NjJm.txt
+/bin/Confused/Release
 *.txt
 *.log
 /bin/Debug

@@ -291,35 +291,34 @@ namespace MinerSearch
                 wtd.StateAction = WinTrustDataStateAction.Close;
                 wtd.Dispose();
 
-                string fileName = Path.GetFileName(filePath);
                 switch (result)
                 {
                     case WinVerifyTrustResult.ProviderUnknown:
-                        Logger.WriteLog($"\t[!] {fileName}: Trust provider is not recognized on this system", Logger.warn);
+                        Logger.WriteLog($"\t[!] {filePath}: \nTrust provider is not recognized on this system", Logger.warn);
                         break;
                     case WinVerifyTrustResult.ActionUnknown:
-                        Logger.WriteLog($"\n\t[!] {fileName}: Trust provider does not support the specified action", Logger.warn);
+                        Logger.WriteLog($"\n\t[!] {filePath}: \nTrust provider does not support the specified action", Logger.warn);
                         break;
                     case WinVerifyTrustResult.SubjectFormUnknown:
-                        Logger.WriteLog($"\t[!] {fileName}: Trust provider does not support the form specified for the subject", Logger.warn);
+                        Logger.WriteLog($"\t[!] {filePath}: \nTrust provider does not support the form specified for the subject", Logger.warn);
                         break;
                     case WinVerifyTrustResult.SubjectNotTrusted:
-                        Logger.WriteLog($"\t[!] {fileName}: Subject failed the specified verification action", Logger.warn);
+                        Logger.WriteLog($"\t[!] {filePath}: \nSubject failed the specified verification action", Logger.warn);
                         break;
                     case WinVerifyTrustResult.SubjectExplicitlyDistrusted:
-                        Logger.WriteLog($"\t[!] {fileName}: Signer's certificate is in the Untrusted Publishers store", Logger.warn);
+                        Logger.WriteLog($"\t[!] {filePath}: \nSigner's certificate is in the Untrusted Publishers store", Logger.warn);
                         break;
                     case WinVerifyTrustResult.SignatureOrFileCorrupt:
-                        Logger.WriteLog($"\t[!] {fileName}: file was probably corrupt", Logger.warn);
+                        Logger.WriteLog($"\t[!] {filePath}: \nfile was probably corrupt", Logger.warn);
                         break;
                     case WinVerifyTrustResult.SubjectCertExpired:
-                        Logger.WriteLog($"\t[!] {fileName}: Signer's certificate was expired", Logger.warn);
+                        Logger.WriteLog($"\t[!] {filePath}: \nSigner's certificate was expired", Logger.warn);
                         break;
                     case WinVerifyTrustResult.SubjectCertificateRevoked:
-                        Logger.WriteLog($"\t[!] {fileName}: Subject's certificate was revoked", Logger.warn);
+                        Logger.WriteLog($"\t[!] {filePath}: \nSubject's certificate was revoked", Logger.warn);
                         break;
                     case WinVerifyTrustResult.UntrustedRoot:
-                        Logger.WriteLog($"\t[!] {fileName}: Root certificate is not trusted", Logger.warn);
+                        Logger.WriteLog($"\t[!] {filePath}: \nRoot certificate is not trusted", Logger.warn);
                         break;
                     case WinVerifyTrustResult.Success:
                         break;
@@ -362,7 +361,10 @@ namespace MinerSearch
                 if (hCatAdmin == IntPtr.Zero)
                 {
                     if (!CryptCATAdminAcquireContext(out hCatAdmin, driverAction, 0))
+                    {
+                        CloseHandle(hFile);
                         return WinVerifyTrustResult.FileNotSigned;
+                    }
                 }
 
                 byte[] hash = new byte[1];
@@ -385,7 +387,10 @@ namespace MinerSearch
                     {
                         hash = new byte[hashLength];
                         if (!CryptCATAdminCalcHashFromFileHandle(hFile, ref hashLength, hash, 0))
+                        {
+                            CloseHandle(hFile);
                             return WinVerifyTrustResult.FileNotSigned;
+                        }
                     }
                 }
 
@@ -399,6 +404,7 @@ namespace MinerSearch
                 if (catInfo == IntPtr.Zero)
                 {
                     CryptCATAdminReleaseContext(hCatAdmin, 0);
+                    CloseHandle(hFile);
                     return WinVerifyTrustResult.FileNotSigned;
                 }
 
@@ -409,6 +415,7 @@ namespace MinerSearch
                 {
                     CryptCATAdminReleaseCatalogContext(hCatAdmin, catInfo, 0);
                     CryptCATAdminReleaseContext(hCatAdmin, 0);
+                    CloseHandle(hFile);
                     return WinVerifyTrustResult.FileNotSigned;
                 }
 

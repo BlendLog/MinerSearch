@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -388,7 +390,7 @@ namespace MinerSearch
 
         }
 
-        public static string GetHash()
+        public static string GetRndString()
         {
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.NewGuid().ToString())).Remove(8);
         }
@@ -410,8 +412,10 @@ namespace MinerSearch
             return true;
         }
 
-        public static bool BinarySearchByteSequenceInFile(string file, byte[] fileBytes, List<byte[]> targetSequences)
+        public static bool BinarySearchByteSequenceInFile(string filePath, List<byte[]> targetSequences)
         {
+            byte[] fileBytes = File.ReadAllBytes(filePath);
+
             const int bufferSize = 4096;
             byte[] buffer = new byte[bufferSize];
             int fileIndex = 0;
@@ -421,6 +425,7 @@ namespace MinerSearch
             {
                 int bytesToRead = Math.Min(bufferSize, fileBytes.Length - fileIndex);
                 Array.Copy(fileBytes, fileIndex, buffer, 0, bytesToRead);
+
                 fileIndex += bytesToRead;
 
                 for (int i = 0; i <= bytesToRead - targetSequences[0].Length; i++)
@@ -430,7 +435,7 @@ namespace MinerSearch
                         bool sequenceFound = true;
                         for (int j = 0; j < targetSequence.Length; j++)
                         {
-                            if (buffer[i + j] != targetSequence[j])
+                            if (i + j >= bytesToRead || buffer[i + j] != targetSequence[j])
                             {
                                 sequenceFound = false;
                                 break;
@@ -439,7 +444,6 @@ namespace MinerSearch
 
                         if (sequenceFound)
                         {
-                            Logger.WriteLog($"Signature match: {file}", Logger.caution);
                             found = true;
                             break;
                         }
@@ -466,7 +470,7 @@ namespace MinerSearch
                     files.AddRange(Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly));
                     foreach (var directory in Directory.GetDirectories(path))
                     {
-                        if (!directory.StartsWith("C:\\Windows\\WinSxS"))
+                        if (!directory.StartsWith("C:\\Windows\\WinSxS") && !directory.Contains(":\\$") && !directory.Contains("minersearch_quarantine"))
                         {
                             files.AddRange(GetFiles(directory, pattern, currentDepth + 1, maxDepth));
                         }
@@ -552,7 +556,7 @@ namespace MinerSearch
 #if DEBUG
             string strErr = net.StandardError.ReadToEnd();
             int exitCode = net.ExitCode;
-         
+
             Logger.WriteLog("\t[.] strOutput: " + strOut, ConsoleColor.DarkGray, false);
             Logger.WriteLog("\t[.] strError: " + strErr, ConsoleColor.DarkGray, false);
             Logger.WriteLog("\t[.] exit code: " + exitCode, ConsoleColor.DarkGray, false);
@@ -633,6 +637,153 @@ namespace MinerSearch
             }
 
 
+        }
+
+        public static bool CheckByteSequenceOccurrences(string filePath, int sequenceLength, int minOccurrences)
+        {
+            byte[] allBytes = File.ReadAllBytes(filePath);
+
+            Dictionary<string, int> sequenceCounts = new Dictionary<string, int>();
+
+            for (int i = 0; i <= allBytes.Length - sequenceLength; i += sequenceLength)
+            {
+                byte[] sequenceBytes = new byte[sequenceLength];
+                Array.Copy(allBytes, i, sequenceBytes, 0, sequenceLength);
+
+                if (!ContainsOnlyZeros(sequenceBytes))
+                {
+                    string sequenceHash = BitConverter.ToString(sequenceBytes);
+
+                    if (sequenceCounts.TryGetValue(sequenceHash, out int count))
+                    {
+                        sequenceCounts[sequenceHash] = count + 1;
+                    }
+                    else
+                    {
+                        sequenceCounts[sequenceHash] = 1;
+                    }
+                }
+
+
+            }
+
+            if (sequenceCounts.Count <= 0)
+            {
+                return false;
+            }
+
+            int maxOccurrences = sequenceCounts.Values.Max();
+
+            if (maxOccurrences < minOccurrences)
+            {
+                sequenceCounts.Clear();
+                return false;
+            }
+
+            string mostCommonSequence = sequenceCounts.FirstOrDefault(x => x.Value == maxOccurrences).Key;
+            double shannonEntropy = ShannonEntropy(mostCommonSequence);
+            int bytesSum = SequenceSum(mostCommonSequence);
+
+            sequenceCounts.Clear();
+            return maxOccurrences >= minOccurrences && shannonEntropy >= 2.5 && shannonEntropy <= 2.9 &&
+                   IsInRange(mostCommonSequence, 0x61, 0x7A) && bytesSum >= 1750 && bytesSum <= 1800;
+
+        }
+
+        static bool ContainsOnlyZeros(byte[] sequenceBytes)
+        {
+            foreach (byte b in sequenceBytes)
+            {
+                if (b != 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        static bool IsInRange(string strBytes, byte min, byte max)
+        {
+            string[] bytesFromString = strBytes.Split('-');
+            foreach (string byteStr in bytesFromString)
+            {
+                byte byteValue = Convert.ToByte(byteStr, 16);
+                if (byteValue < min || byteValue > max)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        static int SequenceSum(string strBytes)
+        {
+            string[] bytesFromString = strBytes.Split('-');
+            int sum = 0;
+            foreach (string byteStr in bytesFromString)
+            {
+                sum += Convert.ToByte(byteStr, 16);
+            }
+            return sum;
+        }
+
+        static double ShannonEntropy(string message)
+        {
+
+            double sumnation = 0;
+            foreach (var s in message.ToList().Distinct())
+            {
+                var temp = (message.Count(x => x == s) / (double)(message.Length));
+                sumnation += temp * Math.Log(temp, 2.0f);
+            }
+            return -1.0f * sumnation;
+        }
+
+        public static string CalculateMD5(string filePath)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(filePath))
+                {
+                    byte[] hashBytes = md5.ComputeHash(stream);
+                    StringBuilder sb = new StringBuilder();
+
+                    foreach (byte b in hashBytes)
+                    {
+                        sb.Append(b.ToString("x2")); // Convert each byte to a hexadecimal string
+                    }
+
+                    return sb.ToString();
+                }
+            }
+        }
+
+        public static bool IsDigit(string str)
+        {
+            foreach (char c in str)
+            {
+                if (c < '0' || c > '9')
+                    return false;
+            }
+            return true;
+        }
+
+        public static void CheckStartupCount()
+        {
+            const string registryKeyPath = @"Software\MinerSearch";
+            const string valueName = "runcount";
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(registryKeyPath, true);
+            if (key == null)
+            {
+                Registry.CurrentUser.CreateSubKey(registryKeyPath).SetValue(valueName, 1);
+                Logger.WriteLog("\t\tStartup count: 1", ConsoleColor.White, false);
+            }
+            else
+            {
+                int newValue = (int)key.GetValue(valueName, 0) + 1;
+                Logger.WriteLog($"\t\tStartup count: {newValue}", ConsoleColor.White, false);
+                key.SetValue(valueName, newValue);
+            }
         }
     }
 }

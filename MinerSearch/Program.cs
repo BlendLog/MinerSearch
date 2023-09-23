@@ -1,9 +1,13 @@
-﻿using MinerSearch.Properties;
+﻿//#define BETA
+
+using MinerSearch.Properties;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
+
 
 namespace MinerSearch
 {
@@ -16,13 +20,30 @@ namespace MinerSearch
         public static bool help = false;
         public static bool RemoveEmptyTasks = false;
         public static bool nosignaturescan = false;
+        public static bool WinPEMode = false;
+        public static int maxSubfolders = 8;
+        public static string drive_letter = "C";
 
         static void Main(string[] args)
         {
+            WaterMark();
+            utils.CheckStartupCount();
+
+
+#if !BETA
+            Console.WriteLine($"\t\tVersion: {new Version(System.Windows.Forms.Application.ProductVersion)}");
+#else
+            Console.WriteLine($"\t\tVersion: {new Version(System.Windows.Forms.Application.ProductVersion)} Beta");
+#endif
+#if !DEBUG
+            Console.WriteLine($"\t\tRelevant versions on https://github.com/BlendLog/MinerSearch/releases/latest \n");
+#endif
+
             InitPrivileges();
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
-            if (!File.Exists("Microsoft.Win32.TaskScheduler.dll"))
+
+            if (!File.Exists("Microsoft.Win32.TaskScheduler.dll") && !WinPEMode)
             {
                 try
                 {
@@ -34,68 +55,111 @@ namespace MinerSearch
                 }
             }
 
+
+
             if (args.Length > 0)
             {
                 foreach (var arg in args)
                 {
-                    switch (arg.ToLower().Trim())
+                    arg.ToLower();
+                    if (arg == "--help")
                     {
-                        case "--help":
-                            help = true;
-                            Console.WriteLine("Available commands: \n");
-                            Console.WriteLine("--help                        This help message");
-                            Console.WriteLine("--no-logs                     Don't write logs in text file");
-                            Console.WriteLine("--no-scantime                 Scan processes only");
-                            Console.WriteLine("--no-runtime                  Static scan only (Malware dirs, files, registry keys, etc)");
-                            Console.WriteLine("--no-signature-scan           Skip scanning files by signatures");
-                            Console.WriteLine("--pause                       Pause before cleanup");
-                            Console.WriteLine("--remove-empty-tasks          Delete a task from the Task Scheduler if the application file does not exist in it");
+                        help = true;
+                        Console.WriteLine("Available commands: \n");
+                        Console.WriteLine("--help                        This help message");
+                        Console.WriteLine("--no-logs                     Don't write logs in text file");
+                        Console.WriteLine("--no-scantime                 Scan processes only");
+                        Console.WriteLine("--no-runtime                  Static scan only (Malware dirs, files, registry keys, etc)");
+                        Console.WriteLine("--no-signature-scan           Skip scanning files by signatures");
+                        Console.WriteLine("--depth=<number>              Where <number> specify the number for maximum search depth. Usage example --depth=5 (default 8)");
+                        Console.WriteLine("--pause                       Pause before cleanup");
+                        Console.WriteLine("--remove-empty-tasks          Delete a task from the Task Scheduler if the application file does not exist in it");
+                        Console.WriteLine("--winpemode                   Start scanning in WinPE environment by specifying a different drive letter (without scanning processes, registry, firewall and task scheduler entries)");
+                        Console.ReadKey();
+                        return;
+                    }
+                    else if (arg == "--no-logs")
+                    {
+                        no_logs = true;
+                    }
+                    else if (arg == "--no-scantime")
+                    {
+                        no_scantime = true;
+                    }
+                    else if (arg == "--no-signature-scan")
+                    {
+                        nosignaturescan = true;
+                    }
+                    else if (arg == "--no-runtime")
+                    {
+                        no_runtime = true;
+                    }
+                    else if (arg == "--pause")
+                    {
+                        pause = true;
+                    }
+                    else if (arg == "--remove-empty-tasks")
+                    {
+                        RemoveEmptyTasks = true;
+                    }
+                    else if (arg.StartsWith("--depth="))
+                    {
+                        int.TryParse(arg.Remove(0, 8), out maxSubfolders);
+                        if (maxSubfolders <= 0 || maxSubfolders > 16)
+                        {
+                            Console.WriteLine($"\nThe number in {arg} command cannot be negative, = 0 or > 16");
+                            Console.ReadLine();
+                            return;
+                        }
+                    }
+                    else if (arg == "--winpemode")
+                    {
+                    drive_letter_lbl:
+                        Console.Write($"\n\t\tSpecify drive letter: ");
+                        drive_letter = Console.ReadLine();
+                        if (drive_letter.Length > 1 || utils.IsDigit(drive_letter))
+                        {
+                            Console.WriteLine($"Incorrect drive letter: {drive_letter}");
                             Console.ReadKey();
-                            return;
-                        case "--no-logs":
-                            no_logs = true;
-                            break;
-                        case "--no-scantime":
-                            no_scantime = true;
-                            break;
-                        case "--no-runtime":
-                            no_runtime = true;
-                            break;
-                        case "--pause":
-                            pause = true;
-                            break;
-                        case "--remove-empty-tasks":
-                            RemoveEmptyTasks = true;
-                            break;
-                        case "--no-signature-scan":
-                            nosignaturescan = true;
-                            break;
-                        default:
-                            Console.WriteLine("\nUnknown command");
-                            Console.ReadKey(true);
-                            return;
+                            goto drive_letter_lbl;
+                        }
+                        no_runtime = true;
+                        WinPEMode = true;
+                        Logger.WriteLog($"\t\t[&] Activated WinPE mode. Specified drive letter - {drive_letter}:\\", ConsoleColor.DarkCyan, false);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"\nUnknown command {arg}");
+                        Console.ReadKey(true);
+                        return;
                     }
                 }
             }
 
             if (!help)
             {
-                Console.WriteLine($"\n\tUse \"--help\" option to display list of available commands\n");
+                Console.WriteLine($"\t\tUse \"--help\" option to display list of available commands");
             }
 
-            if (no_runtime && no_scantime)
+            if (no_runtime && no_scantime && WinPEMode)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\nError: you cannot disable both types of scanning");
+                Console.WriteLine("\t\tError: you cannot disable all types of scanning");
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.ReadKey();
                 return;
             }
 
-            Console.Title = utils.GetHash();
-            WaterMark();
+            if (WinPEMode && nosignaturescan)
+            {
+                nosignaturescan = false;
+            }
+
+            Console.Title = utils.GetRndString();
+            Logger.WriteLog($"\t\tWindows version: {utils.GetWindowsVersion()} {utils.getBitVersion()}\n", ConsoleColor.White, false);
 
             utils.CheckWMI();
+
 
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
             MinerSearch mk = new MinerSearch();
@@ -111,28 +175,27 @@ namespace MinerSearch
                 mk.StaticScan();
             }
 
-            int warningsCount = mk.malware_pids.Count + mk.founded_malwarePaths.Count + mk.founded_suspiciousLockedPaths.Count;
-            if (warningsCount == 0 && !mk.CleanupHosts)
+            if (pause)
             {
-                Logger.WriteLog("\t[+] The system is clean. No malicious files or processes have been detected!", Logger.success, false);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.WriteLine("\nPAUSE BEFORE CLEANUP");
+                Console.WriteLine("Press any key to continue");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ReadKey(true);
             }
-            else
+            if (mk.malware_pids.Count > 0)
             {
-                if (mk.malware_pids.Count > 0)
-                {
-                    Logger.WriteLog($"\t[!!!] Malicious processes: {mk.malware_pids.Count}", Logger.caution);
-                }
-                if (pause)
-                {
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.BackgroundColor = ConsoleColor.Blue;
-                    Console.WriteLine("\nPAUSE BEFORE CLEANUP");
-                    Console.WriteLine("Press any key to continue");
-                    Console.BackgroundColor = ConsoleColor.Black;
-                    Console.ReadKey(true);
-                }
-                mk.Clean();
+                Logger.WriteLog($"\t[!!!] Malicious processes: {mk.malware_pids.Count}", Logger.caution);
             }
+            mk.Clean();
+
+            if (!nosignaturescan)
+            {
+                Logger.WriteLog("\t\tStarting signature scan...", Logger.head, false);
+                mk.SignatureScan();
+            }
+
             Logger.WriteLog("\tAll Done. You can close this window", ConsoleColor.DarkCyan, false);
             Console.Read();
         }
@@ -140,21 +203,19 @@ namespace MinerSearch
         private static void WaterMark()
         {
             Console.ForegroundColor = ConsoleColor.Green;
-
             Console.WriteLine(@"  __  __ _                   ____                      _     ");
             Console.WriteLine(@" |  \/  (_)_ __   ___ _ __  / ___|  ___  __ _ _ __ ___| |__  ");
             Console.WriteLine(@" | |\/| | | '_ \ / _ | '__| \___ \ / _ \/ _` | '__/ __| '_ \ ");
             Console.WriteLine(@" | |  | | | | | |  __| |     ___) |  __| (_| | | | (__| | | |");
             Console.WriteLine(@" |_|  |_|_|_| |_|\___|_|    |____/ \___|\__,_|_|  \___|_| |_|");
+#if !BETA
             Console.WriteLine(@"                                                             ");
-
+#else
+            Console.WriteLine(@"                                                         Beta");
+#endif
             Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("\t\tby: BlendLog");
 
-            Console.WriteLine("\t\tby: BlendLog, Spectrum735");
-            Console.WriteLine($"\t\tVersion: {new Version(System.Windows.Forms.Application.ProductVersion)}\n");
-            Console.WriteLine($"\t\tRelevant versions on https://github.com/BlendLog/MinerSearch/releases/latest \n");
-
-            Logger.WriteLog($"\t\tWindows version: {utils.GetWindowsVersion()} {utils.getBitVersion()}\n", ConsoleColor.White, false);
         }
 
         static void InitPrivileges()
