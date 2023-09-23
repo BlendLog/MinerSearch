@@ -4,9 +4,32 @@ A program designed to find and destroy silent crypto miners.
 It is an auxiliary tool for searching suspicious files, 
 directories, processes, etc. and is NOT an antivirus. 
 
-Based on Miner Killer.
-
 NET Framework 4.7.2 is required to run.
+
+Version v1.4.4
+- Fixed a bug with the inability to delete found files before closing the program
+- Improved miner search algorithm for static analysis
+- Reduced false positive detection of Antivirus solutions. Some antiviruses can still delete program as a Trojan, just add it to AV exclusions. 
+- Added the --depth parameter. Sets the maximum value of the search depth during signature scanning. Usage example: --depth=3 (default is 8).
+- Added signature verification of files from the task scheduler
+- Added Mineresearch launch counter
+- Added the --winpemode parameter. In this mode, the drive letter is requested for scanning. It is assumed that this is a disk with an infected system. Scanning of processes, registry, scheduler tasks, directories in the user profile is not performed. Next, you need to boot into the infected system again and perform a second scan.
+
+Version v1.4.3
+
+- Added signature detection of suspicious files
+- Added brief information about the system to the log
+- Removal of malicious entries in the hosts file, not the file itself. Confirmation is not required
+- Fixed a bug where it is not possible to receive command line arguments due to the shutdown of the WMI service.
+- Added quarantine. In addition to the files detected during static analysis, a txt file is also created with the previous paths of these files
+- Fix a bug when incorrectly defining the injection into the Dwm process on Win 8 (not 8.1)
+- Deleting the John user if it is not the current user
+- Added creation of protected hidden files from re-infection
+- Handling TCP connection exclusion for processes
+- Fixed a bug with the error "Access denied" for some files
+- Fixed a bug with the inability to unlock the directory when the Antivirus is installed
+- Added automatic deletion of invalid tasks from the scheduler based on the result of the last run. For the best result, you should restart your PC after scanning. The --remove-empty-tasks parameter also works.
+- Added the --no-signature-scan startup parameter to skip scanning by signatures
 
 Version v1.4.2
 
@@ -39,8 +62,7 @@ Version 1.3
 
 # Demo
 
-Detects and suspends malicious processes. Starts deleting blocked folders through the access control list on the security tab. 
-If any suspicious or malicious objects are found, confirmation is required to start automatic cleaning.
+Detects, suspends and delete malicious processes, as well as auxiliary components of the trojan-miner, which make it difficult to remove it.
 
 ![image](https://user-images.githubusercontent.com/56220293/215475650-25d31515-d52a-485b-b194-7db63e0e9962.png)
 
