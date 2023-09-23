@@ -4,9 +4,16 @@ A program designed to find and destroy silent crypto miners.
 It is an auxiliary tool for searching suspicious files, 
 directories, processes, etc. and is NOT an antivirus. 
 
-Based on Miner Killer.
-
 NET Framework 4.7.2 is required to run.
+
+Version v1.4.4
+- Fixed a bug with the inability to delete found files before closing the program
+- Improved miner search algorithm for static analysis
+- Reduced false positive detection of Antivirus solutions. Some antiviruses can still delete program as a Trojan, just add it to AV exclusions. 
+- Added the --depth parameter. Sets the maximum value of the search depth during signature scanning. Usage example: --depth=3 (default is 8).
+- Added signature verification of files from the task scheduler
+- Added Mineresearch launch counter
+- Added the --winpemode parameter. In this mode, the drive letter is requested for scanning. It is assumed that this is a disk with an infected system. Scanning of processes, registry, scheduler tasks, directories in the user profile is not performed. Next, you need to boot into the infected system again and perform a second scan.
 
 Version v1.4.3
 
