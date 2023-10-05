@@ -1,11 +1,9 @@
 ﻿//#define BETA
 
-using MinerSearch.Properties;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 
 
@@ -21,15 +19,13 @@ namespace MinerSearch
         public static bool RemoveEmptyTasks = false;
         public static bool nosignaturescan = false;
         public static bool WinPEMode = false;
+        public static bool NoRootkitCheck = false;
         public static int maxSubfolders = 8;
         public static string drive_letter = "C";
 
         static void Main(string[] args)
         {
             WaterMark();
-            utils.CheckStartupCount();
-
-
 #if !BETA
             Console.WriteLine($"\t\tVersion: {new Version(System.Windows.Forms.Application.ProductVersion)}");
 #else
@@ -42,20 +38,6 @@ namespace MinerSearch
             InitPrivileges();
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
-
-            if (!File.Exists("Microsoft.Win32.TaskScheduler.dll") && !WinPEMode)
-            {
-                try
-                {
-                    File.WriteAllBytes("Microsoft.Win32.TaskScheduler.dll", Resources.TaskScheduler);
-                }
-                catch (Exception ex)
-                {
-                    Logger.WriteLog($"Scan Task error: {ex.Message}", Logger.error);
-                }
-            }
-
-
 
             if (args.Length > 0)
             {
@@ -112,6 +94,10 @@ namespace MinerSearch
                             return;
                         }
                     }
+                    else if (arg == "--no-rootkit-check")
+                    {
+                        NoRootkitCheck = true;
+                    }
                     else if (arg == "--winpemode")
                     {
                     drive_letter_lbl:
@@ -156,22 +142,29 @@ namespace MinerSearch
             }
 
             Console.Title = utils.GetRndString();
-            Logger.WriteLog($"\t\tWindows version: {utils.GetWindowsVersion()} {utils.getBitVersion()}\n", ConsoleColor.White, false);
+            Logger.WriteLog($"\t\tWindows version: {utils.GetWindowsVersion()} {utils.getBitVersion()}", ConsoleColor.White, false);
+            Logger.WriteLog($"\t\tUsername: {Environment.UserName}", ConsoleColor.DarkGray, false);
+            Logger.WriteLog($"\t\tPC Name: {Environment.MachineName}\n", ConsoleColor.DarkGray, false);
+            utils.CheckStartupCount();
 
             utils.CheckWMI();
 
+            Stopwatch startTime = Stopwatch.StartNew();
 
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
             MinerSearch mk = new MinerSearch();
 
+            if (!NoRootkitCheck)
+            {
+                mk.DetectRootkit();
+            }
+
             if (!no_runtime)
             {
-                Logger.WriteLog("\t\tPreparing to scan processes, please wait...", Logger.head, false);
                 mk.Scan();
             }
             if (!no_scantime)
             {
-                Logger.WriteLog("\t\tStarting static scan...", Logger.head, false);
                 mk.StaticScan();
             }
 
@@ -196,7 +189,18 @@ namespace MinerSearch
                 mk.SignatureScan();
             }
 
-            Logger.WriteLog("\tAll Done. You can close this window", ConsoleColor.DarkCyan, false);
+            startTime.Stop();
+            TimeSpan resultTime = startTime.Elapsed;
+            string elapsedTime = $"{resultTime.Hours:00}:{resultTime.Minutes:00}:{resultTime.Seconds:00}.{resultTime.Milliseconds:000}";
+            Logger.WriteLog("\n\t\t-----------------------------------", ConsoleColor.White, false);
+            Logger.WriteLog($"\t\t[$] Scan elapsed time: {elapsedTime}", ConsoleColor.White, false);
+            Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
+            Logger.WriteLog("\t\tAll Done. You can close this window", ConsoleColor.Cyan, false);
+
+
+
+
+
             Console.Read();
         }
 
@@ -214,12 +218,13 @@ namespace MinerSearch
             Console.WriteLine(@"                                                         Beta");
 #endif
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("\t\tby: BlendLog");
+            Console.WriteLine("\t\tby: BlеndLоg");
 
         }
 
         static void InitPrivileges()
         {
+
             IntPtr token;
             if (WinApi.OpenProcessToken(Process.GetCurrentProcess().Handle, WinApi.TOKEN_ADJUST_PRIVILEGES | WinApi.TOKEN_QUERY, out token))
             {
@@ -264,6 +269,9 @@ namespace MinerSearch
             {
                 Console.WriteLine("Failed to get process handle with error code: " + Marshal.GetLastWin32Error());
             }
+
+
         }
+
     }
 }

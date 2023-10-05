@@ -44,7 +44,7 @@ namespace MinerSearch
 
                 if (!Program.no_logs)
                 {
-                    using (StreamWriter writer = new StreamWriter(logFileName, true))
+                    using (StreamWriter writer = new StreamWriter(Program.drive_letter + ":\\" + logFileName, true))
                     {
                         writer.WriteLine(logMessage);
                     }
@@ -95,7 +95,7 @@ namespace MinerSearch
 
                 if (!Program.no_logs)
                 {
-                    using (StreamWriter writer = new StreamWriter(logFileName, true))
+                    using (StreamWriter writer = new StreamWriter(Program.drive_letter + ":\\" + logFileName, true))
                     {
                         writer.WriteLine(logMessage);
                     }

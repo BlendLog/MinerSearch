@@ -1,4 +1,7 @@
-﻿using Microsoft.Win32;
+﻿//#define BETA
+
+using Microsoft.Win32;
+using Microsoft.Win32.TaskScheduler;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -134,10 +137,17 @@ namespace MinerSearch
                 {
                     ProcessModule t = p.Modules[0];
                 }
+#if BETA
+                catch (Exception ex)
+                {
+                    Logger.WriteLog($"\t [x] Error for get process {p.ProcessName} | {ex.Message}", ConsoleColor.Red, false);
+                }
+#else
                 catch (Exception)
                 {
                     continue;
                 }
+#endif
                 procs.Add(p);
             }
             return procs;
@@ -395,6 +405,11 @@ namespace MinerSearch
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.NewGuid().ToString())).Remove(8);
         }
 
+        public static string GetRndString(int len)
+        {
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.NewGuid().ToString())).Remove(len);
+        }
+
         public static bool IsDirectoryEmpty(string path)
         {
             string[] files = Directory.GetFiles(path);
@@ -412,7 +427,7 @@ namespace MinerSearch
             return true;
         }
 
-        public static bool BinarySearchByteSequenceInFile(string filePath, List<byte[]> targetSequences)
+        public static bool CheckSignature(string filePath, List<byte[]> targetSequences)
         {
             byte[] fileBytes = File.ReadAllBytes(filePath);
 
@@ -562,6 +577,7 @@ namespace MinerSearch
             Logger.WriteLog("\t[.] exit code: " + exitCode, ConsoleColor.DarkGray, false);
 #endif
             return strOut.ToLower().Contains(username);
+
         }
 
         public static void DeleteUser(string username)
@@ -639,7 +655,7 @@ namespace MinerSearch
 
         }
 
-        public static bool CheckByteSequenceOccurrences(string filePath, int sequenceLength, int minOccurrences)
+        public static bool CheckDynamicSignature(string filePath, int sequenceLength, int minOccurrences)
         {
             byte[] allBytes = File.ReadAllBytes(filePath);
 
@@ -783,6 +799,48 @@ namespace MinerSearch
                 int newValue = (int)key.GetValue(valueName, 0) + 1;
                 Logger.WriteLog($"\t\tStartup count: {newValue}", ConsoleColor.White, false);
                 key.SetValue(valueName, newValue);
+            }
+        }
+
+        public static string StringMD5(string input)
+        {
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    builder.Append(hashBytes[i].ToString("x2"));
+                }
+
+                return builder.ToString();
+            }
+        }
+
+        public static void DeleteTask(TaskService taskService, string taskFolder, string taskName)
+        {
+            try
+            {
+                taskService.GetFolder(taskFolder).DeleteTask(taskName);
+                Logger.WriteLog($"\t[+] Empty Task {taskName} was deleted", Logger.success);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"\t[x] Cannot delete task {taskFolder}\\{taskName} | {ex.Message}", Logger.error);
+            }
+        }
+
+        public static bool IsTaskEmpty(Task task)
+        {
+            try
+            {
+                return (uint)task.LastTaskResult == 0x80070002;
+            }
+            catch
+            {
+                return false;
             }
         }
     }

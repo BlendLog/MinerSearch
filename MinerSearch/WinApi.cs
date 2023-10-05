@@ -143,6 +143,7 @@ namespace MinerSearch
         public const uint SE_PRIVILEGE_ENABLED = 0x00000002;
         public const string SE_SECURITY_NAME = "SeSecurityPrivilege";
         public const string SE_TAKE_OWNERSHIP_NAME = "SeTakeOwnershipPrivilege";
+        public const string SE_DEBUG_PRIVILEGE = "SeDebugPrivilege";
 
         public const int SM_CLEANBOOT = 67;
 
