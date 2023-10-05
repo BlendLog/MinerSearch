@@ -4,7 +4,21 @@ A program designed to find and destroy silent crypto miners.
 It is an auxiliary tool for searching suspicious files, 
 directories, processes, etc. and is NOT an antivirus. 
 
-NET Framework 4.7.2 is required to run.
+NET Framework 4.5.2 is required to run.
+
+### WARNING! Some antiviruses mark this project as trojan. It's false positive detection, just add executable file to the AV white list
+
+Version v1.4.5
+
+- Output of task launch parameters from the scheduler
+- A third-party Task Scheduler library is no longer required. 
+- Added detection and removal of the miner's rootkit
+- Fixed a bug when the scanned process has already completed its work
+- Fixed a bug when the requested access to the registry is denied
+- The log file is written to the root of the scanned disk
+- The required version of the NET Framework has been downgraded to 4.5.2
+- Correction of minor flaws
+- Replenishment of the database of malicious entries in the hosts file
 
 Version v1.4.4
 - Fixed a bug with the inability to delete found files before closing the program
