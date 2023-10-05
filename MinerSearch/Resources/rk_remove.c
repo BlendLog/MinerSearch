@@ -1,0 +1,1 @@
+//it use r77 uninstaller https://github.com/bytecode77/r77-rootkit/tree/master/Uninstall
