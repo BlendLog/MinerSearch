@@ -293,15 +293,6 @@ namespace MinerSearch
 
                 switch (result)
                 {
-                    case WinVerifyTrustResult.ProviderUnknown:
-                        Logger.WriteLog($"\t[!] {filePath}: \nTrust provider is not recognized on this system", Logger.warn);
-                        break;
-                    case WinVerifyTrustResult.ActionUnknown:
-                        Logger.WriteLog($"\n\t[!] {filePath}: \nTrust provider does not support the specified action", Logger.warn);
-                        break;
-                    case WinVerifyTrustResult.SubjectFormUnknown:
-                        Logger.WriteLog($"\t[!] {filePath}: \nTrust provider does not support the form specified for the subject", Logger.warn);
-                        break;
                     case WinVerifyTrustResult.SubjectNotTrusted:
                         Logger.WriteLog($"\t[!] {filePath}: \nSubject failed the specified verification action", Logger.warn);
                         break;
@@ -320,11 +311,12 @@ namespace MinerSearch
                     case WinVerifyTrustResult.UntrustedRoot:
                         Logger.WriteLog($"\t[!] {filePath}: \nRoot certificate is not trusted", Logger.warn);
                         break;
-                    case WinVerifyTrustResult.Success:
-                        break;
                     case WinVerifyTrustResult.FileNotSigned:
                         result = VerifyByCatalog(filePath);
                         break;
+                    default:
+                        break;
+                        
                 }
                 return result;
             }

@@ -61,6 +61,72 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Yes.
+        /// </summary>
+        internal static string _accept_en {
+            get {
+                return ResourceManager.GetString("_accept_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Принять.
+        /// </summary>
+        internal static string _accept_ru {
+            get {
+                return ResourceManager.GetString("_accept_ru", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на No.
+        /// </summary>
+        internal static string _exit_en {
+            get {
+                return ResourceManager.GetString("_exit_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выйти.
+        /// </summary>
+        internal static string _exit_ru {
+            get {
+                return ResourceManager.GetString("_exit_ru", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Disclaimer of Warranty!
+        ///
+        ///This software is provided &quot;As is&quot; without any warranty of any kind. Use this software at your own risk. 
+        ///
+        ///Are you sure you want to continue? 
+        ///
+        ///Click Yes to continue. Click No to exit..
+        /// </summary>
+        internal static string _License_EN {
+            get {
+                return ResourceManager.GetString("_License_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отказ от ответственности
+        ///
+        ///Это программное обеспечение (ПО) предоставляется &quot;Как есть&quot; без каких либо гарантий любого рода. Используйте это программное обеспечение на свой собственный риск. 
+        ///
+        ///Вы уверены, что хотите продолжить? 
+        ///
+        ///Нажмите Принять, чтобы продолжить. Нажмите Выход, чтобы закрыть программу..
+        /// </summary>
+        internal static string _License_RU {
+            get {
+                return ResourceManager.GetString("_License_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
         internal static byte[] rk_remove {

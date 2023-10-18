@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace rk_test
 {
@@ -6,8 +7,11 @@ namespace rk_test
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Test application");
-            Console.ReadLine();
+            Console.WriteLine("nothing to see here");
+            if (args.Length > 0)
+            {
+                Thread.Sleep(Convert.ToInt32(args[0]) * 1000);
+            }
         }
     }
 }

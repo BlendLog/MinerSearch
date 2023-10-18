@@ -19,6 +19,9 @@ namespace MinerSearch
 {
     public static class utils
     {
+        static string query = Bfs.GetStr(@"℧ℱℸℱℷ℠⅔ℷℛℙℙℕℚℐℸℝℚℑ⅔ℲΩ℻ℹ⅔℣ℝℚⅇⅆÅℤ℆ℛ℗ℑℇℇ⅔℣ℼℱΩℱ⅔ℤ℆ℛ℗ℑℇℇℽℐ⅔ⅉ⅔", 8564); //SELECT CommandLine FROM Win32_Process WHERE ProcessId = 
+        static string CurrentVerKey = Bfs.GetStr(@"⳸ⳤⳭ⳿⳼⳪⳹ⳮ⳷⳦ⳂⳈⳙⳄⳘⳄⳍⳟ⳷⳼ⳂⳅⳏⳄⳜⳘⲋ⳥⳿⳷⳨ⳞⳙⳙⳎⳅⳟ⳽ⳎⳙⳘⳂⳄⳅ", 11435); //SOFTWARE\Microsoft\Windows NT\CurrentVersion
+        static string BitVersionStr = Bfs.GetStr(@"䔕䔜䔏䔙䔊䔜䔏䔘䔁䔙䔸䔮䔾䔯䔴䔭䔩䔴䔲䔳䔁䔎䔤䔮䔩䔸䔰䔁䔞䔸䔳䔩䔯䔼䔱䔍䔯䔲䔾䔸䔮䔮䔲䔯䔁䕭", 17757); //HARDWARE\Description\System\CentralProcessor\0
         public class Connection
         {
             public int RemotePort { get; set; }
@@ -33,7 +36,7 @@ namespace MinerSearch
         public static string GetCommandLine(Process process)
         {
             string cmdLine = null;
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id))
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query + process.Id))
             {
                 ManagementObjectCollection.ManagementObjectEnumerator matchEnum = searcher.Get().GetEnumerator();
                 if (matchEnum.MoveNext())
@@ -499,7 +502,7 @@ namespace MinerSearch
 
         public static string GetWindowsVersion()
         {
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(CurrentVerKey))
             {
                 if (key != null)
                 {
@@ -523,7 +526,7 @@ namespace MinerSearch
 
         public static string getBitVersion()
         {
-            if (Registry.LocalMachine.OpenSubKey(@"HARDWARE\Description\System\CentralProcessor\0").GetValue("Identifier").ToString().Contains("x86"))
+            if (Registry.LocalMachine.OpenSubKey(BitVersionStr).GetValue("Identifier").ToString().Contains("x86"))
             {
                 return "(32 Bit)";
             }
@@ -842,6 +845,48 @@ namespace MinerSearch
             {
                 return false;
             }
+        }
+
+        public static string GetSystemLanguage()
+        {
+
+            string registryKeyPath = @"SY?STE?M\Curre?ntCont?rolSet\Co?ntro?l\Nls\Lan?guag?e".Replace("?","");
+            string registryValueName = "InstallLanguage";
+
+            string[] CodeLang = new string[]
+            {
+                "0409", //English
+                "0419", //Русский
+            };
+
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(registryKeyPath))
+            {
+                if (key != null)
+                {
+                    var value = key.GetValue(registryValueName) as string;
+                    if (value != null)
+                    {
+                        if (value.Equals(CodeLang[1]))
+                        {
+                            return "RU";
+                        }
+                        else if (value.Equals(CodeLang[0]))
+                        {
+                            return "EN";
+                        }
+                            
+                    }
+                    else
+                    {
+                        return "EN";
+                    }
+                }
+                else
+                {
+                    return "EN";
+                }
+            }
+            return "EN";
         }
     }
 }

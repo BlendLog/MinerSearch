@@ -1,6 +1,9 @@
 ﻿//#define BETA
 
+using Microsoft.Win32;
+using MinerSearch.Properties;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -22,10 +25,13 @@ namespace MinerSearch
         public static bool NoRootkitCheck = false;
         public static int maxSubfolders = 8;
         public static string drive_letter = "C";
+        public static string ActiveLanguage = utils.GetSystemLanguage();
 
         static void Main(string[] args)
         {
             WaterMark();
+
+
 #if !BETA
             Console.WriteLine($"\t\tVersion: {new Version(System.Windows.Forms.Application.ProductVersion)}");
 #else
@@ -34,6 +40,36 @@ namespace MinerSearch
 #if !DEBUG
             Console.WriteLine($"\t\tRelevant versions on https://github.com/BlendLog/MinerSearch/releases/latest \n");
 #endif
+
+            const string registryKeyPath = @"Software\MinerSearch";
+            const string registryValueName = "acceptedEula";
+
+            using (RegistryKey key = Registry.CurrentUser.CreateSubKey(registryKeyPath))
+            {
+                var value = key.GetValue(registryValueName);
+                if (value == null)
+                {
+                    License licenseForm = new License();
+                    if (ActiveLanguage == "EN")
+                    {
+                        licenseForm.richTextBox1.Text = Resources._License_EN;
+                        licenseForm.Accept_btn.Text = Resources._accept_en;
+                        licenseForm.Exit_btn.Text = Resources._exit_en;
+                    }
+                    if (ActiveLanguage == "RU")
+                    {
+
+                        licenseForm.richTextBox1.Text = Resources._License_RU;
+                        licenseForm.Accept_btn.Text = Resources._accept_ru;
+                        licenseForm.Exit_btn.Text = Resources._exit_ru;
+                    }
+
+                    licenseForm.ShowDialog();
+                }
+            }
+            
+
+
 
             InitPrivileges();
 
@@ -53,6 +89,7 @@ namespace MinerSearch
                         Console.WriteLine("--no-scantime                 Scan processes only");
                         Console.WriteLine("--no-runtime                  Static scan only (Malware dirs, files, registry keys, etc)");
                         Console.WriteLine("--no-signature-scan           Skip scanning files by signatures");
+                        Console.WriteLine("--no-rootkit-check            Skip checking rootkit present");
                         Console.WriteLine("--depth=<number>              Where <number> specify the number for maximum search depth. Usage example --depth=5 (default 8)");
                         Console.WriteLine("--pause                       Pause before cleanup");
                         Console.WriteLine("--remove-empty-tasks          Delete a task from the Task Scheduler if the application file does not exist in it");
@@ -153,10 +190,12 @@ namespace MinerSearch
 
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
             MinerSearch mk = new MinerSearch();
+            Logger.WriteLog("\t\tPreparing to scan, please wait...", Logger.head, false);
+
 
             if (!NoRootkitCheck)
             {
-                mk.DetectRootkit();
+                mk.DetectRk();
             }
 
             if (!no_runtime)
@@ -177,9 +216,9 @@ namespace MinerSearch
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ReadKey(true);
             }
-            if (mk.malware_pids.Count > 0)
+            if (mk.mlwrPids.Count > 0)
             {
-                Logger.WriteLog($"\t[!!!] Malicious processes: {mk.malware_pids.Count}", Logger.caution);
+                Logger.WriteLog($"\t[!!!] Malicious processes: {mk.mlwrPids.Count}", Logger.caution);
             }
             mk.Clean();
 
@@ -196,11 +235,6 @@ namespace MinerSearch
             Logger.WriteLog($"\t\t[$] Scan elapsed time: {elapsedTime}", ConsoleColor.White, false);
             Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
             Logger.WriteLog("\t\tAll Done. You can close this window", ConsoleColor.Cyan, false);
-
-
-
-
-
             Console.Read();
         }
 
@@ -221,7 +255,6 @@ namespace MinerSearch
             Console.WriteLine("\t\tby: BlеndLоg");
 
         }
-
         static void InitPrivileges()
         {
 
@@ -269,9 +302,6 @@ namespace MinerSearch
             {
                 Console.WriteLine("Failed to get process handle with error code: " + Marshal.GetLastWin32Error());
             }
-
-
         }
-
     }
 }

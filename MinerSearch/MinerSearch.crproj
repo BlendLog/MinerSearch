@@ -1,8 +1,0 @@
-<project outputDir="D:\CSHARP\MinerSearch\MinerSearch\bin\Release\Confused" baseDir="D:\CSHARP\MinerSearch\MinerSearch\bin\Release" xmlns="http://confuser.codeplex.com">
-  <module path="MinerSearch.exe">
-    <rule pattern="true" inherit="false">
-      <protection id="rename" />
-      <protection id="constants" />
-    </rule>
-  </module>
-</project>

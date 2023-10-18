@@ -47,24 +47,24 @@
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>none</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <FileAlignment>4096</FileAlignment>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <FileAlignment>512</FileAlignment>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>MinerSearch.Program</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>bitcoin-coin-icon.ico</ApplicationIcon>
+    <ApplicationIcon>64.ico</ApplicationIcon>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
@@ -76,6 +76,11 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>none</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.10.1.0, Culture=neutral, PublicKeyToken=e25603a88b3aa7da, processorArchitecture=MSIL">
@@ -97,6 +102,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bfs.cs" />
+    <Compile Include="HashedString.cs" />
+    <Compile Include="License.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="License.Designer.cs">
+      <DependentUpon>License.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logger.cs" />
     <Compile Include="MinerSearch.cs" />
     <Compile Include="Program.cs" />
@@ -115,17 +128,21 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="64.ico" />
     <Content Include="Resources\rk_remove.c" />
-    <None Include="Resources\rk_remove.exe" />
+    <None Include="Resources\rk_remove.bin" />
     <None Include="Resources\rk_test.exe" />
     <None Include="Resources\Microsoft.Win32.TaskScheduler.dll" />
     <None Include="bin\Release\Microsoft.Win32.TaskScheduler.dll" />
-    <Content Include="bitcoin-coin-icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="License.resx">
+      <DependentUpon>License.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -154,7 +171,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd /d D:\CSHARP\MinerSearch\MinerSearch\bin\Release
-ILMerge.exe MinerSearch.exe Microsoft.Win32.TaskScheduler.dll /out:MinerSearch_v1.4.5.0.exe</PostBuildEvent>
+ILMerge.exe MinerSearch.exe Microsoft.Win32.TaskScheduler.dll /out:MinerSearch_v1.4.5.1.exe</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

@@ -117,41 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="rk_remove" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\rk_remove.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="rk_test" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\rk_test.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_accept_en" xml:space="preserve">
-    <value>Yes</value>
-  </data>
-  <data name="_accept_ru" xml:space="preserve">
-    <value>Принять</value>
-  </data>
-  <data name="_exit_en" xml:space="preserve">
-    <value>No</value>
-  </data>
-  <data name="_exit_ru" xml:space="preserve">
-    <value>Выйти</value>
-  </data>
-  <data name="_License_EN" xml:space="preserve">
-    <value>Disclaimer of Warranty!
-
-This software is provided "As is" without any warranty of any kind. Use this software at your own risk. 
-
-Are you sure you want to continue? 
-
-Click Yes to continue. Click No to exit.</value>
-  </data>
-  <data name="_License_RU" xml:space="preserve">
-    <value>Отказ от ответственности
-
-Это программное обеспечение (ПО) предоставляется "Как есть" без каких либо гарантий любого рода. Используйте это программное обеспечение на свой собственный риск. 
-
-Вы уверены, что хотите продолжить? 
-
-Нажмите Принять, чтобы продолжить. Нажмите Выход, чтобы закрыть программу.</value>
-  </data>
 </root>

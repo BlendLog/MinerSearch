@@ -25,14 +25,8 @@ namespace MinerSearch
         [DllImport("kernel32.dll")]
         public static extern uint SuspendThread(IntPtr hThread);
 
-        [DllImport("kernel32.dll")]
-        public static extern uint ResumeThread(IntPtr hThread);
-
         [DllImport("ntdll.dll", SetLastError = true)]
         public static extern int NtSetInformationProcess(IntPtr hProcess, int processInformationClass, ref int processInformation, int processInformationLength);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr OpenProcess(uint processAccess, bool bInheritHandle, int processId);
 
         [DllImport("ntdll.dll")]
         public static extern int NtQueryInformationProcess(IntPtr processHandle, int processInformationClass, ref PROCESS_BASIC_INFORMATION processInformation, int processInformationLength, out int returnLength);
@@ -54,9 +48,6 @@ namespace MinerSearch
 
         [DllImport("kernel32.dll")]
         public static extern bool Process32Next(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool GetExitCodeProcess(IntPtr hProcess, out uint ExitCode);
 
         [DllImport("Advapi32.dll")]
         public static extern IntPtr OpenSCManager(string machineName, string databaseName, int dwAccess);
@@ -141,9 +132,9 @@ namespace MinerSearch
         public const uint TOKEN_QUERY = 0x0008;
         public const uint TOKEN_ADJUST_PRIVILEGES = 0x0020;
         public const uint SE_PRIVILEGE_ENABLED = 0x00000002;
-        public const string SE_SECURITY_NAME = "SeSecurityPrivilege";
-        public const string SE_TAKE_OWNERSHIP_NAME = "SeTakeOwnershipPrivilege";
-        public const string SE_DEBUG_PRIVILEGE = "SeDebugPrivilege";
+        public static string SE_SECURITY_NAME = "SeSe?cur?ity?Pr?ivi?leg?e".Replace("?","");
+        public static string SE_TAKE_OWNERSHIP_NAME = "S?eTa?keOw?ner?ship?Privi?leg?e".Replace("?", "");
+        public static string SE_DEBUG_PRIVILEGE = "SeDe?bug?P?riv?ile?ge".Replace("?", "");
 
         public const int SM_CLEANBOOT = 67;
 
