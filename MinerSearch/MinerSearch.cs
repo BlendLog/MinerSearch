@@ -20,6 +20,8 @@ namespace MinerSearch
     {
         int[] _PortList = new[]
         {
+            1111,
+            1112,
             9999,
             14444,
             14433,
@@ -46,308 +48,309 @@ namespace MinerSearch
         };
 
         List<string> obfStr1 = new List<string>() {
-Program.drive_letter + Bfs.GetStr(@"ẝỻỷổỈỀổỆỊợỆồỆỻỮỉỔồỆịị", keys[0]), //:\ProgramData\Install
-Program.drive_letter + Bfs.GetStr(@"ⰒⱴⱸⱚⱇⱏⱚⱉⱅⱬⱉⱜⱉⱴⱥⱁⱋⱚⱇⱛⱇⱎⱜⱴⱫⱀⱍⱋⱃ", keys[1]), //:\ProgramData\Microsoft\Check
-Program.drive_letter + Bfs.GetStr(@"䇐䆶䆺䆘䆅䆍䆘䆋䆇䆮䆋䆞䆋䆶䆧䆃䆉䆘䆅䆙䆅䆌䆞䆶䆣䆄䆞䆏䆆", keys[2]), //:\ProgramData\Microsoft\Intel
-Program.drive_letter + Bfs.GetStr(@"ዌኪኦኄኙኑኄኗኛኲኗኂኗኪኻኟንኄኙኅኙነኂኪንኚኄኩኙኆኂኟኛኟኌኗኂኟኙኘኩኀዂዘ዆ዘዅ዆ዅ዇ዎኩዀዂ", keys[3]), //:\ProgramData\Microsoft\clr_optimization_v4.0.30318_64
-Program.drive_letter + Bfs.GetStr(@"᠃ᡥᡩᡋᡖᡞᡋᡘᡔ᡽ᡘᡍᡘᡥᡴᡐᡚᡋᡖᡊᡖᡟᡍᡥᡍᡜᡔᡉ", keys[4]), //:\ProgramData\Microsoft\temp
-Program.drive_letter + Bfs.GetStr(@"➡⟇⟋⟩⟴⟼⟩⟺⟶⟟⟺⟯⟺⟇⟋⟮⟡⟡⟷⟾⟖⟾⟿⟲⟺", keys[5]), //:\ProgramData\PuzzleMedia
-Program.drive_letter + Bfs.GetStr(@"㳟㲹㲵㲗㲊㲂㲗㲄㲈㲡㲄㲑㲄㲹㲷㲀㲄㲉㲑㲀㲎㲭㲡", keys[6]), //:\ProgramData\RealtekHD
-Program.drive_letter + Bfs.GetStr(@"আৠ৬ৎ৓৛ৎঢ়৑৸ঢ়ৈঢ়ৠ৮৙ঢ়৵ৈ৙ৗ৴৸", keys[7]), //:\ProgramData\ReaItekHD
-Program.drive_letter + Bfs.GetStr(@"ቂሤረሊሗሟሊሙሕሼሙሌሙሤሪሗሚሗሌሼምሕሗ", keys[8]), //:\ProgramData\RobotDemo
-Program.drive_letter + Bfs.GetStr(@"⺫⻍⻁⻣⻾⻶⻣⻰⻼⻕⻰⻥⻰⻍⻃⻤⻿⻕⻝⻝", keys[9]), //:\ProgramData\RunDLL
-Program.drive_letter + Bfs.GetStr(@"ㅊㄬㄠ㄂ㄟㄗ㄂ㄑㄝㄴㄑ㄄ㄑㄬㄣㄕ㄄ㄅ㄀", keys[10]), //:\ProgramData\Setup
-Program.drive_letter + Bfs.GetStr(@"䜾䝘䝔䝶䝫䝣䝶䝥䝩䝀䝥䝰䝥䝘䝗䝽䝷䝰䝡䝩䜷䜶", keys[11]), //:\ProgramData\System32
-Program.drive_letter + Bfs.GetStr(@"ڞ۸۴ۖۋۃۖۅۉ۠ۅېۅ۸۳ۅےہ۴ۅۀ", keys[12]), //:\ProgramData\WavePad
-Program.drive_letter + Bfs.GetStr(@"㔜㕺㕶㕔㕉㕁㕔㕇㕋㕢㕇㕒㕇㕺㕱㕏㕈㕂㕉㕑㕕㔆㕲㕇㕕㕍㕕㔆㕵㕃㕔㕐㕏㕅㕃", keys[13]), //:\ProgramData\Windows Tasks Service
-Program.drive_letter + Bfs.GetStr(@"䶴䷒䷞䷼䷡䷩䷼䷯䷣䷊䷯䷺䷯䷒䷙䷧䷠䷪䷡䷹䷽䷚䷯䷽䷥", keys[14]), //:\ProgramData\WindowsTask
-Program.drive_letter + Bfs.GetStr(@"⤚⥼⥰⥒⥏⥇⥒⥁⥍⤀⥦⥉⥌⥅⥓⥼⥴⥒⥁⥎⥓⥍⥉⥓⥓⥉⥏⥎", keys[15]), //:\Program Files\Transmission
-Program.drive_letter + Bfs.GetStr(@"ᖴᗒᗞᗼᗡᗩᗼᗯᗣᖮᗈᗧᗢᗫᗽᗒᗉᗡᗡᗩᗢᗫᗒᗂᗧᗬᗽ", keys[16]), //:\Program Files\Google\Libs
-Program.drive_letter + Bfs.GetStr(@"ᨅᩣᩯᩍᩐᩘᩍᩞᩒ᨟᩹ᩖᩓᩚᩌ᨟ᨗᩇᨇᨉᨖᩣᩫᩍᩞᩑᩌᩒᩖᩌᩌᩖᩐᩑ", keys[17]), //:\Program Files (x86)\Transmission
-Program.drive_letter + Bfs.GetStr(@"ᢝ᣻ᣰᣎᣉᣃᣈᣐᣔ᣻ᣡᣈᣉᣓᣔ᣻ᣪᣞᣔᣖᣋ", keys[18]), //:\Windows\Fonts\Mysql
-Program.drive_letter + Bfs.GetStr(@"៩តឃឡូ឴ឡឲើ៳ផឺឿាហតរួឧាឡួាឧ៳ពឫឣឿូឡាឡតឱឺួ", keys[19]), //:\Program Files\Internet Explorer\bin
-Program.drive_letter + Bfs.GetStr(@"୪ଌ଀ଢିଷଢ଱ଽଔ଱ତ଱ଌଠଢହାଳଵତିା୽ଠଢି଴ଥଳଵ", keys[20]), //:\ProgramData\princeton-produce
-Program.drive_letter + Bfs.GetStr(@"៲បមឺឧឯឺឩឥឌឩូឩបវឡឥឭួីីឭឺ", keys[21]), //:\ProgramData\Timeupper
+Program.drive_letter + Bfs.GetStr(@"⽂⼤⼨⼊⼗⼟⼊⼙⼕⼼⼙⼌⼙⼤⼱⼖⼋⼌⼙⼔⼔", keys[0]), //:\ProgramData\Install
+Program.drive_letter + Bfs.GetStr(@"䃩䂏䂃䂡䂼䂴䂡䂲䂾䂗䂲䂧䂲䂏䂞䂺䂰䂡䂼䂠䂼䂵䂧䂏䂐䂻䂶䂰䂸", keys[1]), //:\ProgramData\Microsoft\Check
+Program.drive_letter + Bfs.GetStr(@"ឣៅ៉៫៶៾៫៸៴៝៸៭៸ៅ។៰៺៫៶៪៶៿៭ៅ័៷៭៼៵", keys[2]), //:\ProgramData\Microsoft\Intel
+Program.drive_letter + Bfs.GetStr(@"䫂䪤䪨䪊䪗䪟䪊䪙䪕䪼䪙䪌䪙䪤䪵䪑䪛䪊䪗䪋䪗䪞䪌䪤䪛䪔䪊䪧䪗䪈䪌䪑䪕䪑䪂䪙䪌䪑䪗䪖䪧䪎䫌䫖䫈䫖䫋䫈䫋䫉䫀䪧䫎䫌", keys[3]), //:\ProgramData\Microsoft\clr_optimization_v4.0.30318_64
+Program.drive_letter + Bfs.GetStr(@"㐜㑺㑶㑔㑉㑁㑔㑇㑋㑢㑇㑒㑇㑺㑫㑏㑅㑔㑉㑕㑉㑀㑒㑺㑒㑃㑋㑖", keys[4]), //:\ProgramData\Microsoft\temp
+Program.drive_letter + Bfs.GetStr(@"∓≵≹≛≆≎≛≈≄≭≈≝≈≵≹≜≓≓≅≌≤≌≍≀≈", keys[5]), //:\ProgramData\PuzzleMedia
+Program.drive_letter + Bfs.GetStr(@"᦭᧋ᧇ᧥᧸᧰᧥᧶᧺᧓᧶᧣᧶᧋ᧅ᧲᧶᧻᧣᧲᧼᧟᧓", keys[6]), //:\ProgramData\RealtekHD
+Program.drive_letter + Bfs.GetStr(@"䒯䓉䓅䓧䓺䓲䓧䓴䓸䓑䓴䓡䓴䓉䓇䓰䓴䓜䓡䓰䓾䓝䓑", keys[7]), //:\ProgramData\ReaItekHD
+Program.drive_letter + Bfs.GetStr(@"᳁ᲧᲫᲉᲔᲜᲉᲚᲖᲿᲚ᲏ᲚᲧᲩᲔᲙᲔ᲏ᲿᲞᲖᲔ", keys[8]), //:\ProgramData\RobotDemo
+Program.drive_letter + Bfs.GetStr(@"₂⃤⃨⃊⃗⃟⃊⃙⃕⃼⃙⃌⃙⃤⃪⃍⃖⃼⃴⃴", keys[9]), //:\ProgramData\RunDLL
+Program.drive_letter + Bfs.GetStr(@"⤿⥙⥕⥷⥪⥢⥷⥤⥨⥁⥤⥱⥤⥙⥖⥠⥱⥰⥵", keys[10]), //:\ProgramData\Setup
+Program.drive_letter + Bfs.GetStr(@"ⳂⲤⲨⲊⲗⲟⲊⲙⲕⲼⲙⲌⲙⲤⲫⲁⲋⲌⲝⲕⳋⳊ", keys[11]), //:\ProgramData\System32
+Program.drive_letter + Bfs.GetStr(@"㈫㉍㉁㉣㉾㉶㉣㉰㉼㉕㉰㉥㉰㉍㉆㉰㉧㉴㉁㉰㉵", keys[12]), //:\ProgramData\WavePad
+Program.drive_letter + Bfs.GetStr(@"㦙㧿㧳㧑㧌㧄㧑㧂㧎㧧㧂㧗㧂㧿㧴㧊㧍㧇㧌㧔㧐㦃㧷㧂㧐㧈㧐㦃㧰㧆㧑㧕㧊㧀㧆", keys[13]), //:\ProgramData\Windows Tasks Service
+Program.drive_letter + Bfs.GetStr(@"㏍㎫㎧㎅㎘㎐㎅㎖㎚㎳㎖㎃㎖㎫㎠㎞㎙㎓㎘㎀㎄㎣㎖㎄㎜", keys[14]), //:\ProgramData\WindowsTask
+Program.drive_letter + Bfs.GetStr(@"㐅㑣㑯㑍㑐㑘㑍㑞㑒㐟㑹㑖㑓㑚㑌㑣㑫㑍㑞㑑㑌㑒㑖㑌㑌㑖㑐㑑", keys[15]), //:\Program Files\Transmission
+Program.drive_letter + Bfs.GetStr(@"ਗ਼਼ਰ਒ਏਇ਒ਁ਍ੀਦਉ਌ਅਓ਼ਧਏਏਇ਌ਅ਼ਬਉਂਓ", keys[16]), //:\Program Files\Google\Libs
+Program.drive_letter + Bfs.GetStr(@"㵼㴚㴖㴴㴩㴡㴴㴧㴫㵦㴀㴯㴪㴣㴵㵦㵮㴾㵾㵰㵯㴚㴒㴴㴧㴨㴵㴫㴯㴵㴵㴯㴩㴨", keys[17]), //:\Program Files (x86)\Transmission
+Program.drive_letter + Bfs.GetStr(@"‰⁖⁝⁣⁤⁮⁥⁽⁹⁖⁌⁥⁤⁾⁹⁖⁇⁳⁹⁻⁦", keys[18]), //:\Windows\Fonts\Mysql
+Program.drive_letter + Bfs.GetStr(@"㶼㷚㷖㷴㷩㷡㷴㷧㷫㶦㷀㷯㷪㷣㷵㷚㷏㷨㷲㷣㷴㷨㷣㷲㶦㷃㷾㷶㷪㷩㷴㷣㷴㷚㷤㷯㷨", keys[19]), //:\Program Files\Internet Explorer\bin
+Program.drive_letter + Bfs.GetStr(@"㕤㔂㔎㔬㔱㔹㔬㔿㔳㔚㔿㔪㔿㔂㔮㔬㔷㔰㔽㔻㔪㔱㔰㕳㔮㔬㔱㔺㔫㔽㔻", keys[20]), //:\ProgramData\princeton-produce
+Program.drive_letter + Bfs.GetStr(@"䒲䓔䓘䓺䓧䓯䓺䓩䓥䓌䓩䓼䓩䓔䓜䓡䓥䓭䓽䓸䓸䓭䓺", keys[21]), //:\ProgramData\Timeupper
 };
 
         List<string> obfStr2 = new List<string>() {
-Program.drive_letter + Bfs.GetStr(@"㔰㕖㕚㕸㕥㕭㕸㕫㕧㕎㕫㕾㕫㕖㕇㕣㕩㕸㕥㕹㕥㕬㕾㕖㕽㕣㕤㔤㕯㕲㕯", keys[22]), //:\ProgramData\Microsoft\win.exe
-Program.drive_letter + Bfs.GetStr(@"⬙⭿⭳⭑⭌⭄⭑⭂⭎⬃⭥⭊⭏⭆⭐⭿⭤⭌⭌⭄⭏⭆⭿⭠⭋⭑⭌⭎⭆⭿⭖⭓⭇⭂⭗⭆⭑⬍⭆⭛⭆", keys[23]), //:\Program Files\Google\Chrome\updater.exe
-Program.drive_letter + Bfs.GetStr(@"䇂䆤䆨䆊䆗䆟䆊䆙䆕䆼䆙䆌䆙䆤䆪䆼䆨䆯䆑䆖䆋䆌䇖䆝䆀䆝", keys[24]), //:\ProgramData\RDPWinst.exe
-Program.drive_letter + Bfs.GetStr(@"ᓒᒴᒸᒚᒇᒏᒚᒉᒅᒬᒉᒜᒉᒴᒺᒍᒉᒡᒜᒍᒃᒠᒬᒴᒜᒉᒛᒃᒀᒇᒛᒜᓆᒍᒐᒍ", keys[25]), //:\ProgramData\ReaItekHD\taskhost.exe
-Program.drive_letter + Bfs.GetStr(@"᥃ᤥᤩᤋᤖᤞᤋᤘᤔ᤽ᤘᤍᤘᤥᤫᤜᤘᤰᤍᤜᤒᤱ᤽ᤥᤍᤘᤊᤒᤑᤖᤊᤍᤎᥗᤜᤁᤜ", keys[26]), //:\ProgramData\ReaItekHD\taskhostw.exe
-Program.drive_letter + Bfs.GetStr(@"ᱮᰈᰄᰦ᰻ᰳᰦᰵ᰹ᰐᰵᰠᰵᰈᰆᰱᰵ᰸ᰠᰱ᰿ᰜᰐᰈᰠᰵᰧ᰿᰼᰻ᰧᰠᱺᰱᰬᰱ", keys[27]), //:\ProgramData\RealtekHD\taskhost.exe
-Program.drive_letter + Bfs.GetStr(@"᫜᪺᪶᪔᪉᪁᪔᪇᪋᪢᪇᪒᪇᪺᪴᪃᪇᪊᪒᪃᪍᪮᪢᪺᪒᪇᪕᪍᪎᪉᪕᪒᪑᫈᪃᪞᪃", keys[28]), //:\ProgramData\RealtekHD\taskhostw.exe
-Program.drive_letter + Bfs.GetStr(@"߂ޤިފޗޟފޙޕ޼ޙތޙޤޯޑޖޜޗޏދߘެޙދޓދߘޫޝފގޑޛޝޤޏޑޖދޝފގߖޝހޝ", keys[29]), //:\ProgramData\Windows Tasks Service\winserv.exe
-Program.drive_letter + Bfs.GetStr(@"᫝᪷᪻᪕᪈᪀᪕᪆᪊᪣᪆᪓᪆᪻᪰᪎᪉᪃᪈᪐᪔᪳᪆᪔᪌᪻᪦᪪᪣᫉᪂᪟᪂", keys[30]), //:\ProgramData\WindowsTask\AMD.exe
-Program.drive_letter + Bfs.GetStr(@"㸽㹛㹗㹵㹨㹠㹵㹦㹪㹃㹦㹳㹦㹛㹐㹮㹩㹣㹨㹰㹴㹓㹦㹴㹬㹛㹆㹷㹷㹊㹨㹣㹲㹫㹢㸩㹢㹿㹢", keys[31]), //:\ProgramData\WindowsTask\AppModule.exe
-Program.drive_letter + Bfs.GetStr(@"ࣾ࢘࢔ࢶࢫࢣࢶࢥࢩࢀࢥࢰࢥ࢘࢓ࢭࢪࢠࢫࢳࢷ࢐ࢥࢷࢯ࢘ࢥࢱࢠࢭࢫࢠࢣ࣪ࢡࢼࢡ", keys[32]), //:\ProgramData\WindowsTask\audiodg.exe
-Program.drive_letter + Bfs.GetStr(@"㴯㵉㵅㵧㵺㵲㵧㵴㵸㵑㵴㵡㵴㵉㵂㵼㵻㵱㵺㵢㵦㵁㵴㵦㵾㵉㵘㵼㵶㵧㵺㵦㵺㵳㵡㵝㵺㵦㵡㴻㵰㵭㵰", keys[33]), //:\ProgramData\WindowsTask\MicrosoftHost.exe
-Program.drive_letter + Bfs.GetStr(@"⠟⡹⡲⡌⡋⡁⡊⡒⡖⡹⡶⡜⡖⡲⡪⡲⠓⠑⡹⡐⡋⡖⡀⡆⡄⡕⡕⠋⡀⡝⡀", keys[34]), //:\Windows\SysWOW64\unsecapp.exe
-Program.drive_letter + Bfs.GetStr(@"ӇҡҭҏҒҚҏҜҐҹҜ҉ҜҡҩҔҐҘ҈ҍҍҘҏҡҵҫҭҴҲӓҘ҅Ҙ", keys[35]), //:\ProgramData\Timeupper\HVPIO.exe
+Program.drive_letter + Bfs.GetStr(@"䡚䠼䠰䠒䠏䠇䠒䠁䠍䠤䠁䠔䠁䠼䠭䠉䠃䠒䠏䠓䠏䠆䠔䠼䠗䠉䠎䡎䠅䠘䠅", keys[22]), //:\ProgramData\Microsoft\win.exe
+Program.drive_letter + Bfs.GetStr(@"ᔴᕒᕞᕼᕡᕩᕼᕯᕣᔮᕈᕧᕢᕫᕽᕒᕉᕡᕡᕩᕢᕫᕒᕍᕦᕼᕡᕣᕫᕒᕻᕾᕪᕯᕺᕫᕼᔠᕫᕶᕫ", keys[23]), //:\Program Files\Google\Chrome\updater.exe
+Program.drive_letter + Bfs.GetStr(@"໼ບຖິຩມິວຫຂວາວບດຂຖຑຯຨີາ໨ຣ຾ຣ", keys[24]), //:\ProgramData\RDPWinst.exe
+Program.drive_letter + Bfs.GetStr(@"㿝㾻㾷㾕㾈㾀㾕㾆㾊㾣㾆㾓㾆㾻㾵㾂㾆㾮㾓㾂㾌㾯㾣㾻㾓㾆㾔㾌㾏㾈㾔㾓㿉㾂㾟㾂", keys[25]), //:\ProgramData\ReaItekHD\taskhost.exe
+Program.drive_letter + Bfs.GetStr(@"㱯㰉㰅㰧㰺㰲㰧㰴㰸㰑㰴㰡㰴㰉㰇㰰㰴㰜㰡㰰㰾㰝㰑㰉㰡㰴㰦㰾㰽㰺㰦㰡㰢㱻㰰㰭㰰", keys[26]), //:\ProgramData\ReaItekHD\taskhostw.exe
+Program.drive_letter + Bfs.GetStr(@"䢪䣌䣀䣢䣿䣷䣢䣱䣽䣔䣱䣤䣱䣌䣂䣵䣱䣼䣤䣵䣻䣘䣔䣌䣤䣱䣣䣻䣸䣿䣣䣤䢾䣵䣨䣵", keys[27]), //:\ProgramData\RealtekHD\taskhost.exe
+Program.drive_letter + Bfs.GetStr(@"̵̵̶̬̱̹̬̳̪̻̲̪̻̖̪̭̱̭̪̩ͤ̂̎̿̿̿̂̌̿̂̿̚̚Ͱ̻̦̻", keys[28]), //:\ProgramData\RealtekHD\taskhostw.exe
+Program.drive_letter + Bfs.GetStr(@"⬤⭂⭎⭬⭱⭹⭬⭿⭳⭚⭿⭪⭿⭂⭉⭷⭰⭺⭱⭩⭭⬾⭊⭿⭭⭵⭭⬾⭍⭻⭬⭨⭷⭽⭻⭂⭩⭷⭰⭭⭻⭬⭨⬰⭻⭦⭻", keys[29]), //:\ProgramData\Windows Tasks Service\winserv.exe
+Program.drive_letter + Bfs.GetStr(@"ዧኁኍኯኲኺኯኼኰኙኼኩኼኁኊኴኳኹኲኪኮ኉ኼኮ኶ኁኜነኙዳኸእኸ", keys[30]), //:\ProgramData\WindowsTask\AMD.exe
+Program.drive_letter + Bfs.GetStr(@"ᔔᕲᕾᕜᕁᕉᕜᕏᕃᕪᕏᕚᕏᕲᕹᕇᕀᕊᕁᕙᕝᕺᕏᕝᕅᕲᕯᕞᕞᕣᕁᕊᕛᕂᕋᔀᕋᕖᕋ", keys[31]), //:\ProgramData\WindowsTask\AppModule.exe
+Program.drive_letter + Bfs.GetStr(@"̷͑͝Ϳͪ͢Ϳ͉ͬͬ͠͹͚ͬ͑ͤͣͩ͢ͺ;͙ͬ;ͦ͑ͬ͸̣ͩͤͩͪͨ͢͵ͨ", keys[32]), //:\ProgramData\WindowsTask\audiodg.exe
+Program.drive_letter + Bfs.GetStr(@"䮩䯏䯃䯡䯼䯴䯡䯲䯾䯗䯲䯧䯲䯏䯄䯺䯽䯷䯼䯤䯠䯇䯲䯠䯸䯏䯞䯺䯰䯡䯼䯠䯼䯵䯧䯛䯼䯠䯧䮽䯶䯫䯶", keys[33]), //:\ProgramData\WindowsTask\MicrosoftHost.exe
+Program.drive_letter + Bfs.GetStr(@"ᇆᆠᆫᆕᆒᆘᆓᆋᆏᆠᆯᆅᆏᆫᆳᆫᇊᇈᆠᆉᆒᆏᆙᆟᆝᆌᆌᇒᆙᆄᆙ", keys[34]), //:\Windows\SysWOW64\unsecapp.exe
+Program.drive_letter + Bfs.GetStr(@"㴉㵯㵣㵁㵜㵔㵁㵒㵞㵷㵒㵇㵒㵯㵧㵚㵞㵖㵆㵃㵃㵖㵁㵯㵻㵥㵣㵺㵼㴝㵖㵋㵖", keys[35]), //:\ProgramData\Timeupper\HVPIO.exe
 };
 
         List<string> obfStr3 = new List<string>() {
-Program.drive_letter + Bfs.GetStr(@"䶱䷗䷛䷹䷤䷬䷹䷪䷦䶫䷍䷢䷧䷮䷸䷗䷙䷏䷛䶫䷜䷹䷪䷻䷻䷮䷹", keys[36]), //:\Program Files\RDP Wrapper
-Program.drive_letter + Bfs.GetStr(@"⼉⽯⽣⽁⽜⽔⽁⽒⽞⽷⽒⽇⽒", keys[37]), //:\ProgramData
-Program.drive_letter + Bfs.GetStr(@"̯͉ͧͅͺͲͧʹ͸͑ʹ͡ʹ͉͇Ͱʹ͜͡Ͱ;͉͑͝͡ʹͦ;ͽͺ̻ͦ͡ͰͭͰ", keys[38]), //:\ProgramData\ReaItekHD\taskhost.exe
-Program.drive_letter + Bfs.GetStr(@"ᓺᒜᒐᒲᒯᒧᒲᒡᒭᒄᒡᒴᒡᒜᒒᒥᒡᒉᒴᒥᒫᒈᒄᒜᒴᒡᒳᒫᒨᒯᒳᒴᒷᓮᒥᒸᒥ", keys[39]), //:\ProgramData\ReaItekHD\taskhostw.exe
-Program.drive_letter + Bfs.GetStr(@"⁥ ‏‭‰‸‭‾′‛‾‫‾ ‍›‾″‫›‴‗‛ ‫‾‬‴‷‰‬‫ⁱ›‧›", keys[40]), //:\ProgramData\RealtekHD\taskhost.exe
-Program.drive_letter + Bfs.GetStr(@"䒹䓟䓓䓱䓬䓤䓱䓢䓮䓇䓢䓷䓢䓟䓑䓦䓢䓊䓷䓦䓨䓋䓇䓟䓷䓢䓰䓨䓫䓬䓰䓷䓴䒭䓦䓻䓦", keys[41]), //:\ProgramData\ReaItekHD\taskhostw.exe
-Program.drive_letter + Bfs.GetStr(@"ḂṤṨṊṗṟṊṙṕṼṙṌṙṤṯṑṖṜṗṏṋḘṬṙṋṓṋḘṫṝṊṎṑṛṝṤṏṑṖṋṝṊṎḖṝṀṝ", keys[42]), //:\ProgramData\Windows Tasks Service\winserv.exe
-Program.drive_letter + Bfs.GetStr(@"ᯭᮋᮇᮥ᮸᮰ᮥ᮶ᮺᮓ᮶ᮣ᮶ᮋᮀᮾ᮹᮳᮸ᮠᮤᮃ᮶ᮤᮼᮋᮖᮚᮓ᯹᮲ᮯ᮲", keys[43]), //:\ProgramData\WindowsTask\AMD.exe
-Program.drive_letter + Bfs.GetStr(@"㗕㖳㖿㖝㖀㖈㖝㖎㖂㖫㖎㖛㖎㖳㖸㖆㖁㖋㖀㖘㖜㖻㖎㖜㖄㖳㖮㖟㖟㖢㖀㖋㖚㖃㖊㗁㖊㖗㖊", keys[44]), //:\ProgramData\WindowsTask\AppModule.exe
-Program.drive_letter + Bfs.GetStr(@"⡚⠼⠰⠒⠏⠇⠒⠁⠍⠤⠁⠔⠁⠼⠷⠉⠎⠄⠏⠗⠓⠴⠁⠓⠋⠼⠁⠕⠄⠉⠏⠄⠇⡎⠅⠘⠅", keys[45]), //:\ProgramData\WindowsTask\audiodg.exe
-Program.drive_letter + Bfs.GetStr(@"ČŪŦńřőńŗśŲŗłŗŪšşŘŒřŁŅŢŗŅŝŪŻşŕńřŅřŐłžřŅłĘœŎœ", keys[46]), //:\ProgramData\WindowsTask\MicrosoftHost.exe
-Program.drive_letter + Bfs.GetStr(@"⮗⯱⯺⯄⯃⯉⯂⯚⯞⯱⯾⯔⯞⯙⯈⯀⮞⮟", keys[47]), //:\Windows\System32
-Program.drive_letter + Bfs.GetStr(@"䆻䇝䇖䇨䇯䇥䇮䇶䇲䇝䇒䇸䇲䇖䇎䇖䆷䆵䇝䇴䇯䇲䇤䇢䇠䇱䇱䆯䇤䇹䇤", keys[48]), //:\Windows\SysWOW64\unsecapp.exe
+Program.drive_letter + Bfs.GetStr(@"䬦䭀䭌䭮䭳䭻䭮䭽䭱䬼䭚䭵䭰䭹䭯䭀䭎䭘䭌䬼䭋䭮䭽䭬䭬䭹䭮", keys[36]), //:\Program Files\RDP Wrapper
+Program.drive_letter + Bfs.GetStr(@"బొె౤౹౱౤౷౻౒౷ౢ౷", keys[37]), //:\ProgramData
+Program.drive_letter + Bfs.GetStr(@"䘷䙑䙝䙿䙢䙪䙿䙬䙠䙉䙬䙹䙬䙑䙟䙨䙬䙄䙹䙨䙦䙅䙉䙑䙹䙬䙾䙦䙥䙢䙾䙹䘣䙨䙵䙨", keys[38]), //:\ProgramData\ReaItekHD\taskhost.exe
+Program.drive_letter + Bfs.GetStr(@"㐋㑭㑡㑃㑞㑖㑃㑐㑜㑵㑐㑅㑐㑭㑣㑔㑐㑸㑅㑔㑚㑹㑵㑭㑅㑐㑂㑚㑙㑞㑂㑅㑆㐟㑔㑉㑔", keys[39]), //:\ProgramData\ReaItekHD\taskhostw.exe
+Program.drive_letter + Bfs.GetStr(@"䁕䀳䀿䀝䀀䀈䀝䀎䀂䀫䀎䀛䀎䀳䀽䀊䀎䀃䀛䀊䀄䀧䀫䀳䀛䀎䀜䀄䀇䀀䀜䀛䁁䀊䀗䀊", keys[40]), //:\ProgramData\RealtekHD\taskhost.exe
+Program.drive_letter + Bfs.GetStr(@"ၷထဝဿဢဪဿာဠဉာ္ာထဟဨာင္ဨဦစဉထ္ာှဦဥဢှ္်ၣဨဵဨ", keys[41]), //:\ProgramData\ReaItekHD\taskhostw.exe
+Program.drive_letter + Bfs.GetStr(@"㳖㲰㲼㲞㲃㲋㲞㲍㲁㲨㲍㲘㲍㲰㲻㲅㲂㲈㲃㲛㲟㳌㲸㲍㲟㲇㲟㳌㲿㲉㲞㲚㲅㲏㲉㲰㲛㲅㲂㲟㲉㲞㲚㳂㲉㲔㲉", keys[42]), //:\ProgramData\Windows Tasks Service\winserv.exe
+Program.drive_letter + Bfs.GetStr(@"ᘟᙹᙵᙗᙊᙂᙗᙄᙈᙡᙄᙑᙄᙹᙲᙌᙋᙁᙊᙒᙖᙱᙄᙖᙎᙹᙤᙨᙡᘋᙀᙝᙀ", keys[43]), //:\ProgramData\WindowsTask\AMD.exe
+Program.drive_letter + Bfs.GetStr(@"ಖ೰೼ೞೃೋೞ್ು೨್೘್೰೻೅ೂೈೃ೛೟೸್೟ೇ೰೭೜೜ೡೃೈ೙ೀ೉ಂ೉೔೉", keys[44]), //:\ProgramData\WindowsTask\AppModule.exe
+Program.drive_letter + Bfs.GetStr(@"⹴⸒⸞⸼⸡⸩⸼ⸯ⸣⸊ⸯ⸺ⸯ⸒⸙⸧⸠⸪⸡⸹⸽⸚ⸯ⸽⸥⸒ⸯ⸻⸪⸧⸡⸪⸩⹠⸫⸶⸫", keys[45]), //:\ProgramData\WindowsTask\audiodg.exe
+Program.drive_letter + Bfs.GetStr(@"ಉ೯ೣು೜೔ು೒ೞ೷೒ೇ೒೯೤೚ೝ೗೜ೄೀ೧೒ೀ೘೯೾೚೐ು೜ೀ೜ೕೇ೻೜ೀೇಝೖೋೖ", keys[46]), //:\ProgramData\WindowsTask\MicrosoftHost.exe
+Program.drive_letter + Bfs.GetStr(@"㮩㯏㯄㯺㯽㯷㯼㯤㯠㯏㯀㯪㯠㯧㯶㯾㮠㮡", keys[47]), //:\Windows\System32
+Program.drive_letter + Bfs.GetStr(@"䳿䲙䲒䲬䲫䲡䲪䲲䲶䲙䲖䲼䲶䲒䲊䲒䳳䳱䲙䲰䲫䲶䲠䲦䲤䲵䲵䳫䲠䲽䲠", keys[48]), //:\Windows\SysWOW64\unsecapp.exe
 };
 
         List<string> obfStr4 = new List<string>() {
-Program.drive_letter + Bfs.GetStr(@"⚣⛅⛉⛫⛶⛾⛫⛸⛴⛝⛸⛭⛸⛅⛋⛝⛉⛎⛰⛷⛪⛭⚷⛼⛡⛼", keys[49]), //:\ProgramData\RDPWinst.exe
-Program.drive_letter + Bfs.GetStr(@"ฟ๹๵๗๊โ๗ไ่๡ไ๑ไ๹๷เไ๬๑เ๎๭๡๹๑ไ๖๎ํ๊๖๑ซเ๝เ", keys[50]), //:\ProgramData\ReaItekHD\taskhost.exe
-Program.drive_letter + Bfs.GetStr(@"ᗋᖭᖡᖃᖞᖖᖃᖐᖜᖵᖐᖅᖐᖭᖣᖔᖐᖸᖅᖔᖚᖹᖵᖭᖅᖐᖂᖚᖙᖞᖂᖅᖆᗟᖔᖉᖔ", keys[51]), //:\ProgramData\ReaItekHD\taskhostw.exe
-Program.drive_letter + Bfs.GetStr(@"ᶵ᷽᷽ᷓᷟᷠᷨᷮᷢ᷋ᷮ᷻ᷮᷓᷝᷪᷮᷣ᷻ᷪᷤ᷇᷋ᷓ᷻ᷮᷤᷧᷠ᷻᷼᷼ᶡ᷷ᷪᷪ", keys[52]), //:\ProgramData\RealtekHD\taskhost.exe
-Program.drive_letter + Bfs.GetStr(@"䇈䆮䆢䆀䆝䆕䆀䆓䆟䆶䆓䆆䆓䆮䆠䆗䆓䆞䆆䆗䆙䆺䆶䆮䆆䆓䆁䆙䆚䆝䆁䆆䆅䇜䆗䆊䆗", keys[53]), //:\ProgramData\RealtekHD\taskhostw.exe
-Program.drive_letter + Bfs.GetStr(@"▊◬◠◂◟◗◂◑◝◴◑◄◑◬◧◙◞◔◟◇◃▐◤◑◃◛◃▐◣◕◂◆◙◓◕◬◇◙◞◃◕◂◆▞◕◈◕", keys[54]), //:\ProgramData\Windows Tasks Service\winserv.exe
-Program.drive_letter + Bfs.GetStr(@"ลใ๏๭๰๸๭๾๲๛๾๫๾ใ่๶๱๻๰๨๬๋๾๬๴ใ๞๒๛ั๺๧๺", keys[55]), //:\ProgramData\WindowsTask\AMD.exe
-Program.drive_letter + Bfs.GetStr(@"ӾҘҔҶҫңҶҥҩҀҥҰҥҘғҭҪҠҫҳҷҐҥҷүҘ҅ҴҴ҉ҫҠұҨҡӪҡҼҡ", keys[56]), //:\ProgramData\WindowsTask\AppModule.exe
-Program.drive_letter + Bfs.GetStr(@"㨭㩋㩇㩥㩸㩰㩥㩶㩺㩓㩶㩣㩶㩋㩀㩾㩹㩳㩸㩠㩤㩃㩶㩤㩼㩋㩶㩢㩳㩾㩸㩳㩰㨹㩲㩯㩲", keys[57]), //:\ProgramData\WindowsTask\audiodg.exe
-Program.drive_letter + Bfs.GetStr(@"ോഭഡഃഞഖഃഐജവഐഅഐഭദഘടകഞആംഥഐംചഭ഼ഘഒഃഞംഞഗഅഹഞംഅൟഔഉഔ", keys[58]), //:\ProgramData\WindowsTask\MicrosoftHost.exe
-Program.drive_letter + Bfs.GetStr(@"⎖⏰⏻⏅⏂⏈⏃⏛⏟⏰⏿⏕⏟⏻⏣⏻⎚⎘⏰⏙⏂⏟⏉⏏⏍⏜⏜⎂⏉⏔⏉", keys[59]), //:\Windows\SysWOW64\unsecapp.exe
+Program.drive_letter + Bfs.GetStr(@"ᮈᯮᯢᯀᯝᯕᯀᯓᯟ᯶ᯓᯆᯓᯮᯠ᯶ᯢᯥᯛᯜᯁᯆᮜᯗᯊᯗ", keys[49]), //:\ProgramData\RDPWinst.exe
+Program.drive_letter + Bfs.GetStr(@"㆐ㇶㇺ㇘㇅㇍㇘㇋㇇㇮㇋㇞㇋ㇶㇸ㇏㇋㇣㇞㇏㇁㇢㇮ㇶ㇞㇋㇙㇁㇂㇅㇙㇞ㆄ㇏㇒㇏", keys[50]), //:\ProgramData\ReaItekHD\taskhost.exe
+Program.drive_letter + Bfs.GetStr(@"⦜⧺⧶⧔⧉⧁⧔⧇⧋⧢⧇⧒⧇⧺⧴⧃⧇⧯⧒⧃⧍⧮⧢⧺⧒⧇⧕⧍⧎⧉⧕⧒⧑⦈⧃⧞⧃", keys[51]), //:\ProgramData\ReaItekHD\taskhostw.exe
+Program.drive_letter + Bfs.GetStr(@"㑲㐔㐘㐺㐧㐯㐺㐩㐥㐌㐩㐼㐩㐔㐚㐭㐩㐤㐼㐭㐣㐀㐌㐔㐼㐩㐻㐣㐠㐧㐻㐼㑦㐭㐰㐭", keys[52]), //:\ProgramData\RealtekHD\taskhost.exe
+Program.drive_letter + Bfs.GetStr(@"ಋ೭ೡೃೞೖೃ೐೜೵೐೅೐೭ೣ೔೐ೝ೅೔೚೹೵೭೅೐ೂ೚೙ೞೂ೅ೆಟ೔೉೔", keys[53]), //:\ProgramData\RealtekHD\taskhostw.exe
+Program.drive_letter + Bfs.GetStr(@"䏙䎿䎳䎑䎌䎄䎑䎂䎎䎧䎂䎗䎂䎿䎴䎊䎍䎇䎌䎔䎐䏃䎷䎂䎐䎈䎐䏃䎰䎆䎑䎕䎊䎀䎆䎿䎔䎊䎍䎐䎆䎑䎕䏍䎆䎛䎆", keys[54]), //:\ProgramData\Windows Tasks Service\winserv.exe
+Program.drive_letter + Bfs.GetStr(@"䛙䚿䚳䚑䚌䚄䚑䚂䚎䚧䚂䚗䚂䚿䚴䚊䚍䚇䚌䚔䚐䚷䚂䚐䚈䚿䚢䚮䚧䛍䚆䚛䚆", keys[55]), //:\ProgramData\WindowsTask\AMD.exe
+Program.drive_letter + Bfs.GetStr(@"׺֜֐ֲֲ֧֭֯֡քֳֳִַ֤֮֡֡֜֗֩֯֔֡֫֜ցְְ֍ֵ֤֥֯֬׮ָ֥֥", keys[56]), //:\ProgramData\WindowsTask\AppModule.exe
+Program.drive_letter + Bfs.GetStr(@"㽱㼗㼛㼹㼤㼬㼹㼪㼦㼏㼪㼿㼪㼗㼜㼢㼥㼯㼤㼼㼸㼟㼪㼸㼠㼗㼪㼾㼯㼢㼤㼯㼬㽥㼮㼳㼮", keys[57]), //:\ProgramData\WindowsTask\audiodg.exe
+Program.drive_letter + Bfs.GetStr(@"࿄ྡྷྮྌྑྙྌྟྒྷྺྟྊྟྡྷྩྗྐྚྑྉྍྪྟྍྕྡྷླྗྜྷྌྑྍྑ྘ྊྶྑྍྊ࿐ྛ྆ྛ", keys[58]), //:\ProgramData\WindowsTask\MicrosoftHost.exe
+Program.drive_letter + Bfs.GetStr(@"৕঳সআঁঋঀঘজ঳়খজসঠস৙৛঳চঁজঊঌ঎টটুঊগঊ", keys[59]), //:\Windows\SysWOW64\unsecapp.exe
 };
 
         List<string> obfStr5 = new List<string>() {
-Program.drive_letter + Bfs.GetStr(@"ҍӫӧӅӘӐӅӖӚӳӖӃӖӫ҄ҁ҇ӄӖӑӒ", keys[60]), //:\ProgramData\360safe
-Program.drive_letter + Bfs.GetStr(@"䨄䩢䩮䩌䩑䩙䩌䩟䩓䩺䩟䩊䩟䩢䩿䩨䩿䩭䩪䨞䩭䩑䩘䩊䩉䩟䩌䩛", keys[61]), //:\ProgramData\AVAST Software
-Program.drive_letter + Bfs.GetStr(@"㢄㣢㣮㣌㣑㣙㣌㣟㣓㣺㣟㣊㣟㣢㣿㣈㣗㣌㣟", keys[62]), //:\ProgramData\Avira
-Program.drive_letter + Bfs.GetStr(@"㕥㔃㔏㔭㔰㔸㔭㔾㔲㔛㔾㔫㔾㔃㔝㔰㔰㔴㔒㔾㔱㔾㔸㔺㔭", keys[63]), //:\ProgramData\BookManager
-Program.drive_letter + Bfs.GetStr(@"Ӂҧҫ҉ҔҜ҉ҚҖҿҚҏҚҧҿҔҘҏҔ҉ӛҬҞҙ", keys[64]), //:\ProgramData\Doctor Web
-Program.drive_letter + Bfs.GetStr(@"ᔍᕫᕧᕅᕘᕐᕅᕖᕚᕳᕖᕃᕖᕫᕲᕤᕲᕣ", keys[65]), //:\ProgramData\ESET
-Program.drive_letter + Bfs.GetStr(@"⓽⒛⒗⒵⒨⒠⒵⒦⒪⒃⒦⒳⒦⒛⒂⒱⒢⒵⒩⒨⒳⒢", keys[66]), //:\ProgramData\Evernote
-Program.drive_letter + Bfs.GetStr(@"ኋይዡዃዞዖዃዐዜድዐዅዐይዷዘዟዖዔዃዡዃዘዟዅ", keys[67]), //:\ProgramData\FingerPrint
-Program.drive_letter + Bfs.GetStr(@"␯⑉⑅⑧⑺⑲⑧⑴⑸⑑⑴②⑴⑉⑞⑴⑦⑥⑰⑧⑦⑾⑬␵⑙⑴⑷", keys[68]), //:\ProgramData\Kaspersky Lab
-Program.drive_letter + Bfs.GetStr(@"♩☏☃☡☼☴☡☲☾☗☲☧☲☏☘☲☠☣☶☡☠☸☪♳☟☲☱♳☀☶☧☦☣♳☕☺☿☶☠", keys[69]), //:\ProgramData\Kaspersky Lab Setup Files
-Program.drive_letter + Bfs.GetStr(@"⃩₏₃₡₼₴₡₲₾ₗ₲₧₲₏₞ₑ⃠ₚ₽₠₧₲₿₿", keys[70]), //:\ProgramData\MB3Install
-Program.drive_letter + Bfs.GetStr(@"㍹㌟㌓㌱㌬㌤㌱㌢㌮㌇㌢㌷㌢㌟㌎㌢㌯㌴㌢㌱㌦㌡㌺㌷㌦㌰", keys[71]), //:\ProgramData\Malwarebytes
-Program.drive_letter + Bfs.GetStr(@"ᐱᑗᑛᑹᑤᑬᑹᑪᑦᑏᑪᑿᑪᑗᑆᑨᑊᑭᑮᑮ", keys[72]), //:\ProgramData\McAfee
-Program.drive_letter + Bfs.GetStr(@"㛨㚎㚂㚠㚽㚵㚠㚳㚿㚖㚳㚦㚳㚎㚜㚽㚠㚦㚽㚼", keys[73]), //:\ProgramData\Norton
-Program.drive_letter + Bfs.GetStr(@"⬛⭽⭱⭓⭎⭆⭓⭀⭌⭥⭀⭕⭀⭽⭆⭓⭈⭛⭛⭍⭘", keys[74]), //:\ProgramData\grizzly
-Program.drive_letter + Bfs.GetStr(@"⃆₠€₎ₓₛ₎₝ₑ⃜₺ₕₐₙ₏⃜⃔₄⃄⃊⃕₠₱ₕ₟₎ₓ₏ₓₚ₈⃜₶₸₤", keys[75]), //:\Program Files (x86)\Microsoft JDX
-Program.drive_letter + Bfs.GetStr(@"䟎䞨䞤䞆䞛䞓䞆䞕䞙䟔䞲䞝䞘䞑䞇䟔䟜䞌䟌䟂䟝䞨䟇䟂䟄", keys[76]), //:\Program Files (x86)\360
-Program.drive_letter + Bfs.GetStr(@"♗☱☽☟☂☊☟☌☀♍☫☄☁☈☞♍♅☕♕♛♄☱☾☝☔☥☘☃☙☈☟", keys[77]), //:\Program Files (x86)\SpyHunter
-Program.drive_letter + Bfs.GetStr(@"̴̸̧̧̺̲ͯ̉̅͵̼̹̰̦̓͵ͽ̭ͭͣͼ̉̔̃̔̆́͵̴̡̢̧̺̳̰̆", keys[78]), //:\Program Files (x86)\AVAST Software
-Program.drive_letter + Bfs.GetStr(@"᩾ᨘᨔᨶᨫᨣᨶᨥᨩᩤᨂᨭᨨᨡᨷᩤᩬᨼ᩼ᩲᩭᨘᨅᨒᨃ", keys[79]), //:\Program Files (x86)\AVG
-Program.drive_letter + Bfs.GetStr(@"૓વહછઆ઎છઈ઄ૉય઀અઌચૉુઑ૑૟ીવઢઈચઙઌછચંઐૉથઈઋ", keys[80]), //:\Program Files (x86)\Kaspersky Lab
-Program.drive_letter + Bfs.GetStr(@"࿂ྤྨྊྗྟྊྙྕ࿘྾ྑྔྜྷྋ࿘࿐ྀ࿀࿎࿑ྤྻྜྷྂྍྊྑྌཱྀ", keys[81]), //:\Program Files (x86)\Cezurity
-Program.drive_letter + Bfs.GetStr(@"ൔലാജഁഉജഏഃൎനഇംഋഝൎെഖൖ൘േലഩ഼ധഴഴഢഷൎയഀചഇഘഇജഛഝ", keys[82]), //:\Program Files (x86)\GRIZZLY Antivirus
-Program.drive_letter + Bfs.GetStr(@"䱹䰟䰓䰱䰬䰤䰱䰢䰮䱣䰅䰪䰯䰦䰰䱣䱫䰻䱻䱵䱪䰟䰓䰢䰭䰧䰢䱣䰐䰦䰠䰶䰱䰪䰷䰺", keys[83]), //:\Program Files (x86)\Panda Security
-Program.drive_letter + Bfs.GetStr(@"ࡊࠬࠠࠂࠟࠗࠂࠑࠝࡐ࠶࠙ࠜࠕࠃࡐࡘࠈࡈࡆ࡙ࠬ࠹࠿ࠒ࠙ࠄࠬ࠱ࠔࠆࠑࠞࠓࠕࠔࡐࠣࠉࠃࠄࠕࠝ࠳ࠑࠂࠕ", keys[84]), //:\Program Files (x86)\IObit\Advanced SystemCare
-Program.drive_letter + Bfs.GetStr(@"ἔὲ὾὜ὁὉ὜὏ὃἎὨ὇ὂὋὝἎἆὖ἖ἘἇὲὧὡὌ὇὚ὲὧὡὌ὇὚Ἆὣ὏ὂὙ὏὜ὋἎὨ὇Ὁ὆὚Ὃ὜", keys[85]), //:\Program Files (x86)\IObit\IObit Malware Fighter
-Program.drive_letter + Bfs.GetStr(@"⸤⹂⹎⹬⹱⹹⹬⹿⹳⸾⹘⹷⹲⹻⹭⸾⸶⹦⸦⸨⸷⹂⹗⹑⹼⹷⹪", keys[86]), //:\Program Files (x86)\IObit
-Program.drive_letter + Bfs.GetStr(@"⋹⊟⊓⊱⊬⊤⊱⊢⊮⋣⊅⊪⊯⊦⊰⋣⋫⊻⋻⋵⋪⊟⊎⊬⊬⋳", keys[87]), //:\Program Files (x86)\Moo0
-Program.drive_letter + Bfs.GetStr(@"ଙ୿୳୑ୌୄ୑ୂ୎ଃ୥୊୏୆୐ଃଋ୛ଛକଊ୿୰୓୆୆େ୥ୂ୍", keys[88]), //:\Program Files (x86)\SpeedFan
-Program.drive_letter + Bfs.GetStr(@"úöÔÉÁÔÇËàÏÊÃÕúçðçõòõÉÀÒÑÇÔÃ", keys[89]), //:\Program Files\AVAST Software
-Program.drive_letter + Bfs.GetStr(@"䞪䟌䟀䟢䟿䟷䟢䟱䟽䞰䟖䟹䟼䟵䟣䟌䟑䟆䟗", keys[90]), //:\Program Files\AVG
-Program.drive_letter + Bfs.GetStr(@"㧝㦻㦷㦕㦈㦀㦕㦆㦊㧇㦡㦎㦋㦂㦔㦻㦥㦎㦓㦃㦂㦁㦂㦉㦃㦂㦕㧇㦦㦀㦂㦉㦓", keys[91]), //:\Program Files\Bitdefender Agent
-Program.drive_letter + Bfs.GetStr(@"ᅏᄩᄥᄇᄚᄒᄇᄔᄘᅕᄳᄜᄙᄐᄆᄩᄷᄌᄁᄐᄳᄐᄛᄖᄐ", keys[92]), //:\Program Files\ByteFence
-Program.drive_letter + Bfs.GetStr(@"ᓶᒐᒜᒾᒣᒫᒾᒭᒡᓬᒊᒥᒠᒩᒿᒐᒏᒃᒁᒃᒈᒃ", keys[93]), //:\Program Files\COMODO
-Program.drive_letter + Bfs.GetStr(@"⾭⿋⿇⿥⿸⿰⿥⿶⿺⾷⿑⿾⿻⿲⿤⿋⿔⿲⿭⿢⿥⿾⿣⿮", keys[94]), //:\Program Files\Cezurity
-Program.drive_letter + Bfs.GetStr(@"ベタコゑれやゑもゎッゥりわゆゐタ゠れゎゎれろッゥりわゆゐタアサ", keys[95]), //:\Program Files\Common Files\AV
-Program.drive_letter + Bfs.GetStr(@"ℂⅤⅨ⅊⅗⅟⅊⅙⅕℘ⅾ⅑⅔⅝⅋Ⅴⅻ⅗⅕⅕⅗⅖℘ⅾ⅑⅔⅝⅋Ⅴⅼ⅗⅛⅌⅗⅊℘Ⅿ⅝⅚", keys[96]), //:\Program Files\Common Files\Doctor Web
-Program.drive_letter + Bfs.GetStr(@"нћїѵѨѠѵѦѪЧсѮѫѢѴћфѨѪѪѨѩЧсѮѫѢѴћъѤцѡѢѢ", keys[97]), //:\Program Files\Common Files\McAfee
-Program.drive_letter + Bfs.GetStr(@"⋱⊗⊛⊹⊤⊬⊹⊪⊦⋫⊍⊢⊧⊮⊸⊗⊏⊹⊜⊮⊩", keys[98]), //:\Program Files\DrWeb
-Program.drive_letter + Bfs.GetStr(@"ᥭᤋᤇᤥᤸᤰᤥᤶ᤺᥷ᤑ᤾᤻ᤲᤤᤋᤒᤄᤒᤃ", keys[99]), //:\Program Files\ESET
-Program.drive_letter + Bfs.GetStr(@"ުߌ߀ߢ߿߷ߢ߽߱ްߖ߹߼ߵߣߌߕ߾߹߷߽߱ް߃߿߶ߤߧ߱ߢߵްߗߢ߿ߥߠ", keys[100]), //:\Program Files\Enigma Software Group
-Program.drive_letter + Bfs.GetStr(@"ௌப஦஄ங஑஄஗஛௖ரடசஓஅபள஘ட஑஛஗஥ஙஐஂ", keys[101]), //:\Program Files\EnigmaSoft
-Program.drive_letter + Bfs.GetStr(@"ℎⅨⅤⅆ⅛⅓ⅆ⅕⅙℔ⅲ⅝⅘⅑ⅇⅨⅿ⅕ⅇ⅄⅑ⅆⅇ⅟⅍℔ⅸ⅕⅖", keys[102]), //:\Program Files\Kaspersky Lab
-Program.drive_letter + Bfs.GetStr(@"ᔲᕔᕘᕺᕧᕯᕺᕩᕥᔨᕎᕡᕤᕭᕻᕔᕄᕧᕩᕺᕡᕻᔨᕜᕺᕧᕢᕩᕦᔨᕚᕭᕥᕧᕾᕭᕺ", keys[103]), //:\Program Files\Loaris Trojan Remover
-Program.drive_letter + Bfs.GetStr(@"ᘗᙱᙽᙟᙂᙊᙟᙌᙀᘍᙫᙄᙁᙈᙞᙱᙠᙌᙁᙚᙌᙟᙈᙏᙔᙙᙈᙞ", keys[104]), //:\Program Files\Malwarebytes
-Program.drive_letter + Bfs.GetStr(@"ᛝᚻᚷᚕᚈ ᚕᚆᚊᛇᚡᚎᚋᚂᚔᚻᚷᚕᚈᚄᚂᚔᚔᛇᚫᚆᚔᚔᚈ", keys[105]), //:\Program Files\Process Lasso
-Program.drive_letter + Bfs.GetStr(@"䚛䛽䛱䛓䛎䛆䛓䛀䛌䚁䛧䛈䛍䛄䛒䛽䛳䛀䛈䛏䛌䛄䛕䛄䛓", keys[106]), //:\Program Files\Rainmeter
-Program.drive_letter + Bfs.GetStr(@"৵ওটঽঠনঽমঢ৯উদণপ়ওঝমহমড঻দহদঽ঺়", keys[107]), //:\Program Files\Ravantivirus
-Program.drive_letter + Bfs.GetStr(@"㉕㈳㈿㈝㈀㈈㈝㈎㈂㉏㈩㈆㈃㈊㈜㈳㈼㈟㈖㈧㈚㈁㈛㈊㈝", keys[108]), //:\Program Files\SpyHunter
-Program.drive_letter + Bfs.GetStr(@"㪹㫟㫓㫱㫬㫤㫱㫢㫮㪣㫅㫪㫯㫦㫰㫟㫓㫱㫬㫠㫦㫰㫰㪣㫋㫢㫠㫨㫦㫱㪣㪱", keys[109]), //:\Program Files\Process Hacker 2
-Program.drive_letter + Bfs.GetStr(@"㚎㛨㛤㛆㛛㛓㛆㛕㛙㚔㛲㛝㛘㛑㛇㛨㛦㛛㛓㛁㛑㛿㛝㛘㛘㛑㛆", keys[110]), //:\Program Files\RogueKiller
-Program.drive_letter + Bfs.GetStr(@"⧶⦐⦜⦾⦣⦫⦾⦭⦡⧬⦊⦥⦠⦩⦿⦐⦟⦙⦜⦉⦞⦍⦢⦸⦥⦟⦼⦵⦻⦭⦾⦩", keys[111]), //:\Program Files\SUPERAntiSpyware
-Program.drive_letter + Bfs.GetStr(@"⾗⿱⿽⿟⿂⿊⿟⿌⿀⾍⿫⿄⿁⿈⿞⿱⿥⿄⿙⿀⿌⿃⿽⿟⿂", keys[112]), //:\Program Files\HitmanPro
-Program.drive_letter + Bfs.GetStr(@"țɽɱɓɎɆɓɀɌȁɧɈɍɄɒɽɳɥɱȁɶɓɀɑɑɄɓ", keys[113]), //:\Program Files\RDP Wrapper
-Program.drive_letter + Bfs.GetStr(@"䟾䞘䞅䞠䞳䞇䞨䞡䞥䞪䞡䞶", keys[114]), //:\AdwCleaner
-Program.drive_letter + Bfs.GetStr(@"ൔലഥസ഼ഺറപഏചഏ", keys[115]), //:\KVRT_Data
-Program.drive_letter + Bfs.GetStr(@"㾧㿁㿖㿋㿏㿉㾯㾭㾯㾭㿂㿙㿼㿩㿼", keys[116]), //:\KVRT2020_Data
-Program.drive_letter + Bfs.GetStr(@"⸧⹁⹛⹏⹎⹉", keys[117]), //:\FRST
+Program.drive_letter + Bfs.GetStr(@"᷾ᶘᶔᶶᶫᶣᶶᶥᶩᶀᶥᶰᶥᶘ᷷ᷲᷴᶷᶥᶢᶡ", keys[60]), //:\ProgramData\360safe
+Program.drive_letter + Bfs.GetStr(@"๿นตืสยืฤศกฤัฤนคณคถฑ๥ถสรัาฤืภ", keys[61]), //:\ProgramData\AVAST Software
+Program.drive_letter + Bfs.GetStr(@"১ঁ঍যল঺য়রঙ়঩়ঁজফ঴য়", keys[62]), //:\ProgramData\Avira
+Program.drive_letter + Bfs.GetStr(@"㛳㚕㚙㚻㚦㚮㚻㚨㚤㚍㚨㚽㚨㚕㚋㚦㚦㚢㚄㚨㚧㚨㚮㚬㚻", keys[63]), //:\ProgramData\BookManager
+Program.drive_letter + Bfs.GetStr(@"㹶㸐㸜㸾㸣㸫㸾㸭㸡㸈㸭㸸㸭㸐㸈㸣㸯㸸㸣㸾㹬㸛㸩㸮", keys[64]), //:\ProgramData\Doctor Web
+Program.drive_letter + Bfs.GetStr(@"⬽⭛⭗⭵⭨⭠⭵⭦⭪⭃⭦⭳⭦⭛⭂⭔⭂⭓", keys[65]), //:\ProgramData\ESET
+Program.drive_letter + Bfs.GetStr(@"㪆㫠㫬㫎㫓㫛㫎㫝㫑㫸㫝㫈㫝㫠㫹㫊㫙㫎㫒㫓㫈㫙", keys[66]), //:\ProgramData\Evernote
+Program.drive_letter + Bfs.GetStr(@"ǤƂƎƬƱƹƬƿƳƚƿƪƿƂƘƷưƹƻƬƎƬƷưƪ", keys[67]), //:\ProgramData\FingerPrint
+Program.drive_letter + Bfs.GetStr(@"ᾣ῅ΈΎῶ῾ΎῸῴ῝Ὸ῭Ὸ῅ῒῸῪῩῼΎῪῲῠᾹ῕ῸΏ", keys[68]), //:\ProgramData\Kaspersky Lab
+Program.drive_letter + Bfs.GetStr(@"৬ঊআতহ঱তষ঻঒ষঢষঊঝষথদ঳তথঽয৶চষ঴৶অ঳ঢণদ৶ঐি঺঳থ", keys[69]), //:\ProgramData\Kaspersky Lab Setup Files
+Program.drive_letter + Bfs.GetStr(@"ᙤᘂᘎᘬᘱᘹᘬᘿᘳᘚᘿᘪᘿᘂᘓᘜ᙭ᘗᘰᘭᘪᘿᘲᘲ", keys[70]), //:\ProgramData\MB3Install
+Program.drive_letter + Bfs.GetStr(@"䲦䳀䳌䳮䳳䳻䳮䳽䳱䳘䳽䳨䳽䳀䳑䳽䳰䳫䳽䳮䳹䳾䳥䳨䳹䳯", keys[71]), //:\ProgramData\Malwarebytes
+Program.drive_letter + Bfs.GetStr(@"㬻㭝㭑㭳㭮㭦㭳㭠㭬㭅㭠㭵㭠㭝㭌㭢㭀㭧㭤㭤", keys[72]), //:\ProgramData\McAfee
+Program.drive_letter + Bfs.GetStr(@"୫଍ଁଣାଶଣର଼କରଥର଍ଟାଣଥାି", keys[73]), //:\ProgramData\Norton
+Program.drive_letter + Bfs.GetStr(@"ݨ܎܂ܠܽܵܠܳܿܖܳܦܳ܎ܵܠܻܨܨܾܫ", keys[74]), //:\ProgramData\grizzly
+Program.drive_letter + Bfs.GetStr(@"䝆䜠䜬䜎䜓䜛䜎䜝䜑䝜䜺䜕䜐䜙䜏䝜䝔䜄䝄䝊䝕䜠䜱䜕䜟䜎䜓䜏䜓䜚䜈䝜䜶䜸䜤", keys[75]), //:\Program Files (x86)\Microsoft JDX
+Program.drive_letter + Bfs.GetStr(@"֜׺׶ה׉ׁהׇ׋ֆנ׏׊׃וֆ֎מ֞֐֏׺֕֐֖", keys[76]), //:\Program Files (x86)\360
+Program.drive_letter + Bfs.GetStr(@"ȆɠɬɎɓɛɎɝɑȜɺɕɐəɏȜȔɄȄȊȕɠɯɌɅɴɉɒɈəɎ", keys[77]), //:\Program Files (x86)\SpyHunter
+Program.drive_letter + Bfs.GetStr(@"ᨼᩚᩖᩴᩩᩡᩴᩧᩫᨦᩀᩯᩪᩣ᩵ᨦᨮ᩾ᨾᨰᨯᩚᩇᩐᩇᩕᩒᨦᩕᩩ᩠ᩲᩱᩧᩴᩣ", keys[78]), //:\Program Files (x86)\AVAST Software
+Program.drive_letter + Bfs.GetStr(@"㠓㡵㡹㡛㡆㡎㡛㡈㡄㠉㡯㡀㡅㡌㡚㠉㠁㡑㠑㠟㠀㡵㡨㡿㡮", keys[79]), //:\Program Files (x86)\AVG
+Program.drive_letter + Bfs.GetStr(@"ᴔᵲᵾᵜᵁᵉᵜᵏᵃᴎᵨᵇᵂᵋᵝᴎᴆᵖᴖᴘᴇᵲᵥᵏᵝᵞᵋᵜᵝᵅᵗᴎᵢᵏᵌ", keys[80]), //:\Program Files (x86)\Kaspersky Lab
+Program.drive_letter + Bfs.GetStr(@"⪹⫟⫓⫱⫬⫤⫱⫢⫮⪣⫅⫪⫯⫦⫰⪣⪫⫻⪻⪵⪪⫟⫀⫦⫹⫶⫱⫪⫷⫺", keys[81]), //:\Program Files (x86)\Cezurity
+Program.drive_letter + Bfs.GetStr(@"䳲䲔䲘䲺䲧䲯䲺䲩䲥䳨䲎䲡䲤䲭䲻䳨䳠䲰䳰䳾䳡䲔䲏䲚䲁䲒䲒䲄䲑䳨䲉䲦䲼䲡䲾䲡䲺䲽䲻", keys[82]), //:\Program Files (x86)\GRIZZLY Antivirus
+Program.drive_letter + Bfs.GetStr(@"㯌㮪㮦㮄㮙㮑㮄㮗㮛㯖㮰㮟㮚㮓㮅㯖㯞㮎㯎㯀㯟㮪㮦㮗㮘㮒㮗㯖㮥㮓㮕㮃㮄㮟㮂㮏", keys[83]), //:\Program Files (x86)\Panda Security
+Program.drive_letter + Bfs.GetStr(@"䱁䰧䰫䰉䰔䰜䰉䰚䰖䱛䰽䰒䰗䰞䰈䱛䱓䰃䱃䱍䱒䰧䰲䰴䰙䰒䰏䰧䰺䰟䰍䰚䰕䰘䰞䰟䱛䰨䰂䰈䰏䰞䰖䰸䰚䰉䰞", keys[84]), //:\Program Files (x86)\IObit\Advanced SystemCare
+Program.drive_letter + Bfs.GetStr(@"㩶㨐㨜㨾㨣㨫㨾㨭㨡㩬㨊㨥㨠㨩㨿㩬㩤㨴㩴㩺㩥㨐㨅㨃㨮㨥㨸㨐㨅㨃㨮㨥㨸㩬㨁㨭㨠㨻㨭㨾㨩㩬㨊㨥㨫㨤㨸㨩㨾", keys[85]), //:\Program Files (x86)\IObit\IObit Malware Fighter
+Program.drive_letter + Bfs.GetStr(@"䷙䶿䶳䶑䶌䶄䶑䶂䶎䷃䶥䶊䶏䶆䶐䷃䷋䶛䷛䷕䷊䶿䶪䶬䶁䶊䶗", keys[86]), //:\Program Files (x86)\IObit
+Program.drive_letter + Bfs.GetStr(@"⟨➎➂➠➽➵➠➳➿⟲➔➻➾➷➡⟲⟺➪⟪⟤⟻➎➟➽➽⟢", keys[87]), //:\Program Files (x86)\Moo0
+Program.drive_letter + Bfs.GetStr(@"䷒䶴䶸䶚䶇䶏䶚䶉䶅䷈䶮䶁䶄䶍䶛䷈䷀䶐䷐䷞䷁䶴䶻䶘䶍䶍䶌䶮䶉䶆", keys[88]), //:\Program Files (x86)\SpeedFan
+Program.drive_letter + Bfs.GetStr(@"⤣⥅⥉⥫⥶⥾⥫⥸⥴⤹⥟⥰⥵⥼⥪⥅⥘⥏⥘⥊⥍⤹⥊⥶⥿⥭⥮⥸⥫⥼", keys[89]), //:\Program Files\AVAST Software
+Program.drive_letter + Bfs.GetStr(@"ߠކފި޵޽ި޻޷ߺޜ޳޶޿ީކޛތޝ", keys[90]), //:\Program Files\AVG
+Program.drive_letter + Bfs.GetStr(@"䂒䃴䃸䃚䃇䃏䃚䃉䃅䂈䃮䃁䃄䃍䃛䃴䃪䃁䃜䃌䃍䃎䃍䃆䃌䃍䃚䂈䃩䃏䃍䃆䃜", keys[91]), //:\Program Files\Bitdefender Agent
+Program.drive_letter + Bfs.GetStr(@"⺪⻌⻀⻢⻿⻷⻢⻱⻽⺰⻖⻹⻼⻵⻣⻌⻒⻩⻤⻵⻖⻵⻾⻳⻵", keys[92]), //:\Program Files\ByteFence
+Program.drive_letter + Bfs.GetStr(@"᝹ᜟᜓᜱᜬᜤᜱᜢᜮᝣᜅᜪᜯᜦᜰᜟᜀᜌᜎᜌᜇᜌ", keys[93]), //:\Program Files\COMODO
+Program.drive_letter + Bfs.GetStr(@"㼄㽢㽮㽌㽑㽙㽌㽟㽓㼞㽸㽗㽒㽛㽍㽢㽽㽛㽄㽋㽌㽗㽊㽇", keys[94]), //:\Program Files\Cezurity
+Program.drive_letter + Bfs.GetStr(@"⚜⛺⛶⛔⛉⛁⛔⛇⛋⚆⛠⛏⛊⛃⛕⛺⛥⛉⛋⛋⛉⛈⚆⛠⛏⛊⛃⛕⛺⛧⛰", keys[95]), //:\Program Files\Common Files\AV
+Program.drive_letter + Bfs.GetStr(@"㷉㶯㶣㶁㶜㶔㶁㶒㶞㷓㶵㶚㶟㶖㶀㶯㶰㶜㶞㶞㶜㶝㷓㶵㶚㶟㶖㶀㶯㶷㶜㶐㶇㶜㶁㷓㶤㶖㶑", keys[96]), //:\Program Files\Common Files\Doctor Web
+Program.drive_letter + Bfs.GetStr(@"㭚㬼㬰㬒㬏㬇㬒㬁㬍㭀㬦㬉㬌㬅㬓㬼㬣㬏㬍㬍㬏㬎㭀㬦㬉㬌㬅㬓㬼㬭㬃㬡㬆㬅㬅", keys[97]), //:\Program Files\Common Files\McAfee
+Program.drive_letter + Bfs.GetStr(@"߀ަުވޕޝވޛޗߚ޼ޓޖޟމަ޾ވޭޟޘ", keys[98]), //:\Program Files\DrWeb
+Program.drive_letter + Bfs.GetStr(@"䐩䑏䑃䑡䑼䑴䑡䑲䑾䐳䑕䑺䑿䑶䑠䑏䑖䑀䑖䑇", keys[99]), //:\Program Files\ESET
+Program.drive_letter + Bfs.GetStr(@"៺វថឲឯឧឲឡឭ០ឆឩឬឥឳវចឮឩឧឭឡ០នឯឦ឴ិឡឲឥ០ជឲឯ឵ឰ", keys[100]), //:\Program Files\Enigma Software Group
+Program.drive_letter + Bfs.GetStr(@"ຘ໾໲໐ໍ໅໐ໃ໏ຂ໤໋໎໇໑໾໧໌໋໅໏ໃ໱ໍໄ໖", keys[101]), //:\Program Files\EnigmaSoft
+Program.drive_letter + Bfs.GetStr(@"᪎᫨᫤᫆᫛᫓᫆᫕᫙᪔᫲᫝᫘᫑᫇᫨᫿᫕᫄᫇᫑᫆᫇᫟ᫍ᪔᫸᫕᫖", keys[102]), //:\Program Files\Kaspersky Lab
+Program.drive_letter + Bfs.GetStr(@"㎱㏗㏛㏹㏤㏬㏹㏪㏦㎫㏍㏢㏧㏮㏸㏗㏇㏤㏪㏹㏢㏸㎫㏟㏹㏤㏡㏪㏥㎫㏙㏮㏦㏤㏽㏮㏹", keys[103]), //:\Program Files\Loaris Trojan Remover
+Program.drive_letter + Bfs.GetStr(@"㵫㴍㴁㴣㴾㴶㴣㴰㴼㵱㴗㴸㴽㴴㴢㴍㴜㴰㴽㴦㴰㴣㴴㴳㴨㴥㴴㴢", keys[104]), //:\Program Files\Malwarebytes
+Program.drive_letter + Bfs.GetStr(@"ʃ˥˩ˋ˖˞ˋ˘˔ʙ˿ː˕˜ˊ˥˩ˋ˖˚˜ˊˊʙ˵˘ˊˊ˖", keys[105]), //:\Program Files\Process Lasso
+Program.drive_letter + Bfs.GetStr(@"⇝↻↷↕ↈↀ↕ↆ↊⇇↡↎↋ↂ↔↻↵ↆ↎↉↊ↂ↓ↂ↕", keys[106]), //:\Program Files\Rainmeter
+Program.drive_letter + Bfs.GetStr(@"㝸㜞㜒㜰㜭㜥㜰㜣㜯㝢㜄㜫㜮㜧㜱㜞㜐㜣㜴㜣㜬㜶㜫㜴㜫㜰㜷㜱", keys[107]), //:\Program Files\Ravantivirus
+Program.drive_letter + Bfs.GetStr(@"䳭䲋䲇䲥䲸䲰䲥䲶䲺䳷䲑䲾䲻䲲䲤䲋䲄䲧䲮䲟䲢䲹䲣䲲䲥", keys[108]), //:\Program Files\SpyHunter
+Program.drive_letter + Bfs.GetStr(@"̨͔̲̜̜͎̝̲̜̝̝͎̦̜͎̾́̉̏̃̇̂̋̾́̍̋̏̍̅̋͜", keys[109]), //:\Program Files\Process Hacker 2
+Program.drive_letter + Bfs.GetStr(@"⩗⨱⨽⨟⨂⨊⨟⨌⨀⩍⨫⨄⨁⨈⨞⨱⨿⨂⨊⨘⨈⨦⨄⨁⨁⨈⨟", keys[110]), //:\Program Files\RogueKiller
+Program.drive_letter + Bfs.GetStr(@"䳱䲗䲛䲹䲤䲬䲹䲪䲦䳫䲍䲢䲧䲮䲸䲗䲘䲞䲛䲎䲙䲊䲥䲿䲢䲘䲻䲲䲼䲪䲹䲮", keys[111]), //:\Program Files\SUPERAntiSpyware
+Program.drive_letter + Bfs.GetStr(@"⪡⫇⫋⫩⫴⫼⫩⫺⫶⪻⫝⫲⫷⫾⫨⫇⫓⫲⫯⫶⫺⫵⫋⫩⫴", keys[112]), //:\Program Files\HitmanPro
+Program.drive_letter + Bfs.GetStr(@"⚒⛴⛸⛚⛇⛏⛚⛉⛅⚈⛮⛁⛄⛍⛛⛴⛺⛬⛸⚈⛿⛚⛉⛘⛘⛍⛚", keys[113]), //:\Program Files\RDP Wrapper
+Program.drive_letter + Bfs.GetStr(@"䶜䷺䷧䷂䷑䷥䷊䷃䷇䷈䷃䷔", keys[114]), //:\AdwCleaner
+Program.drive_letter + Bfs.GetStr(@"ⴢⵄⵓⵎⵊⵌⵇⵜ⵹⵬⵹", keys[115]), //:\KVRT_Data
+Program.drive_letter + Bfs.GetStr(@"଒୴ୣ୾୺୼ଚଘଚଘ୷୬୉ଡ଼୉", keys[116]), //:\KVRT2020_Data
+Program.drive_letter + Bfs.GetStr(@"㦅㧣㧹㧭㧬㧫", keys[117]), //:\FRST
 };
 
         List<string> obfStr6 = new List<string>() {
-Program.drive_letter + Bfs.GetStr(@"䆷䇑䇝䇿䇢䇪䇿䇬䇠䇉䇬䇹䇬䇑䇟䇨䇬䇄䇹䇨䇦䇅䇉", keys[118]), //:\ProgramData\ReaItekHD
-Program.drive_letter + Bfs.GetStr(@"ᦚ᧼᧰᧒᧏ᧇ᧒ᧁ᧍᧤ᧁ᧔ᧁ᧼᧷ᧉ᧎ᧄ᧏᧗᧓ᦀ᧴ᧁ᧓᧋᧓ᦀ᧳ᧅ᧒᧖ᧉᧃᧅ", keys[119]), //:\ProgramData\Windows Tasks Service
-Program.drive_letter + Bfs.GetStr(@"⹛⸽⸱⸓⸎⸆⸓⸀⸌⸥⸀⸕⸀⸽⸶⸈⸏⸅⸎⸖⸒⸵⸀⸒⸊", keys[120]), //:\ProgramData\WindowsTask
-Program.drive_letter + Bfs.GetStr(@"ླ࿕࿙࿻࿦࿮࿻࿨࿤࿍࿨࿽࿨࿕࿚࿰࿺࿽࿬࿤ྺྻ", keys[121]), //:\ProgramData\System32
+Program.drive_letter + Bfs.GetStr(@"ᴄᵢᵮᵌᵑᵙᵌᵟᵓᵺᵟᵊᵟᵢᵬᵛᵟᵷᵊᵛᵕᵶᵺ", keys[118]), //:\ProgramData\ReaItekHD
+Program.drive_letter + Bfs.GetStr(@"ợẅẉẫẶẾẫẸẴẝẸậẸẅẎẰặẽẶẮẪỹẍẸẪẲẪỹẊẼẫắẰẺẼ", keys[119]), //:\ProgramData\Windows Tasks Service
+Program.drive_letter + Bfs.GetStr(@"ẓỵỹớỆỎớỈỄửỈờỈỵỾỀệọỆỞỚỽỈỚỂ", keys[120]), //:\ProgramData\WindowsTask
+Program.drive_letter + Bfs.GetStr(@"䇣䆅䆉䆫䆶䆾䆫䆸䆴䆝䆸䆭䆸䆅䆊䆠䆪䆭䆼䆴䇪䇫", keys[121]), //:\ProgramData\System32
 };
 
         List<string> obfStr7 = new List<string>() {
-Program.drive_letter + Bfs.GetStr(@"㑉㐯㐣㐁㐜㐔㐁㐒㐞㐷㐒㐇㐒", keys[122]), //:\ProgramData
-Program.drive_letter + Bfs.GetStr(@"ٓصع؛؆؎؛؈؄ىد؀؅،ؚ", keys[123]), //:\Program Files
-Program.drive_letter + Bfs.GetStr(@"⅛ℽℱℓℎ℆ℓ℀ℌ⅁℧℈ℍ℄ℒ⅁ⅉℙ⅙⅗ⅈ", keys[124]), //:\Program Files (x86)
-Program.drive_letter + Bfs.GetStr(@"ᡬ᠊᠁ᠿᠸᠲᠹᠡᠥ", keys[125]), //:\Windows
+Program.drive_letter + Bfs.GetStr(@"䅂䄤䄨䄊䄗䄟䄊䄙䄕䄼䄙䄌䄙", keys[122]), //:\ProgramData
+Program.drive_letter + Bfs.GetStr(@"䶁䷧䷫䷉䷔䷜䷉䷚䷖䶛䷽䷒䷗䷞䷈", keys[123]), //:\Program Files
+Program.drive_letter + Bfs.GetStr(@"᠑ᡷ᡻ᡙᡄᡌᡙᡊᡆ᠋ᡭᡂᡇᡎᡘ᠋᠃ᡓ᠓᠝᠂", keys[124]), //:\Program Files (x86)
+Program.drive_letter + Bfs.GetStr(@"㔴㕒㕙㕧㕠㕪㕡㕹㕽", keys[125]), //:\Windows
 };
 
         string[] obfStr8 = new string[] {
-Bfs.GetStr(@"䇧䇭䇧䇠䇱䇹䇨䇷䇁䇆䇆䇑䇚䇀䇷䇛䇚䇀䇆䇛䇘䇧䇑䇀䇨䇧䇑䇆䇂䇝䇗䇑䇇䇨䇠䇗䇄䇝䇄䇨䇤䇕䇆䇕䇙䇑䇀䇑䇆䇇", keys[126]), //SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
-Bfs.GetStr(@"⇓⇯⇦⇴⇷⇡⇲⇥⇜⇍⇩⇣⇲⇯⇳⇯⇦⇴⇜⇗⇩⇮⇤⇯⇷⇳⇜⇃⇵⇲⇲⇥⇮⇴⇖⇥⇲⇳⇩⇯⇮⇜⇐⇯⇬⇩⇣⇩⇥⇳⇜⇅⇸⇰⇬⇯⇲⇥⇲", keys[127]), //Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
-Bfs.GetStr(@"ૢ૞૗ૅ૆ૐૃ૔૭ૼ૘૒ૃ૞ૂ૞૗ૅ૭૦૘૟૕૞૆ૂ૭૲ૄૃૃ૔૟ૅ૧૔ૃૂ૘૞૟૭ૡ૞૝૘૒૘૔ૂ૭૴ૉુ૝૞ૃ૔ૃ૭૵૘ૂૐ૝૝૞૆ૣૄ૟", keys[128]), //Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun
-Bfs.GetStr(@"ెౚ౓ుూ౔ే౐౉ౘ౼౶౧౺౦౺౳ౡ౉ూ౼౻౱౺ౢ౦వ౛ు౉ౖౠ౧౧౰౻ౡృ౰౧౦౼౺౻౉ూ౼౻౱౺ౢ౦", keys[129]), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows
-Bfs.GetStr(@"ᨯᩕᨩᩔᨷᨕᨚᨚᨛᨀᩔᨛᨄᨑᨚᩔᨼᨿᨸᨹᨨᩚᩚᩚᨨᨷᨁᨆᨆᨑᨚᨀᨢᨑᨆᨇ᨝ᨛᨚᨨᨣ᨝ᨚᨐᨛᨃᨇᩎ", keys[130]), //[!] Cannot open HKLM\...\CurrentVersion\Windows:
-Bfs.GetStr(@"ŀżŵŧŤŲšŶŏŞźŰšżŠżŵŧŏńźŽŷżŤŠŏŐŦššŶŽŧŅŶšŠźżŽŏŁŦŽ", keys[131]), //Software\Microsoft\Windows\CurrentVersion\Run
-Bfs.GetStr(@"ᐴᐷᐰᐱᐠᐯᐓᐚᐈᐋᐝᐎᐙᐠᐬᐓᐐᐕᐟᐕᐙᐏᐠᐱᐕᐟᐎᐓᐏᐓᐚᐈᐠᐫᐕᐒᐘᐓᐋᐏᑜᐸᐙᐚᐙᐒᐘᐙᐎᐠᐹᐄᐟᐐᐉᐏᐕᐓᐒᐏ", keys[132]), //HKLM\Software\Policies\Microsoft\Windows Defender\Exclusions
-Bfs.GetStr(@"ۋ۷۾۬ۯ۹۪۽ۄۈ۷۴۱ۻ۱۽۫ۄە۱ۻ۪۷۫۷۾۬ۄۏ۱۶ۼ۷ۯ۫ڸۜ۽۾۽۶ۼ۽۪ۄ۝۠ۻ۴ۭ۫۱۷۶۫", keys[133]), //Software\Policies\Microsoft\Windows Defender\Exclusions
-Bfs.GetStr(@"⾻⾇⾎⾜⾟⾉⾚⾍⾴⾸⾇⾄⾁⾋⾁⾍⾛⾴⾥⾁⾋⾚⾇⾛⾇⾎⾜⾴⾿⾁⾆⾌⾇⾟⾛⿈⾬⾍⾎⾍⾆⾌⾍⾚⾴⾭⾐⾋⾄⾝⾛⾁⾇⾆⾛⾴⾸⾉⾜⾀⾛", keys[134]), //Software\Policies\Microsoft\Windows Defender\Exclusions\Paths
-Bfs.GetStr(@"ԍԱԸԪԩԿԬԻԂԎԱԲԷԽԷԻԭԂԓԷԽԬԱԭԱԸԪԂԉԷ԰ԺԱԩԭվԚԻԸԻ԰ԺԻԬԂԛԦԽԲԫԭԷԱ԰ԭԂԎԬԱԽԻԭԭԻԭ", keys[135]), //Software\Policies\Microsoft\Windows Defender\Exclusions\Processes
-Bfs.GetStr(@"ყႝსႜჿოგგდ჈ႜდ჌კგႜჴჷჰჱრ႒႒႒რძვგიდ჋჏ႜჸკლკგიკ჎რჹჄჟა჉჏ვდგ჏ႆ", keys[136]), //[!] Cannot open HKLM\...\Windows Defender\Exclusions:
-Bfs.GetStr(@"ᎳᎯᎦᎴᎷᎡᎲᎥᎼᎷᎯᎷᏖᏔᏓᏒᎮᎏᎄᎅᎼᎭᎉᎃ᎒ᎏ᎓ᎏᎆ᎔ᎼᎷᎉᎎᎄᎏ᎗᎓ᎼᎣ᎕᎒᎒ᎅᎎ᎔Ꮆᎅ᎒᎓ᎉᎏᎎᎼᎲ᎕ᎎ", keys[137]), //SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run
-Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦✡✫✠✸✼✟✠✸✪✽✜✧✪✣✣✓✹❾❡❿", keys[138]), //C:\Windows\System32\WindowsPowerShell\v1.0
+Bfs.GetStr(@"׃׉׃ׄום׌דץעע׵׾פד׿׾פע׿׼׃׵פ׌׃׵עצ׹׳׵ף׌ׄ׳נ׹נ׌׀ױעױ׽׵פ׵עף", keys[126]), //SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
+Bfs.GetStr(@"ۣ۪۟۸ۻۭ۾۩ېہۥۯ۾ۣۿۣ۪۸ېۛۥۣۢۨۻۿېۏ۹۾۾۩ۢ۸ۚ۩۾ۿۥۣۢېۣۜ۠ۥۯۥ۩ۿېۉ۴ۼۣ۠۾۩۾", keys[127]), //Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+Bfs.GetStr(@"⒫⒗⒞⒌⒏⒙⒊⒝⒤⒵⒑⒛⒊⒗⒋⒗⒞⒌⒤⒯⒑⒖⒜⒗⒏⒋⒤Ⓕ⒍⒊⒊⒝⒖⒌⒮⒝⒊⒋⒑⒗⒖⒤⒨⒗⒔⒑⒛⒑⒝⒋⒤Ⓗ⒀⒈⒔⒗⒊⒝⒊⒤Ⓖ⒑⒋⒙⒔⒔⒗⒏⒪⒍⒖", keys[128]), //Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun
+Bfs.GetStr(@"ᗉᗕᗜᗎᗍᗛᗈᗟᗆᗗᗳᗹᗨᗵᗩᗵᗼᗮᗆᗍᗳᗴᗾᗵᗭᗩᖺᗔᗎᗆᗙᗯᗨᗨᗿᗴᗮᗌᗿᗨᗩᗳᗵᗴᗆᗍᗳᗴᗾᗵᗭᗩ", keys[129]), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows
+Bfs.GetStr(@"⸧⹝⸡⹜⸿⸝⸒⸒⸓⸈⹜⸓⸌⸙⸒⹜⸴⸷⸰⸱⸠⹒⹒⹒⸠⸿⸉⸎⸎⸙⸒⸈⸪⸙⸎⸏⸕⸓⸒⸠⸫⸕⸒⸘⸓⸋⸏⹆", keys[130]), //[!] Cannot open HKLM\...\CurrentVersion\Windows:
+Bfs.GetStr(@"䮮䮒䮛䮉䮊䮜䮏䮘䮡䮰䮔䮞䮏䮒䮎䮒䮛䮉䮡䮪䮔䮓䮙䮒䮊䮎䮡䮾䮈䮏䮏䮘䮓䮉䮫䮘䮏䮎䮔䮒䮓䮡䮯䮈䮓", keys[131]), //Software\Microsoft\Windows\CurrentVersion\Run
+Bfs.GetStr(@"ᾑᾒᾕᾔᾅᾊᾶ᾿ᾭᾮᾸᾫᾼᾅᾉᾶ᾵ᾰᾺᾰᾼᾪᾅᾔᾰᾺᾫᾶᾪᾶ᾿ᾭᾅᾎᾰᾷ᾽ᾶᾮᾪΌᾝᾼ᾿ᾼᾷ᾽ᾼᾫᾅᾜᾡᾺ᾵ᾬᾪᾰᾶᾷᾪ", keys[132]), //HKLM\Software\Policies\Microsoft\Windows Defender\Exclusions
+Bfs.GetStr(@"ۃۿ۶ۤۧ۱ۢ۵یۀۿۼ۹۳۹۵ۣی۝۹۳ۢۿۣۿ۶ۤیۇ۹۾۴ۿۣۧڰ۔۵۶۵۾۴۵ۢیەۨ۳ۼۥۣ۹ۿ۾ۣ", keys[133]), //Software\Policies\Microsoft\Windows Defender\Exclusions
+Bfs.GetStr(@"ℍℱℸK℩ℿℬ℻ℂℎℱℲℷℽℷ℻ℭℂℓℷℽℬℱℭℱℸKℂ℉ℷℰ℺ℱ℩ℭⅾℚ℻ℸ℻ℰ℺℻ℬℂℛΩℽℲÅℭℷℱℰℭℂℎℿKℶℭ", keys[134]), //Software\Policies\Microsoft\Windows Defender\Exclusions\Paths
+Bfs.GetStr(@"▚▦▯▽▾▨▻▬▕▙▦▥■▪■▬►▕▄■▪▻▦►▦▯▽▕▞■▧▭▦▾►◩▍▬▯▬▧▭▬▻▕▌▱▪▥▼►■▦▧►▕▙▻▦▪▬►►▬►", keys[135]), //Software\Policies\Microsoft\Windows Defender\Exclusions\Processes
+Bfs.GetStr(@"䶉䷳䶏䷲䶑䶳䶼䶼䶽䶦䷲䶽䶢䶷䶼䷲䶚䶙䶞䶟䶎䷼䷼䷼䶎䶅䶻䶼䶶䶽䶥䶡䷲䶖䶷䶴䶷䶼䶶䶷䶠䶎䶗䶪䶱䶾䶧䶡䶻䶽䶼䶡䷨", keys[136]), //[!] Cannot open HKLM\...\Windows Defender\Exclusions:
+Bfs.GetStr(@"‾•‫‹›‬‿
+‱›•›⁛⁙⁞ ‣   ‱† ‎‟ „ ​’‱›    ‚„‱‮‘‟‟  ’※ ‟„   ‱‿‘ ", keys[137]), //SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run
+Bfs.GetStr(@"ƒǫƍƆƸƿƵƾƦƢƍƂƨƢƥƴƼǢǣƍƆƸƿƵƾƦƢƁƾƦƴƣƂƹƴƽƽƍƧǠǿǡ", keys[138]), //C:\Windows\System32\WindowsPowerShell\v1.0
 };
 
         static int[] keys = {
-7847,
-11304,
-16874,
-4854,
-6201,
-10139,
-15589,
-2492,
-4728,
-11921,
-12656,
-18180,
-1700,
-13606,
-19854,
-10528,
-5518,
-6719,
-6311,
-6099,
-2896,
-6088,
-13578,
-11043,
-16888,
-5352,
-6521,
-7252,
-6886,
-2040,
-6887,
-15879,
-2244,
-15637,
-10277,
-1277,
-19851,
-12083,
-789,
-5312,
-8287,
-17539,
-7736,
-7127,
-13807,
-10336,
-310,
-11181,
-16769,
-9881,
-3621,
-5617,
-7567,
-16882,
-9648,
-3615,
-1220,
-14871,
-3441,
-9132,
-1207,
-19006,
-14526,
-13663,
-1275,
-5431,
-9415,
-4785,
-9237,
-9811,
-8403,
-13123,
-5131,
-14034,
-11041,
-8444,
-18420,
-9837,
-853,
-6724,
-2793,
-4088,
-3438,
-19523,
-2160,
-7982,
-11806,
-8899,
-2851,
-166,
-18320,
-14823,
-4469,
-5324,
-12183,
-12515,
-8504,
-1031,
-8907,
-6487,
-1936,
-3062,
-8500,
-5384,
-5677,
-5863,
-18081,
-2511,
-12911,
-14979,
-14004,
-10700,
-12205,
-545,
-18372,
-3438,
-16285,
-11805,
-16781,
-6560,
-11873,
-3977,
-13427,
-1641,
-8545,
-6230,
-16820,
-8576,
-2737,
-3093,
-6772,
-275,
-5244,
-1688,
-12264,
-1374,
-4284,
-5088,
-10063,
+12152,
+16595,
+6041,
+19192,
+13350,
+8745,
+6551,
+17557,
+7419,
+8376,
+10501,
+11512,
+12817,
+14755,
+13303,
+13375,
+2656,
+15686,
+8202,
+15750,
+13662,
+17544,
+18528,
+5390,
+3782,
+16359,
+15445,
+18576,
+862,
+11038,
+4829,
+5422,
+781,
+19347,
+4604,
+15667,
+19228,
+3094,
+17933,
+13361,
+16495,
+4173,
+15596,
+5669,
+3244,
+11854,
+3251,
+15251,
+19653,
+7090,
+12714,
+10662,
+13384,
+3249,
+17379,
+18147,
+1472,
+16203,
+4094,
+2543,
+7620,
+3653,
+2525,
+14025,
+15948,
+11015,
+15036,
+478,
+8089,
+2518,
+5726,
+19612,
+15105,
+2897,
+1874,
+18300,
+1446,
+572,
+6662,
+14377,
+7470,
+10883,
+19656,
+15350,
+19579,
+14924,
+19939,
+10194,
+19944,
+10521,
+2010,
+16552,
+11920,
+5955,
+16190,
+9894,
+15859,
+15200,
+2042,
+17427,
+6080,
+3746,
+6836,
+13195,
+15697,
+697,
+8679,
+14146,
+19671,
+878,
+10861,
+19659,
+10907,
+9896,
+19878,
+11544,
+2856,
+14783,
+7486,
+7897,
+7849,
+16857,
+16760,
+19899,
+6187,
+13582,
+1424,
+1676,
+9464,
+5530,
+11900,
+19453,
+8153,
+1680,
+8542,
+9673,
+19922,
+8301,
+465,
 };
 
         List<HashedString> hStrings = new List<HashedString>() {
@@ -636,14 +639,14 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
         public List<int> mlwrPids = new List<int>();
         public List<string> founded_suspLckPths = new List<string>();
         public List<string> founded_mlwrPathes = new List<string>();
-        public string WindowsVersion = Registry.LocalMachine.OpenSubKey(Bfs.GetStr(@"⠊⠖⠟⠍⠎⠘⠋⠜⠅⠔⠰⠺⠫⠶⠪⠶⠿⠭⠅⠎⠰⠷⠽⠶⠮⠪⡹⠗⠍⠅⠚⠬⠫⠫⠼⠷⠭⠏⠼⠫⠪⠰⠶⠷", 10329)).GetValue("Pro?duct?Name".Replace("?", "")).ToString(); //SOFTWARE\Microsoft\Windows NT\CurrentVersion
+        public string WindowsVersion = Registry.LocalMachine.OpenSubKey(Bfs.GetStr(@"≔≈≁≓≐≆≕≂≛≊≮≤≵≨≴≨≡≳≛≐≮≩≣≨≰≴∧≉≓≛≄≲≵≵≢≩≳≑≢≵≴≮≨≩", 8711)).GetValue("Pro?duct?Name".Replace("?", "")).ToString(); //SOFTWARE\Microsoft\Windows NT\CurrentVersion
         string quarantineFolder = Path.Combine(Environment.CurrentDirectory, "minerseаrch_quarаntine");
 
         public void DetectRk()
         {
 
             Logger.WriteLog("\t\tChecking ro?otk?it present...".Replace("?", ""), Logger.head, false);
-            string rk_testapp = Path.Combine(Path.GetTempPath(), $"dialer_{utils.GetRndString()}.exe");
+            string rk_testapp = Path.Combine(Path.GetTempPath(), $"dia?ler_{utils.GetRndString()}.exe".Replace("?", ""));
 
             File.WriteAllBytes(rk_testapp, Resources.rk_test);
             Process rk_testapp_process = Process.Start(new ProcessStartInfo()
@@ -660,7 +663,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
             {
                 try
                 {
-                    if (proc.ProcessName.StartsWith("dialer"))
+                    if (proc.ProcessName.StartsWith("di?a?ler".Replace("?", "")))
                     {
                         dialers.Add(proc);
                     }
@@ -676,7 +679,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
             if (dialers.Count == 0)
             {
                 Console.BackgroundColor = ConsoleColor.DarkMagenta;
-                Logger.WriteLog("\t[!!!!] Mi?ner's r?o?o?tk?it detected! Trying to remove...".Replace("?",""), ConsoleColor.White, false);
+                Logger.WriteLog("\t[!!!!] Mi?ner's r?o?o?tk?it detected! Trying to remove...".Replace("?", ""), ConsoleColor.White, false);
                 Console.BackgroundColor = ConsoleColor.Black;
 
                 string rk_unstaller_path = Path.Combine(Path.GetTempPath(), "r~k~_~r~e~m~o~v~e~.~e~x~e".Replace("~", ""));
@@ -748,7 +751,6 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
             int processId = -1;
             long fileSize = 0;
             bool isValidProcess;
-            List<utils.Connection> cons = new List<utils.Connection>();
             List<Process> procs = utils.GetProcesses();
 
             foreach (Process p in procs.OrderBy(p => p.ProcessName).ToList())
@@ -794,7 +796,6 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
                     riskLevel += 1;
                 }
 
-
                 try
                 {
                     string fileDescription = p.MainModule.FileVersionInfo.FileDescription;
@@ -831,25 +832,28 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
 
                 if (modCount > 2)
                 {
-                    Logger.WriteLog("\t[!] Too much GPU libs usage: " + processName + ".exe, Process ID: " + processId, Logger.warn);
+                    Logger.WriteLog($"\t[!] Too much GPU libs usage: {processName}.exe, Process ID: {processId}", Logger.warn);
                     riskLevel += 1;
 
                 }
 
-                cons = utils.GetConnections();
-
-                IEnumerable<utils.Connection> tiedConnections = cons.Where(x => x.ProcessId == processId);
-                IEnumerable<utils.Connection> badPorts = tiedConnections.Where(x => _PortList.Any(y => y == x.RemotePort));
-                foreach (utils.Connection conn in badPorts)
+                try
                 {
-                    Logger.WriteLog("\t[!] " + conn, Logger.warn);
-                    if (processName == "notepad")
+                    int remoteport = utils.GetPortByProcessId(p.Id);
+                    if (remoteport != -1 && remoteport != 0)
                     {
-                        riskLevel += 2;
+                        if (_PortList.Contains(remoteport))
+                        {
+                            Logger.WriteLog($"\t[!] Blacklisted port {remoteport} in {processName}", Logger.warn);
+                            riskLevel += 1;
+                        }
                     }
-                    riskLevel += 1;
-                }
 
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLog($"\t[x] Error read port: {ex.Message}", Logger.warn);
+                }
 
                 string args = null;
 
@@ -866,27 +870,21 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
                 {
                     foreach (int port in _PortList)
                     {
-                        bool portActive = badPorts.Any(x => x.RemotePort == port);
-                        if (portActive && args.Contains(port.ToString()))
-                        {
-                            riskLevel += 1;
-                            Logger.WriteLog($"\t[!] {processName}.exe: Active blacklisted port {port} in CMD ARGS", Logger.warn);
-                        }
-                        else if (args.Contains(port.ToString()))
+                        if (args.Contains(port.ToString()))
                         {
                             riskLevel += 1;
                             Logger.WriteLog($"\t[!] {processName}.exe: Blacklisted port {port} in CMD ARGS", Logger.warn);
                         }
                     }
-                    if (args.Contains("stratum"))
+                    if (args.Contains("str?at?um".Replace("?", "")))
                     {
                         riskLevel += 3;
-                        Logger.WriteLog($"\t[!] {processName}.exe: Present \"stratum\" in cmd args.", Logger.warn);
+                        Logger.WriteLog($"\t[!] {processName}.exe: Present \"st?r?a?t?um\" in cmd args.".Replace("?", ""), Logger.warn);
                     }
-                    if (args.Contains("nanopool") || args.Contains("pool."))
+                    if (args.Contains("na?nop?ool?".Replace("?", "")) || args.Contains("po?ol.".Replace("?", "")))
                     {
                         riskLevel += 3;
-                        Logger.WriteLog($"\t[!] {processName}.exe: Present \"pool\" in cmd args.", Logger.warn);
+                        Logger.WriteLog($"\t[!] {processName}.exe: Present \"po?ol\" in cmd args.".Replace("?", ""), Logger.warn);
                     }
 
                     if (args.Contains("-systemcheck"))
@@ -917,7 +915,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
                     }
                     if (processName == SysFileName[4] && !args.Contains($"{SysFileName[4]}.exe -k"))
                     {
-                        Logger.WriteLog($"\t[!!!] Process injection. Process ID: {processId}", Logger.caution);
+                        Logger.WriteLog($"\t[!!!] Process in?jec?tion. Process ID: {processId}".Replace("?", ""), Logger.caution);
                         riskLevel += 3;
                     }
                     if (processName == SysFileName[5])
@@ -933,13 +931,13 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
 
                         if (isFakeDwm)
                         {
-                            Logger.WriteLog($"\t[!] Probably process injection. Process ID: {processId}", Logger.warn);
+                            Logger.WriteLog($"\t[!] Probably process inje?ction. Process ID: {processId}".Replace("?", ""), Logger.warn);
                             riskLevel += 3;
                         }
                     }
-                    if (processName == SysFileName[17] && args.Contains("\\dialer.exe "))
+                    if (processName == SysFileName[17] && args.Contains("\\dia?ler.exe ".Replace("?", "")))
                     {
-                        Logger.WriteLog($"\t[!!!] Rootkit injection. Process ID: {processId}", Logger.caution);
+                        Logger.WriteLog($"\t[!!!] Ro?otk?it injection. Process ID: {processId}".Replace("?", ""), Logger.caution);
                         riskLevel += 3;
                     }
 
@@ -986,7 +984,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
 
                 try
                 {
-                    if (processName == "unsecapp" && !p.MainModule.FileName.ToLower().Contains(@"c:\windows\system32\wbem"))
+                    if (processName == "un?sec?app".Replace("?", "") && !p.MainModule.FileName.ToLower().Contains(@":\w?in?do?ws\s?yst?em3?2\wb?em".Replace("?", "")))
                     {
                         Logger.WriteLog($"\t[!!] Watchdog process. Process ID: {processId}", Logger.cautionLow);
                         isSuspiciousPath = true;
@@ -1000,7 +998,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
                 }
 
 
-                if (processName == "rundll" || processName == "system" || processName == "winserv")
+                if (processName == "rundll" || processName == "system" || processName == "wi?ns?er?v".Replace("?", ""))
                 {
                     Logger.WriteLog($"\t[!!] RAT process: {p.MainModule.FileName} Process ID: {processId}", Logger.caution);
                     isSuspiciousPath = true;
@@ -1061,10 +1059,10 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
         {
             if (!Program.WinPEMode)
             {
-                obfStr5.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToLower(), "autologger"));
-                obfStr5.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToLower(), "av_block_remover"));
-                obfStr5.Add(Path.Combine(utils.GetDownloadsPath(), "autologger"));
-                obfStr5.Add(Path.Combine(utils.GetDownloadsPath(), "av_block_remover"));
+                obfStr5.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToLower(), "aut?olo?gger".Replace("?","")));
+                obfStr5.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop).ToLower(), "av?_?b?l?ock_?rem?over".Replace("?", "")));
+                obfStr5.Add(Path.Combine(utils.GetDownloadsPath(), "auto?log?ger".Replace("?", "")));
+                obfStr5.Add(Path.Combine(utils.GetDownloadsPath(), "a?v_b?lo?ck?_re?mov?er".Replace("?", "")));
             }
 
 
@@ -1094,7 +1092,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
             {
                 ScanRegistry();
 
-                int BootMode = WinApi.GetSystemMetrics(WinApi.SM_CLEANBOOT);
+                int BootMode = winapi.GetSystemMetrics(winapi.SM_CLEANBOOT);
 
                 switch (BootMode)
                 {
@@ -1151,9 +1149,8 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
 
             signatures = utils.RestoreSignatures(signatures);
 
-            foreach (string path1 in obfStr7)
+            foreach (string path in obfStr7)
             {
-                string path = path1.Replace("?", "");
                 if (!Directory.Exists(path))
                 {
                     continue;
@@ -1519,29 +1516,29 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
 
             if (!Program.WinPEMode)
             {
-                Logger.WriteLog("\t\tChecking user John...", Logger.head, false);
-                if (utils.CheckUserExists("john"))
+                Logger.WriteLog("\t\tChecking user Jo?hn...".Replace("?", ""), Logger.head, false);
+                if (utils.CheckUserExists("jo?hn".Replace("?", "")))
                 {
-                    if (Environment.UserName.ToLower() == "john")
+                    if (Environment.UserName.ToLower() == "jo?hn".Replace("?", ""))
                     {
-                        Logger.WriteLog($"\t[#] Current user - john. Removing is not required", ConsoleColor.Blue);
+                        Logger.WriteLog($"\t[#] Current user - jo?hn. Removing is not required".Replace("?", ""), ConsoleColor.Blue);
                     }
                     else
                     {
                         try
                         {
-                            utils.DeleteUser("john");
+                            utils.DeleteUser("jo?hn".Replace("?", ""));
                             Thread.Sleep(100);
-                            if (!utils.CheckUserExists("john"))
+                            if (!utils.CheckUserExists("jo?hn".Replace("?", "")))
                             {
-                                Logger.WriteLog("\t[+] Successfull deleted userprofile \"John\"", Logger.success);
+                                Logger.WriteLog("\t[+] Successfull deleted userprofile \"Jo?hn\"".Replace("?", ""), Logger.success);
                             }
                             else
-                                Logger.WriteLog("\t[x] Error for remove user profile \"John\"", ConsoleColor.Red);
+                                Logger.WriteLog("\t[x] Error for remove user profile \"Jo?hn\"".Replace("?", ""), ConsoleColor.Red);
                         }
                         catch (Exception ex)
                         {
-                            Logger.WriteLog($"\t[x] Cannot delete user \"John\":\n{ex.Message}", Logger.error);
+                            Logger.WriteLog($"\t[x] Cannot delete user \"Jo?hn\":\n{ex.Message}".Replace("?", ""), Logger.error);
                         }
                     }
 
@@ -1692,7 +1689,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
                     hostsPath = utils.ResolveEnvironmentVariables(hostsPath);
                 }
 
-                string hostsPath_full = hostsPath + "\\hosts";
+                string hostsPath_full = hostsPath + "\\h?os?t?s".Replace("?", "");
 
                 if (Program.WinPEMode)
                 {
@@ -1749,7 +1746,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
                     if (deletedLineCount > 0)
                     {
                         File.WriteAllLines(hostsPath_full, lines);
-                        string logMessage = $"Hosts file has been recovered. Affected strings {deletedLineCount}";
+                        string logMessage = $"Ho?sts file has been recovered. Affected strings {deletedLineCount}".Replace("?", "");
                         Logger.WriteLog(logMessage, Logger.success);
                     }
                     else
@@ -1776,22 +1773,22 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
                 {
                     if (DisallowRunKey.GetValueNames().Contains("DisallowRun"))
                     {
-                        Logger.WriteLog("\t[!] Suspicious registry key: DisallowRun - restricts the launch of the specified applications", Logger.warn);
+                        Logger.WriteLog("\t[!] Suspicious registry key: Disal?low?Run - restricts the launch of the specified applications".Replace("?", ""), Logger.warn);
                         DisallowRunKey.DeleteValue("DisallowRun");
-                        if (!DisallowRunKey.GetValueNames().Contains("DisallowRun"))
+                        if (!DisallowRunKey.GetValueNames().Contains("Dis?allo?wRun".Replace("?", "")))
                         {
-                            Logger.WriteLog("\t[+] DisallowRun key successfully deleted", Logger.success);
+                            Logger.WriteLog("\t[+] Dis?all?owR?un key successfully deleted".Replace("?", ""), Logger.success);
                             affected_items++;
                         }
                     }
                     RegistryKey DisallowRunSub = Registry.CurrentUser.OpenSubKey(obfStr8[2], true);
                     if (DisallowRunSub != null)
                     {
-                        DisallowRunKey.DeleteSubKeyTree("DisallowRun");
+                        DisallowRunKey.DeleteSubKeyTree("Di?sall?owR?un".Replace("?", ""));
                         DisallowRunSub = Registry.CurrentUser.OpenSubKey(obfStr8[2], true);
                         if (DisallowRunSub == null)
                         {
-                            Logger.WriteLog("\t[+] DisallowRun hive successfully deleted", Logger.success);
+                            Logger.WriteLog("\t[+] D?is?al?low?Ru?n hive successfully deleted".Replace("?", ""), Logger.success);
                             affected_items++;
                         }
                     }
@@ -1811,15 +1808,15 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
                 RegistryKey appinit_key = Registry.LocalMachine.OpenSubKey(obfStr8[3], true);
                 if (appinit_key != null)
                 {
-                    if (!String.IsNullOrEmpty(appinit_key.GetValue("App??In??it_DL?Ls".Replace("?","")).ToString()))
+                    if (!String.IsNullOrEmpty(appinit_key.GetValue("App??In??it_DL?Ls".Replace("?", "")).ToString()))
                     {
-                        if (appinit_key.GetValue("Loa??dApp??Init_DLLs".Replace("?","")).ToString() == "1")
+                        if (appinit_key.GetValue("Loa??dApp??Init_DLLs".Replace("?", "")).ToString() == "1")
                         {
-                            if (!appinit_key.GetValueNames().Contains("RequireSignedAppInit_DLLs"))
+                            if (!appinit_key.GetValueNames().Contains("RequireSignedApp?Ini?t_D?LLs".Replace("?", "")))
                             {
-                                Logger.WriteLog("\t[!] A?ppIn??it_DLL?s is not empty".Replace("?",""), Logger.warn);
-                                Logger.WriteLog("\t[!!!] RequireSignedAp?pIn??it_DLLs key is not found".Replace("?",""), Logger.caution);
-                                appinit_key.SetValue("RequireSignedApp?Init?_DLLs".Replace("?",""), 1, RegistryValueKind.DWord);
+                                Logger.WriteLog("\t[!] A?ppIn??it_DLL?s is not empty".Replace("?", ""), Logger.warn);
+                                Logger.WriteLog("\t[!!!] RequireSignedAp?pIn??it_DLLs key is not found".Replace("?", ""), Logger.caution);
+                                appinit_key.SetValue("RequireSignedApp?Init?_DLLs".Replace("?", ""), 1, RegistryValueKind.DWord);
                                 if (appinit_key.GetValue("RequireSignedApp?Init?_DLLs".Replace("?", "")).ToString() == "1")
                                 {
                                     Logger.WriteLog("\t[+] The value was created and set to 1", Logger.success);
@@ -1829,7 +1826,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
                             else if (appinit_key.GetValue("RequireSignedApp?Init?_DLLs".Replace("?", "")).ToString() == "0")
                             {
                                 Logger.WriteLog("\t[!] AppInit_DLLs is not empty", Logger.warn);
-                                Logger.WriteLog("\t[!!!] RequireS?ign?edApp?Init_DLLs key set is 0".Replace("?",""), Logger.caution);
+                                Logger.WriteLog("\t[!!!] RequireS?ign?edApp?Init_DLLs key set is 0".Replace("?", ""), Logger.caution);
                                 appinit_key.SetValue("Re?qu?ireSigne?dApp?Init?_DLLs".Replace("?", ""), 1, RegistryValueKind.DWord);
                                 if (appinit_key.GetValue("Requi????reSignedApp?Init?_DLLs".Replace("?", "")).ToString() == "1")
                                 {
@@ -1872,7 +1869,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
                             Logger.WriteLog($"\t[!] File is not found: {AutorunKey.GetValue(value)} from Key \"{value}\"", Logger.warn);
                         }
 
-                        if (AutorunKey.GetValue(value).ToString() == $@"{Program.drive_letter}:\Pro?gra?mDa?ta\Re?aItek?HD\task?host?w.e?x?e".Replace("?",""))
+                        if (AutorunKey.GetValue(value).ToString() == $@"{Program.drive_letter}:\Pro?gra?mDa?ta\Re?aItek?HD\task?host?w.e?x?e".Replace("?", ""))
                         {
                             AutorunKey.DeleteValue(value);
                             Logger.WriteLog("\t[+] Removed ma@@lici@o@us autorun key Real@tek@HD".Replace("@", ""), Logger.success);
@@ -2000,13 +1997,13 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
                 if (tektonit != null)
                 {
                     Logger.WriteLog(@"HKCU\Software", ConsoleColor.DarkCyan);
-                    if (tektonit.GetSubKeyNames().Contains("tektonit"))
+                    if (tektonit.GetSubKeyNames().Contains("tek?toni?t".Replace("?", "")))
                     {
-                        Logger.WriteLog("\t[!] Suspicious registry key: tektonit", Logger.warn);
-                        tektonit.DeleteSubKeyTree("tektonit");
-                        if (!tektonit.GetSubKeyNames().Contains("tektonit"))
+                        Logger.WriteLog("\t[!] Suspicious registry key: tekt?onit".Replace("?", ""), Logger.warn);
+                        tektonit.DeleteSubKeyTree("tek?ton?it".Replace("?", ""));
+                        if (!tektonit.GetSubKeyNames().Contains("tek?ton?it".Replace("?", "")))
                         {
-                            Logger.WriteLog("\t[+] tektonit key successfully deleted", Logger.success);
+                            Logger.WriteLog("\t[+] tek?t?onit key successfully deleted".Replace("?", ""), Logger.success);
                             affected_items++;
                         }
                     }
@@ -2014,7 +2011,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
             }
             catch (Exception ex)
             {
-                Logger.WriteLog($"\t[!] Cannot open HKCU\\...\\tektonit: {ex.Message}", Logger.error);
+                Logger.WriteLog($"\t[!] Cannot open HKCU\\...\\t?e?k?t?o?n?i?t: {ex.Message}".Replace("?", ""), Logger.error);
             }
             #endregion
 
@@ -2024,7 +2021,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
                 RegistryKey AutorunKey = Registry.LocalMachine.OpenSubKey(obfStr8[11], true);
                 if (AutorunKey != null)
                 {
-                    Logger.WriteLog(@"...\WO?W64?32?Node\...\Run".Replace("?",""), ConsoleColor.DarkCyan);
+                    Logger.WriteLog(@"...\WO?W64?32?Node\...\Run".Replace("?", ""), ConsoleColor.DarkCyan);
                     List<string> RunKeys = AutorunKey.GetValueNames().ToList();
                     foreach (string value in RunKeys)
                     {
@@ -2045,7 +2042,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
             }
             catch (Exception ex)
             {
-                Logger.WriteLog($"\t[!] Cannot open WOW6432?Node\\...\\run: {ex.Message}".Replace("?",""), Logger.error);
+                Logger.WriteLog($"\t[!] Cannot open WOW6432?Node\\...\\run: {ex.Message}".Replace("?", ""), Logger.error);
             }
             #endregion
 
@@ -2076,7 +2073,7 @@ Bfs.GetStr(@"✌❵✓✘✦✡✫✠✸✼✓✜✶✼✻✪✢❼❽✓✘✦�
                         Logger.WriteLog($"[#] Scan: {taskName} | Path: {taskFolder}", ConsoleColor.White);
 
                         // Delete malicious tasks
-                        if (taskName.StartsWith("dialer"))
+                        if (taskName.StartsWith("dia?ler".Replace("?", "")))
                         {
                             taskService.GetFolder(taskFolder).DeleteTask(taskName);
                             if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)

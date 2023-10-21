@@ -97,13 +97,14 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Disclaimer of Warranty!
+        ///   Ищет локализованную строку, похожую на Denial of responsibility
         ///
-        ///This software is provided &quot;As is&quot; without any warranty of any kind. Use this software at your own risk. 
+        ///This software provided &quot;as is&quot; and was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurrency. The author is not responsible for incidental, indirect or unintentional damage of any kind during the use of this software. You may use it at your own risk.
         ///
-        ///Are you sure you want to continue? 
+        ///FAQ:
         ///
-        ///Click Yes to continue. Click No to exit..
+        ///Question: Why does my antivirus indicate that the software contains a Trojan/virus?
+        ///Answer: A third-party antivirus registers the very fact of interference in the [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _License_EN {
             get {
@@ -114,11 +115,11 @@ namespace MinerSearch.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Отказ от ответственности
         ///
-        ///Это программное обеспечение (ПО) предоставляется &quot;Как есть&quot; без каких либо гарантий любого рода. Используйте это программное обеспечение на свой собственный риск. 
+        ///Данное программное обеспечение (Далее ПО) предоставляется &quot;как есть&quot; и создано исключительно для поиска и удаления вредоносного ПО, тайно использующее ресурсы комьютера для добычи (майнинга) криптовалюты. Автор не несет ответсвенности за причиненный случайный, косвенный или непреднамеренный ущерб любого рода в ходе использования данного ПО. Вы можете использовать его на свой страх и риск. 
         ///
-        ///Вы уверены, что хотите продолжить? 
+        ///Часто задаваемые вопросы:
         ///
-        ///Нажмите Принять, чтобы продолжить. Нажмите Выход, чтобы закрыть программу..
+        ///Вопрос: Почему мой антивирус указывает, что ПО содержит тро [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _License_RU {
             get {

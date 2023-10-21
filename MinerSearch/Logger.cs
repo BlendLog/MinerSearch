@@ -6,6 +6,7 @@ namespace MinerSearch
     public static class Logger
     {
         private static readonly string logFileName = $"MinerSearch_{DateTime.Now:dd_mm_yyyy-hh_ss}.log";
+        public static string LogsFolder = Path.Combine(Program.drive_letter + ":\\", "_MinerSearchLogs");
 
         public static readonly ConsoleColor error = ConsoleColor.Red;
         public static readonly ConsoleColor success = ConsoleColor.Green;
@@ -44,7 +45,7 @@ namespace MinerSearch
 
                 if (!Program.no_logs)
                 {
-                    using (StreamWriter writer = new StreamWriter(Program.drive_letter + ":\\" + logFileName, true))
+                    using (StreamWriter writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true))
                     {
                         writer.WriteLine(logMessage);
                     }
@@ -78,7 +79,7 @@ namespace MinerSearch
                 }
                 else
                     logMessage = currentText;
-                   
+
 
                 Console.ForegroundColor = color;
                 Console.WriteLine(logMessage);
@@ -95,7 +96,7 @@ namespace MinerSearch
 
                 if (!Program.no_logs)
                 {
-                    using (StreamWriter writer = new StreamWriter(Program.drive_letter + ":\\" + logFileName, true))
+                    using (StreamWriter writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true))
                     {
                         writer.WriteLine(logMessage);
                     }

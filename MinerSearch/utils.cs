@@ -11,7 +11,6 @@ using System.Management;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -19,19 +18,9 @@ namespace MinerSearch
 {
     public static class utils
     {
-        static string query = Bfs.GetStr(@"℧ℱℸℱℷ℠⅔ℷℛℙℙℕℚℐℸℝℚℑ⅔ℲΩ℻ℹ⅔℣ℝℚⅇⅆÅℤ℆ℛ℗ℑℇℇ⅔℣ℼℱΩℱ⅔ℤ℆ℛ℗ℑℇℇℽℐ⅔ⅉ⅔", 8564); //SELECT CommandLine FROM Win32_Process WHERE ProcessId = 
-        static string CurrentVerKey = Bfs.GetStr(@"⳸ⳤⳭ⳿⳼⳪⳹ⳮ⳷⳦ⳂⳈⳙⳄⳘⳄⳍⳟ⳷⳼ⳂⳅⳏⳄⳜⳘⲋ⳥⳿⳷⳨ⳞⳙⳙⳎⳅⳟ⳽ⳎⳙⳘⳂⳄⳅ", 11435); //SOFTWARE\Microsoft\Windows NT\CurrentVersion
-        static string BitVersionStr = Bfs.GetStr(@"䔕䔜䔏䔙䔊䔜䔏䔘䔁䔙䔸䔮䔾䔯䔴䔭䔩䔴䔲䔳䔁䔎䔤䔮䔩䔸䔰䔁䔞䔸䔳䔩䔯䔼䔱䔍䔯䔲䔾䔸䔮䔮䔲䔯䔁䕭", 17757); //HARDWARE\Description\System\CentralProcessor\0
-        public class Connection
-        {
-            public int RemotePort { get; set; }
-            public int ProcessId { get; set; }
-
-            public override string ToString()
-            {
-                return "TCP Connection - Process ID: " + ProcessId + ", Port: " + RemotePort;
-            }
-        }
+        static string query = Bfs.GetStr(@"᱒᱄ᱍ᱄᱂᱕ᰡ᱂ᱮᱬᱬᱠᱯᱥᱍᱨᱯᱤᰡ᱇᱓ᱎ᱌ᰡ᱖ᱨᱯᰲᰳᱞ᱑ᱳᱮᱢᱤᱲᱲᰡ᱖᱉᱄᱓᱄ᰡ᱑ᱳᱮᱢᱤᱲᱲ᱈ᱥᰡ᰼ᰡ", 7169); //SELECT CommandLine FROM Win32_Process WHERE ProcessId = 
+        static string CurrentVerKey = Bfs.GetStr(@"ޤ޸ޱޣޠ޶ޥ޲ޫ޺ޞޔޅޘބޘޑރޫޠޞޙޓޘހބߗ޹ޣޫ޴ނޅޅޒޙރޡޒޅބޞޘޙ", 2039); //SOFTWARE\Microsoft\Windows NT\CurrentVersion
+        static string BitVersionStr = Bfs.GetStr(@"䋜䋕䋆䋐䋃䋕䋆䋑䋈䋐䋱䋧䋷䋦䋽䋤䋠䋽䋻䋺䋈䋇䋭䋧䋠䋱䋹䋈䋗䋱䋺䋠䋦䋵䋸䋄䋦䋻䋷䋱䋧䋧䋻䋦䋈䊤", 17044); //HARDWARE\Description\System\CentralProcessor\0
 
         public static string GetCommandLine(Process process)
         {
@@ -45,78 +34,6 @@ namespace MinerSearch
                 }
             }
             return cmdLine;
-        }
-
-        public static List<Connection> GetConnections()
-        {
-            List<Connection> Connections = new List<Connection>();
-
-            try
-            {
-                using (Process p = new Process())
-                {
-
-                    ProcessStartInfo ps = new ProcessStartInfo
-                    {
-                        StandardErrorEncoding = Encoding.GetEncoding("CP866"),
-                        Arguments = "-a -n -o",
-                        FileName = "netstat.exe",
-                        UseShellExecute = false,
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-
-                    };
-
-                    p.StartInfo = ps;
-                    p.Start();
-
-                    StreamReader stdOutput = p.StandardOutput;
-                    StreamReader stdError = p.StandardError;
-
-                    string content = stdOutput.ReadToEnd();
-                    string exitStatus = p.ExitCode.ToString();
-
-                    if (exitStatus != "0")
-                    {
-                        Logger.WriteLog($"\t[x] Failed to read TCP connections\n{stdError.ReadToEnd()}", Logger.error);
-                        return Connections;
-                    }
-
-                    string[] rows = Regex.Split(content, "\r\n");
-                    foreach (string row in rows)
-                    {
-                        if (String.IsNullOrEmpty(row))
-                            continue;
-
-                        if (row.Contains("0.0.0.0") || row.Contains("127.0.0.1") || row.StartsWith("[::") || row.Contains("::"))
-                            continue;
-                        string[] tokens = Regex.Split(row, "\\s+");
-                        if (tokens.Length > 4 && tokens[1].Equals("TCP"))
-                        {
-                            string t = tokens[3].Split(':')[1];
-                            int remotePort = Int32.Parse(t);
-                            Connections.Add(new Connection()
-                            {
-                                ProcessId = Int32.Parse(tokens[5]),
-                                RemotePort = remotePort,
-                            });
-                        }
-                    }
-                    stdOutput.Close();
-                    stdError.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-#if DEBUG
-                Logger.WriteLog($"\t[x] Error for GetConnection: {ex.Message} \n{ex.StackTrace}", Logger.error);
-#else
-                Logger.WriteLog($"\t[x] Error for GetConnection: {ex.Message}", Logger.error);
-#endif
-            }
-            return Connections;
         }
 
         public static string Sizer(long CountBytes)
@@ -156,14 +73,45 @@ namespace MinerSearch
             return procs;
         }
 
+        public static int GetPortByProcessId(int pid)
+        {
+            int buffSize = 0;
+            winapi.GetExtendedTcpTable(IntPtr.Zero, ref buffSize, true, 2, winapi.TcpTableClass.TCP_TABLE_OWNER_PID_ALL, 0);
+            IntPtr tcpTable = Marshal.AllocHGlobal(buffSize);
+
+            try
+            {
+                winapi.GetExtendedTcpTable(tcpTable, ref buffSize, true, 2, winapi.TcpTableClass.TCP_TABLE_OWNER_PID_ALL, 0);
+
+                int rowNumber = Marshal.ReadInt32(tcpTable);
+                IntPtr rowPtr = (IntPtr)(tcpTable.ToInt64() + 4);
+
+                for (int i = 0; i < rowNumber; i++)
+                {
+                    winapi.MIB_TCPROW_OWNER_PID row = (winapi.MIB_TCPROW_OWNER_PID)Marshal.PtrToStructure(rowPtr, typeof(winapi.MIB_TCPROW_OWNER_PID));
+                    if (row.owningPid == pid)
+                    {
+                        return BitConverter.ToUInt16(new byte[2] { row.remotePort[1], row.remotePort[0] }, 0);
+                    }
+                    rowPtr = (IntPtr)(rowPtr.ToInt64() + Marshal.SizeOf(row));
+                }
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(tcpTable);
+            }
+
+            return -1;
+        }
+
         public static uint GetProcessIdByFilePath(string filePath)
         {
-            WinApi.PROCESSENTRY32 processEntry = new WinApi.PROCESSENTRY32();
-            processEntry.dwSize = (uint)Marshal.SizeOf(typeof(WinApi.PROCESSENTRY32));
+            winapi.PROCESSENTRY32 processEntry = new winapi.PROCESSENTRY32();
+            processEntry.dwSize = (uint)Marshal.SizeOf(typeof(winapi.PROCESSENTRY32));
 
-            IntPtr snapshotHandle = WinApi.CreateToolhelp32Snapshot(WinApi.TH32CS_SNAPPROCESS, 0);
+            IntPtr snapshotHandle = winapi.CreateToolhelp32Snapshot(winapi.TH32CS_SNAPPROCESS, 0);
 
-            if (WinApi.Process32First(snapshotHandle, ref processEntry))
+            if (winapi.Process32First(snapshotHandle, ref processEntry))
             {
                 do
                 {
@@ -175,7 +123,7 @@ namespace MinerSearch
                         {
                             if (module.FileName.Equals(filePath, StringComparison.OrdinalIgnoreCase))
                             {
-                                WinApi.CloseHandle(snapshotHandle);
+                                winapi.CloseHandle(snapshotHandle);
                                 return processEntry.th32ProcessID;
                             }
                         }
@@ -184,30 +132,30 @@ namespace MinerSearch
                     {
                         // Ignore any exceptions caused by accessing the process modules.
                     }
-                } while (WinApi.Process32Next(snapshotHandle, ref processEntry));
+                } while (winapi.Process32Next(snapshotHandle, ref processEntry));
             }
 
-            WinApi.CloseHandle(snapshotHandle);
+            winapi.CloseHandle(snapshotHandle);
             return 0;
         }
 
         public static int GetParentProcessId(int processId)
         {
             int parentProcessId = 0;
-            IntPtr hProcess = WinApi.OpenProcess(WinApi.PROCESS_QUERY_LIMITED_INFORMATION, false, processId);
+            IntPtr hProcess = winapi.OpenProcess(winapi.PROCESS_QUERY_LIMITED_INFORMATION, false, processId);
 
             if (hProcess != IntPtr.Zero)
             {
-                WinApi.PROCESS_BASIC_INFORMATION pbi = new WinApi.PROCESS_BASIC_INFORMATION();
+                winapi.PROCESS_BASIC_INFORMATION pbi = new winapi.PROCESS_BASIC_INFORMATION();
 
-                int status = WinApi.NtQueryInformationProcess(hProcess, 0, ref pbi, Marshal.SizeOf(pbi), out int returnLength);
+                int status = winapi.NtQueryInformationProcess(hProcess, 0, ref pbi, Marshal.SizeOf(pbi), out int returnLength);
 
-                if (status == WinApi.STATUS_SUCCESS)
+                if (status == winapi.STATUS_SUCCESS)
                 {
                     parentProcessId = pbi.InheritedFromUniqueProcessId.ToInt32();
                 }
 
-                WinApi.CloseHandle(hProcess);
+                winapi.CloseHandle(hProcess);
             }
 
             return parentProcessId;
@@ -224,9 +172,9 @@ namespace MinerSearch
                     int isCritical = 0;
                     int BreakOnTermination = 0x1D;
 
-                    IntPtr handle = WinApi.OpenProcess(0x001F0FFF, false, pid);
-                    WinApi.NtSetInformationProcess(handle, BreakOnTermination, ref isCritical, sizeof(int));
-                    WinApi.CloseHandle(handle);
+                    IntPtr handle = winapi.OpenProcess(0x001F0FFF, false, pid);
+                    winapi.NtSetInformationProcess(handle, BreakOnTermination, ref isCritical, sizeof(int));
+                    winapi.CloseHandle(handle);
                 }
             }
             catch (Exception ex)
@@ -251,7 +199,7 @@ namespace MinerSearch
                 foreach (ProcessThread pT in Threads)
                 {
 
-                    IntPtr pOpenThread = WinApi.OpenThread(WinApi.ThreadAccess.SUSPEND_RESUME, false, (uint)pT.Id);
+                    IntPtr pOpenThread = winapi.OpenThread(winapi.ThreadAccess.SUSPEND_RESUME, false, (uint)pT.Id);
 
                     if (pOpenThread == IntPtr.Zero)
                     {
@@ -259,8 +207,8 @@ namespace MinerSearch
                     }
                     else
                     {
-                        WinApi.SuspendThread(pOpenThread);
-                        WinApi.CloseHandle(pOpenThread);
+                        winapi.SuspendThread(pOpenThread);
+                        winapi.CloseHandle(pOpenThread);
                     }
 
                 }
@@ -304,7 +252,7 @@ namespace MinerSearch
 
             try
             {
-                WinApi.SHGetKnownFolderPath(ref WinApi.FolderDownloads, 0, IntPtr.Zero, out pathPtr);
+                winapi.SHGetKnownFolderPath(ref winapi.FolderDownloads, 0, IntPtr.Zero, out pathPtr);
                 return Marshal.PtrToStringUni(pathPtr);
             }
             catch (Exception ex)
@@ -526,13 +474,13 @@ namespace MinerSearch
 
         public static string getBitVersion()
         {
-            if (Registry.LocalMachine.OpenSubKey(BitVersionStr).GetValue("Identifier").ToString().Contains("x86"))
+            if (Registry.LocalMachine.OpenSubKey(BitVersionStr).GetValue("Id?enti?fier".Replace("?", "")).ToString().Contains("x86"))
             {
-                return "(32 Bit)";
+                return "x86";
             }
             else
             {
-                return "(64 Bit)";
+                return "x86-64";
             }
         }
 
@@ -600,22 +548,22 @@ namespace MinerSearch
 
             try
             {
-                IntPtr scm = WinApi.OpenSCManager(null, null, WinApi.SC_MANAGER_CONNECT | WinApi.SC_MANAGER_CREATE_SERVICE);
+                IntPtr scm = winapi.OpenSCManager(null, null, winapi.SC_MANAGER_CONNECT | winapi.SC_MANAGER_CREATE_SERVICE);
                 if (scm != IntPtr.Zero)
                 {
-                    IntPtr service = WinApi.OpenService(scm, serviceName, WinApi.SERVICE_QUERY_CONFIG | WinApi.SERVICE_CHANGE_CONFIG | WinApi.SERVICE_START);
+                    IntPtr service = winapi.OpenService(scm, serviceName, winapi.SERVICE_QUERY_CONFIG | winapi.SERVICE_CHANGE_CONFIG | winapi.SERVICE_START);
                     if (service != IntPtr.Zero)
                     {
-                        WinApi.QueryServiceConfig(service, IntPtr.Zero, 0, out int bytesNeeded);
+                        winapi.QueryServiceConfig(service, IntPtr.Zero, 0, out int bytesNeeded);
 
                         IntPtr ptr = Marshal.AllocHGlobal(bytesNeeded);
-                        if (WinApi.QueryServiceConfig(service, ptr, bytesNeeded, out bytesNeeded))
+                        if (winapi.QueryServiceConfig(service, ptr, bytesNeeded, out bytesNeeded))
                         {
-                            WinApi.SERVICE_CONFIG serviceConfig = (WinApi.SERVICE_CONFIG)Marshal.PtrToStructure(ptr, typeof(WinApi.SERVICE_CONFIG));
+                            winapi.SERVICE_CONFIG serviceConfig = (winapi.SERVICE_CONFIG)Marshal.PtrToStructure(ptr, typeof(winapi.SERVICE_CONFIG));
 
-                            if (serviceConfig.dwStartType != WinApi.SERVICE_AUTO_START)
+                            if (serviceConfig.dwStartType != winapi.SERVICE_AUTO_START)
                             {
-                                if (WinApi.ChangeServiceConfig(service, WinApi.SERVICE_NO_CHANGE, WinApi.SERVICE_AUTO_START, WinApi.SERVICE_NO_CHANGE, null, null, IntPtr.Zero, null, null, null, null))
+                                if (winapi.ChangeServiceConfig(service, winapi.SERVICE_NO_CHANGE, winapi.SERVICE_AUTO_START, winapi.SERVICE_NO_CHANGE, null, null, IntPtr.Zero, null, null, null, null))
                                 {
                                     Logger.WriteLog($"\t[+] Startup type of the critical service has been restored", Logger.success, false);
                                 }
@@ -625,11 +573,11 @@ namespace MinerSearch
                                 }
                             }
 
-                            if (serviceConfig.dwCurrentState != WinApi.SERVICE_RUNNING)
+                            if (serviceConfig.dwCurrentState != winapi.SERVICE_RUNNING)
                             {
-                                WinApi.StartService(service, 0, null);
+                                winapi.StartService(service, 0, null);
                                 Thread.Sleep(999);
-                                if (serviceConfig.dwCurrentState == WinApi.SERVICE_RUNNING)
+                                if (serviceConfig.dwCurrentState == winapi.SERVICE_RUNNING)
                                 {
                                     Logger.WriteLog("\t[+] Critical service has been restarted", Logger.success);
                                 }
@@ -637,14 +585,14 @@ namespace MinerSearch
                         }
 
                         Marshal.FreeHGlobal(ptr);
-                        WinApi.CloseServiceHandle(service);
+                        winapi.CloseServiceHandle(service);
                     }
                     else
                     {
                         Logger.WriteLog($"\t[xxx] WMI Service is not found!", ConsoleColor.DarkRed, false);
                     }
 
-                    WinApi.CloseServiceHandle(scm);
+                    winapi.CloseServiceHandle(scm);
                     Application.Exit();
 
                 }

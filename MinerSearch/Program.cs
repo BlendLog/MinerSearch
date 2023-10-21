@@ -32,6 +32,7 @@ namespace MinerSearch
             WaterMark();
 
 
+
 #if !BETA
             Console.WriteLine($"\t\tVersion: {new Version(System.Windows.Forms.Application.ProductVersion)}");
 #else
@@ -68,9 +69,6 @@ namespace MinerSearch
                 }
             }
             
-
-
-
             InitPrivileges();
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
@@ -87,9 +85,9 @@ namespace MinerSearch
                         Console.WriteLine("--help                        This help message");
                         Console.WriteLine("--no-logs                     Don't write logs in text file");
                         Console.WriteLine("--no-scantime                 Scan processes only");
-                        Console.WriteLine("--no-runtime                  Static scan only (Malware dirs, files, registry keys, etc)");
+                        Console.WriteLine("--no-runtime                  Static scan only (Mal?wa?re dirs, files, registry keys, etc)".Replace("?", ""));
                         Console.WriteLine("--no-signature-scan           Skip scanning files by signatures");
-                        Console.WriteLine("--no-rootkit-check            Skip checking rootkit present");
+                        Console.WriteLine("--no-ro?o?t?ki?t-check            Skip checking ro?ot?kit present".Replace("?", ""));
                         Console.WriteLine("--depth=<number>              Where <number> specify the number for maximum search depth. Usage example --depth=5 (default 8)");
                         Console.WriteLine("--pause                       Pause before cleanup");
                         Console.WriteLine("--remove-empty-tasks          Delete a task from the Task Scheduler if the application file does not exist in it");
@@ -131,7 +129,7 @@ namespace MinerSearch
                             return;
                         }
                     }
-                    else if (arg == "--no-rootkit-check")
+                    else if (arg == "--no-roo?tki?t-check".Replace("?", ""))
                     {
                         NoRootkitCheck = true;
                     }
@@ -148,13 +146,29 @@ namespace MinerSearch
                         }
                         no_runtime = true;
                         WinPEMode = true;
-                        Logger.WriteLog($"\t\t[&] Activated WinPE mode. Specified drive letter - {drive_letter}:\\", ConsoleColor.DarkCyan, false);
+                        Console.WriteLine($"\t\t[&] Activated WinPE mode. Specified drive letter - {drive_letter}:\\");
                     }
                     else
                     {
                         Console.WriteLine($"\nUnknown command {arg}");
                         Console.ReadKey(true);
                         return;
+                    }
+                }
+            }
+
+            if (!no_logs)
+            {
+                if (!Directory.Exists(Logger.LogsFolder))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(Logger.LogsFolder);
+                    }
+                    catch (IOException)
+                    {
+                        Logger.LogsFolder += utils.GetRndString(16);
+                        Directory.CreateDirectory(Logger.LogsFolder);
                     }
                 }
             }
@@ -218,7 +232,7 @@ namespace MinerSearch
             }
             if (mk.mlwrPids.Count > 0)
             {
-                Logger.WriteLog($"\t[!!!] Malicious processes: {mk.mlwrPids.Count}", Logger.caution);
+                Logger.WriteLog($"\t[!!!] Ma?li?cio?us processes: {mk.mlwrPids.Count}".Replace("?", ""), Logger.caution);
             }
             mk.Clean();
 
@@ -252,50 +266,50 @@ namespace MinerSearch
             Console.WriteLine(@"                                                         Beta");
 #endif
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("\t\tby: BlеndLоg");
+            Console.WriteLine("\t\tby: BlendLog");
 
         }
         static void InitPrivileges()
         {
 
             IntPtr token;
-            if (WinApi.OpenProcessToken(Process.GetCurrentProcess().Handle, WinApi.TOKEN_ADJUST_PRIVILEGES | WinApi.TOKEN_QUERY, out token))
+            if (winapi.OpenProcessToken(Process.GetCurrentProcess().Handle, winapi.TOKEN_ADJUST_PRIVILEGES | winapi.TOKEN_QUERY, out token))
             {
                 try
                 {
-                    var seSecurityLuid = new WinApi.LUID();
-                    if (WinApi.LookupPrivilegeValue(null, WinApi.SE_SECURITY_NAME, out seSecurityLuid))
+                    var seSecurityLuid = new winapi.LUID();
+                    if (winapi.LookupPrivilegeValue(null, winapi.SE_SECURITY_NAME, out seSecurityLuid))
                     {
-                        var seTakeOwnershipLuid = new WinApi.LUID();
-                        if (WinApi.LookupPrivilegeValue(null, WinApi.SE_TAKE_OWNERSHIP_NAME, out seTakeOwnershipLuid))
+                        var seTakeOwnershipLuid = new winapi.LUID();
+                        if (winapi.LookupPrivilegeValue(null, winapi.SE_TAKE_OWNERSHIP_NAME, out seTakeOwnershipLuid))
                         {
-                            var tokenPrivileges = new WinApi.TOKEN_PRIVILEGES
+                            var tokenPrivileges = new winapi.TOKEN_PRIVILEGES
                             {
                                 PrivilegeCount = 2,
-                                Privileges = new WinApi.LUID_AND_ATTRIBUTES[2]
+                                Privileges = new winapi.LUID_AND_ATTRIBUTES[2]
                                 {
-                        new WinApi.LUID_AND_ATTRIBUTES { Luid = seSecurityLuid, Attributes = WinApi.SE_PRIVILEGE_ENABLED },
-                        new WinApi.LUID_AND_ATTRIBUTES { Luid = seTakeOwnershipLuid, Attributes = WinApi.SE_PRIVILEGE_ENABLED }
+                        new winapi.LUID_AND_ATTRIBUTES { Luid = seSecurityLuid, Attributes = winapi.SE_PRIVILEGE_ENABLED },
+                        new winapi.LUID_AND_ATTRIBUTES { Luid = seTakeOwnershipLuid, Attributes = winapi.SE_PRIVILEGE_ENABLED }
                                 }
                             };
-                            if (!WinApi.AdjustTokenPrivileges(token, false, ref tokenPrivileges, 0, IntPtr.Zero, IntPtr.Zero))
+                            if (!winapi.AdjustTokenPrivileges(token, false, ref tokenPrivileges, 0, IntPtr.Zero, IntPtr.Zero))
                             {
-                                Logger.WriteLog("Failed to enable both SeSecurityPrivilege and SeTakeOwnershipPrivilege with error code: " + Marshal.GetLastWin32Error(), Logger.error, false);
+                                Logger.WriteLog("Failed to enable both SeS?ecur?ityPriv?ilege and Se?Tak?eOw?ners?hipPriv?ilege with error code: ".Replace("?", "") + Marshal.GetLastWin32Error(), Logger.error, false);
                             }
                         }
                         else
                         {
-                            Logger.WriteLog("Failed to lookup SeTakeOwnershipPrivilege with error code: " + Marshal.GetLastWin32Error(), Logger.error, false);
+                            Logger.WriteLog("Failed to lookup Se?Take?Own?ersh?ipPri?vil?ege with error code: ".Replace("?", "") + Marshal.GetLastWin32Error(), Logger.error, false);
                         }
                     }
                     else
                     {
-                        Logger.WriteLog("Failed to lookup SeSecurityPrivilege with error code: " + Marshal.GetLastWin32Error(), Logger.error, false);
+                        Logger.WriteLog("Failed to lookup S?eSe?curity?Pr?ivi?lege with error code: ".Replace("?", "") + Marshal.GetLastWin32Error(), Logger.error, false);
                     }
                 }
                 finally
                 {
-                    WinApi.CloseHandle(token);
+                    winapi.CloseHandle(token);
                 }
             }
             else

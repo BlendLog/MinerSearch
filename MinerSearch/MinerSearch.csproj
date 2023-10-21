@@ -120,7 +120,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="utils.cs" />
-    <Compile Include="WinApi.cs" />
+    <Compile Include="winapi.cs" />
     <Compile Include="WinTrust.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -132,7 +132,6 @@
     <Content Include="Resources\rk_remove.c" />
     <None Include="Resources\rk_remove.bin" />
     <None Include="Resources\rk_test.exe" />
-    <None Include="Resources\Microsoft.Win32.TaskScheduler.dll" />
     <None Include="bin\Release\Microsoft.Win32.TaskScheduler.dll" />
   </ItemGroup>
   <ItemGroup>
@@ -171,7 +170,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd /d D:\CSHARP\MinerSearch\MinerSearch\bin\Release
-ILMerge.exe MinerSearch.exe Microsoft.Win32.TaskScheduler.dll /out:MinerSearch_v1.4.5.1.exe</PostBuildEvent>
+ILMerge.exe MinerSearch.exe Microsoft.Win32.TaskScheduler.dll /out:MinerSearch_v1.4.5.2.exe</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

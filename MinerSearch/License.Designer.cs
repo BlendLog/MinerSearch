@@ -40,7 +40,7 @@ namespace MinerSearch
             this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBox1.ForeColor = System.Drawing.Color.Black;
             this.richTextBox1.Location = new System.Drawing.Point(13, 13);
-            this.richTextBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.richTextBox1.Margin = new System.Windows.Forms.Padding(4);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
             this.richTextBox1.Size = new System.Drawing.Size(826, 248);
@@ -53,10 +53,10 @@ namespace MinerSearch
             this.Accept_btn.FlatAppearance.BorderSize = 0;
             this.Accept_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Accept_btn.Location = new System.Drawing.Point(270, 273);
-            this.Accept_btn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Accept_btn.Margin = new System.Windows.Forms.Padding(4);
             this.Accept_btn.Name = "Accept_btn";
             this.Accept_btn.Size = new System.Drawing.Size(131, 56);
-            this.Accept_btn.TabIndex = 1;
+            this.Accept_btn.TabIndex = 2;
             this.Accept_btn.Text = "Accept";
             this.Accept_btn.UseVisualStyleBackColor = false;
             this.Accept_btn.Click += new System.EventHandler(this.Accept_btn_Click);
@@ -70,7 +70,7 @@ namespace MinerSearch
             this.Exit_btn.Margin = new System.Windows.Forms.Padding(4);
             this.Exit_btn.Name = "Exit_btn";
             this.Exit_btn.Size = new System.Drawing.Size(131, 56);
-            this.Exit_btn.TabIndex = 2;
+            this.Exit_btn.TabIndex = 1;
             this.Exit_btn.Text = "Exit";
             this.Exit_btn.UseVisualStyleBackColor = false;
             this.Exit_btn.Click += new System.EventHandler(this.Exit_btn_Click);
@@ -86,7 +86,7 @@ namespace MinerSearch
             this.Controls.Add(this.richTextBox1);
             this.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "License";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "License";

@@ -1,10 +1,11 @@
 ﻿
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace MinerSearch
 {
-    internal class WinApi
+    internal class winapi
     {
         [DllImport("advapi32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -67,7 +68,9 @@ namespace MinerSearch
         [DllImport("Advapi32.dll")]
         public static extern bool CloseServiceHandle(IntPtr hSCObject);
 
-        // Структура для получения информации о службе
+        [DllImport("iphlpapi.dll", SetLastError = true)]
+        public static extern int GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort, int ipVersion, TcpTableClass tblClass, int reserved);
+
         [StructLayout(LayoutKind.Sequential)]
         public struct SERVICE_CONFIG
         {
@@ -83,6 +86,31 @@ namespace MinerSearch
             public IntPtr lpDisplayName;
         }
 
+        public enum TcpTableClass
+        {
+            TCP_TABLE_BASIC_LISTENER,
+            TCP_TABLE_BASIC_CONNECTIONS,
+            TCP_TABLE_BASIC_ALL,
+            TCP_TABLE_OWNER_PID_LISTENER,
+            TCP_TABLE_OWNER_PID_CONNECTIONS,
+            TCP_TABLE_OWNER_PID_ALL,
+            TCP_TABLE_OWNER_MODULE_LISTENER,
+            TCP_TABLE_OWNER_MODULE_CONNECTIONS,
+            TCP_TABLE_OWNER_MODULE_ALL
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MIB_TCPROW_OWNER_PID
+        {
+            public uint state;
+            public uint localAddr;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            public byte[] localPort;
+            public uint remoteAddr;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            public byte[] remotePort;
+            public int owningPid;
+        }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct PROCESS_BASIC_INFORMATION
