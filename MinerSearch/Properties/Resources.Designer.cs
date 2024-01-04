@@ -79,6 +79,42 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Incorrect program startup.
+        /// </summary>
+        internal static string _ArchiveWarn_caption_en {
+            get {
+                return ResourceManager.GetString("_ArchiveWarn_caption_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Некорректный запуск программы.
+        /// </summary>
+        internal static string _ArchiveWarn_caption_ru {
+            get {
+                return ResourceManager.GetString("_ArchiveWarn_caption_ru", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The program was launched from the archive! Extract the entire archive and restart again..
+        /// </summary>
+        internal static string _ArchiveWarn_en {
+            get {
+                return ResourceManager.GetString("_ArchiveWarn_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Программа была запущена из архива! Извлеките весь архив и повторите перезапуск..
+        /// </summary>
+        internal static string _ArchiveWarn_ru {
+            get {
+                return ResourceManager.GetString("_ArchiveWarn_ru", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на No.
         /// </summary>
         internal static string _exit_en {
@@ -115,11 +151,11 @@ namespace MinerSearch.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Отказ от ответственности
         ///
-        ///Данное программное обеспечение (Далее ПО) предоставляется &quot;как есть&quot; и создано исключительно для поиска и удаления вредоносного ПО, тайно использующее ресурсы комьютера для добычи (майнинга) криптовалюты. Автор не несет ответсвенности за причиненный случайный, косвенный или непреднамеренный ущерб любого рода в ходе использования данного ПО. Вы можете использовать его на свой страх и риск. 
+        ///Данное программное обеспечение (Далее ПО) предоставляется &quot;как есть&quot; и создано исключительно для поиска и удаления вредоносного ПО, тайно использующее ресурсы компьютера для добычи (майнинга) криптовалюты. Автор не несет ответсвенности за причиненный случайный, косвенный или непреднамеренный ущерб любого рода в ходе использования данного ПО. Вы можете использовать его на свой страх и риск. 
         ///
         ///Часто задаваемые вопросы:
         ///
-        ///Вопрос: Почему мой антивирус указывает, что ПО содержит тро [остаток строки не уместился]&quot;;.
+        ///Вопрос: Почему мой антивирус указывает, что ПО содержит тр [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _License_RU {
             get {
@@ -130,19 +166,9 @@ namespace MinerSearch.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] rk_remove {
+        internal static byte[] rktest {
             get {
-                object obj = ResourceManager.GetObject("rk_remove", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
-        /// </summary>
-        internal static byte[] rk_test {
-            get {
-                object obj = ResourceManager.GetObject("rk_test", resourceCulture);
+                object obj = ResourceManager.GetObject("rktest", resourceCulture);
                 return ((byte[])(obj));
             }
         }

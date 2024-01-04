@@ -278,6 +278,13 @@ namespace MinerSearch
             [In] WinTrustData pWVTData
         );
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool Wow64DisableWow64FsRedirection(ref IntPtr ptr);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool Wow64RevertWow64FsRedirection(IntPtr ptr);
 
         public static WinVerifyTrustResult VerifyEmbeddedSignature(string filePath)
         {
