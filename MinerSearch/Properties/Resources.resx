@@ -127,6 +127,12 @@
   <data name="_accept_ru" xml:space="preserve">
     <value>Принять</value>
   </data>
+  <data name="_AppAlreadyRunning_EN" xml:space="preserve">
+    <value>Another copy of the application is already running. Display a help message?</value>
+  </data>
+  <data name="_AppAlreadyRunning_RU" xml:space="preserve">
+    <value>Другая копия приложения уже запущена. Вывести сообщение справки?</value>
+  </data>
   <data name="_ArchiveWarn_caption_en" xml:space="preserve">
     <value>Incorrect program startup</value>
   </data>
@@ -139,11 +145,53 @@
   <data name="_ArchiveWarn_ru" xml:space="preserve">
     <value>Программа была запущена из архива! Извлеките весь архив и повторите перезапуск.</value>
   </data>
+  <data name="_End_EN" xml:space="preserve">
+    <value>All done! You can close this app.</value>
+  </data>
+  <data name="_End_RU" xml:space="preserve">
+    <value>Готово! Приложение можно закрыть.</value>
+  </data>
   <data name="_exit_en" xml:space="preserve">
     <value>No</value>
   </data>
   <data name="_exit_ru" xml:space="preserve">
     <value>Выйти</value>
+  </data>
+  <data name="_Help_EN" xml:space="preserve">
+    <value>Startup params:
+
+--help                        This help message
+--no-logs                     Don't write logs in text file
+--no-scantime                 Scan processes only
+--no-runtime                  Static scan only (Malware dirs, files, registry keys, etc)
+--no-services                 Skip scan services
+--no-signature-scan           Skip scan files by signatures
+--no-rootkit-check            Skip checking rootkit present
+--depth=&lt;number&gt;              Where &lt;number&gt; specify the number for maximum search depth. Usage example --depth=5 (default 8)
+--pause                       Pause before cleanup
+--remove-empty-tasks          Delete a task from the Task Scheduler if the application file does not exist in it
+--winpemode                   Start scanning in WinPE environment by specifying a different drive letter (without scanning processes, registry, firewall and task scheduler entries)
+--scan-only                   Display malicious or suspicious objects, but do nothing
+--full-scan                   Add other entire local drives for signature scan
+--restore=&lt;path&gt;              Restore specified file from quarantine</value>
+  </data>
+  <data name="_Help_RU" xml:space="preserve">
+    <value>Параметры запуска:
+
+--help                       Вызов этой справки
+--no-logs                    Не записывать лог в файл
+--no-scantime                Сканировать только процессы
+--no-runtime                 Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)
+--no-services                Пропустить сканирование служб
+--no-signature-scan          Пропустить сигнатурное сканирование файлов
+--no-rootkit-check           Не проверять присутствие руткита
+--depth=&lt;число&gt;              Где &lt;число&gt; - уровень максимальной глубины поиска. Пример использования --depth=5 (по-умолчанию 8)
+--pause                      Пауза перед очисткой
+--remove-empty-tasks         Удалять задачу из Планировщика задач, если файл приложения в ней не существует
+--winpemode                  Запускает сканирование в режиме WinPE (без сканирования процессов, реестра, правил фаерволла, служб, задач планировщика)
+--scan-only                  Отображать вредоносный или подозрительный объект, но не выполнять лечение
+--full-scan                  Целиком добавляет другие локальные диски для сигнатурного сканирования
+--restore=&lt;путь&gt;             Восстановить указанный файл из карантина</value>
   </data>
   <data name="_License_EN" xml:space="preserve">
     <value>Denial of responsibility

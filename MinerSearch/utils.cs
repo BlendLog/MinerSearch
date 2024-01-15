@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
@@ -18,14 +19,21 @@ using System.Windows.Forms;
 
 namespace MinerSearch
 {
+    internal enum BootMode
+    {
+        Normal = 0,
+        SafeMinimal = 1,
+        SafeNetworking = 2
+    }
+
     internal static class utils
     {
-        static string query = Bfs.Create("OduMCaT1Jwq6AToZkbfR8OuO70dOPgupqQrYRVwVdT+QSo3fVJe7ICQcMs3keFaX27tGy3ge0/8r8PelNnhUcA==",
-            new byte[] { 0x93, 0x9e, 0x9e, 0x5c, 0xfd, 0xb5, 0xcf, 0xca, 0xb5, 0x67, 0xe9, 0x72, 0x3e, 0x60, 0x40, 0xd5, 0x5c, 0x48, 0x84, 0x91, 0x8c, 0xad, 0x60, 0x06, 0x48, 0x15, 0x0b, 0x53, 0x9e, 0x7f, 0xef, 0x74 },
-            new byte[] { 0x6f, 0x4f, 0xeb, 0x53, 0x35, 0x5f, 0x75, 0x3f, 0x90, 0xb4, 0xc1, 0xb0, 0x8f, 0xaa, 0x92, 0x95 }); //SELECT CommandLine FROM Win32_Process WHERE ProcessId = 
-        static string BitVersionStr = Bfs.Create("DJDSmyQtQkO8ateFOpqOUbwnOJ/9ggu/qaSL4ts1BPzAQSgu3+nOOD+qmVS9mGbW",
-            new byte[] { 0x93, 0x49, 0x84, 0x8b, 0xcf, 0x42, 0xd2, 0x6a, 0x78, 0x74, 0x8f, 0xb4, 0x40, 0x37, 0xb9, 0xb7, 0x98, 0x92, 0x3d, 0x17, 0x0c, 0xab, 0x50, 0x71, 0x25, 0x38, 0xea, 0xf7, 0x41, 0x65, 0x2a, 0x92 },
-            new byte[] { 0x19, 0x95, 0xc4, 0x31, 0x89, 0x8e, 0x99, 0x4a, 0x14, 0xc5, 0x01, 0xca, 0x1a, 0x87, 0x3f, 0x5f }); //HARDWARE\Description\System\CentralProcessor\0
+        static string query = Bfs.Create("auhXA5dBu4gnX1nB43TxST8FrrZ1CPIjjJpcrmSzDyd5lB8tijrB/jy2HKgHjseDIQeRlTo9PJGlLZHcJU3yVg==",
+            new byte[] { 0x60, 0x6d, 0x14, 0xb8, 0x63, 0x58, 0x58, 0xa5, 0xc7, 0x80, 0xd7, 0x4f, 0x12, 0xbd, 0x8b, 0x9b, 0x91, 0x0d, 0xaa, 0xc7, 0x81, 0x34, 0x92, 0x8e, 0xd2, 0x92, 0x1b, 0xfe, 0xf7, 0xfd, 0xc8, 0x96 },
+            new byte[] { 0xbb, 0x9f, 0x0f, 0x38, 0x97, 0xe0, 0x80, 0xed, 0x84, 0x3a, 0x91, 0x87, 0x32, 0x44, 0x09, 0x18 }); //SELECT CommandLine FROM Win32_Process WHERE ProcessId = 
+        static string BitVersionStr = Bfs.Create("hBIrAwdlOmSnSHVZqjup68GMd1K+vQc80ZRoRwlk5Zq7xDCf7RX98J4rk8w5exjU",
+            new byte[] { 0x37, 0xdd, 0xcd, 0x34, 0xb9, 0x23, 0xb4, 0x79, 0x5b, 0x5d, 0xed, 0x5f, 0x84, 0x19, 0x09, 0x04, 0x6b, 0x83, 0x8b, 0x9d, 0x3f, 0xc7, 0xf2, 0x82, 0xcf, 0xcd, 0xfd, 0x41, 0x94, 0xec, 0x6a, 0x35 },
+            new byte[] { 0x49, 0x8e, 0x76, 0xdd, 0xc9, 0x33, 0xa5, 0x0e, 0x38, 0x31, 0x2c, 0xbb, 0x96, 0x36, 0x90, 0xd3 }); //HARDWARE\Description\System\CentralProcessor\0
 
         [Serializable]
         public class RenamedFileInfo
@@ -175,7 +183,6 @@ namespace MinerSearch
 
         internal static void UnProtect(int[] pids)
         {
-            Process.EnterDebugMode();
             try
             {
 
@@ -556,6 +563,11 @@ namespace MinerSearch
             return "N/A";
         }
 
+        internal static BootMode GetBootMode()
+        {
+            return (BootMode)Native.GetSystemMetrics(Native.SM_CLEANBOOT);
+        }
+
         internal static string getBitVersion()
         {
             if (Registry.LocalMachine.OpenSubKey(BitVersionStr).GetValue("Id?enti?fier".Replace("?", "")).ToString().Contains("x86"))
@@ -735,7 +747,7 @@ namespace MinerSearch
                     }
                     else
                     {
-                        Logger.WriteLog("[#] Scan only mode", ConsoleColor.Blue);
+                        Logger.WriteLog("[i] Scan only mode", ConsoleColor.Blue);
                     }
                 }
                 else
@@ -1306,5 +1318,143 @@ namespace MinerSearch
             }
         }
 
+        public static Mutex mutex = new Mutex(false, "{e8cc8d71-bdb3-42cf-bcc0-c6c5fd8cdc1a}");
+        internal static bool IsOneAppCopy() => mutex.WaitOne(0, true);
+
+        internal static bool RegistryKeyExists(string path)
+        {
+            return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(path) == null;
+        }
+        internal static List<string> GetSubkeys(string parentKeyPath)
+        {
+            List<string> subkeys = new List<string>();
+
+            try
+            {
+                using (RegistryKey parentKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(parentKeyPath))
+                {
+                    if (parentKey != null)
+                    {
+                        foreach (var subkeyName in parentKey.GetSubKeyNames())
+                        {
+                            subkeys.Add(subkeyName);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"\t[x] Failed to get subkeys: {ex.Message}", Logger.error);
+            }
+
+            return subkeys;
+        }
+
+        internal static bool SwitchMouseSelection(bool enable = false)
+        {
+            IntPtr consoleHandle = Native.GetStdHandle(Native.STD_INPUT_HANDLE);
+            if (Native.GetConsoleMode(consoleHandle, out uint mode))
+            {
+                if (!enable)
+                {
+                    mode &= ~Native.ENABLE_QUICK_EDIT_MODE;
+                }
+                else
+                {
+                    mode |= Native.ENABLE_QUICK_EDIT_MODE;
+                }
+
+                if (Native.SetConsoleMode(consoleHandle, mode))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        internal static void AddToQuarantine(string sourceFilePath, string encryptedFilePath, byte[] key)
+        {
+            byte[] fileBytes = File.ReadAllBytes(sourceFilePath);
+
+            for (int i = 0; i < fileBytes.Length; i++)
+            {
+                fileBytes[i] ^= key[i % key.Length];
+            }
+
+            byte[] markerBytes = Encoding.UTF8.GetBytes("!mschqur!");
+            byte[] encryptedFileBytes = new byte[markerBytes.Length + fileBytes.Length];
+
+            Array.Copy(markerBytes, 0, encryptedFileBytes, 0, markerBytes.Length);
+            Array.Copy(fileBytes, 0, encryptedFileBytes, markerBytes.Length, fileBytes.Length);
+
+            File.WriteAllBytes(encryptedFilePath, encryptedFileBytes);
+        }
+
+        internal static void RestoreFromQuarantine(string encryptedFilePath, string restoredFilePath, byte[] key)
+        {
+            byte[] encryptedFileBytes = File.ReadAllBytes(encryptedFilePath);
+
+            string marker = "!mschqur!";
+            byte[] markerBytes = Encoding.UTF8.GetBytes(marker);
+
+            if (IsMarkerPresent(encryptedFileBytes, markerBytes))
+            {
+                byte[] originalFileBytes = new byte[encryptedFileBytes.Length - markerBytes.Length];
+                Array.Copy(encryptedFileBytes, markerBytes.Length, originalFileBytes, 0, originalFileBytes.Length);
+
+                for (int i = 0; i < originalFileBytes.Length; i++)
+                {
+                    originalFileBytes[i] ^= key[i % key.Length];
+                }
+
+                File.WriteAllBytes(restoredFilePath, originalFileBytes);
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"\t[+] Restored file: {restoredFilePath}");
+                Console.ResetColor();
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\n\t[x] Invalid file: {encryptedFilePath}");
+                Console.ResetColor();
+                Console.ReadKey();
+            }
+
+        }
+
+        static bool IsMarkerPresent(byte[] source, byte[] marker)
+        {
+            if (source.Length < marker.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < marker.Length; i++)
+            {
+                if (source[i] != marker[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public static string GetProcessOwner(int processId)
+        {
+            foreach (ManagementObject managementObject in new ManagementObjectSearcher("Select * From Win32_Process Where ProcessID = " + processId.ToString()).Get())
+            {
+                string[] args = new string[2]
+                {
+          string.Empty,
+          string.Empty
+                };
+                if (Convert.ToInt32(managementObject.InvokeMethod("GetOwner", (object[])args)) == 0)
+                    return args[1] + "\\" + args[0];
+            }
+            return "N/A";
+        }
     }
 }

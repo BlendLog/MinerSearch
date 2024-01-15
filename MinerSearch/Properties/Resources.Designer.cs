@@ -79,6 +79,24 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Another copy of the application is already running. Display a help message?.
+        /// </summary>
+        internal static string _AppAlreadyRunning_EN {
+            get {
+                return ResourceManager.GetString("_AppAlreadyRunning_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Другая копия приложения уже запущена. Вывести сообщение справки?.
+        /// </summary>
+        internal static string _AppAlreadyRunning_RU {
+            get {
+                return ResourceManager.GetString("_AppAlreadyRunning_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Incorrect program startup.
         /// </summary>
         internal static string _ArchiveWarn_caption_en {
@@ -115,6 +133,24 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на All done! You can close this app..
+        /// </summary>
+        internal static string _End_EN {
+            get {
+                return ResourceManager.GetString("_End_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Готово! Приложение можно закрыть..
+        /// </summary>
+        internal static string _End_RU {
+            get {
+                return ResourceManager.GetString("_End_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на No.
         /// </summary>
         internal static string _exit_en {
@@ -129,6 +165,42 @@ namespace MinerSearch.Properties {
         internal static string _exit_ru {
             get {
                 return ResourceManager.GetString("_exit_ru", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Startup params:
+        ///
+        ///--help                        This help message
+        ///--no-logs                     Don&apos;t write logs in text file
+        ///--no-scantime                 Scan processes only
+        ///--no-runtime                  Static scan only (Malware dirs, files, registry keys, etc)
+        ///--no-services                 Skip scan services
+        ///--no-signature-scan           Skip scan files by signatures
+        ///--no-rootkit-check            Skip checking rootkit present
+        ///--depth=&lt;number&gt;              Where &lt;number&gt; specify the number for ma [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string _Help_EN {
+            get {
+                return ResourceManager.GetString("_Help_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Параметры запуска:
+        ///
+        ///--help                       Вызов этой справки
+        ///--no-logs                    Не записывать лог в файл
+        ///--no-scantime                Сканировать только процессы
+        ///--no-runtime                 Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)
+        ///--no-services                Пропустить сканирование служб
+        ///--no-signature-scan          Пропустить сигнатурное сканирование файлов
+        ///--no-rootkit-check           Не проверять присутствие руткита
+        ///--depth=&lt;число&gt;              Г [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string _Help_RU {
+            get {
+                return ResourceManager.GetString("_Help_RU", resourceCulture);
             }
         }
         

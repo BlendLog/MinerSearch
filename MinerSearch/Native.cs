@@ -52,24 +52,6 @@ namespace MinerSearch
         [DllImport("kernel32.dll")]
         public static extern bool Process32Next(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
 
-        [DllImport("Advapi32.dll")]
-        public static extern IntPtr OpenSCManager(string machineName, string databaseName, int dwAccess);
-
-        [DllImport("Advapi32.dll")]
-        public static extern IntPtr OpenService(IntPtr hSCManager, string lpServiceName, int dwDesiredAccess);
-
-        [DllImport("Advapi32.dll")]
-        public static extern bool QueryServiceConfig(IntPtr hService, IntPtr lpServiceConfig, int cbBufSize, out int pcbBytesNeeded);
-
-        [DllImport("Advapi32.dll")]
-        public static extern bool ChangeServiceConfig(IntPtr hService, int nServiceType, int nStartType, int nErrorControl, string lpBinaryPathName, string lpLoadOrderGroup, IntPtr lpdwTagId, string lpDependencies, string lpServiceStartName, string lpPassword, string lpDisplayName);
-
-        [DllImport("Advapi32.dll")]
-        public static extern bool StartService(IntPtr hService, int dwNumServiceArgs, string[] lpServiceArgVectors);
-
-        [DllImport("Advapi32.dll")]
-        public static extern bool CloseServiceHandle(IntPtr hSCObject);
-
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern int GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort, int ipVersion, TcpTableClass tblClass, int reserved);
 
@@ -77,20 +59,14 @@ namespace MinerSearch
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetVersionEx(ref OSVERSIONINFOEX osVersionInfo);
 
-        [StructLayout(LayoutKind.Sequential)]
-        public struct SERVICE_CONFIG
-        {
-            public uint dwServiceType;
-            public uint dwStartType;
-            public uint dwErrorControl;
-            public uint dwCurrentState;
-            public IntPtr lpBinaryPathName;
-            public IntPtr lpLoadOrderGroup;
-            public uint dwTagId;
-            public IntPtr lpDependencies;
-            public IntPtr lpServiceStartName;
-            public IntPtr lpDisplayName;
-        }
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr GetStdHandle(int nStdHandle);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 
         public enum TcpTableClass
         {
@@ -183,6 +159,9 @@ namespace MinerSearch
         public const int SERVICE_RUNNING = 0x00000004;
         public const int SERVICE_DISABLED = 0x00000004;
 
+        public const uint ENABLE_QUICK_EDIT_MODE = 0x0040;
+        public const int STD_INPUT_HANDLE = -10;
+
         public struct LUID
         {
             public uint LowPart;
@@ -251,8 +230,6 @@ namespace MinerSearch
         private const int ERROR_INSUFFICIENT_BUFFER = 0x0000007a;
         private const uint SERVICE_NO_CHANGE = 0xFFFFFFFF;
         private const int SC_STATUS_PROCESS_INFO = 0;
-
-
 
         #region OpenSCManager
         [DllImport("advapi32.dll", EntryPoint = "OpenSCManagerW", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]

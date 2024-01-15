@@ -5,6 +5,7 @@ using MinerSearch.Properties;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 
@@ -30,26 +31,19 @@ namespace MinerSearch
 
         static void Main(string[] args)
         {
+
             Console.Title = utils.GetRndString();
 
-            Console.BufferWidth = 150;
-            Console.BufferHeight = 100;
-
-            int desiredConsoleWidth = Console.LargestWindowWidth - 10;
-            int desiredConsoleHeight = Console.LargestWindowHeight - 10;
-
-            Console.SetWindowSize(desiredConsoleWidth, desiredConsoleHeight);
-            Console.SetWindowPosition(0, 0);
+            Console.SetWindowSize(150, 40);
 
             WaterMark();
 
             ActiveLanguage = utils.GetSystemLanguage();
 
-#if !BETA
+
             Console.WriteLine($"\t\tVersion: {new Version(System.Windows.Forms.Application.ProductVersion)}");
-#else
-            Console.WriteLine($"\t\tVersion: {new Version(System.Windows.Forms.Application.ProductVersion)} Beta");
-#endif
+
+
 #if !DEBUG
             Console.WriteLine($"\t\tRelevant versions on https://github.com/BlendLog/MinerSearch/releases \n");
 #endif
@@ -97,6 +91,27 @@ namespace MinerSearch
                 }
             }
 
+            if (!utils.IsOneAppCopy())
+            {
+                DialogResult message = DialogResult.None;
+                switch (ActiveLanguage)
+                {
+                    case "RU":
+                        message = MessageBox.Show(Resources._AppAlreadyRunning_RU, Console.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        break;
+                    case "EN":
+                        message = MessageBox.Show(Resources._AppAlreadyRunning_EN, Console.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        break;
+                }
+                if (message == DialogResult.Yes)
+                {
+                    args = new string[] { "--help" };
+                }
+                else
+                {
+                    Environment.Exit(0);
+                }
+            }
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
@@ -108,20 +123,21 @@ namespace MinerSearch
                     if (arg == "--help")
                     {
                         help = true;
-                        Console.WriteLine("Available commands: \n");
-                        Console.WriteLine("--help                        This help message");
-                        Console.WriteLine("--no-logs                     Don't write logs in text file");
-                        Console.WriteLine("--no-scantime                 Scan processes only");
-                        Console.WriteLine("--no-runtime                  Static scan only (Mal?wa?re dirs, files, registry keys, etc)".Replace("?", ""));
-                        Console.WriteLine("--no-services                 Skip scan services");
-                        Console.WriteLine("--no-signature-scan           Skip scan files by signatures");
-                        Console.WriteLine("--no-ro?o?t?ki?t-check            Skip checking ro?ot?kit present".Replace("?", ""));
-                        Console.WriteLine("--depth=<number>              Where <number> specify the number for maximum search depth. Usage example --depth=5 (default 8)");
-                        Console.WriteLine("--pause                       Pause before cleanup");
-                        Console.WriteLine("--remove-empty-tasks          Delete a task from the Task Scheduler if the application file does not exist in it");
-                        Console.WriteLine("--winpemode                   Start scanning in WinPE environment by specifying a different drive letter (without scanning processes, registry, firewall and task scheduler entries)");
-                        Console.WriteLine("--scan-only                   Display mali?cious or suspicious objects, but do nothing".Replace("?", ""));
-                        Console.WriteLine("--full-scan                   Add other entire local drives for signature scan");
+
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        if (ActiveLanguage == "EN")
+                        {
+                            Console.Write(Resources._Help_EN);
+                        }
+                        else if (ActiveLanguage == "RU")
+                        {
+                            Console.Write(Resources._Help_RU);
+                        }
+                        else
+                        {
+                            Console.Write(Resources._Help_EN);
+                        }
                         Console.ReadKey();
                         return;
                     }
@@ -178,6 +194,21 @@ namespace MinerSearch
                     {
                         fullScan = true;
                     }
+                    else if (arg.StartsWith("--restore="))
+                    {
+                        var path = arg.Remove(0, 10);
+                        if (File.Exists(path))
+                        {
+                            utils.RestoreFromQuarantine(path, Path.GetFileNameWithoutExtension(path).Split('_')[0], Encoding.UTF8.GetBytes(Application.ProductVersion.Replace(".", "")));
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine($"\t[!] File {path} is not exists");
+                            Console.ResetColor();
+                        }
+                        return;
+                    }
                     else if (arg == "--winpemode")
                     {
                     drive_letter_lbl:
@@ -200,6 +231,11 @@ namespace MinerSearch
                         return;
                     }
                 }
+            }
+
+            if (!help)
+            {
+                utils.SwitchMouseSelection();
             }
 
             if (!no_logs)
@@ -239,18 +275,19 @@ namespace MinerSearch
 
             Logger.WriteLog($"\t\tWindows version: {utils.GetWindowsVersion()} {utils.getBitVersion()}", ConsoleColor.White, false);
             Logger.WriteLog($"\t\tUsername: {Environment.UserName}", ConsoleColor.DarkGray, false);
-            Logger.WriteLog($"\t\tPC Name: {Environment.MachineName}\n", ConsoleColor.DarkGray, false);
+            Logger.WriteLog($"\t\tPC Name: {Environment.MachineName}", ConsoleColor.DarkGray, false);
+            Logger.WriteLog($"\t\tBoot mode: {utils.GetBootMode()}\n", ConsoleColor.DarkGray, false);
             utils.CheckStartupCount();
 
             var pmodules = Process.GetCurrentProcess().Modules;
             foreach (var module in pmodules)
             {
-                if (module.ToString().Contains(Bfs.GetStr(@"䖜䖒䖛䖉䖍䖋䗉䗋䗑䖛䖓䖓", 17919))) //cmdvrt64.dll
+                if (module.ToString().Contains(Bfs.GetStr(@"㟴㟺㟳㟡㟥㟣㞡㞣㞹㟳㟻㟻", 14231))) //cmdvrt64.dll
                 {
                     Console.BackgroundColor = ConsoleColor.Red;
-                    Console.WriteLine(Bfs.Create("Wk3B63KEJuzwmN0LiXM9ckEhNM1GOtFvmi0Iq15YBmY6jjx35GP8EyqZ3vID0NZ/tAmbk0QE+9WUB7wYqjq3zfz2zksQ9g/oYISfmofjOz0zSboixjeuxhvLU8V4AkjZ",
-            new byte[] { 0x19, 0x7b, 0xab, 0x8a, 0x3c, 0xc9, 0xc2, 0xe7, 0x35, 0xc2, 0xcb, 0x29, 0x3d, 0x7f, 0x7a, 0x25, 0xcf, 0x3b, 0x26, 0xe5, 0x36, 0x4b, 0x16, 0xa9, 0x49, 0x32, 0xe0, 0x4a, 0xe7, 0x98, 0x50, 0x99 },
-            new byte[] { 0x33, 0xe8, 0xc3, 0x09, 0x7b, 0xa6, 0xed, 0xb3, 0x6d, 0x6e, 0xe1, 0x7a, 0x86, 0xe6, 0x65, 0x23 })); //[!!!!] COMODO VIRTUAL ENVIRONMENT DETECTED! Please, add program to white list!
+                    Console.WriteLine(Bfs.Create("po3O9ln0Bbpj48dNn9jFJSttgt/rlxKoSC4P9SDDh9gkcexURxlrMVwSywTp13iO2/BP2Wd6MygYFyBji0dPiW2o1PFAYQoTcknosZkmIOM=",
+            new byte[] { 0x49, 0x75, 0xee, 0xf4, 0x85, 0xd9, 0x5e, 0x90, 0x39, 0x92, 0x22, 0x15, 0x60, 0x19, 0x5d, 0x06, 0xfa, 0xf1, 0xe1, 0xef, 0x6d, 0xa8, 0xfc, 0x67, 0x6b, 0xed, 0xd1, 0xe3, 0x31, 0xe5, 0x20, 0xaa },
+            new byte[] { 0x02, 0x13, 0x1d, 0xa9, 0xf0, 0x7d, 0x2b, 0xda, 0xd3, 0x39, 0x5e, 0x90, 0x65, 0xa7, 0x72, 0x23 })); //[!!!!] COMODO VIRTUAL ENVIRONMENT DETECTED! Please, add program to white list!
                     Console.BackgroundColor = ConsoleColor.Black;
 
                     Console.ReadLine();
@@ -311,6 +348,9 @@ namespace MinerSearch
             Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
             Logger.WriteLog("\t\tAll Done. You can close this window", ConsoleColor.Cyan, false);
             mk = null;
+
+            utils.SwitchMouseSelection(true);
+
             Console.Read();
         }
 
@@ -331,11 +371,14 @@ namespace MinerSearch
 #if !BETA
             Console.WriteLine(@"                                                                                          ");
 #else
-            Console.WriteLine(@"                                                         Beta");
+            Console.WriteLine(@"                                                              ____           _           ");
+            Console.WriteLine(@"                                                             | __ )    ___  | |_    __ _ ");
+            Console.WriteLine(@"                                                             |  _ \   / _ \ | __|  / _` |");
+            Console.WriteLine(@"                                                             | |_) | |  __/ | |_  | (_| |");
+            Console.WriteLine(@"                                                             |____/   \___|  \__|  \__,_|");
 #endif
             Console.WriteLine("\t\tby: Bl~end~L~og".Replace("~", ""));
 
         }
-
     }
 }
