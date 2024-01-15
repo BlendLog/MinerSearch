@@ -5,6 +5,24 @@
 
 ### ВНИМАНИЕ! Некоторые антивирусы помечают этот проект как троян. Это ложное срабатывание, просто добавьте исполняемый файл в исключение антивируса
 
+Версия 1.4.6.0
+
+- Добавлено обнаружение запуска приложения из под архива
+- Добавлено корректное определение версии Windows
+- Исключена попытка случайно удалить легальный .bat скрипт
+- Исключена потеря списка вредоносных процессов из памяти, когда приложение аварийно закрывалось
+- Добавлено отключение установленных майнером сервисов
+- Добавлена проверка подписи файла из аргументов rundll32.exe и pcalua.exe, а не сами файлы
+- Исправлена ошибка "Доступ к этому файлу из системы отсутствует"
+- Исправлена недоработка, когда вредоносный файл удален, но выводится сообщение "No threats found"
+- Определение sfx архива в автозапуске
+- Восстановление службы удаленных рабочих столов и удаление RDP Wrapper
+- Опеределение исполняемого файла по сигнатуре, а не по расширению
+- Добавлен параметр --no-services для пропуска сканирования служб
+- Добавлен парамтре --full-scan для добавления всех дополнительных локальных дисков для сигнатурного сканирования
+- Добавлен параметр --scan-only. Отображать подозрительные или вредоносные объекты, но не выполнять лечение.
+
+
 Версия 1.4.5.2
 
 - Переработан алгоритм получения удаленного порта процесса (без netstat)
@@ -86,6 +104,23 @@ This program is designed to find and destroy hidden miners.
 It is an auxiliary tool for searching suspicious files, directories, processes, etc. and is NOT an antivirus.
 
 ### ATTENTION! Some antiviruses mark this project as a Trojan. This is a false positive, just add the executable file to the antivirus exception.
+
+Version 1.4.6.0
+
+- Added detection if application launched from the archive
+- Added the correct detection of the Windows version
+- Fixed attempt to accidentally delete a legal one .bat-script
+- Fixed the loss of the list of malicious processes from memory when application crashes
+- Added option for disabling of the services installed by miner-trojan
+- Added file signature verification from arguments rundll32.exe and pcalua.exe , not the files themselves
+- Fixed the error "There is no access to this file from system"
+- Fixed a bug when a malicious file is deleted, but the message "No threats found" is displayed
+- Added sfx archive detection in autorun
+- Restoring the Remote Desktop Service and removing illegal the RDP Wrapper
+- Determining an executable file by signature, not by extension
+- Added the --no-services parameter to skip scanning services
+- Added a parameter --full-scan to add all additional local disks for signature scanning
+- Added the --scan-only parameter. Display suspicious or malicious objects, but do not perform treatment.
 
 Version 1.4.5.2
 
