@@ -5,6 +5,18 @@
 
 ### ВНИМАНИЕ! Некоторые антивирусы помечают этот проект как троян. Это ложное срабатывание, просто добавьте исполняемый файл в исключение антивируса
 
+Версия 1.4.6.1
+
+- Запись режима загрузки в лог (нормальный или безопасный)
+- Обнаружение работы другой копии программы
+- Обнаружение внедрения в процесс проводника
+- Удаление нежелательных правил блокировки приложений политикой AppLocker
+- Добавлен русский язык справки
+- Исправлена ошибка, когда окно консоли задано больше, чем разрешается
+- Убрана возможность выделения в консоли, предотвращая случайную приостановку работы приложения
+- Зараженные файлы будут зашифрованы, перед добавлением в карантин
+- Добавлена команда --restore=<путь> для восстановления указанного файла из карантина
+  
 Версия 1.4.6.0
 
 - Добавлено обнаружение запуска приложения из под архива
@@ -104,6 +116,18 @@ This program is designed to find and destroy hidden miners.
 It is an auxiliary tool for searching suspicious files, directories, processes, etc. and is NOT an antivirus.
 
 ### ATTENTION! Some antiviruses mark this project as a Trojan. This is a false positive, just add the executable file to the antivirus exception.
+
+Version 1.4.6.1
+
+- Recording the boot mode in the log (normal or safe)
+- Detecting the operation of another copy of the program
+- Detecting the injection to the explorer's process
+- Removing unwanted app Blocking rules by AppLocker Policy
+- Added the Russian help language
+- Fixed a bug where the console window is set to be larger than allowed
+- Removed text selection option in the console, preventing accidental suspension of the application
+- Infected files will be encrypted before being added to quarantine
+- Added the --restore=<path> command to restore the specified file from quarantine
 
 Version 1.4.6.0
 
