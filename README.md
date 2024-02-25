@@ -5,6 +5,18 @@
 
 ### ВНИМАНИЕ! Некоторые антивирусы помечают этот проект как троян. Это ложное срабатывание, просто добавьте исполняемый файл в исключение антивируса
 
+Версия 1.4.7.0
+
+- Добавлен перевод на русский
+- Исправлена обработка путей с неразрывным пробелом
+- Добавлено предотвращение внедрения неподписаных Microsoft dll
+- Добавлено предотвращение блокировки по хэшу значка в заголовке приложения
+- Исправление ошибки 0xc0000005 при проверке процессов в безопасном режиме без поддержки сети
+- Добавлена поддержка малых разрешений экрана
+- Добавлено запись в лог версии приложения
+- Добавлена запись в лог, что ранее найденные процессы были приостановлены, в случае аварийного закрытия программы
+- Добавлен параметр --debug для отладки. Используется при запуске приложения через cmd или powershell
+
 Версия 1.4.6.1
 
 - Запись режима загрузки в лог (нормальный или безопасный)
@@ -116,6 +128,18 @@ This program is designed to find and destroy hidden miners.
 It is an auxiliary tool for searching suspicious files, directories, processes, etc. and is NOT an antivirus.
 
 ### ATTENTION! Some antiviruses mark this project as a Trojan. This is a false positive, just add the executable file to the antivirus exception.
+
+Version 1.4.7.0
+
+- Added Russian translation
+- Fixed the processing of paths with non-breaking space
+- Added inject prevention of unsigned Microsoft dlls
+- Added prevention of blocking by hash of the icon in the title bar
+- Fixed error 0xc0000005 when checking processes in safe mode without networking
+- Added support for small screen resolutions
+- Added logging version of application to the file
+- Added a log entry that previously found processes were suspended while program crash
+- Added the --debug parameter for debugging. It is used when launching the application via cmd or powershell
 
 Version 1.4.6.1
 
