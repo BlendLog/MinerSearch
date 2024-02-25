@@ -13,7 +13,7 @@ namespace MinerSearch
         public static readonly ConsoleColor warn = ConsoleColor.Yellow;
         public static readonly ConsoleColor head = ConsoleColor.Cyan;
         public static readonly ConsoleColor caution = ConsoleColor.Magenta;
-        public static readonly ConsoleColor cautionLow = ConsoleColor.DarkYellow;
+        public static readonly ConsoleColor warnMedium = ConsoleColor.DarkYellow;
         public static string previousWhiteText = "";
         public static string previousNonWhiteText = "";
         public static ConsoleColor previousColor;

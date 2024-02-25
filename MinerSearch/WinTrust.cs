@@ -194,7 +194,7 @@ namespace MinerSearch
         CryptFileError = 0x80092003
     }
 
-    public static class WinTrust
+    public class WinTrust
     {
         public const int MAX_PATH = 260;
         private static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
@@ -278,17 +278,9 @@ namespace MinerSearch
             [In] WinTrustData pWVTData
         );
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool Wow64DisableWow64FsRedirection(ref IntPtr ptr);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool Wow64RevertWow64FsRedirection(IntPtr ptr);
-
-        public static WinVerifyTrustResult VerifyEmbeddedSignature(string filePath)
+        public WinVerifyTrustResult VerifyEmbeddedSignature(string filePath)
         {
-
+            LocalizedLogger LL = new LocalizedLogger();
             try
             {
                 WinTrustFileInfo trustFileInfo = new WinTrustFileInfo(filePath);
@@ -301,22 +293,22 @@ namespace MinerSearch
                 switch (result)
                 {
                     case WinVerifyTrustResult.SubjectNotTrusted:
-                        Logger.WriteLog($"\t[!] {filePath}: \nSubject failed the specified verification action", Logger.warn);
+                        LL.LogWarnMessage("_CertSubjectNotTrusted", filePath);
                         break;
                     case WinVerifyTrustResult.SubjectExplicitlyDistrusted:
-                        Logger.WriteLog($"\t[!] {filePath}: \nSigner's certificate is in the Untrusted Publishers store", Logger.warn);
+                        LL.LogWarnMessage("_CertSubjectExplicitlyDistrusted", filePath);
                         break;
                     case WinVerifyTrustResult.SignatureOrFileCorrupt:
-                        Logger.WriteLog($"\t[!] {filePath}: \nfile was probably corrupt", Logger.warn);
+                        LL.LogWarnMessage("_CertSignatureOrFileCorrupt", filePath);
                         break;
                     case WinVerifyTrustResult.SubjectCertExpired:
-                        Logger.WriteLog($"\t[!] {filePath}: \nSigner's certificate was expired", Logger.warn);
+                        LL.LogWarnMessage("_CertSubjectCertExpired", filePath);
                         break;
                     case WinVerifyTrustResult.SubjectCertificateRevoked:
-                        Logger.WriteLog($"\t[!] {filePath}: \nSubject's certificate was revoked", Logger.warn);
+                        LL.LogWarnMessage("_CertSubjectCertificateRevoked", filePath);
                         break;
                     case WinVerifyTrustResult.UntrustedRoot:
-                        Logger.WriteLog($"\t[!] {filePath}: \nRoot certificate is not trusted", Logger.warn);
+                        LL.LogWarnMessage("_CertUntrustedRoot", filePath);
                         break;
                     case WinVerifyTrustResult.FileNotSigned:
                         result = VerifyByCatalog(filePath);
@@ -329,7 +321,7 @@ namespace MinerSearch
             }
             catch (Exception ex)
             {
-                Logger.WriteLog($"\t[x] Error verify signature: {ex.Message}", Logger.error);
+                new LocalizedLogger().LogErrorMessage("_ErrorVerifySignature", ex);
                 return WinVerifyTrustResult.Error;
             }
         }
@@ -452,7 +444,7 @@ namespace MinerSearch
             }
             catch (Exception ex)
             {
-                Logger.WriteLog($"\t[x] Error verify signature: {ex.Message}", Logger.error);
+                new LocalizedLogger().LogErrorMessage("_ErrorVerifySignature", ex);
                 return WinVerifyTrustResult.Error;
             }
         }

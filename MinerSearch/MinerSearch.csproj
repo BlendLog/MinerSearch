@@ -63,7 +63,7 @@
     </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>64.ico</ApplicationIcon>
+    <ApplicationIcon>256.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -113,6 +113,7 @@
     <Compile Include="License.Designer.cs">
       <DependentUpon>License.cs</DependentUpon>
     </Compile>
+    <Compile Include="LocalizedLogger.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="MinerSearch.cs" />
     <Compile Include="Program.cs" />
@@ -122,7 +123,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="utils.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="Native.cs" />
     <Compile Include="WinTrust.cs" />
   </ItemGroup>
@@ -132,7 +133,10 @@
     <None Include="Resources\rktest.bin" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="256.ico" />
     <Content Include="64.ico" />
+    <Content Include="msch.ico" />
+    <None Include="Resources\rawdata.txt" />
     <Content Include="Resources\rk_remove.c" />
     <None Include="bin\Release\Microsoft.Win32.TaskScheduler.dll" />
   </ItemGroup>
@@ -172,7 +176,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd /d D:\CSHARP\MinerSearch\MinerSearch\bin\Release
-ILMerge.exe /ndebug MinerSearch.exe Microsoft.Win32.TaskScheduler.dll /out:MinerSearch_v1.4.6.1.exe</PostBuildEvent>
+ILMerge.exe /ndebug MinerSearch.exe Microsoft.Win32.TaskScheduler.dll /out:MinerSearch_v1.4.7.0.exe</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

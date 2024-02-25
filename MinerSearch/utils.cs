@@ -1,10 +1,10 @@
-﻿//#define BETA
-
+﻿
 using Microsoft.Win32;
 using Microsoft.Win32.TaskScheduler;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -26,14 +26,12 @@ namespace MinerSearch
         SafeNetworking = 2
     }
 
-    internal static class utils
+    internal class Utils
     {
-        static string query = Bfs.Create("auhXA5dBu4gnX1nB43TxST8FrrZ1CPIjjJpcrmSzDyd5lB8tijrB/jy2HKgHjseDIQeRlTo9PJGlLZHcJU3yVg==",
-            new byte[] { 0x60, 0x6d, 0x14, 0xb8, 0x63, 0x58, 0x58, 0xa5, 0xc7, 0x80, 0xd7, 0x4f, 0x12, 0xbd, 0x8b, 0x9b, 0x91, 0x0d, 0xaa, 0xc7, 0x81, 0x34, 0x92, 0x8e, 0xd2, 0x92, 0x1b, 0xfe, 0xf7, 0xfd, 0xc8, 0x96 },
-            new byte[] { 0xbb, 0x9f, 0x0f, 0x38, 0x97, 0xe0, 0x80, 0xed, 0x84, 0x3a, 0x91, 0x87, 0x32, 0x44, 0x09, 0x18 }); //SELECT CommandLine FROM Win32_Process WHERE ProcessId = 
-        static string BitVersionStr = Bfs.Create("hBIrAwdlOmSnSHVZqjup68GMd1K+vQc80ZRoRwlk5Zq7xDCf7RX98J4rk8w5exjU",
-            new byte[] { 0x37, 0xdd, 0xcd, 0x34, 0xb9, 0x23, 0xb4, 0x79, 0x5b, 0x5d, 0xed, 0x5f, 0x84, 0x19, 0x09, 0x04, 0x6b, 0x83, 0x8b, 0x9d, 0x3f, 0xc7, 0xf2, 0x82, 0xcf, 0xcd, 0xfd, 0x41, 0x94, 0xec, 0x6a, 0x35 },
-            new byte[] { 0x49, 0x8e, 0x76, 0xdd, 0xc9, 0x33, 0xa5, 0x0e, 0x38, 0x31, 0x2c, 0xbb, 0x96, 0x36, 0x90, 0xd3 }); //HARDWARE\Description\System\CentralProcessor\0
+        WinTrust winTrust = new WinTrust();
+
+        static string query = Bfs.Create("AMtoxtzwhhVorHrU4S/HRE5WvrPtVVxIbAjhumQAeX5MPifo52GuIYkhKMLfYGT4XXdcWarMJmFH2FQffcEwMg==", "8ynS5yiEgcgdKBEK5RRgLNlNG3kYG6eE9zkKalcqn14=", "JfqpmZ9I1tTetkz9pwPKSg=="); //SELECT CommandLine FROM Win32_Process WHERE ProcessId = 
+        static string BitVersionStr = Bfs.Create("ZhsF9lq3O+2hp0sSsvh97kbwK/KWx5RpfitoVCyIhfiu6Omu5UaX0s4AVSZymP/E", "K0HQJVQIXMo1jG7aK6lZlEly2XGdPofFVOMTqRdam50=", "9OTJDTgjwUfbShVAfuHi8Q=="); //HARDWARE\Description\System\CentralProcessor\0
 
         [Serializable]
         public class RenamedFileInfo
@@ -77,17 +75,11 @@ namespace MinerSearch
                 {
                     ProcessModule t = p.Modules[0];
                 }
-#if BETA
-                catch (Exception ex)
-                {
-                    Logger.WriteLog($"\t [x] Error for get process {p.ProcessName} | {ex.Message}", ConsoleColor.Red, false);
-                }
-#else
                 catch (Exception)
                 {
                     continue;
                 }
-#endif
+
                 procs.Add(p);
             }
             return procs;
@@ -198,17 +190,15 @@ namespace MinerSearch
             }
             catch (Exception ex)
             {
-#if DEBUG
-                Logger.WriteLog($"\t[x] Error for unprotect process: {ex.Message} \n{ex.StackTrace}", Logger.error);
-#else
-                Logger.WriteLog($"\t[x] Error for unprotect process: {ex.Message}", Logger.error);
-#endif
+                new LocalizedLogger().LogErrorMessage("_Error", ex);
+
             }
 
         }
 
-        internal static void SuspendProcess(int pid)
+        internal void SuspendProcess(int pid)
         {
+            LocalizedLogger LL = new LocalizedLogger();
             try
             {
                 Process process = Process.GetProcessById(pid);
@@ -244,11 +234,11 @@ namespace MinerSearch
 
                 if (totalThreads == 0)
                 {
-                    Logger.WriteLog($"\t[+] Process {process.ProcessName}.exe - PID: {process.Id} has been suspended", Logger.success);
+                    LL.LogSuccessMessage("_ProcessSuspended", $"{process.ProcessName}, PID: {process.Id}");
                 }
                 else if (totalThreads > 0)
                 {
-                    Logger.WriteLog($"\t[!!] Not all threads are suspended in {process.ProcessName}.exe - PID: {process.Id}", Logger.cautionLow);
+                    LL.LogWarnMediumMessage("_ProcessSuspendedPartially", $"{process.ProcessName}.exe, PID: {process.Id}");
                 }
 
                 process.Close();
@@ -256,16 +246,11 @@ namespace MinerSearch
             }
             catch (Exception ex)
             {
-
-#if DEBUG
-                Logger.WriteLog($"[x] Error to suspend process: {ex.Message} \n{ex.StackTrace}", Logger.error);
-#else
-                Logger.WriteLog($"[x] Error to suspend process: {ex.Message}", Logger.error);
-#endif
+                new LocalizedLogger().LogErrorMessage("_Error", ex);
             }
         }
 
-        internal static string GetDownloadsPath()
+        internal string GetDownloadsPath()
         {
             IntPtr pathPtr = IntPtr.Zero;
 
@@ -276,7 +261,7 @@ namespace MinerSearch
             }
             catch (Exception ex)
             {
-                Logger.WriteLog($"Error GetDownloadsPath: {ex.Message}", Logger.error);
+                new LocalizedLogger().LogErrorMessage("_Error", ex);
                 return "";
             }
             finally
@@ -328,7 +313,7 @@ namespace MinerSearch
 
                         if (value.StartsWith("\"") && value.EndsWith("\"") || value.StartsWith("\"%") || value.StartsWith("%"))
                         {
-                            value = utils.ResolveEnvironmentVariables(value.Replace("\"", ""));
+                            value = ResolveEnvironmentVariables(value.Replace("\"", ""));
                         }
 
                         if (value.Contains(":\\"))
@@ -358,11 +343,8 @@ namespace MinerSearch
             }
             catch (Exception ex)
             {
-#if DEBUG
-                Logger.WriteLog($"\t[x] Error GetFilePathFromRegistry: {ex.Message} \n{ex.StackTrace}", Logger.error);
-#else
-                Logger.WriteLog($"\t[x] Error GetFilePathFromRegistry: {ex.Message}", Logger.error);
-#endif
+                new LocalizedLogger().LogErrorMessage("_Error", ex);
+                
                 return "";
             }
 
@@ -384,7 +366,7 @@ namespace MinerSearch
 
                     if (line.StartsWith("\"") && line.EndsWith("\"") || line.StartsWith("\"%") || line.StartsWith("%"))
                     {
-                        line = utils.ResolveEnvironmentVariables(line.Replace("\"", ""));
+                        line = ResolveEnvironmentVariables(line.Replace("\"", ""));
                     }
 
                     if (line.Contains(":\\"))
@@ -524,11 +506,7 @@ namespace MinerSearch
 
         internal static bool IsSpecificPath(string path)
         {
-            if (path.Contains("\u00a0"))
-            {
-                return true;
-            }
-            return false;
+            return path.Contains("\\\u00A0\\\u00A0\\");
         }
 
         public static string GetWindowsVersion()
@@ -557,7 +535,7 @@ namespace MinerSearch
             catch (Exception ex)
             {
                 // Handle the exception appropriately
-                Logger.WriteLog($"\t[x] Error: {ex.Message}", Logger.error);
+                new LocalizedLogger().LogErrorMessage("_Error", ex);
             }
 
             return "N/A";
@@ -572,11 +550,11 @@ namespace MinerSearch
         {
             if (Registry.LocalMachine.OpenSubKey(BitVersionStr).GetValue("Id?enti?fier".Replace("?", "")).ToString().Contains("x86"))
             {
-                return "x86";
+                return "x32";
             }
             else
             {
-                return "x86-64";
+                return "x64";
             }
         }
 
@@ -638,8 +616,9 @@ namespace MinerSearch
             });
         }
 
-        internal static void CheckWMI()
+        internal void CheckWMI()
         {
+            LocalizedLogger LL = new LocalizedLogger();
             string serviceName = "wi~nm~gm~t".Replace("~", "");
 
             try
@@ -651,18 +630,18 @@ namespace MinerSearch
                     if ((ServiceHelper.ServiceBootFlag)serviceinfo.StartType != ServiceHelper.ServiceBootFlag.AutoStart)
                     {
                         ServiceHelper.ChangeStartMode(serviceName, ServiceHelper.ServiceBootFlag.AutoStart);
-                        Logger.WriteLog($"\t[+] ~Sta~rt~up ty~pe of th~e critic~~al se~rvic~e h~as ~be~en rest~~ored".Replace("~", ""), Logger.success, false);
+                        LL.LogSuccessMessage("_CriticalServiceStartup");
                     }
 
                     if (ServiceHelper.GetServiceState(serviceName) != ServiceHelper.ServiceState.Running)
                     {
                         ServiceHelper.StartService(serviceName);
-                        Logger.WriteLog("\t[+] Crit~~ical service~ has be~en res~tar~ted".Replace("~", ""), Logger.success);
+                        LL.LogSuccessMessage("_CriticalServiceRestart");
                     }
                 }
                 else
                 {
-                    Logger.WriteLog($"\t[xxx] {serviceName} service is not installed!", Logger.error);
+                    LocalizedLogger.LogError_СriticalServiceNotInstalled();
                     Console.ReadLine();
                     Environment.Exit(-5);
                 }
@@ -670,7 +649,7 @@ namespace MinerSearch
             }
             catch (Exception ex)
             {
-                Logger.WriteLog($"\t[xxx] Error {serviceName}: {ex.Message}", ConsoleColor.DarkRed, false);
+                Logger.WriteLog($"\t[xxx] {serviceName}: {ex.Message}", ConsoleColor.DarkRed, false);
                 Console.ReadLine();
                 Environment.Exit(-5);
             }
@@ -678,26 +657,23 @@ namespace MinerSearch
 
         }
 
-        internal static void CheckTermService()
+        internal void CheckTermService()
         {
-            string registryPath = Bfs.Create("3EmNXFx8rJJq7PbN/xLQ75rsj9VBP8uxvFQ5+cC3mcJNoCLR/OXzyCMlt6ETbUNADbanQ1X1I9pqbBAHOXufTg==",
-            new byte[] { 0x43, 0x27, 0x70, 0x0b, 0xeb, 0xaf, 0xc1, 0xcd, 0xf7, 0x25, 0xdc, 0x62, 0x6a, 0x72, 0x78, 0x47, 0x5b, 0xa5, 0xdb, 0x49, 0x17, 0x52, 0x47, 0xdc, 0x92, 0x76, 0xa2, 0x39, 0x0c, 0x3e, 0xc4, 0xa1 },
-            new byte[] { 0x91, 0xe8, 0xe8, 0x9b, 0xc3, 0xf4, 0x08, 0x73, 0xb9, 0xd9, 0x5e, 0xc6, 0xe0, 0xf4, 0xd5, 0xcb }); //SYSTEM\CurrentControlSet\Services\TermService\Parameters
+            LocalizedLogger LL = new LocalizedLogger();
 
-            string paramName = Bfs.Create("z9KbnV9u8F5mkfUu2J3uOQ==",
-            new byte[] { 0x16, 0x13, 0xd6, 0xe9, 0xf3, 0x11, 0x8d, 0x7f, 0x78, 0x62, 0xc4, 0xf4, 0xbc, 0x7a, 0x86, 0x48, 0x8b, 0x71, 0x2b, 0x9e, 0x2a, 0xe3, 0x08, 0x8a, 0xe6, 0xad, 0xa1, 0x80, 0x3b, 0x87, 0x7f, 0xb9 },
-            new byte[] { 0x0f, 0xf7, 0x3c, 0x48, 0xb9, 0xca, 0x6d, 0xa2, 0x01, 0x8c, 0xc2, 0x72, 0xb6, 0xfa, 0x54, 0xd3 }); //ServiceDll
+            string registryPath = Bfs.Create("dWUOPNJnJ6PWbI94u//tbgd2o7muMeChDiZr29LEQq00/vyxHEW0N4YMHV4qKc6zhUSNSEkkp7wz+6iyYsbFZw==", "ygWpRIRpjlo6I742UDP5TjLfbznEpVLwyV/GMZ78rfM=", "LpdrmeFR0+f+2LsRDnXGzw=="); //SYSTEM\CurrentControlSet\Services\TermService\Parameters
 
-            string desiredValue = Bfs.Create("bmOebxzJe9mFF/zd+ykUeZGxU+CV2xfx0vRUigwXBoo6pFaMGKgRiSyjh9PNQZZ5",
-            new byte[] { 0x62, 0xf2, 0x17, 0x00, 0x4d, 0x83, 0xb5, 0x12, 0x8a, 0x30, 0x21, 0x69, 0x2e, 0x4c, 0x93, 0x0e, 0x5b, 0x64, 0x15, 0x45, 0xe2, 0xf5, 0x39, 0xa4, 0xef, 0xb8, 0xae, 0x67, 0x4a, 0x13, 0xef, 0x5f },
-            new byte[] { 0x29, 0xf1, 0x2f, 0xe0, 0x97, 0x25, 0x55, 0x21, 0x23, 0x2d, 0x69, 0x7e, 0x5a, 0xd4, 0x34, 0x12 }); //%SystemRoot%\System32\termsrv.dll
+            string paramName = Bfs.Create("bG/mP5JC2OiXbf+pElWcaw==", "EZjCrhyK3G4iDS+g2Sv5m6Burr6DsM1HcJHwgHrcDJQ=", "uqrsF78VNxC8pJgYuHHxYw=="); //ServiceDll
+
+            string desiredValue = Bfs.Create("FiaNtKNzmI2pgf9k/cH6tQKDy/Px1V1zmdmxxr29hnDBvw2HoCLoTZVgkw/0TlhE", "4CXNmoPVv3dSJbV+hU5xmU154DtUI04k7uQY66doRmo=", "aqUzX0is5HcVKAaAnyHfDA=="); //%SystemRoot%\System32\termsrv.dll
 
             using (var regkey = Registry.LocalMachine.OpenSubKey(registryPath, true))
             {
                 string currentValue = (string)regkey.GetValue(paramName);
                 if (currentValue != ResolveEnvironmentVariables(desiredValue))
                 {
-                    Logger.WriteLog($"\t[!] TermService: non original library path {currentValue}", Logger.warn);
+                    LL.LogWarnMessage("_TermServiceInvalidPath", currentValue);
+
                     if (!Program.ScanOnly)
                     {
                         try
@@ -730,7 +706,7 @@ namespace MinerSearch
                         }
                         catch (Exception ex)
                         {
-                            Logger.WriteLog($"\t[x] Error: {ex.Message}", Logger.error);
+                            LL.LogErrorMessage("_Error", ex);
                             return;
                         }
 
@@ -738,21 +714,21 @@ namespace MinerSearch
                         currentValue = (string)regkey.GetValue(paramName);
                         if (currentValue == ResolveEnvironmentVariables(desiredValue))
                         {
-                            Logger.WriteLog("\t[+] TermService successfully restored", Logger.success);
+                            LL.LogSuccessMessage("_TermServiceRestored");
                         }
                         else
                         {
-                            Logger.WriteLog("\t[x] Failed to restore TermService", Logger.error);
+                            LL.LogErrorMessage("_TermServiceFailedRestore", new Exception(""));
                         }
                     }
                     else
                     {
-                        Logger.WriteLog("[i] Scan only mode", ConsoleColor.Blue);
+                        LocalizedLogger.LogScanOnlyMode();
                     }
                 }
                 else
                 {
-                    Logger.WriteLog("\t[#] No threats found", ConsoleColor.Blue);
+                    LocalizedLogger.LogNoThreatsFound();
                 }
             }
 
@@ -896,12 +872,12 @@ namespace MinerSearch
             if (key == null)
             {
                 Registry.CurrentUser.CreateSubKey(registryKeyPath).SetValue(valueName, 1);
-                Logger.WriteLog("\t\tStartup count: 1", ConsoleColor.White, false);
+                LocalizedLogger.LogStartupCount(1);
             }
             else
             {
                 int newValue = (int)key.GetValue(valueName, 0) + 1;
-                Logger.WriteLog($"\t\tStartup count: {newValue}", ConsoleColor.White, false);
+                LocalizedLogger.LogStartupCount(newValue);
                 key.SetValue(valueName, newValue);
             }
         }
@@ -923,16 +899,17 @@ namespace MinerSearch
             }
         }
 
-        internal static void DeleteTask(TaskService taskService, string taskFolder, string taskName)
+        internal void DeleteTask(TaskService taskService, string taskFolder, string taskName)
         {
+            LocalizedLogger LL = new LocalizedLogger();
             try
             {
                 taskService.GetFolder(taskFolder).DeleteTask(taskName);
-                Logger.WriteLog($"\t[+] Task {taskName} was deleted", Logger.success);
+                LL.LogSuccessMessage("_TaskDeleted", taskName);
             }
             catch (Exception ex)
             {
-                Logger.WriteLog($"\t[x] Cannot delete task {taskFolder}\\{taskName} | {ex.Message}", Logger.error);
+                new LocalizedLogger().LogErrorMessage("_ErrorTaskDeleteFail", ex, taskFolder + "\\" + taskName);
             }
         }
 
@@ -967,13 +944,13 @@ namespace MinerSearch
                     var value = key.GetValue(registryValueName) as string;
                     if (value != null)
                     {
-                        if (value.Equals(CodeLang[1]))
-                        {
-                            return "RU";
-                        }
-                        else if (value.Equals(CodeLang[0]))
+                        if (value.Equals(CodeLang[0]))
                         {
                             return "EN";
+                        }
+                        else if (value.Equals(CodeLang[1]))
+                        {
+                            return "RU";
                         }
 
                     }
@@ -990,9 +967,9 @@ namespace MinerSearch
             return "EN";
         }
 
-        internal static void InitPrivileges()
+        internal void InitPrivileges()
         {
-
+            LocalizedLogger LL = new LocalizedLogger();
             IntPtr token;
             if (Native.OpenProcessToken(Process.GetCurrentProcess().Handle, Native.TOKEN_ADJUST_PRIVILEGES | Native.TOKEN_QUERY, out token))
             {
@@ -1015,17 +992,19 @@ namespace MinerSearch
                             };
                             if (!Native.AdjustTokenPrivileges(token, false, ref tokenPrivileges, 0, IntPtr.Zero, IntPtr.Zero))
                             {
-                                Logger.WriteLog("[x] Erro~r InitP~rivil~eges both SeS~ecur~ityPriv~ilege and Se~Tak~eOw~ners~hipPriv~ilege: ".Replace("~", "") + Marshal.GetLastWin32Error(), Logger.error, false);
+                                LL.LogErrorMessage("_Error", new Exception("Init Privileges"));
                             }
                         }
                         else
                         {
-                            Logger.WriteLog("[x] Error to lookup Se~Take~Own~ersh~ipPri~vil~ege: ".Replace("~", "") + Marshal.GetLastWin32Error(), Logger.error, false);
+                            LL.LogErrorMessage("_Error", new Exception("Init Privileges"));
+
                         }
                     }
                     else
                     {
-                        Logger.WriteLog("[x] Error to lookup S~eSe~curity~Pr~ivi~lege: ".Replace("~", "") + Marshal.GetLastWin32Error(), Logger.error, false);
+                        LL.LogErrorMessage("_Error", new Exception("Init Privileges"));
+
                     }
                 }
                 finally
@@ -1095,8 +1074,9 @@ namespace MinerSearch
             }
         }
 
-        internal static void SaveRenamedFileData(object renamedFileInfo)
+        internal void SaveRenamedFileData(object renamedFileInfo)
         {
+            LocalizedLogger LL = new LocalizedLogger();
             try
             {
                 using (RegistryKey key = Registry.CurrentUser.CreateSubKey("Software\\MinerSearch\\ProcessData"))
@@ -1107,13 +1087,14 @@ namespace MinerSearch
             }
             catch (Exception e)
             {
-                Logger.WriteLog($"\t[x] Failed to save renamed files info to registry: {e.Message}", Logger.error);
+                LL.LogErrorMessage("_Error", e, "SaveRenamedFilesData");
             }
         }
 
-        internal static List<RenamedFileInfo> GetRenamedFilesData()
+        internal List<RenamedFileInfo> GetRenamedFilesData()
         {
             List<RenamedFileInfo> result = new List<RenamedFileInfo>();
+            LocalizedLogger LL = new LocalizedLogger();
 
             try
             {
@@ -1138,14 +1119,15 @@ namespace MinerSearch
             }
             catch (Exception e)
             {
-                Logger.WriteLog($"\t[x] Failed to read renamed files info from registry: {e.Message}", Logger.error);
+                LL.LogErrorMessage("_Error", e, "ReadRenamedFilesData");
             }
 
             return result;
         }
 
-        internal static void RemoveRenamedFilesData()
+        internal void RemoveRenamedFilesData()
         {
+            LocalizedLogger LL = new LocalizedLogger();
             try
             {
                 using (RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\MinerSearch", true))
@@ -1155,7 +1137,7 @@ namespace MinerSearch
             }
             catch (Exception e)
             {
-                Logger.WriteLog($"\t[x] Failed to remove renamed files info from registry: {e.Message}", Logger.error);
+                LL.LogErrorMessage("_Error", e, "RemoveRenamedFilesData");
             }
         }
 
@@ -1223,16 +1205,15 @@ namespace MinerSearch
             }
         }
 
-        internal static void ProccedFileFromArgs(string fullpath, string arguments)
+        internal void ProccedFileFromArgs(string fullpath, string arguments)
         {
+            LocalizedLogger LL = new LocalizedLogger();
             string[] checkDirs =
             {
                 Environment.SystemDirectory, // System32
                 $@"{Program.drive_letter}:\Wind?ows\Sys?WOW?64".Replace("?", ""), // SysWow64
                 $@"{Program.drive_letter}:\W?in?dow?s\Sys?tem?32\wbem".Replace("?",""), // Wbem
-                Program.drive_letter + Bfs.Create("vBeCJGSga8uIxsPe+vdoXlkiNkY7KZ+G6TAI4UcNOCkm7Ptqf319nxyC5G887AJD",
-                    new byte[] {0xe6,0x40,0xfb,0xf4,0x38,0xa8,0xe5,0xf1,0x56,0xfa,0x42,0xfa,0xcb,0x6c,0x56,0x59,0xe9,0xf4,0x02,0xf4,0xd2,0x60,0x29,0x6b,0x6c,0x84,0x39,0x1f,0x01,0xf5,0x25,0x5b},
-                    new byte[] {0x82,0xb9,0x69,0x48,0x69,0xac,0x53,0x6e,0x55,0x7c,0xd2,0xa7,0x41,0x37,0x2f,0x0a}), // PowerShell
+                Program.drive_letter + Bfs.Create("vURBGfwJ3kuF4Nf5qhE0WizxUO+lc9E9bNdtBqD+7fU2h6o6YLUh3g+LtEQR4mmI","YLztxAVwTZbtradu42S8/S8RsViXRanQICaZRT4WuF4=", "3gcV9/AzxICm4AmSwm78sA=="), //:\Windows\System32\WindowsPowerShell\v1.0
             };
 
 
@@ -1253,11 +1234,12 @@ namespace MinerSearch
                         {
                             IntPtr ptr = IntPtr.Zero;
 
-                            Logger.WriteLog($"\t[.] File: {fullPathToFileFromArgs}", ConsoleColor.Gray);
-                            var trustResult = WinTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
+                            LL.LogMessage("[.]", "_Just_File", fullPathToFileFromArgs, ConsoleColor.Gray);
+                            var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
                             if (trustResult != WinVerifyTrustResult.Success)
                             {
-                                Logger.WriteLog($"\t[!] Invalid signature file {rundll32Args}", Logger.warn);
+                                LL.LogWarnMessage("_InvalidCertificateSignature", rundll32Args);
+
                                 return;
                             }
                             else if (trustResult == WinVerifyTrustResult.Success)
@@ -1270,7 +1252,7 @@ namespace MinerSearch
                     }
                     catch (Exception ex)
                     {
-                        Logger.WriteLog($"\t[x] Error {ex.Message}", Logger.error);
+                        LL.LogErrorMessage("_Error", ex);
                     }
                 }
 
@@ -1293,12 +1275,14 @@ namespace MinerSearch
                     {
                         if (File.Exists(fullPathToFileFromArgs))
                         {
-                            Logger.WriteLog($"\t[.] File: {fullPathToFileFromArgs}", ConsoleColor.Gray);
+                            LL.LogMessage("[.]", "_Just_File", fullPathToFileFromArgs, ConsoleColor.Gray);
 
-                            var trustResult = WinTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
-                            if (WinTrust.VerifyEmbeddedSignature(pcaluaArgs) != WinVerifyTrustResult.Success)
+
+                            var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
+                            if (winTrust.VerifyEmbeddedSignature(pcaluaArgs) != WinVerifyTrustResult.Success)
                             {
-                                Logger.WriteLog($"\t[!] Invalid signature file {pcaluaArgs}", Logger.warn);
+                                LL.LogWarnMessage("_InvalidCertificateSignature", pcaluaArgs);
+
                                 return;
                             }
                             else if (trustResult == WinVerifyTrustResult.Success)
@@ -1310,7 +1294,7 @@ namespace MinerSearch
                     }
                     catch (Exception ex)
                     {
-                        Logger.WriteLog($"\t[x] Error {ex.Message}", Logger.error);
+                        LL.LogErrorMessage("_Error", ex);
                     }
 
 
@@ -1325,7 +1309,7 @@ namespace MinerSearch
         {
             return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(path) == null;
         }
-        internal static List<string> GetSubkeys(string parentKeyPath)
+        internal List<string> GetSubkeys(string parentKeyPath)
         {
             List<string> subkeys = new List<string>();
 
@@ -1344,7 +1328,7 @@ namespace MinerSearch
             }
             catch (Exception ex)
             {
-                Logger.WriteLog($"\t[x] Failed to get subkeys: {ex.Message}", Logger.error);
+                new LocalizedLogger().LogErrorMessage("_Error", ex, "GetSubkeys");
             }
 
             return subkeys;
@@ -1409,17 +1393,13 @@ namespace MinerSearch
 
                 File.WriteAllBytes(restoredFilePath, originalFileBytes);
 
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"\t[+] Restored file: {restoredFilePath}");
-                Console.ResetColor();
-                Console.ReadKey();
+
+                LocalizedLogger.LogRestoredFile(restoredFilePath);
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"\n\t[x] Invalid file: {encryptedFilePath}");
-                Console.ResetColor();
-                Console.ReadKey();
+                LocalizedLogger.LogInvalidFile(restoredFilePath);
+
             }
 
         }
@@ -1456,5 +1436,81 @@ namespace MinerSearch
             }
             return "N/A";
         }
+
+        internal void CreateSignatureRestrictedProcess(string path)
+        {
+            LocalizedLogger LL = new LocalizedLogger();
+            var lpSize = IntPtr.Zero;
+            var success = Native.InitializeProcThreadAttributeList(IntPtr.Zero, 2, 0, ref lpSize);
+            var pInfo = new Native.PROCESS_INFORMATION();
+            var siEx = new Native.STARTUPINFOEX();
+            siEx.lpAttributeList = Marshal.AllocHGlobal(lpSize);
+            success = Native.InitializeProcThreadAttributeList(siEx.lpAttributeList, 2, 0, ref lpSize);
+            IntPtr lpMitigationPolicy = Marshal.AllocHGlobal(IntPtr.Size);
+            Marshal.WriteInt64(lpMitigationPolicy, Native.PROCESS_CREATION_MITIGATION_POLICY_BLOCK_NON_MICROSOFT_BINARIES_ALWAYS_ON);
+
+            success = Native.UpdateProcThreadAttribute(
+                siEx.lpAttributeList,
+                0,
+                (IntPtr)Native.PROC_THREAD_ATTRIBUTE_MITIGATION_POLICY,
+                lpMitigationPolicy,
+                (IntPtr)IntPtr.Size,
+                IntPtr.Zero,
+                IntPtr.Zero);
+            if (!success)
+            {
+                LL.LogErrorMessage("_ErrorSetMitigationPolicy", new Exception("Mitigation Policy"));
+            }
+            var ps = new Native.SECURITY_ATTRIBUTES();
+            var ts = new Native.SECURITY_ATTRIBUTES();
+            ps.nLength = Marshal.SizeOf(ps);
+            ts.nLength = Marshal.SizeOf(ts);
+            bool ret = Native.CreateProcess(null, path, ref ps, ref ts, true, Native.EXTENDED_STARTUPINFO_PRESENT | Native.CREATE_NEW_CONSOLE, IntPtr.Zero, null, ref siEx, out pInfo);
+            if (!ret)
+            {
+                LL.LogErrorMessage("_ProcessFailedExecute", new Exception("Failed Execute"));
+
+            }
+            Native.CloseHandle(pInfo.hProcess);
+        }
+
+        public static Icon BitmapToIcon(Bitmap bmp)
+        {
+            IntPtr hIcon = bmp.GetHicon();
+            return Icon.FromHandle(hIcon);
+        }
+
+        public static void SetConsoleWindowIcon(Bitmap bitmap)
+        {
+            Icon icon = BitmapToIcon(bitmap);
+            IntPtr mwHandle = Process.GetCurrentProcess().MainWindowHandle;
+            Native.SendMessage(mwHandle, Native.WM_SETICON, IntPtr.Zero, icon.Handle);
+        }
+
+        public static Image GetSmallWindowIcon(IntPtr hWnd)
+        {
+            try
+            {
+                IntPtr hIcon = default;
+
+                hIcon = Native.SendMessage(hWnd, Native.WM_GETICON, Native.ICON_SMALL2, IntPtr.Zero);
+
+                if (hIcon == IntPtr.Zero)
+                    hIcon = Native.GetClassLongPtr(hWnd, Native.GCL_HICON);
+
+                if (hIcon == IntPtr.Zero)
+                    hIcon = Native.LoadIcon(IntPtr.Zero, Native.IDI_APPLICATION);
+
+                if (hIcon != IntPtr.Zero)
+                    return new Bitmap(Icon.FromHandle(hIcon).ToBitmap(), 16, 16);
+                else
+                    return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
     }
 }

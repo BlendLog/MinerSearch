@@ -68,6 +68,79 @@ namespace MinerSearch
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool InitializeProcThreadAttributeList(IntPtr lpAttributeList, int dwAttributeCount, int dwFlags, ref IntPtr lpSize);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool UpdateProcThreadAttribute(IntPtr lpAttributeList, uint dwFlags, IntPtr Attribute, IntPtr lpValue, IntPtr cbSize, IntPtr lpPreviousValue, IntPtr lpReturnSize);
+
+        [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool CreateProcess(string lpApplicationName, string lpCommandLine, ref SECURITY_ATTRIBUTES lpProcessAttributes, ref SECURITY_ATTRIBUTES lpThreadAttributes,
+            bool bInheritHandles, uint dwCreationFlags, IntPtr lpEnvironment, string lpCurrentDirectory, [In] ref STARTUPINFOEX lpStartupInfo, out PROCESS_INFORMATION lpProcessInformation);
+
+        [DllImport("user32.dll")]
+        internal static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        internal static extern IntPtr LoadIcon(IntPtr hInstance, IntPtr lpIconName);
+
+        [DllImport("user32.dll", EntryPoint = "GetClassLong")]
+        internal static extern uint GetClassLong32(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", EntryPoint = "GetClassLongPtr")]
+        internal static extern IntPtr GetClassLong64(IntPtr hWnd, int nIndex);
+
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SECURITY_ATTRIBUTES
+        {
+            public int nLength;
+            public IntPtr lpSecurityDescriptor;
+            [MarshalAs(UnmanagedType.Bool)]
+            public bool bInheritHandle;
+        }
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct STARTUPINFOEX
+        {
+            public STARTUPINFO StartupInfo;
+            public IntPtr lpAttributeList;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct STARTUPINFO
+        {
+            public Int32 cb;
+            public string lpReserved;
+            public string lpDesktop;
+            public string lpTitle;
+            public Int32 dwX;
+            public Int32 dwY;
+            public Int32 dwXSize;
+            public Int32 dwYSize;
+            public Int32 dwXCountChars;
+            public Int32 dwYCountChars;
+            public Int32 dwFillAttribute;
+            public Int32 dwFlags;
+            public Int16 wShowWindow;
+            public Int16 cbReserved2;
+            public IntPtr lpReserved2;
+            public IntPtr hStdInput;
+            public IntPtr hStdOutput;
+            public IntPtr hStdError;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct PROCESS_INFORMATION
+        {
+            public IntPtr hProcess;
+            public IntPtr hThread;
+            public int dwProcessId;
+            public int dwThreadId;
+        }
+
         public enum TcpTableClass
         {
             TCP_TABLE_BASIC_LISTENER,
@@ -162,6 +235,17 @@ namespace MinerSearch
         public const uint ENABLE_QUICK_EDIT_MODE = 0x0040;
         public const int STD_INPUT_HANDLE = -10;
 
+        public const long PROCESS_CREATION_MITIGATION_POLICY_BLOCK_NON_MICROSOFT_BINARIES_ALWAYS_ON = 0x100000000000;
+        public const int PROC_THREAD_ATTRIBUTE_MITIGATION_POLICY = 0x00020007;
+        public const uint EXTENDED_STARTUPINFO_PRESENT = 0x00080000;
+        public const uint CREATE_NEW_CONSOLE = 0x00000010;
+
+        public static uint WM_GETICON = 0x007f;
+        public static uint WM_SETICON = 0x80;
+        public static IntPtr ICON_SMALL2 = new IntPtr(2);
+        public static IntPtr IDI_APPLICATION = new IntPtr(0x7F00);
+        public static int GCL_HICON = -14;
+
         public struct LUID
         {
             public uint LowPart;
@@ -220,6 +304,14 @@ namespace MinerSearch
             Windows_11_22H2 = 22621,
             Windows_11_23H2 = 22631,
         };
+
+        internal static IntPtr GetClassLongPtr(IntPtr hWnd, int nIndex)
+        {
+            if (IntPtr.Size == 4)
+                return new IntPtr((long)GetClassLong32(hWnd, nIndex));
+            else
+                return GetClassLong64(hWnd, nIndex);
+        }
     }
 
     // https://github.com/DavidXanatos/priv10/blob/master/MiscHelpers/API/ServiceHelper.cs
@@ -755,5 +847,6 @@ namespace MinerSearch
             return regkey.GetValue("ImagePath").ToString();
         }
     }
+
 
 }

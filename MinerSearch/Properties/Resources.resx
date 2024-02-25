@@ -118,6 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="rawdata" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\rawdata.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="rktest" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\rktest.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -127,23 +130,167 @@
   <data name="_accept_ru" xml:space="preserve">
     <value>Принять</value>
   </data>
+  <data name="_AllDone_EN" xml:space="preserve">
+    <value>All Done. Press ENTER to close this window...</value>
+  </data>
+  <data name="_AllDone_RU" xml:space="preserve">
+    <value>Готово. Нажмите ENTER, чтобы закрыть...</value>
+  </data>
+  <data name="_AlreadyProceeded_EN" xml:space="preserve">
+    <value>Already proceeded</value>
+  </data>
+  <data name="_AlreadyProceeded_RU" xml:space="preserve">
+    <value>Уже обработан</value>
+  </data>
+  <data name="_AnalyzingFile_EN" xml:space="preserve">
+    <value>Analyzing</value>
+  </data>
+  <data name="_AnalyzingFile_RU" xml:space="preserve">
+    <value>Анализ</value>
+  </data>
   <data name="_AppAlreadyRunning_EN" xml:space="preserve">
     <value>Another copy of the application is already running. Display a help message?</value>
   </data>
   <data name="_AppAlreadyRunning_RU" xml:space="preserve">
     <value>Другая копия приложения уже запущена. Вывести сообщение справки?</value>
   </data>
-  <data name="_ArchiveWarn_caption_en" xml:space="preserve">
+  <data name="_AppInitNotEmpty_EN" xml:space="preserve">
+    <value>A?ppIn??it_DLL?s is not empty</value>
+  </data>
+  <data name="_AppInitNotEmpty_RU" xml:space="preserve">
+    <value>Параметр A?ppIn??it_DLL?s не пуст</value>
+  </data>
+  <data name="_ArchiveWarn_caption_EN" xml:space="preserve">
     <value>Incorrect program startup</value>
   </data>
-  <data name="_ArchiveWarn_caption_ru" xml:space="preserve">
+  <data name="_ArchiveWarn_caption_RU" xml:space="preserve">
     <value>Некорректный запуск программы</value>
   </data>
-  <data name="_ArchiveWarn_en" xml:space="preserve">
+  <data name="_ArchiveWarn_EN" xml:space="preserve">
     <value>The program was launched from the archive! Extract the entire archive and restart again.</value>
   </data>
-  <data name="_ArchiveWarn_ru" xml:space="preserve">
+  <data name="_ArchiveWarn_RU" xml:space="preserve">
     <value>Программа была запущена из архива! Извлеките весь архив и повторите перезапуск.</value>
+  </data>
+  <data name="_BlacklistedPortCMD_EN" xml:space="preserve">
+    <value>Blacklisted port in cmd args - </value>
+  </data>
+  <data name="_BlacklistedPortCMD_RU" xml:space="preserve">
+    <value>Нежелательный порт в парам. командной строки -</value>
+  </data>
+  <data name="_BlacklistedPort_EN" xml:space="preserve">
+    <value>Blacklisted port:</value>
+  </data>
+  <data name="_BlacklistedPort_RU" xml:space="preserve">
+    <value>Нежелательный порт:</value>
+  </data>
+  <data name="_BlockingProcessClosed_EN" xml:space="preserve">
+    <value>Blocking process has been closed -</value>
+  </data>
+  <data name="_BlockingProcessClosed_RU" xml:space="preserve">
+    <value>Блокирующий процесс был закрыт -</value>
+  </data>
+  <data name="_BootMode_EN" xml:space="preserve">
+    <value>Boot mode:</value>
+  </data>
+  <data name="_BootMode_RU" xml:space="preserve">
+    <value>Режим загрузки:</value>
+  </data>
+  <data name="_CertSignatureOrFileCorrupt_EN" xml:space="preserve">
+    <value>File or signature was probably corrupt</value>
+  </data>
+  <data name="_CertSignatureOrFileCorrupt_RU" xml:space="preserve">
+    <value>Файл или подпись вероятно были повреждены</value>
+  </data>
+  <data name="_CertSubjectCertExpired_EN" xml:space="preserve">
+    <value>Signer's certificate was expired</value>
+  </data>
+  <data name="_CertSubjectCertExpired_RU" xml:space="preserve">
+    <value>Сертификат подписавшего просрочен</value>
+  </data>
+  <data name="_CertSubjectCertificateRevoked_EN" xml:space="preserve">
+    <value>Subject's certificate was revoked</value>
+  </data>
+  <data name="_CertSubjectCertificateRevoked_RU" xml:space="preserve">
+    <value>Сертификат субъекта был отозван</value>
+  </data>
+  <data name="_CertSubjectExplicitlyDistrusted_EN" xml:space="preserve">
+    <value>Signer's certificate is in the Untrusted Publishers store</value>
+  </data>
+  <data name="_CertSubjectExplicitlyDistrusted_RU" xml:space="preserve">
+    <value>Сертификат подписавшего находится в хранилище ненадежных издателей</value>
+  </data>
+  <data name="_CertSubjectNotTrusted_EN" xml:space="preserve">
+    <value>Subject failed the specified verification action</value>
+  </data>
+  <data name="_CertSubjectNotTrusted_RU" xml:space="preserve">
+    <value>Субъект не выполнил указанное действие проверки</value>
+  </data>
+  <data name="_CertUntrustedRoot_EN" xml:space="preserve">
+    <value>Root certificate is not trusted</value>
+  </data>
+  <data name="_CertUntrustedRoot_RU" xml:space="preserve">
+    <value>Нет доверия корневому сертификату</value>
+  </data>
+  <data name="_CheckingTermService_EN" xml:space="preserve">
+    <value>Checking TermService...</value>
+  </data>
+  <data name="_CheckingTermService_RU" xml:space="preserve">
+    <value>Проверка TermService...</value>
+  </data>
+  <data name="_CheckUserJohn_EN" xml:space="preserve">
+    <value>Checking user John...</value>
+  </data>
+  <data name="_CheckUserJohn_RU" xml:space="preserve">
+    <value>Проверка пользователя John...</value>
+  </data>
+  <data name="_ChekingR00tkit_EN" xml:space="preserve">
+    <value>Checking roo??tk??it present...</value>
+  </data>
+  <data name="_ChekingR00tkit_RU" xml:space="preserve">
+    <value>Проверка присутствия руткита...</value>
+  </data>
+  <data name="_CriticalServiceNotInstalled_EN" xml:space="preserve">
+    <value>service is not installed!</value>
+  </data>
+  <data name="_CriticalServiceNotInstalled_RU" xml:space="preserve">
+    <value>служба не установлена!</value>
+  </data>
+  <data name="_CriticalServiceRestart_EN" xml:space="preserve">
+    <value>Critical service has been restalted</value>
+  </data>
+  <data name="_CriticalServiceRestart_RU" xml:space="preserve">
+    <value>Важный для работы компонент (служба) был перезапущен</value>
+  </data>
+  <data name="_CriticalServiceStartup_EN" xml:space="preserve">
+    <value>Startup type of the critical service has been restored</value>
+  </data>
+  <data name="_CriticalServiceStartup_RU" xml:space="preserve">
+    <value>Тип запуска важного для работы компонента (службы) был восстановлен</value>
+  </data>
+  <data name="_Deleted_EN" xml:space="preserve">
+    <value>- Deleted successfull</value>
+  </data>
+  <data name="_Deleted_RU" xml:space="preserve">
+    <value>- Удалено успешно</value>
+  </data>
+  <data name="_Directory_EN" xml:space="preserve">
+    <value>directory</value>
+  </data>
+  <data name="_Directory_RU" xml:space="preserve">
+    <value>каталог</value>
+  </data>
+  <data name="_Elapse_EN" xml:space="preserve">
+    <value>Scan elapsed time</value>
+  </data>
+  <data name="_Elapse_RU" xml:space="preserve">
+    <value>Затраченное время проверки</value>
+  </data>
+  <data name="_EmptyTask_EN" xml:space="preserve">
+    <value>Empty task</value>
+  </data>
+  <data name="_EmptyTask_RU" xml:space="preserve">
+    <value>Пустая задача</value>
   </data>
   <data name="_End_EN" xml:space="preserve">
     <value>All done! You can close this app.</value>
@@ -151,11 +298,155 @@
   <data name="_End_RU" xml:space="preserve">
     <value>Готово! Приложение можно закрыть.</value>
   </data>
+  <data name="_ErrorAnalyzingFile_EN" xml:space="preserve">
+    <value>Error analyzing file</value>
+  </data>
+  <data name="_ErrorAnalyzingFile_RU" xml:space="preserve">
+    <value>Ошибка анализа файла</value>
+  </data>
+  <data name="_ErrorCannotOpen_EN" xml:space="preserve">
+    <value>Can not open</value>
+  </data>
+  <data name="_ErrorCannotOpen_RU" xml:space="preserve">
+    <value>Не удалось открыть</value>
+  </data>
+  <data name="_ErrorCannotProceed_EN" xml:space="preserve">
+    <value>Can not proceed</value>
+  </data>
+  <data name="_ErrorCannotProceed_RU" xml:space="preserve">
+    <value>Не удалось обработать</value>
+  </data>
+  <data name="_ErrorCannotRemove_EN" xml:space="preserve">
+    <value>Can not remove</value>
+  </data>
+  <data name="_ErrorCannotRemove_RU" xml:space="preserve">
+    <value>Не удалось удалить</value>
+  </data>
+  <data name="_ErrorCleanHosts_EN" xml:space="preserve">
+    <value>Error clean hosts file:</value>
+  </data>
+  <data name="_ErrorCleanHosts_RU" xml:space="preserve">
+    <value>Ошибка очистки файла hosts:</value>
+  </data>
+  <data name="_ErrorDisabledScan_EN" xml:space="preserve">
+    <value>Error: you cannot disable all types of scanning</value>
+  </data>
+  <data name="_ErrorDisabledScan_RU" xml:space="preserve">
+    <value>Ошибка: невозможно отключить все типы сканирования</value>
+  </data>
+  <data name="_ErrorOnUnlock_EN" xml:space="preserve">
+    <value>Error on unlock</value>
+  </data>
+  <data name="_ErrorOnUnlock_RU" xml:space="preserve">
+    <value>Не удалось разблокировать</value>
+  </data>
+  <data name="_ErrorSetMitigationPolicy_EN" xml:space="preserve">
+    <value>Failed to apply mitigation policy</value>
+  </data>
+  <data name="_ErrorSetMitigationPolicy_RU" xml:space="preserve">
+    <value>Не удалось применить политику устранения рисков</value>
+  </data>
+  <data name="_ErrorTaskDeleteFail_EN" xml:space="preserve">
+    <value>Failed to delete task</value>
+  </data>
+  <data name="_ErrorTaskDeleteFail_RU" xml:space="preserve">
+    <value>Не удалось удалить задачу</value>
+  </data>
+  <data name="_ErrorTermitateProcess_EN" xml:space="preserve">
+    <value>Failed to terminate ma?li?ci?ou?s process:</value>
+  </data>
+  <data name="_ErrorTermitateProcess_RU" xml:space="preserve">
+    <value>Не удалось завершить вредоносный процесс:</value>
+  </data>
+  <data name="_ErrorVerifySignature_EN" xml:space="preserve">
+    <value>Error verify signature</value>
+  </data>
+  <data name="_ErrorVerifySignature_RU" xml:space="preserve">
+    <value>Ошибка проверки цифровой подписи</value>
+  </data>
+  <data name="_Error_EN" xml:space="preserve">
+    <value>Error:</value>
+  </data>
+  <data name="_Error_RU" xml:space="preserve">
+    <value>Ошибка:</value>
+  </data>
+  <data name="_Exclusion_EN" xml:space="preserve">
+    <value>exclusion</value>
+  </data>
+  <data name="_Exclusion_RU" xml:space="preserve">
+    <value>исключение</value>
+  </data>
   <data name="_exit_en" xml:space="preserve">
     <value>No</value>
   </data>
   <data name="_exit_ru" xml:space="preserve">
     <value>Выйти</value>
+  </data>
+  <data name="_FakeSystemTask_EN" xml:space="preserve">
+    <value>Probably fake system task</value>
+  </data>
+  <data name="_FakeSystemTask_RU" xml:space="preserve">
+    <value>Вероятно подделка системной задачи</value>
+  </data>
+  <data name="_FileIsNotFound_EN" xml:space="preserve">
+    <value>File is not found:</value>
+  </data>
+  <data name="_FileIsNotFound_RU" xml:space="preserve">
+    <value>Файл не найден:</value>
+  </data>
+  <data name="_FileNotExistsSpec_EN" xml:space="preserve">
+    <value>File does not exist in the specified directories:</value>
+  </data>
+  <data name="_FileNotExistsSpec_RU" xml:space="preserve">
+    <value>Файл не существует в указанных каталогах:</value>
+  </data>
+  <data name="_FileRenamed_EN" xml:space="preserve">
+    <value>File renamed to</value>
+  </data>
+  <data name="_FileRenamed_RU" xml:space="preserve">
+    <value>Файл переименован в</value>
+  </data>
+  <data name="_File_EN" xml:space="preserve">
+    <value>file</value>
+  </data>
+  <data name="_File_RU" xml:space="preserve">
+    <value>файл</value>
+  </data>
+  <data name="_FindBlockingProcess_EN" xml:space="preserve">
+    <value>Try to find blocking process...</value>
+  </data>
+  <data name="_FindBlockingProcess_RU" xml:space="preserve">
+    <value>Попытка найти блокирующий процесс...</value>
+  </data>
+  <data name="_FoundMlwrKey_EN" xml:space="preserve">
+    <value>Found mali?cio?us registry key - </value>
+  </data>
+  <data name="_FoundMlwrKey_RU" xml:space="preserve">
+    <value>Найден вредоносный ключ реестра - </value>
+  </data>
+  <data name="_FoundThreats_EN" xml:space="preserve">
+    <value>Found threats:</value>
+  </data>
+  <data name="_FoundThreats_RU" xml:space="preserve">
+    <value>Найдено угроз: </value>
+  </data>
+  <data name="_Found_EN" xml:space="preserve">
+    <value>Found:</value>
+  </data>
+  <data name="_Found_RU" xml:space="preserve">
+    <value>Найдено:</value>
+  </data>
+  <data name="_GPULibsUsage_EN" xml:space="preserve">
+    <value>Too much GPU libs usage:</value>
+  </data>
+  <data name="_GPULibsUsage_RU" xml:space="preserve">
+    <value>Объемное потребление ресурсов ГП:</value>
+  </data>
+  <data name="_HelpHint_EN" xml:space="preserve">
+    <value>Use "--help" option to display list of available commands</value>
+  </data>
+  <data name="_HelpHint_RU" xml:space="preserve">
+    <value>Для вызова справки используйте параметр "--help"</value>
   </data>
   <data name="_Help_EN" xml:space="preserve">
     <value>Startup params:
@@ -192,6 +483,48 @@
 --scan-only                  Отображать вредоносный или подозрительный объект, но не выполнять лечение
 --full-scan                  Целиком добавляет другие локальные диски для сигнатурного сканирования
 --restore=&lt;путь&gt;             Восстановить указанный файл из карантина</value>
+  </data>
+  <data name="_HostsFileCreated_EN" xml:space="preserve">
+    <value>New hosts file has been created</value>
+  </data>
+  <data name="_HostsFileCreated_RU" xml:space="preserve">
+    <value>Новый файл hosts создан</value>
+  </data>
+  <data name="_HostsFileMissing_EN" xml:space="preserve">
+    <value>Hosts file is missing</value>
+  </data>
+  <data name="_HostsFileMissing_RU" xml:space="preserve">
+    <value>Файл hosts отсутствует</value>
+  </data>
+  <data name="_IncorrectDrive_EN" xml:space="preserve">
+    <value>Incorrect drive letter</value>
+  </data>
+  <data name="_IncorrectDrive_RU" xml:space="preserve">
+    <value>Неверная буква диска</value>
+  </data>
+  <data name="_InvalidCertificateSignature_EN" xml:space="preserve">
+    <value>Invalid signature file</value>
+  </data>
+  <data name="_InvalidCertificateSignature_RU" xml:space="preserve">
+    <value>Цифровая подпись сертификата неверна</value>
+  </data>
+  <data name="_InvalidFile_EN" xml:space="preserve">
+    <value>Invalid file</value>
+  </data>
+  <data name="_InvalidFile_RU" xml:space="preserve">
+    <value>Некорректный файл</value>
+  </data>
+  <data name="_Just_File_EN" xml:space="preserve">
+    <value>File:</value>
+  </data>
+  <data name="_Just_File_RU" xml:space="preserve">
+    <value>Файл:</value>
+  </data>
+  <data name="_Just_Service_EN" xml:space="preserve">
+    <value>Service:</value>
+  </data>
+  <data name="_Just_Service_RU" xml:space="preserve">
+    <value>Служба:</value>
   </data>
   <data name="_License_EN" xml:space="preserve">
     <value>Denial of responsibility
@@ -238,5 +571,469 @@ Click Yes to continue. Click No to exit.</value>
 Вы уверены, что хотите продолжить?
 
 Нажмите "Принять" - чтобы подолжить. Нажмите "Выйти" - чтобы закрыть программу. </value>
+  </data>
+  <data name="_LockedDir_EN" xml:space="preserve">
+    <value>Locked directory</value>
+  </data>
+  <data name="_LockedDir_RU" xml:space="preserve">
+    <value>Заблокированный каталог</value>
+  </data>
+  <data name="_Malici0usFile_EN" xml:space="preserve">
+    <value>Mali?cious file:</value>
+  </data>
+  <data name="_Malici0usFile_RU" xml:space="preserve">
+    <value>Вредоносный файл:</value>
+  </data>
+  <data name="_Malici0usProcesses_EN" xml:space="preserve">
+    <value>Mali?cious processes...</value>
+  </data>
+  <data name="_Malici0usProcesses_RU" xml:space="preserve">
+    <value>Вредоносные процессы...</value>
+  </data>
+  <data name="_Malici0usProcess_EN" xml:space="preserve">
+    <value>Mali?cio?us process:</value>
+  </data>
+  <data name="_Malici0usProcess_RU" xml:space="preserve">
+    <value>Вредоносный процесс:</value>
+  </data>
+  <data name="_MaliciousDir_EN" xml:space="preserve">
+    <value>Mali?cious directory</value>
+  </data>
+  <data name="_MaliciousDir_RU" xml:space="preserve">
+    <value>Вредоносный каталог</value>
+  </data>
+  <data name="_MaliciousEntry_EN" xml:space="preserve">
+    <value>Mali?cious entry -</value>
+  </data>
+  <data name="_MaliciousEntry_RU" xml:space="preserve">
+    <value>Вредоносная запись -</value>
+  </data>
+  <data name="_MaliciousProfile_EN" xml:space="preserve">
+    <value>Mali?cious profile</value>
+  </data>
+  <data name="_MaliciousProfile_RU" xml:space="preserve">
+    <value>Вредоносный профиль</value>
+  </data>
+  <data name="_MlwrProcessesCount_EN" xml:space="preserve">
+    <value>Ma??li??cio??us processes:</value>
+  </data>
+  <data name="_MlwrProcessesCount_RU" xml:space="preserve">
+    <value>Вредоносных процессов:</value>
+  </data>
+  <data name="_Name_EN" xml:space="preserve">
+    <value>Name:</value>
+  </data>
+  <data name="_Name_RU" xml:space="preserve">
+    <value>Название:</value>
+  </data>
+  <data name="_NoThreats_EN" xml:space="preserve">
+    <value>No threats found</value>
+  </data>
+  <data name="_NoThreats_RU" xml:space="preserve">
+    <value>Угроз не найдено</value>
+  </data>
+  <data name="_Path_EN" xml:space="preserve">
+    <value>Path:</value>
+  </data>
+  <data name="_Path_RU" xml:space="preserve">
+    <value>Путь:</value>
+  </data>
+  <data name="_PAUSE_EN" xml:space="preserve">
+    <value>PAUSE BEFORE CLEANUP
+Press any key to continue...</value>
+  </data>
+  <data name="_PAUSE_RU" xml:space="preserve">
+    <value>ПАУЗА ПЕРЕД ОЧИСТКОЙ
+Нажмите любую клавишу, чтобы продолжить...</value>
+  </data>
+  <data name="_PCName_EN" xml:space="preserve">
+    <value>PC Name:</value>
+  </data>
+  <data name="_PCName_RU" xml:space="preserve">
+    <value>Имя компьютера:</value>
+  </data>
+  <data name="_PreparingToScan_EN" xml:space="preserve">
+    <value>Preparing to scan, please wait...</value>
+  </data>
+  <data name="_PreparingToScan_RU" xml:space="preserve">
+    <value>Подготовка сканирования, пожалуйста, подождите...</value>
+  </data>
+  <data name="_PresentInCmdArgs_EN" xml:space="preserve">
+    <value>is present in cmd args</value>
+  </data>
+  <data name="_PresentInCmdArgs_RU" xml:space="preserve">
+    <value>присутствует в парам. командной строки</value>
+  </data>
+  <data name="_ProbablyRAT_EN" xml:space="preserve">
+    <value>Probably RAT process:</value>
+  </data>
+  <data name="_ProbablyRAT_RU" xml:space="preserve">
+    <value>Вероятно RAT-процесс (бэкдор):</value>
+  </data>
+  <data name="_ProcessFailedExecute_EN" xml:space="preserve">
+    <value>Proccess failed to execute!</value>
+  </data>
+  <data name="_ProcessFailedExecute_RU" xml:space="preserve">
+    <value>Не удалось запустить процесс!</value>
+  </data>
+  <data name="_ProcessFound_EN" xml:space="preserve">
+    <value>Ma??li??cio??us process detected! Risk level</value>
+  </data>
+  <data name="_ProcessFound_RU" xml:space="preserve">
+    <value>Обнаружен вредоносный процесс! Уровень риска</value>
+  </data>
+  <data name="_ProcessInj3cti0n_EN" xml:space="preserve">
+    <value>Process inj?ect?ion</value>
+  </data>
+  <data name="_ProcessInj3cti0n_RU" xml:space="preserve">
+    <value>Внедрённый процесс</value>
+  </data>
+  <data name="_ProcessSuspendedPartially_EN" xml:space="preserve">
+    <value>Not all threads are suspended</value>
+  </data>
+  <data name="_ProcessSuspendedPartially_RU" xml:space="preserve">
+    <value>Процесс был приостановлен частично</value>
+  </data>
+  <data name="_ProcessSuspended_EN" xml:space="preserve">
+    <value>Process has been suspended -</value>
+  </data>
+  <data name="_ProcessSuspended_RU" xml:space="preserve">
+    <value>Процесс был приостановлен -</value>
+  </data>
+  <data name="_ProcessTerminated_EN" xml:space="preserve">
+    <value>Process successfully terminated -</value>
+  </data>
+  <data name="_ProcessTerminated_RU" xml:space="preserve">
+    <value>Процесс успешно прерван -</value>
+  </data>
+  <data name="_R00tkitPresent_EN" xml:space="preserve">
+    <value>Mi?ner's r?o??o?tk??it detected! Try to remove...</value>
+  </data>
+  <data name="_R00tkitPresent_RU" xml:space="preserve">
+    <value>Обнаружен руткит! Выполняется нейтрализация...</value>
+  </data>
+  <data name="_RegistryKeyRemoved_EN" xml:space="preserve">
+    <value>Key successfully removed -</value>
+  </data>
+  <data name="_RegistryKeyRemoved_RU" xml:space="preserve">
+    <value>Ключ успешно удалён -</value>
+  </data>
+  <data name="_RelevantVer_EN" xml:space="preserve">
+    <value>Relevant versions on Github</value>
+  </data>
+  <data name="_RelevantVer_RU" xml:space="preserve">
+    <value>Актуальные версии на Github</value>
+  </data>
+  <data name="_RemovedEmptyDir_EN" xml:space="preserve">
+    <value>Removed empty dir</value>
+  </data>
+  <data name="_RemovedEmptyDir_RU" xml:space="preserve">
+    <value>Удален пустой каталог</value>
+  </data>
+  <data name="_RemovingFoundMlwrFiles_EN" xml:space="preserve">
+    <value>Removing found mal?ici?ous files...</value>
+  </data>
+  <data name="_RemovingFoundMlwrFiles_RU" xml:space="preserve">
+    <value>Удаление найденных вредоносных файлов...</value>
+  </data>
+  <data name="_RemovingKnownMlwrFiles_EN" xml:space="preserve">
+    <value>Removing known mal?ware files...</value>
+  </data>
+  <data name="_RemovingKnownMlwrFiles_RU" xml:space="preserve">
+    <value>Удаление известных вредоносных файлов...</value>
+  </data>
+  <data name="_RemovingMLWRFiles_EN" xml:space="preserve">
+    <value>Removing m?ali?cious files...</value>
+  </data>
+  <data name="_RemovingMLWRFiles_RU" xml:space="preserve">
+    <value>Удаление вредоносных файлов...</value>
+  </data>
+  <data name="_RemovingMLWRPaths_EN" xml:space="preserve">
+    <value>Removing mal?ware dirs...</value>
+  </data>
+  <data name="_RemovingMLWRPaths_RU" xml:space="preserve">
+    <value>Удаление вредоносных каталогов...</value>
+  </data>
+  <data name="_RestartCleanup_EN" xml:space="preserve">
+    <value>Restart the cleanup...</value>
+  </data>
+  <data name="_RestartCleanup_RU" xml:space="preserve">
+    <value>Перезапуск очистки...</value>
+  </data>
+  <data name="_RestoredFile_EN" xml:space="preserve">
+    <value>Restored file</value>
+  </data>
+  <data name="_RestoredFile_RU" xml:space="preserve">
+    <value>Файл восстановлен</value>
+  </data>
+  <data name="_Rule_EN" xml:space="preserve">
+    <value>Rule</value>
+  </data>
+  <data name="_Rule_RU" xml:space="preserve">
+    <value>Правило</value>
+  </data>
+  <data name="_SafeBootHint_EN" xml:space="preserve">
+    <value>Safe boot: scan tasks and firewall rules is not available.</value>
+  </data>
+  <data name="_SafeBootHint_RU" xml:space="preserve">
+    <value>Безопасный режим: проверка задач планировщика и правил брандмауэра недоступна. </value>
+  </data>
+  <data name="_SafeBootNetworkingHint_EN" xml:space="preserve">
+    <value>Safe boot networking: task scheduler check not available</value>
+  </data>
+  <data name="_SafeBootNetworkingHint_RU" xml:space="preserve">
+    <value>Безопасный режим с поддержкой сети: проверка задач планировщика недоступна.</value>
+  </data>
+  <data name="_ScanDirectories_EN" xml:space="preserve">
+    <value>Scanning directories...</value>
+  </data>
+  <data name="_ScanDirectories_RU" xml:space="preserve">
+    <value>Сканирование каталогов...</value>
+  </data>
+  <data name="_ScanFiles_EN" xml:space="preserve">
+    <value>Scanning files...</value>
+  </data>
+  <data name="_ScanFiles_RU" xml:space="preserve">
+    <value>Сканирование файлов...</value>
+  </data>
+  <data name="_ScanFirewall_EN" xml:space="preserve">
+    <value>Scanning firewall...</value>
+  </data>
+  <data name="_ScanFirewall_RU" xml:space="preserve">
+    <value>Сканирование настроек брандмауэра...</value>
+  </data>
+  <data name="_ScanningHosts_EN" xml:space="preserve">
+    <value>Scanning hosts file...</value>
+  </data>
+  <data name="_ScanningHosts_RU" xml:space="preserve">
+    <value>Сканирование файла hosts...</value>
+  </data>
+  <data name="_Scanning_EN" xml:space="preserve">
+    <value>Scanning:</value>
+  </data>
+  <data name="_Scanning_RU" xml:space="preserve">
+    <value>Сканирование:</value>
+  </data>
+  <data name="_ScanOnlyMode_EN" xml:space="preserve">
+    <value>Scan only mode</value>
+  </data>
+  <data name="_ScanOnlyMode_RU" xml:space="preserve">
+    <value>Только проверка</value>
+  </data>
+  <data name="_ScanProcesses_EN" xml:space="preserve">
+    <value>Scanning processes...</value>
+  </data>
+  <data name="_ScanProcesses_RU" xml:space="preserve">
+    <value>Сканирование процессов...</value>
+  </data>
+  <data name="_ScanRegistry_EN" xml:space="preserve">
+    <value>Scanning registry...</value>
+  </data>
+  <data name="_ScanRegistry_RU" xml:space="preserve">
+    <value>Сканирование реестра...</value>
+  </data>
+  <data name="_ScanServices_EN" xml:space="preserve">
+    <value>Scanning services...</value>
+  </data>
+  <data name="_ScanServices_RU" xml:space="preserve">
+    <value>Сканирование служб...</value>
+  </data>
+  <data name="_ScanTasks_EN" xml:space="preserve">
+    <value>Scanning scheduled tasks...</value>
+  </data>
+  <data name="_ScanTasks_RU" xml:space="preserve">
+    <value>Сканирование задач планировщика...</value>
+  </data>
+  <data name="_ServiceDisabled_EN" xml:space="preserve">
+    <value>Service has been disabled</value>
+  </data>
+  <data name="_ServiceDisabled_RU" xml:space="preserve">
+    <value>Службы была отключена</value>
+  </data>
+  <data name="_ServiceFileIsNotFound_EN" xml:space="preserve">
+    <value>Service file is not found</value>
+  </data>
+  <data name="_ServiceFileIsNotFound_RU" xml:space="preserve">
+    <value>Файл службы не найден</value>
+  </data>
+  <data name="_ServiceName_EN" xml:space="preserve">
+    <value>Service name:</value>
+  </data>
+  <data name="_ServiceName_RU" xml:space="preserve">
+    <value>Имя службы:</value>
+  </data>
+  <data name="_ServiceStopped_EN" xml:space="preserve">
+    <value>Service has been stopped</value>
+  </data>
+  <data name="_ServiceStopped_RU" xml:space="preserve">
+    <value>Службы была остановлена</value>
+  </data>
+  <data name="_Service_EN" xml:space="preserve">
+    <value>service</value>
+  </data>
+  <data name="_Service_RU" xml:space="preserve">
+    <value>службу</value>
+  </data>
+  <data name="_sfxArchive_EN" xml:space="preserve">
+    <value>SFX Archive:</value>
+  </data>
+  <data name="_sfxArchive_RU" xml:space="preserve">
+    <value>SFX Архив:</value>
+  </data>
+  <data name="_SignedAppInitNotFound_EN" xml:space="preserve">
+    <value>RequireSignedAp?pIn??it_DLLs key is not found</value>
+  </data>
+  <data name="_SignedAppInitNotFound_RU" xml:space="preserve">
+    <value>Параметр RequireSignedAp?pIn??it_DLLs не найден</value>
+  </data>
+  <data name="_SignedAppInitValue_EN" xml:space="preserve">
+    <value>Incorrent value on RequireS?ign?edApp?Init_DLLs</value>
+  </data>
+  <data name="_SignedAppInitValue_RU" xml:space="preserve">
+    <value>RequireS?ign?edApp?Init_DLLs - установлено неверное значение</value>
+  </data>
+  <data name="_SpecDrive_EN" xml:space="preserve">
+    <value>Specify drive letter:</value>
+  </data>
+  <data name="_SpecDrive_RU" xml:space="preserve">
+    <value>Укажите букву диска:</value>
+  </data>
+  <data name="_StartSignatureScan_EN" xml:space="preserve">
+    <value>Starting signature scan...</value>
+  </data>
+  <data name="_StartSignatureScan_RU" xml:space="preserve">
+    <value>Начато сигнатурное сканирование...</value>
+  </data>
+  <data name="_StartupCount_EN" xml:space="preserve">
+    <value>Startup count</value>
+  </data>
+  <data name="_StartupCount_RU" xml:space="preserve">
+    <value>Кол-во запусков</value>
+  </data>
+  <data name="_State_EN" xml:space="preserve">
+    <value>State:</value>
+  </data>
+  <data name="_State_RU" xml:space="preserve">
+    <value>Состояние:</value>
+  </data>
+  <data name="_SuspiciousFileSize_EN" xml:space="preserve">
+    <value>Suspicious file size</value>
+  </data>
+  <data name="_SuspiciousFileSize_RU" xml:space="preserve">
+    <value>Подозрительный размер файла</value>
+  </data>
+  <data name="_SuspiciousFile_EN" xml:space="preserve">
+    <value>Suspicious file:</value>
+  </data>
+  <data name="_SuspiciousFile_RU" xml:space="preserve">
+    <value>Подозрительный файл:</value>
+  </data>
+  <data name="_SuspiciousPath_EN" xml:space="preserve">
+    <value>Suspicious path</value>
+  </data>
+  <data name="_SuspiciousPath_RU" xml:space="preserve">
+    <value>Подозрительный путь</value>
+  </data>
+  <data name="_SuspiciousRegKey_EN" xml:space="preserve">
+    <value>Sus?pic?ious registry key:</value>
+  </data>
+  <data name="_SuspiciousRegKey_RU" xml:space="preserve">
+    <value>Подозрительный ключ реестра:</value>
+  </data>
+  <data name="_TaskDeleted_EN" xml:space="preserve">
+    <value>Task successfully deleted -</value>
+  </data>
+  <data name="_TaskDeleted_RU" xml:space="preserve">
+    <value>Задача успешно удалена -</value>
+  </data>
+  <data name="_TermServiceFailedRestore_EN" xml:space="preserve">
+    <value>TermService: failed to restore</value>
+  </data>
+  <data name="_TermServiceFailedRestore_RU" xml:space="preserve">
+    <value>TermService: не удалось ввостановить</value>
+  </data>
+  <data name="_TermServiceInvalidPath_EN" xml:space="preserve">
+    <value>TermService: non original library path</value>
+  </data>
+  <data name="_TermServiceInvalidPath_RU" xml:space="preserve">
+    <value>TermService: неккоректный путь к библиотеке</value>
+  </data>
+  <data name="_TermServiceRestored_EN" xml:space="preserve">
+    <value>TermService successfully restored</value>
+  </data>
+  <data name="_TermServiceRestored_RU" xml:space="preserve">
+    <value>TermService успешно восстановлен</value>
+  </data>
+  <data name="_TryCloseProcess_EN" xml:space="preserve">
+    <value>Try to close processes...</value>
+  </data>
+  <data name="_TryCloseProcess_RU" xml:space="preserve">
+    <value>Попытка завершить процессы...</value>
+  </data>
+  <data name="_TryUnlockDirectory_EN" xml:space="preserve">
+    <value>Try to unlock directory...</value>
+  </data>
+  <data name="_TryUnlockDirectory_RU" xml:space="preserve">
+    <value>Попытка разблокировать каталог...</value>
+  </data>
+  <data name="_UnknownCommand_EN" xml:space="preserve">
+    <value>Unknown command</value>
+  </data>
+  <data name="_UnknownCommand_RU" xml:space="preserve">
+    <value>Неизвестная команда</value>
+  </data>
+  <data name="_UnlockSuccess_EN" xml:space="preserve">
+    <value>Unlock success</value>
+  </data>
+  <data name="_UnlockSuccess_RU" xml:space="preserve">
+    <value>Разблокировано успешно</value>
+  </data>
+  <data name="_Username_EN" xml:space="preserve">
+    <value>Username:</value>
+  </data>
+  <data name="_Username_RU" xml:space="preserve">
+    <value>Имя пользователя:</value>
+  </data>
+  <data name="_Userprofile_EN" xml:space="preserve">
+    <value>userprofile</value>
+  </data>
+  <data name="_Userprofile_RU" xml:space="preserve">
+    <value>профиль пользователя</value>
+  </data>
+  <data name="_ValueSetTo1_EN" xml:space="preserve">
+    <value>The value was set to 1</value>
+  </data>
+  <data name="_ValueSetTo1_RU" xml:space="preserve">
+    <value>Задано значение 1</value>
+  </data>
+  <data name="_ValueWasCreated_EN" xml:space="preserve">
+    <value>The value was created</value>
+  </data>
+  <data name="_ValueWasCreated_RU" xml:space="preserve">
+    <value>Параметр был создан</value>
+  </data>
+  <data name="_Version_EN" xml:space="preserve">
+    <value>Version:</value>
+  </data>
+  <data name="_Version_RU" xml:space="preserve">
+    <value>Версия:</value>
+  </data>
+  <data name="_WatchdogProcess_EN" xml:space="preserve">
+    <value>Watchdog process</value>
+  </data>
+  <data name="_WatchdogProcess_RU" xml:space="preserve">
+    <value>Сторожевой процесс</value>
+  </data>
+  <data name="_WinPEMode_EN" xml:space="preserve">
+    <value>Activated WinPE mode. Specified drive letter -</value>
+  </data>
+  <data name="_WinPEMode_RU" xml:space="preserve">
+    <value>Активирован режим WinPE. Указанная буква диска -</value>
+  </data>
+  <data name="_Winver_EN" xml:space="preserve">
+    <value>Windows version:</value>
+  </data>
+  <data name="_Winver_RU" xml:space="preserve">
+    <value>Версия Windows:</value>
   </data>
 </root>

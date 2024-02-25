@@ -79,6 +79,60 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на All Done. Press ENTER to close this window....
+        /// </summary>
+        internal static string _AllDone_EN {
+            get {
+                return ResourceManager.GetString("_AllDone_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Готово. Нажмите ENTER, чтобы закрыть....
+        /// </summary>
+        internal static string _AllDone_RU {
+            get {
+                return ResourceManager.GetString("_AllDone_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Already proceeded.
+        /// </summary>
+        internal static string _AlreadyProceeded_EN {
+            get {
+                return ResourceManager.GetString("_AlreadyProceeded_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Уже обработан.
+        /// </summary>
+        internal static string _AlreadyProceeded_RU {
+            get {
+                return ResourceManager.GetString("_AlreadyProceeded_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Analyzing.
+        /// </summary>
+        internal static string _AnalyzingFile_EN {
+            get {
+                return ResourceManager.GetString("_AnalyzingFile_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Анализ.
+        /// </summary>
+        internal static string _AnalyzingFile_RU {
+            get {
+                return ResourceManager.GetString("_AnalyzingFile_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Another copy of the application is already running. Display a help message?.
         /// </summary>
         internal static string _AppAlreadyRunning_EN {
@@ -97,38 +151,416 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на A?ppIn??it_DLL?s is not empty.
+        /// </summary>
+        internal static string _AppInitNotEmpty_EN {
+            get {
+                return ResourceManager.GetString("_AppInitNotEmpty_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Параметр A?ppIn??it_DLL?s не пуст.
+        /// </summary>
+        internal static string _AppInitNotEmpty_RU {
+            get {
+                return ResourceManager.GetString("_AppInitNotEmpty_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Incorrect program startup.
         /// </summary>
-        internal static string _ArchiveWarn_caption_en {
+        internal static string _ArchiveWarn_caption_EN {
             get {
-                return ResourceManager.GetString("_ArchiveWarn_caption_en", resourceCulture);
+                return ResourceManager.GetString("_ArchiveWarn_caption_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Некорректный запуск программы.
         /// </summary>
-        internal static string _ArchiveWarn_caption_ru {
+        internal static string _ArchiveWarn_caption_RU {
             get {
-                return ResourceManager.GetString("_ArchiveWarn_caption_ru", resourceCulture);
+                return ResourceManager.GetString("_ArchiveWarn_caption_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на The program was launched from the archive! Extract the entire archive and restart again..
         /// </summary>
-        internal static string _ArchiveWarn_en {
+        internal static string _ArchiveWarn_EN {
             get {
-                return ResourceManager.GetString("_ArchiveWarn_en", resourceCulture);
+                return ResourceManager.GetString("_ArchiveWarn_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Программа была запущена из архива! Извлеките весь архив и повторите перезапуск..
         /// </summary>
-        internal static string _ArchiveWarn_ru {
+        internal static string _ArchiveWarn_RU {
             get {
-                return ResourceManager.GetString("_ArchiveWarn_ru", resourceCulture);
+                return ResourceManager.GetString("_ArchiveWarn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Blacklisted port:.
+        /// </summary>
+        internal static string _BlacklistedPort_EN {
+            get {
+                return ResourceManager.GetString("_BlacklistedPort_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Нежелательный порт:.
+        /// </summary>
+        internal static string _BlacklistedPort_RU {
+            get {
+                return ResourceManager.GetString("_BlacklistedPort_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Blacklisted port in cmd args - .
+        /// </summary>
+        internal static string _BlacklistedPortCMD_EN {
+            get {
+                return ResourceManager.GetString("_BlacklistedPortCMD_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Нежелательный порт в парам. командной строки -.
+        /// </summary>
+        internal static string _BlacklistedPortCMD_RU {
+            get {
+                return ResourceManager.GetString("_BlacklistedPortCMD_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Blocking process has been closed -.
+        /// </summary>
+        internal static string _BlockingProcessClosed_EN {
+            get {
+                return ResourceManager.GetString("_BlockingProcessClosed_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Блокирующий процесс был закрыт -.
+        /// </summary>
+        internal static string _BlockingProcessClosed_RU {
+            get {
+                return ResourceManager.GetString("_BlockingProcessClosed_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Boot mode:.
+        /// </summary>
+        internal static string _BootMode_EN {
+            get {
+                return ResourceManager.GetString("_BootMode_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Режим загрузки:.
+        /// </summary>
+        internal static string _BootMode_RU {
+            get {
+                return ResourceManager.GetString("_BootMode_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на File or signature was probably corrupt.
+        /// </summary>
+        internal static string _CertSignatureOrFileCorrupt_EN {
+            get {
+                return ResourceManager.GetString("_CertSignatureOrFileCorrupt_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл или подпись вероятно были повреждены.
+        /// </summary>
+        internal static string _CertSignatureOrFileCorrupt_RU {
+            get {
+                return ResourceManager.GetString("_CertSignatureOrFileCorrupt_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Signer&apos;s certificate was expired.
+        /// </summary>
+        internal static string _CertSubjectCertExpired_EN {
+            get {
+                return ResourceManager.GetString("_CertSubjectCertExpired_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сертификат подписавшего просрочен.
+        /// </summary>
+        internal static string _CertSubjectCertExpired_RU {
+            get {
+                return ResourceManager.GetString("_CertSubjectCertExpired_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Subject&apos;s certificate was revoked.
+        /// </summary>
+        internal static string _CertSubjectCertificateRevoked_EN {
+            get {
+                return ResourceManager.GetString("_CertSubjectCertificateRevoked_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сертификат субъекта был отозван.
+        /// </summary>
+        internal static string _CertSubjectCertificateRevoked_RU {
+            get {
+                return ResourceManager.GetString("_CertSubjectCertificateRevoked_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Signer&apos;s certificate is in the Untrusted Publishers store.
+        /// </summary>
+        internal static string _CertSubjectExplicitlyDistrusted_EN {
+            get {
+                return ResourceManager.GetString("_CertSubjectExplicitlyDistrusted_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сертификат подписавшего находится в хранилище ненадежных издателей.
+        /// </summary>
+        internal static string _CertSubjectExplicitlyDistrusted_RU {
+            get {
+                return ResourceManager.GetString("_CertSubjectExplicitlyDistrusted_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Subject failed the specified verification action.
+        /// </summary>
+        internal static string _CertSubjectNotTrusted_EN {
+            get {
+                return ResourceManager.GetString("_CertSubjectNotTrusted_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Субъект не выполнил указанное действие проверки.
+        /// </summary>
+        internal static string _CertSubjectNotTrusted_RU {
+            get {
+                return ResourceManager.GetString("_CertSubjectNotTrusted_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Root certificate is not trusted.
+        /// </summary>
+        internal static string _CertUntrustedRoot_EN {
+            get {
+                return ResourceManager.GetString("_CertUntrustedRoot_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Нет доверия корневому сертификату.
+        /// </summary>
+        internal static string _CertUntrustedRoot_RU {
+            get {
+                return ResourceManager.GetString("_CertUntrustedRoot_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Checking TermService....
+        /// </summary>
+        internal static string _CheckingTermService_EN {
+            get {
+                return ResourceManager.GetString("_CheckingTermService_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверка TermService....
+        /// </summary>
+        internal static string _CheckingTermService_RU {
+            get {
+                return ResourceManager.GetString("_CheckingTermService_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Checking user John....
+        /// </summary>
+        internal static string _CheckUserJohn_EN {
+            get {
+                return ResourceManager.GetString("_CheckUserJohn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверка пользователя John....
+        /// </summary>
+        internal static string _CheckUserJohn_RU {
+            get {
+                return ResourceManager.GetString("_CheckUserJohn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Checking roo??tk??it present....
+        /// </summary>
+        internal static string _ChekingR00tkit_EN {
+            get {
+                return ResourceManager.GetString("_ChekingR00tkit_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверка присутствия руткита....
+        /// </summary>
+        internal static string _ChekingR00tkit_RU {
+            get {
+                return ResourceManager.GetString("_ChekingR00tkit_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на service is not installed!.
+        /// </summary>
+        internal static string _CriticalServiceNotInstalled_EN {
+            get {
+                return ResourceManager.GetString("_CriticalServiceNotInstalled_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на служба не установлена!.
+        /// </summary>
+        internal static string _CriticalServiceNotInstalled_RU {
+            get {
+                return ResourceManager.GetString("_CriticalServiceNotInstalled_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Critical service has been restalted.
+        /// </summary>
+        internal static string _CriticalServiceRestart_EN {
+            get {
+                return ResourceManager.GetString("_CriticalServiceRestart_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Важный для работы компонент (служба) был перезапущен.
+        /// </summary>
+        internal static string _CriticalServiceRestart_RU {
+            get {
+                return ResourceManager.GetString("_CriticalServiceRestart_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Startup type of the critical service has been restored.
+        /// </summary>
+        internal static string _CriticalServiceStartup_EN {
+            get {
+                return ResourceManager.GetString("_CriticalServiceStartup_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тип запуска важного для работы компонента (службы) был восстановлен.
+        /// </summary>
+        internal static string _CriticalServiceStartup_RU {
+            get {
+                return ResourceManager.GetString("_CriticalServiceStartup_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на - Deleted successfull.
+        /// </summary>
+        internal static string _Deleted_EN {
+            get {
+                return ResourceManager.GetString("_Deleted_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на - Удалено успешно.
+        /// </summary>
+        internal static string _Deleted_RU {
+            get {
+                return ResourceManager.GetString("_Deleted_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на directory.
+        /// </summary>
+        internal static string _Directory_EN {
+            get {
+                return ResourceManager.GetString("_Directory_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на каталог.
+        /// </summary>
+        internal static string _Directory_RU {
+            get {
+                return ResourceManager.GetString("_Directory_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scan elapsed time.
+        /// </summary>
+        internal static string _Elapse_EN {
+            get {
+                return ResourceManager.GetString("_Elapse_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Затраченное время проверки.
+        /// </summary>
+        internal static string _Elapse_RU {
+            get {
+                return ResourceManager.GetString("_Elapse_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Empty task.
+        /// </summary>
+        internal static string _EmptyTask_EN {
+            get {
+                return ResourceManager.GetString("_EmptyTask_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пустая задача.
+        /// </summary>
+        internal static string _EmptyTask_RU {
+            get {
+                return ResourceManager.GetString("_EmptyTask_RU", resourceCulture);
             }
         }
         
@@ -151,6 +583,240 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Error:.
+        /// </summary>
+        internal static string _Error_EN {
+            get {
+                return ResourceManager.GetString("_Error_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка:.
+        /// </summary>
+        internal static string _Error_RU {
+            get {
+                return ResourceManager.GetString("_Error_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error analyzing file.
+        /// </summary>
+        internal static string _ErrorAnalyzingFile_EN {
+            get {
+                return ResourceManager.GetString("_ErrorAnalyzingFile_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка анализа файла.
+        /// </summary>
+        internal static string _ErrorAnalyzingFile_RU {
+            get {
+                return ResourceManager.GetString("_ErrorAnalyzingFile_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Can not open.
+        /// </summary>
+        internal static string _ErrorCannotOpen_EN {
+            get {
+                return ResourceManager.GetString("_ErrorCannotOpen_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось открыть.
+        /// </summary>
+        internal static string _ErrorCannotOpen_RU {
+            get {
+                return ResourceManager.GetString("_ErrorCannotOpen_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Can not proceed.
+        /// </summary>
+        internal static string _ErrorCannotProceed_EN {
+            get {
+                return ResourceManager.GetString("_ErrorCannotProceed_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось обработать.
+        /// </summary>
+        internal static string _ErrorCannotProceed_RU {
+            get {
+                return ResourceManager.GetString("_ErrorCannotProceed_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Can not remove.
+        /// </summary>
+        internal static string _ErrorCannotRemove_EN {
+            get {
+                return ResourceManager.GetString("_ErrorCannotRemove_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось удалить.
+        /// </summary>
+        internal static string _ErrorCannotRemove_RU {
+            get {
+                return ResourceManager.GetString("_ErrorCannotRemove_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error clean hosts file:.
+        /// </summary>
+        internal static string _ErrorCleanHosts_EN {
+            get {
+                return ResourceManager.GetString("_ErrorCleanHosts_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка очистки файла hosts:.
+        /// </summary>
+        internal static string _ErrorCleanHosts_RU {
+            get {
+                return ResourceManager.GetString("_ErrorCleanHosts_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error: you cannot disable all types of scanning.
+        /// </summary>
+        internal static string _ErrorDisabledScan_EN {
+            get {
+                return ResourceManager.GetString("_ErrorDisabledScan_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка: невозможно отключить все типы сканирования.
+        /// </summary>
+        internal static string _ErrorDisabledScan_RU {
+            get {
+                return ResourceManager.GetString("_ErrorDisabledScan_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error on unlock.
+        /// </summary>
+        internal static string _ErrorOnUnlock_EN {
+            get {
+                return ResourceManager.GetString("_ErrorOnUnlock_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось разблокировать.
+        /// </summary>
+        internal static string _ErrorOnUnlock_RU {
+            get {
+                return ResourceManager.GetString("_ErrorOnUnlock_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to apply mitigation policy.
+        /// </summary>
+        internal static string _ErrorSetMitigationPolicy_EN {
+            get {
+                return ResourceManager.GetString("_ErrorSetMitigationPolicy_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось применить политику устранения рисков.
+        /// </summary>
+        internal static string _ErrorSetMitigationPolicy_RU {
+            get {
+                return ResourceManager.GetString("_ErrorSetMitigationPolicy_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to delete task.
+        /// </summary>
+        internal static string _ErrorTaskDeleteFail_EN {
+            get {
+                return ResourceManager.GetString("_ErrorTaskDeleteFail_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось удалить задачу.
+        /// </summary>
+        internal static string _ErrorTaskDeleteFail_RU {
+            get {
+                return ResourceManager.GetString("_ErrorTaskDeleteFail_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to terminate ma?li?ci?ou?s process:.
+        /// </summary>
+        internal static string _ErrorTermitateProcess_EN {
+            get {
+                return ResourceManager.GetString("_ErrorTermitateProcess_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось завершить вредоносный процесс:.
+        /// </summary>
+        internal static string _ErrorTermitateProcess_RU {
+            get {
+                return ResourceManager.GetString("_ErrorTermitateProcess_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error verify signature.
+        /// </summary>
+        internal static string _ErrorVerifySignature_EN {
+            get {
+                return ResourceManager.GetString("_ErrorVerifySignature_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка проверки цифровой подписи.
+        /// </summary>
+        internal static string _ErrorVerifySignature_RU {
+            get {
+                return ResourceManager.GetString("_ErrorVerifySignature_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на exclusion.
+        /// </summary>
+        internal static string _Exclusion_EN {
+            get {
+                return ResourceManager.GetString("_Exclusion_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на исключение.
+        /// </summary>
+        internal static string _Exclusion_RU {
+            get {
+                return ResourceManager.GetString("_Exclusion_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на No.
         /// </summary>
         internal static string _exit_en {
@@ -165,6 +831,186 @@ namespace MinerSearch.Properties {
         internal static string _exit_ru {
             get {
                 return ResourceManager.GetString("_exit_ru", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Probably fake system task.
+        /// </summary>
+        internal static string _FakeSystemTask_EN {
+            get {
+                return ResourceManager.GetString("_FakeSystemTask_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вероятно подделка системной задачи.
+        /// </summary>
+        internal static string _FakeSystemTask_RU {
+            get {
+                return ResourceManager.GetString("_FakeSystemTask_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на file.
+        /// </summary>
+        internal static string _File_EN {
+            get {
+                return ResourceManager.GetString("_File_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на файл.
+        /// </summary>
+        internal static string _File_RU {
+            get {
+                return ResourceManager.GetString("_File_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на File is not found:.
+        /// </summary>
+        internal static string _FileIsNotFound_EN {
+            get {
+                return ResourceManager.GetString("_FileIsNotFound_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл не найден:.
+        /// </summary>
+        internal static string _FileIsNotFound_RU {
+            get {
+                return ResourceManager.GetString("_FileIsNotFound_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на File does not exist in the specified directories:.
+        /// </summary>
+        internal static string _FileNotExistsSpec_EN {
+            get {
+                return ResourceManager.GetString("_FileNotExistsSpec_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл не существует в указанных каталогах:.
+        /// </summary>
+        internal static string _FileNotExistsSpec_RU {
+            get {
+                return ResourceManager.GetString("_FileNotExistsSpec_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на File renamed to.
+        /// </summary>
+        internal static string _FileRenamed_EN {
+            get {
+                return ResourceManager.GetString("_FileRenamed_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл переименован в.
+        /// </summary>
+        internal static string _FileRenamed_RU {
+            get {
+                return ResourceManager.GetString("_FileRenamed_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Try to find blocking process....
+        /// </summary>
+        internal static string _FindBlockingProcess_EN {
+            get {
+                return ResourceManager.GetString("_FindBlockingProcess_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Попытка найти блокирующий процесс....
+        /// </summary>
+        internal static string _FindBlockingProcess_RU {
+            get {
+                return ResourceManager.GetString("_FindBlockingProcess_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Found:.
+        /// </summary>
+        internal static string _Found_EN {
+            get {
+                return ResourceManager.GetString("_Found_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Найдено:.
+        /// </summary>
+        internal static string _Found_RU {
+            get {
+                return ResourceManager.GetString("_Found_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Found mali?cio?us registry key - .
+        /// </summary>
+        internal static string _FoundMlwrKey_EN {
+            get {
+                return ResourceManager.GetString("_FoundMlwrKey_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Найден вредоносный ключ реестра - .
+        /// </summary>
+        internal static string _FoundMlwrKey_RU {
+            get {
+                return ResourceManager.GetString("_FoundMlwrKey_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Found threats:.
+        /// </summary>
+        internal static string _FoundThreats_EN {
+            get {
+                return ResourceManager.GetString("_FoundThreats_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Найдено угроз: .
+        /// </summary>
+        internal static string _FoundThreats_RU {
+            get {
+                return ResourceManager.GetString("_FoundThreats_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Too much GPU libs usage:.
+        /// </summary>
+        internal static string _GPULibsUsage_EN {
+            get {
+                return ResourceManager.GetString("_GPULibsUsage_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Объемное потребление ресурсов ГП:.
+        /// </summary>
+        internal static string _GPULibsUsage_RU {
+            get {
+                return ResourceManager.GetString("_GPULibsUsage_RU", resourceCulture);
             }
         }
         
@@ -205,6 +1051,150 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Use &quot;--help&quot; option to display list of available commands.
+        /// </summary>
+        internal static string _HelpHint_EN {
+            get {
+                return ResourceManager.GetString("_HelpHint_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Для вызова справки используйте параметр &quot;--help&quot;.
+        /// </summary>
+        internal static string _HelpHint_RU {
+            get {
+                return ResourceManager.GetString("_HelpHint_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на New hosts file has been created.
+        /// </summary>
+        internal static string _HostsFileCreated_EN {
+            get {
+                return ResourceManager.GetString("_HostsFileCreated_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Новый файл hosts создан.
+        /// </summary>
+        internal static string _HostsFileCreated_RU {
+            get {
+                return ResourceManager.GetString("_HostsFileCreated_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Hosts file is missing.
+        /// </summary>
+        internal static string _HostsFileMissing_EN {
+            get {
+                return ResourceManager.GetString("_HostsFileMissing_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл hosts отсутствует.
+        /// </summary>
+        internal static string _HostsFileMissing_RU {
+            get {
+                return ResourceManager.GetString("_HostsFileMissing_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Incorrect drive letter.
+        /// </summary>
+        internal static string _IncorrectDrive_EN {
+            get {
+                return ResourceManager.GetString("_IncorrectDrive_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Неверная буква диска.
+        /// </summary>
+        internal static string _IncorrectDrive_RU {
+            get {
+                return ResourceManager.GetString("_IncorrectDrive_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Invalid signature file.
+        /// </summary>
+        internal static string _InvalidCertificateSignature_EN {
+            get {
+                return ResourceManager.GetString("_InvalidCertificateSignature_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Цифровая подпись сертификата неверна.
+        /// </summary>
+        internal static string _InvalidCertificateSignature_RU {
+            get {
+                return ResourceManager.GetString("_InvalidCertificateSignature_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Invalid file.
+        /// </summary>
+        internal static string _InvalidFile_EN {
+            get {
+                return ResourceManager.GetString("_InvalidFile_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Некорректный файл.
+        /// </summary>
+        internal static string _InvalidFile_RU {
+            get {
+                return ResourceManager.GetString("_InvalidFile_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на File:.
+        /// </summary>
+        internal static string _Just_File_EN {
+            get {
+                return ResourceManager.GetString("_Just_File_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл:.
+        /// </summary>
+        internal static string _Just_File_RU {
+            get {
+                return ResourceManager.GetString("_Just_File_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Service:.
+        /// </summary>
+        internal static string _Just_Service_EN {
+            get {
+                return ResourceManager.GetString("_Just_Service_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Служба:.
+        /// </summary>
+        internal static string _Just_Service_RU {
+            get {
+                return ResourceManager.GetString("_Just_Service_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Denial of responsibility
         ///
         ///This software provided &quot;as is&quot; and was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurrency. The author is not responsible for incidental, indirect or unintentional damage of any kind during the use of this software. You may use it at your own risk.
@@ -232,6 +1222,1403 @@ namespace MinerSearch.Properties {
         internal static string _License_RU {
             get {
                 return ResourceManager.GetString("_License_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Locked directory.
+        /// </summary>
+        internal static string _LockedDir_EN {
+            get {
+                return ResourceManager.GetString("_LockedDir_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Заблокированный каталог.
+        /// </summary>
+        internal static string _LockedDir_RU {
+            get {
+                return ResourceManager.GetString("_LockedDir_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Mali?cious file:.
+        /// </summary>
+        internal static string _Malici0usFile_EN {
+            get {
+                return ResourceManager.GetString("_Malici0usFile_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вредоносный файл:.
+        /// </summary>
+        internal static string _Malici0usFile_RU {
+            get {
+                return ResourceManager.GetString("_Malici0usFile_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Mali?cio?us process:.
+        /// </summary>
+        internal static string _Malici0usProcess_EN {
+            get {
+                return ResourceManager.GetString("_Malici0usProcess_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вредоносный процесс:.
+        /// </summary>
+        internal static string _Malici0usProcess_RU {
+            get {
+                return ResourceManager.GetString("_Malici0usProcess_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Mali?cious processes....
+        /// </summary>
+        internal static string _Malici0usProcesses_EN {
+            get {
+                return ResourceManager.GetString("_Malici0usProcesses_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вредоносные процессы....
+        /// </summary>
+        internal static string _Malici0usProcesses_RU {
+            get {
+                return ResourceManager.GetString("_Malici0usProcesses_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Mali?cious directory.
+        /// </summary>
+        internal static string _MaliciousDir_EN {
+            get {
+                return ResourceManager.GetString("_MaliciousDir_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вредоносный каталог.
+        /// </summary>
+        internal static string _MaliciousDir_RU {
+            get {
+                return ResourceManager.GetString("_MaliciousDir_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Mali?cious entry -.
+        /// </summary>
+        internal static string _MaliciousEntry_EN {
+            get {
+                return ResourceManager.GetString("_MaliciousEntry_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вредоносная запись -.
+        /// </summary>
+        internal static string _MaliciousEntry_RU {
+            get {
+                return ResourceManager.GetString("_MaliciousEntry_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Mali?cious profile.
+        /// </summary>
+        internal static string _MaliciousProfile_EN {
+            get {
+                return ResourceManager.GetString("_MaliciousProfile_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вредоносный профиль.
+        /// </summary>
+        internal static string _MaliciousProfile_RU {
+            get {
+                return ResourceManager.GetString("_MaliciousProfile_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ma??li??cio??us processes:.
+        /// </summary>
+        internal static string _MlwrProcessesCount_EN {
+            get {
+                return ResourceManager.GetString("_MlwrProcessesCount_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вредоносных процессов:.
+        /// </summary>
+        internal static string _MlwrProcessesCount_RU {
+            get {
+                return ResourceManager.GetString("_MlwrProcessesCount_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Name:.
+        /// </summary>
+        internal static string _Name_EN {
+            get {
+                return ResourceManager.GetString("_Name_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Название:.
+        /// </summary>
+        internal static string _Name_RU {
+            get {
+                return ResourceManager.GetString("_Name_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на No threats found.
+        /// </summary>
+        internal static string _NoThreats_EN {
+            get {
+                return ResourceManager.GetString("_NoThreats_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Угроз не найдено.
+        /// </summary>
+        internal static string _NoThreats_RU {
+            get {
+                return ResourceManager.GetString("_NoThreats_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Path:.
+        /// </summary>
+        internal static string _Path_EN {
+            get {
+                return ResourceManager.GetString("_Path_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Путь:.
+        /// </summary>
+        internal static string _Path_RU {
+            get {
+                return ResourceManager.GetString("_Path_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на PAUSE BEFORE CLEANUP
+        ///Press any key to continue....
+        /// </summary>
+        internal static string _PAUSE_EN {
+            get {
+                return ResourceManager.GetString("_PAUSE_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на ПАУЗА ПЕРЕД ОЧИСТКОЙ
+        ///Нажмите любую клавишу, чтобы продолжить....
+        /// </summary>
+        internal static string _PAUSE_RU {
+            get {
+                return ResourceManager.GetString("_PAUSE_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на PC Name:.
+        /// </summary>
+        internal static string _PCName_EN {
+            get {
+                return ResourceManager.GetString("_PCName_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Имя компьютера:.
+        /// </summary>
+        internal static string _PCName_RU {
+            get {
+                return ResourceManager.GetString("_PCName_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Preparing to scan, please wait....
+        /// </summary>
+        internal static string _PreparingToScan_EN {
+            get {
+                return ResourceManager.GetString("_PreparingToScan_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подготовка сканирования, пожалуйста, подождите....
+        /// </summary>
+        internal static string _PreparingToScan_RU {
+            get {
+                return ResourceManager.GetString("_PreparingToScan_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на is present in cmd args.
+        /// </summary>
+        internal static string _PresentInCmdArgs_EN {
+            get {
+                return ResourceManager.GetString("_PresentInCmdArgs_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на присутствует в парам. командной строки.
+        /// </summary>
+        internal static string _PresentInCmdArgs_RU {
+            get {
+                return ResourceManager.GetString("_PresentInCmdArgs_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Probably RAT process:.
+        /// </summary>
+        internal static string _ProbablyRAT_EN {
+            get {
+                return ResourceManager.GetString("_ProbablyRAT_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вероятно RAT-процесс (бэкдор):.
+        /// </summary>
+        internal static string _ProbablyRAT_RU {
+            get {
+                return ResourceManager.GetString("_ProbablyRAT_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Proccess failed to execute!.
+        /// </summary>
+        internal static string _ProcessFailedExecute_EN {
+            get {
+                return ResourceManager.GetString("_ProcessFailedExecute_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось запустить процесс!.
+        /// </summary>
+        internal static string _ProcessFailedExecute_RU {
+            get {
+                return ResourceManager.GetString("_ProcessFailedExecute_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ma??li??cio??us process detected! Risk level.
+        /// </summary>
+        internal static string _ProcessFound_EN {
+            get {
+                return ResourceManager.GetString("_ProcessFound_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обнаружен вредоносный процесс! Уровень риска.
+        /// </summary>
+        internal static string _ProcessFound_RU {
+            get {
+                return ResourceManager.GetString("_ProcessFound_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Process inj?ect?ion.
+        /// </summary>
+        internal static string _ProcessInj3cti0n_EN {
+            get {
+                return ResourceManager.GetString("_ProcessInj3cti0n_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Внедрённый процесс.
+        /// </summary>
+        internal static string _ProcessInj3cti0n_RU {
+            get {
+                return ResourceManager.GetString("_ProcessInj3cti0n_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Process has been suspended -.
+        /// </summary>
+        internal static string _ProcessSuspended_EN {
+            get {
+                return ResourceManager.GetString("_ProcessSuspended_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Процесс был приостановлен -.
+        /// </summary>
+        internal static string _ProcessSuspended_RU {
+            get {
+                return ResourceManager.GetString("_ProcessSuspended_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Not all threads are suspended.
+        /// </summary>
+        internal static string _ProcessSuspendedPartially_EN {
+            get {
+                return ResourceManager.GetString("_ProcessSuspendedPartially_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Процесс был приостановлен частично.
+        /// </summary>
+        internal static string _ProcessSuspendedPartially_RU {
+            get {
+                return ResourceManager.GetString("_ProcessSuspendedPartially_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Process successfully terminated -.
+        /// </summary>
+        internal static string _ProcessTerminated_EN {
+            get {
+                return ResourceManager.GetString("_ProcessTerminated_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Процесс успешно прерван -.
+        /// </summary>
+        internal static string _ProcessTerminated_RU {
+            get {
+                return ResourceManager.GetString("_ProcessTerminated_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Mi?ner&apos;s r?o??o?tk??it detected! Try to remove....
+        /// </summary>
+        internal static string _R00tkitPresent_EN {
+            get {
+                return ResourceManager.GetString("_R00tkitPresent_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обнаружен руткит! Выполняется нейтрализация....
+        /// </summary>
+        internal static string _R00tkitPresent_RU {
+            get {
+                return ResourceManager.GetString("_R00tkitPresent_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Key successfully removed -.
+        /// </summary>
+        internal static string _RegistryKeyRemoved_EN {
+            get {
+                return ResourceManager.GetString("_RegistryKeyRemoved_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ключ успешно удалён -.
+        /// </summary>
+        internal static string _RegistryKeyRemoved_RU {
+            get {
+                return ResourceManager.GetString("_RegistryKeyRemoved_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Relevant versions on Github.
+        /// </summary>
+        internal static string _RelevantVer_EN {
+            get {
+                return ResourceManager.GetString("_RelevantVer_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Актуальные версии на Github.
+        /// </summary>
+        internal static string _RelevantVer_RU {
+            get {
+                return ResourceManager.GetString("_RelevantVer_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Removed empty dir.
+        /// </summary>
+        internal static string _RemovedEmptyDir_EN {
+            get {
+                return ResourceManager.GetString("_RemovedEmptyDir_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удален пустой каталог.
+        /// </summary>
+        internal static string _RemovedEmptyDir_RU {
+            get {
+                return ResourceManager.GetString("_RemovedEmptyDir_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Removing found mal?ici?ous files....
+        /// </summary>
+        internal static string _RemovingFoundMlwrFiles_EN {
+            get {
+                return ResourceManager.GetString("_RemovingFoundMlwrFiles_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удаление найденных вредоносных файлов....
+        /// </summary>
+        internal static string _RemovingFoundMlwrFiles_RU {
+            get {
+                return ResourceManager.GetString("_RemovingFoundMlwrFiles_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Removing known mal?ware files....
+        /// </summary>
+        internal static string _RemovingKnownMlwrFiles_EN {
+            get {
+                return ResourceManager.GetString("_RemovingKnownMlwrFiles_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удаление известных вредоносных файлов....
+        /// </summary>
+        internal static string _RemovingKnownMlwrFiles_RU {
+            get {
+                return ResourceManager.GetString("_RemovingKnownMlwrFiles_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Removing m?ali?cious files....
+        /// </summary>
+        internal static string _RemovingMLWRFiles_EN {
+            get {
+                return ResourceManager.GetString("_RemovingMLWRFiles_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удаление вредоносных файлов....
+        /// </summary>
+        internal static string _RemovingMLWRFiles_RU {
+            get {
+                return ResourceManager.GetString("_RemovingMLWRFiles_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Removing mal?ware dirs....
+        /// </summary>
+        internal static string _RemovingMLWRPaths_EN {
+            get {
+                return ResourceManager.GetString("_RemovingMLWRPaths_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удаление вредоносных каталогов....
+        /// </summary>
+        internal static string _RemovingMLWRPaths_RU {
+            get {
+                return ResourceManager.GetString("_RemovingMLWRPaths_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Restart the cleanup....
+        /// </summary>
+        internal static string _RestartCleanup_EN {
+            get {
+                return ResourceManager.GetString("_RestartCleanup_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Перезапуск очистки....
+        /// </summary>
+        internal static string _RestartCleanup_RU {
+            get {
+                return ResourceManager.GetString("_RestartCleanup_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Restored file.
+        /// </summary>
+        internal static string _RestoredFile_EN {
+            get {
+                return ResourceManager.GetString("_RestoredFile_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл восстановлен.
+        /// </summary>
+        internal static string _RestoredFile_RU {
+            get {
+                return ResourceManager.GetString("_RestoredFile_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Rule.
+        /// </summary>
+        internal static string _Rule_EN {
+            get {
+                return ResourceManager.GetString("_Rule_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Правило.
+        /// </summary>
+        internal static string _Rule_RU {
+            get {
+                return ResourceManager.GetString("_Rule_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Safe boot: scan tasks and firewall rules is not available..
+        /// </summary>
+        internal static string _SafeBootHint_EN {
+            get {
+                return ResourceManager.GetString("_SafeBootHint_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Безопасный режим: проверка задач планировщика и правил брандмауэра недоступна. .
+        /// </summary>
+        internal static string _SafeBootHint_RU {
+            get {
+                return ResourceManager.GetString("_SafeBootHint_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Safe boot networking: task scheduler check not available.
+        /// </summary>
+        internal static string _SafeBootNetworkingHint_EN {
+            get {
+                return ResourceManager.GetString("_SafeBootNetworkingHint_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Безопасный режим с поддержкой сети: проверка задач планировщика недоступна..
+        /// </summary>
+        internal static string _SafeBootNetworkingHint_RU {
+            get {
+                return ResourceManager.GetString("_SafeBootNetworkingHint_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scanning directories....
+        /// </summary>
+        internal static string _ScanDirectories_EN {
+            get {
+                return ResourceManager.GetString("_ScanDirectories_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сканирование каталогов....
+        /// </summary>
+        internal static string _ScanDirectories_RU {
+            get {
+                return ResourceManager.GetString("_ScanDirectories_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scanning files....
+        /// </summary>
+        internal static string _ScanFiles_EN {
+            get {
+                return ResourceManager.GetString("_ScanFiles_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сканирование файлов....
+        /// </summary>
+        internal static string _ScanFiles_RU {
+            get {
+                return ResourceManager.GetString("_ScanFiles_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scanning firewall....
+        /// </summary>
+        internal static string _ScanFirewall_EN {
+            get {
+                return ResourceManager.GetString("_ScanFirewall_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сканирование настроек брандмауэра....
+        /// </summary>
+        internal static string _ScanFirewall_RU {
+            get {
+                return ResourceManager.GetString("_ScanFirewall_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scanning:.
+        /// </summary>
+        internal static string _Scanning_EN {
+            get {
+                return ResourceManager.GetString("_Scanning_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сканирование:.
+        /// </summary>
+        internal static string _Scanning_RU {
+            get {
+                return ResourceManager.GetString("_Scanning_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scanning hosts file....
+        /// </summary>
+        internal static string _ScanningHosts_EN {
+            get {
+                return ResourceManager.GetString("_ScanningHosts_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сканирование файла hosts....
+        /// </summary>
+        internal static string _ScanningHosts_RU {
+            get {
+                return ResourceManager.GetString("_ScanningHosts_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scan only mode.
+        /// </summary>
+        internal static string _ScanOnlyMode_EN {
+            get {
+                return ResourceManager.GetString("_ScanOnlyMode_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Только проверка.
+        /// </summary>
+        internal static string _ScanOnlyMode_RU {
+            get {
+                return ResourceManager.GetString("_ScanOnlyMode_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scanning processes....
+        /// </summary>
+        internal static string _ScanProcesses_EN {
+            get {
+                return ResourceManager.GetString("_ScanProcesses_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сканирование процессов....
+        /// </summary>
+        internal static string _ScanProcesses_RU {
+            get {
+                return ResourceManager.GetString("_ScanProcesses_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scanning registry....
+        /// </summary>
+        internal static string _ScanRegistry_EN {
+            get {
+                return ResourceManager.GetString("_ScanRegistry_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сканирование реестра....
+        /// </summary>
+        internal static string _ScanRegistry_RU {
+            get {
+                return ResourceManager.GetString("_ScanRegistry_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scanning services....
+        /// </summary>
+        internal static string _ScanServices_EN {
+            get {
+                return ResourceManager.GetString("_ScanServices_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сканирование служб....
+        /// </summary>
+        internal static string _ScanServices_RU {
+            get {
+                return ResourceManager.GetString("_ScanServices_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scanning scheduled tasks....
+        /// </summary>
+        internal static string _ScanTasks_EN {
+            get {
+                return ResourceManager.GetString("_ScanTasks_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сканирование задач планировщика....
+        /// </summary>
+        internal static string _ScanTasks_RU {
+            get {
+                return ResourceManager.GetString("_ScanTasks_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на service.
+        /// </summary>
+        internal static string _Service_EN {
+            get {
+                return ResourceManager.GetString("_Service_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на службу.
+        /// </summary>
+        internal static string _Service_RU {
+            get {
+                return ResourceManager.GetString("_Service_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Service has been disabled.
+        /// </summary>
+        internal static string _ServiceDisabled_EN {
+            get {
+                return ResourceManager.GetString("_ServiceDisabled_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Службы была отключена.
+        /// </summary>
+        internal static string _ServiceDisabled_RU {
+            get {
+                return ResourceManager.GetString("_ServiceDisabled_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Service file is not found.
+        /// </summary>
+        internal static string _ServiceFileIsNotFound_EN {
+            get {
+                return ResourceManager.GetString("_ServiceFileIsNotFound_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл службы не найден.
+        /// </summary>
+        internal static string _ServiceFileIsNotFound_RU {
+            get {
+                return ResourceManager.GetString("_ServiceFileIsNotFound_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Service name:.
+        /// </summary>
+        internal static string _ServiceName_EN {
+            get {
+                return ResourceManager.GetString("_ServiceName_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Имя службы:.
+        /// </summary>
+        internal static string _ServiceName_RU {
+            get {
+                return ResourceManager.GetString("_ServiceName_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Service has been stopped.
+        /// </summary>
+        internal static string _ServiceStopped_EN {
+            get {
+                return ResourceManager.GetString("_ServiceStopped_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Службы была остановлена.
+        /// </summary>
+        internal static string _ServiceStopped_RU {
+            get {
+                return ResourceManager.GetString("_ServiceStopped_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SFX Archive:.
+        /// </summary>
+        internal static string _sfxArchive_EN {
+            get {
+                return ResourceManager.GetString("_sfxArchive_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SFX Архив:.
+        /// </summary>
+        internal static string _sfxArchive_RU {
+            get {
+                return ResourceManager.GetString("_sfxArchive_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на RequireSignedAp?pIn??it_DLLs key is not found.
+        /// </summary>
+        internal static string _SignedAppInitNotFound_EN {
+            get {
+                return ResourceManager.GetString("_SignedAppInitNotFound_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Параметр RequireSignedAp?pIn??it_DLLs не найден.
+        /// </summary>
+        internal static string _SignedAppInitNotFound_RU {
+            get {
+                return ResourceManager.GetString("_SignedAppInitNotFound_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Incorrent value on RequireS?ign?edApp?Init_DLLs.
+        /// </summary>
+        internal static string _SignedAppInitValue_EN {
+            get {
+                return ResourceManager.GetString("_SignedAppInitValue_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на RequireS?ign?edApp?Init_DLLs - установлено неверное значение.
+        /// </summary>
+        internal static string _SignedAppInitValue_RU {
+            get {
+                return ResourceManager.GetString("_SignedAppInitValue_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Specify drive letter:.
+        /// </summary>
+        internal static string _SpecDrive_EN {
+            get {
+                return ResourceManager.GetString("_SpecDrive_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Укажите букву диска:.
+        /// </summary>
+        internal static string _SpecDrive_RU {
+            get {
+                return ResourceManager.GetString("_SpecDrive_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Starting signature scan....
+        /// </summary>
+        internal static string _StartSignatureScan_EN {
+            get {
+                return ResourceManager.GetString("_StartSignatureScan_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Начато сигнатурное сканирование....
+        /// </summary>
+        internal static string _StartSignatureScan_RU {
+            get {
+                return ResourceManager.GetString("_StartSignatureScan_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Startup count.
+        /// </summary>
+        internal static string _StartupCount_EN {
+            get {
+                return ResourceManager.GetString("_StartupCount_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Кол-во запусков.
+        /// </summary>
+        internal static string _StartupCount_RU {
+            get {
+                return ResourceManager.GetString("_StartupCount_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на State:.
+        /// </summary>
+        internal static string _State_EN {
+            get {
+                return ResourceManager.GetString("_State_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Состояние:.
+        /// </summary>
+        internal static string _State_RU {
+            get {
+                return ResourceManager.GetString("_State_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Suspicious file:.
+        /// </summary>
+        internal static string _SuspiciousFile_EN {
+            get {
+                return ResourceManager.GetString("_SuspiciousFile_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подозрительный файл:.
+        /// </summary>
+        internal static string _SuspiciousFile_RU {
+            get {
+                return ResourceManager.GetString("_SuspiciousFile_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Suspicious file size.
+        /// </summary>
+        internal static string _SuspiciousFileSize_EN {
+            get {
+                return ResourceManager.GetString("_SuspiciousFileSize_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подозрительный размер файла.
+        /// </summary>
+        internal static string _SuspiciousFileSize_RU {
+            get {
+                return ResourceManager.GetString("_SuspiciousFileSize_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Suspicious path.
+        /// </summary>
+        internal static string _SuspiciousPath_EN {
+            get {
+                return ResourceManager.GetString("_SuspiciousPath_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подозрительный путь.
+        /// </summary>
+        internal static string _SuspiciousPath_RU {
+            get {
+                return ResourceManager.GetString("_SuspiciousPath_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Sus?pic?ious registry key:.
+        /// </summary>
+        internal static string _SuspiciousRegKey_EN {
+            get {
+                return ResourceManager.GetString("_SuspiciousRegKey_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подозрительный ключ реестра:.
+        /// </summary>
+        internal static string _SuspiciousRegKey_RU {
+            get {
+                return ResourceManager.GetString("_SuspiciousRegKey_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Task successfully deleted -.
+        /// </summary>
+        internal static string _TaskDeleted_EN {
+            get {
+                return ResourceManager.GetString("_TaskDeleted_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Задача успешно удалена -.
+        /// </summary>
+        internal static string _TaskDeleted_RU {
+            get {
+                return ResourceManager.GetString("_TaskDeleted_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на TermService: failed to restore.
+        /// </summary>
+        internal static string _TermServiceFailedRestore_EN {
+            get {
+                return ResourceManager.GetString("_TermServiceFailedRestore_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на TermService: не удалось ввостановить.
+        /// </summary>
+        internal static string _TermServiceFailedRestore_RU {
+            get {
+                return ResourceManager.GetString("_TermServiceFailedRestore_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на TermService: non original library path.
+        /// </summary>
+        internal static string _TermServiceInvalidPath_EN {
+            get {
+                return ResourceManager.GetString("_TermServiceInvalidPath_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на TermService: неккоректный путь к библиотеке.
+        /// </summary>
+        internal static string _TermServiceInvalidPath_RU {
+            get {
+                return ResourceManager.GetString("_TermServiceInvalidPath_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на TermService successfully restored.
+        /// </summary>
+        internal static string _TermServiceRestored_EN {
+            get {
+                return ResourceManager.GetString("_TermServiceRestored_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на TermService успешно восстановлен.
+        /// </summary>
+        internal static string _TermServiceRestored_RU {
+            get {
+                return ResourceManager.GetString("_TermServiceRestored_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Try to close processes....
+        /// </summary>
+        internal static string _TryCloseProcess_EN {
+            get {
+                return ResourceManager.GetString("_TryCloseProcess_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Попытка завершить процессы....
+        /// </summary>
+        internal static string _TryCloseProcess_RU {
+            get {
+                return ResourceManager.GetString("_TryCloseProcess_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Try to unlock directory....
+        /// </summary>
+        internal static string _TryUnlockDirectory_EN {
+            get {
+                return ResourceManager.GetString("_TryUnlockDirectory_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Попытка разблокировать каталог....
+        /// </summary>
+        internal static string _TryUnlockDirectory_RU {
+            get {
+                return ResourceManager.GetString("_TryUnlockDirectory_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Unknown command.
+        /// </summary>
+        internal static string _UnknownCommand_EN {
+            get {
+                return ResourceManager.GetString("_UnknownCommand_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Неизвестная команда.
+        /// </summary>
+        internal static string _UnknownCommand_RU {
+            get {
+                return ResourceManager.GetString("_UnknownCommand_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Unlock success.
+        /// </summary>
+        internal static string _UnlockSuccess_EN {
+            get {
+                return ResourceManager.GetString("_UnlockSuccess_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Разблокировано успешно.
+        /// </summary>
+        internal static string _UnlockSuccess_RU {
+            get {
+                return ResourceManager.GetString("_UnlockSuccess_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Username:.
+        /// </summary>
+        internal static string _Username_EN {
+            get {
+                return ResourceManager.GetString("_Username_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Имя пользователя:.
+        /// </summary>
+        internal static string _Username_RU {
+            get {
+                return ResourceManager.GetString("_Username_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на userprofile.
+        /// </summary>
+        internal static string _Userprofile_EN {
+            get {
+                return ResourceManager.GetString("_Userprofile_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на профиль пользователя.
+        /// </summary>
+        internal static string _Userprofile_RU {
+            get {
+                return ResourceManager.GetString("_Userprofile_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The value was set to 1.
+        /// </summary>
+        internal static string _ValueSetTo1_EN {
+            get {
+                return ResourceManager.GetString("_ValueSetTo1_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Задано значение 1.
+        /// </summary>
+        internal static string _ValueSetTo1_RU {
+            get {
+                return ResourceManager.GetString("_ValueSetTo1_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The value was created.
+        /// </summary>
+        internal static string _ValueWasCreated_EN {
+            get {
+                return ResourceManager.GetString("_ValueWasCreated_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Параметр был создан.
+        /// </summary>
+        internal static string _ValueWasCreated_RU {
+            get {
+                return ResourceManager.GetString("_ValueWasCreated_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Version:.
+        /// </summary>
+        internal static string _Version_EN {
+            get {
+                return ResourceManager.GetString("_Version_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Версия:.
+        /// </summary>
+        internal static string _Version_RU {
+            get {
+                return ResourceManager.GetString("_Version_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Watchdog process.
+        /// </summary>
+        internal static string _WatchdogProcess_EN {
+            get {
+                return ResourceManager.GetString("_WatchdogProcess_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сторожевой процесс.
+        /// </summary>
+        internal static string _WatchdogProcess_RU {
+            get {
+                return ResourceManager.GetString("_WatchdogProcess_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Activated WinPE mode. Specified drive letter -.
+        /// </summary>
+        internal static string _WinPEMode_EN {
+            get {
+                return ResourceManager.GetString("_WinPEMode_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Активирован режим WinPE. Указанная буква диска -.
+        /// </summary>
+        internal static string _WinPEMode_RU {
+            get {
+                return ResourceManager.GetString("_WinPEMode_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Windows version:.
+        /// </summary>
+        internal static string _Winver_EN {
+            get {
+                return ResourceManager.GetString("_Winver_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Версия Windows:.
+        /// </summary>
+        internal static string _Winver_RU {
+            get {
+                return ResourceManager.GetString("_Winver_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на N1mbPahalSypYxpkvcdnpowATS5bhcxLqp/OMOQq2EXWsENsC7MrWXHQQfHIJtGSqFL23G6YMoI2z/DS2iQSxt0KrpGG2NdwxwfZ3qoL33D0xZ9YgFHmjG+70Y95FyXAXctkNmgjVsmsKstbKBiiTApHL9U80dqCvPuWVfK22uj05baxWU6L9CQqEyofWsmJ2QClniFW3U0PhFcgP7NzJI19gareWGvW3sqNX83vaDXpz5g3sIQ0AVdf4J7Tdk1AN88YG6zGc5qIP2tVNvxDa002Go3/sR1EFgqSQx7lAecczNTPtdcSQnVeAPt01yC2+I7xkgQwLulJ+P9+u79g7tEcqb91uugUvsFJpx7mdONrigTYIMFF1cPYiM69Fv4Ehcey55ALhNd+xgXCgppuPUwTaaD4EWyfgXztcrXUYE8Luus4NExl66Ot17VzAiQIyKwx0MjalQiRIsW/HmJLk4hA8Dmaqy+Vc69p7jM8qZoJHBH3gT5kpwzo8ybkAEaI [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string rawdata {
+            get {
+                return ResourceManager.GetString("rawdata", resourceCulture);
             }
         }
         

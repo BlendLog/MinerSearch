@@ -70,15 +70,15 @@ namespace MinerSearch
             return obfs(original, new object[] { numberToObf });
         }
 
-        public static string Create(string base64CipherText, byte[] Key, byte[] IV)
+        public static string Create(string base64CipherText, string Key, string IV)
         {
             byte[] cipherText = Convert.FromBase64String(base64CipherText);
             string plaintext = null;
 
             using (Aes aesAlg = Aes.Create())
             {
-                aesAlg.Key = Key;
-                aesAlg.IV = IV;
+                aesAlg.Key = ConvertBase64ToBytes(Key);
+                aesAlg.IV = ConvertBase64ToBytes(IV);
 
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
@@ -96,16 +96,17 @@ namespace MinerSearch
             return plaintext;
         }
 
-        public static byte[] DecryptBytes(byte[] cipherBytes, byte[] key, byte[] iv)
+        public static byte[] Decrypt(string cipherBase64, string key, string iv)
         {
+            byte[] cipherText = Convert.FromBase64String(cipherBase64);
             using (Aes aesAlg = Aes.Create())
             {
-                aesAlg.Key = key;
-                aesAlg.IV = iv;
+                aesAlg.Key = ConvertBase64ToBytes(key);
+                aesAlg.IV = ConvertBase64ToBytes(iv);
 
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-                using (MemoryStream msDecrypt = new MemoryStream(cipherBytes))
+                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
                 {
                     using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {
@@ -117,6 +118,11 @@ namespace MinerSearch
                     }
                 }
             }
+        }
+
+        public static byte[] ConvertBase64ToBytes(string base64String)
+        {
+            return Convert.FromBase64String(base64String);
         }
     }
 }
