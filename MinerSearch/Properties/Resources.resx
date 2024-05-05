@@ -149,10 +149,10 @@
     <value>Анализ</value>
   </data>
   <data name="_AppAlreadyRunning_EN" xml:space="preserve">
-    <value>Another copy of the application is already running. Display a help message?</value>
+    <value>Another copy of the application is already running. For display help message use --help option</value>
   </data>
   <data name="_AppAlreadyRunning_RU" xml:space="preserve">
-    <value>Другая копия приложения уже запущена. Вывести сообщение справки?</value>
+    <value>Другая копия приложения уже запущена. Для вызова справки используйте параметр --help</value>
   </data>
   <data name="_AppInitNotEmpty_EN" xml:space="preserve">
     <value>A?ppIn??it_DLL?s is not empty</value>
@@ -334,6 +334,12 @@
   <data name="_ErrorDisabledScan_RU" xml:space="preserve">
     <value>Ошибка: невозможно отключить все типы сканирования</value>
   </data>
+  <data name="_ErrorNoDotNet_EN" xml:space="preserve">
+    <value>NET Framework version 4.5.2 or higher is required to run this application. Check this component and try again</value>
+  </data>
+  <data name="_ErrorNoDotNet_RU" xml:space="preserve">
+    <value>Для работы приложения требуется .NET Framework 4.5.2 и выше. Проверьте установлен ли компонент и повторите попытку</value>
+  </data>
   <data name="_ErrorOnUnlock_EN" xml:space="preserve">
     <value>Error on unlock</value>
   </data>
@@ -352,10 +358,10 @@
   <data name="_ErrorTaskDeleteFail_RU" xml:space="preserve">
     <value>Не удалось удалить задачу</value>
   </data>
-  <data name="_ErrorTermitateProcess_EN" xml:space="preserve">
+  <data name="_ErrorTerminateProcess_EN" xml:space="preserve">
     <value>Failed to terminate ma?li?ci?ou?s process:</value>
   </data>
-  <data name="_ErrorTermitateProcess_RU" xml:space="preserve">
+  <data name="_ErrorTerminateProcess_RU" xml:space="preserve">
     <value>Не удалось завершить вредоносный процесс:</value>
   </data>
   <data name="_ErrorVerifySignature_EN" xml:space="preserve">

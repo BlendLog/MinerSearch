@@ -395,7 +395,7 @@ namespace MinerSearch
             Logger.WriteLog($"\t[#] {message}".Replace("?", ""), ConsoleColor.Blue);
         }
 
-        string GetLocalizedMessage(string ResourceKey)
+        internal string GetLocalizedMessage(string ResourceKey)
         {
             string message = string.Empty;
             switch (Program.ActiveLanguage)

@@ -90,6 +90,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -176,7 +177,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd /d D:\CSHARP\MinerSearch\MinerSearch\bin\Release
-ILMerge.exe /ndebug MinerSearch.exe Microsoft.Win32.TaskScheduler.dll /out:MinerSearch_v1.4.7.0.exe</PostBuildEvent>
+ILMerge.exe /ndebug MinerSearch.exe Microsoft.Win32.TaskScheduler.dll /out:MinerSearch_v1.4.7.1.exe</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

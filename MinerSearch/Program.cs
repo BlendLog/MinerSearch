@@ -19,6 +19,7 @@ namespace MinerSearch
         public static bool no_scantime = false;
         public static bool no_runtime = false;
         public static bool no_services = false;
+        public static bool no_scan_tasks = false;
         public static bool pause = false;
         public static bool help = false;
         public static bool RemoveEmptyTasks = false;
@@ -34,8 +35,23 @@ namespace MinerSearch
 
         static void Main(string[] args)
         {
+
             LocalizedLogger LL = new LocalizedLogger();
             Utils utils = new Utils();
+
+            ActiveLanguage = Utils.GetSystemLanguage();
+
+            if (!Utils.IsDotNetInstalled())
+            {
+                MessageBox.Show(LL.GetLocalizedMessage("_ErrorNoDotNet"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Environment.Exit(1);
+            }
+
+            if (!Utils.IsOneAppCopy())
+            {
+                MessageBox.Show(LL.GetLocalizedMessage("_AppAlreadyRunning"), Console.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                Environment.Exit(1);
+            }
 
 #if !DEBUG
             if (!args.Intersect(new string[] { "--debug" }).Any())
@@ -67,7 +83,6 @@ namespace MinerSearch
                 WaterMark();
             }
 
-            ActiveLanguage = Utils.GetSystemLanguage();
 
 #if !DEBUG
             LL.LogJustDisplayMessage("\t\t",$"_RelevantVer", "https://github.com/BlendLog/MinerSearch/releases \n", ConsoleColor.White);
@@ -75,15 +90,7 @@ namespace MinerSearch
 
             if (Utils.IsStartedFromArchive())
             {
-                switch (ActiveLanguage)
-                {
-                    case "RU":
-                        MessageBox.Show(Resources._ArchiveWarn_RU, Resources._ArchiveWarn_caption_RU, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        break;
-                    case "EN":
-                        MessageBox.Show(Resources._ArchiveWarn_EN, Resources._ArchiveWarn_caption_EN, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        break;
-                }
+                MessageBox.Show(LL.GetLocalizedMessage("_ArchiveWarn"), LL.GetLocalizedMessage("_ArchiveWarn_caption"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Environment.Exit(1);
             }
 
@@ -116,27 +123,7 @@ namespace MinerSearch
                 }
             }
 
-            if (!Utils.IsOneAppCopy())
-            {
-                DialogResult message = DialogResult.None;
-                switch (ActiveLanguage)
-                {
-                    case "RU":
-                        message = MessageBox.Show(Resources._AppAlreadyRunning_RU, Console.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                        break;
-                    case "EN":
-                        message = MessageBox.Show(Resources._AppAlreadyRunning_EN, Console.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                        break;
-                }
-                if (message == DialogResult.Yes)
-                {
-                    args = new string[] { "--help" };
-                }
-                else
-                {
-                    Environment.Exit(0);
-                }
-            }
+
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
@@ -182,6 +169,10 @@ namespace MinerSearch
                     else if (arg == "--no-runtime")
                     {
                         no_runtime = true;
+                    }
+                    else if (arg == "--no-scan-tasks")
+                    {
+                        no_scan_tasks = true;
                     }
                     else if (arg == "--pause")
                     {
@@ -259,6 +250,11 @@ namespace MinerSearch
                         return;
                     }
                 }
+            }
+
+            if (!WinPEMode)
+            {
+                drive_letter = Environment.GetEnvironmentVariable("systemdrive").Remove(1);
             }
 
 #if !DEBUG

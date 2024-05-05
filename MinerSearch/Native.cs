@@ -93,6 +93,24 @@ namespace MinerSearch
         [DllImport("user32.dll", EntryPoint = "GetClassLongPtr")]
         internal static extern IntPtr GetClassLong64(IntPtr hWnd, int nIndex);
 
+        [DllImport("kernel32.dll")]
+        internal static extern void GetNativeSystemInfo(ref SYSTEM_INFO lpSystemInfo);
+
+        [DllImport("Netapi32.dll", CharSet = CharSet.Unicode)]
+        internal static extern int NetUserEnum(string servername, int level, int filter, out IntPtr bufptr, int prefmaxlen, out int entriesread, out int totalentries, ref int resume_handle);
+
+        [DllImport("Netapi32.dll", SetLastError = true)]
+        internal static extern int NetApiBufferFree(IntPtr Buffer);
+
+        [DllImport("Netapi32.dll", CharSet = CharSet.Unicode)]
+        internal static extern int NetUserDel(string servername, string username);
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        internal struct USER_INFO_0
+        {
+            public string Username;
+        }
+
 
         [StructLayout(LayoutKind.Sequential)]
         public struct SECURITY_ATTRIBUTES
@@ -215,7 +233,7 @@ namespace MinerSearch
         public const uint TOKEN_QUERY = 0x0008;
         public const uint TOKEN_ADJUST_PRIVILEGES = 0x0020;
         public const uint SE_PRIVILEGE_ENABLED = 0x00000002;
-        public static string SE_SECURITY_NAME = "SeSe~cur~ity~Pr~ivi~leg~e".Replace("~","");
+        public static string SE_SECURITY_NAME = "SeSe~cur~ity~Pr~ivi~leg~e".Replace("~", "");
         public static string SE_TAKE_OWNERSHIP_NAME = "S~eTa~keOw~ner~ship~Privi~leg~e".Replace("~", "");
         public const int SM_CLEANBOOT = 67;
 
@@ -303,6 +321,7 @@ namespace MinerSearch
             Windows_11_21H2 = 22000,
             Windows_11_22H2 = 22621,
             Windows_11_23H2 = 22631,
+            Windows_11_24H2 = 26058,
         };
 
         internal static IntPtr GetClassLongPtr(IntPtr hWnd, int nIndex)
@@ -311,6 +330,22 @@ namespace MinerSearch
                 return new IntPtr((long)GetClassLong32(hWnd, nIndex));
             else
                 return GetClassLong64(hWnd, nIndex);
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct SYSTEM_INFO
+        {
+            public ushort wProcessorArchitecture;
+            public ushort wReserved;
+            public uint dwPageSize;
+            public IntPtr lpMinimumApplicationAddress;
+            public IntPtr lpMaximumApplicationAddress;
+            public UIntPtr dwActiveProcessorMask;
+            public uint dwNumberOfProcessors;
+            public uint dwProcessorType;
+            public uint dwAllocationGranularity;
+            public ushort wProcessorLevel;
+            public ushort wProcessorRevision;
         }
     }
 
@@ -645,7 +680,7 @@ namespace MinerSearch
 
         private static void StartService(IntPtr service)
         {
-            
+
             StartService(service, 0, 0);
 
             var changedStatus = WaitForServiceStatus(service, ServiceState.StartPending, ServiceState.Running);

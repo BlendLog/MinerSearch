@@ -4,6 +4,7 @@ using Microsoft.Win32.TaskScheduler;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.DirectoryServices.AccountManagement;
 using System.Drawing;
 using System.IO;
 using System.IO.Compression;
@@ -31,7 +32,7 @@ namespace MinerSearch
         WinTrust winTrust = new WinTrust();
 
         static string query = Bfs.Create("AMtoxtzwhhVorHrU4S/HRE5WvrPtVVxIbAjhumQAeX5MPifo52GuIYkhKMLfYGT4XXdcWarMJmFH2FQffcEwMg==", "8ynS5yiEgcgdKBEK5RRgLNlNG3kYG6eE9zkKalcqn14=", "JfqpmZ9I1tTetkz9pwPKSg=="); //SELECT CommandLine FROM Win32_Process WHERE ProcessId = 
-        static string BitVersionStr = Bfs.Create("ZhsF9lq3O+2hp0sSsvh97kbwK/KWx5RpfitoVCyIhfiu6Omu5UaX0s4AVSZymP/E", "K0HQJVQIXMo1jG7aK6lZlEly2XGdPofFVOMTqRdam50=", "9OTJDTgjwUfbShVAfuHi8Q=="); //HARDWARE\Description\System\CentralProcessor\0
+        static string batchSig = Bfs.Create("1y7xzbsrn9HjEYCdmrP4F0xELM4Wshf5/5UbnYIs2nA=", "igHNg8aGF9P/8w+QwNQ0CS7YEAejoefLga1NUG3UjSE=", "GzxN7/iyM+xipDU+5vHsvA=="); //Add-MpPreference -ExclusionPath
 
         [Serializable]
         public class RenamedFileInfo
@@ -344,7 +345,7 @@ namespace MinerSearch
             catch (Exception ex)
             {
                 new LocalizedLogger().LogErrorMessage("_Error", ex);
-                
+
                 return "";
             }
 
@@ -486,12 +487,12 @@ namespace MinerSearch
                 if (currentDepth <= maxDepth)
                 {
                     files.AddRange(Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly));
-                    foreach (var directory in Directory.GetDirectories(path))
+                    foreach (var directory in Directory.EnumerateDirectories(path))
                     {
                         if (!directory.Contains(":\\Windows\\WinSxS") &&
                             !directory.Contains(":\\$") &&
                             !directory.Contains("minersearch_quarantine") &&
-                            !directory.Contains(@":\ProgramData\Microsoft\Windows\Containers\BaseImages") &&
+                            !directory.Contains(@":\programdata\microsoft\Windows\Containers\BaseImages") &&
                             !directory.Contains(@"AppData\Local\Microsoft\WindowsApps"))
                         {
                             files.AddRange(GetFiles(directory, pattern, currentDepth + 1, maxDepth));
@@ -524,7 +525,7 @@ namespace MinerSearch
                     {
                         if (osInfo.dwBuildNumber == (uint)version)
                         {
-                            string WinVerion = $"{version.ToString().Replace('_', ' ')} {osInfo.dwBuildNumber}";
+                            string WinVerion = $"{version.ToString().Replace('_', ' ')} {osInfo.dwBuildNumber} {GetPlatform()}";
                             return WinVerion;
                         }
                     }
@@ -546,16 +547,19 @@ namespace MinerSearch
             return (BootMode)Native.GetSystemMetrics(Native.SM_CLEANBOOT);
         }
 
-        internal static string getBitVersion()
+        internal static string GetPlatform()
         {
-            if (Registry.LocalMachine.OpenSubKey(BitVersionStr).GetValue("Id?enti?fier".Replace("?", "")).ToString().Contains("x86"))
+            Native.SYSTEM_INFO lpSystemInfo = new Native.SYSTEM_INFO();
+            Native.GetNativeSystemInfo(ref lpSystemInfo);
+            switch (lpSystemInfo.wProcessorArchitecture)
             {
-                return "x32";
+                case 0:
+                    return "(x86)";
+
+                case 9:
+                    return "(x64)";
             }
-            else
-            {
-                return "x64";
-            }
+            return "";
         }
 
         internal static List<byte[]> RestoreSignatures(List<byte[]> signatures)
@@ -564,7 +568,7 @@ namespace MinerSearch
             {
                 for (int i = 0; i < sig.Length; i++)
                 {
-                    if (sig[i] / 2 == 0)
+                    if (i / 2 == 0)
                     {
                         sig[i] += 1;
                     }
@@ -580,40 +584,53 @@ namespace MinerSearch
 
         internal static bool CheckUserExists(string username)
         {
-            Process net = Process.Start(new ProcessStartInfo()
-            {
-                FileName = "cmd",
-                Arguments = "/c net user",
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                StandardOutputEncoding = Encoding.GetEncoding(866),
-                StandardErrorEncoding = Encoding.GetEncoding(866)
-            });
-
-            string strOut = net.StandardOutput.ReadToEnd();
 #if DEBUG
-            string strErr = net.StandardError.ReadToEnd();
-            int exitCode = net.ExitCode;
-
-            Logger.WriteLog("\t[.] strOutput: " + strOut, ConsoleColor.DarkGray, false);
-            Logger.WriteLog("\t[.] strError: " + strErr, ConsoleColor.DarkGray, false);
-            Logger.WriteLog("\t[.] exit code: " + exitCode, ConsoleColor.DarkGray, false);
+            var users = GetUsers();
+            foreach (var user in users)
+            {
+                Logger.WriteLog(user, ConsoleColor.DarkGray, false);
+            }
 #endif
-            return strOut.ToLower().Contains(username);
-
+            return GetUsers().Contains(username);
         }
 
-        internal static void DeleteUser(string username)
+        internal static List<string> GetUsers()
         {
-            Process.Start(new ProcessStartInfo()
+            const int MAX_PREFERRED_LENGTH = -1;
+            const int NERR_Success = 0;
+            IntPtr bufPtr;
+            int entriesRead, totalEntries;
+            int resumeHandle = 0;
+
+            List<string> users = new List<string>();
+
+            int result = Native.NetUserEnum(null, 0, 2, out bufPtr, MAX_PREFERRED_LENGTH, out entriesRead, out totalEntries, ref resumeHandle);
+
+            if (result == NERR_Success)
             {
-                FileName = "net",
-                Arguments = $"user /delete {username}",
-                UseShellExecute = false,
-                CreateNoWindow = true
-            });
+                IntPtr current = bufPtr;
+
+                for (int i = 0; i < entriesRead; i++)
+                {
+                    Native.USER_INFO_0 userInfo = (Native.USER_INFO_0)Marshal.PtrToStructure(current, typeof(Native.USER_INFO_0));
+                    users.Add(userInfo.Username);
+                    current += Marshal.SizeOf(typeof(Native.USER_INFO_0));
+                }
+
+                Native.NetApiBufferFree(bufPtr);
+            }
+
+            return users;
+        }
+
+        internal static void DeleteUser(string userName)
+        {
+            PrincipalContext ctx = new PrincipalContext(ContextType.Machine);
+            UserPrincipal usrp = new UserPrincipal(ctx);
+            usrp.Name = userName;
+            PrincipalSearcher ps_usr = new PrincipalSearcher(usrp);
+            var user = ps_usr.FindOne();
+            user.Delete();
         }
 
         internal void CheckWMI()
@@ -786,6 +803,41 @@ namespace MinerSearch
 
         }
 
+        internal static bool CheckDynamicSignature(string filePath, int offset, byte[] startSequence, byte[] endSequence)
+        {
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                byte[] buffer = new byte[fs.Length];
+                fs.Read(buffer, 0, buffer.Length);
+
+                byte[] sequenceInRange = new byte[16];
+                Array.Copy(buffer, offset, sequenceInRange, 0, sequenceInRange.Length);
+
+                bool isStartSequence = true;
+                for (int i = 0; i < startSequence.Length; i++)
+                {
+                    if (sequenceInRange[i] != startSequence[i])
+                    {
+                        isStartSequence = false;
+                        break;
+                    }
+                }
+
+                bool isEndSequence = true;
+                for (int i = endSequence.Length - 1; i >= 0; i--)
+                {
+                    if (sequenceInRange[sequenceInRange.Length - endSequence.Length + i] != endSequence[i])
+                    {
+                        isEndSequence = false;
+                        break;
+                    }
+                }
+
+
+                return isStartSequence && isEndSequence;
+            }
+        }
+
         static bool ContainsOnlyZeros(byte[] sequenceBytes)
         {
             foreach (byte b in sequenceBytes)
@@ -811,6 +863,8 @@ namespace MinerSearch
             }
             return true;
         }
+
+       
 
         static int SequenceSum(string strBytes)
         {
@@ -1205,6 +1259,35 @@ namespace MinerSearch
             }
         }
 
+        internal bool IsBatchFileBad(string filePath)
+        {
+            try
+            {
+                if (!File.Exists(filePath))
+                {
+                    return false;
+                }
+
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (line.IndexOf(batchSig, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                new LocalizedLogger().LogErrorMessage("_ErrorAnalyzingFile", ex, filePath);
+            }
+
+            return false;
+        }
+
         internal void ProccedFileFromArgs(string fullpath, string arguments)
         {
             LocalizedLogger LL = new LocalizedLogger();
@@ -1372,6 +1455,15 @@ namespace MinerSearch
             Array.Copy(fileBytes, 0, encryptedFileBytes, markerBytes.Length, fileBytes.Length);
 
             File.WriteAllBytes(encryptedFilePath, encryptedFileBytes);
+
+            try
+            {
+                File.Delete(sourceFilePath);
+            }
+            catch (Exception ex)
+            {
+                new LocalizedLogger().LogErrorMessage("_ErrorCannotRemove", ex, sourceFilePath, "_File");
+            }
         }
 
         internal static void RestoreFromQuarantine(string encryptedFilePath, string restoredFilePath, byte[] key)
@@ -1435,6 +1527,23 @@ namespace MinerSearch
                     return args[1] + "\\" + args[0];
             }
             return "N/A";
+        }
+
+        internal static bool IsDotNetInstalled()
+        {
+            const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full";
+            using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(subkey))
+            {
+                if (ndpKey != null && ndpKey.GetValue("Release") != null)
+                {
+                    int releaseKey = (int)ndpKey.GetValue("Release");
+                    return releaseKey >= 378389;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
         internal void CreateSignatureRestrictedProcess(string path)

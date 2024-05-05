@@ -133,7 +133,7 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Another copy of the application is already running. Display a help message?.
+        ///   Ищет локализованную строку, похожую на Another copy of the application is already running. For display help message use --help option.
         /// </summary>
         internal static string _AppAlreadyRunning_EN {
             get {
@@ -142,7 +142,7 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Другая копия приложения уже запущена. Вывести сообщение справки?.
+        ///   Ищет локализованную строку, похожую на Другая копия приложения уже запущена. Для вызова справки используйте параметр --help.
         /// </summary>
         internal static string _AppAlreadyRunning_RU {
             get {
@@ -709,6 +709,24 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на NET Framework version 4.5.2 or higher is required to run this application. Check this component and try again.
+        /// </summary>
+        internal static string _ErrorNoDotNet_EN {
+            get {
+                return ResourceManager.GetString("_ErrorNoDotNet_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Для работы приложения требуется .NET Framework 4.5.2 и выше. Проверьте установлен ли компонент и повторите попытку.
+        /// </summary>
+        internal static string _ErrorNoDotNet_RU {
+            get {
+                return ResourceManager.GetString("_ErrorNoDotNet_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Error on unlock.
         /// </summary>
         internal static string _ErrorOnUnlock_EN {
@@ -765,18 +783,18 @@ namespace MinerSearch.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Failed to terminate ma?li?ci?ou?s process:.
         /// </summary>
-        internal static string _ErrorTermitateProcess_EN {
+        internal static string _ErrorTerminateProcess_EN {
             get {
-                return ResourceManager.GetString("_ErrorTermitateProcess_EN", resourceCulture);
+                return ResourceManager.GetString("_ErrorTerminateProcess_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Не удалось завершить вредоносный процесс:.
         /// </summary>
-        internal static string _ErrorTermitateProcess_RU {
+        internal static string _ErrorTerminateProcess_RU {
             get {
-                return ResourceManager.GetString("_ErrorTermitateProcess_RU", resourceCulture);
+                return ResourceManager.GetString("_ErrorTerminateProcess_RU", resourceCulture);
             }
         }
         
