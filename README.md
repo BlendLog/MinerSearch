@@ -5,6 +5,18 @@
 
 ### ВНИМАНИЕ! Некоторые антивирусы помечают этот проект как троян. Это ложное срабатывание, просто добавьте исполняемый файл в исключение антивируса
 
+Версия 1.4.7.1
+
+- Добавлено обнаружение вредоносной версии утилиты печати (print.exe)
+- Добавлена проверка Установщика Windows (msiexec.exe)
+- добавлена проверка установленного пакета NET Framework 4.5.X
+- Исправлено зависание утилиты при сканировании процессов, если систем несколько
+- Исправление ошибок локализации
+- Корректная проверка powershell
+- Нативная проверка имени пользователя
+- добавлен параметр --no-scan-tasks для пропуска сканирования задач планировщика
+- обновление сигнатур
+
 Версия 1.4.7.0
 
 - Добавлен перевод на русский
@@ -107,27 +119,24 @@
 - Сканирование файла hosts теперь выполняется в конце
 - Исправлен баг с пропуском дубликатов задач в планировщике задач
 
-Версия v1.4
-
-- Переработан алгоритм проверки и удаления вредоносных каталогов / файлов
-- Добавлена проверка планировщика задач
-- Переработать алгоритм парсинга пути приложения в автозапуске из реестра
-- Добавлена проверка, действительно ли процесс приостановлен
-- Добавлена функция переименования вредоносных файлов процессов
-- Добавлен вызов справки --help
-- Переработана проверка цифровой подписи
-- Текст в логе теперь не дублируется
-- Исправлен баг, когда входная строка имела неверный формат
-- Добавлена проверка родительского процесса
-
-Для запуска требуется NET Framework 4.5.2 (до 1.4.5)
-
 ---------------------------------------------------
 
 This program is designed to find and destroy hidden miners.
 It is an auxiliary tool for searching suspicious files, directories, processes, etc. and is NOT an antivirus.
 
 ### ATTENTION! Some antiviruses mark this project as a Trojan. This is a false positive, just add the executable file to the antivirus exception.
+
+Version 1.4.7.1
+
+- Added detection of a malicious version of the printing utility (print.exe )
+- Added Windows Installer check (msiexec.exe )
+- added verification of the installed NET Framework 4.5.X package
+- Fixed the utility hanging when scanning processes if there are several systems
+- Fixed localization typos
+- Correct powershell check
+- user name check now use native functions 
+- added the --no-scan-tasks parameter to skip scanning of scheduler tasks
+- updating signatures
 
 Version 1.4.7.0
 
@@ -229,20 +238,6 @@ Version v1.4.2
 - Deleting directories and restoring rights to them is performed separately
 - The hosts file is now scanned at the end
 - Fixed a bug with missing duplicate tasks in the task scheduler
-
-
-Version v1.4
-
-- Redesigned algorithm for checking and removing malicious directories/files
-- Added task scheduler check
-- Rework the algorithm for parsing the application path in autorun from the registry
-- Added a check whether the process is really suspended
-- Added the function of renaming malicious process files
-- Added a call to help --help
-- Redesigned digital signature verification
-- The text in the log is no longer duplicated
-- Fixed a bug when the input string had an incorrect format
-- Added parent process verification
 
 --------------------------------------------------------------
 
