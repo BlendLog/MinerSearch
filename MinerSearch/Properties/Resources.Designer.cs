@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MinerSearch.Properties {
+namespace MSearch.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace MinerSearch.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MinerSearch.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MSearch.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -457,7 +457,7 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Critical service has been restalted.
+        ///   Ищет локализованную строку, похожую на Critical service has been restarted.
         /// </summary>
         internal static string _CriticalServiceRestart_EN {
             get {
@@ -723,6 +723,24 @@ namespace MinerSearch.Properties {
         internal static string _ErrorNoDotNet_RU {
             get {
                 return ResourceManager.GetString("_ErrorNoDotNet_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Important components could not be loaded, as the archive was probably not fully extracted..
+        /// </summary>
+        internal static string _ErrorNotFoundComponent_EN {
+            get {
+                return ResourceManager.GetString("_ErrorNotFoundComponent_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось загрузить важные компоненты, так как вероятно архив был извлечён не полностью. .
+        /// </summary>
+        internal static string _ErrorNotFoundComponent_RU {
+            get {
+                return ResourceManager.GetString("_ErrorNotFoundComponent_RU", resourceCulture);
             }
         }
         
@@ -1119,6 +1137,24 @@ namespace MinerSearch.Properties {
         internal static string _HostsFileMissing_RU {
             get {
                 return ResourceManager.GetString("_HostsFileMissing_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ho??sts file has been recovered. Affected strings:.
+        /// </summary>
+        internal static string _HostsFileRecovered_EN {
+            get {
+                return ResourceManager.GetString("_HostsFileRecovered_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл ho??s?ts был восстановлен. Удалено строк:.
+        /// </summary>
+        internal static string _HostsFileRecovered_RU {
+            get {
+                return ResourceManager.GetString("_HostsFileRecovered_RU", resourceCulture);
             }
         }
         
@@ -2146,7 +2182,7 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на SFX Archive:.
+        ///   Ищет локализованную строку, похожую на S???F????X A????rch???i????ve??:.
         /// </summary>
         internal static string _sfxArchive_EN {
             get {
@@ -2155,7 +2191,7 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на SFX Архив:.
+        ///   Ищет локализованную строку, похожую на ????S??F?X?? А?р?хив:.
         /// </summary>
         internal static string _sfxArchive_RU {
             get {
@@ -2614,7 +2650,7 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Windows version:.
+        ///   Ищет локализованную строку, похожую на Wi?ndo?ws ??ve??rsion:.
         /// </summary>
         internal static string _Winver_EN {
             get {
@@ -2623,30 +2659,11 @@ namespace MinerSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Версия Windows:.
+        ///   Ищет локализованную строку, похожую на Версия W??indo??ws:.
         /// </summary>
         internal static string _Winver_RU {
             get {
                 return ResourceManager.GetString("_Winver_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на N1mbPahalSypYxpkvcdnpowATS5bhcxLqp/OMOQq2EXWsENsC7MrWXHQQfHIJtGSqFL23G6YMoI2z/DS2iQSxt0KrpGG2NdwxwfZ3qoL33D0xZ9YgFHmjG+70Y95FyXAXctkNmgjVsmsKstbKBiiTApHL9U80dqCvPuWVfK22uj05baxWU6L9CQqEyofWsmJ2QClniFW3U0PhFcgP7NzJI19gareWGvW3sqNX83vaDXpz5g3sIQ0AVdf4J7Tdk1AN88YG6zGc5qIP2tVNvxDa002Go3/sR1EFgqSQx7lAecczNTPtdcSQnVeAPt01yC2+I7xkgQwLulJ+P9+u79g7tEcqb91uugUvsFJpx7mdONrigTYIMFF1cPYiM69Fv4Ehcey55ALhNd+xgXCgppuPUwTaaD4EWyfgXztcrXUYE8Luus4NExl66Ot17VzAiQIyKwx0MjalQiRIsW/HmJLk4hA8Dmaqy+Vc69p7jM8qZoJHBH3gT5kpwzo8ybkAEaI [остаток строки не уместился]&quot;;.
-        /// </summary>
-        internal static string rawdata {
-            get {
-                return ResourceManager.GetString("rawdata", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
-        /// </summary>
-        internal static byte[] rktest {
-            get {
-                object obj = ResourceManager.GetObject("rktest", resourceCulture);
-                return ((byte[])(obj));
             }
         }
     }

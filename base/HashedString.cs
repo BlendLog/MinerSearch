@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace MSearch
+namespace DBase
 {
     public class HashedString : IEnumerable<char>
     {

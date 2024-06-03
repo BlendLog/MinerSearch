@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9A4C3043-8FD0-4F41-B012-FAB8DE92CE0D}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>MinerSearch</RootNamespace>
+    <RootNamespace>MSearch</RootNamespace>
     <AssemblyName>MinerSearch</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -80,10 +80,22 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="dbase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Release\dbase.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.10.1.0, Culture=neutral, PublicKeyToken=e25603a88b3aa7da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Resources\Microsoft.Win32.TaskScheduler.dll</HintPath>
@@ -106,8 +118,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bfs.cs" />
-    <Compile Include="HashedString.cs" />
     <Compile Include="License.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -131,14 +141,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="app.manifest" />
-    <None Include="Resources\rktest.bin" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="256.ico" />
     <Content Include="64.ico" />
     <Content Include="msch.ico" />
-    <None Include="Resources\rawdata.txt" />
-    <Content Include="Resources\rk_remove.c" />
     <None Include="bin\Release\Microsoft.Win32.TaskScheduler.dll" />
   </ItemGroup>
   <ItemGroup>
@@ -174,10 +181,13 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>cd /d D:\CSHARP\MinerSearch\MinerSearch\bin\Release
-ILMerge.exe /ndebug MinerSearch.exe Microsoft.Win32.TaskScheduler.dll /out:MinerSearch_v1.4.7.1.exe</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

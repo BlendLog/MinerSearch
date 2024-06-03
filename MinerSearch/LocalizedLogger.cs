@@ -1,19 +1,14 @@
-﻿using MinerSearch.Properties;
+﻿using MSearch.Properties;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Resources;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MinerSearch
+namespace MSearch
 {
     public class LocalizedLogger
     {
 
-        ResourceManager resourceManager = new ResourceManager("MinerSearch.Properties.Resources", Assembly.GetExecutingAssembly());
+        ResourceManager resourceManager = new ResourceManager("M$Sear$ch.Properties.Resources".Replace("$", ""), Assembly.GetExecutingAssembly());
 
         #region TopRegion
         internal static void LogPCInfo(string winver, string username, string pcname, BootMode bootmode)
@@ -38,7 +33,7 @@ namespace MinerSearch
                     break;
             }
 
-            Logger.WriteLog($"\t\t{_winver} {winver}", ConsoleColor.DarkGray, false);
+            Logger.WriteLog($"\t\t{_winver} {winver}".Replace("?",""), ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_username} {username}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_pcname} {pcname}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_bootmode} {bootmode}\n", ConsoleColor.DarkGray, false);

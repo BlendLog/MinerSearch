@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace MinerSearch
+namespace MSearch
 {
     public partial class License : Form
     {
@@ -31,7 +31,7 @@ namespace MinerSearch
 
         private void Accept_btn_Click(object sender, EventArgs e)
         {
-            const string registryKeyPath = @"Software\MinerSearch";
+            const string registryKeyPath = @"Software\M1nerSearch";
             const string valueName = "acceptedEula";
             Registry.CurrentUser.CreateSubKey(registryKeyPath).SetValue(valueName, 1);
             Close();

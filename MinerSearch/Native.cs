@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
-namespace MinerSearch
+namespace MSearch
 {
     internal class Native
     {
@@ -68,19 +68,6 @@ namespace MinerSearch
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool InitializeProcThreadAttributeList(IntPtr lpAttributeList, int dwAttributeCount, int dwFlags, ref IntPtr lpSize);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool UpdateProcThreadAttribute(IntPtr lpAttributeList, uint dwFlags, IntPtr Attribute, IntPtr lpValue, IntPtr cbSize, IntPtr lpPreviousValue, IntPtr lpReturnSize);
-
-        [DllImport("kernel32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool CreateProcess(string lpApplicationName, string lpCommandLine, ref SECURITY_ATTRIBUTES lpProcessAttributes, ref SECURITY_ATTRIBUTES lpThreadAttributes,
-            bool bInheritHandles, uint dwCreationFlags, IntPtr lpEnvironment, string lpCurrentDirectory, [In] ref STARTUPINFOEX lpStartupInfo, out PROCESS_INFORMATION lpProcessInformation);
-
         [DllImport("user32.dll")]
         internal static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
@@ -102,62 +89,12 @@ namespace MinerSearch
         [DllImport("Netapi32.dll", SetLastError = true)]
         internal static extern int NetApiBufferFree(IntPtr Buffer);
 
-        [DllImport("Netapi32.dll", CharSet = CharSet.Unicode)]
-        internal static extern int NetUserDel(string servername, string username);
-
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         internal struct USER_INFO_0
         {
             public string Username;
         }
 
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct SECURITY_ATTRIBUTES
-        {
-            public int nLength;
-            public IntPtr lpSecurityDescriptor;
-            [MarshalAs(UnmanagedType.Bool)]
-            public bool bInheritHandle;
-        }
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct STARTUPINFOEX
-        {
-            public STARTUPINFO StartupInfo;
-            public IntPtr lpAttributeList;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct STARTUPINFO
-        {
-            public Int32 cb;
-            public string lpReserved;
-            public string lpDesktop;
-            public string lpTitle;
-            public Int32 dwX;
-            public Int32 dwY;
-            public Int32 dwXSize;
-            public Int32 dwYSize;
-            public Int32 dwXCountChars;
-            public Int32 dwYCountChars;
-            public Int32 dwFillAttribute;
-            public Int32 dwFlags;
-            public Int16 wShowWindow;
-            public Int16 cbReserved2;
-            public IntPtr lpReserved2;
-            public IntPtr hStdInput;
-            public IntPtr hStdOutput;
-            public IntPtr hStdError;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct PROCESS_INFORMATION
-        {
-            public IntPtr hProcess;
-            public IntPtr hThread;
-            public int dwProcessId;
-            public int dwThreadId;
-        }
 
         public enum TcpTableClass
         {
@@ -474,34 +411,6 @@ namespace MinerSearch
         private static extern int StartService(IntPtr hService, int dwNumServiceArgs, int lpServiceArgVectors);
         #endregion
 
-        public static void Uninstall(string serviceName)
-        {
-            IntPtr scm = OpenSCManager(ScmAccessRights.AllAccess);
-
-            try
-            {
-                IntPtr service = OpenService(scm, serviceName, ServiceAccessRights.AllAccess);
-                if (service == IntPtr.Zero)
-                    throw new ApplicationException("Service not installed.");
-
-                try
-                {
-                    StopService(service);
-
-                    if (!DeleteService(service))
-                        throw new ApplicationException("Could not delete service " + Marshal.GetLastWin32Error());
-                }
-                finally
-                {
-                    CloseServiceHandle(service);
-                }
-            }
-            finally
-            {
-                CloseServiceHandle(scm);
-            }
-        }
-
         public static bool ServiceIsInstalled(string serviceName)
         {
             IntPtr scm = OpenSCManager(ScmAccessRights.Connect);
@@ -515,28 +424,6 @@ namespace MinerSearch
 
                 CloseServiceHandle(service);
                 return true;
-            }
-            finally
-            {
-                CloseServiceHandle(scm);
-            }
-        }
-
-        public static void Install(string serviceName, string displayName, string fileName)
-        {
-            IntPtr scm = OpenSCManager(ScmAccessRights.AllAccess);
-
-            try
-            {
-                IntPtr service = OpenService(scm, serviceName, ServiceAccessRights.AllAccess);
-
-                if (service == IntPtr.Zero)
-                    service = CreateService(scm, serviceName, displayName, ServiceAccessRights.AllAccess, SERVICE_WIN32_OWN_PROCESS, ServiceBootFlag.AutoStart, ServiceError.Normal, fileName, null, IntPtr.Zero, null, null, null);
-
-                if (service == IntPtr.Zero)
-                    throw new ApplicationException("Failed to install service.");
-
-                CloseServiceHandle(service);
             }
             finally
             {

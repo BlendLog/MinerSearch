@@ -1,17 +1,16 @@
 ﻿//#define BETA
 
+using DBase;
 using Microsoft.Win32;
-using MinerSearch.Properties;
+using MSearch.Properties;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-
-namespace MinerSearch
+namespace MSearch
 {
     public class Program
     {
@@ -32,15 +31,25 @@ namespace MinerSearch
         public static string drive_letter = "C";
         public static string ActiveLanguage = "";
         internal static BootMode bootMode = Utils.GetBootMode();
+        public static LocalizedLogger LL = new LocalizedLogger();
+        public static Utils _utils = new Utils();
 
         static void Main(string[] args)
         {
-
-            LocalizedLogger LL = new LocalizedLogger();
-            Utils utils = new Utils();
-
             ActiveLanguage = Utils.GetSystemLanguage();
+            try
+            {
+                Init(args);
+            }
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show(LL.GetLocalizedMessage("_ErrorNotFoundComponent"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Environment.Exit(1);
+            }
+        }
 
+        static void Init(string[] args)
+        {
             if (!Utils.IsDotNetInstalled())
             {
                 MessageBox.Show(LL.GetLocalizedMessage("_ErrorNoDotNet"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -53,21 +62,6 @@ namespace MinerSearch
                 Environment.Exit(1);
             }
 
-#if !DEBUG
-            if (!args.Intersect(new string[] { "--debug" }).Any())
-            {
-                if (!args.Intersect(new string[] { "-x-" }).Any())
-                {
-                    StringBuilder argsBuilder = new StringBuilder(" -x-");
-                    foreach (string arg in args)
-                    {
-                        argsBuilder.Append(" " + arg.ToLower());
-                    }
-                    utils.CreateSignatureRestrictedProcess(Path.GetFileName(Application.ExecutablePath) + argsBuilder.ToString());
-                    return;
-                }
-            }
-#endif
             Console.Title = Utils.GetRndString();
 
             var bitmap = (Bitmap)Utils.GetSmallWindowIcon(Process.GetCurrentProcess().MainWindowHandle);
@@ -85,7 +79,7 @@ namespace MinerSearch
 
 
 #if !DEBUG
-            LL.LogJustDisplayMessage("\t\t",$"_RelevantVer", "https://github.com/BlendLog/MinerSearch/releases \n", ConsoleColor.White);
+            LL.LogJustDisplayMessage("\t\t", $"_RelevantVer", "https://github.com/BlendLog/Mi?ne?rSea?rch/releases \n".Replace("?", ""), ConsoleColor.White);
 #endif
 
             if (Utils.IsStartedFromArchive())
@@ -94,7 +88,7 @@ namespace MinerSearch
                 Environment.Exit(1);
             }
 
-            const string registryKeyPath = @"Software\MinerSearch";
+            const string registryKeyPath = @"Software\M1nerSearch";
             const string registryValueName = "acceptedEula";
 
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(registryKeyPath))
@@ -122,8 +116,6 @@ namespace MinerSearch
                     }
                 }
             }
-
-
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
@@ -226,7 +218,7 @@ namespace MinerSearch
                     }
                     else if (arg == "--winpemode")
                     {
-                        drive_letter_lbl:
+                    drive_letter_lbl:
                         LocalizedLogger.LogSpecifyDrive();
                         drive_letter = Console.ReadLine();
                         if (drive_letter.Length > 1 || Utils.IsDigit(drive_letter))
@@ -241,8 +233,6 @@ namespace MinerSearch
                         WinPEMode = true;
                         LocalizedLogger.LogWinPEMode(drive_letter);
                     }
-                    else if (arg == "-x-") continue;
-                    else if (arg == "--debug") continue;
                     else
                     {
                         LocalizedLogger.LogUnknownCommand(arg);
@@ -255,6 +245,7 @@ namespace MinerSearch
             if (!WinPEMode)
             {
                 drive_letter = Environment.GetEnvironmentVariable("systemdrive").Remove(1);
+                Drive.Letter = drive_letter;
             }
 
 #if !DEBUG
@@ -281,7 +272,7 @@ namespace MinerSearch
                 }
             }
 
-            LL.LogMessage("\t\t","_Version", new Version(Application.ProductVersion).ToString(), ConsoleColor.White, false);
+            LL.LogMessage("\t\t", "_Version", new Version(Application.ProductVersion).ToString(), ConsoleColor.White, false);
 
 
             if (!help)
@@ -305,13 +296,13 @@ namespace MinerSearch
             LocalizedLogger.LogPCInfo(Utils.GetWindowsVersion(), Environment.UserName, Environment.MachineName, bootMode);
             Utils.CheckStartupCount();
 
-            var pmodules = Process.GetCurrentProcess().Modules;
+            ProcessModuleCollection pmodules = Process.GetCurrentProcess().Modules;
             foreach (var module in pmodules)
             {
-                if (module.ToString().Contains(Bfs.Create("OnLH99ckgjbaHy775r3XEg==", "vloJ+qqa5fltFaJHVGmfyY1I22SWdjhIPIbu/jjH4IA=", "I3nT7VjzEGh5igxIYxW9XA=="))) //cmdvrt64.dll
+                if (module.ToString().Contains("c~m~d~vrt~64.d~ll".Replace("~", "")))
                 {
                     Console.BackgroundColor = ConsoleColor.Red;
-                    Console.WriteLine(Bfs.Create("ziuPkBXyTgR5Q4o5rRQZeMukZNL8pKum/7ZNY8H/13CT2asXs1XkUX6kbwgyf8n2YBWTeJneAX2maS4L3/OTf48RZ7PE1cLGeLfoTvCcQ3M=", "Yd+ShW9fOuOgNPjCUPSgWNIRazIDhR/YhibliA9+qxk=", "jzX2drTFKRWe9k1x3iGL0w==")); //[!!!!] COMODO VIRTUAL ENVIRONMENT DETECTED! Please, add program to white list!
+                    Console.WriteLine("Please, add the program to ant1v1rus whitelist!");
                     Console.BackgroundColor = ConsoleColor.Black;
 
                     Console.ReadLine();
@@ -320,7 +311,7 @@ namespace MinerSearch
             }
             pmodules = null;
 
-            utils.CheckWMI();
+            _utils.CheckWMI();
 
             Stopwatch startTime = Stopwatch.StartNew();
 
@@ -375,7 +366,6 @@ namespace MinerSearch
 
             Console.Read();
         }
-
         private static void WaterMark()
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;

@@ -1,12 +1,13 @@
-﻿using System;
+﻿//using DBase;
+using System;
 using System.IO;
 
-namespace MinerSearch
+namespace MSearch
 {
     public static class Logger
     {
-        private static readonly string logFileName = $"MinerSearch_{DateTime.Now:dd_mm_yyyy-hh_ss}.log";
-        public static string LogsFolder = Path.Combine(Program.drive_letter + ":\\", "_MinerSearchLogs");
+        private static readonly string logFileName = $"M?in?erSe?a?rch_{DateTime.Now:dd_mm_yyyy-hh_ss}.log".Replace("?", "");
+        public static string LogsFolder = Path.Combine(Program.drive_letter + ":\\", "_M?in?erSe?a?rchLogs".Replace("?",""));
 
         public static readonly ConsoleColor error = ConsoleColor.Red;
         public static readonly ConsoleColor success = ConsoleColor.Green;

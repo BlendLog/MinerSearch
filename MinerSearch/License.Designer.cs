@@ -1,5 +1,5 @@
 ﻿
-namespace MinerSearch
+namespace MSearch
 {
     partial class License
     {

@@ -117,13 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="rawdata" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\rawdata.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="rktest" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\rktest.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="_accept_en" xml:space="preserve">
     <value>Yes</value>
   </data>
@@ -257,7 +250,7 @@
     <value>служба не установлена!</value>
   </data>
   <data name="_CriticalServiceRestart_EN" xml:space="preserve">
-    <value>Critical service has been restalted</value>
+    <value>Critical service has been restarted</value>
   </data>
   <data name="_CriticalServiceRestart_RU" xml:space="preserve">
     <value>Важный для работы компонент (служба) был перезапущен</value>
@@ -339,6 +332,12 @@
   </data>
   <data name="_ErrorNoDotNet_RU" xml:space="preserve">
     <value>Для работы приложения требуется .NET Framework 4.5.2 и выше. Проверьте установлен ли компонент и повторите попытку</value>
+  </data>
+  <data name="_ErrorNotFoundComponent_EN" xml:space="preserve">
+    <value>Important components could not be loaded, as the archive was probably not fully extracted.</value>
+  </data>
+  <data name="_ErrorNotFoundComponent_RU" xml:space="preserve">
+    <value>Не удалось загрузить важные компоненты, так как вероятно архив был извлечён не полностью. </value>
   </data>
   <data name="_ErrorOnUnlock_EN" xml:space="preserve">
     <value>Error on unlock</value>
@@ -502,6 +501,12 @@
   <data name="_HostsFileMissing_RU" xml:space="preserve">
     <value>Файл hosts отсутствует</value>
   </data>
+  <data name="_HostsFileRecovered_EN" xml:space="preserve">
+    <value>Ho??sts file has been recovered. Affected strings:</value>
+  </data>
+  <data name="_HostsFileRecovered_RU" xml:space="preserve">
+    <value>Файл ho??s?ts был восстановлен. Удалено строк:</value>
+  </data>
   <data name="_IncorrectDrive_EN" xml:space="preserve">
     <value>Incorrect drive letter</value>
   </data>
@@ -546,7 +551,7 @@ Question: The software closes during operation / freezes / does not start
 Answer:
 1) Third-party antivirus interferes with normal operation;
 2) incorrect startup parameters / path too long / not installed / important components disabled;
-3) Malicious software blocks its operation - in this case, you need to rename the executable file "MinerSearch_{version number}.exe" to anything else.
+3) Malicious software blocks its operation - in this case, you need to rename the executable file "MinеrSearch_{version number}.exe" to anything else.
 4) There was an error in the code that requires correction. Write about an error in an issue in the official github repository.
 
 This license agreement applies to all copies, and to previous and subsequent versions of the software.
@@ -569,7 +574,7 @@ Click Yes to continue. Click No to exit.</value>
 Ответ: 
 	1) Сторонний антивирус мешает нормальной работе;
 	2) неверные параметры запуска / слишком длинный путь / не установлены / отключены важные компоненты;
-	3) Вредоносное ПО блокирует его работу - в таком случае необходимо переименовать исполняемый файл "MinerSearch_{номер-версии}.exe" в любое другое.
+	3) Вредоносное ПО блокирует его работу - в таком случае необходимо переименовать исполняемый файл "MinеrSearch_{номер-версии}.exe" в любое другое.
 	4) В коде была допущена ошибка, которая требует исправления. Об ошибке писать в issue в официальный репозиторий github. 
 
 Настоящее лицензионное соглашение распространяется на все копии, а также на предыдущие и последующие версии программного обеспечения.
@@ -881,10 +886,10 @@ Press any key to continue...</value>
     <value>службу</value>
   </data>
   <data name="_sfxArchive_EN" xml:space="preserve">
-    <value>SFX Archive:</value>
+    <value>S???F????X A????rch???i????ve??:</value>
   </data>
   <data name="_sfxArchive_RU" xml:space="preserve">
-    <value>SFX Архив:</value>
+    <value>????S??F?X?? А?р?хив:</value>
   </data>
   <data name="_SignedAppInitNotFound_EN" xml:space="preserve">
     <value>RequireSignedAp?pIn??it_DLLs key is not found</value>
@@ -1037,9 +1042,9 @@ Press any key to continue...</value>
     <value>Активирован режим WinPE. Указанная буква диска -</value>
   </data>
   <data name="_Winver_EN" xml:space="preserve">
-    <value>Windows version:</value>
+    <value>Wi?ndo?ws ??ve??rsion:</value>
   </data>
   <data name="_Winver_RU" xml:space="preserve">
-    <value>Версия Windows:</value>
+    <value>Версия W??indo??ws:</value>
   </data>
 </root>

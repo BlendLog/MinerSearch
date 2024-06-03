@@ -6,7 +6,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace MinerSearch
+namespace MSearch
 {
 
     #region WinTrustData struct field enums
@@ -280,7 +280,6 @@ namespace MinerSearch
 
         public WinVerifyTrustResult VerifyEmbeddedSignature(string filePath)
         {
-            LocalizedLogger LL = new LocalizedLogger();
             try
             {
                 WinTrustFileInfo trustFileInfo = new WinTrustFileInfo(filePath);
@@ -293,22 +292,22 @@ namespace MinerSearch
                 switch (result)
                 {
                     case WinVerifyTrustResult.SubjectNotTrusted:
-                        LL.LogWarnMessage("_CertSubjectNotTrusted", filePath);
+                        Program.LL.LogWarnMessage("_CertSubjectNotTrusted", filePath);
                         break;
                     case WinVerifyTrustResult.SubjectExplicitlyDistrusted:
-                        LL.LogWarnMessage("_CertSubjectExplicitlyDistrusted", filePath);
+                        Program.LL.LogWarnMessage("_CertSubjectExplicitlyDistrusted", filePath);
                         break;
                     case WinVerifyTrustResult.SignatureOrFileCorrupt:
-                        LL.LogWarnMessage("_CertSignatureOrFileCorrupt", filePath);
+                        Program.LL.LogWarnMessage("_CertSignatureOrFileCorrupt", filePath);
                         break;
                     case WinVerifyTrustResult.SubjectCertExpired:
-                        LL.LogWarnMessage("_CertSubjectCertExpired", filePath);
+                        Program.LL.LogWarnMessage("_CertSubjectCertExpired", filePath);
                         break;
                     case WinVerifyTrustResult.SubjectCertificateRevoked:
-                        LL.LogWarnMessage("_CertSubjectCertificateRevoked", filePath);
+                        Program.LL.LogWarnMessage("_CertSubjectCertificateRevoked", filePath);
                         break;
                     case WinVerifyTrustResult.UntrustedRoot:
-                        LL.LogWarnMessage("_CertUntrustedRoot", filePath);
+                        Program.LL.LogWarnMessage("_CertUntrustedRoot", filePath);
                         break;
                     case WinVerifyTrustResult.FileNotSigned:
                         result = VerifyByCatalog(filePath);
