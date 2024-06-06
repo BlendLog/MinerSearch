@@ -5,6 +5,13 @@
 
 ### ВНИМАНИЕ! Некоторые антивирусы помечают этот проект как троян. Это ложное срабатывание, просто добавьте исполняемый файл в исключение антивируса
 
+Версия 1.4.7.2
+
+- Наличие руткита майнера определяется быстрее
+- Разделение базы данных от основного приложения
+- Исправлена обработка путей с прямым(обычным) слешем
+
+
 Версия 1.4.7.1
 
 - Добавлено обнаружение вредоносной версии утилиты печати (print.exe)
@@ -110,21 +117,18 @@
 - Добавлено автоматическое удаление недействительных задач из планировщика на основе результата последнего запуска. Для лучшего результата следует перезагрузить ПК после сканирования. Параметр --remove-empty-tasks также работает.
 - Добавлен параметр запуска --no-signature-scan для пропуска скнирования по сигнатурам
 
-Версия v1.4.2
-
-- Добавлено определение загрузки ОС
-- Добавлено удаление вредоносных путей из исключения Windows Defender
-- Добавлено удаление вредоносных правил из брандмауэра Windows
-- Удаление каталогов и восстановление прав на них выполняется отдельно
-- Сканирование файла hosts теперь выполняется в конце
-- Исправлен баг с пропуском дубликатов задач в планировщике задач
-
 ---------------------------------------------------
 
 This program is designed to find and destroy hidden miners.
 It is an auxiliary tool for searching suspicious files, directories, processes, etc. and is NOT an antivirus.
 
 ### ATTENTION! Some antiviruses mark this project as a Trojan. This is a false positive, just add the executable file to the antivirus exception.
+
+Version 1.4.7.2
+
+- The presence of a miner's rootkit is detected faster
+- Separation of the database from the main application
+- Fixed bug of processing of paths with direct (usual) slash
 
 Version 1.4.7.1
 
@@ -229,15 +233,6 @@ Version v1.4.3
 - Fixed a bug with the inability to unlock the directory when the Antivirus is installed
 - Added automatic deletion of invalid tasks from the scheduler based on the result of the last run. For the best result, you should restart your PC after scanning. The --remove-empty-tasks parameter also works.
 - Added the --no-signature-scan startup parameter to skip scanning by signatures
-
-Version v1.4.2
-
-- Added OS boot definition
-- Added removal of malicious paths from Windows Defender exception
-- Added removal of malicious rules from Windows Firewall
-- Deleting directories and restoring rights to them is performed separately
-- The hosts file is now scanned at the end
-- Fixed a bug with missing duplicate tasks in the task scheduler
 
 --------------------------------------------------------------
 
