@@ -3,6 +3,9 @@
 Настоящая программа разработанная для поиска и уничтожения скрытых майнеров.
 Является вспомогательным инструментом для поиска подозрительных файлов, каталогов, процессов и тд. и НЕ является антивирусом. 
 
+## Новости об обновлениях теперь в телеграм!
+https://t.me/MinerSearch_blog
+
 ### ВНИМАНИЕ! Некоторые антивирусы помечают этот проект как троян. Это ложное срабатывание, просто добавьте исполняемый файл в исключение антивируса
 
 Версия 1.4.7.2
@@ -42,6 +45,10 @@
 
 This program is designed to find and destroy hidden miners.
 It is an auxiliary tool for searching suspicious files, directories, processes, etc. and is NOT an antivirus.
+
+## News about updates now in the Telegram!
+https://t.me/MinerSearch_blog
+
 
 ### ATTENTION! Some antiviruses mark this project as a Trojan. This is a false positive, just add the executable file to the antivirus exception.
 
