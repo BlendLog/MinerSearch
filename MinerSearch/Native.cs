@@ -89,11 +89,30 @@ namespace MSearch
         [DllImport("Netapi32.dll", SetLastError = true)]
         internal static extern int NetApiBufferFree(IntPtr Buffer);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        internal static extern IntPtr GetCurrentProcess();
+
+        [DllImport("kernel32.dll")]
+        internal static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        internal const int SW_HIDE = 0;
+        internal const int SW_SHOW = 5;
+        internal const int SW_MINIMIZE = 6;
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         internal struct USER_INFO_0
         {
             public string Username;
         }
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern uint GetFileAttributes(string lpFileName);
+
+        internal const uint FILE_ATTRIBUTE_DIRECTORY = 0x10;
+        internal const uint FILE_ATTRIBUTE_REPARSE_POINT = 0x400;
 
 
         public enum TcpTableClass
@@ -201,22 +220,25 @@ namespace MSearch
         public static IntPtr IDI_APPLICATION = new IntPtr(0x7F00);
         public static int GCL_HICON = -14;
 
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct LUID
         {
             public uint LowPart;
             public int HighPart;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct LUID_AND_ATTRIBUTES
         {
             public LUID Luid;
             public uint Attributes;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct TOKEN_PRIVILEGES
         {
             public uint PrivilegeCount;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
             public LUID_AND_ATTRIBUTES[] Privileges;
         }
 

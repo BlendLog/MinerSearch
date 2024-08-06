@@ -315,13 +315,13 @@ namespace MSearch
         //-------------------------------------------------
         public void LogMessage(string sign, string ResourceKey, string target, ConsoleColor consoleColor, bool DisplayTime = true)
         {
-            string message = GetLocalizedMessage(ResourceKey);
+            string message = GetLocalizedString(ResourceKey);
             Logger.WriteLog($"{sign} {message} {target}".Replace("?", ""), consoleColor, DisplayTime);
         }
 
         public void LogJustDisplayMessage(string sign, string ResourceKey, string target, ConsoleColor consoleColor)
         {
-            string message = GetLocalizedMessage(ResourceKey);
+            string message = GetLocalizedString(ResourceKey);
             Console.ForegroundColor = consoleColor;
             Console.Write($"{sign}{message} {target}");
             Console.ResetColor();
@@ -329,19 +329,19 @@ namespace MSearch
 
         public void LogHeadMessage(string ResourceKey)
         {
-            string message = GetLocalizedMessage(ResourceKey);
+            string message = GetLocalizedString(ResourceKey);
             Logger.WriteLog($"\t\t{message}".Replace("?", ""), Logger.head, false);
         }
 
         public void LogWarnMessage(string ResourceKey, string target = "")
         {
-            string message = GetLocalizedMessage(ResourceKey);
+            string message = GetLocalizedString(ResourceKey);
             Logger.WriteLog($"\t[!] {message} {target}".Replace("?", ""), Logger.warn);
         }
 
         public void LogWarnMediumMessage(string ResourceKey, string target = "", string trigger = "")
         {
-            string message = GetLocalizedMessage(ResourceKey);
+            string message = GetLocalizedString(ResourceKey);
             if (trigger == "")
             {
                 Logger.WriteLog($"\t[!!] {message} {target}".Replace("?", ""), Logger.warnMedium);
@@ -354,20 +354,20 @@ namespace MSearch
 
         public void LogCautionMessage(string ResourceKey, string subject = "")
         {
-            string message = GetLocalizedMessage(ResourceKey);
+            string message = GetLocalizedString(ResourceKey);
             Logger.WriteLog($"\t[!!!] {message} {subject}".Replace("?", ""), Logger.caution);
         }
 
         public void LogSuccessMessage(string ResourceKey, string subject = "", string ResourceKeyAction = "")
         {
-            string message = GetLocalizedMessage(ResourceKey);
+            string message = GetLocalizedString(ResourceKey);
             if (ResourceKeyAction == "")
             {
                 Logger.WriteLog($"\t[+] {message} {subject}".Replace("?", ""), Logger.success);
             }
             else
             {
-                string action = GetLocalizedMessage(ResourceKeyAction);
+                string action = GetLocalizedString(ResourceKeyAction);
                 Logger.WriteLog($"\t[+] {message} {subject} {action}".Replace("?", ""), Logger.success);
             }
         }
@@ -376,21 +376,21 @@ namespace MSearch
         {
             if (targetType != "")
             {
-                Logger.WriteLog($"\t[x] {GetLocalizedMessage(MessageResourceKey)} {GetLocalizedMessage(targetType)} {target} | {ex.Message}".Replace("?", ""), Logger.error);
+                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {GetLocalizedString(targetType)} {target} | {ex.Message}".Replace("?", ""), Logger.error);
             }
             else
             {
-                Logger.WriteLog($"\t[x] {GetLocalizedMessage(MessageResourceKey)} {target} | {ex.Message}".Replace("?", ""), Logger.error);
+                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {target} | {ex.Message}".Replace("?", ""), Logger.error);
             }
         }
 
         public void LogStatusMessage(string MessageResourceKey)
         {
-            string message = GetLocalizedMessage(MessageResourceKey);
+            string message = GetLocalizedString(MessageResourceKey);
             Logger.WriteLog($"\t[#] {message}".Replace("?", ""), ConsoleColor.Blue);
         }
 
-        internal string GetLocalizedMessage(string ResourceKey)
+        internal string GetLocalizedString(string ResourceKey)
         {
             string message = string.Empty;
             switch (Program.ActiveLanguage)
@@ -429,20 +429,31 @@ namespace MSearch
             Logger.WriteLog($"\t\t[$] {message}: {elapsedTime}", ConsoleColor.White, false);
         }
 
-        public static void LogAllDone()
+        public static void LogTotalScanResult(int _totalThreats, int _neutralizedThreats)
         {
-            string alldone = Resources._AllDone_EN;
+            string totalThreats = Resources._TotalThreatsFound_EN;
+            string neutralizedThreats = Resources._TotalNeutralizedThreats_EN;
+
             switch (Program.ActiveLanguage)
             {
                 case "RU":
-                    alldone = Resources._AllDone_RU;
+                    totalThreats = Resources._TotalThreatsFound_RU;
+                    neutralizedThreats = Resources._TotalNeutralizedThreats_RU;
                     break;
                 case "EN":
-                    alldone = Resources._AllDone_EN;
+                    totalThreats = Resources._TotalThreatsFound_EN;
+                    neutralizedThreats = Resources._TotalNeutralizedThreats_EN;
                     break;
             }
 
-            Logger.WriteLog($"\t\t{alldone}", ConsoleColor.Cyan, false);
+            ConsoleColor color = ConsoleColor.White;
+
+            if (_neutralizedThreats == _totalThreats) color = ConsoleColor.Green;
+            if (_neutralizedThreats <= Math.Round(Convert.ToDouble(_neutralizedThreats / 2))) color = ConsoleColor.Yellow;
+
+            Logger.WriteLog($"\t\t[&] {totalThreats} {_totalThreats}", ConsoleColor.Magenta, false);
+            Logger.WriteLog($"\t\t[&] {neutralizedThreats} {_neutralizedThreats}", color, false);
+            Console.ResetColor();
         }
 
 

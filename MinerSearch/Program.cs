@@ -28,6 +28,8 @@ namespace MSearch
         public static bool ScanOnly = false;
         public static bool fullScan = false;
         public static int maxSubfolders = 8;
+        public static int totalFoundThreats = 0;
+        public static int totalNeutralizedThreats = 0;
         public static string drive_letter = "C";
         public static string ActiveLanguage = "";
         internal static BootMode bootMode = Utils.GetBootMode();
@@ -36,6 +38,8 @@ namespace MSearch
 
         static void Main(string[] args)
         {
+
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(ExeptionHandler.HookExeption);
             ActiveLanguage = Utils.GetSystemLanguage();
             try
             {
@@ -43,22 +47,24 @@ namespace MSearch
             }
             catch (FileNotFoundException)
             {
-                MessageBox.Show(LL.GetLocalizedMessage("_ErrorNotFoundComponent"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(LL.GetLocalizedString("_ErrorNotFoundComponent"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Environment.Exit(1);
             }
+
         }
 
         static void Init(string[] args)
         {
             if (!Utils.IsDotNetInstalled())
             {
-                MessageBox.Show(LL.GetLocalizedMessage("_ErrorNoDotNet"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(LL.GetLocalizedString("_ErrorNoDotNet"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Environment.Exit(1);
             }
 
+
             if (!Utils.IsOneAppCopy())
             {
-                MessageBox.Show(LL.GetLocalizedMessage("_AppAlreadyRunning"), Console.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                MessageBox.Show(LL.GetLocalizedString("_AppAlreadyRunning"), Console.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 Environment.Exit(1);
             }
 
@@ -73,8 +79,11 @@ namespace MSearch
 
             if (Screen.PrimaryScreen.Bounds.Width > 1024 && Screen.PrimaryScreen.Bounds.Height > 634)
             {
-                Console.SetWindowSize(150, 40);
-                WaterMark();
+                if (Console.LargestWindowWidth >= 150)
+                {
+                    Console.SetWindowSize(150, 40);
+                    WaterMark();
+                }
             }
 
 
@@ -84,7 +93,7 @@ namespace MSearch
 
             if (Utils.IsStartedFromArchive())
             {
-                MessageBox.Show(LL.GetLocalizedMessage("_ArchiveWarn"), LL.GetLocalizedMessage("_ArchiveWarn_caption"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(LL.GetLocalizedString("_ArchiveWarn"), LL.GetLocalizedString("_ArchiveWarn_caption"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Environment.Exit(1);
             }
 
@@ -316,6 +325,8 @@ namespace MSearch
             Stopwatch startTime = Stopwatch.StartNew();
 
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
+
+
             MinerSearch mk = new MinerSearch();
             LL.LogHeadMessage("_PreparingToScan");
             Process.EnterDebugMode();
@@ -357,14 +368,20 @@ namespace MSearch
             Logger.WriteLog("\n\t\t-----------------------------------", ConsoleColor.White, false);
             LocalizedLogger.LogElapsedTime(elapsedTime);
             Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
-
-            LocalizedLogger.LogAllDone();
-
-            mk = null;
+            LocalizedLogger.LogTotalScanResult(totalFoundThreats, totalNeutralizedThreats + totalFoundThreats);
+            Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
 
             Utils.SwitchMouseSelection(true);
 
-            Console.Read();
+            Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_MINIMIZE);
+
+            Finish finish = new Finish(totalFoundThreats, totalNeutralizedThreats + totalFoundThreats, elapsedTime)
+            {
+                TopMost = true
+            };
+            finish.ShowDialog();
+            Console.ReadLine();
+            Environment.Exit(0);
         }
         private static void WaterMark()
         {

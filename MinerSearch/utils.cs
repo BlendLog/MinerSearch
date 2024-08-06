@@ -12,10 +12,13 @@ using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.AccessControl;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace MSearch
 {
@@ -24,6 +27,15 @@ namespace MSearch
         Normal = 0,
         SafeMinimal = 1,
         SafeNetworking = 2
+    }
+
+    public static class ExeptionHandler
+    {
+        public static void HookExeption(object sender, UnhandledExceptionEventArgs args)
+        {
+            Exception e = (Exception)args.ExceptionObject;
+            MessageBox.Show(e.Message + "\n" + e.StackTrace, Program.LL.GetLocalizedString("_ExeptionTitle"));
+        }
     }
 
     public class Utils
@@ -198,7 +210,6 @@ namespace MSearch
 
         internal void SuspendProcess(int pid)
         {
-            LocalizedLogger LL = new LocalizedLogger();
             try
             {
                 Process process = Process.GetProcessById(pid);
@@ -421,15 +432,16 @@ namespace MSearch
 
         internal static bool IsDirectoryEmpty(string path)
         {
-            string[] files = Directory.GetFiles(path);
-            string[] subdirectories = Directory.GetDirectories(path);
 
-            if (files.Length > 0 || subdirectories.Length > 0)
+            var files = new DirectoryInfo(path).GetFiles("*", SearchOption.TopDirectoryOnly);
+            var subdirectories = new DirectoryInfo(path).GetDirectories("*", SearchOption.TopDirectoryOnly);
+
+            if (files.Length > 0)
                 return false;
 
-            foreach (string subdirectory in subdirectories)
+            foreach (var subdirectory in subdirectories)
             {
-                if (!IsDirectoryEmpty(subdirectory))
+                if (!IsDirectoryEmpty(subdirectory.FullName))
                     return false;
             }
 
@@ -494,9 +506,10 @@ namespace MSearch
                     files.AddRange(Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly));
                     foreach (var directory in Directory.EnumerateDirectories(path))
                     {
-                        if (!directory.Contains(":\\Windows\\WinSxS") &&
+                        if (!IsReparsePoint(directory) && 
+                            !directory.Contains(":\\Windows\\WinSxS") &&
                             !directory.Contains(":\\$") &&
-                            !directory.Contains("mi?ner?se?arch_quarantine".Replace("?","")) &&
+                            !directory.Contains("mi?ner?se?arch_quarantine".Replace("?", "")) &&
                             !directory.Contains(@":\programdata\microsoft\Windows\Containers\BaseImages") &&
                             !directory.Contains(@"AppData\Local\Microsoft\WindowsApps"))
                         {
@@ -513,6 +526,11 @@ namespace MSearch
         internal static bool IsSpecificPath(string path)
         {
             return path.Contains("\\\u00A0\\\u00A0\\");
+        }
+
+        internal static bool IsReparsePoint(string path)
+        {
+            return (Native.GetFileAttributes(path) & Native.FILE_ATTRIBUTE_REPARSE_POINT) == Native.FILE_ATTRIBUTE_REPARSE_POINT;
         }
 
         public static string GetWindowsVersion()
@@ -640,7 +658,6 @@ namespace MSearch
 
         internal void CheckWMI()
         {
-            LocalizedLogger LL = new LocalizedLogger();
             string serviceName = "wi~nm~gm~t".Replace("~", "");
 
             try
@@ -681,8 +698,6 @@ namespace MSearch
 
         internal void CheckTermService()
         {
-            LocalizedLogger LL = new LocalizedLogger();
-
             string registryPath = msData.queries[13]; //SYSTEM\CurrentControlSet\Services\TermService\Parameters
             string desiredValue = msData.queries[14]; //%SystemRoot%\System32\termsrv.dll
 
@@ -695,6 +710,8 @@ namespace MSearch
                 if (currentValue != ResolveEnvironmentVariables(desiredValue))
                 {
                     Program.LL.LogWarnMessage("_TermServiceInvalidPath", currentValue);
+                    Program.totalFoundThreats++;
+
 
                     if (!Program.ScanOnly)
                     {
@@ -737,6 +754,7 @@ namespace MSearch
                         if (currentValue == ResolveEnvironmentVariables(desiredValue))
                         {
                             Program.LL.LogSuccessMessage("_TermServiceRestored");
+                            
                         }
                         else
                         {
@@ -987,8 +1005,8 @@ namespace MSearch
         internal static string GetSystemLanguage()
         {
 
-            string registryKeyPath = @"SY~STE~M\Curre~ntCont~rolSet\Co~ntro~l\Nls\Lan~guag~e".Replace("~", "");
-            string registryValueName = "Ins~tall~La~ngu~age".Replace("~", "");
+            string registryKeyPath = @"SYS~TEM~\Cu~rrentC~ontrol~Set\Co~n~tro~l\Nls\La~ngu~ag~e".Replace("~", "");
+            string registryValueName = "Ins~tall~~Language".Replace("~", "");
 
             string[] CodeLang = new string[]
             {
@@ -1028,53 +1046,49 @@ namespace MSearch
 
         internal void InitPrivileges()
         {
-            LocalizedLogger LL = new LocalizedLogger();
-            IntPtr token;
-            if (Native.OpenProcessToken(Process.GetCurrentProcess().Handle, Native.TOKEN_ADJUST_PRIVILEGES | Native.TOKEN_QUERY, out token))
+            IntPtr hToken;
+            Native.TOKEN_PRIVILEGES tkpPrivileges = new Native.TOKEN_PRIVILEGES
             {
-                try
+                PrivilegeCount = 5,
+                Privileges = new Native.LUID_AND_ATTRIBUTES[5]
+            };
+
+            string[] privilegeNames = new string[]
+            {
+            "SeDebugPrivilege",
+            "SeBackupPrivilege",
+            "SeRestorePrivilege",
+            "SeTakeOwnershipPrivilege",
+            "SeSecurityPrivilege"
+            };
+
+            if (!Native.OpenProcessToken(Native.GetCurrentProcess(), Native.TOKEN_ADJUST_PRIVILEGES | Native.TOKEN_QUERY, out hToken))
+            {
+                Program.LL.LogErrorMessage("_Error", new Exception("OpenProcessToken: Current process"));
+                return;
+            }
+
+            for (int i = 0; i < privilegeNames.Length; i++)
+            {
+                if (!Native.LookupPrivilegeValue(null, privilegeNames[i], out Native.LUID luid))
                 {
-                    var seSecurityLuid = new Native.LUID();
-                    if (Native.LookupPrivilegeValue(null, Native.SE_SECURITY_NAME, out seSecurityLuid))
-                    {
-                        var seTakeOwnershipLuid = new Native.LUID();
-                        if (Native.LookupPrivilegeValue(null, Native.SE_TAKE_OWNERSHIP_NAME, out seTakeOwnershipLuid))
-                        {
-                            var tokenPrivileges = new Native.TOKEN_PRIVILEGES
-                            {
-                                PrivilegeCount = 2,
-                                Privileges = new Native.LUID_AND_ATTRIBUTES[2]
-                                {
-                        new Native.LUID_AND_ATTRIBUTES { Luid = seSecurityLuid, Attributes = Native.SE_PRIVILEGE_ENABLED },
-                        new Native.LUID_AND_ATTRIBUTES { Luid = seTakeOwnershipLuid, Attributes = Native.SE_PRIVILEGE_ENABLED }
-                                }
-                            };
-                            if (!Native.AdjustTokenPrivileges(token, false, ref tokenPrivileges, 0, IntPtr.Zero, IntPtr.Zero))
-                            {
-                                Program.LL.LogErrorMessage("_Error", new Exception("Init Privileges"));
-                            }
-                        }
-                        else
-                        {
-                            Program.LL.LogErrorMessage("_Error", new Exception("Init Privileges"));
-
-                        }
-                    }
-                    else
-                    {
-                        Program.LL.LogErrorMessage("_Error", new Exception("Init Privileges"));
-
-                    }
+                    Program.LL.LogErrorMessage("_Error", new Exception("LookupPrivilegeValue()"));
+                    Native.CloseHandle(hToken);
+                    return;
                 }
-                finally
+                else
                 {
-                    Native.CloseHandle(token);
+                    tkpPrivileges.Privileges[i].Luid = luid;
+                    tkpPrivileges.Privileges[i].Attributes = Native.SE_PRIVILEGE_ENABLED;
                 }
             }
-            else
+
+            if (!Native.AdjustTokenPrivileges(hToken, false, ref tkpPrivileges, 0, IntPtr.Zero, IntPtr.Zero))
             {
-                Console.WriteLine("Fai~led t~o g~et proc~ess han~dle wit~h ~error~ cod~e: ".Replace("~", "") + Marshal.GetLastWin32Error());
+                Program.LL.LogErrorMessage("_Error", new Exception("AdjustTokenPrivileges: Privileges are not available"));
             }
+
+            Native.CloseHandle(hToken);
         }
 
         internal static bool IsStartedFromArchive()
@@ -1452,29 +1466,36 @@ namespace MSearch
 
         internal static void AddToQuarantine(string sourceFilePath, string encryptedFilePath, byte[] key)
         {
-            byte[] fileBytes = File.ReadAllBytes(sourceFilePath);
-
-            for (int i = 0; i < fileBytes.Length; i++)
+            if (File.Exists(sourceFilePath))
             {
-                fileBytes[i] ^= key[i % key.Length];
-            }
+                byte[] fileBytes = File.ReadAllBytes(sourceFilePath);
 
-            byte[] markerBytes = Encoding.UTF8.GetBytes("!mschqur!");
-            byte[] encryptedFileBytes = new byte[markerBytes.Length + fileBytes.Length];
+                for (int i = 0; i < fileBytes.Length; i++)
+                {
+                    fileBytes[i] ^= key[i % key.Length];
+                }
 
-            Array.Copy(markerBytes, 0, encryptedFileBytes, 0, markerBytes.Length);
-            Array.Copy(fileBytes, 0, encryptedFileBytes, markerBytes.Length, fileBytes.Length);
+                byte[] markerBytes = Encoding.UTF8.GetBytes("!mschqur!");
+                byte[] encryptedFileBytes = new byte[markerBytes.Length + fileBytes.Length];
 
-            File.WriteAllBytes(encryptedFilePath, encryptedFileBytes);
+                Array.Copy(markerBytes, 0, encryptedFileBytes, 0, markerBytes.Length);
+                Array.Copy(fileBytes, 0, encryptedFileBytes, markerBytes.Length, fileBytes.Length);
 
-            try
-            {
-                File.Delete(sourceFilePath);
-            }
-            catch (Exception ex)
-            {
-                new LocalizedLogger().LogErrorMessage("_ErrorCannotRemove", ex, sourceFilePath, "_File");
-            }
+                File.WriteAllBytes(encryptedFilePath, encryptedFileBytes);
+
+                try
+                {
+                    File.Delete(sourceFilePath);
+                    if (!File.Exists(sourceFilePath))
+                    {
+                        Program.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_Deleted");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Program.LL.LogErrorMessage("_ErrorCannotRemove", ex, sourceFilePath, "_File");
+                }
+            }            
         }
 
         internal static void RestoreFromQuarantine(string encryptedFilePath, string restoredFilePath, byte[] key)
@@ -1595,5 +1616,33 @@ namespace MSearch
             }
         }
 
+        public static string GetLongPath(string path)
+        {
+            // Check if the path already contains the long path prefix
+            if (path.StartsWith(@"\\?\"))
+            {
+                return path;
+            }
+
+            // Prepend the long path prefix
+            return @"\\?\" + path;
+        }
+        public static bool ForceDeleteDirectory(string path)
+        {
+            ProcessStartInfo processStartInfo = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/c takeown /f \"\\\\?\\{path}\" /R /A & icacls \"\\\\?\\{path}\" /remove:d /T & icacls \"\\\\?\\{path}\" /grant *S-1-5-32-544:F & rd /s /q \"\\\\?\\{path}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (Process process = Process.Start(processStartInfo))
+            {
+                process.WaitForExit();
+            }
+
+            return Directory.Exists(path);
+        }
     }
 }

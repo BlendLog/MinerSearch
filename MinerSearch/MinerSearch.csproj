@@ -92,13 +92,12 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="dbase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="dbase, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Release\dbase.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.10.1.0, Culture=neutral, PublicKeyToken=e25603a88b3aa7da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Resources\Microsoft.Win32.TaskScheduler.dll</HintPath>
+    <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.11.0.0, Culture=neutral, PublicKeyToken=e25603a88b3aa7da, processorArchitecture=MSIL">
+      <HintPath>..\packages\TaskScheduler.2.11.0\lib\net45\Microsoft.Win32.TaskScheduler.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -107,6 +106,7 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
@@ -118,6 +118,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Finish.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Finish.Designer.cs">
+      <DependentUpon>Finish.cs</DependentUpon>
+    </Compile>
     <Compile Include="License.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -134,6 +140,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UnlockObjectClass.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Native.cs" />
     <Compile Include="WinTrust.cs" />
@@ -146,9 +153,17 @@
     <Content Include="256.ico" />
     <Content Include="64.ico" />
     <Content Include="msch.ico" />
+    <None Include="packages.config" />
+    <None Include="Resources\128.png" />
+    <None Include="Resources\yoomoney.png" />
+    <None Include="Resources\blendlog-donate.png" />
+    <None Include="Resources\telegram_logo.png" />
     <None Include="bin\Release\Microsoft.Win32.TaskScheduler.dll" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Finish.resx">
+      <DependentUpon>Finish.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="License.resx">
       <DependentUpon>License.cs</DependentUpon>
     </EmbeddedResource>
@@ -181,9 +196,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

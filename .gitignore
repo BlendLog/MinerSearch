@@ -372,3 +372,5 @@ FodyWeavers.xsd
 *.blend
 *.png
 *.blend1
+*.lnk
+/MinerSearch/.vscode

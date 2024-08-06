@@ -61,6 +61,16 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _128 {
+            get {
+                object obj = ResourceManager.GetObject("128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Yes.
         /// </summary>
         internal static string _accept_en {
@@ -529,7 +539,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Scan elapsed time.
+        ///   Ищет локализованную строку, похожую на Scan elapsed time:.
         /// </summary>
         internal static string _Elapse_EN {
             get {
@@ -538,7 +548,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Затраченное время проверки.
+        ///   Ищет локализованную строку, похожую на Время сканирования:.
         /// </summary>
         internal static string _Elapse_RU {
             get {
@@ -565,7 +575,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на All done! You can close this app..
+        ///   Ищет локализованную строку, похожую на Scanning complete.
         /// </summary>
         internal static string _End_EN {
             get {
@@ -574,7 +584,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Готово! Приложение можно закрыть..
+        ///   Ищет локализованную строку, похожую на Сканирование завершено.
         /// </summary>
         internal static string _End_RU {
             get {
@@ -849,6 +859,24 @@ namespace MSearch.Properties {
         internal static string _Exclusion_RU {
             get {
                 return ResourceManager.GetString("_Exclusion_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Unhandled Exeption.
+        /// </summary>
+        internal static string _ExeptionTitle_EN {
+            get {
+                return ResourceManager.GetString("_ExeptionTitle_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Необработанное исключение.
+        /// </summary>
+        internal static string _ExeptionTitle_RU {
+            get {
+                return ResourceManager.GetString("_ExeptionTitle_RU", resourceCulture);
             }
         }
         
@@ -1213,6 +1241,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Have questions? Join the telegram!.
+        /// </summary>
+        internal static string _JoinToTelegram_EN {
+            get {
+                return ResourceManager.GetString("_JoinToTelegram_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Есть вопросы? Заходите в телеграм!.
+        /// </summary>
+        internal static string _JoinToTelegram_RU {
+            get {
+                return ResourceManager.GetString("_JoinToTelegram_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на File:.
         /// </summary>
         internal static string _Just_File_EN {
@@ -1245,6 +1291,24 @@ namespace MSearch.Properties {
         internal static string _Just_Service_RU {
             get {
                 return ResourceManager.GetString("_Just_Service_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Like the app? Support the project on Boosty!.
+        /// </summary>
+        internal static string _LabelSupport_EN {
+            get {
+                return ResourceManager.GetString("_LabelSupport_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Нравится приложение? Поддержи проект на Boosty!.
+        /// </summary>
+        internal static string _LabelSupport_RU {
+            get {
+                return ResourceManager.GetString("_LabelSupport_RU", resourceCulture);
             }
         }
         
@@ -2452,6 +2516,42 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Total neutralized threats:.
+        /// </summary>
+        internal static string _TotalNeutralizedThreats_EN {
+            get {
+                return ResourceManager.GetString("_TotalNeutralizedThreats_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Итого удалено угроз:.
+        /// </summary>
+        internal static string _TotalNeutralizedThreats_RU {
+            get {
+                return ResourceManager.GetString("_TotalNeutralizedThreats_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Total threats:.
+        /// </summary>
+        internal static string _TotalThreatsFound_EN {
+            get {
+                return ResourceManager.GetString("_TotalThreatsFound_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Итого найдено угроз:.
+        /// </summary>
+        internal static string _TotalThreatsFound_RU {
+            get {
+                return ResourceManager.GetString("_TotalThreatsFound_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Try to close processes....
         /// </summary>
         internal static string _TryCloseProcess_EN {
@@ -2664,6 +2764,72 @@ namespace MSearch.Properties {
         internal static string _Winver_RU {
             get {
                 return ResourceManager.GetString("_Winver_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на WMI Event .
+        /// </summary>
+        internal static string _WMIEvent_EN {
+            get {
+                return ResourceManager.GetString("_WMIEvent_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Событие WMI.
+        /// </summary>
+        internal static string _WMIEvent_RU {
+            get {
+                return ResourceManager.GetString("_WMIEvent_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на WMI Database check....
+        /// </summary>
+        internal static string _WMIHead_EN {
+            get {
+                return ResourceManager.GetString("_WMIHead_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверка базы данных WMI....
+        /// </summary>
+        internal static string _WMIHead_RU {
+            get {
+                return ResourceManager.GetString("_WMIHead_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap blendlog_donate {
+            get {
+                object obj = ResourceManager.GetObject("blendlog-donate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap telegram_logo {
+            get {
+                object obj = ResourceManager.GetObject("telegram_logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap yoomoney {
+            get {
+                object obj = ResourceManager.GetObject("yoomoney", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }
