@@ -3,8 +3,21 @@
 Настоящая программа разработанная для поиска и уничтожения скрытых майнеров.
 Является вспомогательным инструментом для поиска подозрительных файлов, каталогов, процессов и тд. и НЕ является антивирусом. 
 
-## Новости об обновлениях теперь в телеграм!
-https://t.me/MinerSearch_blog
+## Новости об обновлениях теперь в телеграм! https://t.me/MinerSearch_blog
+
+Версия 1.4.7.3
+
+- Удаление новой версии майнера с цифровой подписью;
+- Исправлено автоматическое закрытие приложения в случае сбоя;
+- Переработан алгоритм отключения вредоносных служб;
+- Исправлено добавление удалённых файлов в карантин;
+- Добавлена проверку удаления файла из аргументов msiexec;
+- Добавлен счетчик всех найденных угроз;
+- Добавлено игнорирование новых функций удаления с опцией --scan-only;
+- Добавлено отображение строк из файла hosts, которые были обезврежены;
+- Исправлена обработка каталогов в виде символической ссылки;
+- Теперь статистика отображатеся в диалоговом окне;
+- Вывод уведомления по завершении сканирования;
 
 Версия 1.4.7.2
 
@@ -46,6 +59,20 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 
 ## News about updates now in the Telegram!
 https://t.me/MinerSearch_blog
+
+Version 1.4.7.3
+
+- Removal of the new version of the miner with a digital signature;
+- Fixed automatic closing of the application when it crash;
+- Updated algorithm for disabling malicious services;
+- Fixed adding deleted files to quarantine;
+- Added a check for deleting a file from msiexec arguments;
+- Added a counter for all threats found;
+- Added ignoring of new deletion functions with the --scan-only option;
+- Added display of lines from the hosts file that have been neutralized;
+- Fixed directories scan as a symbolic link;
+- Statistics are now displayed in the new form;
+- Notification output at the end of scan;
 
 Version 1.4.7.2
 
