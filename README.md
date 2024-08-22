@@ -32,7 +32,7 @@
 
 Полностью распакуйте архив с программой в отдельную папку и запустите приложение. Дождитесь окончания сканирования. После окончания будет указано итоговое время проверки.
 Важно примечание: на данный момент количество обнаруженных угроз указано для каждого этапа. Ознакомиться с полным отчётом (логом) сканирования можно в файле MinerSearch_<датавремя>.log,
-генерируемый по-умолчанию в C:\\_MinerSearchLogs.
+генерируемый по-умолчанию в каталоге C:\\_MinerSearchLogs\\.
 
 Дополнительные параметры запуска (обычно не требуется):
 
@@ -106,7 +106,7 @@ Version 1.4.7.2
 ## How to use
 
 Extract entire archive to the empty folder and run the application. Wait while scanning do. After full scan the app will be display total elapsed time of scan.
-Important note: at this moment, the quantity threats displays on each scanning stage. You can read full log of scanning in MinerSearch_<datetime>.log file, that will be generated in C:\\_MinerSearchLogs by default.
+Important note: at this moment, the quantity threats displays on each scanning stage. You can read full log of scanning in MinerSearch_<datetime>.log file, that will be generated in folder C:\\_MinerSearchLogs\\ by default.
 
 Additional command line args (usually is not required):
 
