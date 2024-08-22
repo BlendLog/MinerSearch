@@ -53,6 +53,26 @@
 | --full-scan | Целиком добавляет другие локальные диски для сигнатурного сканирования |
 | --restore=[путь] | Восстановить указанный файл из карантина, путь к файлу в карантине не должен содержать пробелов |
 
+----------------------------
+
+Условные обозначения в логах
+
+| Подсказка | Описание |
+|-----------|----------|
+|    [!] | Незначительное предупреждение |
+|   [!!] | Предупреждение, на которое стоит обратить внимание |
+|  [!!!] | Обнаружена угроза |
+| [!!!!] | Обнаружен руткит |
+|  [Reg] | Cканирование раздела(ов) реестра |
+|    [+] | Успешное выполнение действия (лечение, удаление и т.д.) |
+|    [x] | Ошибка |
+|  [xxx] | Критическая ошибка: например, при запуске в песочнице |
+|    [#] | Статус |
+|    [.] | Описание |
+|    [_] | Разблокировка каталога и удаление, если пуст |
+|    [i] | Информация |
+|    [$] | Затраченное время сканирования |
+
 ---------------------------------------------------
 
 This program is designed to find and destroy hidden miners.
@@ -90,7 +110,7 @@ Important note: at this moment, the quantity threats displays on each scanning s
 
 Additional command line args (usually is not required):
 
-| Параметр | Описание |
+| Argument | Description |
 | -------- | -------- |
 |--help | Show this help message |
 | --no-logs	| Don't write logs in text file |
@@ -108,6 +128,26 @@ Additional command line args (usually is not required):
 | --restore=[path] | Restore specified file from quarantine. Specified path can't include space symbol |
 
 --------------------------------------------------------------
+
+Symbols in logs
+
+| Hint | Description |
+|-----------|----------|
+|    [!] | Minor warning |
+| [!!] | A warning worth paying attention to |
+|  [!!!] | Threat detected |
+| [!!!!] | A rootkit has been detected |
+| [Reg] | Scan the registry key(s) |
+|    [+] | Successful completion of the action (treatment, removal, etc.) |
+|    [x] | Error |
+| [xxx] | Critical error: for example, when running in the sandbox |
+|    [#] | Status |
+| [.] | Description |
+|    [_] | Unblocking the directory and deleting if empty |
+| [i] | Info |
+|    [$] | Scan elapsed time |
+
+----------------------------
 
 # Demo
 
