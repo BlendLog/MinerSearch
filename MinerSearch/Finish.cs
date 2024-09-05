@@ -132,6 +132,13 @@ namespace MSearch
 
                     }
                 }
+                else
+                {
+                    key.SetValue(valueName, 0, RegistryValueKind.DWord);
+                    top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                    top.Text = "MinerSearch          ";
+                    button1.Visible = true;
+                }
             }
             else if (allowStatistics == 1)
             {

@@ -89,8 +89,6 @@ namespace MSearch
                 }
             }
 
-            Logger.WriteLog("\t\tID: " + Utils.GetDeviceId(), ConsoleColor.White, false, true);
-
 #if !DEBUG
             LL.LogJustDisplayMessage("\t\t", $"_RelevantVer", "https://github.com/BlendLog/Mi?ne?rSea?rch/releases \n".Replace("?", ""), ConsoleColor.White);
 #endif
@@ -289,6 +287,7 @@ namespace MSearch
                 }
             }
 
+            Logger.WriteLog("\t\tID: " + Utils.GetDeviceId(), ConsoleColor.White, false, true);
             LL.LogMessage("\t\t", "_Version", new Version(Application.ProductVersion).ToString(), ConsoleColor.White, false);
 
 
