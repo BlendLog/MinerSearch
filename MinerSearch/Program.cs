@@ -88,7 +88,8 @@ namespace MSearch
                     WaterMark();
                 }
             }
-            Logger.WriteLog("\t\tLogID:" + Logger.LogID, true, false);
+
+            Logger.WriteLog("\t\tID: " + Utils.GetDeviceId(), ConsoleColor.White, false, true);
 
 #if !DEBUG
             LL.LogJustDisplayMessage("\t\t", $"_RelevantVer", "https://github.com/BlendLog/Mi?ne?rSea?rch/releases \n".Replace("?", ""), ConsoleColor.White);
@@ -333,8 +334,13 @@ namespace MSearch
 
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
 
+            if (!no_logs)
+            {
+                LL.LogWriteWithoutDisplay(true, false);
+            }
 
             MinerSearch mk = new MinerSearch();
+
             LL.LogHeadMessage("_PreparingToScan");
             Process.EnterDebugMode();
 
@@ -377,11 +383,6 @@ namespace MSearch
             Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
             LocalizedLogger.LogTotalScanResult(totalFoundThreats, totalNeutralizedThreats + totalFoundThreats);
             Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
-
-            if (!no_logs)
-            {
-                LL.LogWriteWithoutDisplay(true, false);
-            }
 
             Utils.SwitchMouseSelection(true);
 

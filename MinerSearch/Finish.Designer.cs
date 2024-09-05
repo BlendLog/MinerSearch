@@ -451,7 +451,7 @@ namespace MSearch
             this.top.Name = "top";
             this.top.Size = new System.Drawing.Size(702, 28);
             this.top.TabIndex = 1;
-            this.top.Text = "MinerSearch";
+            this.top.Text = "MinerSearch          ";
             this.top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.top.MouseDown += new System.Windows.Forms.MouseEventHandler(this.top_MouseDown);
             // 
@@ -465,9 +465,10 @@ namespace MSearch
             this.button1.Location = new System.Drawing.Point(671, 0);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(24, 26);
+            this.button1.Size = new System.Drawing.Size(27, 26);
             this.button1.TabIndex = 2;
             this.button1.Text = "X";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);

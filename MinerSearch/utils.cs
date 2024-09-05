@@ -67,7 +67,7 @@ namespace MSearch
             return cmdLine;
         }
 
-        
+
         internal static string Sizer(long CountBytes)
         {
             string[] type = { "B", "KB", "MB", "GB" };
@@ -702,6 +702,14 @@ namespace MSearch
                 }
 
             }
+            catch (MissingMethodException)
+            {
+                if (!Utils.IsDotNetInstalled())
+                {
+                    MessageBox.Show(Program.LL.GetLocalizedString("_ErrorNoDotNet"), GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Environment.Exit(1);
+                }
+            }
             catch (Exception ex)
             {
                 Logger.WriteLog($"\t[xxx] {serviceName}: {ex.Message}", ConsoleColor.DarkRed, false);
@@ -1085,7 +1093,6 @@ namespace MSearch
 
         internal void DeleteTask(TaskService taskService, string taskFolder, string taskName)
         {
-            LocalizedLogger LL = new LocalizedLogger();
             try
             {
                 taskService.GetFolder(taskFolder).DeleteTask(taskName);
@@ -1093,8 +1100,21 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                new LocalizedLogger().LogErrorMessage("_ErrorTaskDeleteFail", ex, taskFolder + "\\" + taskName);
+                Program.LL.LogErrorMessage("_ErrorTaskDeleteFail", ex, taskFolder + "\\" + taskName);
             }
+        }
+
+        public static string GetDeviceId()
+        {
+            string path = Path.Combine(Registry.LocalMachine.Name, @"SOFTWARE\Microsoft\SQMClient");
+            var machineIdValue = Registry.GetValue(path, "MachineId", null);
+            if (machineIdValue == null)
+            {
+                return "N/A";
+            }
+
+            Guid MachineId = new Guid((string)machineIdValue);
+            return MachineId.ToString();
         }
 
         internal static bool IsTaskEmpty(Task task)
@@ -1265,7 +1285,6 @@ namespace MSearch
 
         internal void SaveRenamedFileData(object renamedFileInfo)
         {
-            LocalizedLogger LL = new LocalizedLogger();
             try
             {
                 using (RegistryKey key = Registry.CurrentUser.CreateSubKey("Software\\M1nerSearch\\ProcessData"))
@@ -1283,8 +1302,6 @@ namespace MSearch
         internal List<RenamedFileInfo> GetRenamedFilesData()
         {
             List<RenamedFileInfo> result = new List<RenamedFileInfo>();
-            LocalizedLogger LL = new LocalizedLogger();
-
             try
             {
                 using (RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\M1nerSearch\\ProcessData"))
@@ -1437,40 +1454,51 @@ namespace MSearch
             {
                 string rundll32Args = ResolveFilePathFromString(arguments).Split(',')[0];
 
-                foreach (string checkDir in checkDirs)
+                string fullPathToFileFromArgs = "";
+                if (!rundll32Args.EndsWith("\""))
                 {
-                    string fullPathToFileFromArgs = Path.Combine(checkDir, rundll32Args);
-                    if (!fullPathToFileFromArgs.EndsWith(".dll"))
+                    foreach (string checkDir in checkDirs)
                     {
-                        fullPathToFileFromArgs += ".dll";
-                    }
-                    try
-                    {
-                        if (File.Exists(fullPathToFileFromArgs))
+                        fullPathToFileFromArgs = Path.Combine(checkDir, rundll32Args);
+                        if (!fullPathToFileFromArgs.EndsWith(".dll"))
                         {
-                            IntPtr ptr = IntPtr.Zero;
-
-                            Program.LL.LogMessage("[.]", "_Just_File", fullPathToFileFromArgs, ConsoleColor.Gray);
-                            var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
-                            if (trustResult != WinVerifyTrustResult.Success)
-                            {
-                                Program.LL.LogWarnMessage("_InvalidCertificateSignature", rundll32Args);
-
-                                return;
-                            }
-                            else if (trustResult == WinVerifyTrustResult.Success)
-                            {
-                                Logger.WriteLog($"\t[OK]", Logger.success, false);
-                            }
-                            return;
-
+                            fullPathToFileFromArgs += ".dll";
                         }
                     }
-                    catch (Exception ex)
+                }
+                else
+                {
+                    fullPathToFileFromArgs = rundll32Args.Replace("\"", "");
+                }
+
+
+                try
+                {
+                    if (File.Exists(fullPathToFileFromArgs))
                     {
-                        Program.LL.LogErrorMessage("_Error", ex);
+                        IntPtr ptr = IntPtr.Zero;
+
+                        Program.LL.LogMessage("[.]", "_Just_File", fullPathToFileFromArgs, ConsoleColor.Gray);
+                        var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
+                        if (trustResult != WinVerifyTrustResult.Success)
+                        {
+                            Program.LL.LogWarnMediumMessage("_InvalidCertificateSignature", rundll32Args);
+                            AddToQuarantine(fullPathToFileFromArgs, Path.Combine(MinerSearch.quarantineFolder, Path.GetFileName(fullPathToFileFromArgs) + $"_{Utils.CalculateMD5(fullPathToFileFromArgs)}.bak"), Encoding.UTF8.GetBytes(Application.ProductVersion.Replace(".", "")));
+                            return;
+                        }
+                        else if (trustResult == WinVerifyTrustResult.Success)
+                        {
+                            Logger.WriteLog($"\t[OK]", Logger.success, false);
+                        }
+                        return;
+
                     }
                 }
+                catch (Exception ex)
+                {
+                    Program.LL.LogErrorMessage("_Error", ex);
+                }
+
 
 
             }
@@ -1497,8 +1525,8 @@ namespace MSearch
                             var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
                             if (winTrust.VerifyEmbeddedSignature(pcaluaArgs) != WinVerifyTrustResult.Success)
                             {
-                                Program.LL.LogWarnMessage("_InvalidCertificateSignature", pcaluaArgs);
-
+                                Program.LL.LogWarnMediumMessage("_InvalidCertificateSignature", pcaluaArgs);
+                                AddToQuarantine(fullPathToFileFromArgs, Path.Combine(MinerSearch.quarantineFolder, Path.GetFileName(fullPathToFileFromArgs) + $"_{Utils.CalculateMD5(fullPathToFileFromArgs)}.bak"), Encoding.UTF8.GetBytes(Application.ProductVersion.Replace(".", "")));
                                 return;
                             }
                             else if (trustResult == WinVerifyTrustResult.Success)
@@ -1596,7 +1624,7 @@ namespace MSearch
                     File.Delete(sourceFilePath);
                     if (!File.Exists(sourceFilePath))
                     {
-                        Program.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_Deleted");
+                        Program.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_MovedToQuarantine");
                     }
                 }
                 catch (Exception ex)

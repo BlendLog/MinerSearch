@@ -305,7 +305,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Details.
+        ///   Ищет локализованную строку, похожую на Show Log.
         /// </summary>
         internal static string _BtnDetails_EN {
             get {
@@ -314,7 +314,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Подробно.
+        ///   Ищет локализованную строку, похожую на Показать отчёт.
         /// </summary>
         internal static string _BtnDetails_RU {
             get {
@@ -1568,6 +1568,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Moved to Quarantine.
+        /// </summary>
+        internal static string _MovedToQuarantine_EN {
+            get {
+                return ResourceManager.GetString("_MovedToQuarantine_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Перемещено в карантин.
+        /// </summary>
+        internal static string _MovedToQuarantine_RU {
+            get {
+                return ResourceManager.GetString("_MovedToQuarantine_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Name:.
         /// </summary>
         internal static string _Name_EN {
@@ -1656,6 +1674,24 @@ namespace MSearch.Properties {
         internal static string _PCName_RU {
             get {
                 return ResourceManager.GetString("_PCName_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Wait....
+        /// </summary>
+        internal static string _PleaseWaitMessage_EN {
+            get {
+                return ResourceManager.GetString("_PleaseWaitMessage_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подождите....
+        /// </summary>
+        internal static string _PleaseWaitMessage_RU {
+            get {
+                return ResourceManager.GetString("_PleaseWaitMessage_RU", resourceCulture);
             }
         }
         

@@ -107,17 +107,26 @@ namespace MSearch
                     {
                         try
                         {
-                            await Task.Run(() => MinerSearch.SentLog());
+                            await Task.Run(() => {
+                                Task.Delay(new Random().Next(10, 3000));
+                                MinerSearch.SentLog();
+                            });
+                            top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                            top.Text = "MinerSearch          ";
                             button1.Visible = true;
                         }
                         catch (System.IO.FileNotFoundException fnf)
                         {
                             Program.LL.LogErrorMessage("_Error", fnf);
+                            top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                            top.Text = "MinerSearch          ";
                             button1.Visible = true;
                         }
                         catch (Exception ex)
                         {
                             Program.LL.LogErrorMessage("_Error", ex);
+                            top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                            top.Text = "MinerSearch          ";
                             button1.Visible = true;
                         }
 
@@ -130,24 +139,35 @@ namespace MSearch
                 {
                     try
                     {
-                        await Task.Run(() => MinerSearch.SentLog());
+                        await Task.Run(() => {
+                            Task.Delay(new Random().Next(10,3000));
+                            MinerSearch.SentLog();
+                        });
+                        top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                        top.Text = "MinerSearch          ";
                         button1.Visible = true;
                     }
                     catch (System.IO.FileNotFoundException fnf)
                     {
                         Program.LL.LogErrorMessage("_Error", fnf);
+                        top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                        top.Text = "MinerSearch          ";
                         button1.Visible = true;
 
                     }
                     catch (Exception ex)
                     {
                         Program.LL.LogErrorMessage("_Error", ex);
+                        top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                        top.Text = "MinerSearch          ";
                         button1.Visible = true;
                     }
                 }
             }
             else
             {
+                top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                top.Text = "MinerSearch          ";
                 button1.Visible = true;
             }
             key.Close();
@@ -191,6 +211,9 @@ namespace MSearch
             LBL_ScanTime.Text = Program.LL.GetLocalizedString("_Elapse");
             LBL_Support.Text = Program.LL.GetLocalizedString("_LabelSupport");
             btnDetails.Text = Program.LL.GetLocalizedString("_BtnDetails");
+            top.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            top.Text = Program.LL.GetLocalizedString("_PleaseWaitMessage");
+
         }
 
         private void pb_QR_MouseEnter(object sender, EventArgs e)

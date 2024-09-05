@@ -108,7 +108,7 @@ namespace MSearch
         public List<int> mlwrPids = new List<int>();
         public List<string> founded_suspLckPths = new List<string>();
         public List<string> founded_mlwrPathes = new List<string>();
-        string quarantineFolder = Path.Combine(Environment.CurrentDirectory, "mi?ne?rs?eаrch_quarаntine".Replace("?", ""));
+        public static string quarantineFolder = Path.Combine(Environment.CurrentDirectory, "mi?ne?rs?eаrch_quarаntine".Replace("?", ""));
 
         WinTrust winTrust = new WinTrust();
         MSData msData = new MSData();
@@ -659,9 +659,13 @@ namespace MSearch
                             {
                                 ScanTaskScheduler();
                             }
-                            catch (Exception)
+                            catch (FileNotFoundException)
                             {
                                 MessageBox.Show(Program.LL.GetLocalizedString("_ErrorNotFoundComponent"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                            catch (Exception ex)
+                            {
+                                Program.LL.LogErrorMessage("_Error", ex);
                             }
                         }
                         break;
@@ -1275,21 +1279,24 @@ namespace MSearch
                                     line = substrings[0].Trim();
                                 }
 
-                                string truncatedLine = line.Substring(line.Length - hLine.OriginalLength);
-                                if (Utils.StringMD5(truncatedLine).Equals(hLine.Hash))
+                                if (line.Length >= hLine.OriginalLength)
                                 {
-                                    Program.totalFoundThreats++;
-                                    if (!Program.ScanOnly)
+                                    string truncatedLine = line.Substring(line.Length - hLine.OriginalLength);
+                                    if (Utils.StringMD5(truncatedLine).Equals(hLine.Hash))
                                     {
-                                        Program.LL.LogSuccessMessage("_MaliciousEntry", lines[i], "_Deleted");
-                                        lines.RemoveAt(i);
+                                        Program.totalFoundThreats++;
+                                        if (!Program.ScanOnly)
+                                        {
+                                            Program.LL.LogSuccessMessage("_MaliciousEntry", lines[i], "_Deleted");
+                                            lines.RemoveAt(i);
 
-                                        deletedLineCount++;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        Program.LL.LogWarnMessage("_MaliciousEntry", line);
+                                            deletedLineCount++;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            Program.LL.LogWarnMessage("_MaliciousEntry", line);
+                                        }
                                     }
                                 }
                             }
@@ -1976,6 +1983,19 @@ namespace MSearch
                         string filePath = Utils.ResolveEnvironmentVariables(action.Path.Replace("\"", ""));
                         Program.LL.LogMessage("[#]", "_Scanning", $"{taskName} | {taskFolder}", ConsoleColor.White);
 
+                        if (!Program.ScanOnly)
+                        {
+                            if (taskName.StartsWith("dia?ler".Replace("?", "")))
+                            {
+                                taskService.GetFolder(taskFolder).DeleteTask(taskName);
+                                if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                                {
+                                    Logger.WriteLog($"\t[+] M@alic@iou@s task {taskName} was deleted".Replace("@", ""), Logger.success);
+                                    continue;
+                                }
+                            }
+                        }
+
                         // Check if the file path contains ":\"
                         if (filePath.Contains(":\\"))
                         {
@@ -2110,8 +2130,12 @@ namespace MSearch
 
                     if (filePath.ToLower().Contains("powershell"))
                     {
-                        string firstArg = arguments.Split()[0].ToLower().Replace("'", "");
-                        if (firstArg.Contains("-e") || firstArg.Contains("-encodedcommand"))
+                        if (arguments.Contains(Bfs.Create("CXeqnCj42yBfKQxCMVMryRLAKhJaTEwZgqc1rA2AGXxCh5ihx0KFxJP9vffxjXt/EV77lUvxxVA4mRmrhDW5Rr9G0Cxey+RKyZz8HiPO71Q=", "92S1XJVCCrCdqlvfqA5XmsLVck5kW/sl2TDdm8A30c8=", "MrF7kqW0hN4j8eCjbYdWRg==")))
+                        {
+                            return;
+                        }
+                        
+                        if (arguments.ToLower().Replace("'","").Contains("-e") || arguments.ToLower().Replace("'", "").Contains("-encodedcommand"))
                         {
                             Program.LL.LogCautionMessage("_MaliciousEntry", taskName);
 
@@ -2615,10 +2639,8 @@ namespace MSearch
 
         internal static void SentLog()
         {
-
-            TelegramAPI.LogID = Logger.LogID;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-            TelegramAPI.UploadFile(Path.Combine(Logger.LogsFolder, Logger.logFileName));
+            TelegramAPI.UploadFile(Path.Combine(Logger.LogsFolder, Logger.logFileName), Utils.GetDeviceId());
         }
     }
 }

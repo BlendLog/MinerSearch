@@ -7,7 +7,6 @@ namespace MSearch
     {
         internal static string logFileName = $"M?in?er?Sea?rch_{DateTime.Now}.log".Replace("/", "_").Replace("?", "").Replace(":", "-").Replace(" ", "_");
         public static string LogsFolder = Path.Combine(Program.drive_letter + ":\\", "_Mi?n?erSe?a?rchLogs".Replace("?", ""));
-        public static string LogID = Utils.GetRndString(32).ToUpper();
 
         public static readonly ConsoleColor error = ConsoleColor.Red;
         public static readonly ConsoleColor success = ConsoleColor.Green;

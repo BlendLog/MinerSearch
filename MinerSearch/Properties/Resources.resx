@@ -1145,10 +1145,10 @@ Click Yes to continue. Click No to exit.</value>
     <value>Перезапуск службы...</value>
   </data>
   <data name="_BtnDetails_EN" xml:space="preserve">
-    <value>Details</value>
+    <value>Show Log</value>
   </data>
   <data name="_BtnDetails_RU" xml:space="preserve">
-    <value>Подробно</value>
+    <value>Показать отчёт</value>
   </data>
   <data name="_LogLegend_RU" xml:space="preserve">
     <value>--------------Условные-обозначения-------------------
@@ -1165,7 +1165,8 @@ Click Yes to continue. Click No to exit.</value>
 [_]     Разблокировка каталога и удаление, если пуст
 [i]     Информация
 [$]     Затраченное время сканирования
-[&amp;]     Итог</value>
+[&amp;]     Итог
+-----------------------------------------------------</value>
   </data>
   <data name="_ServiceDcomAbusing_EN" xml:space="preserve">
     <value>Svchost Hijacking module:</value>
@@ -1188,12 +1189,25 @@ Click Yes to continue. Click No to exit.</value>
 [_]     Unblocking the directory and deleting if empty
 [i]     Information
 [$]     Elapsed scan time
-[&amp;]     Summary</value>
+[&amp;]     Summary
+----------------------------------------------------</value>
   </data>
   <data name="_AllowSentStatistics_EN" xml:space="preserve">
     <value>Do you allow sending a log file (scan log of detected threats) to the developer every time you use it? This will help to improve the operation of the application.</value>
   </data>
   <data name="_AllowSentStatistics_RU" xml:space="preserve">
     <value>Разрешить отправлять лог-файл (журнал сканирования найденных угроз) разработчику при каждом использовании? Это поможет улучшить работу приложения.</value>
+  </data>
+  <data name="_MovedToQuarantine_EN" xml:space="preserve">
+    <value>Moved to Quarantine</value>
+  </data>
+  <data name="_MovedToQuarantine_RU" xml:space="preserve">
+    <value>Перемещено в карантин</value>
+  </data>
+  <data name="_PleaseWaitMessage_EN" xml:space="preserve">
+    <value>Wait...</value>
+  </data>
+  <data name="_PleaseWaitMessage_RU" xml:space="preserve">
+    <value>Подождите...</value>
   </data>
 </root>
