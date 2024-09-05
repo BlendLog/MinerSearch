@@ -452,10 +452,30 @@ namespace MSearch
             if (_neutralizedThreats <= Math.Round(Convert.ToDouble(_neutralizedThreats / 2))) color = ConsoleColor.Yellow;
 
             Logger.WriteLog($"\t\t[&] {totalThreats} {_totalThreats}", ConsoleColor.Magenta, false);
-            Logger.WriteLog($"\t\t[&] {neutralizedThreats} {_neutralizedThreats}", color, false);
+
+            if (!Program.ScanOnly)
+            {
+                Logger.WriteLog($"\t\t[&] {neutralizedThreats} {_neutralizedThreats}", color, false);
+            }
+
             Console.ResetColor();
         }
 
+        public void LogWriteWithoutDisplay(bool NoDisplay, bool DisplayTime)
+        {
+            string text = Resources._LogLegend_EN;
 
+            switch (Program.ActiveLanguage)
+            {
+                case "RU":
+                    text = Resources._LogLegend_RU;
+                    break;
+                case "EN":
+                    text = Resources._LogLegend_EN;
+                    break;
+            }
+          
+            Logger.WriteLog("\n\n" + text, NoDisplay, DisplayTime);
+        }
     }
 }

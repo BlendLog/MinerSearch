@@ -54,6 +54,7 @@ namespace MSearch
 
         internal static string GetCommandLine(Process process)
         {
+
             string cmdLine = null;
             using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(msData.queries[10] + process.Id))
             {
@@ -66,6 +67,7 @@ namespace MSearch
             return cmdLine;
         }
 
+        
         internal static string Sizer(long CountBytes)
         {
             string[] type = { "B", "KB", "MB", "GB" };
@@ -203,7 +205,6 @@ namespace MSearch
             catch (Exception ex)
             {
                 new LocalizedLogger().LogErrorMessage("_Error", ex);
-
             }
 
         }
@@ -506,7 +507,7 @@ namespace MSearch
                     files.AddRange(Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly));
                     foreach (var directory in Directory.EnumerateDirectories(path))
                     {
-                        if (!IsReparsePoint(directory) && 
+                        if (!IsReparsePoint(directory) &&
                             !directory.Contains(":\\Windows\\WinSxS") &&
                             !directory.Contains(":\\$") &&
                             !directory.Contains("mi?ner?se?arch_quarantine".Replace("?", "")) &&
@@ -677,6 +678,21 @@ namespace MSearch
                         ServiceHelper.StartService(serviceName);
                         Program.LL.LogSuccessMessage("_CriticalServiceRestart");
                     }
+
+                    try
+                    {
+                        GetProcessOwner(Process.GetProcessesByName("explorer")[0].Id);
+                        GetServiceImagePath("Dhcp");
+                    }
+                    catch (ManagementException me)
+                    {
+                        if (me.ErrorCode == ManagementStatus.InvalidClass)
+                        {
+                            Utils.RestoreWMICorruption();
+                        }
+                        throw me;
+                    }
+
                 }
                 else
                 {
@@ -696,6 +712,81 @@ namespace MSearch
 
         }
 
+        internal static void RestoreWMICorruption()
+        {
+            if (Program.RestoredWMI)
+            {
+                throw new Exception("WMI_Corruption");
+            }
+
+            Program.LL.LogMessage("\t\t[xxx]", "_WMICorruption", "", ConsoleColor.Red, false);
+
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+
+            Program.LL.LogHeadMessage("_WMIRecompilation");
+
+            string wbemPath = Path.Combine(Environment.SystemDirectory, "Wbem");
+
+            List<string> filteredMof = Directory
+                    .EnumerateFiles(wbemPath, "*.*", SearchOption.AllDirectories)
+                    .Where(file => new FileInfo(file).Extension.Equals(".mof") || new FileInfo(file).Extension.Equals(".mfl"))
+                    .ToList();
+
+            foreach (var file in filteredMof)
+            {
+                if (File.Exists(file))
+                {
+                    Process.Start(new ProcessStartInfo()
+                    {
+                        FileName = "mofcomp.exe",
+                        Arguments = $"\"{file}\"",
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }).WaitForExit();
+                }
+            }
+
+            Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
+            Program.LL.LogHeadMessage("_WMIRegister");
+
+            foreach (var file in Directory.GetFiles(wbemPath, "*.dll", SearchOption.AllDirectories))
+            {
+                if (File.Exists(file))
+                {
+                    Process.Start(new ProcessStartInfo()
+                    {
+                        FileName = "regsvr32.exe",
+                        Arguments = $"-s \"{file}\"",
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }).WaitForExit();
+                }
+            }
+
+
+            Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
+            Program.LL.LogHeadMessage("_WMIRestartService");
+
+            ServiceController service = new ServiceController("winmgmt");
+            if (service.Status != ServiceControllerStatus.Stopped)
+            {
+                service.Stop();
+                service.WaitForStatus(ServiceControllerStatus.Stopped);
+            }
+            Thread.Sleep(3000);
+            service.Start();
+            service.WaitForStatus(ServiceControllerStatus.Running);
+
+
+            Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
+            Program.LL.LogHeadMessage("_WMIRestartApplication");
+
+            Thread.Sleep(2000);
+            mutex.ReleaseMutex();
+            Process.Start(Application.ExecutablePath, "-R");
+            Environment.Exit(0);
+        }
+
         internal void CheckTermService()
         {
             string registryPath = msData.queries[13]; //SYSTEM\CurrentControlSet\Services\TermService\Parameters
@@ -703,75 +794,83 @@ namespace MSearch
 
             string paramName = "Ser/vice/Dll".Replace("/", "");
 
-
             using (var regkey = Registry.LocalMachine.OpenSubKey(registryPath, true))
             {
-                string currentValue = (string)regkey.GetValue(paramName);
-                if (currentValue != ResolveEnvironmentVariables(desiredValue))
+                if (regkey != null)
                 {
-                    Program.LL.LogWarnMessage("_TermServiceInvalidPath", currentValue);
-                    Program.totalFoundThreats++;
-
-
-                    if (!Program.ScanOnly)
+                    string currentValue = (string)regkey.GetValue(paramName);
+                    if (currentValue != null)
                     {
-                        try
+                        if (currentValue != ResolveEnvironmentVariables(desiredValue))
                         {
-                            string termsrv = "TermService";
-                            string UmRdpSrv = "UmRdpService";
+                            Program.LL.LogWarnMessage("_TermServiceInvalidPath", currentValue);
+                            Program.totalFoundThreats++;
 
-                            var UmRdpSrvInfo = ServiceHelper.GetServiceInfo(UmRdpSrv);
-                            var termSrvInfo = ServiceHelper.GetServiceInfo(termsrv);
 
-                            if (ServiceHelper.GetServiceState(UmRdpSrv) == ServiceHelper.ServiceState.Running)
+                            if (!Program.ScanOnly)
                             {
-                                ServiceHelper.StopService(UmRdpSrv);
-                            }
+                                try
+                                {
+                                    string termsrv = "TermService";
+                                    string UmRdpSrv = "UmRdpService";
 
-                            if ((ServiceHelper.ServiceBootFlag)UmRdpSrvInfo.StartType != ServiceHelper.ServiceBootFlag.DemandStart)
+                                    var UmRdpSrvInfo = ServiceHelper.GetServiceInfo(UmRdpSrv);
+                                    var termSrvInfo = ServiceHelper.GetServiceInfo(termsrv);
+
+                                    if (ServiceHelper.GetServiceState(UmRdpSrv) == ServiceHelper.ServiceState.Running)
+                                    {
+                                        ServiceHelper.StopService(UmRdpSrv);
+                                    }
+
+                                    if ((ServiceHelper.ServiceBootFlag)UmRdpSrvInfo.StartType != ServiceHelper.ServiceBootFlag.DemandStart)
+                                    {
+                                        ServiceHelper.ChangeStartMode(UmRdpSrv, ServiceHelper.ServiceBootFlag.DemandStart);
+                                    }
+
+                                    if (ServiceHelper.GetServiceState(termsrv) == ServiceHelper.ServiceState.Running)
+                                    {
+                                        ServiceHelper.StopService(termsrv);
+                                    }
+
+                                    if ((ServiceHelper.ServiceBootFlag)termSrvInfo.StartType != ServiceHelper.ServiceBootFlag.DemandStart)
+                                    {
+                                        ServiceHelper.ChangeStartMode(termsrv, ServiceHelper.ServiceBootFlag.DemandStart);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Program.LL.LogErrorMessage("_Error", ex);
+                                    return;
+                                }
+
+                                regkey.SetValue(paramName, desiredValue, RegistryValueKind.ExpandString);
+                                currentValue = (string)regkey.GetValue(paramName);
+                                if (currentValue == ResolveEnvironmentVariables(desiredValue))
+                                {
+                                    Program.LL.LogSuccessMessage("_TermServiceRestored");
+
+                                }
+                                else
+                                {
+                                    Program.LL.LogErrorMessage("_TermServiceFailedRestore", new Exception(""));
+                                }
+                            }
+                            else
                             {
-                                ServiceHelper.ChangeStartMode(UmRdpSrv, ServiceHelper.ServiceBootFlag.DemandStart);
+                                LocalizedLogger.LogScanOnlyMode();
                             }
-
-                            if (ServiceHelper.GetServiceState(termsrv) == ServiceHelper.ServiceState.Running)
-                            {
-                                ServiceHelper.StopService(termsrv);
-                            }
-
-                            if ((ServiceHelper.ServiceBootFlag)termSrvInfo.StartType != ServiceHelper.ServiceBootFlag.DemandStart)
-                            {
-                                ServiceHelper.ChangeStartMode(termsrv, ServiceHelper.ServiceBootFlag.DemandStart);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Program.LL.LogErrorMessage("_Error", ex);
-                            return;
-                        }
-
-                        regkey.SetValue(paramName, desiredValue, RegistryValueKind.ExpandString);
-                        currentValue = (string)regkey.GetValue(paramName);
-                        if (currentValue == ResolveEnvironmentVariables(desiredValue))
-                        {
-                            Program.LL.LogSuccessMessage("_TermServiceRestored");
-                            
                         }
                         else
                         {
-                            Program.LL.LogErrorMessage("_TermServiceFailedRestore", new Exception(""));
+                            LocalizedLogger.LogNoThreatsFound();
                         }
-                    }
-                    else
-                    {
-                        LocalizedLogger.LogScanOnlyMode();
                     }
                 }
                 else
                 {
-                    LocalizedLogger.LogNoThreatsFound();
+                    Program.LL.LogWarnMediumMessage("_ServiceNotInstalled", "T?ermS?ervi?ce".Replace("?", ""));
                 }
             }
-
 
         }
 
@@ -916,18 +1015,26 @@ namespace MSearch
         {
             using (var md5 = MD5.Create())
             {
-                using (var stream = File.OpenRead(filePath))
+                try
                 {
-                    byte[] hashBytes = md5.ComputeHash(stream);
-                    StringBuilder sb = new StringBuilder();
-
-                    foreach (byte b in hashBytes)
+                    using (var stream = File.OpenRead(filePath))
                     {
-                        sb.Append(b.ToString("x2")); // Convert each byte to a hexadecimal string
-                    }
+                        byte[] hashBytes = md5.ComputeHash(stream);
+                        StringBuilder sb = new StringBuilder();
 
-                    return sb.ToString();
+                        foreach (byte b in hashBytes)
+                        {
+                            sb.Append(b.ToString("x2")); // Convert each byte to a hexadecimal string
+                        }
+
+                        return sb.ToString();
+                    }
                 }
+                catch (IOException)
+                {
+                    return "N/A";
+                }
+
             }
         }
 
@@ -1104,7 +1211,8 @@ namespace MSearch
 
         internal static string GetServiceImagePath(string serviceName)
         {
-            using (var sc = new System.Management.ManagementObject($"Win32_Service.Name='{serviceName}'"))
+
+            using (var sc = new ManagementObject($"Win32_Service.Name='{serviceName}'"))
             {
                 string sPath = sc["PathName"]?.ToString();
 
@@ -1118,7 +1226,7 @@ namespace MSearch
 
         internal static void SetServiceStartType(string serviceName, ServiceStartMode startMode)
         {
-            using (var service = new System.Management.ManagementObject($"Win32_Service.Name='{serviceName}'"))
+            using (var service = new ManagementObject($"Win32_Service.Name='{serviceName}'"))
             {
                 var inParams = service.GetMethodParameters("ChangeStartMode");
                 inParams["StartMode"] = startMode.ToString();
@@ -1128,10 +1236,12 @@ namespace MSearch
 
         internal static ServiceStartMode GetServiceStartType(string serviceName)
         {
+
             using (var service = new System.Management.ManagementObject($"Win32_Service.Name='{serviceName}'"))
             {
                 return (ServiceStartMode)Enum.Parse(typeof(ServiceStartMode), service["StartMode"].ToString().Replace("Auto", "Automatic"));
             }
+
         }
 
         internal static byte[] SerializeObject(object obj)
@@ -1206,7 +1316,6 @@ namespace MSearch
 
         internal void RemoveRenamedFilesData()
         {
-            LocalizedLogger LL = new LocalizedLogger();
             try
             {
                 using (RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\M1nerSearch", true))
@@ -1315,7 +1424,6 @@ namespace MSearch
 
         internal void ProccedFileFromArgs(string fullpath, string arguments)
         {
-            LocalizedLogger LL = new LocalizedLogger();
             string[] checkDirs =
             {
                 Environment.SystemDirectory, // System32
@@ -1495,7 +1603,7 @@ namespace MSearch
                 {
                     Program.LL.LogErrorMessage("_ErrorCannotRemove", ex, sourceFilePath, "_File");
                 }
-            }            
+            }
         }
 
         internal static void RestoreFromQuarantine(string encryptedFilePath, string restoredFilePath, byte[] key)
@@ -1548,6 +1656,8 @@ namespace MSearch
 
         public static string GetProcessOwner(int processId)
         {
+
+
             foreach (ManagementObject managementObject in new ManagementObjectSearcher(msData.queries[11] + processId.ToString()).Get())
             {
                 string[] args = new string[2]
@@ -1559,6 +1669,7 @@ namespace MSearch
                     return args[1] + "\\" + args[0];
             }
             return "N/A";
+
         }
 
         internal static bool IsDotNetInstalled()
@@ -1643,6 +1754,180 @@ namespace MSearch
             }
 
             return Directory.Exists(path);
+        }
+
+        internal bool GetR77Processes(ref Native.R77_PROCESS[] r77Processes, ref uint count)
+        {
+            bool result = true;
+            uint actualCount = 0;
+
+            uint[] processes = new uint[Native.MaxProcesses];
+            int processCount = 0;
+            IntPtr[] modules = new IntPtr[Native.MaxModules];
+            uint moduleCount = 0;
+            byte[] moduleBytes = new byte[512];
+
+            if (Native.EnumProcesses(processes, processes.Length * sizeof(uint), out processCount))
+            {
+                processCount /= sizeof(uint);
+
+                for (int i = 0; i < processCount; i++)
+                {
+                    IntPtr process = Native.OpenProcess(0x0410 /* PROCESS_QUERY_INFORMATION | PROCESS_VM_READ */, false, (int)processes[i]);
+                    if (process != IntPtr.Zero)
+                    {
+                        if (Native.EnumProcessModulesEx(process, modules, (uint)modules.Length * (uint)IntPtr.Size, out moduleCount, 0x03 /* LIST_MODULES_ALL */))
+                        {
+                            moduleCount /= (uint)IntPtr.Size;
+
+                            for (uint j = 0; j < moduleCount; j++)
+                            {
+                                if (Native.ReadProcessMemory(process, modules[j], moduleBytes, moduleBytes.Length, IntPtr.Zero))
+                                {
+                                    ushort signature = BitConverter.ToUInt16(moduleBytes, 0x40);
+                                    if (signature == Native.R77_SIGNATURE || signature == Native.R77_SERVICE_SIGNATURE || signature == Native.R77_HELPER_SIGNATURE)
+                                    {
+                                        if (actualCount < count)
+                                        {
+                                            r77Processes[actualCount].ProcessId = processes[i];
+                                            r77Processes[actualCount].Signature = signature;
+                                            r77Processes[actualCount++].DetachAddress = (signature == Native.R77_SIGNATURE) ? BitConverter.ToUInt64(moduleBytes, 0x40 + 2) : 0;
+                                        }
+                                        else
+                                        {
+                                            result = false;
+                                        }
+
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        Native.CloseHandle(process);
+                    }
+                }
+            }
+
+            count = actualCount;
+            return result;
+        }
+
+        internal bool DetachInjectedProcess(ref Native.R77_PROCESS r77Process)
+        {
+            bool result = false;
+            IntPtr process = IntPtr.Zero;
+            if (r77Process.Signature == Native.R77_SIGNATURE)
+            {
+                process = Native.OpenProcess(0x1F0FFF /* PROCESS_ALL_ACCESS */, false, (int)r77Process.ProcessId);
+                if (process != IntPtr.Zero)
+                {
+                    IntPtr thread = IntPtr.Zero;
+                    int status = Native.NtCreateThreadEx(
+                        out thread,
+                        0x1FFFFF, /* Desired Access */
+                        IntPtr.Zero, /* Object Attributes */
+                        process, /* Process Handle */
+                        new IntPtr((long)r77Process.DetachAddress), /* Start Address */
+                        IntPtr.Zero, /* Parameter */
+                        false, /* Create Suspended */
+                        0, /* Stack Zero Bits */
+                        0, /* Size Of Stack */
+                        0, /* Maximum Stack Size */
+                        IntPtr.Zero /* Attribute List */
+                    );
+
+                    if (status >= 0 && thread != IntPtr.Zero)
+                    {
+#if DEBUG
+                        Console.WriteLine($"\tDetach process pid: {r77Process.ProcessId}");
+#endif 
+                        result = true;
+                        Native.CloseHandle(thread);
+                    }
+
+                    Native.CloseHandle(process);
+                }
+            }
+
+            return result;
+        }
+
+        internal void DetachAllInjectedProcesses(Native.R77_PROCESS[] r77Processes, uint r77ProcessCount)
+        {
+            for (uint i = 0; i < r77ProcessCount; i++)
+            {
+                DetachInjectedProcess(ref r77Processes[i]);
+            }
+        }
+
+        internal void TerminateR77Service(int excludedProcessId)
+        {
+            Native.R77_PROCESS[] r77Processes = new Native.R77_PROCESS[Native.MaxProcesses];
+            uint r77ProcessCount = Native.MaxProcesses;
+            if (GetR77Processes(ref r77Processes, ref r77ProcessCount))
+            {
+                for (int i = 0; i < r77ProcessCount; i++)
+                {
+                    if (r77Processes[i].Signature == Native.R77_SERVICE_SIGNATURE && r77Processes[i].ProcessId != excludedProcessId)
+                    {
+                        IntPtr process = Native.OpenProcess(0x0001, false, (int)r77Processes[i].ProcessId);
+                        if (process != IntPtr.Zero)
+                        {
+                            Native.NtTerminateProcess(process, 0);
+                            Native.CloseHandle(process);
+                        }
+                    }
+                }
+            }
+        }
+
+        internal void RemoveR77Config()
+        {
+            string[] patterns = { "dll32", "dll64", "stager" };
+
+            using (RegistryKey baseKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true))
+            {
+                if (baseKey != null)
+                {
+                    foreach (string valueName in baseKey.GetValueNames())
+                    {
+                        foreach (string pattern in patterns)
+                        {
+                            if (valueName.EndsWith(pattern, StringComparison.OrdinalIgnoreCase))
+                            {
+                                Program.LL.LogSuccessMessage("_RegistryKeyRemoved", valueName);
+                                baseKey.DeleteValue(valueName);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            string subKeyPath = @"dia?ler?con?fig".Replace("?", "");
+
+            using (RegistryKey baseKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true))
+            {
+                if (baseKey != null && baseKey.OpenSubKey(subKeyPath) != null)
+                {
+                    baseKey.DeleteSubKeyTree(subKeyPath);
+                    Program.LL.LogSuccessMessage("_RegistryKeyRemoved", subKeyPath);
+                }
+            }
+
+        }
+
+        //public static string GetFileImpHash(string path) //too slow
+        //{
+        //    return new ImportHash(new PeNet.PeFile(File.ReadAllBytes(path)).ImportedFunctions).ImpHash;
+        //}
+
+        internal static int GetServiceId(string serviceName)
+        {
+            ManagementObject service = new ManagementObject(@"Win32_service.Name='" + serviceName + "'");
+            object serviceObject = service.GetPropertyValue("ProcessId");
+            return (int)(uint)serviceObject;
         }
     }
 }

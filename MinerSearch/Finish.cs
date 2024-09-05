@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MSearch
@@ -66,21 +69,98 @@ namespace MSearch
             base.WndProc(ref m);
         }
 
-        private void Finish_Load(object sender, EventArgs e)
+        private async void Finish_Load(object sender, EventArgs e)
         {
             TopMost = true;
             TranslateForm();
             MessageBox.Show(Program.LL.GetLocalizedString("_End"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Information);
-            Text = Utils.GetRndString();
 
+            string registryPath = @"Software\M1nerSearch";
+            string valueName = "allowstatistics";
+
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath, true);
+
+            if (key == null)
+            {
+                key = Registry.CurrentUser.CreateSubKey(registryPath);
+            }
+
+            object regValue = key.GetValue(valueName);
+
+            if (regValue == null)
+            {
+                key.SetValue(valueName, 2, RegistryValueKind.DWord);
+                regValue = 2;
+            }
+
+            int allowStatistics = (int)regValue;
+
+            if (allowStatistics == 2)
+            {
+                var result = MessageBox.Show(Program.LL.GetLocalizedString("_AllowSentStatistics"), Utils.GetRndString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    key.SetValue(valueName, 1, RegistryValueKind.DWord);
+                    
+                    if (!Program.no_logs && !Utils.GetWindowsVersion().Contains("Windows 7"))
+                    {
+                        try
+                        {
+                            await Task.Run(() => MinerSearch.SentLog());
+                            button1.Visible = true;
+                        }
+                        catch (System.IO.FileNotFoundException fnf)
+                        {
+                            Program.LL.LogErrorMessage("_Error", fnf);
+                            button1.Visible = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.LL.LogErrorMessage("_Error", ex);
+                            button1.Visible = true;
+                        }
+
+                    }
+                }
+            }
+            else if (allowStatistics == 1)
+            {
+                if (!Program.no_logs && !Utils.GetWindowsVersion().Contains("Windows 7"))
+                {
+                    try
+                    {
+                        await Task.Run(() => MinerSearch.SentLog());
+                        button1.Visible = true;
+                    }
+                    catch (System.IO.FileNotFoundException fnf)
+                    {
+                        Program.LL.LogErrorMessage("_Error", fnf);
+                        button1.Visible = true;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Program.LL.LogErrorMessage("_Error", ex);
+                        button1.Visible = true;
+                    }
+                }
+            }
+            else
+            {
+                button1.Visible = true;
+            }
+            key.Close();
         }
 
         void TranslateForm()
         {
             if (Program.ActiveLanguage != "RU")
             {
-                LBL_yoomoney.Visible = false;
+                textBox1.Select(0, 0);
+                yoomoney_tb.Visible = false;
             }
+            else yoomoney_tb.Select(0, 0);
 
             if (Program.totalFoundThreats > 0)
             {
@@ -92,14 +172,17 @@ namespace MSearch
                 LBL_totalThreats.ForeColor = System.Drawing.Color.DarkGreen;
                 LBL_threatsCount.ForeColor = System.Drawing.Color.DarkGreen;
             }
-            
+
             if (Program.ScanOnly || Program.totalFoundThreats == 0)
             {
                 LBL_neutralizedThreats.Visible = false;
                 LBL_curedCount.Visible = false;
             }
 
-
+            if (Program.no_logs)
+            {
+                btnDetails.Visible = false;
+            }
 
             LBL_ScanComplete.Text = Program.LL.GetLocalizedString("_End");
             LBL_totalThreats.Text = Program.LL.GetLocalizedString("_TotalThreatsFound");
@@ -107,6 +190,7 @@ namespace MSearch
             LBL_JoinTelegram.Text = Program.LL.GetLocalizedString("_JoinToTelegram");
             LBL_ScanTime.Text = Program.LL.GetLocalizedString("_Elapse");
             LBL_Support.Text = Program.LL.GetLocalizedString("_LabelSupport");
+            btnDetails.Text = Program.LL.GetLocalizedString("_BtnDetails");
         }
 
         private void pb_QR_MouseEnter(object sender, EventArgs e)
@@ -172,6 +256,18 @@ namespace MSearch
         private void label1_Click(object sender, EventArgs e)
         {
             OpenExternalLink("https://boosty.to/BlendLog/donate");
+        }
+
+        private void btnDetails_Click(object sender, EventArgs e)
+        {
+            string logpath = Path.Combine(Logger.LogsFolder, Logger.logFileName);
+            if (!File.Exists(logpath))
+            {
+                return;
+            }
+
+            string argument = "/select, \"" + logpath + "\"";
+            Process.Start("explorer.exe", argument);
         }
     }
 }

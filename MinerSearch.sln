@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinerSearch", "MinerSearch\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbase", "base\dbase.csproj", "{B623BF11-5FDD-4D88-856F-233F94C8647D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "netlib", "netlib\netlib.csproj", "{9FDE29C5-F490-4144-8FEF-91555B0166A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{B623BF11-5FDD-4D88-856F-233F94C8647D}.Release|x64.Build.0 = Release|Any CPU
 		{B623BF11-5FDD-4D88-856F-233F94C8647D}.Release|x86.ActiveCfg = Release|Any CPU
 		{B623BF11-5FDD-4D88-856F-233F94C8647D}.Release|x86.Build.0 = Release|Any CPU
+		{9FDE29C5-F490-4144-8FEF-91555B0166A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FDE29C5-F490-4144-8FEF-91555B0166A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FDE29C5-F490-4144-8FEF-91555B0166A6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9FDE29C5-F490-4144-8FEF-91555B0166A6}.Debug|x64.Build.0 = Debug|Any CPU
+		{9FDE29C5-F490-4144-8FEF-91555B0166A6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9FDE29C5-F490-4144-8FEF-91555B0166A6}.Debug|x86.Build.0 = Debug|Any CPU
+		{9FDE29C5-F490-4144-8FEF-91555B0166A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FDE29C5-F490-4144-8FEF-91555B0166A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FDE29C5-F490-4144-8FEF-91555B0166A6}.Release|x64.ActiveCfg = Release|Any CPU
+		{9FDE29C5-F490-4144-8FEF-91555B0166A6}.Release|x64.Build.0 = Release|Any CPU
+		{9FDE29C5-F490-4144-8FEF-91555B0166A6}.Release|x86.ActiveCfg = Release|Any CPU
+		{9FDE29C5-F490-4144-8FEF-91555B0166A6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

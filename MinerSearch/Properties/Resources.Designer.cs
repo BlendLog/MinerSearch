@@ -107,6 +107,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Do you allow sending a log file (scan log of detected threats) to the developer every time you use it? This will help to improve the operation of the application..
+        /// </summary>
+        internal static string _AllowSentStatistics_EN {
+            get {
+                return ResourceManager.GetString("_AllowSentStatistics_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Разрешить отправлять лог-файл (журнал сканирования найденных угроз) разработчику при каждом использовании? Это поможет улучшить работу приложения..
+        /// </summary>
+        internal static string _AllowSentStatistics_RU {
+            get {
+                return ResourceManager.GetString("_AllowSentStatistics_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Already proceeded.
         /// </summary>
         internal static string _AlreadyProceeded_EN {
@@ -283,6 +301,24 @@ namespace MSearch.Properties {
         internal static string _BootMode_RU {
             get {
                 return ResourceManager.GetString("_BootMode_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Details.
+        /// </summary>
+        internal static string _BtnDetails_EN {
+            get {
+                return ResourceManager.GetString("_BtnDetails_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подробно.
+        /// </summary>
+        internal static string _BtnDetails_RU {
+            get {
+                return ResourceManager.GetString("_BtnDetails_RU", resourceCulture);
             }
         }
         
@@ -1362,6 +1398,50 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на --------------Legend-symbols-------------------
+        ///[!]     Minor warning
+        ///[!!]    A warning worth paying attention to
+        ///[!!!]   A threat has been detected
+        ///[!!!!]  A rootkit has been detected
+        ///[reg]   Scan the registry key(s)
+        ///[+]     Successful completion of the action (treatment, removal, etc.)
+        ///[x]     Error
+        ///[xxx]   Critical error: for example, when running in the sandbox
+        ///[#]     Status
+        ///[.]     Description
+        ///[_]     Unblocking the directory and deleting if empty
+        ///[i]     Information
+        ///[$]     Elapsed scan  [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string _LogLegend_EN {
+            get {
+                return ResourceManager.GetString("_LogLegend_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на --------------Условные-обозначения-------------------
+        ///[!]     Незначительное предупреждение
+        ///[!!]    Предупреждение, на которое стоит обратить внимание
+        ///[!!!]   Обнаружена угроза
+        ///[!!!!]  Обнаружен руткит
+        ///[Reg]   Cканирование раздела(ов) реестра
+        ///[+]     Успешное выполнение действия (лечение, удаление и т.д.)
+        ///[x]     Ошибка
+        ///[xxx]   Критическая ошибка: например, при запуске в песочнице
+        ///[#]     Статус
+        ///[.]     Описание
+        ///[_]     Разблокировка каталога и удаление, если пуст
+        ///[i]     Информация
+        ///[$]     Зат [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string _LogLegend_RU {
+            get {
+                return ResourceManager.GetString("_LogLegend_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Mali?cious file:.
         /// </summary>
         internal static string _Malici0usFile_EN {
@@ -2174,6 +2254,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Svchost Hijacking module:.
+        /// </summary>
+        internal static string _ServiceDcomAbusing_EN {
+            get {
+                return ResourceManager.GetString("_ServiceDcomAbusing_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Модуль перехвата Svchost:.
+        /// </summary>
+        internal static string _ServiceDcomAbusing_RU {
+            get {
+                return ResourceManager.GetString("_ServiceDcomAbusing_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Service has been disabled.
         /// </summary>
         internal static string _ServiceDisabled_EN {
@@ -2228,6 +2326,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Specified service is not installed:.
+        /// </summary>
+        internal static string _ServiceNotInstalled_EN {
+            get {
+                return ResourceManager.GetString("_ServiceNotInstalled_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Указанная служба не установлена:.
+        /// </summary>
+        internal static string _ServiceNotInstalled_RU {
+            get {
+                return ResourceManager.GetString("_ServiceNotInstalled_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Service has been stopped.
         /// </summary>
         internal static string _ServiceStopped_EN {
@@ -2246,7 +2362,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на S???F????X A????rch???i????ve??:.
+        ///   Ищет локализованную строку, похожую на S??F????X A????rch???i???ve??:.
         /// </summary>
         internal static string _sfxArchive_EN {
             get {
@@ -2255,7 +2371,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на ????S??F?X?? А?р?хив:.
+        ///   Ищет локализованную строку, похожую на ???S??F?X?? А?р?хив:.
         /// </summary>
         internal static string _sfxArchive_RU {
             get {
@@ -2368,6 +2484,24 @@ namespace MSearch.Properties {
         internal static string _State_RU {
             get {
                 return ResourceManager.GetString("_State_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Rootkit neutralized.
+        /// </summary>
+        internal static string _SuccessR00tkitNeutralized_EN {
+            get {
+                return ResourceManager.GetString("_SuccessR00tkitNeutralized_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Руткит нейтрализован.
+        /// </summary>
+        internal static string _SuccessR00tkitNeutralized_RU {
+            get {
+                return ResourceManager.GetString("_SuccessR00tkitNeutralized_RU", resourceCulture);
             }
         }
         
@@ -2768,6 +2902,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на WMI Database corrupted. Trying to restore...Please wait.
+        /// </summary>
+        internal static string _WMICorruption_EN {
+            get {
+                return ResourceManager.GetString("_WMICorruption_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на База данных WMI повреждена. Выполняется восстановление...пожалуйста, ждите.
+        /// </summary>
+        internal static string _WMICorruption_RU {
+            get {
+                return ResourceManager.GetString("_WMICorruption_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на WMI Event .
         /// </summary>
         internal static string _WMIEvent_EN {
@@ -2800,6 +2952,78 @@ namespace MSearch.Properties {
         internal static string _WMIHead_RU {
             get {
                 return ResourceManager.GetString("_WMIHead_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Recompile necessary MOF files....
+        /// </summary>
+        internal static string _WMIRecompilation_EN {
+            get {
+                return ResourceManager.GetString("_WMIRecompilation_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Рекомпиляция необходимых фалов....
+        /// </summary>
+        internal static string _WMIRecompilation_RU {
+            get {
+                return ResourceManager.GetString("_WMIRecompilation_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Register necessary DLLs....
+        /// </summary>
+        internal static string _WMIRegister_EN {
+            get {
+                return ResourceManager.GetString("_WMIRegister_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Регистрация необходимых DLL....
+        /// </summary>
+        internal static string _WMIRegister_RU {
+            get {
+                return ResourceManager.GetString("_WMIRegister_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Restart Application....
+        /// </summary>
+        internal static string _WMIRestartApplication_EN {
+            get {
+                return ResourceManager.GetString("_WMIRestartApplication_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Перезапуск приложения....
+        /// </summary>
+        internal static string _WMIRestartApplication_RU {
+            get {
+                return ResourceManager.GetString("_WMIRestartApplication_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Restart service....
+        /// </summary>
+        internal static string _WMIRestartService_EN {
+            get {
+                return ResourceManager.GetString("_WMIRestartService_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Перезапуск службы....
+        /// </summary>
+        internal static string _WMIRestartService_RU {
+            get {
+                return ResourceManager.GetString("_WMIRestartService_RU", resourceCulture);
             }
         }
         

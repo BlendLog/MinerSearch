@@ -413,7 +413,7 @@
     <value>служба не установлена!</value>
   </data>
   <data name="_sfxArchive_RU" xml:space="preserve">
-    <value>????S??F?X?? А?р?хив:</value>
+    <value>???S??F?X?? А?р?хив:</value>
   </data>
   <data name="_ProcessFound_EN" xml:space="preserve">
     <value>Ma??li??cio??us process detected! Risk level</value>
@@ -756,7 +756,7 @@ Press any key to continue...</value>
     <value>Итого удалено угроз:</value>
   </data>
   <data name="_sfxArchive_EN" xml:space="preserve">
-    <value>S???F????X A????rch???i????ve??:</value>
+    <value>S??F????X A????rch???i???ve??:</value>
   </data>
   <data name="_CriticalServiceStartup_RU" xml:space="preserve">
     <value>Тип запуска важного для работы компонента (службы) был восстановлен</value>
@@ -1101,5 +1101,99 @@ Click Yes to continue. Click No to exit.</value>
   </data>
   <data name="_LabelSupport_RU" xml:space="preserve">
     <value>Нравится приложение? Поддержи проект на Boosty!</value>
+  </data>
+  <data name="_SuccessR00tkitNeutralized_EN" xml:space="preserve">
+    <value>Rootkit neutralized</value>
+  </data>
+  <data name="_SuccessR00tkitNeutralized_RU" xml:space="preserve">
+    <value>Руткит нейтрализован</value>
+  </data>
+  <data name="_ServiceNotInstalled_EN" xml:space="preserve">
+    <value>Specified service is not installed:</value>
+  </data>
+  <data name="_ServiceNotInstalled_RU" xml:space="preserve">
+    <value>Указанная служба не установлена:</value>
+  </data>
+  <data name="_WMICorruption_EN" xml:space="preserve">
+    <value>WMI Database corrupted. Trying to restore...Please wait</value>
+  </data>
+  <data name="_WMICorruption_RU" xml:space="preserve">
+    <value>База данных WMI повреждена. Выполняется восстановление...пожалуйста, ждите</value>
+  </data>
+  <data name="_WMIRecompilation_EN" xml:space="preserve">
+    <value>Recompile necessary MOF files...</value>
+  </data>
+  <data name="_WMIRecompilation_RU" xml:space="preserve">
+    <value>Рекомпиляция необходимых фалов...</value>
+  </data>
+  <data name="_WMIRegister_EN" xml:space="preserve">
+    <value>Register necessary DLLs...</value>
+  </data>
+  <data name="_WMIRegister_RU" xml:space="preserve">
+    <value>Регистрация необходимых DLL...</value>
+  </data>
+  <data name="_WMIRestartApplication_EN" xml:space="preserve">
+    <value>Restart Application...</value>
+  </data>
+  <data name="_WMIRestartApplication_RU" xml:space="preserve">
+    <value>Перезапуск приложения...</value>
+  </data>
+  <data name="_WMIRestartService_EN" xml:space="preserve">
+    <value>Restart service...</value>
+  </data>
+  <data name="_WMIRestartService_RU" xml:space="preserve">
+    <value>Перезапуск службы...</value>
+  </data>
+  <data name="_BtnDetails_EN" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="_BtnDetails_RU" xml:space="preserve">
+    <value>Подробно</value>
+  </data>
+  <data name="_LogLegend_RU" xml:space="preserve">
+    <value>--------------Условные-обозначения-------------------
+[!]     Незначительное предупреждение
+[!!]    Предупреждение, на которое стоит обратить внимание
+[!!!]   Обнаружена угроза
+[!!!!]  Обнаружен руткит
+[Reg]   Cканирование раздела(ов) реестра
+[+]     Успешное выполнение действия (лечение, удаление и т.д.)
+[x]     Ошибка
+[xxx]   Критическая ошибка: например, при запуске в песочнице
+[#]     Статус
+[.]     Описание
+[_]     Разблокировка каталога и удаление, если пуст
+[i]     Информация
+[$]     Затраченное время сканирования
+[&amp;]     Итог</value>
+  </data>
+  <data name="_ServiceDcomAbusing_EN" xml:space="preserve">
+    <value>Svchost Hijacking module:</value>
+  </data>
+  <data name="_ServiceDcomAbusing_RU" xml:space="preserve">
+    <value>Модуль перехвата Svchost:</value>
+  </data>
+  <data name="_LogLegend_EN" xml:space="preserve">
+    <value>--------------Legend-symbols-------------------
+[!]     Minor warning
+[!!]    A warning worth paying attention to
+[!!!]   A threat has been detected
+[!!!!]  A rootkit has been detected
+[reg]   Scan the registry key(s)
+[+]     Successful completion of the action (treatment, removal, etc.)
+[x]     Error
+[xxx]   Critical error: for example, when running in the sandbox
+[#]     Status
+[.]     Description
+[_]     Unblocking the directory and deleting if empty
+[i]     Information
+[$]     Elapsed scan time
+[&amp;]     Summary</value>
+  </data>
+  <data name="_AllowSentStatistics_EN" xml:space="preserve">
+    <value>Do you allow sending a log file (scan log of detected threats) to the developer every time you use it? This will help to improve the operation of the application.</value>
+  </data>
+  <data name="_AllowSentStatistics_RU" xml:space="preserve">
+    <value>Разрешить отправлять лог-файл (журнал сканирования найденных угроз) разработчику при каждом использовании? Это поможет улучшить работу приложения.</value>
   </data>
 </root>

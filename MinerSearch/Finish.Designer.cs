@@ -32,6 +32,8 @@ namespace MSearch
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.LBL_link3 = new System.Windows.Forms.Panel();
+            this.yoomoney_tb = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.pb_QR = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.LBL_Support = new System.Windows.Forms.Label();
@@ -43,6 +45,7 @@ namespace MSearch
             this.LBL_JoinTelegram = new System.Windows.Forms.Label();
             this.pb_telegram = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnDetails = new System.Windows.Forms.Button();
             this.LBL_scanElapsedTime = new System.Windows.Forms.Label();
             this.LBL_curedCount = new System.Windows.Forms.Label();
             this.LBL_threatsCount = new System.Windows.Forms.Label();
@@ -54,7 +57,6 @@ namespace MSearch
             this.LBL_totalThreats = new System.Windows.Forms.Label();
             this.top = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.LBL_yoomoney = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.LBL_link3.SuspendLayout();
@@ -73,7 +75,7 @@ namespace MSearch
             this.panel1.Location = new System.Drawing.Point(1, 27);
             this.panel1.Margin = new System.Windows.Forms.Padding(1);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(702, 403);
+            this.panel1.Size = new System.Drawing.Size(702, 436);
             this.panel1.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -90,21 +92,50 @@ namespace MSearch
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 61.53846F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 38.46154F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(702, 403);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(702, 436);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // LBL_link3
             // 
-            this.LBL_link3.Controls.Add(this.LBL_yoomoney);
+            this.LBL_link3.Controls.Add(this.yoomoney_tb);
+            this.LBL_link3.Controls.Add(this.textBox1);
             this.LBL_link3.Controls.Add(this.pb_QR);
             this.LBL_link3.Controls.Add(this.label1);
             this.LBL_link3.Controls.Add(this.LBL_Support);
             this.LBL_link3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LBL_link3.Location = new System.Drawing.Point(2, 249);
+            this.LBL_link3.Location = new System.Drawing.Point(2, 270);
             this.LBL_link3.Margin = new System.Windows.Forms.Padding(2);
             this.LBL_link3.Name = "LBL_link3";
-            this.LBL_link3.Size = new System.Drawing.Size(698, 152);
+            this.LBL_link3.Size = new System.Drawing.Size(698, 164);
             this.LBL_link3.TabIndex = 3;
+            // 
+            // yoomoney_tb
+            // 
+            this.yoomoney_tb.BackColor = System.Drawing.Color.White;
+            this.yoomoney_tb.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.yoomoney_tb.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.yoomoney_tb.Location = new System.Drawing.Point(16, 126);
+            this.yoomoney_tb.Name = "yoomoney_tb";
+            this.yoomoney_tb.ReadOnly = true;
+            this.yoomoney_tb.Size = new System.Drawing.Size(478, 20);
+            this.yoomoney_tb.TabIndex = 10;
+            this.yoomoney_tb.Text = "ЮМани (яндекс): 4100 1161 1264 0968";
+            this.yoomoney_tb.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.yoomoney_tb.WordWrap = false;
+            // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.Color.White;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox1.Location = new System.Drawing.Point(25, 93);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(484, 20);
+            this.textBox1.TabIndex = 10;
+            this.textBox1.Text = "USDT: UQBw3htVV8uMW6lugGryttzR50GbBeSSMCsFoHCQjq75JiPl";
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBox1.WordWrap = false;
             // 
             // pb_QR
             // 
@@ -112,7 +143,7 @@ namespace MSearch
             this.pb_QR.BackColor = System.Drawing.Color.Transparent;
             this.pb_QR.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pb_QR.Image = global::MSearch.Properties.Resources.blendlog_donate;
-            this.pb_QR.Location = new System.Drawing.Point(489, 7);
+            this.pb_QR.Location = new System.Drawing.Point(516, 13);
             this.pb_QR.Name = "pb_QR";
             this.pb_QR.Size = new System.Drawing.Size(139, 140);
             this.pb_QR.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -125,11 +156,11 @@ namespace MSearch
             // label1
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(21, 70);
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(52, 58);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 1, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(413, 25);
+            this.label1.Size = new System.Drawing.Size(445, 25);
             this.label1.TabIndex = 2;
             this.label1.Text = "https://boosty.to/BlendLog/donate";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -139,10 +170,10 @@ namespace MSearch
             // 
             this.LBL_Support.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LBL_Support.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.LBL_Support.Location = new System.Drawing.Point(3, 7);
+            this.LBL_Support.Location = new System.Drawing.Point(10, 13);
             this.LBL_Support.Margin = new System.Windows.Forms.Padding(0);
             this.LBL_Support.Name = "LBL_Support";
-            this.LBL_Support.Size = new System.Drawing.Size(433, 52);
+            this.LBL_Support.Size = new System.Drawing.Size(493, 27);
             this.LBL_Support.TabIndex = 1;
             this.LBL_Support.Text = "Нравится приложение? Поддержи проект на Boosty";
             this.LBL_Support.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -162,7 +193,7 @@ namespace MSearch
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(698, 243);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(698, 264);
             this.tableLayoutPanel2.TabIndex = 4;
             // 
             // panel4
@@ -176,7 +207,7 @@ namespace MSearch
             this.panel4.Location = new System.Drawing.Point(351, 3);
             this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(344, 237);
+            this.panel4.Size = new System.Drawing.Size(344, 258);
             this.panel4.TabIndex = 1;
             // 
             // pb_M1nerSearch
@@ -184,7 +215,7 @@ namespace MSearch
             this.pb_M1nerSearch.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pb_M1nerSearch.Cursor = System.Windows.Forms.Cursors.Default;
             this.pb_M1nerSearch.Image = global::MSearch.Properties.Resources._128;
-            this.pb_M1nerSearch.Location = new System.Drawing.Point(185, 58);
+            this.pb_M1nerSearch.Location = new System.Drawing.Point(185, 69);
             this.pb_M1nerSearch.Margin = new System.Windows.Forms.Padding(2);
             this.pb_M1nerSearch.Name = "pb_M1nerSearch";
             this.pb_M1nerSearch.Size = new System.Drawing.Size(92, 92);
@@ -201,7 +232,7 @@ namespace MSearch
             this.LBL_link2.AutoSize = true;
             this.LBL_link2.Cursor = System.Windows.Forms.Cursors.Hand;
             this.LBL_link2.Font = new System.Drawing.Font("Segoe UI", 10.2F);
-            this.LBL_link2.Location = new System.Drawing.Point(54, 198);
+            this.LBL_link2.Location = new System.Drawing.Point(54, 209);
             this.LBL_link2.Margin = new System.Windows.Forms.Padding(2, 1, 2, 0);
             this.LBL_link2.Name = "LBL_link2";
             this.LBL_link2.Size = new System.Drawing.Size(243, 23);
@@ -218,7 +249,7 @@ namespace MSearch
             this.LBL_link1.AutoSize = true;
             this.LBL_link1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.LBL_link1.Font = new System.Drawing.Font("Segoe UI", 10.2F);
-            this.LBL_link1.Location = new System.Drawing.Point(54, 164);
+            this.LBL_link1.Location = new System.Drawing.Point(54, 175);
             this.LBL_link1.Margin = new System.Windows.Forms.Padding(2, 1, 2, 0);
             this.LBL_link1.Name = "LBL_link1";
             this.LBL_link1.Size = new System.Drawing.Size(244, 23);
@@ -247,7 +278,7 @@ namespace MSearch
             // 
             this.pb_telegram.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pb_telegram.Image = global::MSearch.Properties.Resources.telegram_logo;
-            this.pb_telegram.Location = new System.Drawing.Point(75, 58);
+            this.pb_telegram.Location = new System.Drawing.Point(75, 69);
             this.pb_telegram.Margin = new System.Windows.Forms.Padding(2);
             this.pb_telegram.Name = "pb_telegram";
             this.pb_telegram.Size = new System.Drawing.Size(92, 92);
@@ -260,6 +291,7 @@ namespace MSearch
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.btnDetails);
             this.panel2.Controls.Add(this.LBL_scanElapsedTime);
             this.panel2.Controls.Add(this.LBL_curedCount);
             this.panel2.Controls.Add(this.LBL_threatsCount);
@@ -273,8 +305,23 @@ namespace MSearch
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(343, 237);
+            this.panel2.Size = new System.Drawing.Size(343, 258);
             this.panel2.TabIndex = 0;
+            // 
+            // btnDetails
+            // 
+            this.btnDetails.FlatAppearance.BorderColor = System.Drawing.Color.Navy;
+            this.btnDetails.FlatAppearance.BorderSize = 2;
+            this.btnDetails.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDetails.Font = new System.Drawing.Font("Verdana", 10.2F);
+            this.btnDetails.ForeColor = System.Drawing.Color.Navy;
+            this.btnDetails.Location = new System.Drawing.Point(14, 116);
+            this.btnDetails.Name = "btnDetails";
+            this.btnDetails.Size = new System.Drawing.Size(295, 34);
+            this.btnDetails.TabIndex = 9;
+            this.btnDetails.Text = "Подробно";
+            this.btnDetails.UseVisualStyleBackColor = true;
+            this.btnDetails.Click += new System.EventHandler(this.btnDetails_Click);
             // 
             // LBL_scanElapsedTime
             // 
@@ -282,7 +329,7 @@ namespace MSearch
             this.LBL_scanElapsedTime.AutoSize = true;
             this.LBL_scanElapsedTime.Font = new System.Drawing.Font("Verdana", 10.2F);
             this.LBL_scanElapsedTime.ForeColor = System.Drawing.Color.Black;
-            this.LBL_scanElapsedTime.Location = new System.Drawing.Point(10, 185);
+            this.LBL_scanElapsedTime.Location = new System.Drawing.Point(18, 201);
             this.LBL_scanElapsedTime.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_scanElapsedTime.Name = "LBL_scanElapsedTime";
             this.LBL_scanElapsedTime.Size = new System.Drawing.Size(97, 20);
@@ -296,7 +343,7 @@ namespace MSearch
             this.LBL_curedCount.AutoSize = true;
             this.LBL_curedCount.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_curedCount.ForeColor = System.Drawing.Color.Black;
-            this.LBL_curedCount.Location = new System.Drawing.Point(288, 100);
+            this.LBL_curedCount.Location = new System.Drawing.Point(288, 88);
             this.LBL_curedCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_curedCount.Name = "LBL_curedCount";
             this.LBL_curedCount.Size = new System.Drawing.Size(21, 20);
@@ -310,7 +357,7 @@ namespace MSearch
             this.LBL_threatsCount.AutoSize = true;
             this.LBL_threatsCount.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_threatsCount.ForeColor = System.Drawing.Color.Black;
-            this.LBL_threatsCount.Location = new System.Drawing.Point(288, 65);
+            this.LBL_threatsCount.Location = new System.Drawing.Point(288, 57);
             this.LBL_threatsCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_threatsCount.Name = "LBL_threatsCount";
             this.LBL_threatsCount.Size = new System.Drawing.Size(21, 20);
@@ -323,7 +370,7 @@ namespace MSearch
             this.LBL_ScanTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LBL_ScanTime.AutoSize = true;
             this.LBL_ScanTime.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.LBL_ScanTime.Location = new System.Drawing.Point(10, 153);
+            this.LBL_ScanTime.Location = new System.Drawing.Point(10, 169);
             this.LBL_ScanTime.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_ScanTime.Name = "LBL_ScanTime";
             this.LBL_ScanTime.Size = new System.Drawing.Size(202, 20);
@@ -335,7 +382,7 @@ namespace MSearch
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Verdana", 10.2F);
-            this.label7.Location = new System.Drawing.Point(3, 129);
+            this.label7.Location = new System.Drawing.Point(3, 147);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(321, 20);
@@ -361,7 +408,7 @@ namespace MSearch
             this.LBL_neutralizedThreats.AutoSize = true;
             this.LBL_neutralizedThreats.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.LBL_neutralizedThreats.ForeColor = System.Drawing.Color.Black;
-            this.LBL_neutralizedThreats.Location = new System.Drawing.Point(10, 100);
+            this.LBL_neutralizedThreats.Location = new System.Drawing.Point(10, 88);
             this.LBL_neutralizedThreats.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_neutralizedThreats.Name = "LBL_neutralizedThreats";
             this.LBL_neutralizedThreats.Size = new System.Drawing.Size(178, 20);
@@ -386,7 +433,7 @@ namespace MSearch
             this.LBL_totalThreats.AutoSize = true;
             this.LBL_totalThreats.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_totalThreats.ForeColor = System.Drawing.Color.Black;
-            this.LBL_totalThreats.Location = new System.Drawing.Point(10, 65);
+            this.LBL_totalThreats.Location = new System.Drawing.Point(10, 57);
             this.LBL_totalThreats.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_totalThreats.Name = "LBL_totalThreats";
             this.LBL_totalThreats.Size = new System.Drawing.Size(219, 20);
@@ -422,27 +469,15 @@ namespace MSearch
             this.button1.TabIndex = 2;
             this.button1.Text = "X";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // LBL_yoomoney
-            // 
-            this.LBL_yoomoney.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.LBL_yoomoney.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.LBL_yoomoney.ForeColor = System.Drawing.Color.Black;
-            this.LBL_yoomoney.Location = new System.Drawing.Point(3, 105);
-            this.LBL_yoomoney.Margin = new System.Windows.Forms.Padding(0);
-            this.LBL_yoomoney.Name = "LBL_yoomoney";
-            this.LBL_yoomoney.Size = new System.Drawing.Size(433, 41);
-            this.LBL_yoomoney.TabIndex = 4;
-            this.LBL_yoomoney.Text = "или ЮМани (яндекс): 4100 1161 1264 0968";
-            this.LBL_yoomoney.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Finish
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Navy;
-            this.ClientSize = new System.Drawing.Size(704, 431);
+            this.ClientSize = new System.Drawing.Size(704, 466);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.top);
             this.Controls.Add(this.panel1);
@@ -456,6 +491,7 @@ namespace MSearch
             this.panel1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.LBL_link3.ResumeLayout(false);
+            this.LBL_link3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_QR)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
@@ -495,6 +531,8 @@ namespace MSearch
         private System.Windows.Forms.Label LBL_curedCount;
         private System.Windows.Forms.Label LBL_threatsCount;
         private System.Windows.Forms.Label LBL_scanElapsedTime;
-        private System.Windows.Forms.Label LBL_yoomoney;
+        private System.Windows.Forms.Button btnDetails;
+        private System.Windows.Forms.TextBox yoomoney_tb;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

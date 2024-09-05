@@ -4,6 +4,8 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.IO;
+using System.Security.Cryptography;
 
 namespace MSearch
 {
@@ -34,6 +36,9 @@ namespace MSearch
         [DllImport("ntdll.dll")]
         public static extern int NtQueryInformationProcess(IntPtr processHandle, int processInformationClass, ref PROCESS_BASIC_INFORMATION processInformation, int processInformationLength, out int returnLength);
 
+        [DllImport("ntdll.dll", SetLastError = true)]
+        public static extern bool NtTerminateProcess(IntPtr hProcess, uint errorStatus);
+
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenProcess(int access, bool inheritHandle, int processId);
 
@@ -63,10 +68,10 @@ namespace MSearch
         public static extern IntPtr GetStdHandle(int nStdHandle);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+        internal static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
+        internal static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 
         [DllImport("user32.dll")]
         internal static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
@@ -114,6 +119,32 @@ namespace MSearch
         internal const uint FILE_ATTRIBUTE_DIRECTORY = 0x10;
         internal const uint FILE_ATTRIBUTE_REPARSE_POINT = 0x400;
 
+        [DllImport("psapi.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool EnumProcesses([Out] uint[] processIds, int size, [Out] out int bytesReturned);
+
+        [DllImport("psapi.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool EnumProcessModulesEx(IntPtr hProcess, [Out] IntPtr[] lphModule, uint cb, [Out] out uint lpcbNeeded, uint dwFilterFlag);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, IntPtr lpNumberOfBytesRead);
+
+
+        [DllImport("ntdll.dll")]
+        internal static extern int NtCreateThreadEx(
+            out IntPtr threadHandle,
+            uint desiredAccess,
+            IntPtr objectAttributes,
+            IntPtr processHandle,
+            IntPtr startAddress,
+            IntPtr parameter,
+            bool createSuspended,
+            uint stackZeroBits,
+            uint sizeOfStack,
+            uint maximumStackSize,
+            IntPtr attributeList);
 
         public enum TcpTableClass
         {
@@ -183,6 +214,10 @@ namespace MSearch
         public static Guid FolderDownloads = new Guid("374DE290-123F-4565-9164-39C4925E467B");
 
         public const int PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
+        public const int PROCESS_QUERY_INFORMATION = 0x0400;
+        public const int PROCESS_VM_READ = 0x0010;
+        public const int OffsetProcessParametersx32 = 0x10;
+        public const int OffsetCommandLinex32 = 0x40;
         public const uint TH32CS_SNAPPROCESS = 0x00000002;
         public const int STATUS_SUCCESS = 0;
 
@@ -280,7 +315,7 @@ namespace MSearch
             Windows_11_21H2 = 22000,
             Windows_11_22H2 = 22621,
             Windows_11_23H2 = 22631,
-            Windows_11_24H2 = 26058,
+            Windows_11_24H2 = 26100,
         };
 
         internal static IntPtr GetClassLongPtr(IntPtr hWnd, int nIndex)
@@ -305,6 +340,20 @@ namespace MSearch
             public uint dwAllocationGranularity;
             public ushort wProcessorLevel;
             public ushort wProcessorRevision;
+        }
+
+        public const uint R77_SIGNATURE = 0x7277;
+        public const uint R77_SERVICE_SIGNATURE = 0x7273;
+        public const uint R77_HELPER_SIGNATURE = 0x7268;
+        public const int MaxProcesses = 10000;
+        public const int MaxModules = 10000;
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct R77_PROCESS
+        {
+            public int Signature;
+            public uint ProcessId;
+            public ulong DetachAddress;
         }
     }
 
@@ -705,7 +754,6 @@ namespace MSearch
             return scm;
         }
 
-
         public enum ServiceState
         {
             Unknown = -1, // The state cannot be (has not been) retrieved.
@@ -782,15 +830,6 @@ namespace MSearch
             Severe = 0x00000002,
             Critical = 0x00000003
         }
-
-        public static string GetServiceImagePath(string serviceName)
-        {
-            RegistryKey regkey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\services\" + serviceName);
-            if (regkey.GetValue("ImagePath") == null)
-                return null;
-            return regkey.GetValue("ImagePath").ToString();
-        }
     }
-
 
 }

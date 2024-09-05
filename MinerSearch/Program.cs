@@ -3,11 +3,13 @@
 using DBase;
 using Microsoft.Win32;
 using MSearch.Properties;
+using netlib;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace MSearch
@@ -27,6 +29,7 @@ namespace MSearch
         public static bool NoRootkitCheck = false;
         public static bool ScanOnly = false;
         public static bool fullScan = false;
+        public static bool RestoredWMI = false;
         public static int maxSubfolders = 8;
         public static int totalFoundThreats = 0;
         public static int totalNeutralizedThreats = 0;
@@ -85,7 +88,7 @@ namespace MSearch
                     WaterMark();
                 }
             }
-
+            Logger.WriteLog("\t\tLogID:" + Logger.LogID, true, false);
 
 #if !DEBUG
             LL.LogJustDisplayMessage("\t\t", $"_RelevantVer", "https://github.com/BlendLog/Mi?ne?rSea?rch/releases \n".Replace("?", ""), ConsoleColor.White);
@@ -242,6 +245,10 @@ namespace MSearch
                         WinPEMode = true;
                         LocalizedLogger.LogWinPEMode(drive_letter);
                     }
+                    else if (arg == "-R")
+                    {
+                        RestoredWMI = true;
+                    }
                     else
                     {
                         LocalizedLogger.LogUnknownCommand(arg);
@@ -308,7 +315,7 @@ namespace MSearch
             ProcessModuleCollection pmodules = Process.GetCurrentProcess().Modules;
             foreach (var module in pmodules)
             {
-                if (module.ToString().Contains("c~m~d~vrt~64.d~ll".Replace("~", "")))
+                if (module.ToString().Contains("c~md~vrt~6~4.d~ll".Replace("~", "")))
                 {
                     Console.BackgroundColor = ConsoleColor.Red;
                     Console.WriteLine("Please, add the program to ant1v1rus whitelist!");
@@ -371,6 +378,11 @@ namespace MSearch
             LocalizedLogger.LogTotalScanResult(totalFoundThreats, totalNeutralizedThreats + totalFoundThreats);
             Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
 
+            if (!no_logs)
+            {
+                LL.LogWriteWithoutDisplay(true, false);
+            }
+
             Utils.SwitchMouseSelection(true);
 
             Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_MINIMIZE);
@@ -407,7 +419,6 @@ namespace MSearch
             Console.WriteLine(@"                                                             |____/   \___|  \__|  \__,_|");
 #endif
             Console.WriteLine("\t\tby: Bl?end??Log".Replace("?", ""));
-
         }
     }
 }
