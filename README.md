@@ -6,6 +6,30 @@
 ## Новости об обновлениях теперь в телеграм! 
 ## https://t.me/MinerSearch_blog
 
+Версия 1.4.7.4
+
+- Сбор статистики удаления угроз (на усмотрение пользователя)
+- Восстановление прав доступа существующих приложений из списка заблокированных каталогов
+- Добавлена тщательная проверка процессов по времени использования CPU
+- Добавлена легенда условных обозначений в логе
+- Добавлена кнопка "Подробно" для открытия папки с логами
+- Более точное обнаружение руткита майнера
+- Нормальный формат даты в имени лог файла
+- Улучшена проверка служб, включая Службы удаленных рабочих столов (TermService)
+- Восстанавление базы данных WMI
+- Удаление новых вредоносных версий системных программ 
+[HOTFIX]
+- Исправление некорректного чтения файла hosts
+- Корректное создание индентификатора устройства в логе
+- Улучшена обработка планировщика задач
+- Исправлено ложное срабатываение на легальный скрипт powershell (UnusedSmb1.ps1)
+- Добавлено удаление задачи руткита из планировщика задач 
+- Улучшено обнаружение угроз, которые запускаются через RunDLL
+- Предположительно вредоносные файлы перемещаются в карантин
+- Легенда обозначений перемещена в начало лог-файла
+- Исправлено исчезнавение крестика "закрыть" в окне с кратким отчётом
+- Проверка установленной версии NET Framework 4.5.2 (для windows 7)
+
 Версия 1.4.7.3
 
 - Удаление новой версии майнера с цифровой подписью;
@@ -19,12 +43,6 @@
 - Исправлена обработка каталогов в виде символической ссылки;
 - Теперь статистика отображатеся в диалоговом окне;
 - Вывод уведомления по завершении сканирования;
-
-Версия 1.4.7.2
-
-- Наличие руткита майнера определяется быстрее
-- Разделение базы данных от основного приложения
-- Исправлена обработка путей с прямым(обычным) слешем
 
 --------------------------------------------
 
@@ -81,6 +99,30 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 ## News about updates now in the Telegram!
 https://t.me/MinerSearch_blog
 
+Version 1.4.7.4
+
+- Fix of threat removal statistics (optional by user)
+- Restoring access rights of existing applications from the list of blocked directories
+- Added a thorough check of processes by CPU usage time
+- Added legend of symbols in the log
+- Added the "Show details" button to open the folder with logs
+- More accurate detection of the miner's rootkit
+- The normal date format in the log file name
+- Improved verification of services, including Remote Desktop (TermService)
+- Restoring the WMI database
+- Removal of new malicious versions of system programs 
+[HOTFIX]
+- Fix of incorrect reading of the hosts file
+- Fixed creation of the device identifier in the log
+- Improved task scheduler processing
+- Fixed a false positive for a legitimate powershell script (UnusedSmb1.ps1)
+- Added removal of the rootkit task from the task scheduler 
+- Improved detection of threats that run through RunDLL
+- Presumably malicious files are being moved to quarantine
+- The legend of the symbols has been moved to the beginning of the log file
+- Fixed the disappearance of the "close" cross in the summary report window
+- Checking the installed version of NET Framework 4.5.2 (for windows 7)
+
 Version 1.4.7.3
 
 - Removal of the new version of the miner with a digital signature;
@@ -94,12 +136,6 @@ Version 1.4.7.3
 - Fixed directories scan as a symbolic link;
 - Statistics are now displayed in the new form;
 - Notification output at the end of scan;
-
-Version 1.4.7.2
-
-- The presence of a miner's rootkit is detected faster
-- Separation of the database from the main application
-- Fixed bug of processing of paths with direct (usual) slash
 
 -----------------------------------------
 
