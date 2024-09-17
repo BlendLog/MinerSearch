@@ -6,6 +6,10 @@
 ## Новости об обновлениях теперь в телеграм! 
 ## https://t.me/MinerSearch_blog
 
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/total?style=flat&color=00ff66)
+![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?style=flat&labelColor=navy)
+
+
 Версия 1.4.7.4
 
 - Сбор статистики удаления угроз (на усмотрение пользователя)
