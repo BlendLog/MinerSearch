@@ -575,6 +575,44 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Warning! The application has identified many services with invalid digital signatures. 
+        ///
+        ///It is assumed that the system:
+        /// - was installed from an unverified source;
+        /// - has Insider Preview status;
+        /// - or modified by third-party programs.
+        ///
+        ///The following services will be disabled, which may lead to system instability:
+        ///#InvalidServices#
+        ///
+        ///Would you like to continue?.
+        /// </summary>
+        internal static string _DisableServiceWarning_EN {
+            get {
+                return ResourceManager.GetString("_DisableServiceWarning_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Внимание! Приложение выявило множество служб с недействительной цифровой подписью. 
+        ///
+        ///Предполагается, что система:
+        /// - была установлена из непроверенного источника;
+        /// - имеет статус Insider Preview;
+        /// - либо модифицирована сторонними программами.
+        ///
+        ///Перечисленные ниже службы будут отключены, что возможно приведёт к нестабильности системы:
+        ///#InvalidServices#
+        ///
+        ///Желаете продолжить?.
+        /// </summary>
+        internal static string _DisableServiceWarning_RU {
+            get {
+                return ResourceManager.GetString("_DisableServiceWarning_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Scan elapsed time:.
         /// </summary>
         internal static string _Elapse_EN {
@@ -755,6 +793,42 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на The file is only available online.
+        /// </summary>
+        internal static string _ErrorFileOnlineOnly_EN {
+            get {
+                return ResourceManager.GetString("_ErrorFileOnlineOnly_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл доступен только онлайн.
+        /// </summary>
+        internal static string _ErrorFileOnlineOnly_RU {
+            get {
+                return ResourceManager.GetString("_ErrorFileOnlineOnly_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на File locked by Wi?ndo?ws Def?end?er:.
+        /// </summary>
+        internal static string _ErrorLockedByWD_EN {
+            get {
+                return ResourceManager.GetString("_ErrorLockedByWD_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл заблокирован Защитником Windows:.
+        /// </summary>
+        internal static string _ErrorLockedByWD_RU {
+            get {
+                return ResourceManager.GetString("_ErrorLockedByWD_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на NET Framework version 4.5.2 or higher is required to run this application. Check this component and try again.
         /// </summary>
         internal static string _ErrorNoDotNet_EN {
@@ -805,6 +879,24 @@ namespace MSearch.Properties {
         internal static string _ErrorOnUnlock_RU {
             get {
                 return ResourceManager.GetString("_ErrorOnUnlock_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Something is prevent the search for malicious processes. You should temporarily turn off your antivirus and try again..
+        /// </summary>
+        internal static string _ErrorScanProcesses_EN {
+            get {
+                return ResourceManager.GetString("_ErrorScanProcesses_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Что-то мешает выполнить поиск вредоносных процессов. Следует временно приостановить работу антивирусного ПО и повторить попытку..
+        /// </summary>
+        internal static string _ErrorScanProcesses_RU {
+            get {
+                return ResourceManager.GetString("_ErrorScanProcesses_RU", resourceCulture);
             }
         }
         
@@ -1039,6 +1131,60 @@ namespace MSearch.Properties {
         internal static string _FindBlockingProcess_RU {
             get {
                 return ResourceManager.GetString("_FindBlockingProcess_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на All threats has been neutralized!.
+        /// </summary>
+        internal static string _FinishAllThreatsNeutralized_EN {
+            get {
+                return ResourceManager.GetString("_FinishAllThreatsNeutralized_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Все угрозы были устранены!.
+        /// </summary>
+        internal static string _FinishAllThreatsNeutralized_RU {
+            get {
+                return ResourceManager.GetString("_FinishAllThreatsNeutralized_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Not all threats found have been neutralized. Restart your computer and run the check again..
+        /// </summary>
+        internal static string _FinishNotAllThreatsNeutralized_EN {
+            get {
+                return ResourceManager.GetString("_FinishNotAllThreatsNeutralized_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не все найденные угрозы были устранены. Перезагрузите компьютер и выполните проверку снова..
+        /// </summary>
+        internal static string _FinishNotAllThreatsNeutralized_RU {
+            get {
+                return ResourceManager.GetString("_FinishNotAllThreatsNeutralized_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Do you want to restart your computer right now?.
+        /// </summary>
+        internal static string _FinishRebootPCNow_EN {
+            get {
+                return ResourceManager.GetString("_FinishRebootPCNow_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Перезагрузить компьютер сейчас?.
+        /// </summary>
+        internal static string _FinishRebootPCNow_RU {
+            get {
+                return ResourceManager.GetString("_FinishRebootPCNow_RU", resourceCulture);
             }
         }
         
@@ -1550,6 +1696,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Malicious Service -.
+        /// </summary>
+        internal static string _MaliciousService_EN {
+            get {
+                return ResourceManager.GetString("_MaliciousService_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вредоносная служба - .
+        /// </summary>
+        internal static string _MaliciousService_RU {
+            get {
+                return ResourceManager.GetString("_MaliciousService_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Ma??li??cio??us processes:.
         /// </summary>
         internal static string _MlwrProcessesCount_EN {
@@ -1800,6 +1964,24 @@ namespace MSearch.Properties {
         internal static string _ProcessInj3cti0n_RU {
             get {
                 return ResourceManager.GetString("_ProcessInj3cti0n_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The process is not running.
+        /// </summary>
+        internal static string _ProcessNotRunning_EN {
+            get {
+                return ResourceManager.GetString("_ProcessNotRunning_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Процесс не выполняется.
+        /// </summary>
+        internal static string _ProcessNotRunning_RU {
+            get {
+                return ResourceManager.GetString("_ProcessNotRunning_RU", resourceCulture);
             }
         }
         
@@ -2448,6 +2630,24 @@ namespace MSearch.Properties {
         internal static string _SignedAppInitValue_RU {
             get {
                 return ResourceManager.GetString("_SignedAppInitValue_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Skipped Service -.
+        /// </summary>
+        internal static string _SkipServiceMessage_EN {
+            get {
+                return ResourceManager.GetString("_SkipServiceMessage_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Служба пропущена -.
+        /// </summary>
+        internal static string _SkipServiceMessage_RU {
+            get {
+                return ResourceManager.GetString("_SkipServiceMessage_RU", resourceCulture);
             }
         }
         

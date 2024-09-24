@@ -29,6 +29,7 @@ namespace MSearch
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.LBL_link3 = new System.Windows.Forms.Panel();
@@ -55,8 +56,10 @@ namespace MSearch
             this.LBL_neutralizedThreats = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.LBL_totalThreats = new System.Windows.Forms.Label();
+            this.FinalStatus_label = new System.Windows.Forms.Label();
             this.top = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.AnimationTimer = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.LBL_link3.SuspendLayout();
@@ -75,24 +78,27 @@ namespace MSearch
             this.panel1.Location = new System.Drawing.Point(1, 27);
             this.panel1.Margin = new System.Windows.Forms.Padding(1);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(702, 436);
+            this.panel1.Size = new System.Drawing.Size(702, 483);
             this.panel1.TabIndex = 0;
             // 
             // tableLayoutPanel1
             // 
+            this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.LBL_link3, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.LBL_link3, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.FinalStatus_label, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 61.53846F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 38.46154F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(702, 436);
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 82.80255F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 17.19745F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 166F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(702, 483);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // LBL_link3
@@ -102,11 +108,10 @@ namespace MSearch
             this.LBL_link3.Controls.Add(this.pb_QR);
             this.LBL_link3.Controls.Add(this.label1);
             this.LBL_link3.Controls.Add(this.LBL_Support);
-            this.LBL_link3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LBL_link3.Location = new System.Drawing.Point(2, 270);
+            this.LBL_link3.Location = new System.Drawing.Point(3, 317);
             this.LBL_link3.Margin = new System.Windows.Forms.Padding(2);
             this.LBL_link3.Name = "LBL_link3";
-            this.LBL_link3.Size = new System.Drawing.Size(698, 164);
+            this.LBL_link3.Size = new System.Drawing.Size(696, 163);
             this.LBL_link3.TabIndex = 3;
             // 
             // yoomoney_tb
@@ -143,7 +148,7 @@ namespace MSearch
             this.pb_QR.BackColor = System.Drawing.Color.Transparent;
             this.pb_QR.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pb_QR.Image = global::MSearch.Properties.Resources.blendlog_donate;
-            this.pb_QR.Location = new System.Drawing.Point(516, 13);
+            this.pb_QR.Location = new System.Drawing.Point(515, 12);
             this.pb_QR.Name = "pb_QR";
             this.pb_QR.Size = new System.Drawing.Size(139, 140);
             this.pb_QR.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -157,7 +162,7 @@ namespace MSearch
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(52, 58);
+            this.label1.Location = new System.Drawing.Point(51, 57);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 1, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(445, 25);
@@ -170,7 +175,7 @@ namespace MSearch
             // 
             this.LBL_Support.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LBL_Support.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.LBL_Support.Location = new System.Drawing.Point(10, 13);
+            this.LBL_Support.Location = new System.Drawing.Point(9, 12);
             this.LBL_Support.Margin = new System.Windows.Forms.Padding(0);
             this.LBL_Support.Name = "LBL_Support";
             this.LBL_Support.Size = new System.Drawing.Size(493, 27);
@@ -180,20 +185,19 @@ namespace MSearch
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.BackColor = System.Drawing.Color.White;
             this.tableLayoutPanel2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.07194F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 49.92806F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Controls.Add(this.panel4, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.panel2, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(2, 2);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(4, 4);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(698, 264);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 252F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(694, 253);
             this.tableLayoutPanel2.TabIndex = 4;
             // 
             // panel4
@@ -204,10 +208,10 @@ namespace MSearch
             this.panel4.Controls.Add(this.LBL_JoinTelegram);
             this.panel4.Controls.Add(this.pb_telegram);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(351, 3);
+            this.panel4.Location = new System.Drawing.Point(349, 3);
             this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(344, 258);
+            this.panel4.Size = new System.Drawing.Size(342, 247);
             this.panel4.TabIndex = 1;
             // 
             // pb_M1nerSearch
@@ -215,7 +219,7 @@ namespace MSearch
             this.pb_M1nerSearch.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pb_M1nerSearch.Cursor = System.Windows.Forms.Cursors.Default;
             this.pb_M1nerSearch.Image = global::MSearch.Properties.Resources._128;
-            this.pb_M1nerSearch.Location = new System.Drawing.Point(185, 69);
+            this.pb_M1nerSearch.Location = new System.Drawing.Point(184, 65);
             this.pb_M1nerSearch.Margin = new System.Windows.Forms.Padding(2);
             this.pb_M1nerSearch.Name = "pb_M1nerSearch";
             this.pb_M1nerSearch.Size = new System.Drawing.Size(92, 92);
@@ -232,7 +236,7 @@ namespace MSearch
             this.LBL_link2.AutoSize = true;
             this.LBL_link2.Cursor = System.Windows.Forms.Cursors.Hand;
             this.LBL_link2.Font = new System.Drawing.Font("Segoe UI", 10.2F);
-            this.LBL_link2.Location = new System.Drawing.Point(54, 209);
+            this.LBL_link2.Location = new System.Drawing.Point(53, 203);
             this.LBL_link2.Margin = new System.Windows.Forms.Padding(2, 1, 2, 0);
             this.LBL_link2.Name = "LBL_link2";
             this.LBL_link2.Size = new System.Drawing.Size(243, 23);
@@ -249,7 +253,7 @@ namespace MSearch
             this.LBL_link1.AutoSize = true;
             this.LBL_link1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.LBL_link1.Font = new System.Drawing.Font("Segoe UI", 10.2F);
-            this.LBL_link1.Location = new System.Drawing.Point(54, 175);
+            this.LBL_link1.Location = new System.Drawing.Point(53, 169);
             this.LBL_link1.Margin = new System.Windows.Forms.Padding(2, 1, 2, 0);
             this.LBL_link1.Name = "LBL_link1";
             this.LBL_link1.Size = new System.Drawing.Size(244, 23);
@@ -269,7 +273,7 @@ namespace MSearch
             this.LBL_JoinTelegram.Location = new System.Drawing.Point(0, 0);
             this.LBL_JoinTelegram.Margin = new System.Windows.Forms.Padding(0);
             this.LBL_JoinTelegram.Name = "LBL_JoinTelegram";
-            this.LBL_JoinTelegram.Size = new System.Drawing.Size(344, 46);
+            this.LBL_JoinTelegram.Size = new System.Drawing.Size(342, 46);
             this.LBL_JoinTelegram.TabIndex = 4;
             this.LBL_JoinTelegram.Text = "Есть вопросы? Заходите в телеграм!";
             this.LBL_JoinTelegram.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -278,7 +282,7 @@ namespace MSearch
             // 
             this.pb_telegram.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pb_telegram.Image = global::MSearch.Properties.Resources.telegram_logo;
-            this.pb_telegram.Location = new System.Drawing.Point(75, 69);
+            this.pb_telegram.Location = new System.Drawing.Point(74, 65);
             this.pb_telegram.Margin = new System.Windows.Forms.Padding(2);
             this.pb_telegram.Name = "pb_telegram";
             this.pb_telegram.Size = new System.Drawing.Size(92, 92);
@@ -305,17 +309,18 @@ namespace MSearch
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(343, 258);
+            this.panel2.Size = new System.Drawing.Size(341, 247);
             this.panel2.TabIndex = 0;
             // 
             // btnDetails
             // 
+            this.btnDetails.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnDetails.FlatAppearance.BorderColor = System.Drawing.Color.Navy;
             this.btnDetails.FlatAppearance.BorderSize = 2;
             this.btnDetails.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDetails.Font = new System.Drawing.Font("Verdana", 10.2F);
             this.btnDetails.ForeColor = System.Drawing.Color.Navy;
-            this.btnDetails.Location = new System.Drawing.Point(14, 116);
+            this.btnDetails.Location = new System.Drawing.Point(12, 122);
             this.btnDetails.Name = "btnDetails";
             this.btnDetails.Size = new System.Drawing.Size(295, 34);
             this.btnDetails.TabIndex = 9;
@@ -325,11 +330,11 @@ namespace MSearch
             // 
             // LBL_scanElapsedTime
             // 
-            this.LBL_scanElapsedTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LBL_scanElapsedTime.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LBL_scanElapsedTime.AutoSize = true;
             this.LBL_scanElapsedTime.Font = new System.Drawing.Font("Verdana", 10.2F);
             this.LBL_scanElapsedTime.ForeColor = System.Drawing.Color.Black;
-            this.LBL_scanElapsedTime.Location = new System.Drawing.Point(18, 201);
+            this.LBL_scanElapsedTime.Location = new System.Drawing.Point(17, 207);
             this.LBL_scanElapsedTime.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_scanElapsedTime.Name = "LBL_scanElapsedTime";
             this.LBL_scanElapsedTime.Size = new System.Drawing.Size(97, 20);
@@ -339,11 +344,11 @@ namespace MSearch
             // 
             // LBL_curedCount
             // 
-            this.LBL_curedCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LBL_curedCount.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LBL_curedCount.AutoSize = true;
             this.LBL_curedCount.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_curedCount.ForeColor = System.Drawing.Color.Black;
-            this.LBL_curedCount.Location = new System.Drawing.Point(288, 88);
+            this.LBL_curedCount.Location = new System.Drawing.Point(287, 94);
             this.LBL_curedCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_curedCount.Name = "LBL_curedCount";
             this.LBL_curedCount.Size = new System.Drawing.Size(21, 20);
@@ -353,11 +358,11 @@ namespace MSearch
             // 
             // LBL_threatsCount
             // 
-            this.LBL_threatsCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LBL_threatsCount.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LBL_threatsCount.AutoSize = true;
             this.LBL_threatsCount.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_threatsCount.ForeColor = System.Drawing.Color.Black;
-            this.LBL_threatsCount.Location = new System.Drawing.Point(288, 57);
+            this.LBL_threatsCount.Location = new System.Drawing.Point(286, 63);
             this.LBL_threatsCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_threatsCount.Name = "LBL_threatsCount";
             this.LBL_threatsCount.Size = new System.Drawing.Size(21, 20);
@@ -367,10 +372,10 @@ namespace MSearch
             // 
             // LBL_ScanTime
             // 
-            this.LBL_ScanTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LBL_ScanTime.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LBL_ScanTime.AutoSize = true;
             this.LBL_ScanTime.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.LBL_ScanTime.Location = new System.Drawing.Point(10, 169);
+            this.LBL_ScanTime.Location = new System.Drawing.Point(9, 175);
             this.LBL_ScanTime.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_ScanTime.Name = "LBL_ScanTime";
             this.LBL_ScanTime.Size = new System.Drawing.Size(202, 20);
@@ -380,9 +385,10 @@ namespace MSearch
             // 
             // label7
             // 
+            this.label7.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Verdana", 10.2F);
-            this.label7.Location = new System.Drawing.Point(3, 147);
+            this.label7.Location = new System.Drawing.Point(1, 153);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(321, 20);
@@ -397,18 +403,18 @@ namespace MSearch
             this.LBL_ScanComplete.Location = new System.Drawing.Point(0, 0);
             this.LBL_ScanComplete.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_ScanComplete.Name = "LBL_ScanComplete";
-            this.LBL_ScanComplete.Size = new System.Drawing.Size(343, 46);
+            this.LBL_ScanComplete.Size = new System.Drawing.Size(341, 46);
             this.LBL_ScanComplete.TabIndex = 3;
             this.LBL_ScanComplete.Text = "Сканирование завершено";
             this.LBL_ScanComplete.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LBL_neutralizedThreats
             // 
-            this.LBL_neutralizedThreats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LBL_neutralizedThreats.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LBL_neutralizedThreats.AutoSize = true;
             this.LBL_neutralizedThreats.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.LBL_neutralizedThreats.ForeColor = System.Drawing.Color.Black;
-            this.LBL_neutralizedThreats.Location = new System.Drawing.Point(10, 88);
+            this.LBL_neutralizedThreats.Location = new System.Drawing.Point(9, 94);
             this.LBL_neutralizedThreats.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_neutralizedThreats.Name = "LBL_neutralizedThreats";
             this.LBL_neutralizedThreats.Size = new System.Drawing.Size(178, 20);
@@ -418,9 +424,10 @@ namespace MSearch
             // 
             // label5
             // 
+            this.label5.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(3, 37);
+            this.label5.Location = new System.Drawing.Point(1, 43);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(321, 20);
@@ -429,17 +436,31 @@ namespace MSearch
             // 
             // LBL_totalThreats
             // 
-            this.LBL_totalThreats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LBL_totalThreats.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LBL_totalThreats.AutoSize = true;
             this.LBL_totalThreats.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_totalThreats.ForeColor = System.Drawing.Color.Black;
-            this.LBL_totalThreats.Location = new System.Drawing.Point(10, 57);
+            this.LBL_totalThreats.Location = new System.Drawing.Point(9, 63);
             this.LBL_totalThreats.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_totalThreats.Name = "LBL_totalThreats";
             this.LBL_totalThreats.Size = new System.Drawing.Size(219, 20);
             this.LBL_totalThreats.TabIndex = 1;
             this.LBL_totalThreats.Text = "Всего найдено угроз:";
             this.LBL_totalThreats.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // FinalStatus_label
+            // 
+            this.FinalStatus_label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.FinalStatus_label.AutoSize = true;
+            this.FinalStatus_label.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
+            this.FinalStatus_label.ForeColor = System.Drawing.Color.Black;
+            this.FinalStatus_label.Location = new System.Drawing.Point(3, 277);
+            this.FinalStatus_label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.FinalStatus_label.Name = "FinalStatus_label";
+            this.FinalStatus_label.Size = new System.Drawing.Size(696, 20);
+            this.FinalStatus_label.TabIndex = 2;
+            this.FinalStatus_label.Text = "-----------------------------------";
+            this.FinalStatus_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // top
             // 
@@ -473,12 +494,17 @@ namespace MSearch
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // AnimationTimer
+            // 
+            this.AnimationTimer.Interval = 10;
+            this.AnimationTimer.Tick += new System.EventHandler(this.AnimationTimer_Tick);
+            // 
             // Finish
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Navy;
-            this.ClientSize = new System.Drawing.Size(704, 466);
+            this.ClientSize = new System.Drawing.Size(704, 343);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.top);
             this.Controls.Add(this.panel1);
@@ -491,6 +517,7 @@ namespace MSearch
             this.Load += new System.EventHandler(this.Finish_Load);
             this.panel1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.LBL_link3.ResumeLayout(false);
             this.LBL_link3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_QR)).EndInit();
@@ -517,7 +544,6 @@ namespace MSearch
         private System.Windows.Forms.Label LBL_totalThreats;
         private System.Windows.Forms.Label LBL_neutralizedThreats;
         private System.Windows.Forms.Label LBL_JoinTelegram;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label LBL_link2;
@@ -535,5 +561,8 @@ namespace MSearch
         private System.Windows.Forms.Button btnDetails;
         private System.Windows.Forms.TextBox yoomoney_tb;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.Label FinalStatus_label;
+        private System.Windows.Forms.Timer AnimationTimer;
     }
 }

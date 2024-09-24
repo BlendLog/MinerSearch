@@ -116,9 +116,6 @@ namespace MSearch
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         internal static extern uint GetFileAttributes(string lpFileName);
 
-        internal const uint FILE_ATTRIBUTE_DIRECTORY = 0x10;
-        internal const uint FILE_ATTRIBUTE_REPARSE_POINT = 0x400;
-
         [DllImport("psapi.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool EnumProcesses([Out] uint[] processIds, int size, [Out] out int bytesReturned);
@@ -131,6 +128,70 @@ namespace MSearch
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, IntPtr lpNumberOfBytesRead);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        internal static extern bool GetFileInformationByHandleEx(IntPtr hFile, FILE_INFO_BY_HANDLE_CLASS FileInformationClass, out FILE_BASIC_INFO lpFileInformation, uint dwBufferSize);
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        internal static extern IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
+
+        [Flags]
+        internal enum FILE_ATTRIBUTE
+        {
+            READONLY = 0x00000001, // Файл только для чтения
+            HIDDEN = 0x00000002, // Файл скрыт
+            SYSTEM = 0x00000004, // Системный файл
+            DIRECTORY = 0x00000010, // Указывает на каталог
+            ARCHIVE = 0x00000020, // Файл, требующий архивации
+            DEVICE = 0x00000040, // Зарезервировано для системы, не используется
+            NORMAL = 0x00000080, // Обычный файл, без других атрибутов
+            TEMPORARY = 0x00000100, // Временный файл
+            SPARSE_FILE = 0x00000200, // Разреженный файл
+            REPARSE_POINT = 0x00000400, // Файл с точкой повторного анализа
+            COMPRESSED = 0x00000800, // Сжатый файл
+            OFFLINE = 0x00001000, // Файл недоступен, данные только в облаке (например, для OneDrive)
+            NOT_CONTENT_INDEXED = 0x00002000, // Файл не индексируется службой поиска
+            ENCRYPTED = 0x00004000, // Зашифрованный файл или каталог
+            INTEGRITY_STREAM = 0x00008000, // Файл или каталог с потоком целостности
+            VIRTUAL = 0x00010000, // Зарезервировано для будущего использования
+            NO_SCRUB_DATA = 0x00020000, // Данные файла не подлежат очистке
+            RECALL_ON_OPEN = 0x00040000, // Обратный вызов при открытии
+            PINNED = 0x00080000, // Файл закреплен для хранения в кэше (OneDrive)
+            UNPINNED = 0x00100000, // Файл откреплен, может быть удален из кэша (OneDrive)
+            RECALL_ON_DATA_ACCESS = 0x00400000 // Обратный вызов при доступе к данным файла
+        }
+
+
+        internal enum FILE_INFO_BY_HANDLE_CLASS
+        {
+            FileBasicInfo = 0,
+            FileStandardInfo = 1,
+            FileNameInfo = 2,
+            FileRemoteProtocolInfo = 3,
+            FileCompressionInfo = 4,
+            FileAttributeTagInfo = 5,
+            FileIdBothDirectoryInfo = 6,
+            FileIdBothDirectoryRestartInfo = 7,
+            FileIoPriorityHintInfo = 8,
+            FileRemoteInfo = 9,
+            FileFullDirectoryInfo = 10,
+            FileFullDirectoryRestartInfo = 11,
+            FileStorageInfo = 12,
+            FileAlignmentInfo = 13,
+            FileIdInfo = 14,
+            FileIdExtdDirectoryInfo = 15,
+            FileIdExtdDirectoryRestartInfo = 16,
+            MaximumFileInfoByHandlesClass
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct FILE_BASIC_INFO
+        {
+            public long CreationTime;
+            public long LastAccessTime;
+            public long LastWriteTime;
+            public long ChangeTime;
+            public uint FileAttributes;
+        }
 
         [DllImport("ntdll.dll")]
         internal static extern int NtCreateThreadEx(
@@ -254,6 +315,7 @@ namespace MSearch
         public static IntPtr ICON_SMALL2 = new IntPtr(2);
         public static IntPtr IDI_APPLICATION = new IntPtr(0x7F00);
         public static int GCL_HICON = -14;
+
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct LUID
@@ -653,6 +715,34 @@ namespace MSearch
             var changedStatus = WaitForServiceStatus(service, ServiceState.StopPending, ServiceState.Stopped);
             if (!changedStatus)
                 throw new ApplicationException("Unable to stop service");
+        }
+
+        public static void Uninstall(string serviceName)
+        {
+            IntPtr scm = OpenSCManager(ScmAccessRights.AllAccess);
+
+            try
+            {
+                IntPtr service = OpenService(scm, serviceName, ServiceAccessRights.AllAccess);
+                if (service == IntPtr.Zero)
+                    throw new ApplicationException("Service not installed.");
+
+                try
+                {
+                    StopService(service);
+
+                    if (!DeleteService(service))
+                        throw new ApplicationException("Could not delete service " + Marshal.GetLastWin32Error());
+                }
+                finally
+                {
+                    CloseServiceHandle(service);
+                }
+            }
+            finally
+            {
+                CloseServiceHandle(scm);
+            }
         }
 
         public static ServiceState GetServiceState(string serviceName)

@@ -467,8 +467,9 @@ namespace MSearch
 
                 for (int i = 0; i <= bytesToRead - targetSequences[0].Length; i++)
                 {
-                    foreach (var targetSequence in targetSequences)
+                    for (int index = 0; index < targetSequences.Count; index++)
                     {
+                        byte[] targetSequence = targetSequences[index];
                         bool sequenceFound = true;
                         for (int j = 0; j < targetSequence.Length; j++)
                         {
@@ -482,6 +483,12 @@ namespace MSearch
                         if (sequenceFound)
                         {
                             found = true;
+
+                            if (index == 4 && fileIndex > 4096)
+                            {
+                                found = false;
+                            }
+
                             break;
                         }
                     }
@@ -496,9 +503,13 @@ namespace MSearch
             return found;
         }
 
-        internal static List<string> GetFiles(string path, string pattern, int currentDepth = 0, int maxDepth = 2)
+        
+
+        internal static List<string> GetFiles(string path, string pattern, int currentDepth = 0, int maxDepth = 3)
         {
             var files = new List<string>();
+
+            string minersearchfolder = "mi?ner?se?arch_quarantine".Replace("?", "");
 
             try
             {
@@ -510,7 +521,7 @@ namespace MSearch
                         if (!IsReparsePoint(directory) &&
                             !directory.Contains(":\\Windows\\WinSxS") &&
                             !directory.Contains(":\\$") &&
-                            !directory.Contains("mi?ner?se?arch_quarantine".Replace("?", "")) &&
+                            !directory.Contains(minersearchfolder) &&
                             !directory.Contains(@":\programdata\microsoft\Windows\Containers\BaseImages") &&
                             !directory.Contains(@"AppData\Local\Microsoft\WindowsApps"))
                         {
@@ -519,19 +530,22 @@ namespace MSearch
                     }
                 }
             }
-            catch (Exception) { }
-
+            catch (Exception ex) 
+            {
+                Program.LL.LogErrorMessage("_Error", ex);
+            }
+            
             return files;
         }
 
         internal static bool IsSpecificPath(string path)
         {
-            return path.Contains("\\\u00A0\\\u00A0\\");
+            return path.Contains("\u00A0");
         }
 
         internal static bool IsReparsePoint(string path)
         {
-            return (Native.GetFileAttributes(path) & Native.FILE_ATTRIBUTE_REPARSE_POINT) == Native.FILE_ATTRIBUTE_REPARSE_POINT;
+            return (Native.GetFileAttributes(path) & (uint)Native.FILE_ATTRIBUTE.REPARSE_POINT) == (uint)Native.FILE_ATTRIBUTE.REPARSE_POINT;
         }
 
         public static string GetWindowsVersion()
@@ -1493,6 +1507,7 @@ namespace MSearch
                         return;
 
                     }
+                    else Program.LL.LogWarnMessage("_FileIsNotFound", fullPathToFileFromArgs);
                 }
                 catch (Exception ex)
                 {
@@ -1771,7 +1786,25 @@ namespace MSearch
             ProcessStartInfo processStartInfo = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
-                Arguments = $"/c takeown /f \"\\\\?\\{path}\" /R /A & icacls \"\\\\?\\{path}\" /remove:d /T & icacls \"\\\\?\\{path}\" /grant *S-1-5-32-544:F & rd /s /q \"\\\\?\\{path}\"",
+                Arguments = $"/c takeown /F \"\\\\?\\{path}\" /R /A /D Y & icacls \"\\\\?\\{path}\" /remove:d %USERNAME% /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-5-18 /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-5-32-544 /T && rd /s /q \"\\\\?\\{path}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (Process process = Process.Start(processStartInfo))
+            {
+                process.WaitForExit();
+            }
+
+            return Directory.Exists(path);
+        }
+
+        public static bool ForceUnlockDirectory(string path)
+        {
+            ProcessStartInfo processStartInfo = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/c takeown /F \"\\\\?\\{path}\" /R /A /D Y & icacls \"\\\\?\\{path}\" /remove:d %USERNAME% /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-5-18 /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-5-32-544 /T",
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
@@ -1912,7 +1945,7 @@ namespace MSearch
 
         internal void RemoveR77Config()
         {
-            string[] patterns = { "dll32", "dll64", "stager" };
+            string[] patterns = { "dll32", "dll64", "sta&ger&".Replace("&","") };
 
             using (RegistryKey baseKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true))
             {
@@ -1945,11 +1978,6 @@ namespace MSearch
             }
 
         }
-
-        //public static string GetFileImpHash(string path) //too slow
-        //{
-        //    return new ImportHash(new PeNet.PeFile(File.ReadAllBytes(path)).ImportedFunctions).ImpHash;
-        //}
 
         internal static int GetServiceId(string serviceName)
         {

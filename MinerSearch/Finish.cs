@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -9,11 +10,19 @@ namespace MSearch
 {
     public partial class Finish : Form
     {
+        int threatsCount = 0;
+        int curedCount = 0;
+
+        private int targetHeight = 415;
+        private int step = 2; // Шаг изменения высоты
+
         public Finish(int _totalThreats, int _neutralizedThreats, string _elapsedTime)
         {
             InitializeComponent();
+            threatsCount = _totalThreats;
+            curedCount = _neutralizedThreats;
             LBL_threatsCount.Text = _totalThreats.ToString();
-            LBL_curedCount.Text = _neutralizedThreats.ToString();
+            LBL_curedCount.Text = _neutralizedThreats.ToString();  
             LBL_scanElapsedTime.Text = _elapsedTime;
         }
 
@@ -59,6 +68,21 @@ namespace MSearch
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (curedCount < threatsCount)
+            {
+                var result = MessageBox.Show(Program.LL.GetLocalizedString("_FinishRebootPCNow"), Utils.GetRndString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    Process.Start(new ProcessStartInfo()
+                    {
+                        FileName = "shutdown",
+                        Arguments = "/r /t 0",
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    });
+                }
+                else Environment.Exit(0);
+            }
             Environment.Exit(0);
         }
 
@@ -73,7 +97,13 @@ namespace MSearch
         {
             TopMost = true;
             TranslateForm();
-            MessageBox.Show(Program.LL.GetLocalizedString("_End"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            if (curedCount == threatsCount && !Program.WinPEMode && !Program.ScanOnly && threatsCount != 0)
+            {
+                top.Enabled = false;
+                await Task.Delay(1000);
+                AnimationTimer.Start();
+            }
 
             string registryPath = @"Software\M1nerSearch";
             string valueName = "allowstatistics";
@@ -89,8 +119,16 @@ namespace MSearch
 
             if (regValue == null)
             {
-                key.SetValue(valueName, 2, RegistryValueKind.DWord);
-                regValue = 2;
+                if (Utils.GetWindowsVersion().Contains("Windows 7"))
+                {
+                    key.SetValue(valueName, 0, RegistryValueKind.DWord);
+                    regValue = 0;
+                }
+                else
+                {
+                    key.SetValue(valueName, 2, RegistryValueKind.DWord);
+                    regValue = 2;
+                }
             }
 
             int allowStatistics = (int)regValue;
@@ -102,12 +140,13 @@ namespace MSearch
                 if (result == DialogResult.Yes)
                 {
                     key.SetValue(valueName, 1, RegistryValueKind.DWord);
-                    
-                    if (!Program.no_logs && !Utils.GetWindowsVersion().Contains("Windows 7"))
+
+                    if (!Program.no_logs)
                     {
                         try
                         {
-                            await Task.Run(() => {
+                            await Task.Run(() =>
+                            {
                                 Task.Delay(new Random().Next(10, 3000));
                                 MinerSearch.SentLog();
                             });
@@ -142,14 +181,15 @@ namespace MSearch
             }
             else if (allowStatistics == 1)
             {
-                if (!Program.no_logs && !Utils.GetWindowsVersion().Contains("Windows 7"))
+                if (!Program.no_logs)
                 {
                     try
                     {
-                        await Task.Run(() => {
-                            Task.Delay(new Random().Next(10,3000));
-                            MinerSearch.SentLog();
-                        });
+                        await Task.Run(() =>
+                    {
+                        Task.Delay(new Random().Next(10, 3000));
+                        MinerSearch.SentLog();
+                    });
                         top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
                         top.Text = "MinerSearch          ";
                         button1.Visible = true;
@@ -178,6 +218,24 @@ namespace MSearch
                 button1.Visible = true;
             }
             key.Close();
+
+        }
+
+        void AnimationTimer_Tick(object sender, EventArgs e)
+        {
+            // Если текущая высота меньше целевой, увеличиваем её
+            if (this.Height < targetHeight)
+            {
+                this.Height += step;
+
+                Location = new System.Drawing.Point(Location.X, Location.Y - 1);
+            }
+            else
+            {
+                // Останавливаем таймер, когда высота достигнет целевой
+                AnimationTimer.Stop();
+                top.Enabled = true;
+            }
         }
 
         void TranslateForm()
@@ -221,6 +279,33 @@ namespace MSearch
             top.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             top.Text = Program.LL.GetLocalizedString("_PleaseWaitMessage");
 
+            if (!Program.ScanOnly)
+            {
+                if (threatsCount > 0)
+                {
+                    if (curedCount < threatsCount)
+                    {
+                        FinalStatus_label.Text = Program.LL.GetLocalizedString("_FinishNotAllThreatsNeutralized");
+                        FinalStatus_label.ForeColor = System.Drawing.Color.Red;
+                    }
+                    else if (curedCount == threatsCount)
+                    {
+                        FinalStatus_label.Text = Program.LL.GetLocalizedString("_FinishAllThreatsNeutralized");
+                        FinalStatus_label.ForeColor = System.Drawing.Color.Green;
+
+                    }
+                }
+                else
+                {
+                    FinalStatus_label.Text = Program.LL.GetLocalizedString("_NoThreats");
+                    FinalStatus_label.ForeColor = System.Drawing.Color.Green;
+                }
+            }
+            else
+            {
+                FinalStatus_label.Text = Program.LL.GetLocalizedString("_ScanOnlyMode");
+                FinalStatus_label.ForeColor = System.Drawing.Color.Blue;
+            }
         }
 
         private void pb_QR_MouseEnter(object sender, EventArgs e)
@@ -299,5 +384,7 @@ namespace MSearch
             string argument = "/select, \"" + logpath + "\"";
             Process.Start("explorer.exe", argument);
         }
+
+
     }
 }

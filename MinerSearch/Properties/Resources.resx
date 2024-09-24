@@ -1210,4 +1210,84 @@ Click Yes to continue. Click No to exit.</value>
   <data name="_PleaseWaitMessage_RU" xml:space="preserve">
     <value>Подождите...</value>
   </data>
+  <data name="_ErrorFileOnlineOnly_EN" xml:space="preserve">
+    <value>The file is only available online</value>
+  </data>
+  <data name="_ErrorFileOnlineOnly_RU" xml:space="preserve">
+    <value>Файл доступен только онлайн</value>
+  </data>
+  <data name="_ErrorLockedByWD_EN" xml:space="preserve">
+    <value>File locked by Wi?ndo?ws Def?end?er:</value>
+  </data>
+  <data name="_ErrorLockedByWD_RU" xml:space="preserve">
+    <value>Файл заблокирован Защитником Windows:</value>
+  </data>
+  <data name="_ProcessNotRunning_EN" xml:space="preserve">
+    <value>The process is not running</value>
+  </data>
+  <data name="_ProcessNotRunning_RU" xml:space="preserve">
+    <value>Процесс не выполняется</value>
+  </data>
+  <data name="_ErrorScanProcesses_EN" xml:space="preserve">
+    <value>Something is prevent the search for malicious processes. You should temporarily turn off your antivirus and try again.</value>
+  </data>
+  <data name="_ErrorScanProcesses_RU" xml:space="preserve">
+    <value>Что-то мешает выполнить поиск вредоносных процессов. Следует временно приостановить работу антивирусного ПО и повторить попытку.</value>
+  </data>
+  <data name="_FinishAllThreatsNeutralized_EN" xml:space="preserve">
+    <value>All threats has been neutralized!</value>
+  </data>
+  <data name="_FinishAllThreatsNeutralized_RU" xml:space="preserve">
+    <value>Все угрозы были устранены!</value>
+  </data>
+  <data name="_FinishNotAllThreatsNeutralized_EN" xml:space="preserve">
+    <value>Not all threats found have been neutralized. Restart your computer and run the check again.</value>
+  </data>
+  <data name="_FinishNotAllThreatsNeutralized_RU" xml:space="preserve">
+    <value>Не все найденные угрозы были устранены. Перезагрузите компьютер и выполните проверку снова.</value>
+  </data>
+  <data name="_FinishRebootPCNow_EN" xml:space="preserve">
+    <value>Do you want to restart your computer right now?</value>
+  </data>
+  <data name="_FinishRebootPCNow_RU" xml:space="preserve">
+    <value>Перезагрузить компьютер сейчас?</value>
+  </data>
+  <data name="_DisableServiceWarning_EN" xml:space="preserve">
+    <value>Warning! The application has identified many services with invalid digital signatures. 
+
+It is assumed that the system:
+ - was installed from an unverified source;
+ - has Insider Preview status;
+ - or modified by third-party programs.
+
+The following services will be disabled, which may lead to system instability:
+#InvalidServices#
+
+Would you like to continue?</value>
+  </data>
+  <data name="_DisableServiceWarning_RU" xml:space="preserve">
+    <value>Внимание! Приложение выявило множество служб с недействительной цифровой подписью. 
+
+Предполагается, что система:
+ - была установлена из непроверенного источника;
+ - имеет статус Insider Preview;
+ - либо модифицирована сторонними программами.
+
+Перечисленные ниже службы будут отключены, что возможно приведёт к нестабильности системы:
+#InvalidServices#
+
+Желаете продолжить?</value>
+  </data>
+  <data name="_MaliciousService_EN" xml:space="preserve">
+    <value>Malicious Service -</value>
+  </data>
+  <data name="_MaliciousService_RU" xml:space="preserve">
+    <value>Вредоносная служба - </value>
+  </data>
+  <data name="_SkipServiceMessage_EN" xml:space="preserve">
+    <value>Skipped Service -</value>
+  </data>
+  <data name="_SkipServiceMessage_RU" xml:space="preserve">
+    <value>Служба пропущена -</value>
+  </data>
 </root>

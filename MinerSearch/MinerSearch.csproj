@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>MSearch</RootNamespace>
     <AssemblyName>MinerSearch</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -167,6 +167,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Finish.resx">
       <DependentUpon>Finish.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="License.resx">
       <DependentUpon>License.cs</DependentUpon>

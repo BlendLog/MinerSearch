@@ -418,7 +418,7 @@ namespace MSearch
             Console.WriteLine(@"                                                             | |_) | |  __/ | |_  | (_| |");
             Console.WriteLine(@"                                                             |____/   \___|  \__|  \__,_|");
 #endif
-            Console.WriteLine("\t\tby: Bl?end??Log".Replace("?", ""));
+            Console.WriteLine("\t\t?by: Ble?nd??Log?".Replace("?", ""));
         }
     }
 }

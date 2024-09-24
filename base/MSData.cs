@@ -228,216 +228,237 @@ namespace DBase
 	        new HashedString("8d9b6cfb8aa32afdfb3e8a8d8e457b85",10) //Z-oleg.com
         };
 
+        public List<string> whitelistedWords = new List<string>() {
+        Bfs.Create("yU2wd2acAptMTac3FuaaOg==","0OyEVNHGxYh6ERyU5zGkKMXLquocQyejyPZekpDwK/g=", "CaYwnP1uUKQyxbhrt6UBLg=="), //ads
+		Bfs.Create("6O5soZp06DoKFqc2dDaqsQ==","bba5m2JBzVPMWMJDL40UhT/c+noJgk/h+sZxb9JJOoM=", "++sFiwuGeUaANVEPjjgp1A=="), //msn
+		Bfs.Create("uasKMIDwwZa1vcGKEfM0jg==","zcb0/UWrYiPpESktgfOl6QvmmDA+L3xVEdgzkVFDO3M=", "1bqmi+YUE769jO6/A0fHBg=="), //aria
+		Bfs.Create("rDNn3EeXAqKZM7WbWI19iQ==","gDlnzro91pVxVeVRQd129skqMOxsaOoE5CP4t8v9sjc=", "5RD27Q2j51j5MQGUHraOCA=="), //blob
+		Bfs.Create("OPgF+YCVXnX/M26blg2r3g==","t8rlG1pWz19ajVfVzb5OuN430j3XKupEj/ouHOMKkfw=", "CExcBNhOHDM7ZuSZNYGa5Q=="), //llnw
+		Bfs.Create("NyWmBQHGaD5pyowI7KhpBQ==","igSB+uG7HF6DmYfQ1yxNDQ89qBpirw55WYPTM26KmTo=", "BjrMrrtApksTX79ujm9UYA=="), //ipv6
+		Bfs.Create("dGVaRoDoVjKIxdbWta1ySw==","6e+robbroI0WBrjhg3UJyXZ8IUeDDktddA2Ircg76XI=", "idIQR92/qDSUc5k/z0w83Q=="), //adnxs
+		Bfs.Create("IW3orijkshMc3KylyhShUA==","29iKRxK8eOgXp5/bPDvVuprzww/8BmdUhNEPtmbgUzc=", "iNs2JcXN/fHnstBoTJ5BmA=="), //akadns
+		Bfs.Create("lX3ipRWDX7eWctggt2z9WA==","Q92pL9GEXJU3ExZ1gN1pTrLfOuci5gLR4VTGLh4Rd7k=", "e54Kobhy4kU680sEEUteYg=="), //vortex
+		Bfs.Create("B+s1QC56PVY71IIDH+Jqzw==","gNfiGlMGHjOBqjgaDOGSAOSr55tbLBs1hEvc1WiwpSU=", "AhzZFH6rMJyGJ7te6638WA=="), //watson
+		Bfs.Create("hYqjMwFj9tA7X/nooASYtQ==","m8Z5kmKPmsvTup3dBjzK8jHvCxW5gsfbvjW4h/4gA9s=", "j5jRvo0OMQBaj4Ec5eLJxw=="), //windows
+		Bfs.Create("RnUzpPilltuslRUy1ySHtg==","ohB5n+3a6TmbV8By9q5eSZ3QW0q5Ndq8KHzMijUmIgs=", "R5MNMIquEb00dNbEnN/DyQ=="), //telemetry
+		};
+
+
         public List<string> obfStr1 = new List<string>() {
-        Drive.Letter + Bfs.Create("nfvgWaJztsXgh5fRRsefdc+soivAoiDtn23Of/LbhTg=","OktoD6uy/Zacr92HwThHztq+U92omQBYPuDdIQ0W7T8=", "qU4v6+ecJxIUzIIydaG12w=="), //:\ProgramData\Install
-		Drive.Letter + Bfs.Create("uXf8zu2VaApTpP067iV0hv+cFdceKuYX6wM5KbCfVzs=","9bv+6J2SwXSDnISEaTEmggDqgXmUXLO2jj6zElhyrtE=", "MllfEDOWlPYrUg+6g9MVcg=="), //:\ProgramData\Microsoft\Check
-		Drive.Letter + Bfs.Create("zBVhNps5z4N2CPyQ5+8wrqmDauIN9+AaOzrLvb45dRA=","YplDGq45NHdJ1WIyIah79LNMbyAxdIbF6KKW7dZlXgE=", "x2bV+sSKAPt/hJGHgDKwvg=="), //:\ProgramData\Microsoft\Intel
-		Drive.Letter + Bfs.Create("/XBU22EmLzIQWMIhpiJU6eT4HBXdPvySc/GZ+RDn3b4DNgFzjPKzTLf+8CPIs3Hz16zV+k/D1/ga7MdmxNVY7A==","1Xe9Beca2Ow7eu5VCiib+ea7FF/OMvIFy58hdJQ83b8=", "KDmPeESvtAmnYJe8J0ORDA=="), //:\ProgramData\Microsoft\clr_optimization_v4.0.30318_64
-		Drive.Letter + Bfs.Create("Cl+rN5CqM3ZehNUMgU+HIxK9fiZY9NBuQUNkw0ggzX4=","k3UJC+D34xJO8goPks57ObHpWqd5vINUDbH/bzpNs10=", "r+boJUrlWZ2RuNm9ICpqow=="), //:\ProgramData\Microsoft\temp
-		Drive.Letter + Bfs.Create("Mi+ysZAWVU0fnBnbvLfXdZ9TTp4o3gYR6J9gv0OXh1o=","ofooEi6ZcBYeiWUDkJi95xigiu/hp6w+H4SQmmAMiB0=", "iBWK36tQihR+6RXmeVjcKg=="), //:\ProgramData\PuzzleMedia
-		Drive.Letter + Bfs.Create("vxlHornj27QP1bDpo+iaxdUXbp/sYco/VZVfemeqW+4=","mCgRcpUIeyJIQoNRnOc5/S98fR8iCmqx4JXcR0rCr5I=", "sEGWQ08JTviV0fCBb3JATg=="), //:\ProgramData\RealtekHD
-		Drive.Letter + Bfs.Create("NX8mXXaVTne/ZB9bEJtjZU4xyDeGpNqh7JqqNZZdmE8=","7zoP3EYuYS55gzdl0DuIoe7p+v/F7mfa4V7R33Fd66Y=", "LfMqfQo3yQ93hTxx0jIV/Q=="), //:\ProgramData\ReaItekHD
-		Drive.Letter + Bfs.Create("2um9u9dkfDOZOCQWwf/FY15/YDfYfBHXJ9V84hf85Ms=","ZJAWNamME/DaFqWft6RJEaz3HZsbyNQRY/3J2ZyPe8g=", "jMQeuUdMJwmpZNwSF7MnHA=="), //:\ProgramData\RobotDemo
-		Drive.Letter + Bfs.Create("O+av1ET+RSqt8/4k+NvBpD8bTpP/SbTqv7+fLE4T+ZU=","2htsOl4baGFSfTIOHbYzr3SbnGZp6vWIcWo9J8RHVxU=", "GZGIL50GkON4XY+V5PgwUA=="), //:\ProgramData\RunDLL
-		Drive.Letter + Bfs.Create("0yemHWmslA49zlrtgxpdtbSBn97sFRQn+4KshgF9jnQ=","Tpboc15f7tH6XEB/7+M2LJP5da3PzZkgKrSOqqJke5w=", "LiCjQ0UwJiR5WJaX4I5Dkw=="), //:\ProgramData\Setup
-		Drive.Letter + Bfs.Create("tOLBVxts5VJCSLVfDnLtR+r1mOGjEnVksWQwZnc/kCk=","ZTU3ehZ1up3ONtijtrbOaiWxR1LaCjeMmRecXoHhh0k=", "dRtJNjlZkh6tlsFXUTBJfg=="), //:\ProgramData\System32
-		Drive.Letter + Bfs.Create("DXoeuF5S6bpamoV/VeboT/Hk9wOopzMB8ABrFk0to+c=","aTgaXVS+YaaSTu7XeAMfM7KRAidYxOAffEmPoEFSClw=", "AtEmMilAYzfFi1unEnLMEA=="), //:\ProgramData\WavePad
-		Drive.Letter + Bfs.Create("YPZAzTDE/oOa0sE7mTxe9rU1ig/4bm64YKri0jQLVqR9JPkl6UdY+hGffklRMdzX","nxQ9oCFHEbeGVfvjum0/naAUHiKFNEzWPJ2mNFZYUTs=", "gKBm1ddub8C7pDua60swSQ=="), //:\ProgramData\Windows Tasks Service
-		Drive.Letter + Bfs.Create("Rt880mu3efMcvU4IVzD3E5wQYw0PwdvGMFffu7+fAuE=","Ix+CnMdPVQoYBXOJkBONoX8TVdZRS8eP9obBSQwJNLw=", "IFEeMppWnY5RtEHCQVmX9Q=="), //:\ProgramData\WindowsTask
-		Drive.Letter + Bfs.Create("VktIPVrJw6VuhZ1UzaqU9wFPRGBMwg548Q7D5FlwWJo=","W4UgM9DgbZZrdgfczN9qjNEaZQmoTxDaFwBt5aWTIxY=", "JieQbKPVkiRtplpkpKQgaw=="), //:\ProgramData\Google\Chrome
-		Drive.Letter + Bfs.Create("+ZSD+3WTJZIa0J4sFnLhuFpss/soGvNs271t/P+1W94=","9yA8wJuUkoGzNW9jzoBSJ1C1Jbvwackh5efyAljrfh4=", "Chg0WS26+gXc9u2QUSdjfQ=="), //:\Program Files\Transmission
-		Drive.Letter + Bfs.Create("bx4v5MenCGgMXdXa0U4dEQj965UcMw4wAv4CEofvaCI=","foHhPGsnyx4RwFkApe0rYwiuviwcrulZ8TjpbCBUhXY=", "NG6bIojSkFWqUjNIkjxcfQ=="), //:\Program Files\Google\Libs
-		Drive.Letter + Bfs.Create("3G210+/Ek4PvmSseufY9ZI8FNf6SOVRVTwFkZEWqWLt68ka+OdAvzhsoR5p5yc3b","eqmIZwxYh8+BMPlMHQ3grLBHPa3sVnnmXrMqRRW9a7s=", "RYFEBK4IA+pnrRkm/81GjA=="), //:\Program Files (x86)\Transmission
-		Drive.Letter + Bfs.Create("hbJCwS1oZGkHt0kv8bt8aRDLt+lA55WloNg5xKNr6t4=","3nvXhpjQX3hhorelVyuYSwFDPrFG3D5Mziw3Tnrd6D4=", "2fkCQ4CIAdluea25xzb7fQ=="), //:\Windows\Fonts\Mysql
-		Drive.Letter + Bfs.Create("3qKRGSAtNM/ImLLJWSbe1kiBw1GiOtiNu3CcyM9KuCaZDX9h4kOoFet915VxQ+ej","vwlCHI9Z4oKf14jrTEwwU/qDbZk1cIirBVJFohOXFPY=", "KtZAXA2faPQ2t6ywHLUBfA=="), //:\Program Files\Internet Explorer\bin
-		Drive.Letter + Bfs.Create("LbHXsNP8ghg08bPkqtQmb4/sEjiMbYfHba8oXuSRm0Y=","0n1ILsVqpnEguQvotOQR8urShm5RSYh/0X+CAx8SMQs=", "EtP9/DX11lXR7YPFaVNzMg=="), //:\ProgramData\princeton-produce
-		Drive.Letter + Bfs.Create("6czdlkKO+PnfZz4T2q0CYmasM0o77xsHHAbYmsDGnp0=","1j6vt+Q4nGo3qvczrnzgm2tXizmMX+GwPoydBsk743Q=", "iHkSapBwjV19v4WiSE56sA=="), //:\ProgramData\Timeupper
-		Drive.Letter + Bfs.Create("Un2EIIY26nOHZPRVU0Y67onS8MPHlBvOvosIRl4pfQc=","vfaDETxOfsZvkNXnAZwvnw9KemlZi11M7LgrlwyA+8s=", "7ZPnAYLDvy0W8L49il6YYQ=="), //:\Program Files\RDP Wrapper
-		@"\\?\" + Drive.Letter + Bfs.Create("yznlgcSp0qpKYqExBOY78xV67gTA77ZsvR/jCph7YW0=","wBnCQkX3dxInNXgi3EbDYeKrt5YYZkdCtE0FzNWumOw=", "dAq29Fp/uaQX6QpsEehNXg=="), //:\ProgramData\AUX..
-		@"\\?\" + Drive.Letter + Bfs.Create("C7+idKSkOLJ9uvhhgzgwSd2LxfUTdaAMh5KZ90Z6Ij8=","tgLM8lelJpfBAcWXWsOqqbA0aiNvOOQFWrb2BbS91Xo=", "hChlkwH1O5IsbLoChOab1A=="), //:\ProgramData\NUL..
-		Drive.Letter + Bfs.Create("D5NrsQwstvq6HZ2cfRMZ0gYfql5ctA63LRs0Gi1SO0o=","MmL65VWLjs1g80pMFShA/jH/psD/CDnBjAg+Ak93BxE=", "DSrDdrVbtCwdT+IOzMDCqg=="), //:\ProgramData\Jedist
-		Drive.Letter + Bfs.Create("Cy1tc2rD4moISUhpood1c+e0assI2qjFQcWrEMd5BPvDodMZX0exEgdywLMv/sV0XyTTMDsJ0+XNR/Ba/2mt1A==","6dxrzF2EylkhRHdGR1cWRL4lYZorMoVgLrzzmhOqsDE=", "MgAaJb90O3rSE6+GMvUNLQ=="), //:\ProgramData\Classic.{BB06C0E4-D293-4f75-8A90-CB05B6477EEE}
-		Drive.Letter + Bfs.Create("nXtl66luX1nMkS8uWZij9tYoABQdGX0AWkJjbzDg03sh5q43bXpTsnEU+XUg5JBaOQjS0OtFbVTVRgl9ovEl4Q==","5h3N4qGpMiXmnWx3DXF/x6olsSalZ6WoRh1TG6YsJOw=", "7Bs3hsQ1rz+zoebggGu1tQ=="), //:\ProgramData\Classic.{BB64F8A7-BEE7-4E1A-AB8D-7D8273F7FDB6}
-        Drive.Letter + Bfs.Create("6j05r3VBUo4rZFsEpaQp7eNBlEQYm4qhqD5yoAuwgV0=","j6ivYSP43Z9tDTkfA8VNgMkVV5oIauNvEi9an6zLw4A=", "LJp7yhTdA/ctUBoQbtTtoQ=="), //:\ProgramData\Gedist
+        Drive.Letter + Bfs.Create("NP/BljSwGdxsVysoi2hrUcI7JyB0Wk5RYIUJkW+ceqo=","zP9GNFpvjlr7SF8Vl9sdSW601X620lb3ab7rv/bWmHw=", "+3F4Ko1vnzA+JqIUSRaM2A=="), //:\ProgramData\Install
+		Drive.Letter + Bfs.Create("/waUpzpwCfFg4TXuXoPYj13Z+9TAYJyNSOmOiKrA+gw=","pAUR30EQotwNQdetWDOKNozJCHD25jN9fjlCDqdd2zk=", "+UtW2x87l9N/S4TUYD6QrQ=="), //:\ProgramData\Microsoft\Check
+		Drive.Letter + Bfs.Create("LaXP2unDi7ro3rEr4rkHZQB1dOKmMIOIfCFwraanit8=","6oJLQCWeMAWGwlcukbISuLfT+1zaeE7FZcgE5WGZwno=", "AEuEtEx/5KBWM73doW3wyg=="), //:\ProgramData\Microsoft\Intel
+		Drive.Letter + Bfs.Create("eu04dRFzXeEQchdLny5U9mft+r/m/QADqyVFMgTmLieSq3TOR4n8+VzJRblCkMwpIf836YDeUQbWXfT+gPOC3w==","09MGhf+AjCE390cvpOvixzJ4MRI+vjvW+oY/zy26L60=", "Grx/D56OJOvBsp6wUvdGzw=="), //:\ProgramData\Microsoft\clr_optimization_v4.0.30318_64
+		Drive.Letter + Bfs.Create("1tDYAZZI5GQbCNTvyBT2Rwkpt2zg1R/80Q6QyVAJ/tY=","p3nEDFSFstg7aEYNjPLNlZxJ25reQxXHHTdFbPl8Tl0=", "7MTtSHqH7CLXIyZaarUMtA=="), //:\ProgramData\Microsoft\temp
+		Drive.Letter + Bfs.Create("RkVVp/TNdUXsH2JNZ5OaVDAM3mGpyAEFt3SGuPDoKdA=","YaS2t1XkxHXtxD2ZUuYvAFjGiW66hG5ExOOS7Ap3nKk=", "XbWWZJPl9UBpLsmUr78icQ=="), //:\ProgramData\PuzzleMedia
+		Drive.Letter + Bfs.Create("qUwQKd30o6YqNoLfz0KhHl/AJ+T/50r6/kNQwhSDviU=","Gf/GFw8XIQ1QslGxGDWLk6bge4cWDzl51vFMBzRRWHU=", "MpZO2ZRY1cs5WkF2YpGErw=="), //:\ProgramData\RealtekHD
+		Drive.Letter + Bfs.Create("eHwikQ8pIKWXYeLPhp6+6+d9YWlEpSOaslxFuQtzZJQ=","xD5nK31II4os0mbrn9G1yqwlr5rBKq2WmCZF/Af4Zm0=", "uGCHE2eMXjA02g/5V0C9Rg=="), //:\ProgramData\ReaItekHD
+		Drive.Letter + Bfs.Create("+6Mg/dIhcmBvNS2QGPXIauccB6uSTfimigBd2Kh485g=","7RmdmLkHYoWptcuA3w2GWagDB6fFcvDziZAGIXHqaSQ=", "Ndez6t7bgrqF/pW4Zqtmtg=="), //:\ProgramData\RobotDemo
+		Drive.Letter + Bfs.Create("2Uezd70ZphkAsRnwx/jz6yqRc/6XbvVAhAtlgOMUQs0=","DWW3BK57VGzfE2iMqdcLlnQ5h/dvPMUL508MIcnVp6Y=", "GUC6hBkoTDPSU9igcFrHhw=="), //:\ProgramData\RunDLL
+		Drive.Letter + Bfs.Create("SmymPzMe/BbEQWNGkO+jPvmFv16Gfy/wSQsaWeikVWA=","SBDScFVIb3gpa4BmO1+ymeaSGqT70XOlqpkxveufiQM=", "j0XRZMFiLo+5XLkSym/cUA=="), //:\ProgramData\Setup
+		Drive.Letter + Bfs.Create("csgVNS88EXoSuHBoUAX2h2tteTvuKtLx7dcMnaZRnuw=","uhIEcrQcEtPrvvO5TS7kO9IEjnmpMNxrJ9EurD/lXEA=", "CaG/41NBX0aKs/cJ0NoXpw=="), //:\ProgramData\System32
+		Drive.Letter + Bfs.Create("KbwEpmBtoUQl2iNcBZz91yjXQpT91us5uKDqzuCD5U8=","lWAfDnU3lkRxZgICI//Ui0QStkSyfV/i8zb9rXcekeg=", "c3NVwdPk0sw+BT8NgcIJ+g=="), //:\ProgramData\WavePad
+		Drive.Letter + Bfs.Create("uDWko555Kps3DoYA7oMV4zG0/FoPoCXUmH3tVphYaf2AF/ftY2aOjhPQl8mhtLyD","43NuKogyYxPO377QiF+vY8N8EtKb/rgr+FfNkqfbNV8=", "26/Gk2I9Hx/j37Ka29qqwQ=="), //:\ProgramData\Windows Tasks Service
+		Drive.Letter + Bfs.Create("Ysg/bXJNG5UgVa5VmVW0ZBRMk0opfICe/9DsgQOOvGI=","aZwMe65i+7+fUNN96YJ1Q570MTJK/Z7mnH1Ldfi1+GE=", "HknItf+j8zcOEewmpQmL0g=="), //:\ProgramData\WindowsTask
+		Drive.Letter + Bfs.Create("2D3sXLjPH5DZnK4QR+DxtVeUy44+fD0ms8ivVoorqcY=","zluvH8RJl8Ky3Z6rGgnGoypJhcby7H2OjrSgdgtE0KM=", "78nifUDfIuRjkcLTEgrxzw=="), //:\ProgramData\Google\Chrome
+		Drive.Letter + Bfs.Create("4U0WHv+rYccMCeW2qC7NoWyruePxdA3QJwo1Q0VyqQU=","53KSX6wwSannnOnqXAFD4QL5bHlt3AGpBeAjp71mhVk=", "NZdweyB1JzI/jTrMThLquQ=="), //:\Program Files\Transmission
+		Drive.Letter + Bfs.Create("GnFjPBIeSpcEGvazN0wOwyUOTBv+/pjURAq+ZM6Di/0=","CT9MYb4ADiNWG+jUhCNVzbCB4QZBtjnAxy+x2zHEQaA=", "5ZXyI3neYsrFfx/gGsR1/g=="), //:\Program Files\Google\Libs
+		Drive.Letter + Bfs.Create("09tsAWg1CLajfYIugV5dWtYHj6+iFSYnUbFJ95Hksj0PJNDRedh2HaD2FL4i1iBX","Sug6S4TewnPEybZvzpI3vQI9J9fxgEAiP31xv6Ljpmg=", "ePiVOft5hktSC47NH7MZ8Q=="), //:\Program Files (x86)\Transmission
+		Drive.Letter + Bfs.Create("1+LYmKk6GXI5jP9Ur4XlwUx2yHY8rBeQKlmR43w/ICQ=","UZKPVEtBi9aF8ydVTxzuETIwLADSqcLZyWdn0dSAzVE=", "CUHIBY63Bc//8ppywK5iUQ=="), //:\Windows\Fonts\Mysql
+		Drive.Letter + Bfs.Create("jssuq89DpM4BxgWPMnU8aJ0H5oZLDp/SpzmE/ycA7CooL/mfpCWo4tJkizHv3Nqn","+fVudyudvr7kl6K4PXlTM4UTCuvueeEhqEXDln8/yEs=", "c0pk/MSKxZaSKnrGZsJ89g=="), //:\Program Files\Internet Explorer\bin
+		Drive.Letter + Bfs.Create("zIIDg+EwQ0PiMe7GbkgcXTIDNHf8cMegkEDoXb/f1XI=","4AlrQO/zPkPnTyA32SF3n8h4az9j7WzHv+NCMwy423M=", "3QIzFOw9bLYCQGiVHNsdJQ=="), //:\ProgramData\princeton-produce
+		Drive.Letter + Bfs.Create("i6JwECYS9JnY0hDoqQoZ1qWd0hGTL7JASpJgEHN4vsE=","MXDMDVJH+FqKYdT2J1Xj8mC8ce6AmwP5smQF2vTTA5Q=", "Di5EL0ASlLrv5D2S+nzw5Q=="), //:\ProgramData\Timeupper
+		Drive.Letter + Bfs.Create("J/fd8hB9j2aGe1BadCCFSW2hI6mFc02+eMVy+87Pubg=","gYkL0XghQKZZreRuYldx66Nei/WhLLVOkGO5BBPaQME=", "GMn36WNDQAROf24CbFQeGg=="), //:\Program Files\RDP Wrapper
+	    @"\\?\" + Drive.Letter + Bfs.Create("dlNhw5J5IuiAtTTI3R8FLdomROpK1+8b/9PG1YDNvpM=","frkHXotWhzz4M3jwj1g+00+bcyVUrOGLPO1fMG0YqgE=", "a6qo7etlSc8UWzZUVGa2ng=="), //:\ProgramData\AUX..
+		@"\\?\" + Drive.Letter + Bfs.Create("VBl696ZhnyfPlwpy1TKrxNA01MfO7NOFLkDjXxAz/dY=","h6LPCQ3OzEqHSTvIaRJLU7UEZQuaDiafeTACy5H3ZxA=", "Vx58FSz2wC088MO90xY0WQ=="), //:\ProgramData\NUL..
+		Drive.Letter + Bfs.Create("u+vcRwJBIUPaL/vbi150UoqYc8lG/6dvZOWz6tGnQJ8=","Ax+YvaqHeADPKxlWYCyIm1eSTaElaLDdRUgWTzjM2O4=", "B+jWyVBTFqZxPmIh28eXJQ=="), //:\ProgramData\Jedist
+		Drive.Letter + Bfs.Create("JBQsd2ldRybWk4te5v+PmqhXHDsSktenuVDqAcSGUcMN5d10dbzscWRFaG4KGEenjGEsz7bLqiqQXpmA27L5fQ==","HwKl+EhXJB+Dkw4l5bc8geGscLKKXNVP+tvTbUMpBQY=", "gOigRjOyClkk757+A1YeuQ=="), //:\ProgramData\Classic.{BB06C0E4-D293-4f75-8A90-CB05B6477EEE}
+		Drive.Letter + Bfs.Create("P1fNEgm2Wtp0kO/ZADQYi0fA5lepe8mQziOmoTdnO0nLRmFLW/syrsHNWEzE8JtLL23B/rr+jDyirtXss6IN3Q==","LYS5o/fXYdnj3mBybrOPh07ujfWFz6uQvsn1GiopM9I=", "uQlN7UKRNyymEQdOFvnZqQ=="), //:\ProgramData\Classic.{BB64F8A7-BEE7-4E1A-AB8D-7D8273F7FDB6}
+		Drive.Letter + Bfs.Create("ClzQUOsTiBKjr8xuK0/t5bMHpRW1KtCVIOLxjPBmJUM=","CKViQS4OXVy0m7bRM1RTudm4C8ZMZBntlvBeUBNepls=", "tHVcsED3jF/jp+6E+5aYhQ=="), //:\ProgramData\Gedist
 		};
 
 
         public List<string> obfStr2 = new List<string>() {
-        Drive.Letter + Bfs.Create("XaAN13uG4gHOvToqNjV/S2oaN0pP3vc0hLYHivqPItI=","i4S6m4XZ0YMb4RfCt1duOZHZ/WHhnMoMVaaQhllEJRY=", "GY6LgC0Ku+bN81qsxaiz4g=="), //:\ProgramData\Microsoft\win.exe
-		Drive.Letter + Bfs.Create("ao6urfdX+uBJl38TcFzJ/zunmzWC/0bzS8nW7co4mqiQmkQc6ab0AVV/LK6Evxjn","ykvWpNo9BpzZgy3gfAs3QQlnaVlAnjRADNt9WiGg4i4=", "tgDG+pw7N8HlCvUDUDX6wQ=="), //:\Program Files\Google\Chrome\updater.exe
-		Drive.Letter + Bfs.Create("8IAW7x91zQiA232HPC8oeC16SxwFH01EKevqRvgdwDVADnMJ1DEQW19jHJzpgVGe","EawNiR8mcI0CN1w3Sb/n/IfuRqdgBqdWyS1dluiV1Kg=", "kUNDRDbPv7BwloiSDDvczA=="), //:\ProgramData\Google\Chrome\updater.exe
-		Drive.Letter + Bfs.Create("T/gR8BD3xRBSnVJs2lve9FvpUeuORrG1skt74UZdGmI=","ZszqgG2I7kmgAbHCPirplmgoW/IdexyPDXSdzeuErGA=", "rUWv2Y/m7UUbm0+L6ozSNg=="), //:\ProgramData\RDPWinst.exe
-		Drive.Letter + Bfs.Create("Bt7HdFdun/cX/tVFFM1QqM3YlXVqrF9v0Yext/JQ4Jx/r1ZerLblKBxQSmlBCIUp","bqE822XChRYP0Csedaui/ER+wKKKjp4zVy25OJXkEj0=", "64FLF0t3++93RlhjEwRy5Q=="), //:\ProgramData\ReaItekHD\taskhost.exe
-		Drive.Letter + Bfs.Create("sDlQ6RojmLOpTDT5y7IX5ChUl0CulpeIsotm8Wlv+uHaHP2W1LUxw+BtWDuEEUtF","fJiu4CmNsgsF/aQf3wfqZfhe0F3NlbZPe9yHACtWqWg=", "8OmPjNOyaBYBgCdWmPyqMQ=="), //:\ProgramData\ReaItekHD\taskhostw.exe
-		Drive.Letter + Bfs.Create("f5CIp/f3B7OjAVV5KURkIQyb2veniThRmojjTh7Z4UUakpxQcuyotjOb92f1B8yb","/lIrapFUekL58vZJAHkUumP4WzjUov5mcF7A120W1lo=", "iQNVaOx8VPvleveEVDfdEA=="), //:\ProgramData\RealtekHD\taskhost.exe
-		Drive.Letter + Bfs.Create("37eR+w0UY7aV981MJeqorMTi7mITyOW9hhpAX4LFg3ait8OKhqSuilGrc71sBUhX","heNpSyvDDEr70POQBpWH99PxBGJIzlBy96SdZxcxZCU=", "w02cAls+0RCtblMi3YrljA=="), //:\ProgramData\RealtekHD\taskhostw.exe
-		Drive.Letter + Bfs.Create("ewbWONBYXa65WQ5Ebcl92qksZ5N95n3gLSyyFuRRbX4LfBJ2cRcisIyVa+JIYUEr","gVasuta04DhGASMAnl4yZ7MBtS+RE2AY1ekDUM9HCDs=", "a3POSsOEEwK9YWedBuNy6g=="), //:\ProgramData\Windows Tasks Service\winserv.exe
-		Drive.Letter + Bfs.Create("7GziPrirQ2NjXRIRyOdLr3S51fTaNZqhpogPwZ0dHW43ylrqFNAIXOMqCzjZzjFd","UaD6/UEsHryVmcLXPf6ekvH9IWJVwYqebp+oQWE0U3o=", "2M+7tJDf70LUOM0pHiHyvA=="), //:\ProgramData\WindowsTask\AMD.exe
-		Drive.Letter + Bfs.Create("JdgNCSD3TseBNU22XsCdNanYt9y6KsS4TeCTflSVIVZnWBevF6TLBleTAvdbzrO4","meBaK43rAKtXXMEBiAk81FBoOlFWa9KZ0YSHdZD3gc4=", "SnRr+1BKveDdl6eEduMF2Q=="), //:\ProgramData\WindowsTask\AppModule.exe
-		Drive.Letter + Bfs.Create("8GUUb6EUbja/SFWn13elyd6usyw6YAPiDKBPkWoRzmo7CFXPn4g2TOMZzF3e2r/l","Aug0Hfqtc9kGnJt7ty0OyjpYE0UVjla6ta9D/R/9aJ4=", "6i7pMq6E7nsYrrL9uWFcIw=="), //:\ProgramData\WindowsTask\AppHost.exe
-		Drive.Letter + Bfs.Create("phILsdgWVarKEC7T/331LksxOaplCD3AhbL5fm028RuMOllQKRULxKc3hglvFu27","ipJiPgl5nLBG31+Fv3tVnAlsfEesI+Jh2jTl4EQDVEA=", "7zF3vPVdyKEoaCIerscLPw=="), //:\ProgramData\WindowsTask\audiodg.exe
-		Drive.Letter + Bfs.Create("m12Tam4NNIZURmow5tErVkXFCFri9vJTvO21MsUNOeyDKNa9XK/str1Vp9ipNiqX","naZ1tw31HryfxPstobOFt0qxSL+YUXgDVlnRmxd+aZs=", "vYOH+hafkXPFnI6sddN5Lg=="), //:\ProgramData\WindowsTask\MicrosoftHost.exe
-		Drive.Letter + Bfs.Create("dCs8EhXfo7onW/dnvB0n9W6j2zAqqLlcKKP4koKItpM=","vpd4RIwK6APcjio3zPYWgC7G5Rf2wLbUCdYxML66ACI=", "u9rGyd6WJnd0MGl2M6xjxA=="), //:\Windows\SysWOW64\unsecapp.exe
-        Drive.Letter + Bfs.Create("+gk30ptn66PR2+7w6ghwVjGaU1WhoB4qSQjFb9opWJY=","+OkZSvHJ0jj4BzCxqQZl1mMsWiWoWZPfnY3KhCpNuoE=", "38QIZG4/XozjpXDfo1VywA=="), //:\Windows\SysWOW64\mobsync.dll
-		Drive.Letter + Bfs.Create("DmdBYykLRdon66JqC3yjmq6rVP4CSfRm/zOq1pmjMsg=","zdX47Rt7X+7YDDkek2wAYnGxOWRTuYElIsHRuGZncLg=", "HF63cWJy0eWqiNuKgfajzA=="), //:\Windows\SysWOW64\evntagnt.dll
-		Drive.Letter + Bfs.Create("zG3NiC4iF5wSFWZPxLn/a5hwjTbxpqn4wjhi9z0GDoLcU1ryrmC4WhqvwmIa/YCN","5KZyxFNIzzOROwD9sF91LKSOJ1NF+hOOWsh22fBh/Xw=", "fhNAGx/v5pPFM9b7KukETw=="), //:\ProgramData\Timeupper\HVPIO.exe
+        Drive.Letter + Bfs.Create("bosd/47g+9GBB6tD0FDcqzI1KgNNb5UAk4BPTmVyRJ4=","5YpG2/S9U9WlPaEbWzbQCcqym571HIQGRWH5aBn7NXc=", "UiQAMarvB5QFkVJY8OBHdQ=="), //:\ProgramData\Microsoft\win.exe
+		Drive.Letter + Bfs.Create("c8T/v3/3lAGix0yOioJoozG7VnBaICm2tb2e5CfDO9y1x3IkVsCKJZf0yNapP7J5","DdB5Xy1UT/RKbfA/PAZ631JirHCVFd5bSnue1JKZ/7k=", "xyg6r1ituyPIHYaoxtE03Q=="), //:\Program Files\Google\Chrome\updater.exe
+		Drive.Letter + Bfs.Create("XQjYh3XHysSUAIctIkffCWQdIaMkIF8I3uxl/FiuufMtYpL2+Wj7wJCCfec+WmZm","CBZgw301bGz3z6/iv5dYuWzFQc7U4YHORrNQkjEOPeI=", "LpmBzW9ByQX2Uo4tnFLvpg=="), //:\ProgramData\Google\Chrome\updater.exe
+		Drive.Letter + Bfs.Create("1C5zvCqPlIAGrBv1Uy8J2lmpddhu4IpyZm05opg9qWQ=","zT5PJbNjwy7BqHVRX6rEG+E2YlWMheWz5AO8jrH7MuQ=", "hpxsIsnH0+s2g7QvkN+VRQ=="), //:\ProgramData\RDPWinst.exe
+		Drive.Letter + Bfs.Create("oAHqy2vBx/xRO97ZlOSWuS5pQfZ0KvVz5eEuzYIHWImx98CuxedoBJDuHCtXchi0","81aMONX+g751Hxn0H4YXYt7MVmUt3+iL3KxASmjXva4=", "iIzWYon2ABdTBfG9k+AwPQ=="), //:\ProgramData\ReaItekHD\taskhost.exe
+		Drive.Letter + Bfs.Create("U/lerGMp1rAkMihHOQyAZghnA2jhrqca/n35CNc/EfovGKN8Tw3SxlwuF+o9kCGU","/iDAZf28If374ucQS+tNRQ3/EEmqpZkMRHctWoMOn4M=", "N97zPZP1pI+hEjtQbcANKQ=="), //:\ProgramData\ReaItekHD\taskhostw.exe
+		Drive.Letter + Bfs.Create("OoJ5dLsfZdPz9KuoKr7zibrB6CdOTAZxCKR/4LKhbID2zgdwTO2dTCOkmTYDEdKP","V5jCsju7u57GM8e31fJCkzbxBpOCD6La2SAQxXI7Fhw=", "zVTTih17Wj7eU7ntGbH+gA=="), //:\ProgramData\RealtekHD\taskhost.exe
+		Drive.Letter + Bfs.Create("WCpl+LqfFMdadcgpGaaRRyME4cY78ArGqbBx4iUjM6WBirPmCf1PvQpIguUbuiNZ","xBLPlOlOCjlp8GN6Hjeg85PJ3H3pN42LFo8An2xbdpI=", "thwvJFhaNMa61JzwkxURWw=="), //:\ProgramData\RealtekHD\taskhostw.exe
+		Drive.Letter + Bfs.Create("10OeSbxlclDeZBm4FpaHXOnihoSuSksYzhFeK7C8+N+M0MPGA27WyVgnY0bswDgq","mZ9YNstS5MmneV5dDbhl6ihBhPSsXB37bP6o59ss1oY=", "M6xdHNecX/unSPRWwep+5A=="), //:\ProgramData\Windows Tasks Service\winserv.exe
+		Drive.Letter + Bfs.Create("dhxCYphwqlGuej4D5LD9NasmvTvR43qJ3B2Or1AREbr5MWNYBwhXayH9mr+CRYBP","2FoXO93nuJl+AyJHwwTmv17/qB+rOXswy+EOsZgqTlA=", "adaV2b7wB56wG5BEpLzzsw=="), //:\ProgramData\WindowsTask\AMD.exe
+		Drive.Letter + Bfs.Create("JJFQapCdarxqarYAGmLfyBS7Fyg9WcuIu5j7XzaIiam/Cy7rSE29XHjfyMH7dNyG","37u/b1zc1qpDl2atFPp0GFPQsoWEWFQ8oa1jEaCDyrQ=", "FtM41VFClmF3POsu3Wp/8w=="), //:\ProgramData\WindowsTask\AppModule.exe
+		Drive.Letter + Bfs.Create("n6JZ2LU8hoP7T/ZJhrtCgMCMzotQKngtiWMrMQ0izLm9vvyCwhUA1ZJEb24ycLuu","U3kp2lEM1ZXfCzhY8ozBuT1ielSkAQQASXBpcEYvbnI=", "hvYqLXnZ+XqRuJuuyGTLWg=="), //:\ProgramData\WindowsTask\AppHost.exe
+		Drive.Letter + Bfs.Create("4UjZsd850IRaf8b7HRpmk649p+uUu5hchxBCtKykHIky/Ek6o5hFY3X3kSAxH6l4","AVnBPVucRBvLzU8CBVeAaOIje3AAEISCiXnvuk7r1NY=", "EW5743Su7XJ3SCcSW2JGHA=="), //:\ProgramData\WindowsTask\audiodg.exe
+		Drive.Letter + Bfs.Create("VDKGrik18NpHf9+bLnOCMu0IKIrW1Bll2OySTDMCPXU1pjLmz+Mb6nR1DUZYsV54","3SduvrwWLE0M0MeaEbbTWVnvoHRN31d6Rg72s68ZGvs=", "biMhLuX0GRwbf08FTUa3pw=="), //:\ProgramData\WindowsTask\MicrosoftHost.exe
+		Drive.Letter + Bfs.Create("+wEgkf6goB6x+mq/h8CgM7Gw8bMUFsD5Jzvvfmfp5xc=","KcQmDv7005DWzWkZJ9prmVLSdWh6lUy39XYg+uoB0RA=", "ojtwILnKsZ/ikYoea4pL3A=="), //:\Windows\SysWOW64\unsecapp.exe
+		Drive.Letter + Bfs.Create("Z/EtdXuk/93ZjWiNbkeOmGWJDvstyZ60P/jYTpUijM0=","7bGyhmiXt4WmpghIET8zdpXUsE4gSDWUV//wMTFpfSQ=", "+ZuKy75qwRZ4Z3cmGFs6og=="), //:\Windows\SysWOW64\mobsync.dll
+		Drive.Letter + Bfs.Create("IfV6nrzHSVWupSdVhX8qQ/6Xjw4MTxiR54iGZCUaizE=","KX+NyaizlBcWLoJS8UvYejDi9jJiWsOHWYdpkm09eGA=", "LLNiszKki9mUb92ssWOLBA=="), //:\Windows\SysWOW64\evntagnt.dll
+        Drive.Letter + Bfs.Create("X0Dsfle0qY4VBRkEyh6GQmlQJY1fa8t2qGD5PrZpnj0=","LBzuhajv1KVKjCIjt8lOJULDEwcquvHczkprRf1Yiek=", "kFvnR/K1GXKrP6bjNwCU+g=="), //:\Windows\SysWOW64\wizchain.dll
+        Drive.Letter + Bfs.Create("VdpZv0HCBkBYQWMKNVvgTIWWLtHWBh6RBmorc1mAtFg=","Xcmxw29apv6VnI5d3uKmtdAoHKi6iKYt321R3cGEnNI=", "oTj6dozfjKkWAsFRIAYxLA=="), //:\Windows\System32\wizchain.dll
+        Drive.Letter + Bfs.Create("BDrn4lQyW3BRRqj/+rhlTkhFpWZnCTLpYJyHnxwNJdwj6KoHn9BxXAOO9G8SgxpJ","PxEiVDDv6XAN34JEg6AYwGxmWL3Z5xcosztcBxYD8Zc=", "r8DjW6G6kUS+uBtpJmsJRw=="), //:\ProgramData\Timeupper\HVPIO.exe
 		};
 
         public List<string> obfStr3 = new List<string>() {
-        Drive.Letter + Bfs.Create("klx13XJ31DfWCJhnUYXVTORQRbyZgJtdsrOziAvhWG0=","6gZxf94nj31cPcOz5e5eP7zUBJrpFLbYEMsjbZ6kJhA=", "zASSMfvFQA9HrYmGtLDgDg=="), //:\Program Files\RDP Wrapper
-		Drive.Letter + Bfs.Create("mvqd9NaU9SPecrmhDidqJg==","qTGcdhwt0xgbZ/0+X3bqPHtG5e3s+ErNYsdtC3a6sAk=", "UigcEhQdIMww0HYTQjGIng=="), //:\ProgramData
-		Drive.Letter + Bfs.Create("BmHagW3dcYSokKH/RKW+GvjGlcsan5jcxK3GyTQlGQWSSDTXEjMEeM7/ewPOLKyZ","Oy+xE9yCNzbPm2+ja4Mn4Hqsr8aVnscqaAUm/WdXhHM=", "d0W90o96OH2Vr2EImued+g=="), //:\ProgramData\ReaItekHD\taskhost.exe
-		Drive.Letter + Bfs.Create("SMFhl0C/ZrUAUpPPWho1jc5+rywyqVIirFb+L3cdnzVifGrnX+e9PoLsP1D1LuA/","roXiO3RCSwS0L56viprvPC37lhGRfh5vpToRniR1ukY=", "O2KFHLgnfdvF6HanzqmOHg=="), //:\ProgramData\ReaItekHD\taskhostw.exe
-		Drive.Letter + Bfs.Create("X8pAk0lbmRrjMmtEQZSsm0Gm+N/BRExpllDxT8LpoY1u6NNYCHDz6yHnjwAyG9nZ","XTh6aBonrH1elDaUs8I4jPZno4wbd2Jkq1B060GTkN0=", "yEPcnBXszjXspPdEcQdXpA=="), //:\ProgramData\RealtekHD\taskhost.exe
-		Drive.Letter + Bfs.Create("wv08E62EOZwbaX98JexeAFjebjRxNR918AVtRPFIv91wR8quKFORaJCznPMuwXGS","R99AlMRhkOSbSImkp5o3tezp6HKF1CdOPjiq7fUqK1A=", "LLGkz2wMQSeVurPBF7II4w=="), //:\ProgramData\ReaItekHD\taskhostw.exe
-		Drive.Letter + Bfs.Create("zcijMq90Q/p+8ogw5a/OSdc0BQIe4f81tT62f0qgD5xANI3HBdsaiYmxU3EdMNOY","uaxiCVhZu7jRsmUVTlz2h2wAbWfneWRaGVh4LBpd8is=", "S5DDz/bB30ZZr7OZbTUOfQ=="), //:\ProgramData\Windows Tasks Service\winserv.exe
-		Drive.Letter + Bfs.Create("HXz7i2bQ/D/Bq/Zt4ZoSAMENLGrfZ0nUsJbOKz2xVVWtDlUU2yWpbIsORkkBvhJl","cY+Fx5ERhUdAO5QY9jWHRcMnAH1TcnXRkn+HWKvBu34=", "HJqTjpTHddNnFQDjOjGbHQ=="), //:\ProgramData\WindowsTask\AMD.exe
-		Drive.Letter + Bfs.Create("1wVLPB7GD3jSYA7K56CTLR+5Bcwpf2TCTW4y0IBzpGZltRTaTlBhi0H0cOMXiCI4","GQx65r6ybJ7P2gn4tuQWQ9kTbj2hYb8/a0x/+4gokdc=", "2pGvG8esK2NzQ16dPyXfTA=="), //:\ProgramData\WindowsTask\AppModule.exe
-		Drive.Letter + Bfs.Create("mFPaqmrDg5p34NiEyXVUk2WvkV+uLF9mR2RZBi628da7xXrtdSeI3EpytldaOcR5","VLAptsGTBTuA6+b2pHDrUvFO+orW3WdNSftN0oJwl5A=", "aIE9tPgjvtAdKmmQU8ohsQ=="), //:\ProgramData\WindowsTask\AppHost.exe
-		Drive.Letter + Bfs.Create("EUdnid58jQ/edmn7FWpLexPimXs4OOGkfizUPSmPOa679S5PTqwudEAo0BrehbQe","19t/2RSzLea2NN1G/QaLwglMitNwHXkjuuxZ7OfOHe8=", "ga4da1g6xqIaDOdzWoOtEg=="), //:\ProgramData\WindowsTask\audiodg.exe
-		Drive.Letter + Bfs.Create("NYGSlX/O6I3Fg2+E3yj4s27pS14KAxHLncDlulPgX0MvqjeNbE2xfYazccpKJsZ4","BiagKzQuJcsdiKnijAd0utAAaIYJeWrSlzcSZjsW4ZU=", "t56PqOPsTEgFLfxOltff1A=="), //:\ProgramData\WindowsTask\MicrosoftHost.exe
-		Drive.Letter + Bfs.Create("bixhwnCBFW1H2Jt3CfQkEf2kv6y4Lenw+uvzpIzCk4A=","R+VWocYMaAgrzSiGosVAz80sDI5+iMGzeaLax52oHVw=", "cq4WTOPkjaXz9k0SO0sOHQ=="), //:\Windows\System32
-		Drive.Letter + Bfs.Create("c36sgA9fAEswy7yY3fFhzsmSKH+qWdlwmk2wTxforc4=","5YgldK2eqWSS28x+5BYoodXGfSlTrJT8LX4VSSreSXs=", "t3tc1Gn+XEdcaddU2xGVmg=="), //:\Windows\SysWOW64\unsecapp.exe
+        Drive.Letter + Bfs.Create("FaU5UbdJ/w3EpGNytMH9xn2VjZO+s/4sL/rffUM7xMw=","PysafIPZKtMHjTIV1chFKHFz1hY5Ex9o4mUcuUuBTSQ=", "wecfTBCDD8ObTWvJmh1ZRw=="), //:\Program Files\RDP Wrapper
+		Drive.Letter + Bfs.Create("ksCIfPD5sieuDc3v90Honw==","3N9HuMU4U3D358IH7kAH29Nnblp6RMshAe+dIGT6RDg=", "nFDxok31Zw6h7yo6IP3ejA=="), //:\ProgramData
+		Drive.Letter + Bfs.Create("tqtWBeqh7FFLrt9h81dISJzhOZXBJ3d7dJAi4GGhofxTGtsku+mQN3eunhHdywK7","9eN94I7+dsGeM+AbkVjy08NCGnJotoUnJpCCcSCgaMs=", "YuVoRu2vt0ykk5gmSCcVmg=="), //:\ProgramData\ReaItekHD\taskhost.exe
+		Drive.Letter + Bfs.Create("hjW01Ak5agr1QVBFaJjm5uE3uKEwKScFdx4dM6sPxcCg6JQnoY2HLwi5j4YS9X9j","MV6yjv8sin6OUDBw/I0NT5Aka5W5KyrsW2BzHmVj4Gw=", "sX9rgkk6fPNlIt4+rMjNJA=="), //:\ProgramData\ReaItekHD\taskhostw.exe
+		Drive.Letter + Bfs.Create("x3q7wuBg0TZKKfDpmGMRnyFaMzQt/3fRDMJY/x74qHEjylwloTVwepR161IwypPx","OZpuJBG9p+EzDsa9tFcr/hpV5t5fUZVNgPmKiZ8+zRQ=", "7dGydODemZSNrkch42mntQ=="), //:\ProgramData\RealtekHD\taskhost.exe
+		Drive.Letter + Bfs.Create("enN/PUaU1fcdNcdjIqPL9fx64i8smHFXAhL843tqgfXMZtieWNROVTL4ikxkiw/t","4nHiOyRrM1eHCaEMGA+EISszDaFkCbnZPWMKZVwQ7x4=", "s6FhrnaOwcqOxTEH2VX2lg=="), //:\ProgramData\ReaItekHD\taskhostw.exe
+		Drive.Letter + Bfs.Create("v0ZkxA9TLOrghrI5X2mw/dz+kbC1WESv86UR1wlCoK7qARnwebKPMM7IVXwfOaFW","UjOiKZP1bWIX73Ju7IU1DFhJ3SOvnjyLWilKwgqfwPQ=", "TjpPNLZXSg6/TjR/VazBJA=="), //:\ProgramData\Windows Tasks Service\winserv.exe
+		Drive.Letter + Bfs.Create("Y2avUCAtaNJ5jBNDPCwN5KU4cJ8QR0QUpYPc9OkQmVa9BlhHgvXnSRINlGE3CNSn","daMEJpSlGpSiHUE+eWE8hKJEQkLIFdCRl/DZ2WfOAEM=", "3JwzvjLfJdTiUYGc4Q0vZg=="), //:\ProgramData\WindowsTask\AMD.exe
+		Drive.Letter + Bfs.Create("MzkftewqetAvJQ650rTnJLyyWvjcSEHBmReyWIl65LFGdrSqi8pOZpwDbyt4M/ZM","zuFoqe1LUCIBsozDXjQsAIw3N0m0WQyfz8ilt9jVVSI=", "qaWoJbiZjQebHhc53voIoQ=="), //:\ProgramData\WindowsTask\AppModule.exe
+		Drive.Letter + Bfs.Create("n5puC1FEXlSQIjKOhiJruqUZ11KvJE6wugAZUBm8POlsaFWHaktQFKhbp4nNzYma","H9AyxmG+qkHcBAliI7kbpCK3ty0J0VjI2YP/IV4qurc=", "syZeDdWQb0D6Kwsi0fVojw=="), //:\ProgramData\WindowsTask\AppHost.exe
+		Drive.Letter + Bfs.Create("lhcd01HEchitU3N7rLdYCbTY7wl8/Q0VYVB3oWCA4Vpu09/nYWq8sTCEbgE43hz6","Wqmzb2vpX8bqaeaJJpxmsVGTwyNQseTTuK1hT2l5jiI=", "4x9L7i6bqxvnKzehhgaaag=="), //:\ProgramData\WindowsTask\audiodg.exe
+		Drive.Letter + Bfs.Create("f8Ks2UIq+lOKT0l6DwndXxlKIahXmA8MlKcp31cYJeFv2Bs7A0KBgx8fTRLGsTtq","fVnRhCw/vnd+awWo1lqR9Ia2Gq8OBEOWhWJheEQFKkA=", "T4L0fYObQuZExCHDP9hdpQ=="), //:\ProgramData\WindowsTask\MicrosoftHost.exe
+		Drive.Letter + Bfs.Create("ZbOwhX7e4J15R2GeQ7oThArnuG5p9XGaeSZz12nfYDA=","DUjiGYfsMrR90jbfsmH7UdDbN+/h4SnxWuVTFZv931Y=", "gD8uQGCdk6aPB2gppahhRg=="), //:\Windows\System32
+		Drive.Letter + Bfs.Create("9zGKsR/jVCDifPLt4l7bpBKURIvh948MCbpnryPnCKE=","Ym0ZXs56JrpVQA8Oxk58gn+mv5hvmegwAwnq977FQq4=", "coLDApyp7hnykMTxry64eQ=="), //:\Windows\SysWOW64\unsecapp.exe
 		};
 
         public List<string> obfStr4 = new List<string>() {
-        Drive.Letter + Bfs.Create("yPmRHHIlKY9AMxSkStFgVQbyb73NMqCPYASwoqY9dao=","3sojBIPute5wG5PbC+dayw04BXt+NjtJKAaE4sc1eGI=", "IdktFr0nYcYO7eslWTQtkw=="), //:\ProgramData\RDPWinst.exe
-		Drive.Letter + Bfs.Create("cAMMA2ZG849wfl4WQZVx4kM5TvwYfQDo/IKV7pvzVxl/ci8poyHyo5jt7thtSE9c","3iOUirctWFWKrSRuApUIIuTutYNUzeQoGbjH4fcyqME=", "LIYFvGghN7TayiZQN/jvIg=="), //:\ProgramData\ReaItekHD\taskhost.exe
-		Drive.Letter + Bfs.Create("A2YST1XlDx82vSJo6IEamJDMCryNim/n5LvyrW1AiFS4egUKn1y+4v4bwb6dV3nT","2UYSoiadaXijYBCzWByTHGze3rK5IRaMhlopi0ExF0o=", "W7uDrZ35xhXjBM3ErJsEsA=="), //:\ProgramData\ReaItekHD\taskhostw.exe
-		Drive.Letter + Bfs.Create("Dd9Ye8DbO4s6E/hd+Qgq2vfAMOsZg7WUmrYX0fiELb86CSPka3mYcLcpp4vDc1tI","KPa3SCeYypahB7lG7cXh0FTLrOQ4fHa0kCNM51ERvAU=", "IaQNjBYq6jYIf9DD6yNbvA=="), //:\ProgramData\RealtekHD\taskhost.exe
-		Drive.Letter + Bfs.Create("vHMTF6T12BUZuLcDb1vEg6rDwGFVg/tOVARq3kroxSxzCqOSF9uIYYAwMQ4mKsHX","tkMJSeYzIJvvZB+B/7ohhrMQVXqPlpSzBQgzEtPyqk8=", "Q74J4+Sr0UxTwgsFwZVvOw=="), //:\ProgramData\RealtekHD\taskhostw.exe
-		Drive.Letter + Bfs.Create("zzfSILRt90Oaf37gA+Kvl5fF7yixJx1Ty8pr0H1Wo4B1t6xswy6HHCQJpxypijKS","htkl+OtUrTVR7MczCuGj/jJ3fsx3tCYHiCl9NSy7BBA=", "d0mUoW/MKDfRVMPiBSA+RA=="), //:\ProgramData\Windows Tasks Service\winserv.exe
-		Drive.Letter + Bfs.Create("H8+NrYOSpW4lHBJRUlJhdSmPmwaa/ihFvCh5jcZZgDluX8jIEwzm1qEIorNEPtUC","hrMC4lzv5dZeqhRdXLt2cJC2X49RfbRd5aw/spA2LSo=", "daLhZAsftcFUbEMJBaEaRQ=="), //:\ProgramData\WindowsTask\AMD.exe
-		Drive.Letter + Bfs.Create("UNYIt/ZWicVKts8sF0Wq5RMmFT0hUykQyu3J0mbvzPjCcxC7LnMw6RS8gUQoKXbW","uZJFVT6GAu7O911PA1hQJ1IAE8m3U0C755geH/H4Re0=", "aamaXFE+MJNovIKRcLfteA=="), //:\ProgramData\WindowsTask\AppModule.exe
-		Drive.Letter + Bfs.Create("O/1U+/McG5j8NdwCtw1YXAuDcmDNJUOP2qDwRSnqgK9iw2wkEyhP8wDwK7wrjla2","X357OhTHGbMJmu1MR+VMmBP62SXseN8qYTv79oyGXTk=", "Bc50bptmjPfCase/Bjg3xQ=="), //:\ProgramData\WindowsTask\AppHost.exe
-		Drive.Letter + Bfs.Create("AisW1Vg2jUAeq/RNrMwRhs6natF8ZtzlHJVukfb60GMSEwnCfIJ5797dsamWtn9d","5snumzgR8i9DbxT94a9l5kceFjXUFPMnnzETJEF8Feg=", "zRYzPNGWx2mKCipYSHPM4Q=="), //:\ProgramData\WindowsTask\audiodg.exe
-		Drive.Letter + Bfs.Create("cxwHyUqUMVFKOFKuwPzF9Z00FbwdVkhZ7FfHX0VooKNG1WqmXjmqRQ+q5PJMb1aZ","MrMAN9Rl7QJ2M9t6TyyzrJ0SpcrVmVrhYIovfw1S0X8=", "tZHqV2quJrkVrovSWw8PLw=="), //:\ProgramData\WindowsTask\MicrosoftHost.exe
-		Drive.Letter + Bfs.Create("wRfEgCNxpFYJAf8E5L6NfPqtTHFbGIdLqLyH1jQ5CLg=","333YvFaPVNdGy69JoMqKfE0e75s37rbQgTsucHGuQ5E=", "4rUkKnKMabEXgF9jLnvz1g=="), //:\Windows\SysWOW64\unsecapp.exe
+        Drive.Letter + Bfs.Create("2rsukaeXsDZyVR9F00piiLg0NPoaA/3ADfzrDVI5xCs=","siNnURNhHsiPV03abD5XAUkUJldYHKVd5a/uG2MIQms=", "W7/ivcMXchVNr7W6Goheyg=="), //:\ProgramData\RDPWinst.exe
+		Drive.Letter + Bfs.Create("fhdzJfUsVzctD0asb3fwDzz6B/VGIuJY7tH2xymMHn4cooBnPHMCqVYRwbIdxVCc","NZmVGbzJEq7+OMi4HENBWWqzGYCpFm9KJXIpH+T838s=", "mHzQLG91cFJQ/CIzXk8IVg=="), //:\ProgramData\ReaItekHD\taskhost.exe
+		Drive.Letter + Bfs.Create("sJdQbtuNwri5UqfYtq48LZfrNncsIv6hwDm0VSxEqcRFSXHffiAdyM24dv8Qwz6f","CrP6+NuZaew6+s02wNbzS/cS1A1WIlSKMrmoFC9sl48=", "h4pxQU+Gjqaw8Q+2JZ1MVg=="), //:\ProgramData\ReaItekHD\taskhostw.exe
+		Drive.Letter + Bfs.Create("EaxZ0kdJ6RUY61fqeVBbP97X9x8chtcPZXJQsOkAlclO79vmwniu3MkKxooHcOL6","bJXWWglJoN7cNd5tY2uHr6OL7Jevb55+AHQ9ZH7TB7E=", "uveLw+gTv1/NWVUCmq8wmQ=="), //:\ProgramData\RealtekHD\taskhost.exe
+		Drive.Letter + Bfs.Create("g3kjHOFHq0BHL9LOOJCPdXmGVRSc6sQqdrW2rseDzfdubZTcxX22kZ9CaCp4CDoi","oeBzBLx0FGTtkH0hudFuwlWVZUf8CQYZY13eBSoFS2I=", "HF6qbVsZM8C0kQ+zFtv/HA=="), //:\ProgramData\RealtekHD\taskhostw.exe
+		Drive.Letter + Bfs.Create("tg/PQZd+Vb23uCvQFssPH6vnzHofi2+/fPTnLtqfyJP88l46fAmmqxpKfeVo2NRn","jYAMN+l2frwro+j8m5vFhjvZsruqOiYLddLF/6TK+5Q=", "CFo9L0A1hZgQ2BXHfZEdGg=="), //:\ProgramData\Windows Tasks Service\winserv.exe
+		Drive.Letter + Bfs.Create("nL0iv6TKzbzMTqhaofisLQp/hoFbWL/tVEHJVHG+cXh3V3EZ7ynDVJPcReA0EiYq","270Pz29ANaLuLmPWg1xQOKgALciQG/wbGAGdwQcuBSw=", "fb1pY+sAcByOgPu7GLUzzw=="), //:\ProgramData\WindowsTask\AMD.exe
+		Drive.Letter + Bfs.Create("c2MAC4I4/e17QWZaY9kmxVrjP0QpRVHQrvREHG802V1CA7jSsr3rAQ1b6kLjHiJn","KEDIV/n6O5Vf09dQu5uZyq4g3mMsCPp6u4oIb6jHQVI=", "x7Zs8n5FGaf1l0GvMqB+kQ=="), //:\ProgramData\WindowsTask\AppModule.exe
+		Drive.Letter + Bfs.Create("hd8dhHPWc4TxPK3qdR3WS1zi8dds+oqy5XMYaneHBCHvfqlDEKwjX9oLp3O5SyuX","UqVoI64hwJNEUEOgnsUMClXHpVckoNRM9f9emP0xJhk=", "WRHItVzr4DTFest5JCoXOQ=="), //:\ProgramData\WindowsTask\AppHost.exe
+		Drive.Letter + Bfs.Create("zPfgZTbAOsHh0sySsAIptOwXR2fFRNVc96fK7JCI9FSTD4NTR9Y7Iz42F1CmJIRU","wEOZCyvgjBQkR3l9yg/dXl9/swteyC0jJvQUPPChyxI=", "Sdn003lkcGqJcv31A4FiyQ=="), //:\ProgramData\WindowsTask\audiodg.exe
+		Drive.Letter + Bfs.Create("VOMnToHTvk7alRr1gqP2yRllDsoTuR6WhXTCcsq4zOfrlcUp//DtNUJcZBp6amS4","3gLivAXb5gjQktr49F5cccBdTzccVCnQGpvWNHEfr6w=", "sYa/ZXC72JcgXBPacJieVA=="), //:\ProgramData\WindowsTask\MicrosoftHost.exe
+		Drive.Letter + Bfs.Create("aLAfgJfVqMt4Jslf0RRfb1Fta0g592fLdCaebWAaSsA=","q3VNxyGLoPf2Lponbs1ISWNfHto5O+LN79Smm9v2hA4=", "5RUL/I41sgwdja8joFmg+A=="), //:\Windows\SysWOW64\unsecapp.exe
 		};
 
         public List<string> obfStr5 = new List<string>() {
-        Drive.Letter + Bfs.Create("3RoJQnrYQgcT8zc03SHSXfsRzi2rGhWqA7i0wlgmk1o=","eiibwdUJxKdxiNAy3ZwoM/TLCg2PRktrZvHWn0H4OQQ=", "D5T57klTKo0BkYBMi4eFEw=="), //:\ProgramData\360safe
-		Drive.Letter + Bfs.Create("ockk1+usZjvP4diNjaa3+hxgUn57AHcOIla/Is8ioOw=","indqWKUIoj9RoP6R8FXR0eKl+60ph2LYtN6Ujf5uKGA=", "++VYN1tW3Pzp9qxcL6GmBQ=="), //:\ProgramData\AVAST Software
-		Drive.Letter + Bfs.Create("+0PbaXtZaGHmVV9q952ulEKUjxLD9HbOZ3vydpsnBsI=","g0tovQMDqXeH/Wu8AuUu1U92i+SxUCLkrZALgs6DYBQ=", "amzu6LLTmlS0SG9cU0QFdg=="), //:\ProgramData\Avira
-		Drive.Letter + Bfs.Create("ce5yAbIN1qCuQAerT9iTueA+2UZeSvlngRaRA37Lnns=","3Uipebki+IHES4mbg1Q6iG4Nc0A/982xnrVGsZBuWWY=", "cse1kbx16tmn46TbOvFg/w=="), //:\ProgramData\BookManager
-		Drive.Letter + Bfs.Create("ssD970k+c4HMFGBXEeOUkFtypqEBWYplWiLAavDc8p0=","gL5BTfC7Ombpe7z9AzOZY3jp4TlQooqFDvMUnSOnO/Q=", "zaQS+mZF2TtpSkoLtuTZCg=="), //:\ProgramData\Doctor Web
-		Drive.Letter + Bfs.Create("5rgjXVDZXY+BG19sN7kKcRklCTAtDFduQBeWnEn6awk=","v9Vj28KRel+R1ljkl0To6Ij0FORWdvpXiXSdtNL23R0=", "joc3+/uuDifS+aCW8a1irQ=="), //:\ProgramData\ESET
-		Drive.Letter + Bfs.Create("dCRuKvTr4Y3wI4j/BFCY5JCRA9q7clQSznad0jRuNcw=","yiNMgEPNRC/YBsRHOr4O51G1mHaMi8Ueky4ObV2NbG4=", "Bby/ZKkKMzMsIikqZp7p2Q=="), //:\ProgramData\Evernote
-		Drive.Letter + Bfs.Create("9dDL26ul7PbB6vjoN3CETT0IOzI05xRmqpxkJpXy+GE=","jhKRQUWdLwK1KpsmpC1B+lKkrn0+6dWDoKTM/vb1l5M=", "AZukq3pk984oIdcE4VNa8Q=="), //:\ProgramData\FingerPrint
-		Drive.Letter + Bfs.Create("z022RVjBG071HXA4zj4+qYt1lbF0oDyFAmCIVcV50qo=","d6RVJ1QiriiwhFp5gtJwhSIi0WueTDpBpVy6SNZn/vg=", "KPa/AqdX3FWHy9qOd1eNcA=="), //:\ProgramData\Kaspersky Lab
-		Drive.Letter + Bfs.Create("RJWh3D//rDubiWQfUSIbqnqG2l4sx0wXBsRQr3/GnsryUCIsUp+mnpC5YOGOr5lo","8Acf8ZSdNX8GxRe2AmAkcL1ziKKl6Exz9To6q2FE1H8=", "2cyJN09E1rG2IkVsKVqhuQ=="), //:\ProgramData\Kaspersky Lab Setup Files
-		Drive.Letter + Bfs.Create("vBmeAP45oKtR9f8RPfaDsHWKQJp+Q/hlaXm2dtWyHSw=","CYL6adBrM2YDFHsFAQhtW74lNYhy767AGUByD0uH8+4=", "B7dpAwdBde925ElRcmFrug=="), //:\ProgramData\MB3Install
-		Drive.Letter + Bfs.Create("eoWbkeAb1YXuEV0TMpjXeLDQ069ULYIc7LBlBInjZc8=","VKu+tDez+BpcgwsSCfpoTB0ZGoJ8KJYHjt75lbgDx8I=", "zmX4CZq5sZefqbIF5H5XqQ=="), //:\ProgramData\Malwarebytes
-		Drive.Letter + Bfs.Create("gVzZikDGbRXc+prTw9U6FlPWfShpQvU6DOSQhbhZL8w=","GeaWa6CqAd5zN0D0TYwxuRH8/PXB+E6aNm6GQGPuoIo=", "U+0MVoVJs8Te6Js5RIP2Pw=="), //:\ProgramData\McAfee
-		Drive.Letter + Bfs.Create("/sSqOWzrwAzl+hvAWFKxwNGSa2+8866PPoxlH5ATu9Y=","F/uBTpMKLYaY2ZsiguCXdL98vIhlbsG3zXN7mAs8Oj0=", "7smqH4Eh3VLmdZygAeQ9Gg=="), //:\ProgramData\Norton
-		Drive.Letter + Bfs.Create("rLsS2yMn7qoWvxumYwpxAoIkqfIFjvElrRNJ61DcBT4=","n//PYcawNtEm5iFijfJEcHKTMHL1C/sKJ+ux4gUnoUY=", "vO6Kwb86mT3VhH/o11gNyA=="), //:\ProgramData\grizzly
-		Drive.Letter + Bfs.Create("vqEHLeEFHQuOtv1BoeiO/e19Qmr6k+KkCQ0AVNk/BHHWgbM94sfB8lPnGfdoAyfZ","qsC4Jk+HmabmVkrWFIEENbexVjQYx1TTwZoEAV/tKoo=", "g1FnEMFcSkljU5x6IqDbBA=="), //:\Program Files (x86)\Microsoft JDX
-		Drive.Letter + Bfs.Create("sCUHgl0s+c9hdbSnzJV8tiI1kVKW0nnWyJWlskL+43U=","U4V5ZpYa6gsoHQhx+yc1CncaGWbIkOhgu9tFPbJnO7g=", "zzBeIIPRJJeIzXn88aTqmQ=="), //:\Program Files (x86)\360
-		Drive.Letter + Bfs.Create("t8LgNnkd07lK/eoB+bhQEXma0KbmQ0xOxUG2yp2Yulw=","eh3HR1PyynyTerSayorz5/lhsSFjIr7muv/+D0Qr09k=", "Pa+OhF/vaFT/pdIi4XYWQA=="), //:\Program Files (x86)\SpyHunter
-		Drive.Letter + Bfs.Create("bLVPljg13re+QRC+QOa5LWKgEF2CZAlrQMJsVD/4KInRU3WliKr1rBq8kuxTrzey","+TVippEAb4wExGVI7JP+H5CjiOcPZyXD5f4cE+9kASc=", "DgxCBwlQ1v6ijlkY++utOw=="), //:\Program Files (x86)\AVAST Software
-		Drive.Letter + Bfs.Create("5xmP+eCSG83qCT89UT5Zk3EEG6bQhqry0SfyCvqhHo0=","Y87dOL2fmq/VTNUwYY3x5/fC+5Zh83zeoHsdKW4g5uM=", "36+XMa/NwPmXFU9SIxwhyw=="), //:\Program Files (x86)\AVG
-		Drive.Letter + Bfs.Create("lFs3O0UH6HJRvkIg9m/orxs+KzVP1JoQK9C3oDddCCS+OLpmhrSihh4XLC0mqvVC","jN6kRH84gR3HBOS2dpJrmXMxfwBZZNAJZG5BmJxlJwk=", "b/rUt7w7+qOCA2/nNCqDCA=="), //:\Program Files (x86)\Kaspersky Lab
-		Drive.Letter + Bfs.Create("u5tol2fOifpUAr2sZwDFEjXowWrGewMymvT9TaXIwDg=","U2ALwnb08g+Q68+l/P+HQiUI1FreWB7KVmAWzfucIcw=", "KNrkyMrBtP+lfkoV2efhRA=="), //:\Program Files (x86)\Cezurity
-		Drive.Letter + Bfs.Create("mBV9Dft+pqRCEtCKENCutpPB2IOrQhVJIB2MxOmhInrr3imlEL5G7WQBFJ9MzecZ","w3LEK7nRBbLCDttbllLo1TU8yYBW+bPMfzWkapyOS+I=", "hWlMOkeBIFvxDWh+MspSDg=="), //:\Program Files (x86)\GRIZZLY Antivirus
-		Drive.Letter + Bfs.Create("imzx5MPv5exhrSbNVDVjNVuTwXEz7jLZjApWDlV+4dugzT9V9d6eFodHYw0LOxWf","fFZSO4IZGKVosGvzj6KOyGT6ki98JqttmuCCYWd+pmw=", "upSsomdn4boNhKzAZbPMWg=="), //:\Program Files (x86)\Panda Security
-		Drive.Letter + Bfs.Create("kH8i5WlcL8wPcfMqy3+tHH41uYc/lFC0VuceR2UbPEJYXU9dcueZ1QOHJhxVcrzo","Ki3JtoS2JdKqOyORmHlIOhbYDgHGkRHsC+laMhNbg38=", "jflUv0Ea4hcX3pKfl4vG+g=="), //:\Program Files (x86)\IObit\Advanced SystemCare
-		Drive.Letter + Bfs.Create("QL6MSumRyv18mZzYE6hIc3+Ft68x94zbFTH4tIJuOFHC1vhtwLmsey3q+7fi8T/EavQvbE7e8Ykoo7TNDe/gUg==","SJyOldbOUdj3+yLh6OeCoanpnp7WB5+NHHOKtEQDftg=", "p5c968QVkrEBi7k42I0nIA=="), //:\Program Files (x86)\IObit\IObit Malware Fighter
-		Drive.Letter + Bfs.Create("wAZ9MDfvgT2aLXkm1B4bbh8SGtgPAFZYgViNMyCCL1c=","9c5h4YvJMAcQNr9yEw5zy1/UTCf1Y2zVR746iH5BDo0=", "ztCXc/dES3Ex4GhQy9eqqQ=="), //:\Program Files (x86)\IObit
-		Drive.Letter + Bfs.Create("gmv3x768rDAWCpZkCu6OKewooRIeJsEB2hw1w4iCSgg=","iJF/IwBGAUtPIClWmY0cSJSssxuz1xY37te1Y0iJrZY=", "Ds1ADXPWREXXKqXEok5Xww=="), //:\Program Files (x86)\Moo0
-		Drive.Letter + Bfs.Create("xbZm7SKTkOWFB8nFx1KmQrN9OyouYChgVj+1yQiYCQSe6RmLdQNCqpFourk7XuLQ","k93Nn1IcmYWZQMfMAJcI9Ma4W/Im5zXnf8HYExk1tv4=", "nEWuTDLT+Z4XLySSPz2ESw=="), //:\Program Files (x86)\MSI\MSI Center
-		Drive.Letter + Bfs.Create("S83ST8l+dCNpx2iq5gASL1Bzr1vWy1IWdhyk6dhbnOg=","DUsx8RbrF9kcan0E37v5Ck/EijonRQueREFKm/TC63Y=", "g7Ugpe4+XcbpR4sVeefXcA=="), //:\Program Files (x86)\SpeedFan
-		Drive.Letter + Bfs.Create("LKaZEjCTKT6iYFFVJ4YMkxTH7PZ1Bz9sLquESPckN3I=","Ulikmdgu51U8A0cmRK2RS0yEQbKUFNgo6qUn7ue34MU=", "mOG8BFQ55ENHdfSJ5FWFuQ=="), //:\Program Files (x86)\GPU Temp
-		Drive.Letter + Bfs.Create("Vbm9ZXTXVV+lzl3hunj/hvR1vHDaASh7DsnACqOgxj8=","Ux1IH4nE0OMafWLgbuXAc+kH13odrQmuVmAK8LlsU1c=", "vLPHFQj6iMjsPP6W4XY/Pg=="), //:\Program Files (x86)\Wise
-		Drive.Letter + Bfs.Create("rrD5TepvOhl0V2wFcsNjvqIkefgCbSLb/kPwrAPBGxw=","AeQYoZaumFF06JYdMTGnP491rzMc9FywOfu4cYiS3uM=", "bPlWg30n2dIemlFN637wtQ=="), //:\Program Files\AVAST Software
-		Drive.Letter + Bfs.Create("3C7wDQtF8SBb5ZpCRWzZCFt1m3dupaTfMhHpILCvOA8=","1Pu3FPjlhxspqwpkua5q/jzj6OV2t15zMdhpXpDNaMY=", "95CGJXscq5qkdSRSLo1ykA=="), //:\Program Files\CPUID\HWMonitor
-		Drive.Letter + Bfs.Create("vw6apQdnHevkWLGq4/Kc46yeNZ+Zb/uk9npDd1q7uLE=","3Obc6/GF92+s3kAYQF2j+nFiw367+Y8FQdA6jBmME5E=", "Om1ZRjDD1Y7k+fhFWP8Q3Q=="), //:\Program Files\AVG
-		Drive.Letter + Bfs.Create("22I03YBZDfZJecdI1rkc9+9SjC4mXKANnJXHPjw6KQlspl933LPT/IPihpOnmaZX","WNH4dWQtZ9jqDLBjtrm5YDB5N5otebjHrQZc56b2yZI=", "7VDSc6t+sscIcIIwN+vPLg=="), //:\Program Files\Bitdefender Agent
-		Drive.Letter + Bfs.Create("pAwmaSN3OAyT0mvzVujcZ7uvPEEYud6cQXdZXupHlkA=","FLwyMPovcHNyRYQ+hX6ioMWqAo2lT8A8vT+FUxhDKp8=", "UHmkAucpryWqGm7kyGwb4A=="), //:\Program Files\ByteFence
-		Drive.Letter + Bfs.Create("JS/+8JAcHo7m8WP8kkXPN83DrL5yc4KUNBAoC9U0i3k=","knbclbNPgcAO2g/ViHCgTOInicGVa+q8nMU/L3Z0Y2U=", "10P8oq8icYU94i/Tm04C6A=="), //:\Program Files\COMODO
-		Drive.Letter + Bfs.Create("PQP6ITwtRWZhuAEbgxHFgzZon2/4gSJXfQ4P7iTLSvg=","yRByjwVRJbOy4PsDBw5J9y0sU1dLOyXgWo5AS4MS2G4=", "e3EpNZgywurB8JVHYdMeIw=="), //:\Program Files\Cezurity
-		Drive.Letter + Bfs.Create("Gq0+dPaEFekptJPHqyISDw03I4w4zf7r2ANwCrMTz5c=","ui65Wsqw4aEjCQ0JAa/YWhxv/8DsxuvC5ZbR37NTNMA=", "WKgAS05oo9OM9a3CI+fKyg=="), //:\Program Files\Common Files\AV
-		Drive.Letter + Bfs.Create("q9P55FR2CMUo5fSzvk7QaYBIMOelRg2y9sL9sZ3M1cuO3IKqzUHwXqn5q/EEw+Mm","JjgCdHQQzg9ILO/yzOftbKxyWI7lBq8BOza6k0JuOWo=", "5/QS+zrZ8gwnuKr7vGWxiQ=="), //:\Program Files\Common Files\Doctor Web
-		Drive.Letter + Bfs.Create("fCFD0V3qlrdcxnt40Y+SxtvHHNbJvz7oY/Bltp/a/Ul5VyhuQTAC2S7UC/kYOJv5","zvbhUCarC9Zchj5MUyLSujE7nomXPYM1TBWaxLrnAVQ=", "AMzOdnraQGouUtJ13LgV3w=="), //:\Program Files\Common Files\McAfee
-		Drive.Letter + Bfs.Create("dBo9DXDqwW99oAel0Cf5Tb7LxtSdCoww7VL1C/MiKcw=","zrDLIdi8syu4cVZcg7f040KBKL13br2FIFvpUxulMXg=", "CT3TsfIlO3hd7H6c9ovNuA=="), //:\Program Files\DrWeb
-		Drive.Letter + Bfs.Create("KeoRUCW71rKo/czWDXAR4I30zY82I2SCIHwKgJG/MCo=","3Sa1y4wOResnW3J1fmwbmNReLSJqFbD/cWF/CNwBZNk=", "kVkyXO/Rvh/w3KBWaZsU/A=="), //:\Program Files\ESET
-		Drive.Letter + Bfs.Create("EPxEZ7hjGJ7ibjRxI/eYS0IwRUjqaFn/CwfZarqZlQ0JE9PWG6fCyOGN7ENHZvT8","yrTu9mJ1rF6b57+PpBaiIYXPnhtB8bLLBtK5AF0+lso=", "bdbzYrj7WxAzV0wDbn7kbA=="), //:\Program Files\Enigma Software Group
-		Drive.Letter + Bfs.Create("2gMnczE+TQ5JEp5P8CNjiSDkfgJRr0iE0pPLfG24JCI=","O2PAtzCRFtURjDnGfrCTK0aArDTxxeuArxfzNMvlvos=", "01QGccOiwrBnvlqW1luFmQ=="), //:\Program Files\EnigmaSoft
-		Drive.Letter + Bfs.Create("7ehrDuOsVy4eD9ET9+RrX4Vsy+4XNKwqs/7WFHID5X8=","mlr+g+7HQ1WslmBHupsAw2fti+ul9dklqQrMwSy7VRU=", "82xIn2XogtDnS1tdCZPQ5Q=="), //:\Program Files\Kaspersky Lab
-		Drive.Letter + Bfs.Create("WbliZBQowpxKjmNgCVxxO3eRPB9PYsWLzun5AtVv+gtewmTRug94v/DPeOy043o2","kLlbdv0VkPH8Qy3Y3kNAEtrOt5w1c2k+n9KRD/2dZi8=", "YFpTaFaHuvciomDTIxq3hw=="), //:\Program Files\Loaris Trojan Remover
-		Drive.Letter + Bfs.Create("tg3QDCMVnwyEv1XY6ur8NYwh1cPz1xm7fw9bPBYW8ss=","PHRo9g5BfE1yk4/D503cVhE8Fk6oJ7fbKNfKSUg5Wvc=", "/lfJF8fmu/1gy8w5/g05hw=="), //:\Program Files\Malwarebytes
-		Drive.Letter + Bfs.Create("dT8P5dfEYmg2mlzfLez+8kJc8sigWs6BUWRqbpzjcqM=","BJaKZ2dy39HuICLc1HoKuGkHNcCFmZ5GyimU2NesK9k=", "UOZDII5HvhZq84xeEOu9hA=="), //:\Program Files\Process Lasso
-		Drive.Letter + Bfs.Create("LRrohsZFXOu96IxgvUhyv1zmit5ReEeKYv3isN7ZKy8=","t4O+LFdXISybM9bIt1lpXfMM+xc3l/uW6+CczcFSH3U=", "nnKPR8xX//MgCuliRsLh2w=="), //:\Program Files\Rainmeter
-		Drive.Letter + Bfs.Create("tG1M+6BfsejJkoFv07ImsgOcEo6vZUk8Bz6SuEbOU4s=","IWlNbx1tqJaE7Ynta3dXixoXYg5pcm7PnjAlFf6PraE=", "PKP6Y35Fsk8Rmf9UR/w0qA=="), //:\Program Files\Ravantivirus
-		Drive.Letter + Bfs.Create("IJZwudb+1oF8Nv0jto0+dAWv4BqHdgCOT1pXzK21yns=","ctUo0dknmMff6va8BhEJT0jsXaD9PjTKVQlK9kraEgw=", "8FrhpbrcrU1ELUvzcXoGMA=="), //:\Program Files\SpyHunter
-		Drive.Letter + Bfs.Create("L1Tpv+WTisRYYyqcYSVkAYZ/jmiaK1FlQg6uWvu5Y6SjCP+5TnyxeUZC/E2MQy3n","neW6nvN3xSmludKPBI/v9Z+VBKfVr1x95HlbzOSpDlA=", "re5QfLulvtMcCQCkC0ZkCQ=="), //:\Program Files\Process Hacker 2
-		Drive.Letter + Bfs.Create("jSaFFWH5Oc+/bPSIm/LQQUKgc3X3acB2UqqECQbzp5g=","pQphaewD+tRy4QlcSM8wSJ5hBSnG+K3waM6meoT+rWo=", "KGTqF8k6eKS7ZsjHmaYaGA=="), //:\Program Files\RogueKiller
-		Drive.Letter + Bfs.Create("U43gI9wmZwj3feyl9lYAUSN6etsKwNaKmfGUrdIljtagE14dCVATLBhw2bXX9p8f","KaD1EFx7jI55qh3uu7sJwbRyrsjST4Y0MTNhQ3TgWeA=", "UibTbX/V6D7CXv/nezfXRg=="), //:\Program Files\SUPERAntiSpyware
-		Drive.Letter + Bfs.Create("kA0b7Hef+3mc46o6dmy5mfsmM+82illg5U2Twk7bEN8=","F4e4PQ4qNwHUXr/WhdcUhQpzz2latVyGFOvtnPWTWCk=", "AiqCINzNOXb2N3LYYeN+Kg=="), //:\Program Files\HitmanPro
-		Drive.Letter + Bfs.Create("HKs7dS4lIfusS8Ger809rEOi9djpR3mVZHaQZqhzDug=","5RWn5dsVwFguGZ3798epkuu2WIB1QO1ogG5cCc4ERUg=", "C3mVzP+7nUiK1ktNYgWLZQ=="), //:\Program Files\RDP Wrapper
-		Drive.Letter + Bfs.Create("JMssfCwBgT4hnG2WjgwdyeI1nSzwKu1NQe28t6kjHtY=","8LBQrjnL6R7j9sS5GE4u9doJun9X1qKqkMcbVplAcTI=", "O5wrGEaN4mYTGxZMNElwuQ=="), //:\Program Files\QuickCPU
-		Drive.Letter + Bfs.Create("s2AVlp4ZxJgrudhkd4zn5G0ISKzyFWUpn+tc3eoQLx4=","LoZON8ayNqTOTNwGV2xg6i+QaGtRWSb24DmJYeVZGZM=", "Q508/McqyIu00aZRlN3qHA=="), //:\Program Files\NETGATE
-		Drive.Letter + Bfs.Create("JfTNWJwzNPp2shp5F8bjo9NLYAyaDeyYHcT7cnvc3sE=","3u5hqrICDO/R6nyICqC0rs1pBC/U/caubtUcSgpVd7Y=", "8vHQvyfuVoTswqokcpd8zQ=="), //:\Program Files\Google\Chrome
-		Drive.Letter + Bfs.Create("zKKhA6RGWwOOZMboucrSCrVs6byqUjWUnwZJK2XPtcc=","lCNkB2CHApA5UjtPgf4vyMNR9WP9fRpPG/BhGT1z8Ys=", "Qj1FMKqMWCW3DGOr0QR6xA=="), //:\Program Files\ReasonLabs
-		Drive.Letter + Bfs.Create("+LOt7Zev1KI5jrmcAHE+cQ==","gC7UoLvnsc9BSZmoDnIedSHPSwBRi/esMxtkhpdD9mo=", "8uhIKCxnx7jhTzNRJ8R5jw=="), //:\AdwCleaner
-		Drive.Letter + Bfs.Create("ibDdbHcyMoxw+UfCM8YIoQ==","/dE4hp6W2wUcFnrsoo3BJX/NDSBVVFJ4RDRxynnaRj0=", "9axxcOUsqtCsOKSx7kbo6A=="), //:\KVRT_Data
-		Drive.Letter + Bfs.Create("M66b8MVYdGYqhbJT6LXCWA==","mmp0A3aWZcD9IYtjK6TnbmscY6h7jOnXMPCRc+4xAl8=", "IrvzNRQT9gpH7nh8aCo1uA=="), //:\KVRT2020_Data
-		Drive.Letter + Bfs.Create("vggs66Xd0CdrYRT1yZi4bQ==","L0Ah/pR4BVkIWnO4y7fVlreOGacj0c2VVACzz/o8kaQ=", "IXM29xC0mR/PHI/5EtKd2g=="), //:\FRST
+        Drive.Letter + Bfs.Create("/7QOM3Gqt4/xEAeWaWu5TJJtKEdOSY4ApS6Tpp5fzG8=","lLdLA2yf2qE8bPURFbOJxDI56L0IUYzyOK5ef6lrV18=", "DHgq4YvcwsDBpSupPDKNZQ=="), //:\ProgramData\360safe
+		Drive.Letter + Bfs.Create("U+bkj2nQOxmFQozNUlM3HaVMadod2cO2i+RZb1qDmLY=","3r+XRW3kuiAS63EZ6VABHi88iwA7Ia0xRLkvtVzX5wo=", "Xtr5aTeiYgRhazOzblxu6A=="), //:\ProgramData\AVAST Software
+		Drive.Letter + Bfs.Create("nt9rkMSYFivSS/IU7X0Uhf76d0b7MelParRX86k38/I=","52+zVcnxOOZt8aCM8k8xzqqUtRNPh98RQlQAJ8iRA7A=", "yPLFEKBqCot5n7FiZ3svRw=="), //:\ProgramData\Avira
+		Drive.Letter + Bfs.Create("jvFHza55pNSxaWJRQ2wXDVlhGj/Ma+SCyKxJHrPgrgE=","6gYdQRgeXL5QDznKlCg1IC0R/j17MKW/eGUdVjk/Q3w=", "8NTD7lisgysvKwz1lQjNIw=="), //:\ProgramData\BookManager
+		Drive.Letter + Bfs.Create("17XIqUnyYgvmoMT7LhMRI4t3g1tr6top1NY2/418SCw=","r4iY2QFK4DH54yGl4hYKI4xaOFsl5Hrn6yZgsA30Id4=", "/y/77Auc86XouPjY17kQNQ=="), //:\ProgramData\Doctor Web
+		Drive.Letter + Bfs.Create("S5HwwNP3LiMm3Zy/WHKi2sdtgtNAii46c21/TL7Jfa8=","ZMBEfvYReJXouG5Uw5OJzQqA3mHIA/ns60ioarZFMRk=", "n6srDNlmq/cxq2KD6Ay2sw=="), //:\ProgramData\ESET
+		Drive.Letter + Bfs.Create("OOcUvUhUey2Owz4JaRJAVgjguQLCvW1Kq69VUhZBwV0=","mYhfRsi1MhNd6pb3Euri9GfHUyI9vqJtRh5xbKCWXa4=", "1of+wVSpWt+qTWyP6uBYBQ=="), //:\ProgramData\Evernote
+		Drive.Letter + Bfs.Create("U8tUL1VmZSYCyX6iL/Sz7cme5OHmAq8PiS9bxROhMvk=","+rbYklPXCgUH3RjwQe5qLnA9Ksw4qaxgwgrfgQjnlyc=", "Xzn6osKc0QE9+89r7+MKcA=="), //:\ProgramData\FingerPrint
+		Drive.Letter + Bfs.Create("4X2Ea6oNqtEKDbonQRH91KutW25hl+AsjrLhn20OtKU=","JPujyZJojdn1FfdfKDoyAy4mllV7bxpml3VQbEE0B7U=", "eX1Umeq944JLRriuF/oytw=="), //:\ProgramData\Kaspersky Lab
+		Drive.Letter + Bfs.Create("Im1c0Hpl2TUm6jRqanD4a0Xcfm0OJcl+p3lQ3lDUWhTK+xeJn51x0JudPFwiV50T","254WhGIyBNb0cypjwQ3HkcC0b+wtBDf/S4wsy2DpH/w=", "RRd6gDGhqRP0aVUjLEAjyw=="), //:\ProgramData\Kaspersky Lab Setup Files
+		Drive.Letter + Bfs.Create("OK3f2PvRjmVcQ/cgdcZDlvh/sOkcwcXW18nYV58d2XM=","ixfmdMWUt4gos0U7E4/Pdtfd5rCfARyBoR7nwFLSreQ=", "AqUhomdGm/mAhi/WfOqa0w=="), //:\ProgramData\MB3Install
+		Drive.Letter + Bfs.Create("Lh8EDSf6YDyK9bwIOjO1GyhXDxXUqJRNydeyx04zNVs=","AVlvNoIOmzWmMf+oST2EF6sm8ZT+NHiwCJzOuGJrM1M=", "G1ZmQBT+1EE54vJw3HBMag=="), //:\ProgramData\Malwarebytes
+		Drive.Letter + Bfs.Create("6wmYnFAnM3hmw2bZ1gzLaiXejXevwNO/i/dgBA6UMnM=","Ql+Zm2S1LEjBfE9ajn80cMj3IK5WrH7s7/P+TOVTh3M=", "kqKtmFwduV2VdWW0O6s9Rw=="), //:\ProgramData\McAfee
+		Drive.Letter + Bfs.Create("VcmNH0LoTvtvs2QqQx4j+kTavdweIERlSB+lI71CiF8=","0v+Vu9lN+ykhU4nMasBrxLN1+7CSeIbVvRNHU4P6BIs=", "dKAXHq59lxhgOng/Ghsh+w=="), //:\ProgramData\Norton
+		Drive.Letter + Bfs.Create("qLwoXBNsJUlINIjqqBY+GjgWxTPI4gv4IwUFkdJeHr4=","tBjX+FoZ7dRBpRiYiCL9bfgB8lNan6nO33ws72ORRTw=", "atfJ1f/7C0fz8iJ/jIpjFQ=="), //:\ProgramData\grizzly
+		Drive.Letter + Bfs.Create("rhAlfwQxp6q4fefEPyT3Z8MxwDb2fOIO7vy0cg1mVm8ANEQD91u7nAfnEG0xECJN","5DmPQOzblRfThZHfPTHoQ351zctXszZBz4Elu4e4F6I=", "xhdxyy0icSwjV37cpZM1Vw=="), //:\Program Files (x86)\Microsoft JDX
+		Drive.Letter + Bfs.Create("zsejVOkwyT6JT8kFdA6IztFgTr+y/0KN3Da7/Jm6BSk=","qQdD1PngKyBqBC6ZBizSNIJXq/H4fnAXIQUw97WDREc=", "A1mtcIXVL0sydOipTd0XGg=="), //:\Program Files (x86)\360
+		Drive.Letter + Bfs.Create("ZQFyS5uZ+Up7IAf2cSzcnPmEz9kQZKnX/G9oeEYIxCA=","HlVAShLLQVheUDtWEaocyIlMJi7WXCXsKB23eafJ1mM=", "BYpkUwHVCMKhdZhwciCUzg=="), //:\Program Files (x86)\SpyHunter
+		Drive.Letter + Bfs.Create("DUe/hxWEIMqi1Djjg0YEk4phJi3llS+CGHFJwXXiGgp1K4h1WwiJPIVogci0GU47","3c1ZZdMIPbBCzbg0msTJW+oQ8mZzxkyW9LM9I/Colow=", "MEDwxA9F+Dd/gxcpTtYP2Q=="), //:\Program Files (x86)\AVAST Software
+		Drive.Letter + Bfs.Create("0ZViFHSXICp5nyBhnuy2lOKzSV8beeeCicZIY0z6laM=","nVS3rpE8jdocBy5HKsUsP/IIHl5DKhnJsIDYgnLSrbs=", "v6HJVWjgCwMmX4eUCssggg=="), //:\Program Files (x86)\AVG
+		Drive.Letter + Bfs.Create("Fcb9WlIsqfkILo83EgYEbUkrX/R1mA1xC1HqwKNxanjQJACpoYcekkTQoXz91Lq6","L9+nSYKBotwO9rI00+jvgmpTQ4T2rgPfqz/jBqXfy24=", "u4Zfimg8RoKjIkXxrAJKdQ=="), //:\Program Files (x86)\Kaspersky Lab
+		Drive.Letter + Bfs.Create("ehioLioXW1xUQJbkYC13e+W7RYXiEy65ig+Kkd6KE00=","zYbEFWg6YXjVCcgbWa86UjdSKZHxj/yGW3uhHlhuTeo=", "NVtk3FmpWWirf0jAzax30w=="), //:\Program Files (x86)\Cezurity
+		Drive.Letter + Bfs.Create("VMgRjSYDct2SUCMvxZHTO+HT7T3QNeIX0v6cBZ/k8JfWOuBpCA3Ad9k6VDa9TZKM","llYZ6qx0DO72C3vqKjRJj2Cq43Aedr2WcGlxJ//itL4=", "jbzjzFbj9y24fTc2UrmlwQ=="), //:\Program Files (x86)\GRIZZLY Antivirus
+		Drive.Letter + Bfs.Create("/GzzQRLYS1usMoTeHZddkyMnrHTHlc3+tUYod/WOXfTgFD4ftZjzEHCgqd/WjEXx","DFmbVzt0CTLP0AhsrBGG6XCW2HVowxb4zzG7kzsPlJA=", "BEozmLWWx2I9zZJ4eb3jqw=="), //:\Program Files (x86)\Panda Security
+		Drive.Letter + Bfs.Create("83NO7/X8YjcefDP1wvpktnP3b8Lu3JH8BEAD9ha35sV0T72S++MJSJD8AO2jNs/2","xV00DyU6OtpAltlbyNEorDgFQwWRN6/7pTyVMjNoh4o=", "Z0AsxleVKqiRnw0KNlLn0A=="), //:\Program Files (x86)\IObit\Advanced SystemCare
+		Drive.Letter + Bfs.Create("jeZywYahy8eIKbtzv8OF+sfV8WK2zgqLXUo7zHfvEM93miI0FN0ZRB1gtvtc3gbnYlS63UjAg6Bjbi9oCxVL6Q==","ESTa0JY8rUhsDwco9WJpGAQ910+OCqWsPthHWlCGayI=", "Xa5QevBxlea8j5lrGhkA0Q=="), //:\Program Files (x86)\IObit\IObit Malware Fighter
+		Drive.Letter + Bfs.Create("wcmv8NeJD1LopUTo0WB8QkvO7AWFDgRRq2VipBoj9VY=","/98fRoNXdCxlIdGFmoMSdyKwCPLuTzxJaGKnL+g6C5o=", "UrHqaoxBDrdavDwqzVKWug=="), //:\Program Files (x86)\IObit
+		Drive.Letter + Bfs.Create("91DBI6CS3k0IXO+oex/iBfoPzi2ZhxgM+pJ09zi7X0o=","2lblL552g6wgJ2+YvXCs5jJ52DhhUKWsxzzXJ6epy9c=", "+MFGcj7ZNTUp3uWMu47Cog=="), //:\Program Files (x86)\Moo0
+		Drive.Letter + Bfs.Create("mKh0RSzGQCXBwT/Wmi7HQ+wG9zWkvgZa/Qoc+PaCJpGD7iC20bPvr2z3FNztNK/N","IHjrR5xhfo2lheiNTGhk5TjKd3VCYOy7Iuf0cQUhEfM=", "vO5/lElOvMdsBJ4+CDIcow=="), //:\Program Files (x86)\MSI\MSI Center
+		Drive.Letter + Bfs.Create("713zLMPe+/HNedfaKLsyzkliGIf+HItpRMKiWeelsWw=","PFfPt1Z9dWStTeBSts7/gE/9aCknPj0KjVDq7efPM4s=", "XU8eg99jgcvBZZT1+YZGcg=="), //:\Program Files (x86)\SpeedFan
+		Drive.Letter + Bfs.Create("9B0bbiqS2hQwsCocfxD9W67xzaPQr0mN9VLi++crfMY=","bX/7eidYJFJeG7i/btu9x+vo0XHehEjzAktWemdS1Oo=", "YiJ0oFsEVUYlmym+kpvdPQ=="), //:\Program Files (x86)\GPU Temp
+		Drive.Letter + Bfs.Create("Mjp2y4UecczBUVW0fVfs4fAO7dM7rrDGKbx+tXm4K8c=","emd92dfHH32zCA2Qif9AZ3rAktNIKmhJ6bZ/EGaAGmY=", "5g4fDJx6xvGNgdqDQjM3DA=="), //:\Program Files (x86)\Wise
+		Drive.Letter + Bfs.Create("fNtcUkHXjNbobCLuj8m56Ga0/hdXfxzIH4z5bnuPV90=","TNUjYaKRrKPBzZsZ32Plqeh8n7XRp08wDbKRjTbkxUM=", "bSQX/Bcn3jYrTxbOghoK1g=="), //:\Program Files\AVAST Software
+		Drive.Letter + Bfs.Create("sLz5G/4UJG0bpCgDYJMxsLwbjTsoMRYRNEV0oDbsop0=","6I5NNpmn4cQ0AyrxN8NtFteCx9TjRysybDP2/wnKyzM=", "bOukNnPSmYZ8D1qzFsQjIg=="), //:\Program Files\CPUID\HWMonitor
+		Drive.Letter + Bfs.Create("y+RYJH2+NDsOHoAOHNS0phrS6gg8eOdhYHxxwOpNN0s=","PN6f/TxeRn6QRmM1cdJWyC5yF/sfaVEEGooKjJs2uPo=", "DNseqlIUliS1TK5EwtfltQ=="), //:\Program Files\AVG
+		Drive.Letter + Bfs.Create("l1pRet3Rz5XXMNoObULuEQKln2CfOHJtAJMGfnEuorUshQJ/AVI2xXiX8fmf8E8L","TLYerWkJwUnXSB7fdHsBINQPXSWZ0hf4HTRvqEb54H4=", "KdUmG3l0nFJwXGe/0IZfGw=="), //:\Program Files\Bitdefender Agent
+		Drive.Letter + Bfs.Create("qNJSH0lXmpXvH76zRKBk5fhkg1YwvQXxlqpA3aJ3Gp0=","VinKpYAfCBrbS6vO+dD2UvafV3JC68A7Ogtz7SAv+mg=", "Xh/tcj5f1/X0k8ArlXuLqA=="), //:\Program Files\ByteFence
+		Drive.Letter + Bfs.Create("00N7Q+cOptcJIpJ9YHZKu1IzrM+HrLk7da5RUAhE0sM=","N8lsGP1EiCC3no8x9hRqg9EFCZznBtkM3Nk5bbnymz8=", "2JEEKPMsHHg4D/ug0iZGsQ=="), //:\Program Files\COMODO
+		Drive.Letter + Bfs.Create("zNTTNg+A3TQT9KRF9FgHNHhem7fucs4aJlj2NKHqIDc=","vhedIeo4CD0urpBqOyPg/WfUl0w/3PvbTi2/L6+0vJI=", "lJ5WCH81xVsiZ8G6OnTH/Q=="), //:\Program Files\Cezurity
+		Drive.Letter + Bfs.Create("yZTFmZlc1+tpx+MjX9fyULn4s9RL8r5KXmEC1fQlXIU=","qt0XOxYnydpm1sxWpDw76ZEKK1zsYhYuMvI+a0eLGV4=", "h+S8mJ0JLyd3MQVNUbcbdQ=="), //:\Program Files\Common Files\AV
+		Drive.Letter + Bfs.Create("8r61/hx/G1ZkG9KEIxBQK5VS+GUxAJpQ1IUqHA+W8PbWbOq1Odmb4UrnjWR5R3OF","wtLUFZRgKzaafpaR5H312srxZsk4EimQaxkbqGTictM=", "zb0wmOR8W82qgI+zNgws4Q=="), //:\Program Files\Common Files\Doctor Web
+		Drive.Letter + Bfs.Create("dgP48W75HXyCc02+Dcm2FzgNS5CpD5jbI/i+ahvtxmLW6tWR2aUJTUe5/aPtDWjm","eNngrB1NnGTUMyHGU49H7720kOrPcbsI1HHAdHK0YBA=", "4vUGwN4WWYB13hkWm8/ctA=="), //:\Program Files\Common Files\McAfee
+		Drive.Letter + Bfs.Create("pX2Uxo8ipoQadXzc8F92E9R4wo+Xl3FvTedu5RHfA+U=","zDiS30lSws85uz5H2NjhOk/NtyjyOKPPiQDX3ucKKHc=", "XvkA25KwaKZdo1TLiqP7uw=="), //:\Program Files\DrWeb
+		Drive.Letter + Bfs.Create("W02Hg7ahahhEKtQ/ip5fvqaSRHNuGC/RM22N5culXZc=","s+mFe2yMGhl7o2r3RH3/RgDQUkja8QshzH8w0iOZnSs=", "kmjN/8NDkRDYoYfVeWKRWA=="), //:\Program Files\ESET
+		Drive.Letter + Bfs.Create("eBcyZe6UBLEZtUB8ilEoAxUIQcJZDiIadKq+vXAhjACYlhumrkFYsGhRRtiO29vs","UZBZToprhT3PiULDMtf8eAqW8o4Lsl3JNQwFmitzOrI=", "eJFEgL4TwrOYWmL2vB+CUg=="), //:\Program Files\Enigma Software Group
+		Drive.Letter + Bfs.Create("zRVAg7QwkH1/k9sgRh1+4mBhYryN5Jc/n5wDfUj+zyo=","TextN8HtyUBNYAWFa6z4C+OAPH0neXwUpcI/5cile7A=", "XQEqyHbm15fjHYaUbYhAQQ=="), //:\Program Files\EnigmaSoft
+		Drive.Letter + Bfs.Create("uFIjNUWw8LXgdbAuOv84oIAOKyWvP67+xm5NAlPxwXM=","rQ4ic8YiWg9atSLHYZLb62kUavaoCaGqxQHlMZAlEWM=", "dIl1h5MGwFX8qkDqu7nB+g=="), //:\Program Files\Kaspersky Lab
+		Drive.Letter + Bfs.Create("j93Q0x6VquFQPi2rm0FAkPJCGvWT5wHcafBLLwnl6/i1DEFbRJnHyVUCT9kvhON3","Wwcp6GsabQbR7JOKqZEIfjh/+CDYE7HZQCYevdOaY68=", "qxjQybm77+rJXHHW0oi+fA=="), //:\Program Files\Loaris Trojan Remover
+		Drive.Letter + Bfs.Create("haJp1edxxPuDXyCheCFr8wgS50ucMuijTIwZ12yrLKI=","yIwHq+rrP5SbRG0YY4/+QBrtiZkP3uB2JLoT4syDjF4=", "Hy6zY/tbnk/vUYDkpFbfMA=="), //:\Program Files\Malwarebytes
+		Drive.Letter + Bfs.Create("hPcAApG3EGS78NoY2ZMRaSflQdVKUblK1xkQe0/gwqE=","EIHmwXSKWPl5WCCqwPSCywQt3Mf4LVaK9VuUXQZcejc=", "ztDco3ZyCTeEl5oyDCTX3A=="), //:\Program Files\Process Lasso
+		Drive.Letter + Bfs.Create("CC609W5jbuZkg4sFZ1ZYafJzX6v2Y3J62C2uBOlfZ+k=","He6EJjLa+G8zcwVr4SO2MuOJVCN5KWFeP8bRsB95/1E=", "KAbt6NKvY3P9fkRh2VR15g=="), //:\Program Files\Rainmeter
+		Drive.Letter + Bfs.Create("CcwHOoRenPwIy88Ii68ckm6BAcq/62Vu/cDcRgnUZ6M=","LC07tlMDyPtjzXsSvIp4Gk6J/Nu/LLjZpIWljBFWUN0=", "up1aEG/ZXwz/jkRhWv7meg=="), //:\Program Files\Ravantivirus
+		Drive.Letter + Bfs.Create("BNYL61/yJ1mkN+knN4yGUHtvqoXClGMJ+rZKAYv8NoA=","m9luNSE4Lma/t9+zgaqOu/CQNgMBL5Qi4bWz9rVCzqA=", "3AZeTUeYXSQ5/WJrMcnIEw=="), //:\Program Files\SpyHunter
+		Drive.Letter + Bfs.Create("J+nmd1wW8XbEYMF4RaYAtDOXoauf4tf2kYaQKCr31qKVYKXUj2Z1Rt+i1DP8alsO","AKgBx0SpCyHu7DUpF2dbgUC3Uhs4tXUwStHiMCIK/o0=", "sPxNoTK+vSCqWOdoZ6EEJA=="), //:\Program Files\Process Hacker 2
+		Drive.Letter + Bfs.Create("44F3XIoTYT1v660flT1yIdf8CzbqCU8LjxY2xHJqE24=","Y6lDFlXwYOBIV67BXpSX+xpepblbrg8AS1DxIkpKekg=", "+WgYga43Esff1GkZMlSAiA=="), //:\Program Files\RogueKiller
+		Drive.Letter + Bfs.Create("QPP3p+phH4CdnJUEH23oV7CCd1Rvt2faVeVpg9W92AHEfPLVwC2ayq0Cyly8Imas","pjr6XcvoHuQAH2mVi5cvDamzHryUTHZvFi+uTWYpWa0=", "TsZZIufcEpB/Dy00WkNiZA=="), //:\Program Files\SUPERAntiSpyware
+		Drive.Letter + Bfs.Create("WpsEp0F/ScidCNp4Y3e0zyyMgfVcztDiyg3tkVHRGvg=","g/F+p052+oFu7W5dKsdjJwWcQ24kfZYV12QlAAZn0G4=", "RcFa4APd3FRPchzosGmpSg=="), //:\Program Files\HitmanPro
+		Drive.Letter + Bfs.Create("I3I8JSrgUTL9Mqxgqo/8Fly/qe/qWJQ0YEjPpb4nsqY=","mw2K8uHJA/REOcIFo263GItkkNVmiphKqK+ntnq6LKM=", "DAYAY0OOj2KVY4djjyIH7A=="), //:\Program Files\RDP Wrapper
+		Drive.Letter + Bfs.Create("Rf5PAVaES1gZR77W3jhQtqrG4owVoZ1B2O6/VfX+dAs=","SU9oScSXwrLT1e1UyUATJzIIUzSmlK7SfJfOKM+Rhv0=", "TbfjzJVli/PS+czBeQEiMw=="), //:\Program Files\QuickCPU
+		Drive.Letter + Bfs.Create("iznfizH1ob4o/oEU4e+sd78NzuGFNPh0eK69qVRY7fc=","4eKELGWwalQTSDjd5hdj57jm4ORdzC+CZjeOC6cmgPQ=", "oy5OskyjJf3MUiQAsKNClQ=="), //:\Program Files\NETGATE
+		Drive.Letter + Bfs.Create("ejavehHsSgJosg6fsK66HzjyLS93oYOtKMLscA3OgWg=","X673+2ImOQM+kfMmBAgDP+qaXXhpLXeHCa4h3Y2plS0=", "uM9UP7LYeMuHdr+/RXSAlA=="), //:\Program Files\Google\Chrome
+		Drive.Letter + Bfs.Create("JUB+PoLds0vKQhZsF+WBRj4p83RvRN7vm2PhtS7Pca4=","hTKCtWLR04aP8nZmvAmWfYtwCTEcJAi6Z1cW2xg7Beg=", "ZlNNYynIhjRme+QU9Vy+Tw=="), //:\Program Files\ReasonLabs
+		Drive.Letter + Bfs.Create("ZM/ytIi/DvRzn5/+uESdaQ==","EdXrQrcL5Am+ljbL9uYGn/JycF1L4M7tmhSkcYfphv4=", "k1LRXI0WGSXp5ndenZgcVw=="), //:\AdwCleaner
+		Drive.Letter + Bfs.Create("8PGsqpobyxsrvAHygwGg8g==","FNEYjfKTOu6gDai06d+YOFO4lWRoZ5LBWSE00nh5aqM=", "IZFGx+Xg6ObW9VKjnrU3Bw=="), //:\KVRT_Data
+		Drive.Letter + Bfs.Create("s6dkiYHieCIPZuaaobj1kQ==","xdygKcaeKBI0wrzhH/lA2x7wUEoW6K5LqCvsiLpkyLM=", "ZFvln/YvJwocfRGvC/XOqw=="), //:\KVRT2020_Data
+		Drive.Letter + Bfs.Create("93FIlX1s7+pW6WPU1EGq3Q==","Y2axRjZyHAaJG+VXCltGTrFHzknf6/x6mgCO9c3hKnA=", "ZcqvmIq0U/lIRrf73XXR3A=="), //:\FRST
 		};
 
         public List<string> obfStr6 = new List<string>() {
-        Drive.Letter + Bfs.Create("V68WRBVXOpHvaxp3MvVRKg==","Djy22sR5YU0v/7YNXeBBb0Pg5iMMoUx0vkBg7/sGZU4=", "MrxGbq9GnaCfVN2u5L5a3g=="), //:\ProgramData
-		Drive.Letter + Bfs.Create("wZKRrZ5I190gKzg/nYcX0A==","2Gor0qUb/vqDGt9RE92A/mBS4whkBiypCT1bH+HT2go=", "Rc5DmqDQ9WocE339eWmYrg=="), //:\Program Files
-		Drive.Letter + Bfs.Create("S7xkFo0CNvygGq8FFgrZWYUZVCoYuTnFESH4W8DgcO0=","R9Kie8Qe6g+eD22IWIaViTqlgT0DaTx/DwBkgsZaEXI=", "7S2xrj6mF1Lfz9fDPPdvkQ=="), //:\Program Files (x86)
-		Drive.Letter + Bfs.Create("hoWjMCYUL2+uK8Rr3gDSTg==","qFM7hupr9Tiic+L26KeeJsYbUiUtqkMbwJ/ObCySotc=", "LbXD9O8Qcj9Si1OFBunNxw=="), //:\Windows
+        Drive.Letter + Bfs.Create("FwdLzkw8pYAb8kSKMHcGCA==","Qdn/1fQGzHfcLVo0TLIvv7vTD8vwMPRtxtIPcNicTFU=", "95CHkuas7t833CPYUFjizw=="), //:\ProgramData
+		Drive.Letter + Bfs.Create("XRF07EZ/mEYvMpdk2YQidA==","uajjgdK5lkNBQqg9okbVuxd79ABy+2uAZyLkKrriXME=", "ed9/i78O/CJMz8Aay9HQFw=="), //:\Program Files
+		Drive.Letter + Bfs.Create("2U7PpG3ZmbedFHO3+P1za3BPYW8i2l/RrcuIqytIXG4=","Lfrb8KRTviCeo38kx0fkK9yQ9OOXvSx8VxhGrhwlY/Q=", "KC9tUiZdIQoAeZxRZAQ9cQ=="), //:\Program Files (x86)
+		Drive.Letter + Bfs.Create("4mfKgj33QTKDbRfJeMhSiA==","hOqJxHHJ3f4+X95d2le9Y5BnKxhO0tF5V+RJaKcxUNM=", "XFmC4A4CWdTOQG6jRE1HEg=="), //:\Windows
 		};
 
         public string[] queries = new string[] {
-        Bfs.Create("KT5ZThtAz68vIJCJ2rIbkxfR800IKRJkx8799jDAjiYT92Rv3MqGEmIP9b7RmIsgz1i7AJLOzsAQjPdFZVoYTQ==","vc05vu1PIpfd+f98SMSIKDCVQmjFbmQtXt6khEk0AVc=", "rHof+d9CbaBJQwmA6JWBtw=="), //SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
-		Bfs.Create("//Knqpvz4FFWgmNwNCBX3lNh+BLs+f6RxwZ1tCeBOUH8cqFXjDJ4s2oqgp1dJiEv4zhAgQYL1xBvBd50EiHBsQ==","cfIIXZmFk3ewoZvCLgGz7WepICyrSKYGIriXWEEy/PY=", "mpQUMEfu/Qcq5yTln4tHnA=="), //Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
-		Bfs.Create("3Ieas78+x1i05YksdPvdarbTn82L9DkwndXsGyzNwFZrM8jUr840+YFeXs4ZbOCc9sUy1+bJCkF0irdj0WIOc7+FFYgfW6msjJaAk4zPi/o=","GOw4D8hRERxD5U89NZC4PSFQtaw71B/Mv0XdLEDLq0k=", "FgQZmfF/6TqlAXXXyhJsgA=="), //Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun
-		Bfs.Create("qz1Isp/6Jf6KCFL/OLzP9uFfLiCzGTV4UkFglwfTk/B5l4H9/08hovGwSOynca73qeExU5IEUeAgNrW2/lukSw==","7Wxr//FDrrtNmMrhXPIqZItwcE3JB71qtsfI/uJcB5A=", "PMzkKeUXnky+K+qSeDwCWQ=="), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows
-		Bfs.Create("Slgcxcx6Zh4mltseDLQQcxLFyCEUr133B73aHFzaY2C1UKNs/XQrMAsIivRqtSLL","8yKsSMuohMuhPGcF1CM6j/4++bND/5BZ65ew+fLG/kE=", "ZDyIK+iMOuX4ahDYEiS5DA=="), //Software\Microsoft\Windows\CurrentVersion\Run
-		Bfs.Create("chaVUEAV/LQkSvG/AOpOYSC7wZhomLeEupcsO4/ldX5BVTzw5bDupLQw7Jwhochcu7gi5DYL4n6/FgLi8ZW9aQ==","Upyb/6YsHltmPr4gZ6YgRm7xlZMGrNDrMQ76B53iK2U=", "2JfdFPZFa3fuyFR2htLzJg=="), //Software\Policies\Microsoft\Windows Defender\Exclusions
-		Bfs.Create("K5THfkrh2CrNGQCPjSYcpxh3D62WaS61cbx0MJzxOmNIlBWCgRhwlMJfMRhOjeJAWs13wJTHGHVSDwZ6rUlOLw==","uVYRhgin7bLP8rPJBh2mTh9cUzBcGcTBC+n6I6+oYKM=", "OtgJL0I3yHwCTss7X/jn2g=="), //Software\Policies\Microsoft\Windows Defender\Exclusions\Paths
-		Bfs.Create("vtv/JySNdmQADA6S2O8vE0mZ6J7Fsvw1kwMSdFu59qgs+agAnoLQrLpUZH3i0436ah3OELyaCOLxnHa46/V1YLbP+lBkwzzU6WCCWMblDg0=","Pl1BV/NsAVT949eeUU0Zy9M5FDjCfKPklR3YcZkcLNM=", "yMxNDqHV9pREDp6gA30XZw=="), //Software\Policies\Microsoft\Windows Defender\Exclusions\Processes
-		Bfs.Create("7rpTjOf1Jqg9ebx8pjX0Waju3CakzW+bJjNceXqn7Vo7EVQxMyI9jNFyMmH3OgWlV6zQ5ZisfQce28QltpI1Lg==","0dXuasggA3/RAaWTeXjnwjrv1htHR5I6ghpDC+p1XtM=", "w5xfIchZbvqsRQXCBY9hCg=="), //SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run
-		Drive.Letter + Bfs.Create("vPFV0ICz2ws6AGHjjJhnCpjGW4b+DTl/n621qMxGiBrjiuebBeR8uJJxC47lMk3D","IzyYdY0cmXfu774mO3zf8Mqcp/6SWCdXJtdDxILFSUI=", "4SfjneNzOtPDsY+wIUR7ag=="), //:\Windows\System32\WindowsPowerShell\v1.0
-		Bfs.Create("GPbxi9xJfDswIOz5xxxz7XKV8yEoe47D1uO00y+/dPFznh6nnvjRd6U8FpsMETFhVybeWNhKmS+Iu5iwySEZkQ==","sEQWA3bJ+MVFl8C4O6genpEKRRarm0HN+BIpRu0byjE=", "LnpKHuTI+7Qs+asdSp4QPw=="), //SELECT CommandLine FROM Win32_Process WHERE ProcessId = 
-		Bfs.Create("BncNr15MhaXwwxYhoEQNMNGqTX25YcR4Wddu43Hj8ReoCY9X+I0tbrJ3r09+FGuJ","r/uzqfzy4V2uKgSgTFnel/KRgUAh+fOjy/yyMwdPh/o=", "MlJhiS2iP0Qc/MlDAto7Ng=="), //SELECT * FROM Win32_Process WHERE ProcessId = 
-		Bfs.Create("KVjBczb3qOrgazyUveHLCPabHyeuFajQN0po7+6w504=","m0Ysb3fffA6DW6kXE+jO4bdKG1/xOhyVEw1beqQWpKY=", "FB7MFp4IK3FvwUcIUip0Bw=="), //Add-MpPreference -ExclusionPath
-		Bfs.Create("YuNnugkqDqnOTzYDAl/LLxnbw4dTsb/T3FnQ4d7aLFM/5NH3AqBUJnvcu4gHy0Q1+pHO7rsfdOn3/pOr/EmR5w==","Iv12MrlLpCAotxRshSLIdwZhfB59l6LKinbT9TRwT6o=", "7X5vm3aP49C7w0Ez9hjWzg=="), //SYSTEM\CurrentControlSet\Services\TermService\Parameters
-		Bfs.Create("dAQjYZlq1ZesND7BEiW14p1XEumGGIAR/jGVT5SB8dKe7hzO44D/1ophbGIF5v/1","mwu0xIDbjTMStcSJM8x/LrMzfwI2BMvI7cDQU/FPXcQ=", "ZUkHrOtqdEJc3M0mxXongQ=="), //%SystemRoot%\System32\termsrv.dll
-		Bfs.Create("keC8UaXfUZuMv1B8J+oOvXxgbiTRPiwR352IKLKYoajVFV7EEcG03ffS6RwfjlXcxRh4xkUB7vhXteJxjGmtJykK/YHur53lRzTjXj06T2HqYkwPqy4P8atZ9ky7rh8o","0+adGb34Xc9bGfTAgagwANvdkqFhog4evSFPihEh+IA=", "w6vZGeigbcH5DJIFWLSkMg=="), //SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options
-		Bfs.Create("9YAhlP/V80V1NK9BQRjznqEGAnMJZ0yEK5sF1Mi+NWSAx0odDpQI4xkYlm4btuWhL3QcV52YXu8ZotCXLzuEu6VjeayxC6QUPpp2LHXlUgE=","6uHYil9+6FuP0LbaROiySJid8eVT9yfko/3HJXVOugo=", "/Lr/9T4ytxju6onAJasLWw=="), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options
-		Bfs.Create("xNlHc4YklY7qBFN6eGVs0MmlairXosJtXnr9kODO4FOIhFR/w+j5cIqHbJbSlCW8r08qFxMNeZjksmGod01oVA==","FQ6IW26w4bhpgEkOJnSQmGT7aA0tNTSCH3zl6GKuHXE=", "rfswiM14DBEBMMS+qS8kig=="), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit
+        Bfs.Create("7pYQo/fzpPb1z5wSIg0Fe34xWDtcuN7l8nBYt+cEoEXStY1U1yI/L7CDdJjbc4+ofF+L7NmJy1vjpwzcg8KRYg==","HGLIUkf2Dx2o7M3ad7XPJ8PpMvloM0HaQMSlEVEAhsY=", "DVpcd83B1gJmn0D/NcEhGw=="), //SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
+		Bfs.Create("QLxa0I0PdLka8E2xEBMiUx55UkGhS3zX09j1LFK3x+w/hbU+bStxFha4z+2l3MrGzcKLR85irtSVHOToNa2B2A==","N1Oooc8iWN+sKGCEi9AONqufmt6TOsjxXldo1/i1Pqs=", "98xWE8djv/tXwZHpsXvPbw=="), //Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+		Bfs.Create("/70W1nvhsD4GSHSo8F2xeg0ImzjO0h+eJy0t+3+L4D5CdupOp+iTXiePZecgJ2dgids8Yv9wmpwgWdWbs2sIBoq79Nmv48+3OZJXOjGJsRk=","AwZ7WUDjyD+MHEJrqMCMgmiLe1WWbxeYWqwlRE/npTE=", "gK3oVpDllxjuczcJben6FQ=="), //Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun
+		Bfs.Create("y2VjoVn7y6AOyLnOC6JeZuD9g+boDK7+uU7O0Y0M/1Z2Bh7o/4gny9S3REa1QqUBC+pc4sB1OIXETZy8XeIY4g==","mxqs/10mjAc4kcU0qlkSx5XRog7QMiRsgJyhpANmXnY=", "FYUB0KGeQTeZAatn9p7uTg=="), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows
+		Bfs.Create("VX718nTCqIaPP+ivlLCRf0jQV5YwPp5ycsRAUlW3u00K42U+LmqmKN+76id7hQll","yCTjnIr4Wp5rck+/dr1n2d00rKG1Zr18L6wPVhbkSUM=", "T+KggM/a0ul5teaaiZmTIw=="), //Software\Microsoft\Windows\CurrentVersion\Run
+		Bfs.Create("U8L4UkIILhSYajrU9xL0CiD33xA0K5hZtufcdaii6Cf+s56TGZGgq9wOk8DpHxcGDWnj0GFD3Olj4NLWyrUWJA==","2kebvIomJ3aK3V1SGu/iVR6+Q/UWk3OkEQuxZvSy8uA=", "E5NHGbTx4iD6Cxmgnnl1hg=="), //Software\Policies\Microsoft\Windows Defender\Exclusions
+		Bfs.Create("KUOVVgOkHW/X5HyEow6+XAqJi3GQidmS9bUdJlz5srbkdDhBHZ5JoEmH3hbpBE55Fxj01suCtI+QMkAvr5edYQ==","qkJYF3d+w0SSTSty8aMejSBIw2l4mnXvxTZ54RMJjc4=", "p+2zIHhDljI/tWBdS0zi6g=="), //Software\Policies\Microsoft\Windows Defender\Exclusions\Paths
+		Bfs.Create("EsHdNTWYtlc7+6iWv28E3wNOw+YKNI4lkQQ+JY7sc7WKcq4M2J43n4u2WPDBhmGP3DRf8nfD0ZCR54TjLluxCInuhv8bm7O2riSFsE0uQZE=","kBn2bFvaxKzlrllsCOUB6bqyrzSyPRcAcHmxIVy98dQ=", "QRoONBrQ7OM4sRYFRGi4EA=="), //Software\Policies\Microsoft\Windows Defender\Exclusions\Processes
+		Bfs.Create("TAcJkg5Js3aeaiQxVbnrJU9edlJOPuJ0TK1es6RVoJS0t2RnMzo1Oyb3A4kLx30Zf1AOf4VKSTjMKYSQWUbv7Q==","EKdQ8gSYvQvvDMKXsR9+p6+UrFKYXGlcwa1aPZTbets=", "NsGba0RZd3Nzo7hVfxWF+w=="), //SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run
+		Drive.Letter + Bfs.Create("6CtzkRvroL2bnqkY7uDOSpECoqiMEZNtThJqeX7+7TmC/9G6ITwd18ilRo/eB/2a","vgjIP2NH9AzPUQwJFEfMdrpxlpYkuAIFLIDpOi/OfbY=", "dUtyIHfTfdCPtupwBZIc/w=="), //:\Windows\System32\WindowsPowerShell\v1.0
+		Bfs.Create("k5Akb664DU7X/O9ayuJHfvFpjPAuTy7naxtdQyL47fboRY3IbRW9dB1KGQIQwW9UdBz6UgHXkfgY440iwa7I7g==","vtnDHKHW3GOt23morVjFOe5JVTiqjy7usE6LW36H49Y=", "lFuK6ySdCZg3eJ5M7kUY6A=="), //SELECT CommandLine FROM Win32_Process WHERE ProcessId = 
+		Bfs.Create("IHggNtH+KmzdqLdMAnQs7fSaa2sbHQZ09UJKu5JoN4sZM6DMJYbQ1dpyfA/2OAC3","B8lHrpCw5JAeZkNCqxQmv65mh7q3JlmBenknraoJTMc=", "HB+RQyRiZJ8wYeKuhJxOMQ=="), //SELECT * FROM Win32_Process WHERE ProcessId = 
+		Bfs.Create("ev87GtOHGmJwwakFAxLJnNTcWHxeBR1VVums4Ve9Bok=","iio3UzHXCeeZ7O862hu6Nrd0QExATsEotD3QsboTots=", "dPW+1swO0hU06bTPuCtAbg=="), //Add-MpPreference -ExclusionPath
+		Bfs.Create("ODWKbAShvvGH/4gunI6xf0WK6u9AjAm6tTmqbEaj4I8Quyvwuq4bdrkEbnAPgXfWVkoMk17RRxmuZe2sRyNP0A==","IsFMq6ro9sI2U30d8LVGlxoDWZ8ywIfBT6Wbf9dVFtU=", "q99WkX3Jxyo4/jx2IBNSKQ=="), //SYSTEM\CurrentControlSet\Services\TermService\Parameters
+		Bfs.Create("t9wjVPWTPvUfvlh5IPuhaAFVuaNLHfkLLlF0EcCyWtASMCENrwM6Qiab9dhW39kw","TWwzLPx6Bu7C7LCoR71zR3nquHGUavUkl3yh/8uIQcA=", "Fj7i1UfDxv4rptP8Db0bQA=="), //%SystemRoot%\System32\termsrv.dll
+		Bfs.Create("pH/HrB+1nIEBrLz2In2piP0c0TU1+6C5LYZLeBdJSaD7Gk8SN6Xq5NbuZbVAWC0wNoe0kGZ9y/N38FcYfWvTI/j5Za+yTXQo5CfCHa4imiG/cqzRBexFbDvAP9lTG6k7","/bqfUN8JnbyKGlZU2b6r978VKOt3Dk/GFP1hxhdBE/U=", "xFEKX+bJRC7g/vGVTGdSww=="), //SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options
+		Bfs.Create("i0e2CRqEj8nEUHXQnCtt8oSzequj8kfim2kXlkyjMuJ6cQzA2j84N54w57dTlNSoqSABFpeNMJOSj8OE68rjS3SRs2nCgg3VFwRkr6VCnaI=","vQwCLhuS1OnH78p10R7FIYzD7eZ7gRiGfiyEvUPcqHc=", "roWidMOVv2Y0J/4EARxYGQ=="), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options
+		Bfs.Create("TySXDk2anrMXfC+Tjqpi2AdvU+vl/VURrxczPdk3HhLq4CMsgvRFNllSaW9dur9AJt1whelF7YGZzMS6SdUvww==","1umGv7sCaUHQ42S8eV/JVaso+j8drvocd0fz8nMvAE8=", "vdaUug9KInEZXe4UgHuZXQ=="), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit
 		};
 
         public string[] SysFileName = new string[] {
-        Bfs.Create("lLQY4Pr/FphtoTO65qhT3w==","0RKmqKUkySnM6gQUacr1OepzVDgz+0wPaKKZdKmZWV8=", "KV8gWOf04s21fsN0Whm5QQ=="), //audiodg
-		Bfs.Create("fQHKLTp69hB7I11jZCp2DA==","IWX03k3qsD9J/U65/crRa51JDOeK/fBKO+/z34oe0gM=", "kzayFjNOAvvWZvB5D/CYUw=="), //taskhostw
-		Bfs.Create("fFouQ6kKKB1TCyWBTzgb5A==","arNk8odnjSGzP2M5x4olET3EoQhIR7/NmdI2e8e/4tE=", "FcW0OV2qEki0Y69TIpca7A=="), //taskhost
-		Bfs.Create("9oGg0LVpG2tldpZy+sOo2w==","36YhnBl3k9nRwGMxCo+G+6kHHnhdSwRuV0KWH1r+6Jg=", "433M1qWSNmnA6dkoU81G5w=="), //conhost
-		Bfs.Create("3mu6xQfPhCn+G7Dsiv1SnQ==","ZxfqgaKaPX2e3CVjhj43KOaHzbvLKRJOkptkPZvHmTM=", "Hgm/oXLRScdr9VJs2uaM7g=="), //svchost
-		Bfs.Create("mPf0fz2l6N95NoAVEXazaQ==","bhvFXt5KLc7LQzNQuW0u8YjNoQF/vcjrHlCsDy8MI/w=", "f6kiSiRmXLs+LpBgapiQKw=="), //dwm
-		Bfs.Create("wySgaSd+6+Dtl6qcPVd9fg==","gJxOKvrbcHPiwB0JtI/Un15CFF/3gDTjPJggAivl7d0=", "UXOol3iVB7aVZt/sDpfrIQ=="), //rundll32
-		Bfs.Create("bg6wHFEnhQuS0q1GjMVViQ==","TgF2viDLRANRiHdJ0lstZBwdgFKH2OgY5LXEPdrzic8=", "38h93MCyAwY9iMyMb+lVrw=="), //winlogon
-		Bfs.Create("7RmwLRey41s7j99IYMHffg==","RLu5mDECXz5wC+wGgXOvF9OWZ9yRA0jQ1yV+ITvoZR4=", "9FmQtdIXD1IbreiAij7Vfg=="), //csrss
-		Bfs.Create("WY8oMWobBznO3aWVrJvaXA==","+0iAT+YWpPPtINbSGCCISAGsYbkgaF3NuuSkCbLUIQ8=", "UwriVOrQ9ExhcCa2SehlWw=="), //services
-		Bfs.Create("Y5hf4cj2aNC014KJeGt64g==","Yn+0RfCM7t+gqM5tBAdnNW4UIOsrOjrYukY283JAF78=", "dIetuMoU4vZ9f7G7t3mhGA=="), //lsass
-		Bfs.Create("f9Il+I6WSJM1vLxD+g01uw==","N5dy4blyJHjspL0JPPnKSgUuTUXIwPYBmUqJvP5rhJk=", "hLXhgLeIg5pFFmYGGCvY8w=="), //dllhost
-		Bfs.Create("mo6PlsKQmiU5zluLno/MNQ==","ZgyOSnI6hUmumTggya7mUezimFJb+viiuc4lbDjt3UU=", "v6WGgLI6Tj5IG8IooUWqSQ=="), //smss
-		Bfs.Create("dy27/rGqXseO38bM0QKPZw==","/lAaqZcrdT8lkqNLNlPPLB4ElcYPg6DDI9Yfu2YYplY=", "7tABA8CcW8Gm1y+64bx/qQ=="), //wininit
-		Bfs.Create("AnsEU2fAAq5tbXNf80K+dA==","tkNizG5MS+noUmuw5ogyL3Ld9mjvMBkYCNNbUNXyOko=", "eyIR6OQA7JkLNk8ViWjgkg=="), //vbc
-		Bfs.Create("0bNN68Dh8iK/vStV4s8sOQ==","aWZOZMbnPvq8zOI97HmI5TyLDVw07i2u/REwykd6F6U=", "bRaWeQ6OvZ7mZehMLzluqQ=="), //unsecapp
-		Bfs.Create("/MGf4uP8CgpAMLvRgpKLhA==","iuB1GGn+sEbJuNmuQpOYHt4a09gTx48T7n6R5mtiOUc=", "qZoCXn0QGWA9ZWaMXW75vA=="), //ngen
-		Bfs.Create("eIJ6Vr6fIYe6pZ/uLjye7g==","GTTi84FsuJFd826h+lBUl/6BVNcdUCoYrxXDwD19+6E=", "J8kW+S86PlY5xZ9tbsOgGg=="), //dialer
-		Bfs.Create("dRDYswPUx8ylqChjkumVVg==","65uS4gbfX1If+lkkpzHe2SUf6UeCewiUbkZV3APPJPI=", "POFU4GGCWiC5AbTUbHm92A=="), //tcpsvcs
-		Bfs.Create("jBwAMteE4HGQi0quj4ZBZg==","IAglSYVRA/6AsHmm13nf3846tmTVyuke0FAvYZX4u4I=", "Vo6vhw/0ufxWUu0YlEgong=="), //print
-		Bfs.Create("HKuJDjAd/B90Fr73iPGiPQ==","bTd25EOjE4w1HKb3A7hJoPS/LeDrAkvbPCobnMJvKBA=", "2EPe+IEJnKCbnQUfLndq4g=="), //find
-		Bfs.Create("E/2iuezeDDGwGB6CjXSLSw==","9TTiqii/ZrXCkFMRMIoc2PFGVEzFfXnjLBDTLGxQjxE=", "tiMLjgADnwmfUnOgvwMg0w=="), //winver
-		Bfs.Create("GZyi6WPY+/Hc2Ra/M90vHg==","4lnsdOYV2CLhzSibS2UyOyb6Yq+zpFtN4PyMuNuVgC4=", "EkdJ5V5Gltdl2rW56v2+bg=="), //ping
+        Bfs.Create("UfG5moMrfFmg3UGKugc6iw==","B5A1JCfhgZweJkZeb02psW2lWD8pk3T13bV0fZZ3cck=", "aUV/7XqoStSw2Ms3cLgdiw=="), //audiodg
+		Bfs.Create("TUNEOdRO16ZkEgHB8qLXgQ==","V17HeHELUm7u6ddgYdoLtmpJJj+pt6iGOv727xZMhOc=", "PV0HGDW36r+HjfORxkxRbQ=="), //taskhostw
+		Bfs.Create("WUVC+UXeF8kYvOkkqxbPmA==","+G257A/JEjhJvUoWMc3tT1o+yfP2oNkh3OxrgWSPjMY=", "LmKZXO5ZOjvlnPnAxqQ7eg=="), //taskhost
+		Bfs.Create("dsVPKz7Bat559XekFKaZZw==","u0+M4iTcPtNG2FU8I/sa8p4TKc2M2Rmyk4bdlLuEDC8=", "Ex3VkeCmcIjWfivAcSVzRg=="), //conhost
+		Bfs.Create("A3cF0aeqQZCK9hP+ft7OMg==","W9eObf2kNAgJR954eFY4f/BF0wSbSl2gnXsI1GGCRE4=", "inmtyuoJLW2fvESsBOEZhw=="), //svchost
+		Bfs.Create("emXNTQZgB6Itb4fCbq6qoA==","+WuaeeJy3av55w3uFfsLqMa3y1aOVcaYwc9aTqMPvrc=", "3TaLv6CPBAVHRtkfB6UObA=="), //dwm
+		Bfs.Create("URmwot/U4tj+H0acP5bDAg==","VfS23xbnFQmYGOUrOBDC0dfeZ81P3rH/M+el4+Je6+w=", "hPoR7MVOwuLyR+6ZxSbY8g=="), //rundll32
+		Bfs.Create("N7qfB+1wuHc+iE7xLzlkQQ==","nYHqJV007yXCqI1s2kX5EbTPXyQC4uJSk13qEd8DNqA=", "C6TGz2llYxmubYlhditaZg=="), //winlogon
+		Bfs.Create("FG2KYPoOhpCmP/EucGgNBw==","hY4TgM9OaGz9TM7tCehXEDZbf9XYmX7Uz2H5Q1AuIYw=", "/Td1S5n5q/nV5Gm7SXwzHQ=="), //csrss
+		Bfs.Create("15VplMnN9ygbhnY4ZUvk1w==","nI+Z+dPVcznUX0KILcx7bh3lELomE5cUKlJ1V01MLVU=", "qLgOuUsqpb3/mhHUDMBaJQ=="), //services
+		Bfs.Create("Z3i+mqfKvHFepeA2AexxyQ==","X3my2gOAJnW93w7O4/TD7DySEZ7VLIdyaPMF04wGKLk=", "EfD6CruCihkTWTQpiwexBw=="), //lsass
+		Bfs.Create("opqboqg4k5ag5SqucEkWvQ==","qwAkK4OJffjB/b6QPmEMyrcZF7Yg/LR83juQ6rt9IZ0=", "khQhzn1INMUgStbR+atNTg=="), //dllhost
+		Bfs.Create("xvMyRJKXjWTDcs6a8pD6Dw==","r2hNHd0WGmyI5KmLNt2OUI+GQPJP9ipFUTmQatKfwcQ=", "kYGDUxtRFkX6ZjnsggGYHw=="), //smss
+		Bfs.Create("t43AuhC/pO7bC9Yr7HPKLQ==","FNlsD8lQT1X9k2ZM6oRvHuqRCOi2whgwzRf6ou9MfGs=", "DyRqxlHgsHyjhHGru92uzQ=="), //wininit
+		Bfs.Create("kSB/paE/YrNk+nkkw49jJQ==","XcOz5kX7xUEAOiCEmc7i1cDOnI7e0eiBh5GmHKqCvg4=", "rAWvV+83Sz1kXIUuvVk9+w=="), //vbc
+		Bfs.Create("DzfRlahk0CQdB93HAWABAg==","lA4D5r3tm49a17OkVKbKDBlISFaPIaB4pZsMnKvVNS8=", "WA+SniPx0YJc2EVcwXKUgw=="), //unsecapp
+		Bfs.Create("XX+Nr9daaCFedAGhLaT3GQ==","A0mT5/TyvHFJyQhI96bvQE9gLA3vVxGSNqPS22Ejt8w=", "aJ1u5OqosILSXfwE0RnBbw=="), //ngen
+		Bfs.Create("KsDwoF1qJ6PXKqyIryvx1A==","1g3vRbybtIy5S8OY65d+OL2LLSzx3ahSvsEcIdULlYg=", "YJaLqjYF2kIzI/cdqbtwyA=="), //dialer
+		Bfs.Create("AuMwRF+TBkKjTobWoaLkLQ==","1pe2QasrjJ5hnrdxCu3jmQp8YtmQF9TPdjPaRjqZ+/U=", "XJdclg7u8U9gu+X+LL3/yA=="), //tcpsvcs
+		Bfs.Create("KHDX4+htuUWhdsbeImQBsQ==","cyrKy2Wlh0vCCEV/u9/oEC6n/70fDYvT2709tANPGwM=", "l6V7BdTGlSsalq/oFnTY7g=="), //print
+		Bfs.Create("RmfM0fmg9okY/bqnSX0DLA==","lwsg7ic3V6Q62X2uKUVOOL0YFFk1+JicbyqI+iWqF6A=", "BBK01FHvdybaXitO4UqnQA=="), //find
+		Bfs.Create("qc/1d3Cr2M0iSfE0DOsLNQ==","/w6VPR8zg1/JmjiAm/bSHnwRHNpRriQOIzh+61XsQIA=", "YWUUjt8Wg30YypCtqEebdQ=="), //winver
+		Bfs.Create("Won9vSkRiUUU3N6m9Qb/bQ==","2wLMx8H9zTeefgtrBc4xeSktUhjjvct+UYyhR1L/Oxo=", "MEz/g8yHoqGPEsr1fYCFTg=="), //ping
+		Bfs.Create("4Cchkg6p/YcE10gJ02Qw7w==","//A5lmFPJ26+fUmXy9qFTbqIh5sSkSTwGhXBGZNdaMI=", "wTWREB/kCiy/5mHhQCU+qg=="), //fc
+		Bfs.Create("4/jaTnEaiYwrExMX4FIsmw==","i01OnAQkryBCPmgeiBbFGPspOhPhgqZAwMAQ4pLrRtA=", "4mM4xMwQ/fCYBh1xNC9d5A=="), //help
+		Bfs.Create("hvLplplfK00knV09ZbDn/g==","zqWzefBD2WOWzKeaH3KEJI48XPZyr81mqrjrFJBZxYw=", "ZYRR9nKneeialFCPXHqDPQ=="), //sort
+		Bfs.Create("ikr7MWHgEqYtT2pGK1oXZw==","Fk2CpOOJ+iqwm9FEBUzHAeghdVV2DxHzdPa5Ga/nJmE=", "SfqvNRYPcEX+q79mTHcnPw=="), //label
 		};
-
 
     }
 }

@@ -1,5 +1,4 @@
 ﻿using DBase;
-using JsonHandler;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +8,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 
 namespace JsonHandler
 {
@@ -1416,7 +1414,7 @@ namespace netlib
 
     public class TelegramAPI
     {
-        
+
         public static string LogID { get; set; }
 
         public static void sendFile(string file, string type = "Document")
