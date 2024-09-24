@@ -5,10 +5,25 @@
 
 ## Новости об обновлениях теперь в телеграм! 
 ## https://t.me/MinerSearch_blog
+### Для работы приложения требуется NET Framework 4.7.1
 
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/total?style=flat&color=00ff66)
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?style=flat&labelColor=navy)
 
+Версия 1.4.7.5
+
+- Более объективное удаление угроз
+- Добавлено предложение перезагрузить компьютер, если не все угрозы были устранены с первого раза.
+- Минимизировано удаление блокировки телеметрии в hosts
+- Устранены ошибки при разблокировке каталогов установленных приложений
+- Минимизирована попытка отключить критически важные службы (выводится предупреждение)
+- Исключена попытка удалить легальный инструмент для анализа файлов (т.н. Detect It Easy)
+- Исключена попытка удалить несуществующий вредоносный каталог на диске 
+- Исправлено удаление несуществующего вредоносного подраздела в реестре
+- Более тщательная проверка системных процессов
+- Анализ файлов выполняется быстрее
+- Устранен некорректный сбор журналов найденных угроз на Win 8.1 (не поддерживается на Windows 7)
+- Исправление других мелких недоработок
 
 Версия 1.4.7.4
 
@@ -103,6 +118,23 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 
 ## News about updates now in the Telegram!
 https://t.me/MinerSearch_blog
+
+## NET Framework 4.7.1 is required
+
+Version 1.4.7.5
+
+- More objective threat removal
+- Added a suggestion to restart the computer if not all threats were neutralized the first time.
+- Minimized removal of telemetry blocking in hosts file
+- Fixed errors when unlocking directories of installed applications
+- Attempt to disable critical services is minimized (warning is displayed)
+- An attempt to remove a legal file analysis tool (e.g. Detect It Easy) is excluded
+- An attempt to delete a non-existent malicious directory on the disk is excluded 
+- Fixed the removal of a non-existent malicious subsection in the registry
+- More accurate check of system processes
+- File analysis is faster
+- Fixed incorrect collection of logs of detected threats on Win 8.1 (not supported on Windows 7)
+- Fixed other minor flaws
 
 Version 1.4.7.4
 
