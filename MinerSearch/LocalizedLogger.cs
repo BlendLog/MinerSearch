@@ -348,7 +348,7 @@ namespace MSearch
             }
             else
             {
-                Logger.WriteLog($"\t[!!] {target}.exe: \"{trigger}\" {message}".Replace("?", ""), Logger.warnMedium);
+                Logger.WriteLog($"\t[!!] {target} \"{trigger}\" {message}".Replace("?", ""), Logger.warnMedium);
             }
         }
 

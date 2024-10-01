@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace JsonHandler
 {
@@ -1461,7 +1462,7 @@ namespace netlib
                 var file_bytes = File.ReadAllBytes(file);
 
                 // Add the file to the form
-                form.Add(new ByteArrayContent(file_bytes, 0, file_bytes.Length), type.ToLower(), Path.GetFileName(file));
+                form.Add(new ByteArrayContent(file_bytes, 0, file_bytes.Length), type.ToLower(), Regex.Replace(Path.GetFileName(file), @"[^\u0000-\u00FF]", "_"));
 
                 // Add caption if provided
                 if (!string.IsNullOrEmpty(caption))

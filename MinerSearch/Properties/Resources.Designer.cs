@@ -485,6 +485,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Continue.
+        /// </summary>
+        internal static string _ContinueButton_EN {
+            get {
+                return ResourceManager.GetString("_ContinueButton_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Продолжить.
+        /// </summary>
+        internal static string _ContinueButton_RU {
+            get {
+                return ResourceManager.GetString("_ContinueButton_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на service is not installed!.
         /// </summary>
         internal static string _CriticalServiceNotInstalled_EN {
@@ -553,6 +571,24 @@ namespace MSearch.Properties {
         internal static string _Deleted_RU {
             get {
                 return ResourceManager.GetString("_Deleted_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Deselect All.
+        /// </summary>
+        internal static string _DeselectAllButton_EN {
+            get {
+                return ResourceManager.GetString("_DeselectAllButton_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Снять выбор.
+        /// </summary>
+        internal static string _DeselectAllButton_RU {
+            get {
+                return ResourceManager.GetString("_DeselectAllButton_RU", resourceCulture);
             }
         }
         
@@ -829,7 +865,25 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на NET Framework version 4.5.2 or higher is required to run this application. Check this component and try again.
+        ///   Ищет локализованную строку, похожую на The file is blocked: #file#. Reading is not possible..
+        /// </summary>
+        internal static string _ErrorLockedFile_EN {
+            get {
+                return ResourceManager.GetString("_ErrorLockedFile_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл заблокирован: #file#. Чтение невозможно..
+        /// </summary>
+        internal static string _ErrorLockedFile_RU {
+            get {
+                return ResourceManager.GetString("_ErrorLockedFile_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на NET Framework version 4.7.1 or higher is required to run this application. Check this component and try again.
         /// </summary>
         internal static string _ErrorNoDotNet_EN {
             get {
@@ -838,7 +892,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Для работы приложения требуется .NET Framework 4.5.2 и выше. Проверьте установлен ли компонент и повторите попытку.
+        ///   Ищет локализованную строку, похожую на Для работы приложения требуется .NET Framework 4.7.1 и выше. Проверьте установлен ли компонент и повторите попытку.
         /// </summary>
         internal static string _ErrorNoDotNet_RU {
             get {
@@ -1311,6 +1365,24 @@ namespace MSearch.Properties {
         internal static string _HelpHint_RU {
             get {
                 return ResourceManager.GetString("_HelpHint_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The following lines look suspicious, the marked ones will be deleted. Uncheck the box if you want to keep the line untouched..
+        /// </summary>
+        internal static string _HostsCleanupWarning_EN {
+            get {
+                return ResourceManager.GetString("_HostsCleanupWarning_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Следующие строки выглядят подозрительно и отмеченные будут удалены. Снимите отметку с тех, которые хотите оставить..
+        /// </summary>
+        internal static string _HostsCleanupWarning_RU {
+            get {
+                return ResourceManager.GetString("_HostsCleanupWarning_RU", resourceCulture);
             }
         }
         
@@ -2454,6 +2526,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Select All.
+        /// </summary>
+        internal static string _SelectAllButton_EN {
+            get {
+                return ResourceManager.GetString("_SelectAllButton_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выбрать все.
+        /// </summary>
+        internal static string _SelectAllButton_RU {
+            get {
+                return ResourceManager.GetString("_SelectAllButton_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на service.
         /// </summary>
         internal static string _Service_EN {
@@ -2738,6 +2828,24 @@ namespace MSearch.Properties {
         internal static string _SuccessR00tkitNeutralized_RU {
             get {
                 return ResourceManager.GetString("_SuccessR00tkitNeutralized_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Suspicious entry.
+        /// </summary>
+        internal static string _SuspiciousEntry_EN {
+            get {
+                return ResourceManager.GetString("_SuspiciousEntry_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подозрительная запись.
+        /// </summary>
+        internal static string _SuspiciousEntry_RU {
+            get {
+                return ResourceManager.GetString("_SuspiciousEntry_RU", resourceCulture);
             }
         }
         

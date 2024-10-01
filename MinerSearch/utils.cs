@@ -189,11 +189,19 @@ namespace MSearch
 
         internal static void UnProtect(int[] pids)
         {
+            int _pid = 0;
+
+            if (pids.Length == 0)
+            {
+                return;
+            }
+
             try
             {
 
                 foreach (int pid in pids)
                 {
+                    _pid = pid;
                     int isCritical = 0;
                     int BreakOnTermination = 0x1D;
 
@@ -202,9 +210,17 @@ namespace MSearch
                     Native.CloseHandle(handle);
                 }
             }
-            catch (Exception ex)
+            catch (InvalidOperationException)
             {
-                new LocalizedLogger().LogErrorMessage("_Error", ex);
+                Program.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {_pid}");
+            }
+            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80131509)))
+            {
+                Program.LL.LogSuccessMessage("_ProcessNotRunning", _pid.ToString());
+            }
+            catch (Exception e)
+            {
+                Program.LL.LogErrorMessage("_ErrorTerminateProcess", e);
             }
 
         }
@@ -503,25 +519,24 @@ namespace MSearch
             return found;
         }
 
-        
+
 
         internal static List<string> GetFiles(string path, string pattern, int currentDepth = 0, int maxDepth = 3)
         {
             var files = new List<string>();
 
-            string minersearchfolder = "mi?ner?se?arch_quarantine".Replace("?", "");
-
             try
             {
                 if (currentDepth <= maxDepth)
                 {
-                    files.AddRange(Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly));
+                    files.AddRange(Directory.EnumerateFiles(GetLongPath(path), pattern, SearchOption.TopDirectoryOnly));
+
                     foreach (var directory in Directory.EnumerateDirectories(path))
                     {
+
                         if (!IsReparsePoint(directory) &&
                             !directory.Contains(":\\Windows\\WinSxS") &&
                             !directory.Contains(":\\$") &&
-                            !directory.Contains(minersearchfolder) &&
                             !directory.Contains(@":\programdata\microsoft\Windows\Containers\BaseImages") &&
                             !directory.Contains(@"AppData\Local\Microsoft\WindowsApps"))
                         {
@@ -530,17 +545,12 @@ namespace MSearch
                     }
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Program.LL.LogErrorMessage("_Error", ex);
             }
-            
-            return files;
-        }
 
-        internal static bool IsSpecificPath(string path)
-        {
-            return path.Contains("\u00A0");
+            return files;
         }
 
         internal static bool IsReparsePoint(string path)
@@ -617,6 +627,7 @@ namespace MSearch
 
                 }
             }
+
             return signatures;
         }
 
@@ -1699,8 +1710,6 @@ namespace MSearch
 
         public static string GetProcessOwner(int processId)
         {
-
-
             foreach (ManagementObject managementObject in new ManagementObjectSearcher(msData.queries[11] + processId.ToString()).Get())
             {
                 string[] args = new string[2]
@@ -1786,7 +1795,7 @@ namespace MSearch
             ProcessStartInfo processStartInfo = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
-                Arguments = $"/c takeown /F \"\\\\?\\{path}\" /R /A /D Y & icacls \"\\\\?\\{path}\" /remove:d %USERNAME% /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-5-18 /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-5-32-544 /T && rd /s /q \"\\\\?\\{path}\"",
+                Arguments = $"/c takeown /F \"\\\\?\\{path}\" /R /A /D Y & icacls \"\\\\?\\{path}\" /remove:d %USERNAME% /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-5-18 /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-5-32-544 /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-1-0 /T & rd /s /q \"\\\\?\\{path}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
@@ -1804,7 +1813,7 @@ namespace MSearch
             ProcessStartInfo processStartInfo = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
-                Arguments = $"/c takeown /F \"\\\\?\\{path}\" /R /A /D Y & icacls \"\\\\?\\{path}\" /remove:d %USERNAME% /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-5-18 /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-5-32-544 /T",
+                Arguments = $"/c takeown /F \"\\\\?\\{path}\" /R /A /D Y & icacls \"\\\\?\\{path}\" /remove:d %USERNAME% /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-5-18 /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-5-32-544 /T & icacls \"\\\\?\\{path}\" /remove:d *S-1-1-0 /T",
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
@@ -1945,7 +1954,7 @@ namespace MSearch
 
         internal void RemoveR77Config()
         {
-            string[] patterns = { "dll32", "dll64", "sta&ger&".Replace("&","") };
+            string[] patterns = { "dll32", "dll64", "sta&ger&".Replace("&", "") };
 
             using (RegistryKey baseKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true))
             {
@@ -1984,6 +1993,66 @@ namespace MSearch
             ManagementObject service = new ManagementObject(@"Win32_service.Name='" + serviceName + "'");
             object serviceObject = service.GetPropertyValue("ProcessId");
             return (int)(uint)serviceObject;
+        }
+
+        public static List<string> GetOpenFilesInDirectory(string directoryPath)
+        {
+            var openFiles = new List<string>();
+            int handleInfoSize = 0x10000;
+            IntPtr handleInfoPtr = Marshal.AllocHGlobal(handleInfoSize);
+            int returnLength = 0;
+
+            // Запросить информацию о всех дескрипторах системы
+            while (Native.NtQuerySystemInformation(Native.SystemHandleInformation, handleInfoPtr, handleInfoSize, ref returnLength) == unchecked((int)0xc0000004))
+            {
+                handleInfoSize = returnLength;
+                Marshal.FreeHGlobal(handleInfoPtr);
+                handleInfoPtr = Marshal.AllocHGlobal(handleInfoSize);
+            }
+
+            int handleCount = Marshal.ReadInt32(handleInfoPtr);
+            IntPtr handlePtr = IntPtr.Add(handleInfoPtr, 4);
+
+            for (int i = 0; i < handleCount; i++)
+            {
+                Native.SYSTEM_HANDLE_INFORMATION handleInfo = Marshal.PtrToStructure<Native.SYSTEM_HANDLE_INFORMATION>(handlePtr);
+                handlePtr = IntPtr.Add(handlePtr, Marshal.SizeOf<Native.SYSTEM_HANDLE_INFORMATION>());
+
+                IntPtr processHandle = Native.OpenProcess(Native.PROCESS_DUP_HANDLE, false, handleInfo.ProcessId);
+                if (processHandle == IntPtr.Zero)
+                    continue;
+
+                if (Native.DuplicateHandle(processHandle, new IntPtr(handleInfo.Handle), Process.GetCurrentProcess().Handle, out IntPtr targetHandle, 0, false, Native.DUPLICATE_SAME_ACCESS))
+                {
+                    IntPtr objectNamePtr = Marshal.AllocHGlobal(0x1000);
+                    returnLength = 0;
+
+                    if (Native.NtQueryObject(targetHandle, Native.ObjectNameInformation, objectNamePtr, 0x1000, ref returnLength) == 0)
+                    {
+                        string objectName = Marshal.PtrToStringUni(IntPtr.Add(objectNamePtr, 2));
+                        if (objectName != null && objectName.StartsWith(@"\"))
+                        {
+                            try
+                            {
+                                string filePath = Path.GetFullPath(objectName);
+                                if (filePath.StartsWith(directoryPath, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    openFiles.Add(filePath);
+                                }
+                            }
+                            catch { }
+                        }
+                    }
+
+                    Marshal.FreeHGlobal(objectNamePtr);
+                    Native.CloseHandle(targetHandle);
+                }
+
+                Native.CloseHandle(processHandle);
+            }
+
+            Marshal.FreeHGlobal(handleInfoPtr);
+            return openFiles;
         }
     }
 }

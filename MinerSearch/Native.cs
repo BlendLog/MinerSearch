@@ -128,11 +128,55 @@ namespace MSearch
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, IntPtr lpNumberOfBytesRead);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern bool GetFileInformationByHandleEx(IntPtr hFile, FILE_INFO_BY_HANDLE_CLASS FileInformationClass, out FILE_BASIC_INFO lpFileInformation, uint dwBufferSize);
+        //[DllImport("kernel32.dll", SetLastError = true)]  //unused
+        //internal static extern bool GetFileInformationByHandleEx(IntPtr hFile, FILE_INFO_BY_HANDLE_CLASS FileInformationClass, out FILE_BASIC_INFO lpFileInformation, uint dwBufferSize);
 
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        internal static extern IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
+        //[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        //internal static extern IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
+
+        [DllImport("ntdll.dll")]
+        public static extern int NtQuerySystemInformation(
+            int SystemInformationClass,
+            IntPtr SystemInformation,
+            int SystemInformationLength,
+            ref int ReturnLength);
+
+        [DllImport("ntdll.dll", CharSet = CharSet.Unicode)]
+        public static extern int NtQueryObject(
+            IntPtr ObjectHandle,
+            int ObjectInformationClass,
+            IntPtr ObjectInformation,
+            int ObjectInformationLength,
+            ref int ReturnLength);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool DuplicateHandle(
+            IntPtr hSourceProcessHandle,
+            IntPtr hSourceHandle,
+            IntPtr hTargetProcessHandle,
+            out IntPtr lpTargetHandle,
+            uint dwDesiredAccess,
+            bool bInheritHandle,
+            uint dwOptions);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr OpenProcess(uint processAccess, bool bInheritHandle, int processId);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SYSTEM_HANDLE_INFORMATION
+        {
+            public int ProcessId;
+            public byte ObjectTypeNumber;
+            public byte Flags;
+            public ushort Handle;
+            public IntPtr Object;
+            public uint GrantedAccess;
+        }
+
+        public const int SystemHandleInformation = 16;
+        public const int ObjectNameInformation = 1;
+        public const uint PROCESS_DUP_HANDLE = 0x0040;
+        public const uint DUPLICATE_SAME_ACCESS = 0x0002;
 
         [Flags]
         internal enum FILE_ATTRIBUTE
@@ -305,10 +349,13 @@ namespace MSearch
         public const uint ENABLE_QUICK_EDIT_MODE = 0x0040;
         public const int STD_INPUT_HANDLE = -10;
 
-        public const long PROCESS_CREATION_MITIGATION_POLICY_BLOCK_NON_MICROSOFT_BINARIES_ALWAYS_ON = 0x100000000000;
-        public const int PROC_THREAD_ATTRIBUTE_MITIGATION_POLICY = 0x00020007;
-        public const uint EXTENDED_STARTUPINFO_PRESENT = 0x00080000;
-        public const uint CREATE_NEW_CONSOLE = 0x00000010;
+
+
+
+        //public const long PROCESS_CREATION_MITIGATION_POLICY_BLOCK_NON_MICROSOFT_BINARIES_ALWAYS_ON = 0x100000000000;
+        //public const int PROC_THREAD_ATTRIBUTE_MITIGATION_POLICY = 0x00020007;
+        //public const uint EXTENDED_STARTUPINFO_PRESENT = 0x00080000;
+        //public const uint CREATE_NEW_CONSOLE = 0x00000010;
 
         public static uint WM_GETICON = 0x007f;
         public static uint WM_SETICON = 0x80;

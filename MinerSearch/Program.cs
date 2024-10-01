@@ -1,4 +1,4 @@
-﻿//#define BETA
+﻿#define BETA
 
 using DBase;
 using Microsoft.Win32;
@@ -339,8 +339,9 @@ namespace MSearch
             }
 
             MinerSearch mk = new MinerSearch();
-
+            
             LL.LogHeadMessage("_PreparingToScan");
+            Utils.RestoreSignatures(mk.msData.signatures);
             Process.EnterDebugMode();
 
             if (!NoRootkitCheck)
@@ -350,6 +351,7 @@ namespace MSearch
 
             if (!no_runtime)
             {
+
                 mk.Scan();
             }
 

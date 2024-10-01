@@ -129,6 +129,12 @@
     <Compile Include="Finish.Designer.cs">
       <DependentUpon>Finish.cs</DependentUpon>
     </Compile>
+    <Compile Include="HostsDeletionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HostsDeletionForm.Designer.cs">
+      <DependentUpon>HostsDeletionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="License.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -168,6 +174,9 @@
     <EmbeddedResource Include="Finish.resx">
       <DependentUpon>Finish.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HostsDeletionForm.resx">
+      <DependentUpon>HostsDeletionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="License.resx">
       <DependentUpon>License.cs</DependentUpon>

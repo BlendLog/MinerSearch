@@ -281,7 +281,7 @@
     <value>File does not exist in the specified directories:</value>
   </data>
   <data name="_ErrorNoDotNet_EN" xml:space="preserve">
-    <value>NET Framework version 4.5.2 or higher is required to run this application. Check this component and try again</value>
+    <value>NET Framework version 4.7.1 or higher is required to run this application. Check this component and try again</value>
   </data>
   <data name="_End_EN" xml:space="preserve">
     <value>Scanning complete</value>
@@ -434,7 +434,7 @@
     <value>Только проверка</value>
   </data>
   <data name="_ErrorNoDotNet_RU" xml:space="preserve">
-    <value>Для работы приложения требуется .NET Framework 4.5.2 и выше. Проверьте установлен ли компонент и повторите попытку</value>
+    <value>Для работы приложения требуется .NET Framework 4.7.1 и выше. Проверьте установлен ли компонент и повторите попытку</value>
   </data>
   <data name="_CriticalServiceRestart_EN" xml:space="preserve">
     <value>Critical service has been restarted</value>
@@ -1289,5 +1289,41 @@ Would you like to continue?</value>
   </data>
   <data name="_SkipServiceMessage_RU" xml:space="preserve">
     <value>Служба пропущена -</value>
+  </data>
+  <data name="_ErrorLockedFile_EN" xml:space="preserve">
+    <value>The file is blocked: #file#. Reading is not possible.</value>
+  </data>
+  <data name="_ErrorLockedFile_RU" xml:space="preserve">
+    <value>Файл заблокирован: #file#. Чтение невозможно.</value>
+  </data>
+  <data name="_ContinueButton_EN" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="_ContinueButton_RU" xml:space="preserve">
+    <value>Продолжить</value>
+  </data>
+  <data name="_DeselectAllButton_EN" xml:space="preserve">
+    <value>Deselect All</value>
+  </data>
+  <data name="_DeselectAllButton_RU" xml:space="preserve">
+    <value>Снять выбор</value>
+  </data>
+  <data name="_HostsCleanupWarning_EN" xml:space="preserve">
+    <value>The following lines look suspicious, the marked ones will be deleted. Uncheck the box if you want to keep the line untouched.</value>
+  </data>
+  <data name="_HostsCleanupWarning_RU" xml:space="preserve">
+    <value>Следующие строки выглядят подозрительно и отмеченные будут удалены. Снимите отметку с тех, которые хотите оставить.</value>
+  </data>
+  <data name="_SelectAllButton_EN" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="_SelectAllButton_RU" xml:space="preserve">
+    <value>Выбрать все</value>
+  </data>
+  <data name="_SuspiciousEntry_EN" xml:space="preserve">
+    <value>Suspicious entry</value>
+  </data>
+  <data name="_SuspiciousEntry_RU" xml:space="preserve">
+    <value>Подозрительная запись</value>
   </data>
 </root>

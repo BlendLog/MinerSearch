@@ -14,7 +14,7 @@ namespace MSearch
         int curedCount = 0;
 
         private int targetHeight = 415;
-        private int step = 2; // Шаг изменения высоты
+        private int step = 2;
 
         public Finish(int _totalThreats, int _neutralizedThreats, string _elapsedTime)
         {
@@ -223,7 +223,6 @@ namespace MSearch
 
         void AnimationTimer_Tick(object sender, EventArgs e)
         {
-            // Если текущая высота меньше целевой, увеличиваем её
             if (this.Height < targetHeight)
             {
                 this.Height += step;
@@ -232,7 +231,6 @@ namespace MSearch
             }
             else
             {
-                // Останавливаем таймер, когда высота достигнет целевой
                 AnimationTimer.Stop();
                 top.Enabled = true;
             }

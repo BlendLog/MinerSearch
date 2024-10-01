@@ -159,13 +159,9 @@ namespace DBase
             new HashedString("b2c9a135e92a3d4d0bded64ffe4d1ee3",15), //maxpcsecure.com
             new HashedString("985983ba88d92782fc97526ab0f02cd0",10), //mcafee.com
             new HashedString("79782f8d4349fc66dad89c3765b761d3",23), //metadefender.opswat.com
-            new HashedString("974bf1d93d81d915800bb2e5352b923e",39), //msnbot-65-52-108-33.search.msn.comments
             new HashedString("4a73bdc9cec00bbb9f05bc79cbc130b4",9), //mzrst.com
             new HashedString("3d62ee7e9bada438b991f23890747534",9), //nanoav.ru
             new HashedString("84eac61e5ebc87c23550d11bce7cab5d",17), //novirusthanks.org
-            new HashedString("40ef01d37461ab4affb0fdc88462aba9",27), //ntservicepack.microsoft.com
-            new HashedString("f6b793a2352d382772cb7657139b2a37",27), //oca.telemetry.microsoft.com
-            new HashedString("ad3d5915ac6f54ce9464a51ef5ae8fb7",37), //oca.telemetry.microsoft.com.nsatc.net
             new HashedString("63b4a8681bf273da7096261abcb33657",10), //opswat.com
             new HashedString("61d4dd297f749e3291ed8ae744da57de",20), //paloaltonetworks.com
             new HashedString("8d39a2f3831595b02640c90888c21fdd",17), //pandasecurity.com
@@ -189,17 +185,12 @@ namespace DBase
             new HashedString("fc828fa4ff498f2738556e6c446bb98a",18), //site.anti-virus.by
             new HashedString("ec532f0313071cb7d33bf21781ec751f",10), //sophos.com
             new HashedString("5641840b2116c66124c1b59a15f32189",15), //spamfighter.com
-            new HashedString("9c9345c05ca20184e8046495224f97a5",27), //sqm.telemetry.microsoft.com
-            new HashedString("1ac990351c5efe91882bd5607afcdd1c",19), //stats.microsoft.com
             new HashedString("861cd2c94ae7af5a4534abc999d9169f",13), //stopzilla.com
             new HashedString("90711c695c197049eb736afec84e9ff4",20), //superantispyware.com
             new HashedString("e862d898315ed4b4a49deede1f672fde",13), //surfshark.com
             new HashedString("25da26174f6be2837b64ec23f3db589b",14), //tachyonlab.com
             new HashedString("774f38701dff27e1d5083998b428efd6",11), //tehtris.com
-            new HashedString("f39b0c9cd3be259b72d26bc2ca8b1b3b",35), //telecommand.telemetry.microsoft.com
-            new HashedString("cbf34a13b567f15597d2f3f9a0b8ee9e",45), //telecommand.telemetry.microsoft.com.nsatc.net
             new HashedString("d58a810afab3591cf1450a8197219cc4",11), //tencent.com
-            new HashedString("00d04f179a26f855d01bd52acbf0d0ea",31), //test.stats.update.microsoft.com
             new HashedString("ca867bc71a7ba4529a2d3a9991d54511",9), //tgsoft.it
             new HashedString("64003943175e5f080c849f1744819f48",16), //totaladblock.com
             new HashedString("61cfcb40977412be2ebf5450f4e47d30",11), //totalav.com
@@ -215,8 +206,6 @@ namespace DBase
             new HashedString("b6eb1940800729f89307db6162706c21",19), //virusscan.jotti.org
             new HashedString("e2a50e6c79e09a7356e07d0476dfbb9b",14), //virustotal.com
             new HashedString("4098c777fa8b87f90df7492fd361d54d",9), //vmray.com
-            new HashedString("97f4c811eec10002f0c31512c46a8343",25), //vortex.data.microsoft.com
-            new HashedString("edd9a8bc3fea892c815e156c8f97cd9f",29), //vortex-win.data.microsoft.com
             new HashedString("3ba8af7964d9a010f9f6c60381698ec5",11), //webroot.com
             new HashedString("6c1e4b893bda58da0e9ef2d6d85ac34f",18), //wustat.windows.com
             new HashedString("f360d4a971574eca32732b1f2b55f437",11), //xcitium.com
@@ -229,18 +218,22 @@ namespace DBase
         };
 
         public List<string> whitelistedWords = new List<string>() {
-        Bfs.Create("yU2wd2acAptMTac3FuaaOg==","0OyEVNHGxYh6ERyU5zGkKMXLquocQyejyPZekpDwK/g=", "CaYwnP1uUKQyxbhrt6UBLg=="), //ads
-		Bfs.Create("6O5soZp06DoKFqc2dDaqsQ==","bba5m2JBzVPMWMJDL40UhT/c+noJgk/h+sZxb9JJOoM=", "++sFiwuGeUaANVEPjjgp1A=="), //msn
-		Bfs.Create("uasKMIDwwZa1vcGKEfM0jg==","zcb0/UWrYiPpESktgfOl6QvmmDA+L3xVEdgzkVFDO3M=", "1bqmi+YUE769jO6/A0fHBg=="), //aria
-		Bfs.Create("rDNn3EeXAqKZM7WbWI19iQ==","gDlnzro91pVxVeVRQd129skqMOxsaOoE5CP4t8v9sjc=", "5RD27Q2j51j5MQGUHraOCA=="), //blob
-		Bfs.Create("OPgF+YCVXnX/M26blg2r3g==","t8rlG1pWz19ajVfVzb5OuN430j3XKupEj/ouHOMKkfw=", "CExcBNhOHDM7ZuSZNYGa5Q=="), //llnw
-		Bfs.Create("NyWmBQHGaD5pyowI7KhpBQ==","igSB+uG7HF6DmYfQ1yxNDQ89qBpirw55WYPTM26KmTo=", "BjrMrrtApksTX79ujm9UYA=="), //ipv6
-		Bfs.Create("dGVaRoDoVjKIxdbWta1ySw==","6e+robbroI0WBrjhg3UJyXZ8IUeDDktddA2Ircg76XI=", "idIQR92/qDSUc5k/z0w83Q=="), //adnxs
-		Bfs.Create("IW3orijkshMc3KylyhShUA==","29iKRxK8eOgXp5/bPDvVuprzww/8BmdUhNEPtmbgUzc=", "iNs2JcXN/fHnstBoTJ5BmA=="), //akadns
-		Bfs.Create("lX3ipRWDX7eWctggt2z9WA==","Q92pL9GEXJU3ExZ1gN1pTrLfOuci5gLR4VTGLh4Rd7k=", "e54Kobhy4kU680sEEUteYg=="), //vortex
-		Bfs.Create("B+s1QC56PVY71IIDH+Jqzw==","gNfiGlMGHjOBqjgaDOGSAOSr55tbLBs1hEvc1WiwpSU=", "AhzZFH6rMJyGJ7te6638WA=="), //watson
-		Bfs.Create("hYqjMwFj9tA7X/nooASYtQ==","m8Z5kmKPmsvTup3dBjzK8jHvCxW5gsfbvjW4h/4gA9s=", "j5jRvo0OMQBaj4Ec5eLJxw=="), //windows
-		Bfs.Create("RnUzpPilltuslRUy1ySHtg==","ohB5n+3a6TmbV8By9q5eSZ3QW0q5Ndq8KHzMijUmIgs=", "R5MNMIquEb00dNbEnN/DyQ=="), //telemetry
+        Bfs.Create("wfk1+0lyyeCvp0X/bADGnA==","2Q31CydBVcl/QiJw2BZSYVxGXKcPx8VqvrONyl3yY1k=", "9DkFb4UAdZ1EexTvHLDhFA=="),
+		Bfs.Create("17unW4A74DjCIxM/stxEgA==","faoiUuJEp/PQUlPkJ5Y+7X/QU9+22nWk1XIcBIx03sE=", "m92HRqWamUgtvUREM2h82A=="),
+		Bfs.Create("OjvI2yVDcbL086lIkTkkhw==","6JhQzb/0azllC+U31l2Lu3CCa6Gpylqr3VA8XsavXVc=", "d8Py+9MVbExX/fDKiilYIQ=="),
+		Bfs.Create("x44kZiD6ZyFu25DBZG0kUA==","DK1kiusKaRw1HCkAqrTSw5WDjJf9DHvq7aoAuk4bTQU=", "uojGf0AYi8e0iW9llxg2zQ=="),
+		Bfs.Create("w5q2C4d4bzZ/9sZc2lO8dQ==","ebK1rXuj6sVd/DiUHdbFKgn2NgqGgZBFqjJ1nYn+XWg=", "t8CnQbNlXownK5NmtVrGMQ=="),
+		Bfs.Create("8TFU3fdlXPIcw2rByGZvPQ==","UB1lYoDgZTEdglCTQqCLkofF/KlnYibcEIj0psZxSjY=", "OkFGRtK3sxvhOJZlwXtRhw=="),
+		Bfs.Create("evvzfwb+Ns5We2kh6a8/sA==","YBkWNV1hOv6RYCGddsMHCigB5jqBku4SHPcFgaiwBec=", "Rj7D2uUWGnH/dWhJ8aFfog=="),
+		Bfs.Create("1oIX77H/Lva/5IeHEgjaNg==","11czmRwDJiScJWarZJxFgKEVRfGA4lxkJm8jTbrwKuE=", "/CZ7bJW+cmZLZd6ZAVtt7A=="),
+		Bfs.Create("rt7yJp1orh/TDpurP7qkqA==","/wFzqwe+QkWUtxadf5TNsGdZVzvEpryZ9B0B3UaF+WE=", "ouOf2JwSnscSs8JRMw+oZw=="),
+		Bfs.Create("iLj+199bruJDhLQMegufaw==","zCScncC2k653Dr8aeKujUP2YAfSSToJR/fkgNXkoJ5o=", "7FTFHmmpMXK6FbwdOz75tw=="),
+		Bfs.Create("etcv9hA8t7GVTFUYpQ+lRg==","JFp6MwvicrAIVYfar43LAq7dC/QsoRLE49JNu9AT7N0=", "dR/Ztt0UmQWRL0k1H6EAQg=="),
+		Bfs.Create("BOSAI+2zYbxTIRl7zavqMg==","ACRlGSl0iTZKRhl0eAH87ySEg/k4rbw3GfCLwL89l5k=", "amac1MuJF+uq8l/0ysopcA=="),
+		Bfs.Create("ECp/jANWvBWXfvF9vyCEwA==","fF+pRqEuay+Z0D3jnkf3Zh9tR/s/Yvk/iMgD1uZoQBk=", "ZT/HZKpRzeqJKOeU92i4yg=="),
+		Bfs.Create("Q2PvSTPs/jCxQgMt660mBQ==","SMjVhm0Yq+NX+wE6rJX+g4PznCfPnUXm09bdRMPCsZ0=", "Fi8Gx72kkpv0+FWZUhH1WQ=="),
+		Bfs.Create("wbqLgGwcQqkJm7kPEvm9ng==","0qtmT8WeGmT+mDwrWb+zAXlvnm3EK09HyaACI480mKo=", "aq4Re8AqoikEJXmmcPNvXg=="),
+		Bfs.Create("BGuQHSkG7UCkd+y1GaDYhQ==","LIozqdZm2N1x6DYxAW99/dvv3WkG0cuM0vujU3QTApk=", "lpeAHkG4EMZD7ej8i6xPww=="),
 		};
 
 
@@ -459,6 +452,22 @@ namespace DBase
 		Bfs.Create("hvLplplfK00knV09ZbDn/g==","zqWzefBD2WOWzKeaH3KEJI48XPZyr81mqrjrFJBZxYw=", "ZYRR9nKneeialFCPXHqDPQ=="), //sort
 		Bfs.Create("ikr7MWHgEqYtT2pGK1oXZw==","Fk2CpOOJ+iqwm9FEBUzHAeghdVV2DxHzdPa5Ga/nJmE=", "SfqvNRYPcEX+q79mTHcnPw=="), //label
 		};
+
+        public List<byte[]> signatures = new List<byte[]> {
+                      new byte[] {0x65,0x31,0x71,0x70,0x70,0x6D,},
+                      new byte[] {0x31,0x6C,0x6A,0x6F,0x66,0x73,0x74,},
+                      new byte[] {0x6D,0x68,0x64,0x66,0x69,0x62,0x74,0x69,},
+                      new byte[] {0x73,0x64,0x6C,0x75,0x70,0x6F,0x6A,0x75,},
+                      new byte[] {0x2D,0x73,0x69,0x66,0x6E,0x6A,0x65,0x62,},
+                      new byte[] {0x72,0x73,0x73,0x62,0x75,0x76,0x6E,0x2C,},
+                      new byte[] {0x5E,0x71,0x62,0x6F,0x65,0x70,0x6E,0x79,0x60,},
+                      new byte[] {0x44,0x73,0x66,0x73,0x6F,0x62,0x6D,0x63,0x6D,0x76,0x66,},
+                      new byte[] {0x65,0x6B,0x7A,0x71,0x70,0x70,0x6D,0x2F,0x70,0x73,0x68,},
+                      new byte[] {0x6D,0x60,0x6F,0x70,0x71,0x70,0x70,0x6D,0x2F,0x70,0x73,0x68,},
+                      new byte[] {0x52,0x67,0x66,0x6D,0x6D,0x64,0x70,0x65,0x66,0x47,0x6A,0x6D,0x66,},
+                      new byte[] {0x40,0x6B,0x68,0x70,0x73,0x6A,0x75,0x69,0x6E,0x41,0x79,0x6E,0x73,0x6A,0x68,},
+                      new byte[] {0x43,0x6E,0x76,0x63,0x6D,0x66,0x51,0x76,0x6D,0x74,0x62,0x73,0x51,0x73,0x66,0x74,0x66,0x6F,0x75,},
+                  };
 
     }
 }
