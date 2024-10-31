@@ -2,14 +2,17 @@
 using DBase;
 using Microsoft.Win32;
 using Microsoft.Win32.TaskScheduler;
+using netlib;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.AccessControl;
@@ -17,7 +20,9 @@ using System.Security.Cryptography;
 using System.Security.Principal;
 using System.ServiceProcess;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MSearch
@@ -85,12 +90,23 @@ namespace MSearch
             List<Process> procs = new List<Process>();
             foreach (Process p in Process.GetProcesses())
             {
+                if (p.Id == 0 || p.Id == 4) continue;
                 try
                 {
                     ProcessModule t = p.Modules[0];
                 }
-                catch (Exception)
+                catch (System.ComponentModel.Win32Exception w32e)
                 {
+#if DEBUG
+                    Console.WriteLine($"[DBG] {p.ProcessName}: {w32e.Message}");
+#endif
+                    continue;
+                }
+                catch (Exception e)
+                {
+#if DEBUG
+                    Console.WriteLine($"[DBG] {e.Message}");
+#endif
                     continue;
                 }
 
@@ -274,7 +290,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                new LocalizedLogger().LogErrorMessage("_Error", ex);
+                Program.LL.LogErrorMessage("_Error", ex);
             }
         }
 
@@ -289,7 +305,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                new LocalizedLogger().LogErrorMessage("_Error", ex);
+                Program.LL.LogErrorMessage("_Error", ex);
                 return "";
             }
             finally
@@ -371,7 +387,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                new LocalizedLogger().LogErrorMessage("_Error", ex);
+                Program.LL.LogErrorMessage("_Error", ex);
 
                 return "";
             }
@@ -479,8 +495,6 @@ namespace MSearch
                 int bytesToRead = Math.Min(bufferSize, fileBytes.Length - fileIndex);
                 Array.Copy(fileBytes, fileIndex, buffer, 0, bytesToRead);
 
-                fileIndex += bytesToRead;
-
                 for (int i = 0; i <= bytesToRead - targetSequences[0].Length; i++)
                 {
                     for (int index = 0; index < targetSequences.Count; index++)
@@ -498,15 +512,30 @@ namespace MSearch
 
                         if (sequenceFound)
                         {
+                            int globalOffset = fileIndex + i;
+
                             found = true;
 
-                            if (index == 4 && fileIndex > 4096)
+                            if ((index == 0 && globalOffset > 544) || (index == 4 && globalOffset > 4096))
                             {
                                 found = false;
                             }
 
+#if DEBUG
+                            if (found)
+                            {
+                                string tmp = "";
+                                foreach (var c in targetSequence)
+                                {
+                                    tmp += (char)c;
+                                }
+                                Console.WriteLine("FOUND by: " + tmp);
+                            }
+#endif
                             break;
                         }
+
+
                     }
                     if (found)
                         break;
@@ -514,6 +543,8 @@ namespace MSearch
 
                 if (found)
                     break;
+
+                fileIndex += bytesToRead;
             }
 
             return found;
@@ -529,25 +560,44 @@ namespace MSearch
             {
                 if (currentDepth <= maxDepth)
                 {
-                    files.AddRange(Directory.EnumerateFiles(GetLongPath(path), pattern, SearchOption.TopDirectoryOnly));
-
-                    foreach (var directory in Directory.EnumerateDirectories(path))
+                    if (!Program.RunAsSystem)
                     {
+                        files.AddRange(Directory.EnumerateFiles(GetLongPath(path), pattern, SearchOption.TopDirectoryOnly));
 
-                        if (!IsReparsePoint(directory) &&
-                            !directory.Contains(":\\Windows\\WinSxS") &&
-                            !directory.Contains(":\\$") &&
-                            !directory.Contains(@":\programdata\microsoft\Windows\Containers\BaseImages") &&
-                            !directory.Contains(@"AppData\Local\Microsoft\WindowsApps"))
+                        Regex guidRegex = new Regex(@"^:\\programData\\Microsoft\\Windows\\Containers\\Layers\\[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
+                        foreach (var directory in Directory.EnumerateDirectories(path))
                         {
-                            files.AddRange(GetFiles(directory, pattern, currentDepth + 1, maxDepth));
+                            if (!IsReparsePoint(directory) &&
+                                !directory.Contains(":\\Windows\\WinSxS") &&
+                                !directory.Contains(":\\$") &&
+                                !directory.Contains(@":\programdata\microsoft\Windows\Containers\BaseImages") &&
+                                !guidRegex.IsMatch(directory) &&
+                                !directory.Contains(@"AppData\Local\Microsoft\WindowsApps"))
+                            {
+                                files.AddRange(GetFiles(directory, pattern, currentDepth + 1, maxDepth));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        files.AddRange(Directory.EnumerateFiles(GetLongPath(path), pattern, SearchOption.TopDirectoryOnly));
+                        foreach (var directory in Directory.EnumerateDirectories(path))
+                        {
+                            if (!IsReparsePoint(directory))
+                            {
+                                files.AddRange(GetFiles(directory, pattern, currentDepth + 1, maxDepth));
+                            }
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
+#if DEBUG
+                MessageBox.Show(ex.ToString());
+#else
                 Program.LL.LogErrorMessage("_Error", ex);
+#endif
             }
 
             return files;
@@ -584,7 +634,7 @@ namespace MSearch
             catch (Exception ex)
             {
                 // Handle the exception appropriately
-                new LocalizedLogger().LogErrorMessage("_Error", ex);
+                Program.LL.LogErrorMessage("_Error", ex);
             }
 
             return "N/A";
@@ -706,7 +756,6 @@ namespace MSearch
 
                     try
                     {
-                        GetProcessOwner(Process.GetProcessesByName("explorer")[0].Id);
                         GetServiceImagePath("Dhcp");
                     }
                     catch (ManagementException me)
@@ -1142,13 +1191,13 @@ namespace MSearch
             return MachineId.ToString();
         }
 
-        internal static bool IsTaskEmpty(Task task)
+        internal static bool IsTaskEmpty(Microsoft.Win32.TaskScheduler.Task task)
         {
             try
             {
                 return (uint)task.LastTaskResult == 0x80070002;
             }
-            catch
+            catch (Exception)
             {
                 return false;
             }
@@ -1237,11 +1286,159 @@ namespace MSearch
 
             if (!Native.AdjustTokenPrivileges(hToken, false, ref tkpPrivileges, 0, IntPtr.Zero, IntPtr.Zero))
             {
-                Program.LL.LogErrorMessage("_Error", new Exception("AdjustTokenPrivileges: Privileges are not available"));
+                int error = Marshal.GetLastWin32Error();
+                Program.LL.LogErrorMessage("_Error", new Exception($"AdjustTokenPrivileges failed with error code: {error}"));
+                return;
             }
 
             Native.CloseHandle(hToken);
         }
+
+
+        internal bool HasDebugPrivilege()
+        {
+            IntPtr hToken;
+            if (!Native.OpenProcessToken(Native.GetCurrentProcess(), Native.TOKEN_QUERY, out hToken))
+            {
+                Program.LL.LogErrorMessage("_Error", new Exception("OpenProcessToken: Current process"));
+                return false;
+            }
+
+            try
+            {
+                if (!Native.LookupPrivilegeValue(null, "SeDebugPrivilege", out Native.LUID luid))
+                {
+                    Program.LL.LogErrorMessage("_Error", new Exception("LookupPrivilegeValue: SeDebugPrivilege"));
+                    return false;
+                }
+
+                Native.PRIVILEGE_SET privilegeSet = new Native.PRIVILEGE_SET
+                {
+                    PrivilegeCount = 1,
+                    Control = 1,
+                    Privilege = new Native.LUID_AND_ATTRIBUTES[1]
+                };
+                privilegeSet.Privilege[0].Luid = luid;
+                privilegeSet.Privilege[0].Attributes = Native.SE_PRIVILEGE_ENABLED;
+
+                if (!Native.PrivilegeCheck(hToken, ref privilegeSet, out bool hasPrivilege))
+                {
+                    Program.LL.LogErrorMessage("_Error", new Exception("PrivilegeCheck"));
+                    return false;
+                }
+
+                return hasPrivilege;
+            }
+            finally
+            {
+                Native.CloseHandle(hToken);
+            }
+        }
+
+        internal bool GrantPrivilegeToGroup(string groupName, string privilege)
+        {
+            IntPtr policyHandle = IntPtr.Zero;
+            IntPtr sid = IntPtr.Zero;
+            try
+            {
+                Native.LSA_OBJECT_ATTRIBUTES objectAttributes = new Native.LSA_OBJECT_ATTRIBUTES();
+                Native.LSA_UNICODE_STRING systemName = new Native.LSA_UNICODE_STRING();
+
+                int result = Native.LsaOpenPolicy(ref objectAttributes, ref systemName, Native.POLICY_ALL_ACCESS, out policyHandle);
+                if (result != 0)
+                {
+                    throw new Exception("Cannot open security descriptor: " + Native.LsaNtStatusToWinError(result));
+                }
+
+                int sidSize = 0;
+                int domainNameLength = 0;
+                int use;
+                Native.LookupAccountName(null, groupName, sid, ref sidSize, null, ref domainNameLength, out use);
+
+                sid = Marshal.AllocHGlobal(sidSize);
+                var domainName = new System.Text.StringBuilder(domainNameLength);
+
+                if (!Native.LookupAccountName(null, groupName, sid, ref sidSize, domainName, ref domainNameLength, out use))
+                {
+                    throw new Exception("Error getting admin group SID");
+                }
+
+                Native.LSA_UNICODE_STRING[] userRights = new Native.LSA_UNICODE_STRING[1];
+                userRights[0] = new Native.LSA_UNICODE_STRING
+                {
+                    Buffer = Marshal.StringToHGlobalUni(privilege),
+                    Length = (ushort)(privilege.Length * UnicodeEncoding.CharSize),
+                    MaximumLength = (ushort)((privilege.Length + 1) * UnicodeEncoding.CharSize)
+                };
+
+                result = Native.LsaAddAccountRights(policyHandle, sid, userRights, userRights.Length);
+                if (result != 0)
+                {
+                    throw new Exception("Error assign privilege:" + Native.LsaNtStatusToWinError(result));
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                if (policyHandle != IntPtr.Zero)
+                {
+                    Native.LsaClose(policyHandle);
+                }
+
+                if (sid != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(sid);
+                }
+            }
+        }
+
+
+        internal string ConvertWellKnowSIDToGroupName(string GroupSid)
+        {
+            IntPtr pSid;
+            if (!Native.ConvertStringSidToSid(GroupSid, out pSid))
+            {
+                return null;
+            }
+
+            string groupName = GetAccountNameFromSid(pSid);
+            if (groupName != null)
+            {
+                return groupName;
+            }
+
+            Native.LocalFree(pSid);
+            return null;
+
+        }
+
+        public string GetAccountNameFromSid(IntPtr pSid)
+        {
+            StringBuilder name = new StringBuilder();
+            StringBuilder domainName = new StringBuilder();
+            int nameLen = 0;
+            int domainNameLen = 0;
+            int sidType;
+
+            Native.LookupAccountSid(null, pSid, name, ref nameLen, domainName, ref domainNameLen, out sidType);
+
+            name = new StringBuilder(nameLen);
+            domainName = new StringBuilder(domainNameLen);
+
+            if (Native.LookupAccountSid(null, pSid, name, ref nameLen, domainName, ref domainNameLen, out sidType))
+            {
+                return name.ToString();
+            }
+
+            return null;
+        }
+
+
 
         internal static bool IsStartedFromArchive()
         {
@@ -1458,73 +1655,73 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                new LocalizedLogger().LogErrorMessage("_ErrorAnalyzingFile", ex, filePath);
+                Program.LL.LogErrorMessage("_ErrorAnalyzingFile", ex, filePath);
             }
 
             return false;
         }
 
-        internal void ProccedFileFromArgs(string fullpath, string arguments)
+        internal void ProccedFileFromArgs(string[] checkDirs, string fullpath, string arguments)
         {
-            string[] checkDirs =
-            {
-                Environment.SystemDirectory, // System32
-                $@"{Program.drive_letter}:\Wind?ows\Sys?WOW?64".Replace("?", ""), // SysWow64
-                $@"{Program.drive_letter}:\W?in?dow?s\Sys?tem?32\wbem".Replace("?",""), // Wbem
-                msData.queries[9],
-            };
-
 
             if (fullpath.ToLower().Contains("rundll32"))
             {
+                int notFoundFailures = checkDirs.Length;
                 string rundll32Args = ResolveFilePathFromString(arguments).Split(',')[0];
 
-                string fullPathToFileFromArgs = "";
                 if (!rundll32Args.EndsWith("\""))
                 {
-                    foreach (string checkDir in checkDirs)
+                    rundll32Args = rundll32Args.Replace("\"", "");
+                }
+
+                if (rundll32Args.StartsWith("/"))
+                {
+                    rundll32Args = rundll32Args.Split(' ')[1];
+                }
+
+                foreach (string checkDir in checkDirs)
+                {
+                    string fullPathToFileFromArgs = Path.Combine(checkDir, rundll32Args);
+
+                    if (!fullPathToFileFromArgs.EndsWith(".dll"))
                     {
-                        fullPathToFileFromArgs = Path.Combine(checkDir, rundll32Args);
-                        if (!fullPathToFileFromArgs.EndsWith(".dll"))
-                        {
-                            fullPathToFileFromArgs += ".dll";
-                        }
+                        fullPathToFileFromArgs += ".dll";
                     }
-                }
-                else
-                {
-                    fullPathToFileFromArgs = rundll32Args.Replace("\"", "");
-                }
 
-
-                try
-                {
-                    if (File.Exists(fullPathToFileFromArgs))
+                    try
                     {
-                        IntPtr ptr = IntPtr.Zero;
-
-                        Program.LL.LogMessage("[.]", "_Just_File", fullPathToFileFromArgs, ConsoleColor.Gray);
-                        var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
-                        if (trustResult != WinVerifyTrustResult.Success)
+                        if (File.Exists(fullPathToFileFromArgs))
                         {
-                            Program.LL.LogWarnMediumMessage("_InvalidCertificateSignature", rundll32Args);
-                            AddToQuarantine(fullPathToFileFromArgs, Path.Combine(MinerSearch.quarantineFolder, Path.GetFileName(fullPathToFileFromArgs) + $"_{Utils.CalculateMD5(fullPathToFileFromArgs)}.bak"), Encoding.UTF8.GetBytes(Application.ProductVersion.Replace(".", "")));
+                            IntPtr ptr = IntPtr.Zero;
+
+                            Program.LL.LogMessage("[.]", "_Just_File", fullPathToFileFromArgs, ConsoleColor.Gray);
+                            var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
+                            if (trustResult != WinVerifyTrustResult.Success)
+                            {
+                                Program.LL.LogWarnMediumMessage("_InvalidCertificateSignature", rundll32Args);
+                                AddToQuarantine(fullPathToFileFromArgs, Path.Combine(MinerSearch.quarantineFolder, Path.GetFileName(fullPathToFileFromArgs) + $"_{Utils.CalculateMD5(fullPathToFileFromArgs)}.bak"), Encoding.UTF8.GetBytes(Application.ProductVersion.Replace(".", "")));
+                                return;
+                            }
+                            else if (trustResult == WinVerifyTrustResult.Success)
+                            {
+                                Logger.WriteLog($"\t[OK]", Logger.success, false);
+                            }
+                            //notFoundFailures = 0;
                             return;
-                        }
-                        else if (trustResult == WinVerifyTrustResult.Success)
-                        {
-                            Logger.WriteLog($"\t[OK]", Logger.success, false);
-                        }
-                        return;
 
+                        }
+                        else notFoundFailures += 1;
                     }
-                    else Program.LL.LogWarnMessage("_FileIsNotFound", fullPathToFileFromArgs);
-                }
-                catch (Exception ex)
-                {
-                    Program.LL.LogErrorMessage("_Error", ex);
-                }
+                    catch (Exception ex)
+                    {
+                        Program.LL.LogErrorMessage("_Error", ex);
+                    }
 
+                    if (notFoundFailures == checkDirs.Length)
+                    {
+                        Program.LL.LogWarnMessage("_FileIsNotFound", fullPathToFileFromArgs);
+                    }
+                }
 
 
             }
@@ -1566,14 +1763,14 @@ namespace MSearch
                     {
                         Program.LL.LogErrorMessage("_Error", ex);
                     }
-
-
                 }
             }
         }
 
         public static Mutex mutex = new Mutex(false, "9c5d03a2-b3e5-4b28-a1f6-eafd9b0ed091");
+        public static Mutex rebootMtx = new Mutex(false, "dcd2f5a3-55f7-4903-b4ff-303879f87aab");
         internal static bool IsOneAppCopy() => mutex.WaitOne(0, true);
+        internal static bool IsRebootMtx() => rebootMtx.WaitOne(0, true);
 
         internal static bool RegistryKeyExists(string path)
         {
@@ -1598,7 +1795,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                new LocalizedLogger().LogErrorMessage("_Error", ex, "GetSubkeys");
+                Program.LL.LogErrorMessage("_Error", ex, "GetSubkeys");
             }
 
             return subkeys;
@@ -1708,20 +1905,40 @@ namespace MSearch
             return true;
         }
 
-        public static string GetProcessOwner(int processId)
+        internal static WindowsIdentity GetCurrentProcessOwner()
         {
-            foreach (ManagementObject managementObject in new ManagementObjectSearcher(msData.queries[11] + processId.ToString()).Get())
-            {
-                string[] args = new string[2]
-                {
-          string.Empty,
-          string.Empty
-                };
-                if (Convert.ToInt32(managementObject.InvokeMethod("GetOwner", (object[])args)) == 0)
-                    return args[1] + "\\" + args[0];
-            }
-            return "N/A";
+            return WindowsIdentity.GetCurrent();
+        }
 
+        internal static bool IsSystemProcess(int processId)
+        {
+
+            IntPtr tokenHandle;
+            try
+            {
+                using (Process process = Process.GetProcessById(processId))
+                {
+
+                    if (Native.OpenProcessToken(process.Handle, Native.TOKEN_QUERY, out tokenHandle))
+                    {
+                        WindowsIdentity identity = new WindowsIdentity(tokenHandle);
+#if DEBUG
+                        Console.WriteLine("\t[DBG] Process owner {0}: {1}", processId, identity.Name);
+#endif
+                        Native.CloseHandle(tokenHandle);
+                        return identity.IsSystem;
+                    }
+                    else
+                    {
+                        throw new Exception("Unable open process token");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.LL.LogErrorMessage("_Error", ex);
+            }
+            return false;
         }
 
         internal static bool IsDotNetInstalled()
@@ -1732,7 +1949,7 @@ namespace MSearch
                 if (ndpKey != null && ndpKey.GetValue("Release") != null)
                 {
                     int releaseKey = (int)ndpKey.GetValue("Release");
-                    return releaseKey >= 378389;
+                    return releaseKey >= 460798;
                 }
                 else
                 {
@@ -1911,7 +2128,7 @@ namespace MSearch
                     {
 #if DEBUG
                         Console.WriteLine($"\tDetach process pid: {r77Process.ProcessId}");
-#endif 
+#endif
                         result = true;
                         Native.CloseHandle(thread);
                     }
@@ -1995,7 +2212,7 @@ namespace MSearch
             return (int)(uint)serviceObject;
         }
 
-        public static List<string> GetOpenFilesInDirectory(string directoryPath)
+        internal static List<string> GetOpenFilesInDirectory(string directoryPath)
         {
             var openFiles = new List<string>();
             int handleInfoSize = 0x10000;
@@ -2040,7 +2257,9 @@ namespace MSearch
                                     openFiles.Add(filePath);
                                 }
                             }
-                            catch { }
+                            catch (Exception)
+                            {
+                            }
                         }
                     }
 
@@ -2053,6 +2272,68 @@ namespace MSearch
 
             Marshal.FreeHGlobal(handleInfoPtr);
             return openFiles;
+        }
+
+        internal static bool IsWinPEEnv()
+        {
+            return
+                Path.GetPathRoot(Assembly.GetExecutingAssembly().Location).StartsWith("X:") &&
+                GetCurrentProcessOwner().IsSystem &&
+                Convert.ToInt64(Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion")?.GetValue("InstallDate") ?? -1) == 0;
+        }
+
+        internal static void CheckLatestReleaseVersion()
+        {
+            if (Internet.IsOK())
+            {
+                try
+                {
+                    string latest = GithubAPI.GetLatestVersion("BlendLog/MinerSearch");
+                    string current = Program.CurrentVersion.Replace(".", "");
+
+                    if (!IsLatestVersion(current, latest.StartsWith("v") ? latest.Substring(1).Replace(".", "") : latest.Replace(".", "")))
+                    {
+                        var message = MessageBox.Show(Program.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), "", MessageBoxButtons.YesNo);
+                        if (message == DialogResult.Yes)
+                        {
+                            Process.Start("explorer", "https://github.com/BlendLog/MinerSearch/releases/latest");
+                            Environment.Exit(0);
+                        }
+                        Logger.WriteLog(Program.LL.GetLocalizedString("_Version") + " " + Program.CurrentVersion + " " + Program.LL.GetLocalizedString("_PrefixNewVersionAvailable").Replace("#LATEST#", latest), Logger.warnMedium);
+
+                    }
+                }
+                catch (FileNotFoundException)
+                {
+                    MessageBox.Show(Program.LL.GetLocalizedString("_ErrorNotFoundComponent"), "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                catch (Exception ex)
+                {
+                    Program.LL.LogErrorMessage("_Error", ex);
+                }
+
+            }
+            else
+            {
+                Logger.WriteLog("\t\t[!] " + Program.LL.GetLocalizedString("_ErrorCannotCheckUpdates") + " | " + Program.LL.GetLocalizedString("_NoInternetConnection"), false, false, true);
+            }
+        }
+
+        static bool IsLatestVersion(string currentVersion, string latestVersion)
+        {
+            if (currentVersion.Length > latestVersion.Length)
+            {
+                latestVersion += "0";
+            }
+            else if (currentVersion.Length < latestVersion.Length)
+            {
+                currentVersion += "0";
+            }
+
+            double currentVersionAsDouble = double.Parse(currentVersion + "0", CultureInfo.InvariantCulture);
+            double latestVersionAsDouble = double.Parse(latestVersion + "0", CultureInfo.InvariantCulture);
+
+            return currentVersionAsDouble >= latestVersionAsDouble;
         }
     }
 }

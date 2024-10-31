@@ -1,29 +1,56 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MSearch
 {
-    public partial class Finish : Form
+    public partial class Finish : FormShadow
     {
         int threatsCount = 0;
         int curedCount = 0;
 
-        private int targetHeight = 415;
-        private int step = 2;
-
-        public Finish(int _totalThreats, int _neutralizedThreats, string _elapsedTime)
+        public Finish(int _totalThreats, int _neutralizedThreats, int _suspObj, string _elapsedTime)
         {
             InitializeComponent();
             threatsCount = _totalThreats;
             curedCount = _neutralizedThreats;
             LBL_threatsCount.Text = _totalThreats.ToString();
-            LBL_curedCount.Text = _neutralizedThreats.ToString();  
+            LBL_curedCount.Text = _neutralizedThreats.ToString();
+            Label_SuspiciousObjectsCount.Text = _suspObj.ToString();
             LBL_scanElapsedTime.Text = _elapsedTime;
+
+
+            if (!Program.ScanOnly)
+            {
+                if (threatsCount == 0)
+                {
+                    LBL_totalThreats.ForeColor = Color.Green;
+                    LBL_threatsCount.ForeColor = Color.Green;
+                    LBL_ScanComplete.ForeColor = Color.Green;
+                }
+                else if (threatsCount > curedCount)
+                {
+                    LBL_totalThreats.ForeColor = Color.Crimson;
+                    LBL_threatsCount.ForeColor = Color.Crimson;
+                    LBL_ScanComplete.ForeColor = Color.DarkRed;
+                }
+                else if (threatsCount == curedCount)
+                {
+                    LBL_totalThreats.ForeColor = Color.Green;
+                    LBL_threatsCount.ForeColor = Color.Green;
+                }
+            }
+            else
+            {
+                LBL_totalThreats.ForeColor = Color.DodgerBlue;
+                LBL_threatsCount.ForeColor = Color.DodgerBlue;
+                LBL_ScanComplete.ForeColor = Color.DodgerBlue;
+                FinalStatus_label.ForeColor = Color.DodgerBlue;
+            }
         }
 
         protected override void WndProc(ref Message m)
@@ -39,38 +66,11 @@ namespace MSearch
             base.WndProc(ref m);
         }
 
-        void OpenExternalLink(string link)
-        {
-            if (link.StartsWith("http"))
-            {
-                Process.Start(new ProcessStartInfo()
-                {
-                    FileName = "explorer",
-                    Arguments = $"\"{link}\""
-                });
-            }
-        }
-
-        private void pb_QR_Click(object sender, EventArgs e)
-        {
-            OpenExternalLink("https://boosty.to/blendlog/donate");
-        }
-
-        private void pb_telegram_Click(object sender, EventArgs e)
-        {
-            OpenExternalLink("https://t.me/MinerSearch_blog");
-        }
-
-        private void pb_M1nerSearch_Click(object sender, EventArgs e)
-        {
-            OpenExternalLink("https://t.me/MinerSearch_chat");
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             if (curedCount < threatsCount)
             {
-                var result = MessageBox.Show(Program.LL.GetLocalizedString("_FinishRebootPCNow"), Utils.GetRndString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = MessageBox.Show(Program.LL.GetLocalizedString("_RebootPCNowDialog"), Utils.GetRndString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
                     Process.Start(new ProcessStartInfo()
@@ -82,6 +82,12 @@ namespace MSearch
                     });
                 }
                 else Environment.Exit(0);
+            }
+            else if (curedCount == threatsCount && threatsCount > 0)
+            {
+                Hide();
+                SplashForm splashForm = new SplashForm();
+                splashForm.ShowDialog();
             }
             Environment.Exit(0);
         }
@@ -98,11 +104,12 @@ namespace MSearch
             TopMost = true;
             TranslateForm();
 
-            if (curedCount == threatsCount && !Program.WinPEMode && !Program.ScanOnly && threatsCount != 0)
+            if (Program.no_logs)
             {
-                top.Enabled = false;
-                await Task.Delay(1000);
-                AnimationTimer.Start();
+                top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+                top.Text = "MinerSearch          ";
+                button1.Visible = true;
+                return;
             }
 
             string registryPath = @"Software\M1nerSearch";
@@ -150,21 +157,21 @@ namespace MSearch
                                 Task.Delay(new Random().Next(10, 3000));
                                 MinerSearch.SentLog();
                             });
-                            top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                            top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
                             top.Text = "MinerSearch          ";
                             button1.Visible = true;
                         }
                         catch (System.IO.FileNotFoundException fnf)
                         {
                             Program.LL.LogErrorMessage("_Error", fnf);
-                            top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                            top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
                             top.Text = "MinerSearch          ";
                             button1.Visible = true;
                         }
                         catch (Exception ex)
                         {
                             Program.LL.LogErrorMessage("_Error", ex);
-                            top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                            top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
                             top.Text = "MinerSearch          ";
                             button1.Visible = true;
                         }
@@ -174,7 +181,7 @@ namespace MSearch
                 else
                 {
                     key.SetValue(valueName, 0, RegistryValueKind.DWord);
-                    top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                    top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
                     top.Text = "MinerSearch          ";
                     button1.Visible = true;
                 }
@@ -190,14 +197,14 @@ namespace MSearch
                         Task.Delay(new Random().Next(10, 3000));
                         MinerSearch.SentLog();
                     });
-                        top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                        top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
                         top.Text = "MinerSearch          ";
                         button1.Visible = true;
                     }
                     catch (System.IO.FileNotFoundException fnf)
                     {
                         Program.LL.LogErrorMessage("_Error", fnf);
-                        top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                        top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
                         top.Text = "MinerSearch          ";
                         button1.Visible = true;
 
@@ -205,7 +212,7 @@ namespace MSearch
                     catch (Exception ex)
                     {
                         Program.LL.LogErrorMessage("_Error", ex);
-                        top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                        top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
                         top.Text = "MinerSearch          ";
                         button1.Visible = true;
                     }
@@ -213,7 +220,7 @@ namespace MSearch
             }
             else
             {
-                top.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+                top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
                 top.Text = "MinerSearch          ";
                 button1.Visible = true;
             }
@@ -221,61 +228,38 @@ namespace MSearch
 
         }
 
-        void AnimationTimer_Tick(object sender, EventArgs e)
-        {
-            if (this.Height < targetHeight)
-            {
-                this.Height += step;
-
-                Location = new System.Drawing.Point(Location.X, Location.Y - 1);
-            }
-            else
-            {
-                AnimationTimer.Stop();
-                top.Enabled = true;
-            }
-        }
-
         void TranslateForm()
         {
-            if (Program.ActiveLanguage != "RU")
-            {
-                textBox1.Select(0, 0);
-                yoomoney_tb.Visible = false;
-            }
-            else yoomoney_tb.Select(0, 0);
-
-            if (Program.totalFoundThreats > 0)
-            {
-                LBL_totalThreats.ForeColor = System.Drawing.Color.DarkRed;
-                LBL_threatsCount.ForeColor = System.Drawing.Color.DarkRed;
-            }
-            else
-            {
-                LBL_totalThreats.ForeColor = System.Drawing.Color.DarkGreen;
-                LBL_threatsCount.ForeColor = System.Drawing.Color.DarkGreen;
-            }
 
             if (Program.ScanOnly || Program.totalFoundThreats == 0)
             {
                 LBL_neutralizedThreats.Visible = false;
                 LBL_curedCount.Visible = false;
+                LabelSeparator.Visible = false;
             }
 
             if (Program.no_logs)
             {
-                btnDetails.Visible = false;
+                btnDetails.Enabled = false;
+                btnDetails.BackColor = Color.FromArgb(10, 255, 255, 255);
+                btnDetails.FlatAppearance.BorderSize = 0;
+                btnDetails.Text = Program.LL.GetLocalizedString("_NoLogBtn");
+            }
+            else
+            {
+                btnDetails.Text = Program.LL.GetLocalizedString("_BtnDetails");
             }
 
             LBL_ScanComplete.Text = Program.LL.GetLocalizedString("_End");
             LBL_totalThreats.Text = Program.LL.GetLocalizedString("_TotalThreatsFound");
             LBL_neutralizedThreats.Text = Program.LL.GetLocalizedString("_TotalNeutralizedThreats");
-            LBL_JoinTelegram.Text = Program.LL.GetLocalizedString("_JoinToTelegram");
+            Label_suspiciousObjects.Text = Program.LL.GetLocalizedString("_SuspiciousObjects");
             LBL_ScanTime.Text = Program.LL.GetLocalizedString("_Elapse");
-            LBL_Support.Text = Program.LL.GetLocalizedString("_LabelSupport");
-            btnDetails.Text = Program.LL.GetLocalizedString("_BtnDetails");
-            top.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            Label_showAllLogs.Text = Program.LL.GetLocalizedString("_ShowFolderLogs");
+            top.TextAlign = ContentAlignment.TopRight;
             top.Text = Program.LL.GetLocalizedString("_PleaseWaitMessage");
+
+            Label_OpenLogsFolder.Text = Logger.LogsFolder;
 
             if (!Program.ScanOnly)
             {
@@ -284,7 +268,7 @@ namespace MSearch
                     if (curedCount < threatsCount)
                     {
                         FinalStatus_label.Text = Program.LL.GetLocalizedString("_FinishNotAllThreatsNeutralized");
-                        FinalStatus_label.ForeColor = System.Drawing.Color.Red;
+                        FinalStatus_label.ForeColor = System.Drawing.Color.DarkRed;
                     }
                     else if (curedCount == threatsCount)
                     {
@@ -302,73 +286,7 @@ namespace MSearch
             else
             {
                 FinalStatus_label.Text = Program.LL.GetLocalizedString("_ScanOnlyMode");
-                FinalStatus_label.ForeColor = System.Drawing.Color.Blue;
             }
-        }
-
-        private void pb_QR_MouseEnter(object sender, EventArgs e)
-        {
-            pb_QR.BorderStyle = BorderStyle.FixedSingle;
-        }
-
-        private void pb_QR_MouseLeave(object sender, EventArgs e)
-        {
-            pb_QR.BorderStyle = BorderStyle.None;
-        }
-
-        private void pb_telegram_MouseEnter(object sender, EventArgs e)
-        {
-            pb_telegram.BorderStyle = BorderStyle.FixedSingle;
-        }
-
-        private void pb_telegram_MouseLeave(object sender, EventArgs e)
-        {
-            pb_telegram.BorderStyle = BorderStyle.None;
-        }
-
-        private void pb_M1nerSearch_MouseLeave(object sender, EventArgs e)
-        {
-            pb_M1nerSearch.BorderStyle = BorderStyle.None;
-        }
-
-        private void pb_M1nerSearch_MouseEnter(object sender, EventArgs e)
-        {
-            pb_M1nerSearch.BorderStyle = BorderStyle.FixedSingle;
-        }
-
-        private void LBL_link1_MouseEnter(object sender, EventArgs e)
-        {
-            LBL_link1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, 204);
-        }
-
-        private void LBL_link1_MouseLeave(object sender, EventArgs e)
-        {
-            LBL_link1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 204);
-        }
-
-        private void LBL_link2_MouseEnter(object sender, EventArgs e)
-        {
-            LBL_link2.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, 204);
-        }
-
-        private void LBL_link2_MouseLeave(object sender, EventArgs e)
-        {
-            LBL_link2.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 204);
-        }
-
-        private void LBL_link1_Click(object sender, EventArgs e)
-        {
-            OpenExternalLink("https://t.me/MinerSearch_blog");
-        }
-
-        private void LBL_link2_Click(object sender, EventArgs e)
-        {
-            OpenExternalLink("https://t.me/MinerSearch_chat");
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-            OpenExternalLink("https://boosty.to/BlendLog/donate");
         }
 
         private void btnDetails_Click(object sender, EventArgs e)
@@ -379,10 +297,34 @@ namespace MSearch
                 return;
             }
 
-            string argument = "/select, \"" + logpath + "\"";
-            Process.Start("explorer.exe", argument);
+            string argument = "/c \"" + logpath + "\"";
+            Process.Start(new ProcessStartInfo()
+            {
+                FileName = "cmd",
+                Arguments = argument,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            });
         }
 
+        private void Label_OpenLogsFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (Program.no_logs)
+            {
+                Process.Start("explorer.exe", Logger.LogsFolder);
+                return;
+            }
 
+            string logpath = Path.Combine(Logger.LogsFolder, Logger.logFileName);
+            if (!File.Exists(logpath))
+            {
+                return;
+            }
+
+            string argument = "/select, \"" + logpath + "\"";
+            Process.Start("explorer.exe", argument);
+
+
+        }
     }
 }

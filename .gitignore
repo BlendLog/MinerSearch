@@ -374,3 +374,5 @@ FodyWeavers.xsd
 *.blend1
 *.lnk
 /MinerSearch/.vscode
+/MinerSearch/Resources/sber.jpg
+*.txt

@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace MSearch
 {
-    public partial class HostsDeletionForm : Form
+    public partial class HostsDeletionForm : FormShadow
     {
 
         List<string> linesToDelete;
@@ -30,6 +30,7 @@ namespace MSearch
             selectAllButton.Text = Program.LL.GetLocalizedString("_SelectAllButton");
             deselectAllButton.Text = Program.LL.GetLocalizedString("_DeselectAllButton");
             continueButton.Text = Program.LL.GetLocalizedString("_ContinueButton");
+            skipBtn.Text = Program.LL.GetLocalizedString("_HostsCleanupSkipBtn");
         }
 
         protected override void WndProc(ref Message m)
@@ -97,6 +98,11 @@ namespace MSearch
                 bool currentCheckState = checkedListBox1.GetItemChecked(index);
                 checkedListBox1.SetItemChecked(index, !currentCheckState);
             }
+        }
+
+        private void skipBtn_Click(object sender, EventArgs e)
+        {
+            closeBtn.PerformClick();
         }
     }
 }

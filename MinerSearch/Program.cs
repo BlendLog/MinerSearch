@@ -1,15 +1,15 @@
-﻿#define BETA
+﻿//#define BETA
 
 using DBase;
 using Microsoft.Win32;
 using MSearch.Properties;
-using netlib;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace MSearch
@@ -30,18 +30,23 @@ namespace MSearch
         public static bool ScanOnly = false;
         public static bool fullScan = false;
         public static bool RestoredWMI = false;
+        public static bool RunAsSystem = false;
         public static int maxSubfolders = 8;
         public static int totalFoundThreats = 0;
+        public static int totalFoundSuspiciousObjects = 0;
         public static int totalNeutralizedThreats = 0;
         public static string drive_letter = "C";
         public static string ActiveLanguage = "";
         internal static BootMode bootMode = Utils.GetBootMode();
         public static LocalizedLogger LL = new LocalizedLogger();
         public static Utils _utils = new Utils();
+        public static string CurrentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
+        [STAThread]
         static void Main(string[] args)
         {
 
+#if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(ExeptionHandler.HookExeption);
             ActiveLanguage = Utils.GetSystemLanguage();
             try
@@ -53,6 +58,10 @@ namespace MSearch
                 MessageBox.Show(LL.GetLocalizedString("_ErrorNotFoundComponent"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Environment.Exit(1);
             }
+#else
+            ActiveLanguage = Utils.GetSystemLanguage();
+            Init(args);
+#endif
 
         }
 
@@ -69,6 +78,39 @@ namespace MSearch
             {
                 MessageBox.Show(LL.GetLocalizedString("_AppAlreadyRunning"), Console.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 Environment.Exit(1);
+            }
+
+            if (!Utils.IsRebootMtx())
+            {
+                Utils.mutex.ReleaseMutex();
+                MessageBox.Show(LL.GetLocalizedString("_RebootRequired"), Utils.GetRndString());
+                Environment.Exit(0);
+            }
+
+            if (Utils.IsWinPEEnv())
+            {
+                List<string> newargs = new List<string> { "--winpemode" };
+                if (args.Length > 0)
+                {
+                    foreach (string arg in args)
+                    {
+                        newargs.Add(arg);
+                    }
+                }
+                args = newargs.ToArray();
+
+                WinPEMode = true;
+                RunAsSystem = true;
+            }
+
+            if (Utils.GetCurrentProcessOwner().IsSystem && !WinPEMode)
+            {
+                var msg = MessageBox.Show(LL.GetLocalizedString("_MessageRunAsSystemWarn"), Utils.GetRndString(), MessageBoxButtons.YesNo);
+                if (msg != DialogResult.Yes)
+                {
+                    Environment.Exit(0);
+                }
+                RunAsSystem = true;
             }
 
             Console.Title = Utils.GetRndString();
@@ -111,16 +153,17 @@ namespace MSearch
                     {
                         if (ActiveLanguage == "EN")
                         {
-                            licenseForm.richTextBox1.Text = Resources._License_EN;
+                            licenseForm.Label_LicenseCaption.Text = Resources._LicenseCaption_EN;
+                            licenseForm.richTextBox1.Rtf = Resources._License_EN;
                             licenseForm.Accept_btn.Text = Resources._accept_en;
-                            licenseForm.Exit_btn.Text = Resources._exit_en;
+                            licenseForm.Exit_btn.Text = Resources._exit_EN;
                         }
                         if (ActiveLanguage == "RU")
                         {
-
-                            licenseForm.richTextBox1.Text = Resources._License_RU;
+                            licenseForm.Label_LicenseCaption.Text = Resources._LicenseCaption_RU;
+                            licenseForm.richTextBox1.Rtf = Resources._License_RU;
                             licenseForm.Accept_btn.Text = Resources._accept_ru;
-                            licenseForm.Exit_btn.Text = Resources._exit_ru;
+                            licenseForm.Exit_btn.Text = Resources._exit_RU;
                         }
 
                         licenseForm.ShowDialog();
@@ -235,9 +278,16 @@ namespace MSearch
                         if (drive_letter.Length > 1 || Utils.IsDigit(drive_letter))
                         {
                             LocalizedLogger.LogIncorrectDrive(drive_letter);
-                            Console.ReadKey();
                             goto drive_letter_lbl;
                         }
+
+                        if (!Directory.Exists(drive_letter + ":\\"))
+                        {
+                            LocalizedLogger.LogIncorrectDrive(drive_letter);
+                            goto drive_letter_lbl;
+                        }
+
+                        Drive.Letter = drive_letter;
                         NoRootkitCheck = true;
                         no_runtime = true;
                         no_services = true;
@@ -259,9 +309,10 @@ namespace MSearch
 
             if (!WinPEMode)
             {
-                drive_letter = Environment.GetEnvironmentVariable("systemdrive").Remove(1);
+                drive_letter = Environment.GetEnvironmentVariable("SYSTEMDRIVE").Remove(1);
                 Drive.Letter = drive_letter;
             }
+
 
 #if !DEBUG
             if (!help)
@@ -288,7 +339,6 @@ namespace MSearch
             }
 
             Logger.WriteLog("\t\tID: " + Utils.GetDeviceId(), ConsoleColor.White, false, true);
-            LL.LogMessage("\t\t", "_Version", new Version(Application.ProductVersion).ToString(), ConsoleColor.White, false);
 
 
             if (!help)
@@ -296,12 +346,22 @@ namespace MSearch
                 LocalizedLogger.LogHelpHint();
             }
 
-            if (no_runtime && no_scantime && WinPEMode)
+            LL.LogMessage("\t\t", "_Version", CurrentVersion, ConsoleColor.White, false);
+
+
+#if !DEBUG
+            if (!WinPEMode && !Utils.GetWindowsVersion().Contains("Windows 7"))
+            {
+                Utils.CheckLatestReleaseVersion();
+            }
+
+            if (no_runtime && no_scantime && !WinPEMode)
             {
                 LocalizedLogger.LogErrorDisabledScan();
                 Console.ReadKey();
                 return;
             }
+#endif
 
             if (WinPEMode && nosignaturescan)
             {
@@ -339,10 +399,45 @@ namespace MSearch
             }
 
             MinerSearch mk = new MinerSearch();
-            
+
             LL.LogHeadMessage("_PreparingToScan");
             Utils.RestoreSignatures(mk.msData.signatures);
-            Process.EnterDebugMode();
+
+            _utils.InitPrivileges();
+
+            if (!NoRootkitCheck || !no_runtime)
+            {
+                if (!_utils.HasDebugPrivilege())
+                {
+                    string privilegename = "SeDebugPrivilege";
+                    string groupName = _utils.ConvertWellKnowSIDToGroupName("S-1-5-32-544"); //Admin group
+
+
+                    if (_utils.GrantPrivilegeToGroup(groupName, privilegename))
+                    {
+                        MessageBox.Show(LL.GetLocalizedString("_SuccessGrantPrivilege"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        var result = MessageBox.Show(Program.LL.GetLocalizedString("_RebootPCNowDialog"), Utils.GetRndString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (result == DialogResult.Yes)
+                        {
+                            Process.Start(new ProcessStartInfo()
+                            {
+                                FileName = "shutdown",
+                                Arguments = "/r /t 0",
+                                UseShellExecute = false,
+                                CreateNoWindow = true
+                            });
+                        }
+                        Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_HIDE);
+                        Utils.mutex.ReleaseMutex();
+                        Console.ReadLine();
+                    }
+                    else
+                    {
+                        MessageBox.Show(LL.GetLocalizedString("_ErrorGrantPrivilege"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        Environment.Exit(0);
+                    }
+                }
+            }
 
             if (!NoRootkitCheck)
             {
@@ -351,7 +446,6 @@ namespace MSearch
 
             if (!no_runtime)
             {
-
                 mk.Scan();
             }
 
@@ -382,18 +476,21 @@ namespace MSearch
             Logger.WriteLog("\n\t\t-----------------------------------", ConsoleColor.White, false);
             LocalizedLogger.LogElapsedTime(elapsedTime);
             Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
-            LocalizedLogger.LogTotalScanResult(totalFoundThreats, totalNeutralizedThreats + totalFoundThreats);
+            LocalizedLogger.LogTotalScanResult(totalFoundThreats, totalNeutralizedThreats + totalFoundThreats, totalFoundSuspiciousObjects);
             Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
 
             Utils.SwitchMouseSelection(true);
 
             Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_MINIMIZE);
 
-            Finish finish = new Finish(totalFoundThreats, totalNeutralizedThreats + totalFoundThreats, elapsedTime)
+
+            Finish finish = new Finish(totalFoundThreats, totalNeutralizedThreats + totalFoundThreats, totalFoundSuspiciousObjects, elapsedTime) //+ sign because neutralized threats is negative
             {
                 TopMost = true
             };
             finish.ShowDialog();
+
+
             Console.ReadLine();
             Environment.Exit(0);
         }

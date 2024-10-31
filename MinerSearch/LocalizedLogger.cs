@@ -174,8 +174,9 @@ namespace MSearch
                     message = Resources._IncorrectDrive_EN;
                     break;
             }
-            Console.WriteLine($"{message}: {driveletter}");
-
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"\t[x] {message}: {driveletter}");
+            Console.ResetColor();
         }
 
         public static void LogWinPEMode(string driveletter)
@@ -429,20 +430,23 @@ namespace MSearch
             Logger.WriteLog($"\t\t[$] {message}: {elapsedTime}", ConsoleColor.White, false);
         }
 
-        public static void LogTotalScanResult(int _totalThreats, int _neutralizedThreats)
+        public static void LogTotalScanResult(int _totalThreats, int _neutralizedThreats, int _suspObjects)
         {
             string totalThreats = Resources._TotalThreatsFound_EN;
             string neutralizedThreats = Resources._TotalNeutralizedThreats_EN;
+            string totalSuspObj = Resources._TotalSuspObjects_EN;
 
             switch (Program.ActiveLanguage)
             {
                 case "RU":
                     totalThreats = Resources._TotalThreatsFound_RU;
                     neutralizedThreats = Resources._TotalNeutralizedThreats_RU;
+                    totalSuspObj = Resources._TotalSuspObjects_RU;
                     break;
                 case "EN":
                     totalThreats = Resources._TotalThreatsFound_EN;
                     neutralizedThreats = Resources._TotalNeutralizedThreats_EN;
+                    totalSuspObj = Resources._TotalSuspObjects_EN;
                     break;
             }
 
@@ -452,7 +456,7 @@ namespace MSearch
             if (_neutralizedThreats <= Math.Round(Convert.ToDouble(_neutralizedThreats / 2))) color = ConsoleColor.Yellow;
 
             Logger.WriteLog($"\t\t[&] {totalThreats} {_totalThreats}", ConsoleColor.Magenta, false);
-
+            Logger.WriteLog($"\t\t[&] {totalSuspObj} {_suspObjects}", ConsoleColor.Yellow, false);
             if (!Program.ScanOnly)
             {
                 Logger.WriteLog($"\t\t[&] {neutralizedThreats} {_neutralizedThreats}", color, false);

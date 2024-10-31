@@ -117,6 +117,218 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="_TotalThreatsFound_EN" xml:space="preserve">
+    <value>Total threats:</value>
+  </data>
+  <data name="_ScanRegistry_RU" xml:space="preserve">
+    <value>Сканирование реестра...</value>
+  </data>
+  <data name="_Malici0usFile_RU" xml:space="preserve">
+    <value>Вредоносный файл:</value>
+  </data>
+  <data name="_DisableServiceWarning_RU" xml:space="preserve">
+    <value>Внимание! Приложение выявило множество служб с недействительной цифровой подписью. 
+
+Предполагается, что система:
+ - была установлена из непроверенного источника;
+ - имеет статус Insider Preview;
+ - либо модифицирована сторонними программами.
+
+Перечисленные ниже службы будут отключены, что возможно приведёт к нестабильности системы:
+#InvalidServices#
+
+Желаете продолжить?</value>
+  </data>
+  <data name="_BlockingProcessClosed_EN" xml:space="preserve">
+    <value>Blocking process has been closed -</value>
+  </data>
+  <data name="_Winver_RU" xml:space="preserve">
+    <value>Версия W??indo??ws:</value>
+  </data>
+  <data name="_Username_RU" xml:space="preserve">
+    <value>Имя пользователя:</value>
+  </data>
+  <data name="_ErrorOnUnlock_RU" xml:space="preserve">
+    <value>Не удалось разблокировать</value>
+  </data>
+  <data name="_WMIEvent_EN" xml:space="preserve">
+    <value>WMI Event </value>
+  </data>
+  <data name="_AnalyzingFile_EN" xml:space="preserve">
+    <value>Analyzing</value>
+  </data>
+  <data name="_CertSubjectNotTrusted_RU" xml:space="preserve">
+    <value>Субъект не выполнил указанное действие проверки</value>
+  </data>
+  <data name="_CheckingTermService_RU" xml:space="preserve">
+    <value>Проверка TermService...</value>
+  </data>
+  <data name="_ErrorFileOnlineOnly_EN" xml:space="preserve">
+    <value>The file is only available online</value>
+  </data>
+  <data name="_ArchiveWarn_EN" xml:space="preserve">
+    <value>The program was launched from the archive! Extract the entire archive and restart again.</value>
+  </data>
+  <data name="_ProcessInj3cti0n_EN" xml:space="preserve">
+    <value>Process inj?ect?ion</value>
+  </data>
+  <data name="_HostsFileCreated_RU" xml:space="preserve">
+    <value>Новый файл hosts создан</value>
+  </data>
+  <data name="_HelpHint_RU" xml:space="preserve">
+    <value>Для вызова справки используйте параметр "--help"</value>
+  </data>
+  <data name="_DeselectAllButton_EN" xml:space="preserve">
+    <value>Deselect All</value>
+  </data>
+  <data name="_Winver_EN" xml:space="preserve">
+    <value>Wi?ndo?ws ??ve??rsion:</value>
+  </data>
+  <data name="_ProcessSuspendedPartially_RU" xml:space="preserve">
+    <value>Процесс был приостановлен частично</value>
+  </data>
+  <data name="_File_RU" xml:space="preserve">
+    <value>файл</value>
+  </data>
+  <data name="_WMIRestartService_RU" xml:space="preserve">
+    <value>Перезапуск службы...</value>
+  </data>
+  <data name="_WMIRestartApplication_RU" xml:space="preserve">
+    <value>Перезапуск приложения...</value>
+  </data>
+  <data name="_End_EN" xml:space="preserve">
+    <value>Scanning complete</value>
+  </data>
+  <data name="_CertSubjectExplicitlyDistrusted_EN" xml:space="preserve">
+    <value>Signer's certificate is in the Untrusted Publishers store</value>
+  </data>
+  <data name="_Scanning_EN" xml:space="preserve">
+    <value>Scanning:</value>
+  </data>
+  <data name="_RegistryKeyRemoved_EN" xml:space="preserve">
+    <value>Key successfully removed -</value>
+  </data>
+  <data name="_ErrorSetMitigationPolicy_EN" xml:space="preserve">
+    <value>Failed to apply mitigation policy</value>
+  </data>
+  <data name="_MaliciousDir_RU" xml:space="preserve">
+    <value>Вредоносный каталог</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_ErrorGrantPrivilege_EN" xml:space="preserve">
+    <value>This application has found missing privileges for the Administrators group, but could not restore them. How to assign privileges manually read the blog https://t.me/MinerSearch_blog/24</value>
+  </data>
+  <data name="_Directory_RU" xml:space="preserve">
+    <value>каталог</value>
+  </data>
+  <data name="_CriticalServiceStartup_EN" xml:space="preserve">
+    <value>Startup type of the critical service has been restored</value>
+  </data>
+  <data name="_EmptyTask_EN" xml:space="preserve">
+    <value>Empty task</value>
+  </data>
+  <data name="_ScanOnlyMode_EN" xml:space="preserve">
+    <value>Scan only mode</value>
+  </data>
+  <data name="_RemovedEmptyDir_EN" xml:space="preserve">
+    <value>Removed empty dir</value>
+  </data>
+  <data name="_NoThreats_EN" xml:space="preserve">
+    <value>No threats found</value>
+  </data>
+  <data name="_WMIEvent_RU" xml:space="preserve">
+    <value>Событие WMI</value>
+  </data>
+  <data name="_SafeBootHint_RU" xml:space="preserve">
+    <value>Безопасный режим: проверка задач планировщика и правил брандмауэра недоступна. </value>
+  </data>
+  <data name="_ProcessSuspended_RU" xml:space="preserve">
+    <value>Процесс был приостановлен -</value>
+  </data>
+  <data name="_exit_RU" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
+  <data name="_PresentInCmdArgs_RU" xml:space="preserve">
+    <value>присутствует в парам. командной строки</value>
+  </data>
+  <data name="_ErrorLockedFile_RU" xml:space="preserve">
+    <value>Файл заблокирован: #file#. Чтение невозможно.</value>
+  </data>
+  <data name="_TermServiceFailedRestore_EN" xml:space="preserve">
+    <value>TermService: failed to restore</value>
+  </data>
+  <data name="_ServiceDisabled_EN" xml:space="preserve">
+    <value>Service has been disabled</value>
+  </data>
+  <data name="_ScanServices_RU" xml:space="preserve">
+    <value>Сканирование служб...</value>
+  </data>
+  <data name="_SuspiciousEntry_EN" xml:space="preserve">
+    <value>Suspicious entry</value>
+  </data>
+  <data name="_UnlockSuccess_RU" xml:space="preserve">
+    <value>Разблокировано успешно</value>
+  </data>
+  <data name="_ErrorVerifySignature_RU" xml:space="preserve">
+    <value>Ошибка проверки цифровой подписи</value>
+  </data>
+  <data name="_EmptyTask_RU" xml:space="preserve">
+    <value>Пустая задача</value>
+  </data>
+  <data name="_Scanning_RU" xml:space="preserve">
+    <value>Сканирование:</value>
+  </data>
+  <data name="_StartSignatureScan_EN" xml:space="preserve">
+    <value>Starting signature scan...</value>
+  </data>
+  <data name="_ScanFiles_EN" xml:space="preserve">
+    <value>Scanning files...</value>
+  </data>
+  <data name="_ErrorScanProcesses_EN" xml:space="preserve">
+    <value>Something is prevent the search for malicious processes. You should temporarily turn off your antivirus and try again.</value>
+  </data>
+  <data name="_Error_RU" xml:space="preserve">
+    <value>Ошибка:</value>
+  </data>
+  <data name="_AppInitNotEmpty_RU" xml:space="preserve">
+    <value>Параметр A?ppIn??it_DLL?s не пуст</value>
+  </data>
+  <data name="_ErrorTaskDeleteFail_RU" xml:space="preserve">
+    <value>Не удалось удалить задачу</value>
+  </data>
+  <data name="_ScanFirewall_RU" xml:space="preserve">
+    <value>Сканирование настроек брандмауэра...</value>
+  </data>
+  <data name="_ErrorTerminateProcess_EN" xml:space="preserve">
+    <value>Failed to terminate ma?li?ci?ou?s process:</value>
+  </data>
+  <data name="_WMIRegister_EN" xml:space="preserve">
+    <value>Register necessary DLLs...</value>
+  </data>
+  <data name="_FileNotExistsSpec_RU" xml:space="preserve">
+    <value>Файл не существует в указанных каталогах:</value>
+  </data>
+  <data name="_ProcessTerminated_RU" xml:space="preserve">
+    <value>Процесс успешно прерван -</value>
+  </data>
+  <data name="_ContinueButton_EN" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="_Directory_EN" xml:space="preserve">
+    <value>directory</value>
+  </data>
+  <data name="_Path_EN" xml:space="preserve">
+    <value>Path:</value>
+  </data>
+  <data name="_CheckingTermService_EN" xml:space="preserve">
+    <value>Checking TermService...</value>
+  </data>
+  <data name="_SignedAppInitNotFound_RU" xml:space="preserve">
+    <value>Параметр RequireSignedAp?pIn??it_DLLs не найден</value>
+  </data>
   <data name="_Help_EN" xml:space="preserve">
     <value>Startup params:
 
@@ -135,1020 +347,23 @@
 --full-scan                   Add other entire local drives for signature scan
 --restore=&lt;path&gt;              Restore specified file from quarantine</value>
   </data>
-  <data name="_Winver_EN" xml:space="preserve">
-    <value>Wi?ndo?ws ??ve??rsion:</value>
-  </data>
-  <data name="_ErrorOnUnlock_EN" xml:space="preserve">
-    <value>Error on unlock</value>
-  </data>
-  <data name="_exit_ru" xml:space="preserve">
-    <value>Выйти</value>
-  </data>
-  <data name="_ServiceName_EN" xml:space="preserve">
-    <value>Service name:</value>
-  </data>
-  <data name="_FindBlockingProcess_EN" xml:space="preserve">
-    <value>Try to find blocking process...</value>
-  </data>
-  <data name="_ArchiveWarn_caption_RU" xml:space="preserve">
-    <value>Некорректный запуск программы</value>
-  </data>
-  <data name="_ProcessSuspended_RU" xml:space="preserve">
-    <value>Процесс был приостановлен -</value>
-  </data>
-  <data name="_AlreadyProceeded_RU" xml:space="preserve">
-    <value>Уже обработан</value>
-  </data>
-  <data name="_ErrorCannotProceed_EN" xml:space="preserve">
-    <value>Can not proceed</value>
-  </data>
-  <data name="_FoundThreats_RU" xml:space="preserve">
-    <value>Найдено угроз: </value>
-  </data>
-  <data name="_SafeBootHint_EN" xml:space="preserve">
-    <value>Safe boot: scan tasks and firewall rules is not available.</value>
-  </data>
-  <data name="_R00tkitPresent_RU" xml:space="preserve">
-    <value>Обнаружен руткит! Выполняется нейтрализация...</value>
-  </data>
-  <data name="_MlwrProcessesCount_EN" xml:space="preserve">
-    <value>Ma??li??cio??us processes:</value>
-  </data>
-  <data name="_CertUntrustedRoot_EN" xml:space="preserve">
-    <value>Root certificate is not trusted</value>
-  </data>
-  <data name="_ProcessSuspendedPartially_EN" xml:space="preserve">
-    <value>Not all threads are suspended</value>
-  </data>
-  <data name="_Scanning_RU" xml:space="preserve">
-    <value>Сканирование:</value>
-  </data>
-  <data name="_AppInitNotEmpty_RU" xml:space="preserve">
-    <value>Параметр A?ppIn??it_DLL?s не пуст</value>
-  </data>
-  <data name="_SpecDrive_EN" xml:space="preserve">
-    <value>Specify drive letter:</value>
-  </data>
-  <data name="_ErrorTerminateProcess_RU" xml:space="preserve">
-    <value>Не удалось завершить вредоносный процесс:</value>
-  </data>
-  <data name="_HostsFileCreated_EN" xml:space="preserve">
-    <value>New hosts file has been created</value>
-  </data>
-  <data name="_TotalThreatsFound_RU" xml:space="preserve">
-    <value>Итого найдено угроз:</value>
-  </data>
-  <data name="_GPULibsUsage_RU" xml:space="preserve">
-    <value>Объемное потребление ресурсов ГП:</value>
-  </data>
-  <data name="_CriticalServiceNotInstalled_EN" xml:space="preserve">
-    <value>service is not installed!</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="telegram_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\telegram_logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_InvalidFile_EN" xml:space="preserve">
-    <value>Invalid file</value>
-  </data>
-  <data name="_SignedAppInitNotFound_RU" xml:space="preserve">
-    <value>Параметр RequireSignedAp?pIn??it_DLLs не найден</value>
-  </data>
-  <data name="_AppAlreadyRunning_EN" xml:space="preserve">
-    <value>Another copy of the application is already running. For display help message use --help option</value>
-  </data>
-  <data name="_TermServiceFailedRestore_RU" xml:space="preserve">
-    <value>TermService: не удалось ввостановить</value>
-  </data>
-  <data name="_accept_en" xml:space="preserve">
-    <value>Yes</value>
-  </data>
-  <data name="_ServiceStopped_EN" xml:space="preserve">
-    <value>Service has been stopped</value>
-  </data>
-  <data name="_TryUnlockDirectory_EN" xml:space="preserve">
-    <value>Try to unlock directory...</value>
-  </data>
-  <data name="_CertSubjectCertExpired_EN" xml:space="preserve">
-    <value>Signer's certificate was expired</value>
-  </data>
-  <data name="_Path_RU" xml:space="preserve">
-    <value>Путь:</value>
-  </data>
-  <data name="_AllDone_EN" xml:space="preserve">
-    <value>All Done. Press ENTER to close this window...</value>
-  </data>
-  <data name="_ProcessFailedExecute_EN" xml:space="preserve">
-    <value>Proccess failed to execute!</value>
-  </data>
-  <data name="_ScanProcesses_RU" xml:space="preserve">
-    <value>Сканирование процессов...</value>
-  </data>
-  <data name="_EmptyTask_EN" xml:space="preserve">
-    <value>Empty task</value>
-  </data>
-  <data name="_ServiceName_RU" xml:space="preserve">
-    <value>Имя службы:</value>
-  </data>
-  <data name="_Malici0usFile_EN" xml:space="preserve">
-    <value>Mali?cious file:</value>
-  </data>
-  <data name="_RestartCleanup_RU" xml:space="preserve">
-    <value>Перезапуск очистки...</value>
-  </data>
-  <data name="_ExeptionTitle_RU" xml:space="preserve">
-    <value>Необработанное исключение</value>
-  </data>
-  <data name="_CertSignatureOrFileCorrupt_EN" xml:space="preserve">
-    <value>File or signature was probably corrupt</value>
-  </data>
-  <data name="_BlacklistedPort_RU" xml:space="preserve">
-    <value>Нежелательный порт:</value>
-  </data>
-  <data name="_AlreadyProceeded_EN" xml:space="preserve">
-    <value>Already proceeded</value>
-  </data>
-  <data name="_Exclusion_RU" xml:space="preserve">
-    <value>исключение</value>
-  </data>
-  <data name="_SuspiciousFileSize_RU" xml:space="preserve">
-    <value>Подозрительный размер файла</value>
-  </data>
-  <data name="_Username_RU" xml:space="preserve">
-    <value>Имя пользователя:</value>
-  </data>
-  <data name="_FileNotExistsSpec_EN" xml:space="preserve">
-    <value>File does not exist in the specified directories:</value>
-  </data>
-  <data name="_ErrorNoDotNet_EN" xml:space="preserve">
-    <value>NET Framework version 4.7.1 or higher is required to run this application. Check this component and try again</value>
-  </data>
-  <data name="_End_EN" xml:space="preserve">
-    <value>Scanning complete</value>
-  </data>
-  <data name="_SignedAppInitNotFound_EN" xml:space="preserve">
-    <value>RequireSignedAp?pIn??it_DLLs key is not found</value>
-  </data>
-  <data name="_CertSubjectNotTrusted_RU" xml:space="preserve">
-    <value>Субъект не выполнил указанное действие проверки</value>
-  </data>
-  <data name="_ValueSetTo1_EN" xml:space="preserve">
-    <value>The value was set to 1</value>
-  </data>
-  <data name="_BlockingProcessClosed_RU" xml:space="preserve">
-    <value>Блокирующий процесс был закрыт -</value>
-  </data>
-  <data name="_CheckingTermService_EN" xml:space="preserve">
-    <value>Checking TermService...</value>
-  </data>
-  <data name="_ErrorTaskDeleteFail_EN" xml:space="preserve">
-    <value>Failed to delete task</value>
-  </data>
-  <data name="_UnknownCommand_EN" xml:space="preserve">
-    <value>Unknown command</value>
-  </data>
-  <data name="_StartSignatureScan_RU" xml:space="preserve">
-    <value>Начато сигнатурное сканирование...</value>
-  </data>
-  <data name="_FileRenamed_RU" xml:space="preserve">
-    <value>Файл переименован в</value>
-  </data>
-  <data name="_SpecDrive_RU" xml:space="preserve">
-    <value>Укажите букву диска:</value>
-  </data>
-  <data name="_Userprofile_EN" xml:space="preserve">
-    <value>userprofile</value>
-  </data>
-  <data name="_HostsFileMissing_RU" xml:space="preserve">
-    <value>Файл hosts отсутствует</value>
-  </data>
-  <data name="_ErrorCleanHosts_RU" xml:space="preserve">
-    <value>Ошибка очистки файла hosts:</value>
-  </data>
-  <data name="_Error_EN" xml:space="preserve">
-    <value>Error:</value>
-  </data>
-  <data name="_PresentInCmdArgs_EN" xml:space="preserve">
-    <value>is present in cmd args</value>
-  </data>
-  <data name="_File_RU" xml:space="preserve">
-    <value>файл</value>
-  </data>
-  <data name="_Deleted_RU" xml:space="preserve">
-    <value>- Удалено успешно</value>
-  </data>
-  <data name="_CheckingTermService_RU" xml:space="preserve">
-    <value>Проверка TermService...</value>
-  </data>
-  <data name="_ScanFirewall_RU" xml:space="preserve">
-    <value>Сканирование настроек брандмауэра...</value>
-  </data>
-  <data name="_ScanFirewall_EN" xml:space="preserve">
-    <value>Scanning firewall...</value>
-  </data>
-  <data name="_WinPEMode_EN" xml:space="preserve">
-    <value>Activated WinPE mode. Specified drive letter -</value>
-  </data>
-  <data name="_RestoredFile_EN" xml:space="preserve">
-    <value>Restored file</value>
-  </data>
-  <data name="_RemovingKnownMlwrFiles_EN" xml:space="preserve">
-    <value>Removing known mal?ware files...</value>
-  </data>
-  <data name="_AllDone_RU" xml:space="preserve">
-    <value>Готово. Нажмите ENTER, чтобы закрыть...</value>
-  </data>
-  <data name="_MlwrProcessesCount_RU" xml:space="preserve">
-    <value>Вредоносных процессов:</value>
-  </data>
-  <data name="_StartSignatureScan_EN" xml:space="preserve">
-    <value>Starting signature scan...</value>
-  </data>
-  <data name="_BootMode_RU" xml:space="preserve">
-    <value>Режим загрузки:</value>
-  </data>
-  <data name="_Name_EN" xml:space="preserve">
-    <value>Name:</value>
-  </data>
-  <data name="_ProbablyRAT_RU" xml:space="preserve">
-    <value>Вероятно RAT-процесс (бэкдор):</value>
-  </data>
-  <data name="_InvalidCertificateSignature_RU" xml:space="preserve">
-    <value>Цифровая подпись сертификата неверна</value>
-  </data>
-  <data name="_SuspiciousFile_EN" xml:space="preserve">
-    <value>Suspicious file:</value>
-  </data>
-  <data name="_Directory_EN" xml:space="preserve">
-    <value>directory</value>
-  </data>
-  <data name="_Path_EN" xml:space="preserve">
-    <value>Path:</value>
-  </data>
-  <data name="_TotalNeutralizedThreats_EN" xml:space="preserve">
-    <value>Total neutralized threats:</value>
-  </data>
-  <data name="_PreparingToScan_EN" xml:space="preserve">
-    <value>Preparing to scan, please wait...</value>
-  </data>
-  <data name="_RemovedEmptyDir_RU" xml:space="preserve">
-    <value>Удален пустой каталог</value>
-  </data>
-  <data name="_TaskDeleted_RU" xml:space="preserve">
-    <value>Задача успешно удалена -</value>
-  </data>
-  <data name="_FoundThreats_EN" xml:space="preserve">
-    <value>Found threats:</value>
-  </data>
-  <data name="_StartupCount_RU" xml:space="preserve">
-    <value>Кол-во запусков</value>
-  </data>
-  <data name="_IncorrectDrive_EN" xml:space="preserve">
-    <value>Incorrect drive letter</value>
-  </data>
-  <data name="_ProcessFound_RU" xml:space="preserve">
-    <value>Обнаружен вредоносный процесс! Уровень риска</value>
-  </data>
-  <data name="_CriticalServiceNotInstalled_RU" xml:space="preserve">
-    <value>служба не установлена!</value>
-  </data>
-  <data name="_sfxArchive_RU" xml:space="preserve">
-    <value>???S??F?X?? А?р?хив:</value>
-  </data>
-  <data name="_ProcessFound_EN" xml:space="preserve">
-    <value>Ma??li??cio??us process detected! Risk level</value>
-  </data>
-  <data name="_InvalidCertificateSignature_EN" xml:space="preserve">
-    <value>Invalid signature file</value>
-  </data>
-  <data name="_StartupCount_EN" xml:space="preserve">
-    <value>Startup count</value>
-  </data>
-  <data name="_SuspiciousPath_RU" xml:space="preserve">
-    <value>Подозрительный путь</value>
-  </data>
-  <data name="_PCName_RU" xml:space="preserve">
-    <value>Имя компьютера:</value>
-  </data>
-  <data name="_ScanOnlyMode_RU" xml:space="preserve">
-    <value>Только проверка</value>
-  </data>
-  <data name="_ErrorNoDotNet_RU" xml:space="preserve">
-    <value>Для работы приложения требуется .NET Framework 4.7.1 и выше. Проверьте установлен ли компонент и повторите попытку</value>
-  </data>
-  <data name="_CriticalServiceRestart_EN" xml:space="preserve">
-    <value>Critical service has been restarted</value>
-  </data>
-  <data name="_PresentInCmdArgs_RU" xml:space="preserve">
-    <value>присутствует в парам. командной строки</value>
-  </data>
-  <data name="_ErrorSetMitigationPolicy_RU" xml:space="preserve">
-    <value>Не удалось применить политику устранения рисков</value>
-  </data>
   <data name="_SignedAppInitValue_EN" xml:space="preserve">
     <value>Incorrent value on RequireS?ign?edApp?Init_DLLs</value>
-  </data>
-  <data name="_ServiceDisabled_RU" xml:space="preserve">
-    <value>Службы была отключена</value>
-  </data>
-  <data name="_TermServiceRestored_RU" xml:space="preserve">
-    <value>TermService успешно восстановлен</value>
-  </data>
-  <data name="_ErrorCannotOpen_RU" xml:space="preserve">
-    <value>Не удалось открыть</value>
-  </data>
-  <data name="_ArchiveWarn_RU" xml:space="preserve">
-    <value>Программа была запущена из архива! Извлеките весь архив и повторите перезапуск.</value>
-  </data>
-  <data name="_WatchdogProcess_RU" xml:space="preserve">
-    <value>Сторожевой процесс</value>
-  </data>
-  <data name="_Just_File_EN" xml:space="preserve">
-    <value>File:</value>
-  </data>
-  <data name="_File_EN" xml:space="preserve">
-    <value>file</value>
-  </data>
-  <data name="_InvalidFile_RU" xml:space="preserve">
-    <value>Некорректный файл</value>
-  </data>
-  <data name="_ErrorCannotOpen_EN" xml:space="preserve">
-    <value>Can not open</value>
-  </data>
-  <data name="_Name_RU" xml:space="preserve">
-    <value>Название:</value>
-  </data>
-  <data name="_TermServiceInvalidPath_RU" xml:space="preserve">
-    <value>TermService: неккоректный путь к библиотеке</value>
-  </data>
-  <data name="_CriticalServiceStartup_EN" xml:space="preserve">
-    <value>Startup type of the critical service has been restored</value>
-  </data>
-  <data name="_Malici0usProcesses_EN" xml:space="preserve">
-    <value>Mali?cious processes...</value>
-  </data>
-  <data name="_ErrorCannotRemove_RU" xml:space="preserve">
-    <value>Не удалось удалить</value>
-  </data>
-  <data name="_FoundMlwrKey_RU" xml:space="preserve">
-    <value>Найден вредоносный ключ реестра - </value>
-  </data>
-  <data name="_ErrorTerminateProcess_EN" xml:space="preserve">
-    <value>Failed to terminate ma?li?ci?ou?s process:</value>
-  </data>
-  <data name="_MaliciousEntry_RU" xml:space="preserve">
-    <value>Вредоносная запись -</value>
-  </data>
-  <data name="_Directory_RU" xml:space="preserve">
-    <value>каталог</value>
-  </data>
-  <data name="_Deleted_EN" xml:space="preserve">
-    <value>- Deleted successfull</value>
-  </data>
-  <data name="_ExeptionTitle_EN" xml:space="preserve">
-    <value>Unhandled Exeption</value>
-  </data>
-  <data name="_ErrorSetMitigationPolicy_EN" xml:space="preserve">
-    <value>Failed to apply mitigation policy</value>
-  </data>
-  <data name="_ProcessInj3cti0n_EN" xml:space="preserve">
-    <value>Process inj?ect?ion</value>
-  </data>
-  <data name="_TryCloseProcess_EN" xml:space="preserve">
-    <value>Try to close processes...</value>
-  </data>
-  <data name="_ArchiveWarn_EN" xml:space="preserve">
-    <value>The program was launched from the archive! Extract the entire archive and restart again.</value>
-  </data>
-  <data name="_ErrorAnalyzingFile_RU" xml:space="preserve">
-    <value>Ошибка анализа файла</value>
-  </data>
-  <data name="_FindBlockingProcess_RU" xml:space="preserve">
-    <value>Попытка найти блокирующий процесс...</value>
-  </data>
-  <data name="_Exclusion_EN" xml:space="preserve">
-    <value>exclusion</value>
-  </data>
-  <data name="_RemovingMLWRFiles_RU" xml:space="preserve">
-    <value>Удаление вредоносных файлов...</value>
-  </data>
-  <data name="_AnalyzingFile_EN" xml:space="preserve">
-    <value>Analyzing</value>
-  </data>
-  <data name="_ServiceDisabled_EN" xml:space="preserve">
-    <value>Service has been disabled</value>
-  </data>
-  <data name="_RegistryKeyRemoved_RU" xml:space="preserve">
-    <value>Ключ успешно удалён -</value>
-  </data>
-  <data name="_TryCloseProcess_RU" xml:space="preserve">
-    <value>Попытка завершить процессы...</value>
-  </data>
-  <data name="_accept_ru" xml:space="preserve">
-    <value>Принять</value>
-  </data>
-  <data name="_SuspiciousFile_RU" xml:space="preserve">
-    <value>Подозрительный файл:</value>
-  </data>
-  <data name="yoomoney" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\yoomoney.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_RemovingFoundMlwrFiles_EN" xml:space="preserve">
-    <value>Removing found mal?ici?ous files...</value>
-  </data>
-  <data name="_HostsFileRecovered_EN" xml:space="preserve">
-    <value>Ho??sts file has been recovered. Affected strings:</value>
-  </data>
-  <data name="_FoundMlwrKey_EN" xml:space="preserve">
-    <value>Found mali?cio?us registry key - </value>
-  </data>
-  <data name="_ErrorDisabledScan_RU" xml:space="preserve">
-    <value>Ошибка: невозможно отключить все типы сканирования</value>
-  </data>
-  <data name="_Just_File_RU" xml:space="preserve">
-    <value>Файл:</value>
-  </data>
-  <data name="_EmptyTask_RU" xml:space="preserve">
-    <value>Пустая задача</value>
-  </data>
-  <data name="_Version_EN" xml:space="preserve">
-    <value>Version:</value>
-  </data>
-  <data name="_ScanServices_EN" xml:space="preserve">
-    <value>Scanning services...</value>
-  </data>
-  <data name="_PAUSE_RU" xml:space="preserve">
-    <value>ПАУЗА ПЕРЕД ОЧИСТКОЙ
-Нажмите любую клавишу, чтобы продолжить...</value>
-  </data>
-  <data name="_CertSubjectExplicitlyDistrusted_RU" xml:space="preserve">
-    <value>Сертификат подписавшего находится в хранилище ненадежных издателей</value>
-  </data>
-  <data name="_FileRenamed_EN" xml:space="preserve">
-    <value>File renamed to</value>
-  </data>
-  <data name="_ErrorCleanHosts_EN" xml:space="preserve">
-    <value>Error clean hosts file:</value>
-  </data>
-  <data name="_Version_RU" xml:space="preserve">
-    <value>Версия:</value>
-  </data>
-  <data name="_CertSubjectCertificateRevoked_EN" xml:space="preserve">
-    <value>Subject's certificate was revoked</value>
-  </data>
-  <data name="_ErrorVerifySignature_EN" xml:space="preserve">
-    <value>Error verify signature</value>
-  </data>
-  <data name="_ScanningHosts_EN" xml:space="preserve">
-    <value>Scanning hosts file...</value>
-  </data>
-  <data name="_ScanFiles_RU" xml:space="preserve">
-    <value>Сканирование файлов...</value>
-  </data>
-  <data name="_Error_RU" xml:space="preserve">
-    <value>Ошибка:</value>
-  </data>
-  <data name="_MaliciousProfile_RU" xml:space="preserve">
-    <value>Вредоносный профиль</value>
-  </data>
-  <data name="_ErrorVerifySignature_RU" xml:space="preserve">
-    <value>Ошибка проверки цифровой подписи</value>
-  </data>
-  <data name="_ErrorCannotProceed_RU" xml:space="preserve">
-    <value>Не удалось обработать</value>
-  </data>
-  <data name="_RestartCleanup_EN" xml:space="preserve">
-    <value>Restart the cleanup...</value>
-  </data>
-  <data name="_PAUSE_EN" xml:space="preserve">
-    <value>PAUSE BEFORE CLEANUP
-Press any key to continue...</value>
-  </data>
-  <data name="_ChekingR00tkit_RU" xml:space="preserve">
-    <value>Проверка присутствия руткита...</value>
-  </data>
-  <data name="_UnlockSuccess_RU" xml:space="preserve">
-    <value>Разблокировано успешно</value>
-  </data>
-  <data name="_ErrorCannotRemove_EN" xml:space="preserve">
-    <value>Can not remove</value>
-  </data>
-  <data name="_RegistryKeyRemoved_EN" xml:space="preserve">
-    <value>Key successfully removed -</value>
-  </data>
-  <data name="_SafeBootHint_RU" xml:space="preserve">
-    <value>Безопасный режим: проверка задач планировщика и правил брандмауэра недоступна. </value>
-  </data>
-  <data name="_SuspiciousRegKey_RU" xml:space="preserve">
-    <value>Подозрительный ключ реестра:</value>
-  </data>
-  <data name="_RemovedEmptyDir_EN" xml:space="preserve">
-    <value>Removed empty dir</value>
-  </data>
-  <data name="_ErrorNotFoundComponent_RU" xml:space="preserve">
-    <value>Не удалось загрузить важные компоненты, так как вероятно архив был извлечён не полностью. </value>
-  </data>
-  <data name="_ErrorOnUnlock_RU" xml:space="preserve">
-    <value>Не удалось разблокировать</value>
-  </data>
-  <data name="_ScanFiles_EN" xml:space="preserve">
-    <value>Scanning files...</value>
-  </data>
-  <data name="_License_RU" xml:space="preserve">
-    <value>Отказ от ответственности
-
-Данное программное обеспечение (Далее ПО) предоставляется "как есть" и создано исключительно для поиска и удаления вредоносного ПО, тайно использующее ресурсы компьютера для добычи (майнинга) криптовалюты. Автор не несет ответсвенности за причиненный случайный, косвенный или непреднамеренный ущерб любого рода в ходе использования данного ПО. Вы можете использовать его на свой страх и риск. 
-
-Часто задаваемые вопросы:
-
-Вопрос: Почему мой антивирус указывает, что ПО содержит троян/вирус?
-Ответ: Сторонний антивирус регистрирует сам факт вмешательства в систему и не может отличить конкретное действие (изменение), что как раз пораждает такую реакцию. Невозможно явно указать, что производимое действие (изменение) выполняется в благих целях. 
-
-Вопрос: ПО закрывается во время работы / зависает / не запускается
-Ответ: 
-	1) Сторонний антивирус мешает нормальной работе;
-	2) неверные параметры запуска / слишком длинный путь / не установлены / отключены важные компоненты;
-	3) Вредоносное ПО блокирует его работу - в таком случае необходимо переименовать исполняемый файл "MinеrSearch_{номер-версии}.exe" в любое другое.
-	4) В коде была допущена ошибка, которая требует исправления. Об ошибке писать в issue в официальный репозиторий github. 
-
-Настоящее лицензионное соглашение распространяется на все копии, а также на предыдущие и последующие версии программного обеспечения.
-
-Вы уверены, что хотите продолжить?
-
-Нажмите "Принять" - чтобы подолжить. Нажмите "Выйти" - чтобы закрыть программу. </value>
-  </data>
-  <data name="_NoThreats_EN" xml:space="preserve">
-    <value>No threats found</value>
-  </data>
-  <data name="blendlog-donate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\blendlog-donate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_GPULibsUsage_EN" xml:space="preserve">
-    <value>Too much GPU libs usage:</value>
-  </data>
-  <data name="_exit_en" xml:space="preserve">
-    <value>No</value>
-  </data>
-  <data name="_HostsFileRecovered_RU" xml:space="preserve">
-    <value>Файл ho??s?ts был восстановлен. Удалено строк:</value>
-  </data>
-  <data name="_HostsFileCreated_RU" xml:space="preserve">
-    <value>Новый файл hosts создан</value>
-  </data>
-  <data name="_Rule_EN" xml:space="preserve">
-    <value>Rule</value>
-  </data>
-  <data name="_ErrorDisabledScan_EN" xml:space="preserve">
-    <value>Error: you cannot disable all types of scanning</value>
-  </data>
-  <data name="_SafeBootNetworkingHint_RU" xml:space="preserve">
-    <value>Безопасный режим с поддержкой сети: проверка задач планировщика недоступна.</value>
-  </data>
-  <data name="_RemovingMLWRFiles_EN" xml:space="preserve">
-    <value>Removing m?ali?cious files...</value>
-  </data>
-  <data name="_ScanOnlyMode_EN" xml:space="preserve">
-    <value>Scan only mode</value>
-  </data>
-  <data name="_SignedAppInitValue_RU" xml:space="preserve">
-    <value>RequireS?ign?edApp?Init_DLLs - установлено неверное значение</value>
-  </data>
-  <data name="_State_RU" xml:space="preserve">
-    <value>Состояние:</value>
-  </data>
-  <data name="_FileNotExistsSpec_RU" xml:space="preserve">
-    <value>Файл не существует в указанных каталогах:</value>
-  </data>
-  <data name="_HelpHint_RU" xml:space="preserve">
-    <value>Для вызова справки используйте параметр "--help"</value>
-  </data>
-  <data name="_BlacklistedPort_EN" xml:space="preserve">
-    <value>Blacklisted port:</value>
-  </data>
-  <data name="_ScanRegistry_RU" xml:space="preserve">
-    <value>Сканирование реестра...</value>
-  </data>
-  <data name="_ScanRegistry_EN" xml:space="preserve">
-    <value>Scanning registry...</value>
-  </data>
-  <data name="_Username_EN" xml:space="preserve">
-    <value>Username:</value>
-  </data>
-  <data name="_ErrorAnalyzingFile_EN" xml:space="preserve">
-    <value>Error analyzing file</value>
-  </data>
-  <data name="_State_EN" xml:space="preserve">
-    <value>State:</value>
-  </data>
-  <data name="_BlacklistedPortCMD_EN" xml:space="preserve">
-    <value>Blacklisted port in cmd args - </value>
-  </data>
-  <data name="_ErrorTaskDeleteFail_RU" xml:space="preserve">
-    <value>Не удалось удалить задачу</value>
-  </data>
-  <data name="_Malici0usFile_RU" xml:space="preserve">
-    <value>Вредоносный файл:</value>
-  </data>
-  <data name="_ArchiveWarn_caption_EN" xml:space="preserve">
-    <value>Incorrect program startup</value>
-  </data>
-  <data name="_TotalNeutralizedThreats_RU" xml:space="preserve">
-    <value>Итого удалено угроз:</value>
-  </data>
-  <data name="_sfxArchive_EN" xml:space="preserve">
-    <value>S??F????X A????rch???i???ve??:</value>
-  </data>
-  <data name="_CriticalServiceStartup_RU" xml:space="preserve">
-    <value>Тип запуска важного для работы компонента (службы) был восстановлен</value>
-  </data>
-  <data name="_Just_Service_RU" xml:space="preserve">
-    <value>Служба:</value>
-  </data>
-  <data name="_WMIEvent_RU" xml:space="preserve">
-    <value>Событие WMI</value>
-  </data>
-  <data name="_ProbablyRAT_EN" xml:space="preserve">
-    <value>Probably RAT process:</value>
-  </data>
-  <data name="_CertSubjectCertificateRevoked_RU" xml:space="preserve">
-    <value>Сертификат субъекта был отозван</value>
-  </data>
-  <data name="_WMIHead_RU" xml:space="preserve">
-    <value>Проверка базы данных WMI...</value>
-  </data>
-  <data name="_UnknownCommand_RU" xml:space="preserve">
-    <value>Неизвестная команда</value>
-  </data>
-  <data name="_WatchdogProcess_EN" xml:space="preserve">
-    <value>Watchdog process</value>
-  </data>
-  <data name="_IncorrectDrive_RU" xml:space="preserve">
-    <value>Неверная буква диска</value>
-  </data>
-  <data name="_ValueWasCreated_RU" xml:space="preserve">
-    <value>Параметр был создан</value>
-  </data>
-  <data name="_TotalThreatsFound_EN" xml:space="preserve">
-    <value>Total threats:</value>
-  </data>
-  <data name="_SuspiciousPath_EN" xml:space="preserve">
-    <value>Suspicious path</value>
-  </data>
-  <data name="_WinPEMode_RU" xml:space="preserve">
-    <value>Активирован режим WinPE. Указанная буква диска -</value>
-  </data>
-  <data name="_CheckUserJohn_RU" xml:space="preserve">
-    <value>Проверка пользователя John...</value>
-  </data>
-  <data name="_RelevantVer_RU" xml:space="preserve">
-    <value>Актуальные версии на Github</value>
-  </data>
-  <data name="_ServiceFileIsNotFound_RU" xml:space="preserve">
-    <value>Файл службы не найден</value>
-  </data>
-  <data name="_CertSubjectCertExpired_RU" xml:space="preserve">
-    <value>Сертификат подписавшего просрочен</value>
-  </data>
-  <data name="_WMIHead_EN" xml:space="preserve">
-    <value>WMI Database check...</value>
-  </data>
-  <data name="_ProcessTerminated_EN" xml:space="preserve">
-    <value>Process successfully terminated -</value>
-  </data>
-  <data name="_ProcessInj3cti0n_RU" xml:space="preserve">
-    <value>Внедрённый процесс</value>
-  </data>
-  <data name="_AppInitNotEmpty_EN" xml:space="preserve">
-    <value>A?ppIn??it_DLL?s is not empty</value>
-  </data>
-  <data name="_ScanServices_RU" xml:space="preserve">
-    <value>Сканирование служб...</value>
-  </data>
-  <data name="_End_RU" xml:space="preserve">
-    <value>Сканирование завершено</value>
-  </data>
-  <data name="_ProcessSuspended_EN" xml:space="preserve">
-    <value>Process has been suspended -</value>
-  </data>
-  <data name="_CheckUserJohn_EN" xml:space="preserve">
-    <value>Checking user John...</value>
-  </data>
-  <data name="_BootMode_EN" xml:space="preserve">
-    <value>Boot mode:</value>
-  </data>
-  <data name="_Elapse_EN" xml:space="preserve">
-    <value>Scan elapsed time:</value>
-  </data>
-  <data name="_NoThreats_RU" xml:space="preserve">
-    <value>Угроз не найдено</value>
-  </data>
-  <data name="_AnalyzingFile_RU" xml:space="preserve">
-    <value>Анализ</value>
-  </data>
-  <data name="_CertUntrustedRoot_RU" xml:space="preserve">
-    <value>Нет доверия корневому сертификату</value>
-  </data>
-  <data name="_License_EN" xml:space="preserve">
-    <value>Denial of responsibility
-
-This software provided "as is" and was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurrency. The author is not responsible for incidental, indirect or unintentional damage of any kind during the use of this software. You may use it at your own risk.
-
-FAQ:
-
-Question: Why does my antivirus indicate that the software contains a Trojan/virus?
-Answer: A third-party antivirus registers the very fact of interference in the system and cannot distinguish a specific action (change), which is what gives rise to such a reaction. It is impossible to clearly indicate that the action (change) being performed is performed for good purposes.
-
-Question: The software closes during operation / freezes / does not start
-Answer:
-1) Third-party antivirus interferes with normal operation;
-2) incorrect startup parameters / path too long / not installed / important components disabled;
-3) Malicious software blocks its operation - in this case, you need to rename the executable file "MinеrSearch_{version number}.exe" to anything else.
-4) There was an error in the code that requires correction. Write about an error in an issue in the official github repository.
-
-This license agreement applies to all copies, and to previous and subsequent versions of the software.
-
-Are you sure you want to continue? 
-
-Click Yes to continue. Click No to exit.</value>
-  </data>
-  <data name="_ProcessSuspendedPartially_RU" xml:space="preserve">
-    <value>Процесс был приостановлен частично</value>
-  </data>
-  <data name="_ScanDirectories_EN" xml:space="preserve">
-    <value>Scanning directories...</value>
-  </data>
-  <data name="_Malici0usProcesses_RU" xml:space="preserve">
-    <value>Вредоносные процессы...</value>
-  </data>
-  <data name="_ScanTasks_RU" xml:space="preserve">
-    <value>Сканирование задач планировщика...</value>
-  </data>
-  <data name="_Found_EN" xml:space="preserve">
-    <value>Found:</value>
-  </data>
-  <data name="_ValueSetTo1_RU" xml:space="preserve">
-    <value>Задано значение 1</value>
-  </data>
-  <data name="_SuspiciousRegKey_EN" xml:space="preserve">
-    <value>Sus?pic?ious registry key:</value>
-  </data>
-  <data name="_HostsFileMissing_EN" xml:space="preserve">
-    <value>Hosts file is missing</value>
-  </data>
-  <data name="_TermServiceInvalidPath_EN" xml:space="preserve">
-    <value>TermService: non original library path</value>
-  </data>
-  <data name="_TaskDeleted_EN" xml:space="preserve">
-    <value>Task successfully deleted -</value>
-  </data>
-  <data name="_TermServiceRestored_EN" xml:space="preserve">
-    <value>TermService successfully restored</value>
-  </data>
-  <data name="_RemovingFoundMlwrFiles_RU" xml:space="preserve">
-    <value>Удаление найденных вредоносных файлов...</value>
-  </data>
-  <data name="_RemovingMLWRPaths_EN" xml:space="preserve">
-    <value>Removing mal?ware dirs...</value>
-  </data>
-  <data name="_FileIsNotFound_RU" xml:space="preserve">
-    <value>Файл не найден:</value>
-  </data>
-  <data name="_SuspiciousFileSize_EN" xml:space="preserve">
-    <value>Suspicious file size</value>
-  </data>
-  <data name="_Just_Service_EN" xml:space="preserve">
-    <value>Service:</value>
-  </data>
-  <data name="_FakeSystemTask_RU" xml:space="preserve">
-    <value>Вероятно подделка системной задачи</value>
-  </data>
-  <data name="_Help_RU" xml:space="preserve">
-    <value>Параметры запуска:
-
---help                       Вызов этой справки
---no-logs                    Не записывать лог в файл
---no-scantime                Сканировать только процессы
---no-runtime                 Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)
---no-services                Пропустить сканирование служб
---no-signature-scan          Пропустить сигнатурное сканирование файлов
---no-rootkit-check           Не проверять присутствие руткита
---depth=&lt;число&gt;              Где &lt;число&gt; - уровень максимальной глубины поиска. Пример использования --depth=5 (по-умолчанию 8)
---pause                      Пауза перед очисткой
---remove-empty-tasks         Удалять задачу из Планировщика задач, если файл приложения в ней не существует
---winpemode                  Запускает сканирование в режиме WinPE (без сканирования процессов, реестра, правил фаерволла, служб, задач планировщика)
---scan-only                  Отображать вредоносный или подозрительный объект, но не выполнять лечение
---full-scan                  Целиком добавляет другие локальные диски для сигнатурного сканирования
---restore=&lt;путь&gt;             Восстановить указанный файл из карантина</value>
-  </data>
-  <data name="_WMIEvent_EN" xml:space="preserve">
-    <value>WMI Event </value>
-  </data>
-  <data name="_CertSignatureOrFileCorrupt_RU" xml:space="preserve">
-    <value>Файл или подпись вероятно были повреждены</value>
-  </data>
-  <data name="_TermServiceFailedRestore_EN" xml:space="preserve">
-    <value>TermService: failed to restore</value>
-  </data>
-  <data name="_ErrorNotFoundComponent_EN" xml:space="preserve">
-    <value>Important components could not be loaded, as the archive was probably not fully extracted.</value>
-  </data>
-  <data name="_RestoredFile_RU" xml:space="preserve">
-    <value>Файл восстановлен</value>
-  </data>
-  <data name="_ServiceFileIsNotFound_EN" xml:space="preserve">
-    <value>Service file is not found</value>
-  </data>
-  <data name="_LockedDir_EN" xml:space="preserve">
-    <value>Locked directory</value>
-  </data>
-  <data name="_Malici0usProcess_EN" xml:space="preserve">
-    <value>Mali?cio?us process:</value>
-  </data>
-  <data name="_Winver_RU" xml:space="preserve">
-    <value>Версия W??indo??ws:</value>
-  </data>
-  <data name="_ServiceStopped_RU" xml:space="preserve">
-    <value>Службы была остановлена</value>
-  </data>
-  <data name="_ScanProcesses_EN" xml:space="preserve">
-    <value>Scanning processes...</value>
-  </data>
-  <data name="_Service_EN" xml:space="preserve">
-    <value>service</value>
-  </data>
-  <data name="_ProcessTerminated_RU" xml:space="preserve">
-    <value>Процесс успешно прерван -</value>
-  </data>
-  <data name="_ScanTasks_EN" xml:space="preserve">
-    <value>Scanning scheduled tasks...</value>
-  </data>
-  <data name="_Service_RU" xml:space="preserve">
-    <value>службу</value>
-  </data>
-  <data name="_RemovingKnownMlwrFiles_RU" xml:space="preserve">
-    <value>Удаление известных вредоносных файлов...</value>
-  </data>
-  <data name="_R00tkitPresent_EN" xml:space="preserve">
-    <value>Mi?ner's r?o??o?tk??it detected! Try to remove...</value>
-  </data>
-  <data name="_SafeBootNetworkingHint_EN" xml:space="preserve">
-    <value>Safe boot networking: task scheduler check not available</value>
-  </data>
-  <data name="_Found_RU" xml:space="preserve">
-    <value>Найдено:</value>
-  </data>
-  <data name="_CertSubjectExplicitlyDistrusted_EN" xml:space="preserve">
-    <value>Signer's certificate is in the Untrusted Publishers store</value>
-  </data>
-  <data name="_RelevantVer_EN" xml:space="preserve">
-    <value>Relevant versions on Github</value>
   </data>
   <data name="_ChekingR00tkit_EN" xml:space="preserve">
     <value>Checking roo??tk??it present...</value>
   </data>
-  <data name="_BlockingProcessClosed_EN" xml:space="preserve">
-    <value>Blocking process has been closed -</value>
+  <data name="_ProbablyRAT_RU" xml:space="preserve">
+    <value>Вероятно RAT-процесс (бэкдор):</value>
   </data>
-  <data name="_MaliciousEntry_EN" xml:space="preserve">
-    <value>Mali?cious entry -</value>
+  <data name="_SelectAllButton_RU" xml:space="preserve">
+    <value>Выбрать все</value>
   </data>
-  <data name="_Malici0usProcess_RU" xml:space="preserve">
-    <value>Вредоносный процесс:</value>
+  <data name="_ErrorDisabledScan_RU" xml:space="preserve">
+    <value>Ошибка: невозможно отключить все типы сканирования</value>
   </data>
-  <data name="_ScanDirectories_RU" xml:space="preserve">
-    <value>Сканирование каталогов...</value>
-  </data>
-  <data name="_Scanning_EN" xml:space="preserve">
-    <value>Scanning:</value>
-  </data>
-  <data name="_BlacklistedPortCMD_RU" xml:space="preserve">
-    <value>Нежелательный порт в парам. командной строки -</value>
-  </data>
-  <data name="_ScanningHosts_RU" xml:space="preserve">
-    <value>Сканирование файла hosts...</value>
-  </data>
-  <data name="_MaliciousDir_EN" xml:space="preserve">
-    <value>Mali?cious directory</value>
-  </data>
-  <data name="_TryUnlockDirectory_RU" xml:space="preserve">
-    <value>Попытка разблокировать каталог...</value>
-  </data>
-  <data name="_Rule_RU" xml:space="preserve">
-    <value>Правило</value>
-  </data>
-  <data name="_CertSubjectNotTrusted_EN" xml:space="preserve">
-    <value>Subject failed the specified verification action</value>
-  </data>
-  <data name="_FileIsNotFound_EN" xml:space="preserve">
-    <value>File is not found:</value>
-  </data>
-  <data name="_ProcessFailedExecute_RU" xml:space="preserve">
-    <value>Не удалось запустить процесс!</value>
-  </data>
-  <data name="_RemovingMLWRPaths_RU" xml:space="preserve">
-    <value>Удаление вредоносных каталогов...</value>
-  </data>
-  <data name="_CriticalServiceRestart_RU" xml:space="preserve">
-    <value>Важный для работы компонент (служба) был перезапущен</value>
-  </data>
-  <data name="_ValueWasCreated_EN" xml:space="preserve">
-    <value>The value was created</value>
-  </data>
-  <data name="_Elapse_RU" xml:space="preserve">
-    <value>Время сканирования:</value>
-  </data>
-  <data name="_MaliciousDir_RU" xml:space="preserve">
-    <value>Вредоносный каталог</value>
-  </data>
-  <data name="_HelpHint_EN" xml:space="preserve">
-    <value>Use "--help" option to display list of available commands</value>
-  </data>
-  <data name="_Userprofile_RU" xml:space="preserve">
-    <value>профиль пользователя</value>
-  </data>
-  <data name="_MaliciousProfile_EN" xml:space="preserve">
-    <value>Mali?cious profile</value>
-  </data>
-  <data name="_FakeSystemTask_EN" xml:space="preserve">
-    <value>Probably fake system task</value>
-  </data>
-  <data name="_PCName_EN" xml:space="preserve">
-    <value>PC Name:</value>
-  </data>
-  <data name="_AppAlreadyRunning_RU" xml:space="preserve">
-    <value>Другая копия приложения уже запущена. Для вызова справки используйте параметр --help</value>
-  </data>
-  <data name="_UnlockSuccess_EN" xml:space="preserve">
-    <value>Unlock success</value>
-  </data>
-  <data name="_PreparingToScan_RU" xml:space="preserve">
-    <value>Подготовка сканирования, пожалуйста, подождите...</value>
-  </data>
-  <data name="_LockedDir_RU" xml:space="preserve">
-    <value>Заблокированный каталог</value>
-  </data>
-  <data name="128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_JoinToTelegram_EN" xml:space="preserve">
-    <value>Have questions? Join the telegram!</value>
-  </data>
-  <data name="_JoinToTelegram_RU" xml:space="preserve">
-    <value>Есть вопросы? Заходите в телеграм!</value>
-  </data>
-  <data name="_LabelSupport_EN" xml:space="preserve">
-    <value>Like the app? Support the project on Boosty!</value>
-  </data>
-  <data name="_LabelSupport_RU" xml:space="preserve">
-    <value>Нравится приложение? Поддержи проект на Boosty!</value>
-  </data>
-  <data name="_SuccessR00tkitNeutralized_EN" xml:space="preserve">
-    <value>Rootkit neutralized</value>
-  </data>
-  <data name="_SuccessR00tkitNeutralized_RU" xml:space="preserve">
-    <value>Руткит нейтрализован</value>
-  </data>
-  <data name="_ServiceNotInstalled_EN" xml:space="preserve">
-    <value>Specified service is not installed:</value>
-  </data>
-  <data name="_ServiceNotInstalled_RU" xml:space="preserve">
-    <value>Указанная служба не установлена:</value>
-  </data>
-  <data name="_WMICorruption_EN" xml:space="preserve">
-    <value>WMI Database corrupted. Trying to restore...Please wait</value>
-  </data>
-  <data name="_WMICorruption_RU" xml:space="preserve">
-    <value>База данных WMI повреждена. Выполняется восстановление...пожалуйста, ждите</value>
-  </data>
-  <data name="_WMIRecompilation_EN" xml:space="preserve">
-    <value>Recompile necessary MOF files...</value>
-  </data>
-  <data name="_WMIRecompilation_RU" xml:space="preserve">
-    <value>Рекомпиляция необходимых фалов...</value>
-  </data>
-  <data name="_WMIRegister_EN" xml:space="preserve">
-    <value>Register necessary DLLs...</value>
-  </data>
-  <data name="_WMIRegister_RU" xml:space="preserve">
-    <value>Регистрация необходимых DLL...</value>
-  </data>
-  <data name="_WMIRestartApplication_EN" xml:space="preserve">
-    <value>Restart Application...</value>
-  </data>
-  <data name="_WMIRestartApplication_RU" xml:space="preserve">
-    <value>Перезапуск приложения...</value>
-  </data>
-  <data name="_WMIRestartService_EN" xml:space="preserve">
-    <value>Restart service...</value>
-  </data>
-  <data name="_WMIRestartService_RU" xml:space="preserve">
-    <value>Перезапуск службы...</value>
-  </data>
-  <data name="_BtnDetails_EN" xml:space="preserve">
-    <value>Show Log</value>
-  </data>
-  <data name="_BtnDetails_RU" xml:space="preserve">
-    <value>Показать отчёт</value>
+  <data name="_SuccessGrantPrivilege_RU" xml:space="preserve">
+    <value>Приложение обнаружило недостающие права доступа для группы Администраторов, которые были восстановлены. Для применения изменений следует выполнить повторный вход в систему или перезагрузить компьютер.</value>
   </data>
   <data name="_LogLegend_RU" xml:space="preserve">
     <value>--------------Условные-обозначения-------------------
@@ -1168,11 +383,519 @@ Click Yes to continue. Click No to exit.</value>
 [&amp;]     Итог
 -----------------------------------------------------</value>
   </data>
-  <data name="_ServiceDcomAbusing_EN" xml:space="preserve">
-    <value>Svchost Hijacking module:</value>
+  <data name="_State_EN" xml:space="preserve">
+    <value>State:</value>
+  </data>
+  <data name="_Malici0usProcess_EN" xml:space="preserve">
+    <value>Mali?cio?us process:</value>
+  </data>
+  <data name="_MessageRunAsSystemWarn_EN" xml:space="preserve">
+    <value>Caution! Running this application with SYSTEM privileges may accidentally harm the system. If you want to scan another disk, use the --winpemode option. Continue scanning as a SYSTEM?</value>
+  </data>
+  <data name="_BlockingProcessClosed_RU" xml:space="preserve">
+    <value>Блокирующий процесс был закрыт -</value>
+  </data>
+  <data name="_AlreadyProceeded_RU" xml:space="preserve">
+    <value>Уже обработан</value>
+  </data>
+  <data name="_CertSignatureOrFileCorrupt_EN" xml:space="preserve">
+    <value>File or signature was probably corrupt</value>
+  </data>
+  <data name="_ErrorVerifySignature_EN" xml:space="preserve">
+    <value>Error verify signature</value>
+  </data>
+  <data name="_AllowSentStatistics_RU" xml:space="preserve">
+    <value>Разрешить отправлять лог-файл (журнал сканирования найденных угроз) разработчику при каждом использовании? Это поможет улучшить работу приложения.</value>
+  </data>
+  <data name="_ErrorDisabledScan_EN" xml:space="preserve">
+    <value>Error: you cannot disable all types of scanning</value>
+  </data>
+  <data name="_Deleted_RU" xml:space="preserve">
+    <value>- Удалено успешно</value>
+  </data>
+  <data name="_WMICorruption_RU" xml:space="preserve">
+    <value>База данных WMI повреждена. Выполняется восстановление...пожалуйста, ждите</value>
+  </data>
+  <data name="_ErrorAnalyzingFile_EN" xml:space="preserve">
+    <value>Error analyzing file</value>
+  </data>
+  <data name="_SkipServiceMessage_EN" xml:space="preserve">
+    <value>Skipped Service -</value>
+  </data>
+  <data name="_InvalidFile_RU" xml:space="preserve">
+    <value>Некорректный файл</value>
+  </data>
+  <data name="_RelevantVer_RU" xml:space="preserve">
+    <value>Актуальные версии на Github</value>
+  </data>
+  <data name="_UnknownCommand_EN" xml:space="preserve">
+    <value>Unknown command</value>
+  </data>
+  <data name="_TermServiceRestored_RU" xml:space="preserve">
+    <value>TermService успешно восстановлен</value>
+  </data>
+  <data name="_License_EN" xml:space="preserve">
+    <value>{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049\deflangfe1049{\fonttbl{\f0\fnil\fcharset204 Times New Roman;}}
+{\colortbl ;\red118\green113\blue113;}
+{\*\generator Riched20 10.0.19041}{\*\mmathPr\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
+\pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\f0\fs28\par
+This software provided "as is" and was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurrency. The author is not responsible for incidental, indirect or unintentional damage of any kind during the use of this software. You may use it at your own risk.\par
+\par
+\cf1\b FAQ:\par
+\cf0 Why does my antivirus indicate that the software contains a Trojan/virus?\par
+\b0 Answer: A third-party antivirus registers the very fact of interference in the system and cannot distinguish a specific action (change), which is what gives rise to such a reaction. It is impossible to clearly indicate that the action (change) being performed is performed for good purposes.\par
+\b The software closes during operation / freezes / does not start\par
+\b0 Answer:\par
+
+\pard 
+{\pntext\f0 1)\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pndec{\pntxta)}}
+\fi710\li142\ri212\sa160\sl276\slmult1\qj Third-party antivirus interferes with normal operation;\par
+{\pntext\f0 2)\tab}incorrect startup parameters / path too long / important components disabled or not installed;\par
+{\pntext\f0 3)\tab}Malicious software blocks its operation - in this case, you need to rename the executable file "Min\'e5rSearch_\{version number\}.exe" to anything else.\par
+{\pntext\f0 4)\tab}There was an error in the code that requires correction. Write about an error in an issue in the official github repository.\par
+
+\pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj This license agreement applies to all copies, and to previous and subsequent versions of the software.\par
+Are you sure you want to continue? \par
+Click \b Yes\b0  to continue. \par
+Click \b Exit\b0  to exit.\par
+}</value>
+  </data>
+  <data name="_AlreadyProceeded_EN" xml:space="preserve">
+    <value>Already proceeded</value>
+  </data>
+  <data name="_Just_File_RU" xml:space="preserve">
+    <value>Файл:</value>
+  </data>
+  <data name="_InvalidCertificateSignature_RU" xml:space="preserve">
+    <value>Цифровая подпись сертификата неверна</value>
+  </data>
+  <data name="_ExeptionTitle_EN" xml:space="preserve">
+    <value>Unhandled Exeption</value>
+  </data>
+  <data name="_RestoredFile_EN" xml:space="preserve">
+    <value>Restored file</value>
+  </data>
+  <data name="_ProcessNotRunning_RU" xml:space="preserve">
+    <value>Процесс не выполняется</value>
+  </data>
+  <data name="_PCName_EN" xml:space="preserve">
+    <value>PC Name:</value>
+  </data>
+  <data name="_TotalThreatsFound_RU" xml:space="preserve">
+    <value>Найдено угроз:</value>
+  </data>
+  <data name="_ErrorLockedByWD_RU" xml:space="preserve">
+    <value>Файл заблокирован Защитником Windows:</value>
+  </data>
+  <data name="_TotalNeutralizedThreats_EN" xml:space="preserve">
+    <value>Total cured threats:</value>
+  </data>
+  <data name="_RebootRequired_RU" xml:space="preserve">
+    <value>Требуется перезагрузка</value>
+  </data>
+  <data name="_InvalidCertificateSignature_EN" xml:space="preserve">
+    <value>Invalid signature file</value>
+  </data>
+  <data name="_StartupCount_EN" xml:space="preserve">
+    <value>Startup count</value>
+  </data>
+  <data name="_Malici0usFile_EN" xml:space="preserve">
+    <value>Mali?cious file:</value>
+  </data>
+  <data name="_Exclusion_EN" xml:space="preserve">
+    <value>exclusion</value>
+  </data>
+  <data name="_ProcessFailedExecute_EN" xml:space="preserve">
+    <value>Proccess failed to execute!</value>
+  </data>
+  <data name="_Username_EN" xml:space="preserve">
+    <value>Username:</value>
+  </data>
+  <data name="_ErrorLockedFile_EN" xml:space="preserve">
+    <value>The file is blocked: #file#. Reading is not possible.</value>
+  </data>
+  <data name="_ScanServices_EN" xml:space="preserve">
+    <value>Scanning services...</value>
+  </data>
+  <data name="_AppAlreadyRunning_RU" xml:space="preserve">
+    <value>Другая копия приложения уже запущена. Для вызова справки используйте параметр --help</value>
+  </data>
+  <data name="_Deleted_EN" xml:space="preserve">
+    <value>- Deleted successfull</value>
+  </data>
+  <data name="_UnknownCommand_RU" xml:space="preserve">
+    <value>Неизвестная команда</value>
+  </data>
+  <data name="_NoLogBtn_RU" xml:space="preserve">
+    <value>Без отчёта</value>
+  </data>
+  <data name="_HostsCleanupWarning_EN" xml:space="preserve">
+    <value>The following lines look suspicious, the marked ones will be deleted.</value>
+  </data>
+  <data name="_DisableServiceWarning_EN" xml:space="preserve">
+    <value>Warning! The application has identified many services with invalid digital signatures. 
+
+It is assumed that the system:
+ - was installed from an unverified source;
+ - has Insider Preview status;
+ - or modified by third-party programs.
+
+The following services will be disabled, which may lead to system instability:
+#InvalidServices#
+
+Would you like to continue?</value>
+  </data>
+  <data name="_BlacklistedPortCMD_RU" xml:space="preserve">
+    <value>Нежелательный порт в парам. командной строки -</value>
+  </data>
+  <data name="_ShowFolderLogs_RU" xml:space="preserve">
+    <value>Показать все отчёты в папке</value>
+  </data>
+  <data name="_WMIRegister_RU" xml:space="preserve">
+    <value>Регистрация необходимых DLL...</value>
+  </data>
+  <data name="_TryUnlockDirectory_RU" xml:space="preserve">
+    <value>Попытка разблокировать каталог...</value>
+  </data>
+  <data name="_BootMode_EN" xml:space="preserve">
+    <value>Boot mode:</value>
+  </data>
+  <data name="_MessageRunAsSystemWarn_RU" xml:space="preserve">
+    <value>Осторожно! Запуская это приложение с СИСТЕМНЫМИ привилегиями может случайно навредить системе. Если вы хотите просканировать другой диск, используйте параметр --winpemode. Продолжить сканирование от имени СИСТЕМЫ?</value>
+  </data>
+  <data name="_FileRenamed_RU" xml:space="preserve">
+    <value>Файл переименован в</value>
+  </data>
+  <data name="_AnalyzingFile_RU" xml:space="preserve">
+    <value>Анализ</value>
+  </data>
+  <data name="_Rule_RU" xml:space="preserve">
+    <value>Правило</value>
+  </data>
+  <data name="_SpecDrive_RU" xml:space="preserve">
+    <value>Укажите букву диска:</value>
+  </data>
+  <data name="_Just_Service_EN" xml:space="preserve">
+    <value>Service:</value>
+  </data>
+  <data name="_DeselectAllButton_RU" xml:space="preserve">
+    <value>Снять выбор</value>
+  </data>
+  <data name="_HostsFileMissing_EN" xml:space="preserve">
+    <value>Hosts file is missing</value>
+  </data>
+  <data name="_NoThreats_RU" xml:space="preserve">
+    <value>Угроз не найдено</value>
+  </data>
+  <data name="_PrefixNewVersionAvailable_RU" xml:space="preserve">
+    <value>&lt;-- Доступно обновление #LATEST#</value>
+  </data>
+  <data name="_License_RU" xml:space="preserve">
+    <value>{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049\deflangfe1049{\fonttbl{\f0\fnil\fcharset204 Times New Roman;}}
+{\colortbl ;\red128\green128\blue128;}
+{\*\listtable 
+{\list\listhybrid
+{\listlevel\levelnfc0\leveljc0\levelstartat1{\leveltext\'02\'00.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc4\leveljc0\levelstartat1{\leveltext\'02\'01.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc3\leveljc0\levelstartat1{\leveltext\'02\'02.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc2\leveljc0\levelstartat1{\leveltext\'02\'03.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc1\leveljc0\levelstartat1{\leveltext\'02\'04.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc0\leveljc0\levelstartat1{\leveltext\'02\'05.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc4\leveljc0\levelstartat1{\leveltext\'02\'06.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc3\leveljc0\levelstartat1{\leveltext\'02\'07.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc0\leveljc1\levelstartat1{\leveltext\'02\'08);}{\levelnumbers\'01;}\jclisttab\tx0}\listid1 }}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+{\*\generator Riched20 10.0.19041}{\*\mmathPr\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
+\pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\tx284\f0\fs28\par
+\'c4\'e0\'ed\'ed\'ee\'e5 \'ef\'f0\'ee\'e3\'f0\'e0\'ec\'ec\'ed\'ee\'e5 \'ee\'e1\'e5\'f1\'ef\'e5\'f7\'e5\'ed\'e8\'e5 (\'c4\'e0\'eb\'e5\'e5 \'cf\'ce) \'ef\'f0\'e5\'e4\'ee\'f1\'f2\'e0\'e2\'eb\'ff\'e5\'f2\'f1\'ff "\'ea\'e0\'ea \'e5\'f1\'f2\'fc" \'e8 \'f1\'ee\'e7\'e4\'e0\'ed\'ee \'e8\'f1\'ea\'eb\'fe\'f7\'e8\'f2\'e5\'eb\'fc\'ed\'ee \'e4\'eb\'ff \'ef\'ee\'e8\'f1\'ea\'e0 \'e8 \'f3\'e4\'e0\'eb\'e5\'ed\'e8\'ff \'e2\'f0\'e5\'e4\'ee\'ed\'ee\'f1\'ed\'ee\'e3\'ee \'cf\'ce, \'f2\'e0\'e9\'ed\'ee \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'f3\'fe\'f9\'e5\'e5 \'f0\'e5\'f1\'f3\'f0\'f1\'fb \'ea\'ee\'ec\'ef\'fc\'fe\'f2\'e5\'f0\'e0 \'e4\'eb\'ff \'e4\'ee\'e1\'fb\'f7\'e8 (\'ec\'e0\'e9\'ed\'e8\'ed\'e3\'e0) \'ea\'f0\'e8\'ef\'f2\'ee\'e2\'e0\'eb\'fe\'f2\'fb. \'c0\'e2\'f2\'ee\'f0 \'ed\'e5 \'ed\'e5\'f1\'e5\'f2 \'ee\'f2\'e2\'e5\'f2\'f1\'f2\'e2\'e5\'ed\'ed\'ee\'f1\'f2\'e8 \'e7\'e0 \'ef\'f0\'e8\'f7\'e8\'ed\'e5\'ed\'ed\'fb\'e9 \'f1\'eb\'f3\'f7\'e0\'e9\'ed\'fb\'e9, \'ea\'ee\'f1\'e2\'e5\'ed\'ed\'fb\'e9 \'e8\'eb\'e8 \'ed\'e5\'ef\'f0\'e5\'e4\'ed\'e0\'ec\'e5\'f0\'e5\'ed\'ed\'fb\'e9 \'f3\'f9\'e5\'f0\'e1 \'eb\'fe\'e1\'ee\'e3\'ee \'f0\'ee\'e4\'e0 \'e2 \'f5\'ee\'e4\'e5 \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'ee\'e2\'e0\'ed\'e8\'ff \'e4\'e0\'ed\'ed\'ee\'e3\'ee \'cf\'ce. \'c2\'fb \'ec\'ee\'e6\'e5\'f2\'e5 \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'ee\'e2\'e0\'f2\'fc \'e5\'e3\'ee \'ed\'e0 \'f1\'e2\'ee\'e9 \'f1\'f2\'f0\'e0\'f5 \'e8 \'f0\'e8\'f1\'ea. \par
+\par
+\cf1\b\'d7\'e0\'f1\'f2\'ee \'e7\'e0\'e4\'e0\'e2\'e0\'e5\'ec\'fb\'e5 \'e2\'ee\'ef\'f0\'ee\'f1\'fb:\par
+\cf0\'cf\'ee\'f7\'e5\'ec\'f3 \'ec\'ee\'e9 \'e0\'ed\'f2\'e8\'e2\'e8\'f0\'f3\'f1 \'f3\'ea\'e0\'e7\'fb\'e2\'e0\'e5\'f2, \'f7\'f2\'ee \'cf\'ce \'f1\'ee\'e4\'e5\'f0\'e6\'e8\'f2 \'f2\'f0\'ee\'ff\'ed/\'e2\'e8\'f0\'f3\'f1?\par
+\'ce\'f2\'e2\'e5\'f2\b0 : \'d1\'f2\'ee\'f0\'ee\'ed\'ed\'e8\'e9 \'e0\'ed\'f2\'e8\'e2\'e8\'f0\'f3\'f1 \'f0\'e5\'e3\'e8\'f1\'f2\'f0\'e8\'f0\'f3\'e5\'f2 \'f1\'e0\'ec \'f4\'e0\'ea\'f2 \'e2\'ec\'e5\'f8\'e0\'f2\'e5\'eb\'fc\'f1\'f2\'e2\'e0 \'e2 \'f1\'e8\'f1\'f2\'e5\'ec\'f3 \'e8 \'ed\'e5 \'ec\'ee\'e6\'e5\'f2 \'ee\'f2\'eb\'e8\'f7\'e8\'f2\'fc \'ea\'ee\'ed\'ea\'f0\'e5\'f2\'ed\'ee\'e5 \'e4\'e5\'e9\'f1\'f2\'e2\'e8\'e5 (\'e8\'e7\'ec\'e5\'ed\'e5\'ed\'e8\'e5), \'f7\'f2\'ee \'ea\'e0\'ea \'f0\'e0\'e7 \'ef\'ee\'f0\'ee\'e6\'e4\'e0\'e5\'f2 \'f2\'e0\'ea\'f3\'fe \'f0\'e5\'e0\'ea\'f6\'e8\'fe. \'cd\'e5\'e2\'ee\'e7\'ec\'ee\'e6\'ed\'ee \'ff\'e2\'ed\'ee \'f3\'ea\'e0\'e7\'e0\'f2\'fc, \'f7\'f2\'ee \'ef\'f0\'ee\'e8\'e7\'e2\'ee\'e4\'e8\'ec\'ee\'e5 \'e4\'e5\'e9\'f1\'f2\'e2\'e8\'e5 (\'e8\'e7\'ec\'e5\'ed\'e5\'ed\'e8\'e5) \'e2\'fb\'ef\'ee\'eb\'ed\'ff\'e5\'f2\'f1\'ff \'e2 \'e1\'eb\'e0\'e3\'e8\'f5 \'f6\'e5\'eb\'ff\'f5. \par
+\b\'cf\'ce \'e7\'e0\'ea\'f0\'fb\'e2\'e0\'e5\'f2\'f1\'ff \'e2\'ee \'e2\'f0\'e5\'ec\'ff \'f0\'e0\'e1\'ee\'f2\'fb / \'e7\'e0\'e2\'e8\'f1\'e0\'e5\'f2 / \'ed\'e5 \'e7\'e0\'ef\'f3\'f1\'ea\'e0\'e5\'f2\'f1\'ff\par
+\'ce\'f2\'e2\'e5\'f2\b0 : \par
+
+\pard 
+{\listtext\f0 1)\tab}\ls1\ilvl8\fi142\li710\ri212\sa160\sl276\slmult1\qj\tx284\'d1\'f2\'ee\'f0\'ee\'ed\'ed\'e8\'e9 \'e0\'ed\'f2\'e8\'e2\'e8\'f0\'f3\'f1 \'ec\'e5\'f8\'e0\'e5\'f2 \'ed\'ee\'f0\'ec\'e0\'eb\'fc\'ed\'ee\'e9 \'f0\'e0\'e1\'ee\'f2\'e5;\par
+{\listtext\f0 2)\tab}\'ed\'e5\'e2\'e5\'f0\'ed\'fb\'e5 \'ef\'e0\'f0\'e0\'ec\'e5\'f2\'f0\'fb \'e7\'e0\'ef\'f3\'f1\'ea\'e0 / \'f1\'eb\'e8\'f8\'ea\'ee\'ec \'e4\'eb\'e8\'ed\'ed\'fb\'e9 \'ef\'f3\'f2\'fc / \'ed\'e5 \'f3\'f1\'f2\'e0\'ed\'ee\'e2\'eb\'e5\'ed\'fb \'e8\'eb\'e8 \'ee\'f2\'ea\'eb\'fe\'f7\'e5\'ed\'fb \'e2\'e0\'e6\'ed\'fb\'e5 \'ea\'ee\'ec\'ef\'ee\'ed\'e5\'ed\'f2\'fb;\par
+{\listtext\f0 3)\tab}\'c2\'f0\'e5\'e4\'ee\'ed\'ee\'f1\'ed\'ee\'e5 \'cf\'ce \'e1\'eb\'ee\'ea\'e8\'f0\'f3\'e5\'f2 \'e5\'e3\'ee \'f0\'e0\'e1\'ee\'f2\'f3 - \'e2 \'f2\'e0\'ea\'ee\'ec \'f1\'eb\'f3\'f7\'e0\'e5 \'ed\'e5\'ee\'e1\'f5\'ee\'e4\'e8\'ec\'ee \'ef\'e5\'f0\'e5\'e8\'ec\'e5\'ed\'ee\'e2\'e0\'f2\'fc \'e8\'f1\'ef\'ee\'eb\'ed\'ff\'e5\'ec\'fb\'e9 \'f4\'e0\'e9\'eb "Min\'e5rSearch_\{\'ed\'ee\'ec\'e5\'f0-\'e2\'e5\'f0\'f1\'e8\'e8\}.exe" \'e2 \'eb\'fe\'e1\'ee\'e5 \'e4\'f0\'f3\'e3\'ee\'e5.\par
+{\listtext\f0 4)\tab}\'c2 \'ea\'ee\'e4\'e5 \'e1\'fb\'eb\'e0 \'e4\'ee\'ef\'f3\'f9\'e5\'ed\'e0 \'ee\'f8\'e8\'e1\'ea\'e0, \'ea\'ee\'f2\'ee\'f0\'e0\'ff \'f2\'f0\'e5\'e1\'f3\'e5\'f2 \'e8\'f1\'ef\'f0\'e0\'e2\'eb\'e5\'ed\'e8\'ff. \'ce\'e1 \'ee\'f8\'e8\'e1\'ea\'e5 \'ef\'e8\'f1\'e0\'f2\'fc \'e2 issue \'e2 \'ee\'f4\'e8\'f6\'e8\'e0\'eb\'fc\'ed\'fb\'e9 \'f0\'e5\'ef\'ee\'e7\'e8\'f2\'ee\'f0\'e8\'e9 github. \par
+
+\pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\tx284\par
+\'cd\'e0\'f1\'f2\'ee\'ff\'f9\'e5\'e5 \'eb\'e8\'f6\'e5\'ed\'e7\'e8\'ee\'ed\'ed\'ee\'e5 \'f1\'ee\'e3\'eb\'e0\'f8\'e5\'ed\'e8\'e5 \'f0\'e0\'f1\'ef\'f0\'ee\'f1\'f2\'f0\'e0\'ed\'ff\'e5\'f2\'f1\'ff \'ed\'e0 \'e2\'f1\'e5 \'ea\'ee\'ef\'e8\'e8, \'e0 \'f2\'e0\'ea\'e6\'e5 \'ed\'e0 \'ef\'f0\'e5\'e4\'fb\'e4\'f3\'f9\'e8\'e5 \'e8 \'ef\'ee\'f1\'eb\'e5\'e4\'f3\'fe\'f9\'e8\'e5 \'e2\'e5\'f0\'f1\'e8\'e8 \'ef\'f0\'ee\'e3\'f0\'e0\'ec\'ec\'ed\'ee\'e3\'ee \'ee\'e1\'e5\'f1\'ef\'e5\'f7\'e5\'ed\'e8\'ff.\par
+\'c2\'fb \'f3\'e2\'e5\'f0\'e5\'ed\'fb, \'f7\'f2\'ee \'f5\'ee\'f2\'e8\'f2\'e5 \'ef\'f0\'ee\'e4\'ee\'eb\'e6\'e8\'f2\'fc?\par
+\'cd\'e0\'e6\'ec\'e8\'f2\'e5 "\b\'cf\'f0\'e8\'ed\'ff\'f2\'fc\b0 " - \'f7\'f2\'ee\'e1\'fb \'ef\'f0\'ee\'e4\'ee\'eb\'e6\'e8\'f2\'fc. \par
+\'cd\'e0\'e6\'ec\'e8\'f2\'e5 "\b\'c2\'fb\'e9\'f2\'e8\b0 " - \'f7\'f2\'ee\'e1\'fb \'e7\'e0\'ea\'f0\'fb\'f2\'fc \'ef\'f0\'ee\'e3\'f0\'e0\'ec\'ec\'f3.\par
+}</value>
+  </data>
+  <data name="_CertSubjectCertificateRevoked_RU" xml:space="preserve">
+    <value>Сертификат субъекта был отозван</value>
+  </data>
+  <data name="_FindBlockingProcess_EN" xml:space="preserve">
+    <value>Try to find blocking process...</value>
+  </data>
+  <data name="_SafeBootHint_EN" xml:space="preserve">
+    <value>Safe boot: scan tasks and firewall rules is not available.</value>
+  </data>
+  <data name="_ScanDirectories_EN" xml:space="preserve">
+    <value>Scanning directories...</value>
+  </data>
+  <data name="_Elapse_EN" xml:space="preserve">
+    <value>Scan elapsed time:</value>
+  </data>
+  <data name="_ErrorTaskDeleteFail_EN" xml:space="preserve">
+    <value>Failed to delete task</value>
+  </data>
+  <data name="_RestartCleanup_EN" xml:space="preserve">
+    <value>Restart the cleanup...</value>
   </data>
   <data name="_ServiceDcomAbusing_RU" xml:space="preserve">
     <value>Модуль перехвата Svchost:</value>
+  </data>
+  <data name="_SuccessR00tkitNeutralized_EN" xml:space="preserve">
+    <value>Rootkit neutralized</value>
+  </data>
+  <data name="_ServiceName_EN" xml:space="preserve">
+    <value>Service name:</value>
+  </data>
+  <data name="_ScanFirewall_EN" xml:space="preserve">
+    <value>Scanning firewall...</value>
+  </data>
+  <data name="_TryCloseProcess_EN" xml:space="preserve">
+    <value>Try to close processes...</value>
+  </data>
+  <data name="_End_RU" xml:space="preserve">
+    <value>Сканирование завершено</value>
+  </data>
+  <data name="_AllDone_RU" xml:space="preserve">
+    <value>Готово. Нажмите ENTER, чтобы закрыть...</value>
+  </data>
+  <data name="_ErrorNotFoundComponent_RU" xml:space="preserve">
+    <value>Не удалось загрузить важные компоненты, так как вероятно архив был извлечён не полностью. </value>
+  </data>
+  <data name="_RemovingFoundMlwrFiles_RU" xml:space="preserve">
+    <value>Удаление найденных вредоносных файлов...</value>
+  </data>
+  <data name="_SuspiciousPath_EN" xml:space="preserve">
+    <value>Suspicious path</value>
+  </data>
+  <data name="_PreparingToScan_EN" xml:space="preserve">
+    <value>Preparing to scan, please wait...</value>
+  </data>
+  <data name="_ServiceNotInstalled_RU" xml:space="preserve">
+    <value>Указанная служба не установлена:</value>
+  </data>
+  <data name="_FileNotExistsSpec_EN" xml:space="preserve">
+    <value>File does not exist in the specified directories:</value>
+  </data>
+  <data name="_LabelSupportCaption_EN" xml:space="preserve">
+    <value>Support the project!</value>
+  </data>
+  <data name="_TryUnlockDirectory_EN" xml:space="preserve">
+    <value>Try to unlock directory...</value>
+  </data>
+  <data name="_AppInitNotEmpty_EN" xml:space="preserve">
+    <value>A?ppIn??it_DLL?s is not empty</value>
+  </data>
+  <data name="_ChekingR00tkit_RU" xml:space="preserve">
+    <value>Проверка присутствия руткита...</value>
+  </data>
+  <data name="_RestoredFile_RU" xml:space="preserve">
+    <value>Файл восстановлен</value>
+  </data>
+  <data name="_WinPEMode_EN" xml:space="preserve">
+    <value>Activated WinPE mode. Specified drive letter -</value>
+  </data>
+  <data name="_Help_RU" xml:space="preserve">
+    <value>Параметры запуска:
+
+--help                       Вызов этой справки
+--no-logs                    Не записывать лог в файл
+--no-scantime                Сканировать только процессы
+--no-runtime                 Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)
+--no-services                Пропустить сканирование служб
+--no-signature-scan          Пропустить сигнатурное сканирование файлов
+--no-rootkit-check           Не проверять присутствие руткита
+--depth=&lt;число&gt;              Где &lt;число&gt; - уровень максимальной глубины поиска. Пример использования --depth=5 (по-умолчанию 8)
+--pause                      Пауза перед очисткой
+--remove-empty-tasks         Удалять задачу из Планировщика задач, если файл приложения в ней не существует
+--winpemode                  Запускает сканирование в режиме WinPE (без сканирования процессов, реестра, правил фаерволла, служб, задач планировщика)
+--scan-only                  Отображать вредоносный или подозрительный объект, но не выполнять лечение
+--full-scan                  Целиком добавляет другие локальные диски для сигнатурного сканирования
+--restore=&lt;путь&gt;             Восстановить указанный файл из карантина</value>
+  </data>
+  <data name="_ErrorNoDotNet_EN" xml:space="preserve">
+    <value>NET Framework version 4.7.1 or higher is required to run this application. Check this component and try again</value>
+  </data>
+  <data name="_PAUSE_RU" xml:space="preserve">
+    <value>ПАУЗА ПЕРЕД ОЧИСТКОЙ
+Нажмите любую клавишу, чтобы продолжить...</value>
+  </data>
+  <data name="_CriticalServiceRestart_RU" xml:space="preserve">
+    <value>Важный для работы компонент (служба) был перезапущен</value>
+  </data>
+  <data name="_HelpHint_EN" xml:space="preserve">
+    <value>Use "--help" option to display list of available commands</value>
+  </data>
+  <data name="_InvalidFile_EN" xml:space="preserve">
+    <value>Invalid file</value>
+  </data>
+  <data name="_sfxArchive_RU" xml:space="preserve">
+    <value>???S??F?X?? А?р?хив:</value>
+  </data>
+  <data name="_Error_EN" xml:space="preserve">
+    <value>Error:</value>
+  </data>
+  <data name="_ServiceFileIsNotFound_RU" xml:space="preserve">
+    <value>Файл службы не найден</value>
+  </data>
+  <data name="_ScanDirectories_RU" xml:space="preserve">
+    <value>Сканирование каталогов...</value>
+  </data>
+  <data name="_MovedToQuarantine_EN" xml:space="preserve">
+    <value>Moved to Quarantine</value>
+  </data>
+  <data name="_CertSubjectCertExpired_EN" xml:space="preserve">
+    <value>Signer's certificate was expired</value>
+  </data>
+  <data name="_ExeptionTitle_RU" xml:space="preserve">
+    <value>Необработанное исключение</value>
+  </data>
+  <data name="_TermServiceInvalidPath_EN" xml:space="preserve">
+    <value>TermService: non original library path</value>
+  </data>
+  <data name="_SignedAppInitValue_RU" xml:space="preserve">
+    <value>RequireS?ign?edApp?Init_DLLs - установлено неверное значение</value>
+  </data>
+  <data name="_ValueSetTo1_EN" xml:space="preserve">
+    <value>The value was set to 1</value>
+  </data>
+  <data name="_ServiceStopped_EN" xml:space="preserve">
+    <value>Service has been stopped</value>
+  </data>
+  <data name="_PAUSE_EN" xml:space="preserve">
+    <value>PAUSE BEFORE CLEANUP
+Press any key to continue...</value>
+  </data>
+  <data name="_ValueSetTo1_RU" xml:space="preserve">
+    <value>Задано значение 1</value>
+  </data>
+  <data name="_WMIHead_EN" xml:space="preserve">
+    <value>WMI Database check...</value>
+  </data>
+  <data name="_FoundMlwrKey_EN" xml:space="preserve">
+    <value>Found mali?cio?us registry key - </value>
+  </data>
+  <data name="_HostsCleanupSkipBtn_RU" xml:space="preserve">
+    <value>Пропустить</value>
+  </data>
+  <data name="_MessageNewVersion_EN" xml:space="preserve">
+    <value>A new version is available #LATEST#. Go to the download page?</value>
+  </data>
+  <data name="_LockedDir_RU" xml:space="preserve">
+    <value>Заблокированный каталог</value>
+  </data>
+  <data name="_FindBlockingProcess_RU" xml:space="preserve">
+    <value>Попытка найти блокирующий процесс...</value>
+  </data>
+  <data name="_WMIRecompilation_RU" xml:space="preserve">
+    <value>Рекомпиляция необходимых фалов...</value>
+  </data>
+  <data name="_ScanningHosts_EN" xml:space="preserve">
+    <value>Scanning hosts file...</value>
+  </data>
+  <data name="_FileIsNotFound_EN" xml:space="preserve">
+    <value>File is not found:</value>
+  </data>
+  <data name="_HostsFileCreated_EN" xml:space="preserve">
+    <value>New hosts file has been created</value>
+  </data>
+  <data name="_IncorrectDrive_EN" xml:space="preserve">
+    <value>Incorrect drive letter</value>
+  </data>
+  <data name="_ArchiveWarn_RU" xml:space="preserve">
+    <value>Программа была запущена из архива! Извлеките весь архив и повторите перезапуск.</value>
+  </data>
+  <data name="_ScanOnlyMode_RU" xml:space="preserve">
+    <value>Только проверка</value>
+  </data>
+  <data name="_RegistryKeyRemoved_RU" xml:space="preserve">
+    <value>Ключ успешно удалён -</value>
+  </data>
+  <data name="_FileRenamed_EN" xml:space="preserve">
+    <value>File renamed to</value>
+  </data>
+  <data name="_SelectAllButton_EN" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="_ErrorLockedByWD_EN" xml:space="preserve">
+    <value>File locked by Wi?ndo?ws Def?end?er:</value>
+  </data>
+  <data name="_ValueWasCreated_RU" xml:space="preserve">
+    <value>Параметр был создан</value>
+  </data>
+  <data name="_PrefixNewVersionAvailable_EN" xml:space="preserve">
+    <value>&lt;-- An update is available #LATEST#</value>
+  </data>
+  <data name="_SuspiciousFileSize_RU" xml:space="preserve">
+    <value>Подозрительный размер файла</value>
+  </data>
+  <data name="_WatchdogProcess_RU" xml:space="preserve">
+    <value>Сторожевой процесс</value>
+  </data>
+  <data name="_R00tkitPresent_RU" xml:space="preserve">
+    <value>Обнаружен руткит! Выполняется нейтрализация...</value>
+  </data>
+  <data name="_ScanFiles_RU" xml:space="preserve">
+    <value>Сканирование файлов...</value>
+  </data>
+  <data name="_HostsFileMissing_RU" xml:space="preserve">
+    <value>Файл hosts отсутствует</value>
+  </data>
+  <data name="_BlacklistedPort_RU" xml:space="preserve">
+    <value>Нежелательный порт:</value>
+  </data>
+  <data name="_ErrorCannotOpen_RU" xml:space="preserve">
+    <value>Не удалось открыть</value>
+  </data>
+  <data name="_SuspiciousRegKey_RU" xml:space="preserve">
+    <value>Подозрительный ключ реестра:</value>
+  </data>
+  <data name="_SuspiciousObjects_EN" xml:space="preserve">
+    <value>Suspicious obj:</value>
+  </data>
+  <data name="_ServiceDcomAbusing_EN" xml:space="preserve">
+    <value>Svchost Hijacking module:</value>
+  </data>
+  <data name="_FoundMlwrKey_RU" xml:space="preserve">
+    <value>Найден вредоносный ключ реестра - </value>
+  </data>
+  <data name="_ProcessTerminated_EN" xml:space="preserve">
+    <value>Process successfully terminated -</value>
+  </data>
+  <data name="_ErrorGrantPrivilege_RU" xml:space="preserve">
+    <value>Приложение обнаружило недостающие права доступа для группы Администраторов, но не удалось выполнить их восстановление. Как выполнить восстановление прав вручную читайте в блоге https://t.me/MinerSearch_blog/24</value>
+  </data>
+  <data name="_ProcessInj3cti0n_RU" xml:space="preserve">
+    <value>Внедрённый процесс</value>
+  </data>
+  <data name="_BootMode_RU" xml:space="preserve">
+    <value>Режим загрузки:</value>
+  </data>
+  <data name="_ProcessFound_RU" xml:space="preserve">
+    <value>Обнаружен вредоносный процесс! Уровень риска</value>
+  </data>
+  <data name="_Userprofile_RU" xml:space="preserve">
+    <value>профиль пользователя</value>
+  </data>
+  <data name="_LockedDir_EN" xml:space="preserve">
+    <value>Locked directory</value>
+  </data>
+  <data name="_MaliciousProfile_EN" xml:space="preserve">
+    <value>Mali?cious profile</value>
+  </data>
+  <data name="_File_EN" xml:space="preserve">
+    <value>file</value>
   </data>
   <data name="_LogLegend_EN" xml:space="preserve">
     <value>--------------Legend-symbols-------------------
@@ -1192,138 +915,566 @@ Click Yes to continue. Click No to exit.</value>
 [&amp;]     Summary
 ----------------------------------------------------</value>
   </data>
-  <data name="_AllowSentStatistics_EN" xml:space="preserve">
-    <value>Do you allow sending a log file (scan log of detected threats) to the developer every time you use it? This will help to improve the operation of the application.</value>
-  </data>
-  <data name="_AllowSentStatistics_RU" xml:space="preserve">
-    <value>Разрешить отправлять лог-файл (журнал сканирования найденных угроз) разработчику при каждом использовании? Это поможет улучшить работу приложения.</value>
-  </data>
-  <data name="_MovedToQuarantine_EN" xml:space="preserve">
-    <value>Moved to Quarantine</value>
-  </data>
-  <data name="_MovedToQuarantine_RU" xml:space="preserve">
-    <value>Перемещено в карантин</value>
-  </data>
-  <data name="_PleaseWaitMessage_EN" xml:space="preserve">
-    <value>Wait...</value>
-  </data>
-  <data name="_PleaseWaitMessage_RU" xml:space="preserve">
-    <value>Подождите...</value>
-  </data>
-  <data name="_ErrorFileOnlineOnly_EN" xml:space="preserve">
-    <value>The file is only available online</value>
-  </data>
-  <data name="_ErrorFileOnlineOnly_RU" xml:space="preserve">
-    <value>Файл доступен только онлайн</value>
-  </data>
-  <data name="_ErrorLockedByWD_EN" xml:space="preserve">
-    <value>File locked by Wi?ndo?ws Def?end?er:</value>
-  </data>
-  <data name="_ErrorLockedByWD_RU" xml:space="preserve">
-    <value>Файл заблокирован Защитником Windows:</value>
-  </data>
-  <data name="_ProcessNotRunning_EN" xml:space="preserve">
-    <value>The process is not running</value>
-  </data>
-  <data name="_ProcessNotRunning_RU" xml:space="preserve">
-    <value>Процесс не выполняется</value>
-  </data>
-  <data name="_ErrorScanProcesses_EN" xml:space="preserve">
-    <value>Something is prevent the search for malicious processes. You should temporarily turn off your antivirus and try again.</value>
-  </data>
-  <data name="_ErrorScanProcesses_RU" xml:space="preserve">
-    <value>Что-то мешает выполнить поиск вредоносных процессов. Следует временно приостановить работу антивирусного ПО и повторить попытку.</value>
-  </data>
-  <data name="_FinishAllThreatsNeutralized_EN" xml:space="preserve">
-    <value>All threats has been neutralized!</value>
-  </data>
-  <data name="_FinishAllThreatsNeutralized_RU" xml:space="preserve">
-    <value>Все угрозы были устранены!</value>
-  </data>
-  <data name="_FinishNotAllThreatsNeutralized_EN" xml:space="preserve">
-    <value>Not all threats found have been neutralized. Restart your computer and run the check again.</value>
-  </data>
   <data name="_FinishNotAllThreatsNeutralized_RU" xml:space="preserve">
     <value>Не все найденные угрозы были устранены. Перезагрузите компьютер и выполните проверку снова.</value>
   </data>
-  <data name="_FinishRebootPCNow_EN" xml:space="preserve">
-    <value>Do you want to restart your computer right now?</value>
+  <data name="_Version_EN" xml:space="preserve">
+    <value>Version:</value>
   </data>
-  <data name="_FinishRebootPCNow_RU" xml:space="preserve">
-    <value>Перезагрузить компьютер сейчас?</value>
+  <data name="_WMIRestartApplication_EN" xml:space="preserve">
+    <value>Restart Application...</value>
   </data>
-  <data name="_DisableServiceWarning_EN" xml:space="preserve">
-    <value>Warning! The application has identified many services with invalid digital signatures. 
-
-It is assumed that the system:
- - was installed from an unverified source;
- - has Insider Preview status;
- - or modified by third-party programs.
-
-The following services will be disabled, which may lead to system instability:
-#InvalidServices#
-
-Would you like to continue?</value>
+  <data name="_WinPEMode_RU" xml:space="preserve">
+    <value>Активирован режим WinPE. Указанная буква диска -</value>
   </data>
-  <data name="_DisableServiceWarning_RU" xml:space="preserve">
-    <value>Внимание! Приложение выявило множество служб с недействительной цифровой подписью. 
-
-Предполагается, что система:
- - была установлена из непроверенного источника;
- - имеет статус Insider Preview;
- - либо модифицирована сторонними программами.
-
-Перечисленные ниже службы будут отключены, что возможно приведёт к нестабильности системы:
-#InvalidServices#
-
-Желаете продолжить?</value>
+  <data name="_ErrorCannotCheckUpdates_RU" xml:space="preserve">
+    <value>Не удалось проверить обновления</value>
+  </data>
+  <data name="_NoLogBtn_EN" xml:space="preserve">
+    <value>No Log</value>
+  </data>
+  <data name="_Malici0usProcesses_EN" xml:space="preserve">
+    <value>Mali?cious processes...</value>
+  </data>
+  <data name="_CheckUserJohn_EN" xml:space="preserve">
+    <value>Checking user John...</value>
   </data>
   <data name="_MaliciousService_EN" xml:space="preserve">
     <value>Malicious Service -</value>
   </data>
-  <data name="_MaliciousService_RU" xml:space="preserve">
-    <value>Вредоносная служба - </value>
+  <data name="telegram_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\telegram_logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_SkipServiceMessage_EN" xml:space="preserve">
-    <value>Skipped Service -</value>
+  <data name="_SuccessR00tkitNeutralized_RU" xml:space="preserve">
+    <value>Руткит нейтрализован</value>
+  </data>
+  <data name="_TaskDeleted_RU" xml:space="preserve">
+    <value>Задача успешно удалена -</value>
+  </data>
+  <data name="_Found_RU" xml:space="preserve">
+    <value>Найдено:</value>
+  </data>
+  <data name="_SafeBootNetworkingHint_EN" xml:space="preserve">
+    <value>Safe boot networking: task scheduler check not available</value>
+  </data>
+  <data name="_RemovedEmptyDir_RU" xml:space="preserve">
+    <value>Удален пустой каталог</value>
+  </data>
+  <data name="_R00tkitPresent_EN" xml:space="preserve">
+    <value>Mi?ner's r?o??o?tk??it detected! Try to remove...</value>
+  </data>
+  <data name="_exit_EN" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="_Malici0usProcesses_RU" xml:space="preserve">
+    <value>Вредоносные процессы...</value>
+  </data>
+  <data name="_MessageNewVersion_RU" xml:space="preserve">
+    <value>Доступна новая версия #LATEST#. Перейти на станицу загрузки?</value>
+  </data>
+  <data name="_ScanProcesses_EN" xml:space="preserve">
+    <value>Scanning processes...</value>
+  </data>
+  <data name="_ErrorFileOnlineOnly_RU" xml:space="preserve">
+    <value>Файл доступен только онлайн</value>
+  </data>
+  <data name="_TryCloseProcess_RU" xml:space="preserve">
+    <value>Попытка завершить процессы...</value>
+  </data>
+  <data name="_HostsFileRecovered_RU" xml:space="preserve">
+    <value>Файл ho??s?ts был восстановлен. Удалено строк:</value>
+  </data>
+  <data name="_ArchiveWarn_caption_EN" xml:space="preserve">
+    <value>Incorrect program startup</value>
+  </data>
+  <data name="_ErrorNotFoundComponent_EN" xml:space="preserve">
+    <value>Important components could not be loaded, as the archive was probably not fully extracted.</value>
+  </data>
+  <data name="blendlog-donate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\blendlog-donate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_CriticalServiceRestart_EN" xml:space="preserve">
+    <value>Critical service has been restarted</value>
+  </data>
+  <data name="_LicenseCaption_EN" xml:space="preserve">
+    <value>Denial of Responsibility</value>
+  </data>
+  <data name="_ProcessSuspended_EN" xml:space="preserve">
+    <value>Process has been suspended -</value>
+  </data>
+  <data name="_sfxArchive_EN" xml:space="preserve">
+    <value>S??F????X A????rch???i???ve??:</value>
+  </data>
+  <data name="_UnlockSuccess_EN" xml:space="preserve">
+    <value>Unlock success</value>
+  </data>
+  <data name="_ServiceNotInstalled_EN" xml:space="preserve">
+    <value>Specified service is not installed:</value>
+  </data>
+  <data name="_CriticalServiceNotInstalled_RU" xml:space="preserve">
+    <value>служба не установлена!</value>
+  </data>
+  <data name="_PresentInCmdArgs_EN" xml:space="preserve">
+    <value>is present in cmd args</value>
+  </data>
+  <data name="_MaliciousProfile_RU" xml:space="preserve">
+    <value>Вредоносный профиль</value>
+  </data>
+  <data name="_SuspiciousEntry_RU" xml:space="preserve">
+    <value>Подозрительная запись</value>
+  </data>
+  <data name="_ErrorCannotProceed_EN" xml:space="preserve">
+    <value>Can not proceed</value>
+  </data>
+  <data name="_SuspiciousRegKey_EN" xml:space="preserve">
+    <value>Sus?pic?ious registry key:</value>
+  </data>
+  <data name="_RemovingMLWRFiles_EN" xml:space="preserve">
+    <value>Removing m?ali?cious files...</value>
+  </data>
+  <data name="_Service_RU" xml:space="preserve">
+    <value>службу</value>
+  </data>
+  <data name="_State_RU" xml:space="preserve">
+    <value>Состояние:</value>
+  </data>
+  <data name="_NoInternetConnection_RU" xml:space="preserve">
+    <value>Нет подключения к интернету</value>
+  </data>
+  <data name="yoomoney" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\yoomoney.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_ErrorScanProcesses_RU" xml:space="preserve">
+    <value>Что-то мешает выполнить поиск вредоносных процессов. Следует временно приостановить работу антивирусного ПО и повторить попытку.</value>
+  </data>
+  <data name="_ErrorCannotRemove_EN" xml:space="preserve">
+    <value>Can not remove</value>
+  </data>
+  <data name="_CertSignatureOrFileCorrupt_RU" xml:space="preserve">
+    <value>Файл или подпись вероятно были повреждены</value>
+  </data>
+  <data name="_MaliciousEntry_EN" xml:space="preserve">
+    <value>Mali?cious entry -</value>
+  </data>
+  <data name="_CertUntrustedRoot_RU" xml:space="preserve">
+    <value>Нет доверия корневому сертификату</value>
+  </data>
+  <data name="_MessageForGrantPrivilege_RU" xml:space="preserve">
+    <value>Текущий</value>
+  </data>
+  <data name="_accept_ru" xml:space="preserve">
+    <value>Принять</value>
+  </data>
+  <data name="_ArchiveWarn_caption_RU" xml:space="preserve">
+    <value>Некорректный запуск программы</value>
+  </data>
+  <data name="_LabelSupportCaption_RU" xml:space="preserve">
+    <value>Поддержать разработчика проекта!</value>
+  </data>
+  <data name="_Service_EN" xml:space="preserve">
+    <value>service</value>
+  </data>
+  <data name="_BtnDetails_EN" xml:space="preserve">
+    <value>Show Log</value>
+  </data>
+  <data name="_ServiceDisabled_RU" xml:space="preserve">
+    <value>Службы была отключена</value>
+  </data>
+  <data name="_FakeSystemTask_RU" xml:space="preserve">
+    <value>Вероятно подделка системной задачи</value>
+  </data>
+  <data name="_ProcessFailedExecute_RU" xml:space="preserve">
+    <value>Не удалось запустить процесс!</value>
+  </data>
+  <data name="_GPULibsUsage_RU" xml:space="preserve">
+    <value>Объемное потребление ресурсов ГП:</value>
+  </data>
+  <data name="_CheckUserJohn_RU" xml:space="preserve">
+    <value>Проверка пользователя John...</value>
+  </data>
+  <data name="_RelevantVer_EN" xml:space="preserve">
+    <value>Relevant versions on Github</value>
+  </data>
+  <data name="_RemovingFoundMlwrFiles_EN" xml:space="preserve">
+    <value>Removing found mal?ici?ous files...</value>
+  </data>
+  <data name="_CertSubjectCertExpired_RU" xml:space="preserve">
+    <value>Сертификат подписавшего просрочен</value>
+  </data>
+  <data name="_TaskDeleted_EN" xml:space="preserve">
+    <value>Task successfully deleted -</value>
+  </data>
+  <data name="_Elapse_RU" xml:space="preserve">
+    <value>Время сканирования:</value>
+  </data>
+  <data name="_FinishAllThreatsNeutralized_EN" xml:space="preserve">
+    <value>All threats has been neutralized!</value>
+  </data>
+  <data name="_HostsFileRecovered_EN" xml:space="preserve">
+    <value>Ho??sts file has been recovered. Affected strings:</value>
   </data>
   <data name="_SkipServiceMessage_RU" xml:space="preserve">
     <value>Служба пропущена -</value>
   </data>
-  <data name="_ErrorLockedFile_EN" xml:space="preserve">
-    <value>The file is blocked: #file#. Reading is not possible.</value>
+  <data name="_Just_Service_RU" xml:space="preserve">
+    <value>Служба:</value>
   </data>
-  <data name="_ErrorLockedFile_RU" xml:space="preserve">
-    <value>Файл заблокирован: #file#. Чтение невозможно.</value>
+  <data name="_MaliciousEntry_RU" xml:space="preserve">
+    <value>Вредоносная запись -</value>
   </data>
-  <data name="_ContinueButton_EN" xml:space="preserve">
-    <value>Continue</value>
+  <data name="_ScanTasks_EN" xml:space="preserve">
+    <value>Scanning scheduled tasks...</value>
+  </data>
+  <data name="_ErrorAnalyzingFile_RU" xml:space="preserve">
+    <value>Ошибка анализа файла</value>
+  </data>
+  <data name="_Found_EN" xml:space="preserve">
+    <value>Found:</value>
+  </data>
+  <data name="_RebootRequired_EN" xml:space="preserve">
+    <value>Reboot is required</value>
+  </data>
+  <data name="_BlacklistedPort_EN" xml:space="preserve">
+    <value>Blacklisted port:</value>
+  </data>
+  <data name="_SuspiciousObjects_RU" xml:space="preserve">
+    <value>Подозрений:</value>
+  </data>
+  <data name="_MlwrProcessesCount_EN" xml:space="preserve">
+    <value>Ma??li??cio??us processes:</value>
+  </data>
+  <data name="_BlacklistedPortCMD_EN" xml:space="preserve">
+    <value>Blacklisted port in cmd args - </value>
+  </data>
+  <data name="_accept_en" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="_CertSubjectNotTrusted_EN" xml:space="preserve">
+    <value>Subject failed the specified verification action</value>
+  </data>
+  <data name="_FoundThreats_EN" xml:space="preserve">
+    <value>Found threats:</value>
+  </data>
+  <data name="_RebootPCNowDialog_RU" xml:space="preserve">
+    <value>Перезагрузить компьютер сейчас?</value>
+  </data>
+  <data name="_ErrorSetMitigationPolicy_RU" xml:space="preserve">
+    <value>Не удалось применить политику устранения рисков</value>
+  </data>
+  <data name="_ShowFolderLogs_EN" xml:space="preserve">
+    <value>Show folder containing logs</value>
+  </data>
+  <data name="_LicenseCaption_RU" xml:space="preserve">
+    <value>Отказ от ответственности</value>
+  </data>
+  <data name="_Rule_EN" xml:space="preserve">
+    <value>Rule</value>
+  </data>
+  <data name="_CertUntrustedRoot_EN" xml:space="preserve">
+    <value>Root certificate is not trusted</value>
+  </data>
+  <data name="_RemovingMLWRPaths_RU" xml:space="preserve">
+    <value>Удаление вредоносных каталогов...</value>
+  </data>
+  <data name="_Name_EN" xml:space="preserve">
+    <value>Name:</value>
+  </data>
+  <data name="_PleaseWaitMessage_RU" xml:space="preserve">
+    <value>Подождите...</value>
+  </data>
+  <data name="_CriticalServiceNotInstalled_EN" xml:space="preserve">
+    <value>service is not installed!</value>
+  </data>
+  <data name="_RemovingKnownMlwrFiles_EN" xml:space="preserve">
+    <value>Removing known mal?ware files...</value>
+  </data>
+  <data name="_ErrorOnUnlock_EN" xml:space="preserve">
+    <value>Error on unlock</value>
+  </data>
+  <data name="_SuspiciousFile_EN" xml:space="preserve">
+    <value>Suspicious file:</value>
+  </data>
+  <data name="_ServiceFileIsNotFound_EN" xml:space="preserve">
+    <value>Service file is not found</value>
+  </data>
+  <data name="_TermServiceRestored_EN" xml:space="preserve">
+    <value>TermService successfully restored</value>
+  </data>
+  <data name="_FoundThreats_RU" xml:space="preserve">
+    <value>Найдено угроз: </value>
+  </data>
+  <data name="_CertSubjectCertificateRevoked_EN" xml:space="preserve">
+    <value>Subject's certificate was revoked</value>
+  </data>
+  <data name="_ErrorCannotCheckUpdates_EN" xml:space="preserve">
+    <value>Unable to check updates</value>
+  </data>
+  <data name="_ScanRegistry_EN" xml:space="preserve">
+    <value>Scanning registry...</value>
+  </data>
+  <data name="_ErrorCannotRemove_RU" xml:space="preserve">
+    <value>Не удалось удалить</value>
+  </data>
+  <data name="_Name_RU" xml:space="preserve">
+    <value>Название:</value>
+  </data>
+  <data name="_PreparingToScan_RU" xml:space="preserve">
+    <value>Подготовка сканирования, пожалуйста, подождите...</value>
+  </data>
+  <data name="_Userprofile_EN" xml:space="preserve">
+    <value>userprofile</value>
   </data>
   <data name="_ContinueButton_RU" xml:space="preserve">
     <value>Продолжить</value>
   </data>
-  <data name="_DeselectAllButton_EN" xml:space="preserve">
-    <value>Deselect All</value>
+  <data name="_GPULibsUsage_EN" xml:space="preserve">
+    <value>Too much GPU libs usage:</value>
   </data>
-  <data name="_DeselectAllButton_RU" xml:space="preserve">
-    <value>Снять выбор</value>
+  <data name="_ServiceStopped_RU" xml:space="preserve">
+    <value>Службы была остановлена</value>
   </data>
-  <data name="_HostsCleanupWarning_EN" xml:space="preserve">
-    <value>The following lines look suspicious, the marked ones will be deleted. Uncheck the box if you want to keep the line untouched.</value>
+  <data name="_RemovingMLWRPaths_EN" xml:space="preserve">
+    <value>Removing mal?ware dirs...</value>
+  </data>
+  <data name="_SignedAppInitNotFound_EN" xml:space="preserve">
+    <value>RequireSignedAp?pIn??it_DLLs key is not found</value>
+  </data>
+  <data name="_HostsCleanupSkipBtn_EN" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="_PleaseWaitMessage_EN" xml:space="preserve">
+    <value>Wait...</value>
+  </data>
+  <data name="_StartupCount_RU" xml:space="preserve">
+    <value>Кол-во запусков</value>
+  </data>
+  <data name="_FileIsNotFound_RU" xml:space="preserve">
+    <value>Файл не найден:</value>
+  </data>
+  <data name="_SuspiciousPath_RU" xml:space="preserve">
+    <value>Подозрительный путь</value>
+  </data>
+  <data name="_CertSubjectExplicitlyDistrusted_RU" xml:space="preserve">
+    <value>Сертификат подписавшего находится в хранилище ненадежных издателей</value>
+  </data>
+  <data name="_AppAlreadyRunning_EN" xml:space="preserve">
+    <value>Another copy of the application is already running. For display help message use --help option</value>
+  </data>
+  <data name="_JoinToTelegram_EN" xml:space="preserve">
+    <value>Have questions? Join the telegram!</value>
+  </data>
+  <data name="_IncorrectDrive_RU" xml:space="preserve">
+    <value>Неверная буква диска</value>
+  </data>
+  <data name="_SuccessGrantPrivilege_EN" xml:space="preserve">
+    <value>This application has found missing privileges for the Administrators group, which have been restored. To apply the changes, relogin or restart the computer.</value>
+  </data>
+  <data name="_WMIRecompilation_EN" xml:space="preserve">
+    <value>Recompile necessary MOF files...</value>
+  </data>
+  <data name="_CriticalServiceStartup_RU" xml:space="preserve">
+    <value>Тип запуска важного для работы компонента (службы) был восстановлен</value>
+  </data>
+  <data name="_FinishAllThreatsNeutralized_RU" xml:space="preserve">
+    <value>Все угрозы были устранены!</value>
+  </data>
+  <data name="_RemovingKnownMlwrFiles_RU" xml:space="preserve">
+    <value>Удаление известных вредоносных файлов...</value>
+  </data>
+  <data name="_ValueWasCreated_EN" xml:space="preserve">
+    <value>The value was created</value>
+  </data>
+  <data name="_ScanProcesses_RU" xml:space="preserve">
+    <value>Сканирование процессов...</value>
+  </data>
+  <data name="_StartSignatureScan_RU" xml:space="preserve">
+    <value>Начато сигнатурное сканирование...</value>
+  </data>
+  <data name="_SuspiciousFileSize_EN" xml:space="preserve">
+    <value>Suspicious file size</value>
+  </data>
+  <data name="_Malici0usProcess_RU" xml:space="preserve">
+    <value>Вредоносный процесс:</value>
+  </data>
+  <data name="_JoinToTelegram_RU" xml:space="preserve">
+    <value>Есть вопросы? Заходите в телеграм!</value>
+  </data>
+  <data name="_ScanningHosts_RU" xml:space="preserve">
+    <value>Сканирование файла hosts...</value>
+  </data>
+  <data name="_SpecDrive_EN" xml:space="preserve">
+    <value>Specify drive letter:</value>
+  </data>
+  <data name="_TermServiceInvalidPath_RU" xml:space="preserve">
+    <value>TermService: неккоректный путь к библиотеке</value>
+  </data>
+  <data name="_RestartCleanup_RU" xml:space="preserve">
+    <value>Перезапуск очистки...</value>
+  </data>
+  <data name="_MaliciousDir_EN" xml:space="preserve">
+    <value>Mali?cious directory</value>
+  </data>
+  <data name="_ProcessSuspendedPartially_EN" xml:space="preserve">
+    <value>Not all threads are suspended</value>
+  </data>
+  <data name="_NoInternetConnection_EN" xml:space="preserve">
+    <value>No internet connection</value>
+  </data>
+  <data name="_TermServiceFailedRestore_RU" xml:space="preserve">
+    <value>TermService: не удалось ввостановить</value>
+  </data>
+  <data name="_MaliciousService_RU" xml:space="preserve">
+    <value>Вредоносная служба - </value>
+  </data>
+  <data name="_Just_File_EN" xml:space="preserve">
+    <value>File:</value>
+  </data>
+  <data name="_AllowSentStatistics_EN" xml:space="preserve">
+    <value>Do you allow sending a log file (scan log of detected threats) to the developer every time you use it? This will help to improve the operation of the application.</value>
+  </data>
+  <data name="_WatchdogProcess_EN" xml:space="preserve">
+    <value>Watchdog process</value>
+  </data>
+  <data name="_TotalNeutralizedThreats_RU" xml:space="preserve">
+    <value>Устранено угроз:</value>
+  </data>
+  <data name="_ErrorTerminateProcess_RU" xml:space="preserve">
+    <value>Не удалось завершить вредоносный процесс:</value>
+  </data>
+  <data name="_Path_RU" xml:space="preserve">
+    <value>Путь:</value>
+  </data>
+  <data name="_MovedToQuarantine_RU" xml:space="preserve">
+    <value>Перемещено в карантин</value>
   </data>
   <data name="_HostsCleanupWarning_RU" xml:space="preserve">
-    <value>Следующие строки выглядят подозрительно и отмеченные будут удалены. Снимите отметку с тех, которые хотите оставить.</value>
+    <value>Следующие строки выглядят подозрительно и отмеченные будут удалены. </value>
   </data>
-  <data name="_SelectAllButton_EN" xml:space="preserve">
-    <value>Select All</value>
+  <data name="_RemovingMLWRFiles_RU" xml:space="preserve">
+    <value>Удаление вредоносных файлов...</value>
   </data>
-  <data name="_SelectAllButton_RU" xml:space="preserve">
-    <value>Выбрать все</value>
+  <data name="_ProbablyRAT_EN" xml:space="preserve">
+    <value>Probably RAT process:</value>
   </data>
-  <data name="_SuspiciousEntry_EN" xml:space="preserve">
-    <value>Suspicious entry</value>
+  <data name="_ProcessNotRunning_EN" xml:space="preserve">
+    <value>The process is not running</value>
   </data>
-  <data name="_SuspiciousEntry_RU" xml:space="preserve">
-    <value>Подозрительная запись</value>
+  <data name="_ErrorCannotOpen_EN" xml:space="preserve">
+    <value>Can not open</value>
+  </data>
+  <data name="_WMIHead_RU" xml:space="preserve">
+    <value>Проверка базы данных WMI...</value>
+  </data>
+  <data name="_ScanTasks_RU" xml:space="preserve">
+    <value>Сканирование задач планировщика...</value>
+  </data>
+  <data name="_AllDone_EN" xml:space="preserve">
+    <value>All Done. Press ENTER to close this window...</value>
+  </data>
+  <data name="_SuspiciousFile_RU" xml:space="preserve">
+    <value>Подозрительный файл:</value>
+  </data>
+  <data name="_FinishNotAllThreatsNeutralized_EN" xml:space="preserve">
+    <value>Not all threats found have been neutralized. Restart your computer and run the check again.</value>
+  </data>
+  <data name="_SafeBootNetworkingHint_RU" xml:space="preserve">
+    <value>Безопасный режим с поддержкой сети: проверка задач планировщика недоступна.</value>
+  </data>
+  <data name="_BtnDetails_RU" xml:space="preserve">
+    <value>Показать отчёт</value>
+  </data>
+  <data name="_ErrorCleanHosts_EN" xml:space="preserve">
+    <value>Error clean hosts file:</value>
+  </data>
+  <data name="_ErrorNoDotNet_RU" xml:space="preserve">
+    <value>Для работы приложения требуется .NET Framework 4.7.1 и выше. Проверьте установлен ли компонент и повторите попытку</value>
+  </data>
+  <data name="_ErrorCleanHosts_RU" xml:space="preserve">
+    <value>Ошибка очистки файла hosts:</value>
+  </data>
+  <data name="_WMICorruption_EN" xml:space="preserve">
+    <value>WMI Database corrupted. Trying to restore...Please wait</value>
+  </data>
+  <data name="_RebootPCNowDialog_EN" xml:space="preserve">
+    <value>Do you want to restart your computer right now?</value>
+  </data>
+  <data name="_Exclusion_RU" xml:space="preserve">
+    <value>исключение</value>
+  </data>
+  <data name="_FakeSystemTask_EN" xml:space="preserve">
+    <value>Probably fake system task</value>
+  </data>
+  <data name="_PCName_RU" xml:space="preserve">
+    <value>Имя компьютера:</value>
+  </data>
+  <data name="_ServiceName_RU" xml:space="preserve">
+    <value>Имя службы:</value>
+  </data>
+  <data name="_MlwrProcessesCount_RU" xml:space="preserve">
+    <value>Вредоносных процессов:</value>
+  </data>
+  <data name="_WMIRestartService_EN" xml:space="preserve">
+    <value>Restart service...</value>
+  </data>
+  <data name="_ErrorCannotProceed_RU" xml:space="preserve">
+    <value>Не удалось обработать</value>
+  </data>
+  <data name="_ProcessFound_EN" xml:space="preserve">
+    <value>Ma??li??cio??us process detected! Risk level</value>
+  </data>
+  <data name="_Version_RU" xml:space="preserve">
+    <value>Версия:</value>
+  </data>
+  <data name="usdt_ton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\usdt_ton.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_EventCopyText_EN" xml:space="preserve">
+    <value>Copied</value>
+  </data>
+  <data name="_EventCopyText_RU" xml:space="preserve">
+    <value>Скопировано</value>
+  </data>
+  <data name="_LabelBlogNews_EN" xml:space="preserve">
+    <value>News and updates</value>
+  </data>
+  <data name="_LabelBlogNews_RU" xml:space="preserve">
+    <value>Новости и обновления</value>
+  </data>
+  <data name="_LabelChatHelp_EN" xml:space="preserve">
+    <value>Discussion and help in removement threats</value>
+  </data>
+  <data name="_LabelChatHelp_RU" xml:space="preserve">
+    <value>Обсуждение и помощь в устранении угроз</value>
+  </data>
+  <data name="_LabelSupportClickHint_EN" xml:space="preserve">
+    <value>Click to copy</value>
+  </data>
+  <data name="_LabelSupportClickHint_RU" xml:space="preserve">
+    <value>Нажмите, чтобы скопировать</value>
+  </data>
+  <data name="_LabelSupportGroupCaption_EN" xml:space="preserve">
+    <value>Support the project with a like!</value>
+  </data>
+  <data name="_LabelSupportGroupCaption_RU" xml:space="preserve">
+    <value>Поддержать проект лайком!</value>
+  </data>
+  <data name="_LabelSupportText_EN" xml:space="preserve">
+    <value>Support the developer in any convenient way – this will help to continue to effectively deal with silent miners.
+
+Thank you for your help!</value>
+  </data>
+  <data name="_LabelSupportText_RU" xml:space="preserve">
+    <value>Поддержите разработчика любым удобным способом – это поможет и дальше эффективно бороться с майнерами.
+
+Спасибо за вашу помощь!</value>
+  </data>
+  <data name="_TotalSuspObjects_EN" xml:space="preserve">
+    <value>Total suspcisious objects:</value>
+  </data>
+  <data name="_TotalSuspObjects_RU" xml:space="preserve">
+    <value>Итого подозрительных объектов:</value>
+  </data>
+  <data name="sber" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sber.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

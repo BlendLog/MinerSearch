@@ -24,6 +24,18 @@ namespace MSearch
         [DllImport("advapi32.dll", SetLastError = true)]
         public static extern bool AdjustTokenPrivileges(IntPtr tokenHandle, bool disableAllPrivileges, ref TOKEN_PRIVILEGES newState, uint bufferLength, IntPtr previousState, IntPtr returnLength);
 
+        [DllImport("advapi32.dll", SetLastError = true)]
+        public static extern bool PrivilegeCheck(IntPtr ClientToken, ref PRIVILEGE_SET RequiredPrivileges, out bool pfResult);
+
+#if DEBUG
+        [DllImport("advapi32.dll", SetLastError = true)]
+        public static extern bool GetTokenInformation(IntPtr TokenHandle, int TokenInformationClass, IntPtr TokenInformation, int TokenInformationLength, out int ReturnLength);
+
+        [DllImport("advapi32.dll", SetLastError = true)]
+        public static extern bool LookupPrivilegeName(string lpSystemName, ref LUID lpLuid, StringBuilder lpName, ref int cchName);
+
+#endif
+
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
 
@@ -128,12 +140,6 @@ namespace MSearch
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, IntPtr lpNumberOfBytesRead);
 
-        //[DllImport("kernel32.dll", SetLastError = true)]  //unused
-        //internal static extern bool GetFileInformationByHandleEx(IntPtr hFile, FILE_INFO_BY_HANDLE_CLASS FileInformationClass, out FILE_BASIC_INFO lpFileInformation, uint dwBufferSize);
-
-        //[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        //internal static extern IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
-
         [DllImport("ntdll.dll")]
         public static extern int NtQuerySystemInformation(
             int SystemInformationClass,
@@ -177,6 +183,54 @@ namespace MSearch
         public const int ObjectNameInformation = 1;
         public const uint PROCESS_DUP_HANDLE = 0x0040;
         public const uint DUPLICATE_SAME_ACCESS = 0x0002;
+
+
+        [DllImport("advapi32.dll", SetLastError = true)]
+        public static extern int LsaOpenPolicy(ref LSA_OBJECT_ATTRIBUTES ObjectAttributes, ref LSA_UNICODE_STRING SystemName, int AccessMask, out IntPtr PolicyHandle);
+
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern int LsaAddAccountRights(IntPtr PolicyHandle, IntPtr AccountSid, LSA_UNICODE_STRING[] UserRights, int CountOfRights);
+
+        [DllImport("advapi32.dll")]
+        public static extern int LsaClose(IntPtr PolicyHandle);
+
+        [DllImport("advapi32.dll")]
+        public static extern int LsaNtStatusToWinError(int status);
+
+        [DllImport("advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern bool LookupAccountName(string lpSystemName, string lpAccountName, IntPtr Sid, ref int cbSid, System.Text.StringBuilder ReferencedDomainName, ref int cchReferencedDomainName, out int peUse);
+
+        // Импортируем необходимые функции из advapi32.dll и kernel32.dll
+        [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool LookupAccountSid(string lpSystemName, IntPtr Sid, StringBuilder Name, ref int cchName, StringBuilder ReferencedDomainName, ref int cchReferencedDomainName, out int peUse);
+
+        [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool ConvertStringSidToSid(string StringSid, out IntPtr Sid);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr LocalFree(IntPtr hMem);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct LSA_OBJECT_ATTRIBUTES
+        {
+            public int Length;
+            public IntPtr RootDirectory;
+            public IntPtr ObjectName;
+            public int Attributes;
+            public IntPtr SecurityDescriptor;
+            public IntPtr SecurityQualityOfService;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct LSA_UNICODE_STRING
+        {
+            public ushort Length;
+            public ushort MaximumLength;
+            public IntPtr Buffer;
+        }
+
+        public const int POLICY_ALL_ACCESS = 0x000F0FFF;
+        public const int ERROR_SUCCESS = 0;
 
         [Flags]
         internal enum FILE_ATTRIBUTE
@@ -386,6 +440,15 @@ namespace MSearch
             public LUID_AND_ATTRIBUTES[] Privileges;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct PRIVILEGE_SET
+        {
+            public uint PrivilegeCount;
+            public uint Control;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
+            public LUID_AND_ATTRIBUTES[] Privilege;
+        }
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct OSVERSIONINFOEX
         {
@@ -464,6 +527,8 @@ namespace MSearch
             public uint ProcessId;
             public ulong DetachAddress;
         }
+
+
     }
 
     // https://github.com/DavidXanatos/priv10/blob/master/MiscHelpers/API/ServiceHelper.cs
@@ -683,7 +748,7 @@ namespace MSearch
             {
                 return GetServiceInfo(serviceName);
             }
-            catch
+            catch (Exception)
             {
                 return null;
             }

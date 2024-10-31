@@ -320,7 +320,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                new LocalizedLogger().LogErrorMessage("_ErrorVerifySignature", ex);
+                Program.LL.LogErrorMessage("_ErrorVerifySignature", ex);
                 return WinVerifyTrustResult.Error;
             }
         }
@@ -443,7 +443,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                new LocalizedLogger().LogErrorMessage("_ErrorVerifySignature", ex);
+                Program.LL.LogErrorMessage("_ErrorVerifySignature", ex);
                 return WinVerifyTrustResult.Error;
             }
         }

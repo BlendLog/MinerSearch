@@ -739,6 +739,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Unable to check updates.
+        /// </summary>
+        internal static string _ErrorCannotCheckUpdates_EN {
+            get {
+                return ResourceManager.GetString("_ErrorCannotCheckUpdates_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось проверить обновления.
+        /// </summary>
+        internal static string _ErrorCannotCheckUpdates_RU {
+            get {
+                return ResourceManager.GetString("_ErrorCannotCheckUpdates_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Can not open.
         /// </summary>
         internal static string _ErrorCannotOpen_EN {
@@ -843,6 +861,24 @@ namespace MSearch.Properties {
         internal static string _ErrorFileOnlineOnly_RU {
             get {
                 return ResourceManager.GetString("_ErrorFileOnlineOnly_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на This application has found missing privileges for the Administrators group, but could not restore them. How to assign privileges manually read the blog https://t.me/MinerSearch_blog/24.
+        /// </summary>
+        internal static string _ErrorGrantPrivilege_EN {
+            get {
+                return ResourceManager.GetString("_ErrorGrantPrivilege_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Приложение обнаружило недостающие права доступа для группы Администраторов, но не удалось выполнить их восстановление. Как выполнить восстановление прав вручную читайте в блоге https://t.me/MinerSearch_blog/24.
+        /// </summary>
+        internal static string _ErrorGrantPrivilege_RU {
+            get {
+                return ResourceManager.GetString("_ErrorGrantPrivilege_RU", resourceCulture);
             }
         }
         
@@ -1027,6 +1063,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Copied.
+        /// </summary>
+        internal static string _EventCopyText_EN {
+            get {
+                return ResourceManager.GetString("_EventCopyText_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Скопировано.
+        /// </summary>
+        internal static string _EventCopyText_RU {
+            get {
+                return ResourceManager.GetString("_EventCopyText_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на exclusion.
         /// </summary>
         internal static string _Exclusion_EN {
@@ -1063,20 +1117,20 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на No.
+        ///   Ищет локализованную строку, похожую на Exit.
         /// </summary>
-        internal static string _exit_en {
+        internal static string _exit_EN {
             get {
-                return ResourceManager.GetString("_exit_en", resourceCulture);
+                return ResourceManager.GetString("_exit_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Выйти.
         /// </summary>
-        internal static string _exit_ru {
+        internal static string _exit_RU {
             get {
-                return ResourceManager.GetString("_exit_ru", resourceCulture);
+                return ResourceManager.GetString("_exit_RU", resourceCulture);
             }
         }
         
@@ -1225,24 +1279,6 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Do you want to restart your computer right now?.
-        /// </summary>
-        internal static string _FinishRebootPCNow_EN {
-            get {
-                return ResourceManager.GetString("_FinishRebootPCNow_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Перезагрузить компьютер сейчас?.
-        /// </summary>
-        internal static string _FinishRebootPCNow_RU {
-            get {
-                return ResourceManager.GetString("_FinishRebootPCNow_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Found:.
         /// </summary>
         internal static string _Found_EN {
@@ -1369,7 +1405,25 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на The following lines look suspicious, the marked ones will be deleted. Uncheck the box if you want to keep the line untouched..
+        ///   Ищет локализованную строку, похожую на Skip.
+        /// </summary>
+        internal static string _HostsCleanupSkipBtn_EN {
+            get {
+                return ResourceManager.GetString("_HostsCleanupSkipBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пропустить.
+        /// </summary>
+        internal static string _HostsCleanupSkipBtn_RU {
+            get {
+                return ResourceManager.GetString("_HostsCleanupSkipBtn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The following lines look suspicious, the marked ones will be deleted..
         /// </summary>
         internal static string _HostsCleanupWarning_EN {
             get {
@@ -1378,7 +1432,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Следующие строки выглядят подозрительно и отмеченные будут удалены. Снимите отметку с тех, которые хотите оставить..
+        ///   Ищет локализованную строку, похожую на Следующие строки выглядят подозрительно и отмеченные будут удалены. .
         /// </summary>
         internal static string _HostsCleanupWarning_RU {
             get {
@@ -1549,32 +1603,123 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Like the app? Support the project on Boosty!.
+        ///   Ищет локализованную строку, похожую на News and updates.
         /// </summary>
-        internal static string _LabelSupport_EN {
+        internal static string _LabelBlogNews_EN {
             get {
-                return ResourceManager.GetString("_LabelSupport_EN", resourceCulture);
+                return ResourceManager.GetString("_LabelBlogNews_EN", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Нравится приложение? Поддержи проект на Boosty!.
+        ///   Ищет локализованную строку, похожую на Новости и обновления.
         /// </summary>
-        internal static string _LabelSupport_RU {
+        internal static string _LabelBlogNews_RU {
             get {
-                return ResourceManager.GetString("_LabelSupport_RU", resourceCulture);
+                return ResourceManager.GetString("_LabelBlogNews_RU", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Denial of responsibility
+        ///   Ищет локализованную строку, похожую на Discussion and help in removement threats.
+        /// </summary>
+        internal static string _LabelChatHelp_EN {
+            get {
+                return ResourceManager.GetString("_LabelChatHelp_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обсуждение и помощь в устранении угроз.
+        /// </summary>
+        internal static string _LabelChatHelp_RU {
+            get {
+                return ResourceManager.GetString("_LabelChatHelp_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Support the project!.
+        /// </summary>
+        internal static string _LabelSupportCaption_EN {
+            get {
+                return ResourceManager.GetString("_LabelSupportCaption_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Поддержать разработчика проекта!.
+        /// </summary>
+        internal static string _LabelSupportCaption_RU {
+            get {
+                return ResourceManager.GetString("_LabelSupportCaption_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Click to copy.
+        /// </summary>
+        internal static string _LabelSupportClickHint_EN {
+            get {
+                return ResourceManager.GetString("_LabelSupportClickHint_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Нажмите, чтобы скопировать.
+        /// </summary>
+        internal static string _LabelSupportClickHint_RU {
+            get {
+                return ResourceManager.GetString("_LabelSupportClickHint_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Support the project with a like!.
+        /// </summary>
+        internal static string _LabelSupportGroupCaption_EN {
+            get {
+                return ResourceManager.GetString("_LabelSupportGroupCaption_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Поддержать проект лайком!.
+        /// </summary>
+        internal static string _LabelSupportGroupCaption_RU {
+            get {
+                return ResourceManager.GetString("_LabelSupportGroupCaption_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Support the developer in any convenient way – this will help to continue to effectively deal with silent miners.
         ///
-        ///This software provided &quot;as is&quot; and was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurrency. The author is not responsible for incidental, indirect or unintentional damage of any kind during the use of this software. You may use it at your own risk.
+        ///Thank you for your help!.
+        /// </summary>
+        internal static string _LabelSupportText_EN {
+            get {
+                return ResourceManager.GetString("_LabelSupportText_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Поддержите разработчика любым удобным способом – это поможет и дальше эффективно бороться с майнерами.
         ///
-        ///FAQ:
-        ///
-        ///Question: Why does my antivirus indicate that the software contains a Trojan/virus?
-        ///Answer: A third-party antivirus registers the very fact of interference in the [остаток строки не уместился]&quot;;.
+        ///Спасибо за вашу помощь!.
+        /// </summary>
+        internal static string _LabelSupportText_RU {
+            get {
+                return ResourceManager.GetString("_LabelSupportText_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на {\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049\deflangfe1049{\fonttbl{\f0\fnil\fcharset204 Times New Roman;}}
+        ///{\colortbl ;\red118\green113\blue113;}
+        ///{\*\generator Riched20 10.0.19041}{\*\mmathPr\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
+        ///\pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\f0\fs28\par
+        ///This software provided &quot;as is&quot; and was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurrency. The author is not responsible for incident [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _License_EN {
             get {
@@ -1583,17 +1728,36 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Отказ от ответственности
-        ///
-        ///Данное программное обеспечение (Далее ПО) предоставляется &quot;как есть&quot; и создано исключительно для поиска и удаления вредоносного ПО, тайно использующее ресурсы компьютера для добычи (майнинга) криптовалюты. Автор не несет ответсвенности за причиненный случайный, косвенный или непреднамеренный ущерб любого рода в ходе использования данного ПО. Вы можете использовать его на свой страх и риск. 
-        ///
-        ///Часто задаваемые вопросы:
-        ///
-        ///Вопрос: Почему мой антивирус указывает, что ПО содержит тр [остаток строки не уместился]&quot;;.
+        ///   Ищет локализованную строку, похожую на {\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049\deflangfe1049{\fonttbl{\f0\fnil\fcharset204 Times New Roman;}}
+        ///{\colortbl ;\red128\green128\blue128;}
+        ///{\*\listtable 
+        ///{\list\listhybrid
+        ///{\listlevel\levelnfc0\leveljc0\levelstartat1{\leveltext\&apos;02\&apos;00.;}{\levelnumbers\&apos;01;}\jclisttab\tx0}
+        ///{\listlevel\levelnfc4\leveljc0\levelstartat1{\leveltext\&apos;02\&apos;01.;}{\levelnumbers\&apos;01;}\jclisttab\tx0}
+        ///{\listlevel\levelnfc3\leveljc0\levelstartat1{\leveltext\&apos;02\&apos;02.;}{\levelnumbers\&apos;01;}\jclisttab\tx0}
+        ///{\listlevel [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _License_RU {
             get {
                 return ResourceManager.GetString("_License_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Denial of Responsibility.
+        /// </summary>
+        internal static string _LicenseCaption_EN {
+            get {
+                return ResourceManager.GetString("_LicenseCaption_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отказ от ответственности.
+        /// </summary>
+        internal static string _LicenseCaption_RU {
+            get {
+                return ResourceManager.GetString("_LicenseCaption_RU", resourceCulture);
             }
         }
         
@@ -1786,6 +1950,51 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий.
+        /// </summary>
+        internal static string _MessageForGrantPrivilege_RU {
+            get {
+                return ResourceManager.GetString("_MessageForGrantPrivilege_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на A new version is available #LATEST#. Go to the download page?.
+        /// </summary>
+        internal static string _MessageNewVersion_EN {
+            get {
+                return ResourceManager.GetString("_MessageNewVersion_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Доступна новая версия #LATEST#. Перейти на станицу загрузки?.
+        /// </summary>
+        internal static string _MessageNewVersion_RU {
+            get {
+                return ResourceManager.GetString("_MessageNewVersion_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Caution! Running this application with SYSTEM privileges may accidentally harm the system. If you want to scan another disk, use the --winpemode option. Continue scanning as a SYSTEM?.
+        /// </summary>
+        internal static string _MessageRunAsSystemWarn_EN {
+            get {
+                return ResourceManager.GetString("_MessageRunAsSystemWarn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Осторожно! Запуская это приложение с СИСТЕМНЫМИ привилегиями может случайно навредить системе. Если вы хотите просканировать другой диск, используйте параметр --winpemode. Продолжить сканирование от имени СИСТЕМЫ?.
+        /// </summary>
+        internal static string _MessageRunAsSystemWarn_RU {
+            get {
+                return ResourceManager.GetString("_MessageRunAsSystemWarn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Ma??li??cio??us processes:.
         /// </summary>
         internal static string _MlwrProcessesCount_EN {
@@ -1836,6 +2045,42 @@ namespace MSearch.Properties {
         internal static string _Name_RU {
             get {
                 return ResourceManager.GetString("_Name_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на No internet connection.
+        /// </summary>
+        internal static string _NoInternetConnection_EN {
+            get {
+                return ResourceManager.GetString("_NoInternetConnection_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Нет подключения к интернету.
+        /// </summary>
+        internal static string _NoInternetConnection_RU {
+            get {
+                return ResourceManager.GetString("_NoInternetConnection_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на No Log.
+        /// </summary>
+        internal static string _NoLogBtn_EN {
+            get {
+                return ResourceManager.GetString("_NoLogBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Без отчёта.
+        /// </summary>
+        internal static string _NoLogBtn_RU {
+            get {
+                return ResourceManager.GetString("_NoLogBtn_RU", resourceCulture);
             }
         }
         
@@ -1928,6 +2173,24 @@ namespace MSearch.Properties {
         internal static string _PleaseWaitMessage_RU {
             get {
                 return ResourceManager.GetString("_PleaseWaitMessage_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на &lt;-- An update is available #LATEST#.
+        /// </summary>
+        internal static string _PrefixNewVersionAvailable_EN {
+            get {
+                return ResourceManager.GetString("_PrefixNewVersionAvailable_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на &lt;-- Доступно обновление #LATEST#.
+        /// </summary>
+        internal static string _PrefixNewVersionAvailable_RU {
+            get {
+                return ResourceManager.GetString("_PrefixNewVersionAvailable_RU", resourceCulture);
             }
         }
         
@@ -2126,6 +2389,42 @@ namespace MSearch.Properties {
         internal static string _R00tkitPresent_RU {
             get {
                 return ResourceManager.GetString("_R00tkitPresent_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Do you want to restart your computer right now?.
+        /// </summary>
+        internal static string _RebootPCNowDialog_EN {
+            get {
+                return ResourceManager.GetString("_RebootPCNowDialog_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Перезагрузить компьютер сейчас?.
+        /// </summary>
+        internal static string _RebootPCNowDialog_RU {
+            get {
+                return ResourceManager.GetString("_RebootPCNowDialog_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Reboot is required.
+        /// </summary>
+        internal static string _RebootRequired_EN {
+            get {
+                return ResourceManager.GetString("_RebootRequired_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Требуется перезагрузка.
+        /// </summary>
+        internal static string _RebootRequired_RU {
+            get {
+                return ResourceManager.GetString("_RebootRequired_RU", resourceCulture);
             }
         }
         
@@ -2688,6 +2987,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Show folder containing logs.
+        /// </summary>
+        internal static string _ShowFolderLogs_EN {
+            get {
+                return ResourceManager.GetString("_ShowFolderLogs_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Показать все отчёты в папке.
+        /// </summary>
+        internal static string _ShowFolderLogs_RU {
+            get {
+                return ResourceManager.GetString("_ShowFolderLogs_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на RequireSignedAp?pIn??it_DLLs key is not found.
         /// </summary>
         internal static string _SignedAppInitNotFound_EN {
@@ -2814,6 +3131,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на This application has found missing privileges for the Administrators group, which have been restored. To apply the changes, relogin or restart the computer..
+        /// </summary>
+        internal static string _SuccessGrantPrivilege_EN {
+            get {
+                return ResourceManager.GetString("_SuccessGrantPrivilege_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Приложение обнаружило недостающие права доступа для группы Администраторов, которые были восстановлены. Для применения изменений следует выполнить повторный вход в систему или перезагрузить компьютер..
+        /// </summary>
+        internal static string _SuccessGrantPrivilege_RU {
+            get {
+                return ResourceManager.GetString("_SuccessGrantPrivilege_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Rootkit neutralized.
         /// </summary>
         internal static string _SuccessR00tkitNeutralized_EN {
@@ -2882,6 +3217,24 @@ namespace MSearch.Properties {
         internal static string _SuspiciousFileSize_RU {
             get {
                 return ResourceManager.GetString("_SuspiciousFileSize_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Suspicious obj:.
+        /// </summary>
+        internal static string _SuspiciousObjects_EN {
+            get {
+                return ResourceManager.GetString("_SuspiciousObjects_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подозрений:.
+        /// </summary>
+        internal static string _SuspiciousObjects_RU {
+            get {
+                return ResourceManager.GetString("_SuspiciousObjects_RU", resourceCulture);
             }
         }
         
@@ -2994,7 +3347,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Total neutralized threats:.
+        ///   Ищет локализованную строку, похожую на Total cured threats:.
         /// </summary>
         internal static string _TotalNeutralizedThreats_EN {
             get {
@@ -3003,11 +3356,29 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Итого удалено угроз:.
+        ///   Ищет локализованную строку, похожую на Устранено угроз:.
         /// </summary>
         internal static string _TotalNeutralizedThreats_RU {
             get {
                 return ResourceManager.GetString("_TotalNeutralizedThreats_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Total suspcisious objects:.
+        /// </summary>
+        internal static string _TotalSuspObjects_EN {
+            get {
+                return ResourceManager.GetString("_TotalSuspObjects_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Итого подозрительных объектов:.
+        /// </summary>
+        internal static string _TotalSuspObjects_RU {
+            get {
+                return ResourceManager.GetString("_TotalSuspObjects_RU", resourceCulture);
             }
         }
         
@@ -3021,7 +3392,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Итого найдено угроз:.
+        ///   Ищет локализованную строку, похожую на Найдено угроз:.
         /// </summary>
         internal static string _TotalThreatsFound_RU {
             get {
@@ -3384,9 +3755,29 @@ namespace MSearch.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap sber {
+            get {
+                object obj = ResourceManager.GetObject("sber", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap telegram_logo {
             get {
                 object obj = ResourceManager.GetObject("telegram_logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap usdt_ton {
+            get {
+                object obj = ResourceManager.GetObject("usdt_ton", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

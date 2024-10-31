@@ -50,7 +50,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>none</ErrorReport>
-    <WarningLevel>3</WarningLevel>
+    <WarningLevel>2</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
@@ -92,7 +92,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="dbase, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="dbase, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Release\dbase.dll</HintPath>
     </Reference>
@@ -100,9 +100,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Release\Microsoft.Win32.TaskScheduler.dll</HintPath>
     </Reference>
-    <Reference Include="netlib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="netlib, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Release\netlib.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -129,6 +132,9 @@
     <Compile Include="Finish.Designer.cs">
       <DependentUpon>Finish.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormShadow.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="HostsDeletionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,6 +157,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SplashForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SplashForm.Designer.cs">
+      <DependentUpon>SplashForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UnlockObjectClass.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Native.cs" />
@@ -164,6 +176,9 @@
     <Content Include="256.ico" />
     <Content Include="64.ico" />
     <Content Include="msch.ico" />
+    <None Include="Resources\sber.jpg" />
+    <None Include="Resources\usdt_ton.png" />
+    <None Include="packages.config" />
     <None Include="Resources\128.png" />
     <None Include="Resources\yoomoney.png" />
     <None Include="Resources\blendlog-donate.png" />
@@ -175,6 +190,9 @@
       <DependentUpon>Finish.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormShadow.resx">
+      <DependentUpon>FormShadow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="HostsDeletionForm.resx">
       <DependentUpon>HostsDeletionForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -185,6 +203,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SplashForm.resx">
+      <DependentUpon>SplashForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

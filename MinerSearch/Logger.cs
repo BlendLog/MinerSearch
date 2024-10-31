@@ -204,5 +204,41 @@ namespace MSearch
 #endif
             }
         }
+
+        public static void WriteLog(string currentText, bool WriteOnly = false, bool DisplayTime = false, bool force = false)
+        {
+            try
+            {
+                string logMessage = "";
+                if (DisplayTime)
+                {
+                    logMessage = $"[{DateTime.Now}]: {currentText}";
+                }
+                else
+                    logMessage = currentText;
+
+                if (!WriteOnly)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(logMessage);
+                    Console.ResetColor();
+                }
+
+                if (!Program.no_logs || force)
+                {
+                    using (StreamWriter writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true))
+                    {
+                        writer.WriteLine(logMessage);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.Write($"\tLogger error: {ex.Message} \n{ex.StackTrace}");
+#endif
+            }
+        }
     }
 }

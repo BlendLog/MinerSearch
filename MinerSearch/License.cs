@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace MSearch
 {
-    public partial class License : Form
+    public partial class License : FormShadow
     {
         protected override void WndProc(ref Message m)
         {
@@ -35,6 +35,18 @@ namespace MSearch
             const string valueName = "acceptedEula";
             Registry.CurrentUser.CreateSubKey(registryKeyPath).SetValue(valueName, 1);
             Close();
+        }
+
+        private void Label_LicenseCaption_MouseDown(object sender, MouseEventArgs e)
+        {
+            Label_LicenseCaption.Capture = false;
+            Message m = Message.Create(Handle, 0xA1, new IntPtr(2), IntPtr.Zero);
+            base.WndProc(ref m);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }
