@@ -10,6 +10,22 @@
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/total?style=flat&color=00ff66)
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?style=flat&labelColor=navy)
 
+Версия 1.4.7.6
+
+- Устранено сообщение "Запрос выполнен только частично" при проверке на руткит и без него
+- Исправлен парсинг путей для rundll в WindowsPowerShell и с ключом /d
+- Исправлено некорректное число удаленных строк в hosts (включая подозрительные)
+- Добавлена проверка обновлений (на github) 
+- Минимизировано кол-во ошибок при скачивании обновлений Windows
+- Автоматическое определение WinPE-режима
+- Увеличен диапазон каталогов для проверки в WinPE
+- Минимальная обработка исключений в WinPE
+- Определение доступности необходимых привилегий для группы Администраторов
+- Отображение содержимого в AppInit_DLLs, если он не пуст 
+- Обнаружение и удаление новых майнеров
+- Новый дизайн окон
+- Добавлен счётчик подозрительных объектов 
+
 Версия 1.4.7.5
 
 - Более объективное удаление угроз
@@ -121,6 +137,22 @@ https://t.me/MinerSearch_blog
 
 ## NET Framework 4.7.1 is required
 
+Version 1.4.7.6
+
+- Fixed the message "Only part request was completed" when checking for a rootkit and without it
+- Fixed path parsing for rundll in WindowsPowerShell including "/d" key
+- Fixed incorrect number of deleted lines in hosts (including suspicious ones)
+- Added an update check (on github) 
+- The number of errors when downloading Windows updates is minimized
+- Automatic detection of WinPE mode
+- Increased the range of scan directories in WinPE
+- Minimal exception handling in WinPE
+- Determining the availability of necessary privileges for the Administrator group
+- Displaying the content in AppInit_DLLs if it is not empty 
+- Detection and removal of new miners
+- New window design
+- Added a counter for suspicious objects
+
 Version 1.4.7.5
 
 - More objective threat removal
@@ -159,20 +191,6 @@ Version 1.4.7.4
 - The legend of the symbols has been moved to the beginning of the log file
 - Fixed the disappearance of the "close" cross in the summary report window
 - Checking the installed version of NET Framework 4.5.2 (for windows 7)
-
-Version 1.4.7.3
-
-- Removal of the new version of the miner with a digital signature;
-- Fixed automatic closing of the application when it crash;
-- Updated algorithm for disabling malicious services;
-- Fixed adding deleted files to quarantine;
-- Added a check for deleting a file from msiexec arguments;
-- Added a counter for all threats found;
-- Added ignoring of new deletion functions with the --scan-only option;
-- Added display of lines from the hosts file that have been neutralized;
-- Fixed directories scan as a symbolic link;
-- Statistics are now displayed in the new form;
-- Notification output at the end of scan;
 
 -----------------------------------------
 
@@ -230,6 +248,22 @@ https://t.me/MinerSearch_blog
 
 ## 需要.NET Framework 4.7.1
 
+版本1.4.7.6
+
+- 修正了在检查rootkit和没有它时"仅部分请求已完成"的消息
+- 修复了Windows PowerShell中rundll的路径解析，包括"/d"键
+- 修正主机中删除行数不正确（包括可疑行）
+- 添加了更新检查（在github上） 
+- 下载Windows更新时的错误数量最小化
+- 自动检测WinPE模式
+- 增加了WinPE中扫描目录的范围
+- Winpe中的最小异常处理
+- 确定管理员组的必要权限的可用性
+- 显示AppInit_DLLs中的内容，如果它不是空的 
+- 侦测及清除新矿工
+- 新窗口设计
+- 增加了可疑对象的计数器
+
 版本 1.4.7.5
 
 - 更客观的威胁移除
@@ -268,20 +302,6 @@ https://t.me/MinerSearch_blog
 - 符号图例已移至日志文件的开头
 - 修复了摘要报告窗口中“关闭”按钮消失的问题
 - 检查已安装的.NET Framework 4.5.2版本（适用于Windows 7）
-
-版本 1.4.7.3
-
-- 移除带有数字签名的新版本矿工；
-- 修复应用程序崩溃时自动关闭的问题；
-- 更新恶意服务禁用算法；
-- 修复将已删除文件添加到隔离区的问题；
-- 增加了检查从msiexec参数中删除文件的功能；
-- 增加了所有发现威胁的计数器；
-- 增加了忽略新删除功能的--scan-only选项；
-- 增加了显示已中和的hosts文件中的行；
-- 修复了作为符号链接的目录扫描；
-- 统计信息现在以新形式显示；
-- 扫描结束时的通知输出；
 
 -----------------------------------------
 
