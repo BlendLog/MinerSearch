@@ -10,6 +10,19 @@
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/total?style=flat&color=00ff66)
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?style=flat&labelColor=navy)
 
+Версия 1.4.7.7
+
+- Добавлена форма с кратким отчётом, в которой перечислены какие именно угрозы были устранены
+- Добавлено сообщение "проверка обновлений..." перед сканированием
+- Исправлен парсинг задач, включающих rundll
+- Исправлено замирание рабочего стола на некоторых системах
+- Обнаружение и удаление новых майнеров
+- Минимизирована вероятность ошибочного перемещения в карантин незараженных файлов 
+- Исправление "Неверно задано имя папки"
+- Исправление "Неверная функция"
+- Исправление ошибок при обработке служб (сбой загрузки поставщика)
+- Исправление ошибок при обработке задач планировщика
+
 Версия 1.4.7.6
 
 - Устранено сообщение "Запрос выполнен только частично" при проверке на руткит и без него
@@ -65,20 +78,6 @@
 - Легенда обозначений перемещена в начало лог-файла
 - Исправлено исчезнавение крестика "закрыть" в окне с кратким отчётом
 - Проверка установленной версии NET Framework 4.5.2 (для windows 7)
-
-Версия 1.4.7.3
-
-- Удаление новой версии майнера с цифровой подписью;
-- Исправлено автоматическое закрытие приложения в случае сбоя;
-- Переработан алгоритм отключения вредоносных служб;
-- Исправлено добавление удалённых файлов в карантин;
-- Добавлена проверку удаления файла из аргументов msiexec;
-- Добавлен счетчик всех найденных угроз;
-- Добавлено игнорирование новых функций удаления с опцией --scan-only;
-- Добавлено отображение строк из файла hosts, которые были обезврежены;
-- Исправлена обработка каталогов в виде символической ссылки;
-- Теперь статистика отображатеся в диалоговом окне;
-- Вывод уведомления по завершении сканирования;
 
 --------------------------------------------
 
@@ -136,6 +135,19 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 https://t.me/MinerSearch_blog
 
 ## NET Framework 4.7.1 is required
+
+Version 1.4.7.7
+
+- Added a form that contains which specific threats have been neutralized
+- Added the message "checking for updates..." before scanning
+- Fixed parsing of tasks involving rundll
+- Fixed desktop freezing on some systems
+- Detection and removal of new miners
+- The probability of mistakenly moving uninfected files to quarantine is minimized 
+- Fixed "Wrong folder name"
+- Fixed "Invalid function"
+- Fixed errors in processing services (provider loading failure)
+- Fixed errors in processing scheduler tasks
 
 Version 1.4.7.6
 
