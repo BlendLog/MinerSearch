@@ -527,7 +527,7 @@ Click \b Exit\b0  to exit.\par
     <value>Неизвестная команда</value>
   </data>
   <data name="_NoLogBtn_RU" xml:space="preserve">
-    <value>Без отчёта</value>
+    <value>Отчёт выключен</value>
   </data>
   <data name="_HostsCleanupWarning_EN" xml:space="preserve">
     <value>The following lines look suspicious, the marked ones will be deleted.</value>
@@ -862,7 +862,7 @@ Press any key to continue...</value>
     <value>Подозрительный ключ реестра:</value>
   </data>
   <data name="_SuspiciousObjects_EN" xml:space="preserve">
-    <value>Suspicious obj:</value>
+    <value>Suspicious objects:</value>
   </data>
   <data name="_ServiceDcomAbusing_EN" xml:space="preserve">
     <value>Svchost Hijacking module:</value>
@@ -916,7 +916,7 @@ Press any key to continue...</value>
 ----------------------------------------------------</value>
   </data>
   <data name="_FinishNotAllThreatsNeutralized_RU" xml:space="preserve">
-    <value>Не все найденные угрозы были устранены. Перезагрузите компьютер и выполните проверку снова.</value>
+    <value>Не все найденные угрозы были устранены. Требуется перезагрузка и повторная проверка.</value>
   </data>
   <data name="_Version_EN" xml:space="preserve">
     <value>Version:</value>
@@ -1476,5 +1476,95 @@ Thank you for your help!</value>
   </data>
   <data name="sber" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\sber.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_LogCheckingUpdates_EN" xml:space="preserve">
+    <value>Checking updates. Please, wait...</value>
+  </data>
+  <data name="_LogCheckingUpdates_RU" xml:space="preserve">
+    <value>Проверка обновлений. Подождите...</value>
+  </data>
+  <data name="_LogLastVersion_EN" xml:space="preserve">
+    <value>[OK] You have latest version</value>
+  </data>
+  <data name="_LogLastVersion_RU" xml:space="preserve">
+    <value>[OK] У вас последняя версия</value>
+  </data>
+  <data name="_ActionType_Cured_EN" xml:space="preserve">
+    <value>Cured</value>
+  </data>
+  <data name="_ActionType_Cured_RU" xml:space="preserve">
+    <value>Вылечен</value>
+  </data>
+  <data name="_ActionType_Deleted_EN" xml:space="preserve">
+    <value>Deleted</value>
+  </data>
+  <data name="_ActionType_Deleted_RU" xml:space="preserve">
+    <value>Удалено</value>
+  </data>
+  <data name="_ActionType_Error_EN" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="_ActionType_Error_RU" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="_ActionType_Quarantine_EN" xml:space="preserve">
+    <value>Moved to quarantine</value>
+  </data>
+  <data name="_ActionType_Quarantine_RU" xml:space="preserve">
+    <value>Перемещено в карантин</value>
+  </data>
+  <data name="_ActionType_Skipped_EN" xml:space="preserve">
+    <value>Skipped</value>
+  </data>
+  <data name="_ActionType_Skipped_RU" xml:space="preserve">
+    <value>Пропущено</value>
+  </data>
+  <data name="_DataGridHeader_Action_EN" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="_DataGridHeader_Action_RU" xml:space="preserve">
+    <value>Действие</value>
+  </data>
+  <data name="_DataGridHeader_ObjectType_EN" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="_DataGridHeader_ObjectType_RU" xml:space="preserve">
+    <value>Тип объекта</value>
+  </data>
+  <data name="_DataGridHeader_Path_EN" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="_DataGridHeader_Path_RU" xml:space="preserve">
+    <value>Путь</value>
+  </data>
+  <data name="_DataGrid_FinishBtn_EN" xml:space="preserve">
+    <value>Finish</value>
+  </data>
+  <data name="_DataGrid_FinishBtn_RU" xml:space="preserve">
+    <value>Завершить</value>
+  </data>
+  <data name="_ThreatType_Infected_EN" xml:space="preserve">
+    <value>Infected</value>
+  </data>
+  <data name="_ThreatType_Infected_RU" xml:space="preserve">
+    <value>Заражён</value>
+  </data>
+  <data name="_ThreatType_Malware_EN" xml:space="preserve">
+    <value>Malware</value>
+  </data>
+  <data name="_ThreatType_Malware_RU" xml:space="preserve">
+    <value>Вредоносный</value>
+  </data>
+  <data name="_ThreatType_Suspicious_EN" xml:space="preserve">
+    <value>Suspicious</value>
+  </data>
+  <data name="_ThreatType_Suspicious_RU" xml:space="preserve">
+    <value>Подозрительный</value>
+  </data>
+  <data name="_ThreatType_Unknown_EN" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="_ThreatType_Unknown_RU" xml:space="preserve">
+    <value>Неизвестно</value>
   </data>
 </root>

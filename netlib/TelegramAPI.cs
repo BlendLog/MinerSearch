@@ -1418,32 +1418,6 @@ namespace netlib
 
         public static string LogID { get; set; }
 
-        public static void sendFile(string file, string type = "Document")
-        {
-            // If is file
-            if (!File.Exists(file))
-            {
-                sendText("File not found!");
-                return;
-            }
-            // Send file
-            using (HttpClient httpClient = new HttpClient())
-            {
-                MultipartFormDataContent fform = new MultipartFormDataContent();
-                var file_bytes = File.ReadAllBytes(file);
-                fform.Add(new ByteArrayContent(file_bytes, 0, file_bytes.Length), type.ToLower(), file);
-                var rresponse = httpClient.PostAsync(
-                    "https://api.telegram.org/bot" +
-                    new Config().TT +
-                    "/send" + type +
-                    "?chat_id=" + new Config().CI,
-                    fform
-                );
-                rresponse.Wait();
-                httpClient.Dispose();
-            }
-        }
-
         public static void sendFile(string file, string caption = "", string type = "Document")
         {
             // If file does not exist

@@ -33,7 +33,7 @@ namespace MSearch
                     break;
             }
 
-            Logger.WriteLog($"\t\t{_winver} {winver}".Replace("?",""), ConsoleColor.DarkGray, false);
+            Logger.WriteLog($"\t\t{_winver} {winver}".Replace("?", ""), ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_username} {username}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_pcname} {pcname}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_bootmode} {bootmode}\n", ConsoleColor.DarkGray, false);
@@ -478,7 +478,7 @@ namespace MSearch
                     text = Resources._LogLegend_EN;
                     break;
             }
-          
+
             Logger.WriteLog("\n\n" + text, NoDisplay, DisplayTime);
         }
     }

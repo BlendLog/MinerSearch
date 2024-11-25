@@ -21,7 +21,7 @@ namespace MSearch
                 FileSecurity fileSecurity = new FileSecurity();
                 fileSecurity.SetOwner(currentUserIdentity);
 
-                fileSecurity.SetAccessRuleProtection(false,true);
+                fileSecurity.SetAccessRuleProtection(false, true);
 
                 AuthorizationRuleCollection accessRules = fileSecurity.GetAccessRules(true, true, typeof(SecurityIdentifier));
                 foreach (AuthorizationRule rule in accessRules)
@@ -72,6 +72,10 @@ namespace MSearch
                 fileSecurity.AddAccessRule(systemRule);
 
                 File.SetAccessControl(filePath, fileSecurity);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Program.LL.LogWarnMediumMessage("_ErrorOnUnlock", filePath);
             }
             catch (Exception ex)
             {

@@ -11,26 +11,12 @@ namespace netlib
         {
             using (HttpClient client = new HttpClient())
             {
-                // GitHub требует User-Agent для всех запросов
-                try
-                {
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd("request");
 
-                    // Используем GetStringAsync и блокируем поток
-                    var responseBody = client.GetStringAsync($"https://api.github.com/repos/{repo}/releases/latest").Result;
-
-                    // Парсим ответ
-                    JObject json = JObject.Parse(responseBody);
-
-                    // Извлекаем значение tag_name
-                    string latestVersion = json["tag_name"]?.ToString();
-
-                    return latestVersion;
-                }
-                catch (Exception ex)
-                {
-                    return ex.Message;
-                }
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("request");
+                var responseBody = client.GetStringAsync($"https://api.github.com/repos/{repo}/releases/latest").Result;
+                JObject json = JObject.Parse(responseBody);
+                string latestVersion = json["tag_name"]?.ToString();
+                return latestVersion;
             }
 
 

@@ -62,7 +62,7 @@ namespace MSearch
             ActiveLanguage = Utils.GetSystemLanguage();
             Init(args);
 #endif
-
+            //Остались тесты
         }
 
         static void Init(string[] args)
@@ -349,7 +349,7 @@ namespace MSearch
             LL.LogMessage("\t\t", "_Version", CurrentVersion, ConsoleColor.White, false);
 
 
-#if !DEBUG
+//#if !DEBUG
             if (!WinPEMode && !Utils.GetWindowsVersion().Contains("Windows 7"))
             {
                 Utils.CheckLatestReleaseVersion();
@@ -361,7 +361,7 @@ namespace MSearch
                 Console.ReadKey();
                 return;
             }
-#endif
+//#endif
 
             if (WinPEMode && nosignaturescan)
             {
@@ -484,10 +484,11 @@ namespace MSearch
             Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_MINIMIZE);
 
 
-            Finish finish = new Finish(totalFoundThreats, totalNeutralizedThreats + totalFoundThreats, totalFoundSuspiciousObjects, elapsedTime) //+ sign because neutralized threats is negative
+            FinishEx finish = new FinishEx(totalFoundThreats, totalNeutralizedThreats + totalFoundThreats, totalFoundSuspiciousObjects, elapsedTime) //+ sign because neutralized threats is negative
             {
                 TopMost = true
             };
+            finish.LoadResults(MinerSearch.scanResults);
             finish.ShowDialog();
 
 

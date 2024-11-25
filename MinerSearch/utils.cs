@@ -515,10 +515,16 @@ namespace MSearch
                             int globalOffset = fileIndex + i;
 
                             found = true;
+                            double entropy = CalculateShannonEntropy(fileBytes);
 
-                            if ((index == 0 && globalOffset > 544) || (index == 4 && globalOffset > 4096))
+                            if (((index == 3 && globalOffset > 544 || globalOffset < 544 || globalOffset == 544) && entropy < 7.5) || (index == 7 && globalOffset > 4096) || (index == 9 && globalOffset > 4096))
                             {
                                 found = false;
+                            }
+
+                            if (((index == 0 || index == 1 || index == 2) && entropy >= 7.5) || (index == 3 && globalOffset <= 544 && entropy >= 7.5) || (index == 9 && globalOffset > 4096 && entropy >= 7.5))
+                            {
+                                found = true;
                             }
 
 #if DEBUG
@@ -564,8 +570,8 @@ namespace MSearch
                     {
                         files.AddRange(Directory.EnumerateFiles(GetLongPath(path), pattern, SearchOption.TopDirectoryOnly));
 
-                        Regex guidRegex = new Regex(@"^:\\programData\\Microsoft\\Windows\\Containers\\Layers\\[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
-                        foreach (var directory in Directory.EnumerateDirectories(path))
+                        Regex guidRegex = new Regex(@"^\\\\\?\\[a-fA-F]{1}:\\programData\\Microsoft\\Windows\\Containers\\Layers\\[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
+                        foreach (var directory in Directory.EnumerateDirectories(GetLongPath(path)))
                         {
                             if (!IsReparsePoint(directory) &&
                                 !directory.Contains(":\\Windows\\WinSxS") &&
@@ -581,7 +587,7 @@ namespace MSearch
                     else
                     {
                         files.AddRange(Directory.EnumerateFiles(GetLongPath(path), pattern, SearchOption.TopDirectoryOnly));
-                        foreach (var directory in Directory.EnumerateDirectories(path))
+                        foreach (var directory in Directory.EnumerateDirectories(GetLongPath(path)))
                         {
                             if (!IsReparsePoint(directory))
                             {
@@ -610,34 +616,14 @@ namespace MSearch
 
         public static string GetWindowsVersion()
         {
-            try
-            {
-                Native.OSVERSIONINFOEX osInfo = new Native.OSVERSIONINFOEX
-                {
-                    dwOSVersionInfoSize = (uint)Marshal.SizeOf(typeof(Native.OSVERSIONINFOEX))
-                };
+            Version osVersion = Environment.OSVersion.Version;
 
-                if (Native.GetVersionEx(ref osInfo))
-                {
-                    foreach (Native.BuildNumber version in Enum.GetValues(typeof(Native.BuildNumber)))
-                    {
-                        if (osInfo.dwBuildNumber == (uint)version)
-                        {
-                            string WinVerion = $"{version.ToString().Replace('_', ' ')} {osInfo.dwBuildNumber} {GetPlatform()}";
-                            return WinVerion;
-                        }
-                    }
-
-                    return "N/A";
-                }
-            }
-            catch (Exception ex)
+            if (Enum.IsDefined(typeof(Native.BuildNumber), (uint)osVersion.Build))
             {
-                // Handle the exception appropriately
-                Program.LL.LogErrorMessage("_Error", ex);
+                return Enum.GetName(typeof(Native.BuildNumber), (uint)osVersion.Build)?.Replace('_', ' ');
             }
 
-            return "N/A";
+            return $"Undefined Windows version ({osVersion})";
         }
 
         internal static BootMode GetBootMode()
@@ -735,7 +721,6 @@ namespace MSearch
         internal void CheckWMI()
         {
             string serviceName = "wi~nm~gm~t".Replace("~", "");
-
             try
             {
                 if (ServiceHelper.ServiceIsInstalled(serviceName))
@@ -762,7 +747,7 @@ namespace MSearch
                     {
                         if (me.ErrorCode == ManagementStatus.InvalidClass)
                         {
-                            Utils.RestoreWMICorruption();
+                            RestoreWMICorruption();
                         }
                         throw me;
                     }
@@ -778,7 +763,7 @@ namespace MSearch
             }
             catch (MissingMethodException)
             {
-                if (!Utils.IsDotNetInstalled())
+                if (IsDotNetInstalled())
                 {
                     MessageBox.Show(Program.LL.GetLocalizedString("_ErrorNoDotNet"), GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     Environment.Exit(1);
@@ -930,11 +915,14 @@ namespace MSearch
                                 if (currentValue == ResolveEnvironmentVariables(desiredValue))
                                 {
                                     Program.LL.LogSuccessMessage("_TermServiceRestored");
+                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, Program.LL.GetLocalizedString("_Just_Service") + " -> " + "TermService", ScanActionType.Cured));
 
                                 }
                                 else
                                 {
                                     Program.LL.LogErrorMessage("_TermServiceFailedRestore", new Exception(""));
+                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, Program.LL.GetLocalizedString("_Just_Service") + " -> " + "TermService", ScanActionType.Error));
+
                                 }
                             }
                             else
@@ -1091,6 +1079,41 @@ namespace MSearch
                 sumnation += temp * Math.Log(temp, 2.0f);
             }
             return -1.0f * sumnation;
+        }
+
+        internal static double CalculateShannonEntropy(byte[] fileBytes)
+        {
+            if (fileBytes.Length == 0)
+            {
+                return 0;
+            }
+
+            int[] byteFrequencies = new int[256];
+
+            foreach (byte b in fileBytes)
+            {
+                byteFrequencies[b]++;
+            }
+
+            double entropy = 0.0;
+            int totalBytes = fileBytes.Length;
+
+            for (int i = 0; i < 256; i++)
+            {
+                if (byteFrequencies[i] > 0)
+                {
+                    double probability = (double)byteFrequencies[i] / totalBytes;
+                    entropy -= probability * Log2(probability);
+                }
+            }
+
+            return entropy;
+        }
+
+        // Вспомогательная функция для расчета логарифма по основанию 2
+        private static double Log2(double x)
+        {
+            return Math.Log(x) / Math.Log(2);
         }
 
         internal static string CalculateMD5(string filePath)
@@ -1453,23 +1476,29 @@ namespace MSearch
 
         internal static string GetServiceImagePath(string serviceName)
         {
-
-            using (var sc = new ManagementObject($"Win32_Service.Name='{serviceName}'"))
+            try
             {
-                string sPath = sc["PathName"]?.ToString();
-
-                if (sPath == null || sPath.Equals(""))
+                using (var service = new ManagementObject($"Win32_Service.Name='{serviceName}'"))
                 {
-                    return "";
+                    service.Get();
+                    string sPath = service["PathName"]?.ToString();
+
+                    return string.IsNullOrEmpty(sPath) ? "" : sPath;
                 }
-                return sPath;
             }
+            catch (Exception ex)
+            {
+                Program.LL.LogErrorMessage("_Error", ex);
+                return "";
+            }
+
         }
 
         internal static void SetServiceStartType(string serviceName, ServiceStartMode startMode)
         {
             using (var service = new ManagementObject($"Win32_Service.Name='{serviceName}'"))
             {
+                service.Get();
                 var inParams = service.GetMethodParameters("ChangeStartMode");
                 inParams["StartMode"] = startMode.ToString();
                 service.InvokeMethod("ChangeStartMode", inParams, null);
@@ -1666,63 +1695,80 @@ namespace MSearch
 
             if (fullpath.ToLower().Contains("rundll32"))
             {
-                int notFoundFailures = checkDirs.Length;
+                int notFoundFailures = 0;
                 string rundll32Args = ResolveFilePathFromString(arguments).Split(',')[0];
-
-                if (!rundll32Args.EndsWith("\""))
-                {
-                    rundll32Args = rundll32Args.Replace("\"", "");
-                }
 
                 if (rundll32Args.StartsWith("/"))
                 {
                     rundll32Args = rundll32Args.Split(' ')[1];
                 }
 
-                foreach (string checkDir in checkDirs)
+                if (rundll32Args.StartsWith("\""))
                 {
-                    string fullPathToFileFromArgs = Path.Combine(checkDir, rundll32Args);
+                    rundll32Args = rundll32Args.Replace("\"", "");
+                }
 
-                    if (!fullPathToFileFromArgs.EndsWith(".dll"))
+                string fullPathToFileFromArgs = "";
+                if (!rundll32Args.StartsWith($"{Program.drive_letter}:\\"))
+                {
+                    foreach (string checkDir in checkDirs)
                     {
-                        fullPathToFileFromArgs += ".dll";
-                    }
+                        fullPathToFileFromArgs = Path.Combine(checkDir, rundll32Args);
 
-                    try
-                    {
-                        if (File.Exists(fullPathToFileFromArgs))
+                        if (!fullPathToFileFromArgs.EndsWith(".dll"))
                         {
-                            IntPtr ptr = IntPtr.Zero;
-
-                            Program.LL.LogMessage("[.]", "_Just_File", fullPathToFileFromArgs, ConsoleColor.Gray);
-                            var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
-                            if (trustResult != WinVerifyTrustResult.Success)
-                            {
-                                Program.LL.LogWarnMediumMessage("_InvalidCertificateSignature", rundll32Args);
-                                AddToQuarantine(fullPathToFileFromArgs, Path.Combine(MinerSearch.quarantineFolder, Path.GetFileName(fullPathToFileFromArgs) + $"_{Utils.CalculateMD5(fullPathToFileFromArgs)}.bak"), Encoding.UTF8.GetBytes(Application.ProductVersion.Replace(".", "")));
-                                return;
-                            }
-                            else if (trustResult == WinVerifyTrustResult.Success)
-                            {
-                                Logger.WriteLog($"\t[OK]", Logger.success, false);
-                            }
-                            //notFoundFailures = 0;
-                            return;
-
+                            fullPathToFileFromArgs += ".dll";
                         }
-                        else notFoundFailures += 1;
-                    }
-                    catch (Exception ex)
-                    {
-                        Program.LL.LogErrorMessage("_Error", ex);
-                    }
 
-                    if (notFoundFailures == checkDirs.Length)
+                        if (!File.Exists(fullPathToFileFromArgs))
+                        {
+                            notFoundFailures++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    fullPathToFileFromArgs = rundll32Args;
+                }
+
+
+                try
+                {
+                    if (File.Exists(fullPathToFileFromArgs))
+                    {
+
+                        Program.LL.LogMessage("[.]", "_Just_File", fullPathToFileFromArgs, ConsoleColor.Gray);
+                        var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
+                        if (trustResult != WinVerifyTrustResult.Success)
+                        {
+                            Program.LL.LogWarnMediumMessage("_InvalidCertificateSignature", rundll32Args);
+                            AddToQuarantine(fullPathToFileFromArgs, Path.Combine(MinerSearch.quarantineFolder, Path.GetFileName(fullPathToFileFromArgs) + $"_{Utils.CalculateMD5(fullPathToFileFromArgs)}.bak"), Encoding.UTF8.GetBytes(Application.ProductVersion.Replace(".", "")));
+                            return;
+                        }
+                        else if (trustResult == WinVerifyTrustResult.Success)
+                        {
+                            Logger.WriteLog($"\t[OK]", Logger.success, false);
+                        }
+                        notFoundFailures = 0;
+                    }
+                    else
                     {
                         Program.LL.LogWarnMessage("_FileIsNotFound", fullPathToFileFromArgs);
                     }
                 }
+                catch (Exception ex)
+                {
+                    Program.LL.LogErrorMessage("_Error", ex);
+                }
 
+                if (notFoundFailures == checkDirs.Length)
+                {
+                    Program.LL.LogWarnMessage("_FileIsNotFound", fullPathToFileFromArgs);
+                }
 
             }
 
@@ -1939,6 +1985,41 @@ namespace MSearch
                 Program.LL.LogErrorMessage("_Error", ex);
             }
             return false;
+        }
+
+
+        internal static string GetProcessOwner(int processId)
+        {
+
+            IntPtr tokenHandle = IntPtr.Zero;
+            try
+            {
+                using (Process process = Process.GetProcessById(processId))
+                {
+
+                    if (Native.OpenProcessToken(process.Handle, Native.TOKEN_QUERY, out tokenHandle))
+                    {
+                        WindowsIdentity identity = new WindowsIdentity(tokenHandle);
+                        return identity.Name;
+                    }
+                    else
+                    {
+                        throw new Exception("Unable open process token");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.LL.LogErrorMessage("_Error", ex);
+            }
+            finally
+            {
+                if (tokenHandle != IntPtr.Zero)
+                {
+                    Native.CloseHandle(tokenHandle);
+                }
+            }
+            return "";
         }
 
         internal static bool IsDotNetInstalled()
@@ -2284,6 +2365,7 @@ namespace MSearch
 
         internal static void CheckLatestReleaseVersion()
         {
+            Program.LL.LogHeadMessage("_LogCheckingUpdates");
             if (Internet.IsOK())
             {
                 try
@@ -2302,6 +2384,10 @@ namespace MSearch
                         Logger.WriteLog(Program.LL.GetLocalizedString("_Version") + " " + Program.CurrentVersion + " " + Program.LL.GetLocalizedString("_PrefixNewVersionAvailable").Replace("#LATEST#", latest), Logger.warnMedium);
 
                     }
+                    else
+                    {
+                        Logger.WriteLog("\t\t" + Program.LL.GetLocalizedString("_LogLastVersion"), Logger.success, false);
+                    }
                 }
                 catch (FileNotFoundException)
                 {
@@ -2309,7 +2395,7 @@ namespace MSearch
                 }
                 catch (Exception ex)
                 {
-                    Program.LL.LogErrorMessage("_Error", ex);
+                    Program.LL.LogErrorMessage("_ErrorCannotCheckUpdates", ex);
                 }
 
             }

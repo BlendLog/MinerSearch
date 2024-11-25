@@ -1,11 +1,7 @@
-﻿
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.IO;
-using System.Security.Cryptography;
 
 namespace MSearch
 {
@@ -26,15 +22,6 @@ namespace MSearch
 
         [DllImport("advapi32.dll", SetLastError = true)]
         public static extern bool PrivilegeCheck(IntPtr ClientToken, ref PRIVILEGE_SET RequiredPrivileges, out bool pfResult);
-
-#if DEBUG
-        [DllImport("advapi32.dll", SetLastError = true)]
-        public static extern bool GetTokenInformation(IntPtr TokenHandle, int TokenInformationClass, IntPtr TokenInformation, int TokenInformationLength, out int ReturnLength);
-
-        [DllImport("advapi32.dll", SetLastError = true)]
-        public static extern bool LookupPrivilegeName(string lpSystemName, ref LUID lpLuid, StringBuilder lpName, ref int cchName);
-
-#endif
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
@@ -71,10 +58,6 @@ namespace MSearch
 
         [DllImport("iphlpapi.dll", SetLastError = true)]
         public static extern int GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort, int ipVersion, TcpTableClass tblClass, int reserved);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetVersionEx(ref OSVERSIONINFOEX osVersionInfo);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr GetStdHandle(int nStdHandle);
@@ -200,7 +183,6 @@ namespace MSearch
         [DllImport("advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern bool LookupAccountName(string lpSystemName, string lpAccountName, IntPtr Sid, ref int cbSid, System.Text.StringBuilder ReferencedDomainName, ref int cchReferencedDomainName, out int peUse);
 
-        // Импортируем необходимые функции из advapi32.dll и kernel32.dll
         [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool LookupAccountSid(string lpSystemName, IntPtr Sid, StringBuilder Name, ref int cchName, StringBuilder ReferencedDomainName, ref int cchReferencedDomainName, out int peUse);
 
@@ -256,39 +238,6 @@ namespace MSearch
             PINNED = 0x00080000, // Файл закреплен для хранения в кэше (OneDrive)
             UNPINNED = 0x00100000, // Файл откреплен, может быть удален из кэша (OneDrive)
             RECALL_ON_DATA_ACCESS = 0x00400000 // Обратный вызов при доступе к данным файла
-        }
-
-
-        internal enum FILE_INFO_BY_HANDLE_CLASS
-        {
-            FileBasicInfo = 0,
-            FileStandardInfo = 1,
-            FileNameInfo = 2,
-            FileRemoteProtocolInfo = 3,
-            FileCompressionInfo = 4,
-            FileAttributeTagInfo = 5,
-            FileIdBothDirectoryInfo = 6,
-            FileIdBothDirectoryRestartInfo = 7,
-            FileIoPriorityHintInfo = 8,
-            FileRemoteInfo = 9,
-            FileFullDirectoryInfo = 10,
-            FileFullDirectoryRestartInfo = 11,
-            FileStorageInfo = 12,
-            FileAlignmentInfo = 13,
-            FileIdInfo = 14,
-            FileIdExtdDirectoryInfo = 15,
-            FileIdExtdDirectoryRestartInfo = 16,
-            MaximumFileInfoByHandlesClass
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct FILE_BASIC_INFO
-        {
-            public long CreationTime;
-            public long LastAccessTime;
-            public long LastWriteTime;
-            public long ChangeTime;
-            public uint FileAttributes;
         }
 
         [DllImport("ntdll.dll")]
@@ -402,14 +351,6 @@ namespace MSearch
 
         public const uint ENABLE_QUICK_EDIT_MODE = 0x0040;
         public const int STD_INPUT_HANDLE = -10;
-
-
-
-
-        //public const long PROCESS_CREATION_MITIGATION_POLICY_BLOCK_NON_MICROSOFT_BINARIES_ALWAYS_ON = 0x100000000000;
-        //public const int PROC_THREAD_ATTRIBUTE_MITIGATION_POLICY = 0x00020007;
-        //public const uint EXTENDED_STARTUPINFO_PRESENT = 0x00080000;
-        //public const uint CREATE_NEW_CONSOLE = 0x00000010;
 
         public static uint WM_GETICON = 0x007f;
         public static uint WM_SETICON = 0x80;

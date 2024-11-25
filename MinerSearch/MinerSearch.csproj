@@ -132,6 +132,12 @@
     <Compile Include="Finish.Designer.cs">
       <DependentUpon>Finish.cs</DependentUpon>
     </Compile>
+    <Compile Include="FinishEx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FinishEx.Designer.cs">
+      <DependentUpon>FinishEx.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormShadow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,6 +163,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ScanResult.cs" />
     <Compile Include="SplashForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,6 +193,9 @@
     <None Include="bin\Release\Microsoft.Win32.TaskScheduler.dll" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="FinishEx.resx">
+      <DependentUpon>FinishEx.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Finish.resx">
       <DependentUpon>Finish.cs</DependentUpon>
       <SubType>Designer</SubType>
