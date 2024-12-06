@@ -10,6 +10,18 @@
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/total?style=flat&color=00ff66)
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?style=flat&labelColor=navy)
 
+Версия 1.4.7.72
+
+MinerSearch v1.4.7.72 [PostFix]
+
+   - Улучшен алгоритм поиска майнеров. (Tlauncher Legacy, goodbyedpi, rustme и другие больше не рассматриваются как угроза)
+   - Исправлена невозможность переместить файл в карантин
+   - Удаление вредоносных скриптов из планировщика задач, запускающие майнер
+   > [Что нового]
+   - Добавлен менеджер карантина (опция -q или --open-quarantine, либо на форме с отчётом "Карантин")
+   - Удалена опция "--restore", так как стратегия перемещения файлов в карантин также была изменена (несовместимо с предыдущими версиями MinerSearch)
+
+
 Версия 1.4.7.7
 
 - Добавлена форма с кратким отчётом, в которой перечислены какие именно угрозы были устранены
