@@ -3,8 +3,8 @@ using System.Runtime.InteropServices;
 
 [assembly: ComVisible(true)]
 [assembly: Guid("9c5d03a2-b3e5-4b28-a1f6-eafd9b0ed091")]
-[assembly: AssemblyVersion("1.4.7.7")]
-[assembly: AssemblyFileVersion("1.4.7.7")]
+[assembly: AssemblyVersion("1.4.7.72")]
+[assembly: AssemblyFileVersion("1.4.7.72")]
 [assembly: AssemblyTitle("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("")]

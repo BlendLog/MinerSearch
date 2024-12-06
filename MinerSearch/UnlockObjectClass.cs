@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.Threading;
 
 namespace MSearch
 {
@@ -101,5 +103,65 @@ namespace MSearch
             }
             return false;
         }
+
+        internal static bool IsRegistryKeyBlocked(string keyPath)
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(keyPath, RegistryKeyPermissionCheck.ReadSubTree, RegistryRights.ReadPermissions))
+            {
+                if (key == null)
+                {
+                    Registry.CurrentUser.CreateSubKey(keyPath);
+                }
+
+                var security = key.GetAccessControl();
+                var rules = security.GetAccessRules(true, true, typeof(NTAccount));
+
+                foreach (AuthorizationRule rule in rules)
+                {
+                    if (rule is RegistryAccessRule accessRule &&
+                        accessRule.AccessControlType == AccessControlType.Deny)
+                    {
+                        return true;
+
+                    }
+                }
+            }
+            return false;
+        }
+
+        internal static void UnblockRegistry(string keyPath)
+        {
+            using (RegistryKey baseKey = Registry.CurrentUser.OpenSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions))
+            {
+                if (baseKey == null) return;
+
+                var security = baseKey.GetAccessControl(AccessControlSections.Access);
+                var rules = security.GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount));
+
+                bool changesMade = false;
+
+                foreach (AuthorizationRule rule in rules)
+                {
+                    if (rule is RegistryAccessRule accessRule &&
+                        accessRule.AccessControlType == AccessControlType.Deny)
+                    {
+                        security.RemoveAccessRuleSpecific(accessRule);
+                        changesMade = true;
+#if DEBUG
+                        Console.WriteLine($"[DBG] Removed rule Deny: {accessRule.IdentityReference.Value} (Inheritance: {accessRule.InheritanceFlags})");
+#endif
+                    }
+                }
+
+                if (changesMade)
+                {
+                    baseKey.SetAccessControl(security);
+#if DEBUG
+                    Console.WriteLine($"[DBG] Update Access rules for key: {baseKey.Name}");
+#endif
+                }
+            }
+        }
+
     }
 }

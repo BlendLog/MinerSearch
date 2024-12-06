@@ -99,7 +99,7 @@ namespace MSearch
             // 
             // panel3
             // 
-            this.panel3.BackColor = System.Drawing.Color.Gainsboro;
+            this.panel3.BackColor = System.Drawing.Color.White;
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.selectAllButton);
             this.panel3.Controls.Add(this.deselectAllButton);
@@ -144,15 +144,15 @@ namespace MSearch
             // 
             // panel2
             // 
-            this.panel2.BackColor = System.Drawing.Color.Gainsboro;
+            this.panel2.BackColor = System.Drawing.Color.White;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.skipBtn);
             this.panel2.Controls.Add(this.continueButton);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(6, 528);
-            this.panel2.Margin = new System.Windows.Forms.Padding(5);
+            this.panel2.Location = new System.Drawing.Point(6, 524);
+            this.panel2.Margin = new System.Windows.Forms.Padding(5, 1, 5, 5);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(482, 92);
+            this.panel2.Size = new System.Drawing.Size(482, 96);
             this.panel2.TabIndex = 1;
             // 
             // skipBtn
@@ -187,16 +187,16 @@ namespace MSearch
             // 
             // checkedListBox1
             // 
-            this.checkedListBox1.BackColor = System.Drawing.Color.Gainsboro;
+            this.checkedListBox1.BackColor = System.Drawing.Color.White;
             this.checkedListBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.checkedListBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.checkedListBox1.Font = new System.Drawing.Font("Verdana", 9F);
             this.checkedListBox1.ForeColor = System.Drawing.Color.Black;
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(6, 145);
-            this.checkedListBox1.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
+            this.checkedListBox1.Location = new System.Drawing.Point(6, 141);
+            this.checkedListBox1.Margin = new System.Windows.Forms.Padding(5, 1, 5, 0);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(482, 377);
+            this.checkedListBox1.Size = new System.Drawing.Size(482, 381);
             this.checkedListBox1.Sorted = true;
             this.checkedListBox1.TabIndex = 0;
             this.checkedListBox1.Click += new System.EventHandler(this.checkedListBox1_Click);
@@ -208,20 +208,21 @@ namespace MSearch
             this.panel4.Controls.Add(this.label_message);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(6, 6);
-            this.panel4.Margin = new System.Windows.Forms.Padding(5);
+            this.panel4.Margin = new System.Windows.Forms.Padding(5, 5, 5, 1);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(482, 74);
+            this.panel4.Size = new System.Drawing.Size(482, 78);
             this.panel4.TabIndex = 4;
             // 
             // label_message
             // 
+            this.label_message.BackColor = System.Drawing.Color.White;
             this.label_message.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label_message.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.label_message.ForeColor = System.Drawing.Color.Black;
             this.label_message.Location = new System.Drawing.Point(0, 0);
             this.label_message.Name = "label_message";
             this.label_message.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
-            this.label_message.Size = new System.Drawing.Size(480, 72);
+            this.label_message.Size = new System.Drawing.Size(480, 76);
             this.label_message.TabIndex = 2;
             this.label_message.Text = "label_message";
             this.label_message.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

@@ -29,12 +29,13 @@ namespace MSearch
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.dataGridThreats = new System.Windows.Forms.DataGridView();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.OpenQuarantineBtn = new System.Windows.Forms.Button();
             this.Label_showAllLogs = new System.Windows.Forms.Label();
             this.Label_OpenLogsFolder = new System.Windows.Forms.LinkLabel();
             this.finishBtn = new System.Windows.Forms.Button();
@@ -76,6 +77,7 @@ namespace MSearch
             this.tableLayoutPanel1.Controls.Add(this.panel4, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 4;
@@ -89,27 +91,28 @@ namespace MSearch
             // dataGridThreats
             // 
             this.dataGridThreats.AllowUserToDeleteRows = false;
-            this.dataGridThreats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.dataGridThreats.AllowUserToResizeRows = false;
             this.dataGridThreats.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dataGridThreats.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridThreats.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridThreats.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridThreats.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             this.dataGridThreats.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Verdana", 10F);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridThreats.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Verdana", 10F);
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridThreats.DefaultCellStyle = dataGridViewCellStyle14;
+            this.dataGridThreats.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridThreats.GridColor = System.Drawing.Color.LightGray;
             this.dataGridThreats.Location = new System.Drawing.Point(0, 183);
             this.dataGridThreats.Margin = new System.Windows.Forms.Padding(0);
@@ -117,16 +120,17 @@ namespace MSearch
             this.dataGridThreats.Name = "dataGridThreats";
             this.dataGridThreats.ReadOnly = true;
             this.dataGridThreats.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridThreats.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridThreats.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
             this.dataGridThreats.RowHeadersWidth = 51;
             this.dataGridThreats.RowTemplate.Height = 24;
+            this.dataGridThreats.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridThreats.Size = new System.Drawing.Size(1200, 297);
             this.dataGridThreats.TabIndex = 1;
             this.dataGridThreats.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridThreats_RowsAdded);
@@ -135,6 +139,7 @@ namespace MSearch
             // 
             this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.Controls.Add(this.OpenQuarantineBtn);
             this.panel4.Controls.Add(this.Label_showAllLogs);
             this.panel4.Controls.Add(this.Label_OpenLogsFolder);
             this.panel4.Controls.Add(this.finishBtn);
@@ -146,8 +151,27 @@ namespace MSearch
             this.panel4.Size = new System.Drawing.Size(1200, 70);
             this.panel4.TabIndex = 3;
             // 
+            // OpenQuarantineBtn
+            // 
+            this.OpenQuarantineBtn.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.OpenQuarantineBtn.BackColor = System.Drawing.Color.White;
+            this.OpenQuarantineBtn.FlatAppearance.BorderColor = System.Drawing.Color.RoyalBlue;
+            this.OpenQuarantineBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Navy;
+            this.OpenQuarantineBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
+            this.OpenQuarantineBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.OpenQuarantineBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.OpenQuarantineBtn.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.OpenQuarantineBtn.Location = new System.Drawing.Point(945, 14);
+            this.OpenQuarantineBtn.Name = "OpenQuarantineBtn";
+            this.OpenQuarantineBtn.Size = new System.Drawing.Size(242, 43);
+            this.OpenQuarantineBtn.TabIndex = 14;
+            this.OpenQuarantineBtn.Text = "Открыть карантин";
+            this.OpenQuarantineBtn.UseVisualStyleBackColor = false;
+            this.OpenQuarantineBtn.Click += new System.EventHandler(this.OpenQuarantineBtn_Click);
+            // 
             // Label_showAllLogs
             // 
+            this.Label_showAllLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.Label_showAllLogs.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.Label_showAllLogs.ForeColor = System.Drawing.Color.Black;
             this.Label_showAllLogs.Location = new System.Drawing.Point(10, 9);
@@ -160,6 +184,7 @@ namespace MSearch
             // Label_OpenLogsFolder
             // 
             this.Label_OpenLogsFolder.ActiveLinkColor = System.Drawing.Color.Navy;
+            this.Label_OpenLogsFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.Label_OpenLogsFolder.BackColor = System.Drawing.Color.Transparent;
             this.Label_OpenLogsFolder.DisabledLinkColor = System.Drawing.Color.Gray;
             this.Label_OpenLogsFolder.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
@@ -176,7 +201,7 @@ namespace MSearch
             // 
             // finishBtn
             // 
-            this.finishBtn.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.finishBtn.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.finishBtn.BackColor = System.Drawing.Color.RoyalBlue;
             this.finishBtn.Enabled = false;
             this.finishBtn.FlatAppearance.BorderColor = System.Drawing.Color.Black;
@@ -185,7 +210,7 @@ namespace MSearch
             this.finishBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.finishBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.finishBtn.ForeColor = System.Drawing.Color.AliceBlue;
-            this.finishBtn.Location = new System.Drawing.Point(602, 15);
+            this.finishBtn.Location = new System.Drawing.Point(634, 15);
             this.finishBtn.Name = "finishBtn";
             this.finishBtn.Size = new System.Drawing.Size(213, 43);
             this.finishBtn.TabIndex = 11;
@@ -195,7 +220,7 @@ namespace MSearch
             // 
             // btnDetails
             // 
-            this.btnDetails.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnDetails.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.btnDetails.BackColor = System.Drawing.Color.Gainsboro;
             this.btnDetails.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.btnDetails.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Navy;
@@ -203,7 +228,7 @@ namespace MSearch
             this.btnDetails.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDetails.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnDetails.ForeColor = System.Drawing.Color.Black;
-            this.btnDetails.Location = new System.Drawing.Point(383, 15);
+            this.btnDetails.Location = new System.Drawing.Point(415, 15);
             this.btnDetails.Name = "btnDetails";
             this.btnDetails.Size = new System.Drawing.Size(213, 43);
             this.btnDetails.TabIndex = 10;
@@ -213,10 +238,10 @@ namespace MSearch
             // 
             // panel2
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BackColor = System.Drawing.SystemColors.Control;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.tableLayoutPanel2);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 44);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
             this.panel2.Name = "panel2";
@@ -225,6 +250,7 @@ namespace MSearch
             // 
             // tableLayoutPanel2
             // 
+            this.tableLayoutPanel2.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
@@ -232,7 +258,6 @@ namespace MSearch
             this.tableLayoutPanel2.Controls.Add(this.panel6, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.panel5, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.panel7, 2, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
@@ -254,8 +279,8 @@ namespace MSearch
             // 
             // FinalStatus_label
             // 
+            this.FinalStatus_label.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.FinalStatus_label.BackColor = System.Drawing.Color.Transparent;
-            this.FinalStatus_label.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FinalStatus_label.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold);
             this.FinalStatus_label.ForeColor = System.Drawing.Color.White;
             this.FinalStatus_label.Location = new System.Drawing.Point(0, 0);
@@ -281,7 +306,7 @@ namespace MSearch
             // 
             // LBL_scanElapsedTime
             // 
-            this.LBL_scanElapsedTime.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.LBL_scanElapsedTime.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.LBL_scanElapsedTime.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold);
             this.LBL_scanElapsedTime.ForeColor = System.Drawing.Color.Gainsboro;
             this.LBL_scanElapsedTime.Location = new System.Drawing.Point(236, 80);
@@ -293,7 +318,7 @@ namespace MSearch
             // 
             // LBL_ScanTime
             // 
-            this.LBL_ScanTime.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.LBL_ScanTime.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.LBL_ScanTime.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold);
             this.LBL_ScanTime.ForeColor = System.Drawing.Color.Gainsboro;
             this.LBL_ScanTime.Location = new System.Drawing.Point(7, 80);
@@ -306,21 +331,22 @@ namespace MSearch
             // 
             // LBL_ScanComplete
             // 
+            this.LBL_ScanComplete.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.LBL_ScanComplete.BackColor = System.Drawing.Color.Transparent;
-            this.LBL_ScanComplete.Dock = System.Windows.Forms.DockStyle.Top;
             this.LBL_ScanComplete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.LBL_ScanComplete.Font = new System.Drawing.Font("Trebuchet MS", 14F, System.Drawing.FontStyle.Bold);
             this.LBL_ScanComplete.ForeColor = System.Drawing.Color.White;
-            this.LBL_ScanComplete.Location = new System.Drawing.Point(0, 0);
+            this.LBL_ScanComplete.Location = new System.Drawing.Point(-1, 25);
             this.LBL_ScanComplete.Margin = new System.Windows.Forms.Padding(0);
             this.LBL_ScanComplete.Name = "LBL_ScanComplete";
-            this.LBL_ScanComplete.Size = new System.Drawing.Size(399, 113);
+            this.LBL_ScanComplete.Size = new System.Drawing.Size(401, 55);
             this.LBL_ScanComplete.TabIndex = 4;
             this.LBL_ScanComplete.Text = "Сканирование завершено";
             this.LBL_ScanComplete.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel7
             // 
+            this.panel7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(90)))), ((int)(((byte)(210)))));
             this.panel7.Controls.Add(this.LBL_threatsCount);
             this.panel7.Controls.Add(this.LBL_neutralizedThreats);
@@ -328,7 +354,6 @@ namespace MSearch
             this.panel7.Controls.Add(this.LBL_susObjects);
             this.panel7.Controls.Add(this.LBL_susCount);
             this.panel7.Controls.Add(this.LBL_totalThreats);
-            this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel7.Location = new System.Drawing.Point(798, 0);
             this.panel7.Margin = new System.Windows.Forms.Padding(0);
             this.panel7.Name = "panel7";
@@ -337,12 +362,12 @@ namespace MSearch
             // 
             // LBL_threatsCount
             // 
-            this.LBL_threatsCount.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.LBL_threatsCount.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.LBL_threatsCount.AutoSize = true;
             this.LBL_threatsCount.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_threatsCount.ForeColor = System.Drawing.Color.White;
             this.LBL_threatsCount.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LBL_threatsCount.Location = new System.Drawing.Point(348, 14);
+            this.LBL_threatsCount.Location = new System.Drawing.Point(336, 14);
             this.LBL_threatsCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_threatsCount.Name = "LBL_threatsCount";
             this.LBL_threatsCount.Size = new System.Drawing.Size(21, 20);
@@ -366,12 +391,12 @@ namespace MSearch
             // 
             // LBL_curedCount
             // 
-            this.LBL_curedCount.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.LBL_curedCount.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.LBL_curedCount.AutoSize = true;
             this.LBL_curedCount.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_curedCount.ForeColor = System.Drawing.Color.White;
             this.LBL_curedCount.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LBL_curedCount.Location = new System.Drawing.Point(348, 93);
+            this.LBL_curedCount.Location = new System.Drawing.Point(336, 92);
             this.LBL_curedCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_curedCount.Name = "LBL_curedCount";
             this.LBL_curedCount.Size = new System.Drawing.Size(21, 20);
@@ -395,12 +420,12 @@ namespace MSearch
             // 
             // LBL_susCount
             // 
-            this.LBL_susCount.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.LBL_susCount.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.LBL_susCount.AutoSize = true;
             this.LBL_susCount.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_susCount.ForeColor = System.Drawing.Color.White;
             this.LBL_susCount.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LBL_susCount.Location = new System.Drawing.Point(348, 53);
+            this.LBL_susCount.Location = new System.Drawing.Point(336, 53);
             this.LBL_susCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_susCount.Name = "LBL_susCount";
             this.LBL_susCount.Size = new System.Drawing.Size(21, 20);
@@ -444,7 +469,7 @@ namespace MSearch
             this.CloseBtn.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Bold);
             this.CloseBtn.ForeColor = System.Drawing.Color.White;
             this.CloseBtn.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.CloseBtn.Location = new System.Drawing.Point(1161, 9);
+            this.CloseBtn.Location = new System.Drawing.Point(1158, 9);
             this.CloseBtn.Margin = new System.Windows.Forms.Padding(0);
             this.CloseBtn.Name = "CloseBtn";
             this.CloseBtn.Size = new System.Drawing.Size(30, 30);
@@ -465,7 +490,7 @@ namespace MSearch
             this.top.Location = new System.Drawing.Point(0, 0);
             this.top.Margin = new System.Windows.Forms.Padding(0);
             this.top.Name = "top";
-            this.top.Padding = new System.Windows.Forms.Padding(8, 0, 40, 0);
+            this.top.Padding = new System.Windows.Forms.Padding(20, 0, 40, 0);
             this.top.Size = new System.Drawing.Size(1217, 44);
             this.top.TabIndex = 2;
             this.top.Text = "MinerSearch";
@@ -479,6 +504,7 @@ namespace MSearch
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1200, 550);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FinishEx";
             this.ShowIcon = false;
@@ -526,5 +552,6 @@ namespace MSearch
         public System.Windows.Forms.DataGridView dataGridThreats;
         private System.Windows.Forms.LinkLabel Label_OpenLogsFolder;
         private System.Windows.Forms.Label Label_showAllLogs;
+        private System.Windows.Forms.Button OpenQuarantineBtn;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -55,7 +56,6 @@ namespace MSearch
             Label_showAllLogs.Text = Program.LL.GetLocalizedString("_ShowFolderLogs");
             top.TextAlign = ContentAlignment.MiddleRight;
             top.Text = Program.LL.GetLocalizedString("_PleaseWaitMessage");
-            //finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
             finishBtn.Text = Program.LL.GetLocalizedString("_PleaseWaitMessage");
             finishBtn.BackColor = Color.DimGray;
 
@@ -107,9 +107,14 @@ namespace MSearch
             }
             else if (curedCount == threatsCount && threatsCount > 0)
             {
-                Hide();
-                SplashForm splashForm = new SplashForm();
-                splashForm.ShowDialog();
+#if !DEBUG
+                if (!Program.ScanOnly)
+                {
+                    Hide();
+                    SplashForm splashForm = new SplashForm();
+                    splashForm.ShowDialog();
+                }
+#endif
             }
             Environment.Exit(0);
         }
@@ -164,11 +169,12 @@ namespace MSearch
 
         private void ConfigureDataGridView()
         {
+#if !DEBUG
             if (Program.totalFoundThreats == 0 && Program.totalFoundSuspiciousObjects == 0)
             {
                 dataGridThreats.Visible = false;
             }
-
+#endif
             dataGridThreats.RowHeadersVisible = false;
             dataGridThreats.AutoGenerateColumns = false;
 
@@ -204,9 +210,6 @@ namespace MSearch
                 column.Width = columnWidth;
                 column.MinimumWidth = columnWidth;
             }
-
-
-
         }
 
         public void LoadResults(List<ScanResult> results)
@@ -218,10 +221,12 @@ namespace MSearch
         {
             dataGridThreats.ClearSelection();
             TranslateForm();
-            CollectStatistics();
+            string registryPath = @"Software\M1nerSearch";
+            string valueName = "allowstatistics";
+            CollectStatistics(registryPath, valueName);
         }
 
-        async void CollectStatistics()
+        async void CollectStatistics(string registryPath, string valueName)
         {
             if (Program.no_logs)
             {
@@ -233,9 +238,6 @@ namespace MSearch
                 finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
                 return;
             }
-
-            string registryPath = @"Software\M1nerSearch";
-            string valueName = "allowstatistics";
 
             RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath, true);
 
@@ -403,12 +405,14 @@ namespace MSearch
                         case ScanActionType.Cured:
                         case ScanActionType.Deleted:
                         case ScanActionType.Quarantine:
+                        case ScanActionType.Terminated:
                             row.Cells[row.Cells.Count - 1].Style.BackColor = Color.PaleGreen;
                             break;
                         case ScanActionType.Skipped:
                             row.Cells[row.Cells.Count - 1].Style.BackColor = Color.White;
                             break;
                         case ScanActionType.Error:
+                        case ScanActionType.Active:
                             row.Cells[row.Cells.Count - 1].Style.BackColor = Color.LightSalmon;
                             break;
                     }
@@ -432,6 +436,16 @@ namespace MSearch
 
             string argument = "/select, \"" + logpath + "\"";
             Process.Start("explorer.exe", argument);
+        }
+
+        private void OpenQuarantineBtn_Click(object sender, EventArgs e)
+        {
+            Hide();
+            QuarantineForm qForm = new QuarantineForm(this)
+            {
+                Owner = this
+            };
+            qForm.ShowDialog();
         }
     }
 }

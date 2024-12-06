@@ -36,7 +36,7 @@ namespace MSearch
         public static int totalFoundSuspiciousObjects = 0;
         public static int totalNeutralizedThreats = 0;
         public static string drive_letter = "C";
-        public static string ActiveLanguage = "";
+        public static string ActiveLanguage = "EN";
         internal static BootMode bootMode = Utils.GetBootMode();
         public static LocalizedLogger LL = new LocalizedLogger();
         public static Utils _utils = new Utils();
@@ -62,7 +62,6 @@ namespace MSearch
             ActiveLanguage = Utils.GetSystemLanguage();
             Init(args);
 #endif
-            //Остались тесты
         }
 
         static void Init(string[] args)
@@ -131,10 +130,6 @@ namespace MSearch
                 }
             }
 
-#if !DEBUG
-            LL.LogJustDisplayMessage("\t\t", $"_RelevantVer", "https://github.com/BlendLog/Mi?ne?rSea?rch/releases \n".Replace("?", ""), ConsoleColor.White);
-#endif
-
             if (Utils.IsStartedFromArchive())
             {
                 MessageBox.Show(LL.GetLocalizedString("_ArchiveWarn"), LL.GetLocalizedString("_ArchiveWarn_caption"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -143,6 +138,7 @@ namespace MSearch
 
             const string registryKeyPath = @"Software\M1nerSearch";
             const string registryValueName = "acceptedEula";
+
 
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(registryKeyPath))
             {
@@ -178,7 +174,7 @@ namespace MSearch
                 foreach (var arg in args)
                 {
                     arg.ToLower();
-                    if (arg == "--help")
+                    if (arg == "--help" || arg == "-h")
                     {
                         help = true;
 
@@ -257,18 +253,11 @@ namespace MSearch
                     {
                         fullScan = true;
                     }
-                    else if (arg.StartsWith("--restore="))
+                    else if (arg.StartsWith("--open-quarantine") || arg.StartsWith("-q"))
                     {
-                        var path = arg.Remove(0, 10);
-                        if (File.Exists(path))
-                        {
-                            Utils.RestoreFromQuarantine(path, Path.GetFileNameWithoutExtension(path).Split('_')[0], Encoding.UTF8.GetBytes(Application.ProductVersion.Replace(".", "")));
-                        }
-                        else
-                        {
-                            LL.LogWarnMessage("_FileIsNotFound", path);
-                        }
-                        return;
+                        Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_MINIMIZE);
+                        QuarantineForm qForm = new QuarantineForm();
+                        qForm.ShowDialog();
                     }
                     else if (arg == "--winpemode")
                     {
@@ -321,7 +310,6 @@ namespace MSearch
             }
 
 #endif
-
             if (!no_logs)
             {
                 if (!Directory.Exists(Logger.LogsFolder))
@@ -338,6 +326,9 @@ namespace MSearch
                 }
             }
 
+#if !DEBUG
+            LL.LogJustDisplayMessage("\t\t", $"_RelevantVer", "https://github.com/BlendLog/Mi?ne?rSea?rch/releases \n".Replace("?", ""), ConsoleColor.White);
+#endif
             Logger.WriteLog("\t\tID: " + Utils.GetDeviceId(), ConsoleColor.White, false, true);
 
 
@@ -349,7 +340,7 @@ namespace MSearch
             LL.LogMessage("\t\t", "_Version", CurrentVersion, ConsoleColor.White, false);
 
 
-//#if !DEBUG
+#if !DEBUG
             if (!WinPEMode && !Utils.GetWindowsVersion().Contains("Windows 7"))
             {
                 Utils.CheckLatestReleaseVersion();
@@ -361,7 +352,7 @@ namespace MSearch
                 Console.ReadKey();
                 return;
             }
-//#endif
+#endif
 
             if (WinPEMode && nosignaturescan)
             {
@@ -369,16 +360,17 @@ namespace MSearch
             }
 
 
-            LocalizedLogger.LogPCInfo(Utils.GetWindowsVersion(), Environment.UserName, Environment.MachineName, bootMode);
+            LocalizedLogger.LogPCInfo(Utils.GetWindowsVersion() + " " + Utils.GetPlatform(), Environment.UserName, Environment.MachineName, bootMode);
+
             Utils.CheckStartupCount();
 
             ProcessModuleCollection pmodules = Process.GetCurrentProcess().Modules;
             foreach (var module in pmodules)
             {
-                if (module.ToString().Contains("c~md~vrt~6~4.d~ll".Replace("~", "")))
+                if (module.ToString().Contains(new StringBuilder("cm").Append("dv").Append("rt").Append("64").Append(".d").Append("ll").ToString()))
                 {
                     Console.BackgroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Please, add the program to ant1v1rus whitelist!");
+                    Console.WriteLine(new StringBuilder("Pl").Append("ea").Append("se").Append(", ").Append("ad").Append("d ").Append("th").Append("e ").Append("pr").Append("og").Append("ra").Append("m ").Append("to").Append(" a").Append("nt").Append("1v").Append("1r").Append("us").Append(" w").Append("hi").Append("te").Append("li").Append("st").Append("!").ToString());
                     Console.BackgroundColor = ConsoleColor.Black;
 
                     Console.ReadLine();

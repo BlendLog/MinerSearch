@@ -2,12 +2,12 @@
 using System;
 using System.Reflection;
 using System.Resources;
+using System.Text;
 
 namespace MSearch
 {
     public class LocalizedLogger
     {
-
         ResourceManager resourceManager = new ResourceManager("M$Sear$ch.Properties.Resources".Replace("$", ""), Assembly.GetExecutingAssembly());
 
         #region TopRegion
@@ -72,7 +72,7 @@ namespace MSearch
                     message = Resources._CriticalServiceNotInstalled_EN;
                     break;
             }
-            Logger.WriteLog($"\t[xxx] wi~nmg~mt: {message}".Replace("~", ""), Logger.error);
+            Logger.WriteLog($"\t[xxx] {new StringBuilder("wi").Append("nmg").Append("mt")}: {message}", Logger.error);
         }
 
         public static void LogInvalidFile(string filePath)

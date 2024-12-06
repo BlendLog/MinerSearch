@@ -89,6 +89,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Active.
+        /// </summary>
+        internal static string _ActionType_Active_EN {
+            get {
+                return ResourceManager.GetString("_ActionType_Active_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Активен.
+        /// </summary>
+        internal static string _ActionType_Active_RU {
+            get {
+                return ResourceManager.GetString("_ActionType_Active_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Cured.
         /// </summary>
         internal static string _ActionType_Cured_EN {
@@ -175,6 +193,24 @@ namespace MSearch.Properties {
         internal static string _ActionType_Skipped_RU {
             get {
                 return ResourceManager.GetString("_ActionType_Skipped_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Terminated.
+        /// </summary>
+        internal static string _ActionType_Terminated_EN {
+            get {
+                return ResourceManager.GetString("_ActionType_Terminated_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Прерван.
+        /// </summary>
+        internal static string _ActionType_Terminated_RU {
+            get {
+                return ResourceManager.GetString("_ActionType_Terminated_RU", resourceCulture);
             }
         }
         
@@ -683,6 +719,42 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на File hash.
+        /// </summary>
+        internal static string _DataGridHeader_FileHash_EN {
+            get {
+                return ResourceManager.GetString("_DataGridHeader_FileHash_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Хеш файла.
+        /// </summary>
+        internal static string _DataGridHeader_FileHash_RU {
+            get {
+                return ResourceManager.GetString("_DataGridHeader_FileHash_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на File size.
+        /// </summary>
+        internal static string _DataGridHeader_FileSize_EN {
+            get {
+                return ResourceManager.GetString("_DataGridHeader_FileSize_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Размер файла.
+        /// </summary>
+        internal static string _DataGridHeader_FileSize_RU {
+            get {
+                return ResourceManager.GetString("_DataGridHeader_FileSize_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Type.
         /// </summary>
         internal static string _DataGridHeader_ObjectType_EN {
@@ -715,6 +787,42 @@ namespace MSearch.Properties {
         internal static string _DataGridHeader_Path_RU {
             get {
                 return ResourceManager.GetString("_DataGridHeader_Path_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Remove file from quarantine?.
+        /// </summary>
+        internal static string _DataGridRemoveBtn_EN {
+            get {
+                return ResourceManager.GetString("_DataGridRemoveBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удалить файл из карантина?.
+        /// </summary>
+        internal static string _DataGridRemoveBtn_RU {
+            get {
+                return ResourceManager.GetString("_DataGridRemoveBtn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Delete.
+        /// </summary>
+        internal static string _DeleteBtnText_EN {
+            get {
+                return ResourceManager.GetString("_DeleteBtnText_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удалить.
+        /// </summary>
+        internal static string _DeleteBtnText_RU {
+            get {
+                return ResourceManager.GetString("_DeleteBtnText_RU", resourceCulture);
             }
         }
         
@@ -1747,6 +1855,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Process:.
+        /// </summary>
+        internal static string _Just_Process_EN {
+            get {
+                return ResourceManager.GetString("_Just_Process_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Процесс:.
+        /// </summary>
+        internal static string _Just_Process_RU {
+            get {
+                return ResourceManager.GetString("_Just_Process_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Service:.
         /// </summary>
         internal static string _Just_Service_EN {
@@ -1797,6 +1923,24 @@ namespace MSearch.Properties {
         internal static string _LabelChatHelp_RU {
             get {
                 return ResourceManager.GetString("_LabelChatHelp_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Files in quarantine:.
+        /// </summary>
+        internal static string _LabelQuarantinedFiles_EN {
+            get {
+                return ResourceManager.GetString("_LabelQuarantinedFiles_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файлы в карантине:.
+        /// </summary>
+        internal static string _LabelQuarantinedFiles_RU {
+            get {
+                return ResourceManager.GetString("_LabelQuarantinedFiles_RU", resourceCulture);
             }
         }
         
@@ -1942,7 +2086,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Checking updates. Please, wait....
+        ///   Ищет локализованную строку, похожую на Checking for updates. Please, wait....
         /// </summary>
         internal static string _LogCheckingUpdates_EN {
             get {
@@ -2573,6 +2717,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Quarantine.
+        /// </summary>
+        internal static string _Quarantine_EN {
+            get {
+                return ResourceManager.GetString("_Quarantine_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Карантин.
+        /// </summary>
+        internal static string _Quarantine_RU {
+            get {
+                return ResourceManager.GetString("_Quarantine_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Mi?ner&apos;s r?o??o?tk??it detected! Try to remove....
         /// </summary>
         internal static string _R00tkitPresent_EN {
@@ -2767,6 +2929,24 @@ namespace MSearch.Properties {
         internal static string _RestartCleanup_RU {
             get {
                 return ResourceManager.GetString("_RestartCleanup_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Restore.
+        /// </summary>
+        internal static string _RestoreBtnText_EN {
+            get {
+                return ResourceManager.GetString("_RestoreBtnText_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Восстановить.
+        /// </summary>
+        internal static string _RestoreBtnText_RU {
+            get {
+                return ResourceManager.GetString("_RestoreBtnText_RU", resourceCulture);
             }
         }
         
@@ -3950,7 +4130,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Рекомпиляция необходимых фалов....
+        ///   Ищет локализованную строку, похожую на Рекомпиляция необходимых MOF фалов....
         /// </summary>
         internal static string _WMIRecompilation_RU {
             get {
@@ -4018,6 +4198,16 @@ namespace MSearch.Properties {
         internal static System.Drawing.Bitmap blendlog_donate {
             get {
                 object obj = ResourceManager.GetObject("blendlog-donate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap quarantine_logo {
+            get {
+                object obj = ResourceManager.GetObject("quarantine_logo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

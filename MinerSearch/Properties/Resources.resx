@@ -799,7 +799,7 @@ Press any key to continue...</value>
     <value>Попытка найти блокирующий процесс...</value>
   </data>
   <data name="_WMIRecompilation_RU" xml:space="preserve">
-    <value>Рекомпиляция необходимых фалов...</value>
+    <value>Рекомпиляция необходимых MOF фалов...</value>
   </data>
   <data name="_ScanningHosts_EN" xml:space="preserve">
     <value>Scanning hosts file...</value>
@@ -1478,7 +1478,7 @@ Thank you for your help!</value>
     <value>..\Resources\sber.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="_LogCheckingUpdates_EN" xml:space="preserve">
-    <value>Checking updates. Please, wait...</value>
+    <value>Checking for updates. Please, wait...</value>
   </data>
   <data name="_LogCheckingUpdates_RU" xml:space="preserve">
     <value>Проверка обновлений. Подождите...</value>
@@ -1566,5 +1566,68 @@ Thank you for your help!</value>
   </data>
   <data name="_ThreatType_Unknown_RU" xml:space="preserve">
     <value>Неизвестно</value>
+  </data>
+  <data name="_ActionType_Active_EN" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="_ActionType_Active_RU" xml:space="preserve">
+    <value>Активен</value>
+  </data>
+  <data name="_ActionType_Terminated_EN" xml:space="preserve">
+    <value>Terminated</value>
+  </data>
+  <data name="_ActionType_Terminated_RU" xml:space="preserve">
+    <value>Прерван</value>
+  </data>
+  <data name="_Just_Process_EN" xml:space="preserve">
+    <value>Process:</value>
+  </data>
+  <data name="_Just_Process_RU" xml:space="preserve">
+    <value>Процесс:</value>
+  </data>
+  <data name="quarantine_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\quarantine_logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_DataGridHeader_FileHash_EN" xml:space="preserve">
+    <value>File hash</value>
+  </data>
+  <data name="_DataGridHeader_FileHash_RU" xml:space="preserve">
+    <value>Хеш файла</value>
+  </data>
+  <data name="_DataGridHeader_FileSize_EN" xml:space="preserve">
+    <value>File size</value>
+  </data>
+  <data name="_DataGridHeader_FileSize_RU" xml:space="preserve">
+    <value>Размер файла</value>
+  </data>
+  <data name="_LabelQuarantinedFiles_EN" xml:space="preserve">
+    <value>Files in quarantine:</value>
+  </data>
+  <data name="_LabelQuarantinedFiles_RU" xml:space="preserve">
+    <value>Файлы в карантине:</value>
+  </data>
+  <data name="_Quarantine_EN" xml:space="preserve">
+    <value>Quarantine</value>
+  </data>
+  <data name="_Quarantine_RU" xml:space="preserve">
+    <value>Карантин</value>
+  </data>
+  <data name="_DeleteBtnText_EN" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="_DeleteBtnText_RU" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="_RestoreBtnText_EN" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="_RestoreBtnText_RU" xml:space="preserve">
+    <value>Восстановить</value>
+  </data>
+  <data name="_DataGridRemoveBtn_EN" xml:space="preserve">
+    <value>Remove file from quarantine?</value>
+  </data>
+  <data name="_DataGridRemoveBtn_RU" xml:space="preserve">
+    <value>Удалить файл из карантина?</value>
   </data>
 </root>

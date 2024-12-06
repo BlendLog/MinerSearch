@@ -376,3 +376,4 @@ FodyWeavers.xsd
 /MinerSearch/.vscode
 /MinerSearch/Resources/sber.jpg
 *.txt
+*.ps1

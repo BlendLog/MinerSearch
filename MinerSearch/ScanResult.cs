@@ -12,6 +12,8 @@ namespace MSearch
         Deleted,
         Quarantine,
         Skipped,
+        Active,
+        Terminated,
         Error
     }
 
@@ -65,11 +67,14 @@ namespace MSearch
                     return Program.LL.GetLocalizedString("_ActionType_Cured");
                 case ScanActionType.Quarantine:
                     return Program.LL.GetLocalizedString("_ActionType_Quarantine");
-
                 case ScanActionType.Deleted:
                     return Program.LL.GetLocalizedString("_ActionType_Deleted");
                 case ScanActionType.Error:
                     return Program.LL.GetLocalizedString("_ActionType_Error");
+                case ScanActionType.Active:
+                    return Program.LL.GetLocalizedString("_ActionType_Active");
+                case ScanActionType.Terminated:
+                    return Program.LL.GetLocalizedString("_ActionType_Terminated");
                 default:
                     return Program.LL.GetLocalizedString("_ActionType_Skipped");
             }

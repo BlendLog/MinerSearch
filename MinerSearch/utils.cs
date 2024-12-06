@@ -517,12 +517,22 @@ namespace MSearch
                             found = true;
                             double entropy = CalculateShannonEntropy(fileBytes);
 
-                            if (((index == 3 && globalOffset > 544 || globalOffset < 544 || globalOffset == 544) && entropy < 7.5) || (index == 7 && globalOffset > 4096) || (index == 9 && globalOffset > 4096))
+                            if (index == 3 && (globalOffset > 544 || globalOffset < 544 || globalOffset == 544) && entropy < 7.5)
                             {
                                 found = false;
                             }
 
-                            if (((index == 0 || index == 1 || index == 2) && entropy >= 7.5) || (index == 3 && globalOffset <= 544 && entropy >= 7.5) || (index == 9 && globalOffset > 4096 && entropy >= 7.5))
+                            if (index == 3 && globalOffset > 544 && entropy >= 7.5)
+                            {
+                                found = false;
+                            }
+
+                            if ((index == 7 && globalOffset > 4096)/* || (index == 9 && globalOffset > 4096)*/)
+                            {
+                                found = false;
+                            }
+
+                            if (((index == 0 || index == 1 || index == 2) && entropy >= 7.5) || (index == 3 && globalOffset <= 544 && entropy >= 7.5)/* || (index == 9 && globalOffset > 4096 && entropy >= 7.5)*/)
                             {
                                 found = true;
                             }
@@ -564,13 +574,13 @@ namespace MSearch
 
             try
             {
+                Regex guidRegex = new Regex(@"^\\\\\?\\[a-fA-F]{1}:\\programData\\Microsoft\\Windows\\Containers\\Layers\\[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
                 if (currentDepth <= maxDepth)
                 {
                     if (!Program.RunAsSystem)
                     {
                         files.AddRange(Directory.EnumerateFiles(GetLongPath(path), pattern, SearchOption.TopDirectoryOnly));
 
-                        Regex guidRegex = new Regex(@"^\\\\\?\\[a-fA-F]{1}:\\programData\\Microsoft\\Windows\\Containers\\Layers\\[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
                         foreach (var directory in Directory.EnumerateDirectories(GetLongPath(path)))
                         {
                             if (!IsReparsePoint(directory) &&
@@ -745,7 +755,7 @@ namespace MSearch
                     }
                     catch (ManagementException me)
                     {
-                        if (me.ErrorCode == ManagementStatus.InvalidClass)
+                        if (me.ErrorCode == ManagementStatus.InvalidClass || me.ErrorCode == ManagementStatus.ProviderLoadFailure)
                         {
                             RestoreWMICorruption();
                         }
@@ -1056,8 +1066,6 @@ namespace MSearch
             return true;
         }
 
-
-
         static int SequenceSum(string strBytes)
         {
             string[] bytesFromString = strBytes.Split('-');
@@ -1110,7 +1118,6 @@ namespace MSearch
             return entropy;
         }
 
-        // Вспомогательная функция для расчета логарифма по основанию 2
         private static double Log2(double x)
         {
             return Math.Log(x) / Math.Log(2);
@@ -1534,28 +1541,20 @@ namespace MSearch
             }
         }
 
-        internal void SaveRenamedFileData(object renamedFileInfo)
-        {
-            try
-            {
-                using (RegistryKey key = Registry.CurrentUser.CreateSubKey("Software\\M1nerSearch\\ProcessData"))
-                {
-                    byte[] serializedData = SerializeObject(renamedFileInfo);
-                    key.SetValue(GetRndString(), serializedData, RegistryValueKind.Binary);
-                }
-            }
-            catch (Exception e)
-            {
-                Program.LL.LogErrorMessage("_Error", e, "SaveRenamedFilesData");
-            }
-        }
-
-        internal List<RenamedFileInfo> GetRenamedFilesData()
+        internal List<RenamedFileInfo> GetRenamedFilesData(string _regKey)
         {
             List<RenamedFileInfo> result = new List<RenamedFileInfo>();
+            string baseKey = Path.GetDirectoryName(_regKey);
+
+
+            if (UnlockObjectClass.IsRegistryKeyBlocked(baseKey))
+            {
+                UnlockObjectClass.UnblockRegistry(baseKey);
+            }
+
             try
             {
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\M1nerSearch\\ProcessData"))
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(_regKey))
                 {
                     if (key != null)
                     {
@@ -1582,14 +1581,45 @@ namespace MSearch
             return result;
         }
 
-        internal void RemoveRenamedFilesData()
+        internal void SaveRenamedFileData(object renamedFileInfo, string _regKey)
         {
             try
             {
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\M1nerSearch", true))
+                string baseKey = Path.GetDirectoryName(_regKey);
+
+                if (UnlockObjectClass.IsRegistryKeyBlocked(baseKey))
+                {
+                    UnlockObjectClass.UnblockRegistry(baseKey);
+                }
+
+                using (RegistryKey key = Registry.CurrentUser.CreateSubKey(_regKey))
+                {
+                    byte[] serializedData = SerializeObject(renamedFileInfo);
+                    key.SetValue(GetRndString(), serializedData, RegistryValueKind.Binary);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Program.LL.LogErrorMessage("_Error", e, "SaveRenamedFilesData");
+            }
+        }
+
+        internal void RemoveRenamedFilesData(string _regKey)
+        {
+            try
+            {
+
+                if (UnlockObjectClass.IsRegistryKeyBlocked(_regKey))
+                {
+                    UnlockObjectClass.UnblockRegistry(_regKey);
+                }
+
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(_regKey, true))
                 {
                     key?.DeleteSubKeyTree("ProcessData", false);
                 }
+
             }
             catch (Exception e)
             {
@@ -1746,7 +1776,12 @@ namespace MSearch
                         if (trustResult != WinVerifyTrustResult.Success)
                         {
                             Program.LL.LogWarnMediumMessage("_InvalidCertificateSignature", rundll32Args);
-                            AddToQuarantine(fullPathToFileFromArgs, Path.Combine(MinerSearch.quarantineFolder, Path.GetFileName(fullPathToFileFromArgs) + $"_{Utils.CalculateMD5(fullPathToFileFromArgs)}.bak"), Encoding.UTF8.GetBytes(Application.ProductVersion.Replace(".", "")));
+                            AddToQuarantine(fullPathToFileFromArgs, Encoding.UTF8.GetBytes(CalculateMD5(fullPathToFileFromArgs)));
+                            if (!File.Exists(fullPathToFileFromArgs))
+                            {
+                                Program.totalFoundThreats++;
+                            }
+
                             return;
                         }
                         else if (trustResult == WinVerifyTrustResult.Success)
@@ -1792,10 +1827,14 @@ namespace MSearch
 
 
                             var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
-                            if (winTrust.VerifyEmbeddedSignature(pcaluaArgs) != WinVerifyTrustResult.Success)
+                            if (trustResult != WinVerifyTrustResult.Success)
                             {
                                 Program.LL.LogWarnMediumMessage("_InvalidCertificateSignature", pcaluaArgs);
-                                AddToQuarantine(fullPathToFileFromArgs, Path.Combine(MinerSearch.quarantineFolder, Path.GetFileName(fullPathToFileFromArgs) + $"_{Utils.CalculateMD5(fullPathToFileFromArgs)}.bak"), Encoding.UTF8.GetBytes(Application.ProductVersion.Replace(".", "")));
+                                AddToQuarantine(fullPathToFileFromArgs, Encoding.UTF8.GetBytes(CalculateMD5(fullPathToFileFromArgs)));
+                                if (!File.Exists(fullPathToFileFromArgs))
+                                {
+                                    Program.totalFoundThreats++;
+                                }
                                 return;
                             }
                             else if (trustResult == WinVerifyTrustResult.Success)
@@ -1869,10 +1908,21 @@ namespace MSearch
             return false;
         }
 
-        internal static void AddToQuarantine(string sourceFilePath, string encryptedFilePath, byte[] key)
+        internal static void AddToQuarantine(string sourceFilePath, byte[] key)
         {
-            if (File.Exists(sourceFilePath))
+            if (!File.Exists(sourceFilePath))
+                return;
+
+            try
             {
+                const string quarantineKeyPath = @"Software\M1nerSearch\Quarantine";
+                const string quarantineKeyPathMain = @"Software\M1nerSearch";
+
+                if (UnlockObjectClass.IsRegistryKeyBlocked(quarantineKeyPathMain))
+                {
+                    UnlockObjectClass.UnblockRegistry(quarantineKeyPathMain);
+                }
+
                 byte[] fileBytes = File.ReadAllBytes(sourceFilePath);
 
                 for (int i = 0; i < fileBytes.Length; i++)
@@ -1880,13 +1930,29 @@ namespace MSearch
                     fileBytes[i] ^= key[i % key.Length];
                 }
 
-                byte[] markerBytes = Encoding.UTF8.GetBytes("!mschqur!");
-                byte[] encryptedFileBytes = new byte[markerBytes.Length + fileBytes.Length];
+                string fileHash;
+                using (var md5 = MD5.Create())
+                {
+                    byte[] hashBytes = md5.ComputeHash(File.ReadAllBytes(sourceFilePath));
+                    fileHash = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+                }
 
-                Array.Copy(markerBytes, 0, encryptedFileBytes, 0, markerBytes.Length);
-                Array.Copy(fileBytes, 0, encryptedFileBytes, markerBytes.Length, fileBytes.Length);
+                using (var baseKey = Registry.CurrentUser.CreateSubKey(quarantineKeyPath))
+                {
+                    if (baseKey == null)
+                        return;
 
-                File.WriteAllBytes(encryptedFilePath, encryptedFileBytes);
+
+                    using (var subKey = baseKey.CreateSubKey(fileHash))
+                    {
+                        if (subKey == null)
+                            throw new InvalidOperationException($"Unable to create subkey: {fileHash}");
+
+                        subKey.SetValue("OriginalPath", sourceFilePath, RegistryValueKind.String);
+                        subKey.SetValue("FileData", fileBytes, RegistryValueKind.Binary);
+
+                    }
+                }
 
                 try
                 {
@@ -1894,62 +1960,21 @@ namespace MSearch
                     if (!File.Exists(sourceFilePath))
                     {
                         Program.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_MovedToQuarantine");
+                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Quarantine));
                     }
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    Program.LL.LogErrorMessage("_ErrorCannotRemove", ex, sourceFilePath, "_File");
+                    Program.LL.LogErrorMessage("_Error", e, sourceFilePath, "_File");
                 }
+
+            }
+            catch (Exception ex)
+            {
+                Program.LL.LogErrorMessage("_Error", ex, sourceFilePath, "_File");
             }
         }
 
-        internal static void RestoreFromQuarantine(string encryptedFilePath, string restoredFilePath, byte[] key)
-        {
-            byte[] encryptedFileBytes = File.ReadAllBytes(encryptedFilePath);
-
-            string marker = "!mschqur!";
-            byte[] markerBytes = Encoding.UTF8.GetBytes(marker);
-
-            if (IsMarkerPresent(encryptedFileBytes, markerBytes))
-            {
-                byte[] originalFileBytes = new byte[encryptedFileBytes.Length - markerBytes.Length];
-                Array.Copy(encryptedFileBytes, markerBytes.Length, originalFileBytes, 0, originalFileBytes.Length);
-
-                for (int i = 0; i < originalFileBytes.Length; i++)
-                {
-                    originalFileBytes[i] ^= key[i % key.Length];
-                }
-
-                File.WriteAllBytes(restoredFilePath, originalFileBytes);
-
-
-                LocalizedLogger.LogRestoredFile(restoredFilePath);
-            }
-            else
-            {
-                LocalizedLogger.LogInvalidFile(restoredFilePath);
-
-            }
-
-        }
-
-        static bool IsMarkerPresent(byte[] source, byte[] marker)
-        {
-            if (source.Length < marker.Length)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < marker.Length; i++)
-            {
-                if (source[i] != marker[i])
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
 
         internal static WindowsIdentity GetCurrentProcessOwner()
         {
@@ -2375,7 +2400,7 @@ namespace MSearch
 
                     if (!IsLatestVersion(current, latest.StartsWith("v") ? latest.Substring(1).Replace(".", "") : latest.Replace(".", "")))
                     {
-                        var message = MessageBox.Show(Program.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), "", MessageBoxButtons.YesNo);
+                        var message = MessageBox.Show(Program.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), latest, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                         if (message == DialogResult.Yes)
                         {
                             Process.Start("explorer", "https://github.com/BlendLog/MinerSearch/releases/latest");
