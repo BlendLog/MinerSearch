@@ -7,12 +7,9 @@
 ## https://t.me/MinerSearch_blog
 ### Для работы приложения требуется NET Framework 4.7.1
 
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/total?style=flat&color=00ff66)
-![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?style=flat&labelColor=navy)
+![GitHub Downloads (specific asset, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/%D1%81%D0%BA%D0%B0%D1%87%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D0%B9?style=flat&labelColor=AA00F0&color=navy)
 
-Версия 1.4.7.72
-
-MinerSearch v1.4.7.72 [PostFix]
+Версия 1.4.7.72 [PostFix]
 
    - Улучшен алгоритм поиска майнеров. (Tlauncher Legacy, goodbyedpi, rustme и другие больше не рассматриваются как угроза)
    - Исправлена невозможность переместить файл в карантин
@@ -147,6 +144,15 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 https://t.me/MinerSearch_blog
 
 ## NET Framework 4.7.1 is required
+
+Version 1.4.72 [PostFix]
+
+- Improved miner search algorithm. ((TLauncher Legacy, goodbyedpi, RustMe and others are no longer considered a threat)
+- Fixed the inability to move a file to quarantine
+- Removing malicious scripts from the task scheduler that run the miner
+> [What's new]
+- Added a quarantine manager (option -q or --open-quarantine, or in the report form just click on "Quarantine" button)
+- Removed the "--restore" option, since the strategy for moving files to quarantine has also been changed (incompatible with previous versions of MinerSearch)
 
 Version 1.4.7.7
 
