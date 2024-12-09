@@ -8,6 +8,7 @@
 ### Для работы приложения требуется NET Framework 4.7.1
 
 ![GitHub Downloads (specific asset, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/%D1%81%D0%BA%D0%B0%D1%87%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D0%B9?style=flat&labelColor=AA00F0&color=navy)
+![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 
 Версия 1.4.7.72 [PostFix]
 
