@@ -9,111 +9,68 @@
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 
-Версия 1.4.7.72 [PostFix]
+Версия 1.4.7.8
 
-   - Улучшен алгоритм поиска майнеров. (Tlauncher Legacy, goodbyedpi, rustme и другие больше не рассматриваются как угроза)
-   - Исправлена невозможность переместить файл в карантин
-   - Удаление вредоносных скриптов из планировщика задач, запускающие майнер
-   > [Что нового]
-   - Добавлен менеджер карантина (опция -q или --open-quarantine, либо на форме с отчётом "Карантин")
-   - Удалена опция "--restore", так как стратегия перемещения файлов в карантин также была изменена (несовместимо с предыдущими версиями MinerSearch)
-
-
-Версия 1.4.7.7
-
-- Добавлена форма с кратким отчётом, в которой перечислены какие именно угрозы были устранены
-- Добавлено сообщение "проверка обновлений..." перед сканированием
-- Исправлен парсинг задач, включающих rundll
-- Исправлено замирание рабочего стола на некоторых системах
-- Обнаружение и удаление новых майнеров
-- Минимизирована вероятность ошибочного перемещения в карантин незараженных файлов 
-- Исправление "Неверно задано имя папки"
-- Исправление "Неверная функция"
-- Исправление ошибок при обработке служб (сбой загрузки поставщика)
-- Исправление ошибок при обработке задач планировщика
-
-Версия 1.4.7.6
-
-- Устранено сообщение "Запрос выполнен только частично" при проверке на руткит и без него
-- Исправлен парсинг путей для rundll в WindowsPowerShell и с ключом /d
-- Исправлено некорректное число удаленных строк в hosts (включая подозрительные)
-- Добавлена проверка обновлений (на github) 
-- Минимизировано кол-во ошибок при скачивании обновлений Windows
-- Автоматическое определение WinPE-режима
-- Увеличен диапазон каталогов для проверки в WinPE
-- Минимальная обработка исключений в WinPE
-- Определение доступности необходимых привилегий для группы Администраторов
-- Отображение содержимого в AppInit_DLLs, если он не пуст 
-- Обнаружение и удаление новых майнеров
-- Новый дизайн окон
-- Добавлен счётчик подозрительных объектов 
-
-Версия 1.4.7.5
-
-- Более объективное удаление угроз
-- Добавлено предложение перезагрузить компьютер, если не все угрозы были устранены с первого раза.
-- Минимизировано удаление блокировки телеметрии в hosts
-- Устранены ошибки при разблокировке каталогов установленных приложений
-- Минимизирована попытка отключить критически важные службы (выводится предупреждение)
-- Исключена попытка удалить легальный инструмент для анализа файлов (т.н. Detect It Easy)
-- Исключена попытка удалить несуществующий вредоносный каталог на диске 
-- Исправлено удаление несуществующего вредоносного подраздела в реестре
-- Более тщательная проверка системных процессов
-- Анализ файлов выполняется быстрее
-- Устранен некорректный сбор журналов найденных угроз на Win 8.1 (не поддерживается на Windows 7)
-- Исправление других мелких недоработок
-
-Версия 1.4.7.4
-
-- Сбор статистики удаления угроз (на усмотрение пользователя)
-- Восстановление прав доступа существующих приложений из списка заблокированных каталогов
-- Добавлена тщательная проверка процессов по времени использования CPU
-- Добавлена легенда условных обозначений в логе
-- Добавлена кнопка "Подробно" для открытия папки с логами
-- Более точное обнаружение руткита майнера
-- Нормальный формат даты в имени лог файла
-- Улучшена проверка служб, включая Службы удаленных рабочих столов (TermService)
-- Восстанавление базы данных WMI
-- Удаление новых вредоносных версий системных программ
-
-[HOTFIX]
-- Исправление некорректного чтения файла hosts
-- Корректное создание индентификатора устройства в логе
-- Улучшена обработка планировщика задач
-- Исправлено ложное срабатываение на легальный скрипт powershell (UnusedSmb1.ps1)
-- Добавлено удаление задачи руткита из планировщика задач 
-- Улучшено обнаружение угроз, которые запускаются через RunDLL
-- Предположительно вредоносные файлы перемещаются в карантин
-- Легенда обозначений перемещена в начало лог-файла
-- Исправлено исчезнавение крестика "закрыть" в окне с кратким отчётом
-- Проверка установленной версии NET Framework 4.5.2 (для windows 7)
+- Поиск и удаление новых майнеров, в том числе nanominer
+- Добавлена кнопка "Поддержать проект" на форме с отчетом
+- Добавлена возможность вручную разрешать или запрещать отправку результатов проверки разработчику
+- Опция --full-scan теперь позволяет сканировать весь системный раздел, не только указанные по-умолчанию каталоги
+- Добавлена опция --verbose для подробных сведений о процессах, а также запись в лог строки с файлами, не признанными вредоносными
+- Добавлен параметр --run-as-system для запуска приложения с правами системы
+- Добавлена опция --select, которая позволит сканировать только выбранный каталог, включая вложенные каталоги
+- Корректная работа с опцией --scan-only
+- Добавлен каталог C:\Users\ для сканирования
+- добавлена краткая форма параметров запуска (смотрите в --help \ -h)
+- Добавлена проверка потребляемой памяти процессов
+- Добавлен кастомный MessageBox, так как системный может быть перекрыт окнами проводника или другим приложением
+- Добавлена обработка блокировки .dll защитником Windows
+- Исправлена локализация кнопки "Карантин"
+- Исправление замирания рабочего стола на Win 7
+- Исправлено повторное сканирование каталогов с опцией --full-scan
+- Исправлено удаление файлов при перемещении в карантин
+- Исправлено частичное удаление майнера, маскирующегося под explorer.exe на Win 7, Win 8.1
+- Исправлена ошибка "Не запущена служба сервера" при удалении вредоносного профиля John
+- Исправлен "Сбой загрузки поставщика" при проверке служб
+- Исправлено ложное срабатывание на VS Code
+- Исправлен баг счётчика файлов в карантине
+- Удаление записей из планировщика задач, которые добавляют рекламу в автозапуск
+- Удаление новых вредоносных скриптов в планировщике задач через forfiles и wscript
+- Удаление некорректных параметров MinimumStackCommitInBytes для всех подразделов в IFEO, мешающие нормальному запуску программ
+- Удаление java-майнера в планировщике задач
+- Удаление вредоносных версии uTorrent, MS Teams и Steam
+- Оптимизация при работе с памятью
+- Файл hosts теперь корректируется только в случае заражения и не вызывает ошибку
+- Обновлена справка --help
+- Карантин теперь доступен для всех пользователей
 
 --------------------------------------------
 
 ## Как пользоваться
 
-Полностью распакуйте архив с программой в отдельную папку и запустите приложение. Дождитесь окончания сканирования. После окончания будет указано итоговое время проверки.
-Важно примечание: на данный момент количество обнаруженных угроз указано для каждого этапа. Ознакомиться с полным отчётом (логом) сканирования можно в файле MinerSearch_<датавремя>.log,
-генерируемый по-умолчанию в каталоге C:\\_MinerSearchLogs\\.
+Полностью распакуйте архив с программой в отдельную папку и запустите приложение. Дождитесь окончания сканирования. При первом использовании программы предлагается сообщать о результатах проверки автору на ваше усмотрение. После окончания будет показана форма с кратким отчётом об угрозах, которые были устранены. С подробным отчётом можно ознакомиться, нажав на кнопку "Открыть отчёт". При нажатии на кнопку Карантин откроется Менеджер карантина, в котором вы можете полностью удалить файл или восстановить.
 
 Дополнительные параметры запуска (обычно не требуется):
 
-| Параметр | Описание |
-| -------- | -------- |
-|--help | Вызов справки |
-| --no-logs	| Не вести журнал сканирования |
-| --no-scantime | Сканировать только процессы |
-| --no-runtime	| Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.) |
-| --no-services | Пропустить сканирование служб |
-| --no-signature-scan | Пропустить сигнатурное сканирование файлов |
-| --no-rootkit-check | Не проверять присутствие руткита |
-| --depth=[число] | Где [число] — уровень максимальной глубины поиска. Пример использования --depth=5 (по-умолчанию 8) |
-| --pause | Пауза перед очисткой |
-| --remove-empty-tasks | Удалять задачу из Планировщика задач, если исполняемый файл не существует
-| --winpemode | Запускает сканирование в режиме WinPE (без сканирования процессов, реестра, правил фаерволла, служб, задач планировщика) |
-| --scan-only	| Отображать вредоносный или подозрительный объект, но не выполнять лечение |
-| --full-scan | Целиком добавляет другие локальные диски для сигнатурного сканирования |
-| --restore=[путь] | Восстановить указанный файл из карантина, путь к файлу в карантине не должен содержать пробелов |
+| Параметр | описание |
+|----------|-----------
+| -h     --help               |  Вызов этой справки                                                                                    |
+| -nl    --no-logs            |  Не записывать лог в файл                                                                              |
+| -nstm  --no-scantime        |  Сканировать только процессы                                                                           |
+| -nr    --no-runtime         |  Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)                               |
+| -nse   --no-services        |  Пропустить сканирование служб                                                                         |
+| -nss   --no-signature-scan  |  Пропустить сигнатурное сканирование файлов                                                            |
+| -nrc   --no-rootkit-check   |  Не проверять присутствие руткита                                                                      |
+| -p     --pause              |  Пауза перед очисткой                                                                                  |
+| -ret   --remove-empty-tasks |  Удалять задачу из Планировщика задач, если файл приложения в ней не существует                        |
+| -so    --scan-only          |  Отображать вредоносный или подозрительный объект, но не выполнять лечение                             |
+| -fs    --full-scan          |  Целиком добавляет другие локальные диски для сигнатурного сканирования                                |
+| -ras   --run-as-system      |  Запустить проверку от имени SYSTEM (для опытных пользователей)	                                       |
+| -s     --select             |  Сканировать только выбранный каталог, включая вложенные каталоги                                      |
+| -d=    --depth=<num>        |  Где <num> - уровень максимальной глубины поиска. Пример использования: -d=5 (по-умолчанию 8)          |
+| -v     --verbose            |  Выводит подробные сведения о процессах в консоль, а также                                             |
+|                             |  отключает фильтр строк с файлами не признанных вредоносными. Может увеличить размер лог-файла.        |
+| -w     --winpemode          |  Запускает сканирование в режиме WinPE                                                                 |
+|                             | (без сканирования процессов, реестра, правил фаерволла, служб, задач планировщика)                     |
 
 ----------------------------
 
@@ -145,6 +102,40 @@ https://t.me/MinerSearch_blog
 
 ## NET Framework 4.7.1 is required
 
+Version 1.4.7.8
+
+- Search and remove new miners, including nanominer
+- Added "Donate" button on the scan results form
+- Added the ability to manually allow or prohibit sending scan results to the developer
+- The --full-scan option now allows you to scan the entire system partition, not just the default directories
+- Added the --verbose option for detailed info about processes, as well as writing to the log a line with files that are not considered as malicious
+- Added the --run-as-system parameter to run the application with SYSTEM privileges
+- Added the --select option, which will allow you to scan only the selected directory, including nested directories
+- Correct work with the --scan-only option
+- Added the C:\Users\ directory for scanning
+- Added a short form of launch parameters (see --help \ -h)
+- Added a check for the memory consumed by processes
+- Added a custom MessageBox, since the system one can be overlapped by windows of explorer.exe or another application
+- Added handling of .dll blocking by Windows Defender
+- Fixed localization of the "Quarantine" button
+- Fixed freezing of the desktop on Win 7
+- Fixed re-scanning of directories with the --full-scan option
+- Fixed deleting files when moving to quarantine
+- Fixed partial removal of the miner disguised as explorer.exe on Win 7, Win 8.1
+- Fixed the error "The Server service not started" when deleting the malicious John profile
+- Fixed "Provider loading failure" when checking services
+- Fixed a false positive on VS Code
+- Fixed a bug in the quarantine file counter
+- Removing entries from the task scheduler that add ads to autorun
+- Removing new malicious scripts in the task scheduler via forfiles and wscript
+- Removing incorrect MinimumStackCommitInBytes parameters for all subsections in IFEO that interfere with the normal launch of programs
+- Removing the java miner in task scheduler
+- Removal of malicious versions of uTorrent, MS Teams and Steam
+- Optimization when working with memory
+- The hosts file is now corrected only in case of infection and does not cause an error
+- Help has been updated --help
+- Quarantine is now available for all users
+
 Version 1.4.72 [PostFix]
 
 - Improved miner search algorithm. ((TLauncher Legacy, goodbyedpi, RustMe and others are no longer considered a threat)
@@ -154,99 +145,34 @@ Version 1.4.72 [PostFix]
 - Added a quarantine manager (option -q or --open-quarantine, or in the report form just click on "Quarantine" button)
 - Removed the "--restore" option, since the strategy for moving files to quarantine has also been changed (incompatible with previous versions of MinerSearch)
 
-Version 1.4.7.7
-
-- Added a form that contains which specific threats have been neutralized
-- Added the message "checking for updates..." before scanning
-- Fixed parsing of tasks involving rundll
-- Fixed desktop freezing on some systems
-- Detection and removal of new miners
-- The probability of mistakenly moving uninfected files to quarantine is minimized 
-- Fixed "Wrong folder name"
-- Fixed "Invalid function"
-- Fixed errors in processing services (provider loading failure)
-- Fixed errors in processing scheduler tasks
-
-Version 1.4.7.6
-
-- Fixed the message "Only part request was completed" when checking for a rootkit and without it
-- Fixed path parsing for rundll in WindowsPowerShell including "/d" key
-- Fixed incorrect number of deleted lines in hosts (including suspicious ones)
-- Added an update check (on github) 
-- The number of errors when downloading Windows updates is minimized
-- Automatic detection of WinPE mode
-- Increased the range of scan directories in WinPE
-- Minimal exception handling in WinPE
-- Determining the availability of necessary privileges for the Administrator group
-- Displaying the content in AppInit_DLLs if it is not empty 
-- Detection and removal of new miners
-- New window design
-- Added a counter for suspicious objects
-
-Version 1.4.7.5
-
-- More objective threat removal
-- Added a suggestion to restart the computer if not all threats were neutralized the first time.
-- Minimized removal of telemetry blocking in hosts file
-- Fixed errors when unlocking directories of installed applications
-- Attempt to disable critical services is minimized (warning is displayed)
-- An attempt to remove a legal file analysis tool (e.g. Detect It Easy) is excluded
-- An attempt to delete a non-existent malicious directory on the disk is excluded 
-- Fixed the removal of a non-existent malicious subsection in the registry
-- More accurate check of system processes
-- File analysis is faster
-- Fixed incorrect collection of logs of detected threats on Win 8.1 (not supported on Windows 7)
-- Fixed other minor flaws
-
-Version 1.4.7.4
-
-- Fix of threat removal statistics (optional by user)
-- Restoring access rights of existing applications from the list of blocked directories
-- Added a thorough check of processes by CPU usage time
-- Added legend of symbols in the log
-- Added the "Show details" button to open the folder with logs
-- More accurate detection of the miner's rootkit
-- The normal date format in the log file name
-- Improved verification of services, including Remote Desktop (TermService)
-- Restoring the WMI database
-- Removal of new malicious versions of system programs 
-[HOTFIX]
-- Fix of incorrect reading of the hosts file
-- Fixed creation of the device identifier in the log
-- Improved task scheduler processing
-- Fixed a false positive for a legitimate powershell script (UnusedSmb1.ps1)
-- Added removal of the rootkit task from the task scheduler 
-- Improved detection of threats that run through RunDLL
-- Presumably malicious files are being moved to quarantine
-- The legend of the symbols has been moved to the beginning of the log file
-- Fixed the disappearance of the "close" cross in the summary report window
-- Checking the installed version of NET Framework 4.5.2 (for windows 7)
-
 -----------------------------------------
 
 ## How to use
 
-Extract entire archive to the empty folder and run the application. Wait while scanning do. After full scan the app will be display total elapsed time of scan.
-Important note: at this moment, the quantity threats displays on each scanning stage. You can read full log of scanning in MinerSearch_<datetime>.log file, that will be generated in folder C:\\_MinerSearchLogs\\ by default.
+Completely unzip the archive with the program into a separate folder and launch the application. Wait for the scan to complete. When using the program for the first time, you are offered to report the results of the scan to the author at your wish. After completion, a form will be shown with a brief report on the threats that have been eliminated. You can view the detailed log by clicking on the "Show log" button. Clicking on the "Quarantine" button will open the Quarantine Manager, in which you can completely delete the file or restore it.
 
 Additional command line args (usually is not required):
 
-| Argument | Description |
-| -------- | -------- |
-|--help | Show this help message |
-| --no-logs	| Don't write logs in text file |
-| --no-scantime | Scan processes only |
-| --no-runtime	| Static scan only (Malware dirs, files, registry keys, etc) |
-| --no-services | Skip scan services |
-| --no-signature-scan | Skip scan files by signatures |
-| --no-rootkit-check | Skip checking rootkit present |
-| --depth=[number] | Where <number> specify the number for maximum search depth. Usage example --depth=5 (default 8) |
-| --pause | Pause before cleanup |
-| --remove-empty-tasks | Delete a task from the Task Scheduler if the application file does not exist in it |
-| --winpemode | Start scanning in WinPE environment by specifying a different drive letter (without scanning processes, registry, firewall and task scheduler entries) |
-| --scan-only	| Display malicious or suspicious objects, but do nothing |
-| --full-scan | Add other entire local drives for signature scan |
-| --restore=[path] | Restore specified file from quarantine. Specified path can't include space symbol |
+| Startup params | Description |                                                                                                           
+|----------------|-------------|	                                                                                                          
+| -h     --help                | This help message                                                                                        |
+| -nl    --no-logs             | Don't write logs in text file                                                                            |
+| -nstm  --no-scantime         | Scan processes only                                                                                      |
+| -nr    --no-runtime          | Static scan only (Malware dirs, files, registry keys, etc)                                               |
+| -nse   --no-services         | Skip scan services                                                                                       |
+| -nss   --no-signature-scan   | Skip scan files by signatures                                                                            |
+| -nrc   --no-rootkit-check    | Skip checking rootkit present                                                                            |
+| -p     --pause               | Pause before cleanup                                                                                     |
+| -ret   --remove-empty-tasks  | Delete a task from the Task Scheduler if the application file does not exist in it                       |
+| -so    --scan-only           | Display malicious or suspicious objects, but do nothing                                                  |
+| -fs    --full-scan           | Add other entire local drives for signature scan                                                         |
+| -ras   --run-as-system       | Start scannning with SYSTEM privilege (for advanced users)                                               |
+| -s     --select              | Only selected folder will be scanned, including subfolders                                               |
+| -d=    --depth=<number>      | Where <number> specify the number for maximum search depth. Usage example -d=5 (default 8)               |
+| -v     --verbose             | Displays more info to the console and a log file,                                                        |
+|                              | including lines about files that are not considered malicious. It may increase the size of the log file. |
+| -w     --winpemode           | Start scanning in WinPE environment by specifying a different drive letter                               |
+|                              | (without scanning processes, registry, firewall and task scheduler entries)                              |
 
 --------------------------------------------------------------
 
@@ -383,9 +309,11 @@ https://t.me/MinerSearch_blog
 
 # Demo
 
-Обнаруживает и приостанавливает вредоносные процессы, а также вспомогательне компоненты майнера, которые затруденяют его удаление.
 ## Screenshots
+Stop and remove malicious processes and his support components, that makes deletion malware harder
+![first](https://github.com/user-attachments/assets/29828484-6d57-4e71-ad5c-641913ce34f7)
 
-![image](https://user-images.githubusercontent.com/56220293/215475650-25d31515-d52a-485b-b194-7db63e0e9962.png)
+Final report form
+![second](https://github.com/user-attachments/assets/309e7625-bc57-4b80-9052-4805c33f9486)
 
-![image2](https://user-images.githubusercontent.com/56220293/215356942-8080b05a-f324-4006-9864-6843923ff2be.png)
+
