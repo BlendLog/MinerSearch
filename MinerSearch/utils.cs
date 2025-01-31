@@ -5,6 +5,7 @@ using Microsoft.Win32.TaskScheduler;
 using netlib;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
 using System.Drawing;
@@ -15,14 +16,12 @@ using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.AccessControl;
 using System.Security.Cryptography;
 using System.Security.Principal;
 using System.ServiceProcess;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MSearch
@@ -39,7 +38,7 @@ namespace MSearch
         public static void HookExeption(object sender, UnhandledExceptionEventArgs args)
         {
             Exception e = (Exception)args.ExceptionObject;
-            MessageBox.Show(e.Message + "\n" + e.StackTrace, Program.LL.GetLocalizedString("_ExeptionTitle"));
+            MessageBoxCustom.Show(e.Message + "\n" + e.StackTrace, Program.LL.GetLocalizedString("_ExeptionTitle"), Color.Salmon, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -49,6 +48,9 @@ namespace MSearch
         static MSData msData = new MSData();
 
         static string batchSig = msData.queries[12]; //Add-MpPreference -ExclusionPath
+        static readonly Regex ProgramDataLayersRegEx = new Regex(
+        @"^\\\\\?\\[a-fA-F]{1}:\\programData\\Microsoft\\Windows\\Containers\\Layers\\[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+        RegexOptions.Compiled);
 
         [Serializable]
         public class RenamedFileInfo
@@ -57,21 +59,117 @@ namespace MSearch
             public string _NewFilePath { get; set; }
         }
 
+        //based on https://github.com/dotnet-campus/dotnetCampus.Win32ProcessCommandViewer/blob/master/src/dotnetCampus.Win32ProcessCommandViewer/Program.cs
         internal static string GetCommandLine(Process process)
         {
+            var pid = process.Id;
 
-            string cmdLine = null;
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(msData.queries[10] + process.Id))
+            var pbi = new Native.PROCESS_BASIC_INFORMATION();
+
+            IntPtr proc = Native.OpenProcess(
+                Native.PROCESS_QUERY_INFORMATION | Native.PROCESS_VM_READ,
+                false,
+                pid
+            );
+
+            if (proc == IntPtr.Zero)
             {
-                ManagementObjectCollection.ManagementObjectEnumerator matchEnum = searcher.Get().GetEnumerator();
-                if (matchEnum.MoveNext())
-                {
-                    cmdLine = matchEnum.Current["CommandLine"]?.ToString();
-                }
+#if DEBUG
+
+                Console.WriteLine($"[DBG] Failed to open process. Error: {Marshal.GetLastWin32Error()}");
+#endif
+                return "";
             }
-            return cmdLine;
+
+            try
+            {
+                int status = Native.NtQueryInformationProcess(
+                    proc,
+                    Native.ProcessBasicInformation,
+                    ref pbi,
+                    Marshal.SizeOf(pbi),
+                    out int returnLength
+                );
+
+                if (status != 0)
+                {
+#if DEBUG
+                    Console.WriteLine($"[DBG] NtQueryInformationProcess failed. Status: 0x{status:X}");
+#endif
+                    return "";
+                }
+
+                // Читаем адрес RTL_USER_PROCESS_PARAMETERS
+                var buff = new byte[IntPtr.Size];
+                IntPtr rtlUserProcParamsOffset = (IntPtr.Size == 4) ? new IntPtr(0x10) : new IntPtr(0x20);
+
+                IntPtr rtlUserProcParamsAddress = IntPtr.Add(pbi.PebBaseAddress, rtlUserProcParamsOffset.ToInt32());
+
+                if (!Native.ReadProcessMemory(proc, rtlUserProcParamsAddress, buff, IntPtr.Size, out _))
+                {
+#if DEBUG
+                    Console.WriteLine($"[DBG] Failed to read RTL_USER_PROCESS_PARAMETERS address. Error: {Marshal.GetLastWin32Error()}");
+#endif
+                    return "";
+                }
+
+                IntPtr rtlUserProcParamsPointer = (IntPtr.Size == 4) ? (IntPtr)BitConverter.ToInt32(buff, 0) : (IntPtr)BitConverter.ToInt64(buff, 0);
+
+                // Читаем структуру UNICODE_STRING для командной строки
+                IntPtr commandLineOffset = (IntPtr.Size == 4) ? new IntPtr(0x40) : new IntPtr(0x70);
+                IntPtr commandLineAddress = IntPtr.Add(rtlUserProcParamsPointer, commandLineOffset.ToInt32());
+
+                var commandLineStruct = new byte[Marshal.SizeOf(typeof(Native.UNICODE_STRING))];
+
+                if (!Native.ReadProcessMemory(proc, commandLineAddress, commandLineStruct, commandLineStruct.Length, out _))
+                {
+#if DEBUG
+                    Console.WriteLine($"[DBG] Failed to read UNICODE_STRING structure. Error: {Marshal.GetLastWin32Error()}");
+#endif
+                    return "";
+                }
+
+                var ucsData = ByteArrayToStructure<Native.UNICODE_STRING>(commandLineStruct);
+
+                // Читаем саму командную строку
+                var commandLineBuffer = new byte[ucsData.Length];
+                if (!Native.ReadProcessMemory(proc, ucsData.Buffer, commandLineBuffer, ucsData.Length, out _))
+                {
+#if DEBUG
+                    Console.WriteLine($"[DBG] Failed to read command line string. Error: {Marshal.GetLastWin32Error()}");
+#endif
+                    return "";
+                }
+
+                return Encoding.Unicode.GetString(commandLineBuffer);
+            }
+            catch (Win32Exception w32e)
+            {
+#if DEBUG
+                Console.WriteLine($"[DBG] Win32Exception: {w32e.HResult} {w32e.Message}");
+#endif
+            }
+            finally
+            {
+                Native.CloseHandle(proc);
+            }
+
+            return "";
         }
 
+        // Helper method to convert byte array to structure
+        private static T ByteArrayToStructure<T>(byte[] bytes) where T : struct
+        {
+            GCHandle handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
+            try
+            {
+                return (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
+            }
+            finally
+            {
+                handle.Free();
+            }
+        }
 
         internal static string Sizer(long CountBytes)
         {
@@ -232,8 +330,9 @@ namespace MSearch
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80131509)))
             {
-                Program.LL.LogSuccessMessage("_ProcessNotRunning", _pid.ToString());
+                Program.LL.LogWarnMessage("_ProcessNotRunning", _pid.ToString());
             }
+            catch (System.ComponentModel.Win32Exception) { }
             catch (Exception e)
             {
                 Program.LL.LogErrorMessage("_ErrorTerminateProcess", e);
@@ -369,7 +468,7 @@ namespace MSearch
                                 return executablePath.Replace("\"", "");
                             }
                         }
-                        else if (!value.Contains(":\\") && value.ToLower().EndsWith(".exe"))
+                        else if (!value.Contains(":\\") && value.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
                         {
                             if (File.Exists(Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32", value)))
                             {
@@ -428,7 +527,7 @@ namespace MSearch
                             return executablePath.Replace("\"", "");
                         }
                     }
-                    else if (!line.Contains(":\\") && line.ToLower().EndsWith(".exe"))
+                    else if (!line.Contains(":\\") && line.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
                     {
                         if (File.Exists(Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32", line)))
                         {
@@ -481,142 +580,54 @@ namespace MSearch
             return true;
         }
 
-        internal static bool CheckSignature(string filePath, List<byte[]> targetSequences)
+
+
+        internal static IEnumerable<string> GetFiles(string path, string pattern, int currentDepth = 0, int maxDepth = 3)
         {
-            byte[] fileBytes = File.ReadAllBytes(filePath);
-
-            const int bufferSize = 4096;
-            byte[] buffer = new byte[bufferSize];
-            int fileIndex = 0;
-            bool found = false;
-
-            while (fileIndex < fileBytes.Length)
+            if (currentDepth > maxDepth)
             {
-                int bytesToRead = Math.Min(bufferSize, fileBytes.Length - fileIndex);
-                Array.Copy(fileBytes, fileIndex, buffer, 0, bytesToRead);
-
-                for (int i = 0; i <= bytesToRead - targetSequences[0].Length; i++)
-                {
-                    for (int index = 0; index < targetSequences.Count; index++)
-                    {
-                        byte[] targetSequence = targetSequences[index];
-                        bool sequenceFound = true;
-                        for (int j = 0; j < targetSequence.Length; j++)
-                        {
-                            if (i + j >= bytesToRead || buffer[i + j] != targetSequence[j])
-                            {
-                                sequenceFound = false;
-                                break;
-                            }
-                        }
-
-                        if (sequenceFound)
-                        {
-                            int globalOffset = fileIndex + i;
-
-                            found = true;
-                            double entropy = CalculateShannonEntropy(fileBytes);
-
-                            if (index == 3 && (globalOffset > 544 || globalOffset < 544 || globalOffset == 544) && entropy < 7.5)
-                            {
-                                found = false;
-                            }
-
-                            if (index == 3 && globalOffset > 544 && entropy >= 7.5)
-                            {
-                                found = false;
-                            }
-
-                            if ((index == 7 && globalOffset > 4096)/* || (index == 9 && globalOffset > 4096)*/)
-                            {
-                                found = false;
-                            }
-
-                            if (((index == 0 || index == 1 || index == 2) && entropy >= 7.5) || (index == 3 && globalOffset <= 544 && entropy >= 7.5)/* || (index == 9 && globalOffset > 4096 && entropy >= 7.5)*/)
-                            {
-                                found = true;
-                            }
-
-#if DEBUG
-                            if (found)
-                            {
-                                string tmp = "";
-                                foreach (var c in targetSequence)
-                                {
-                                    tmp += (char)c;
-                                }
-                                Console.WriteLine("FOUND by: " + tmp);
-                            }
-#endif
-                            break;
-                        }
-
-
-                    }
-                    if (found)
-                        break;
-                }
-
-                if (found)
-                    break;
-
-                fileIndex += bytesToRead;
+                yield break;
             }
 
-            return found;
+            foreach (var file in Directory.EnumerateFiles(GetLongPath(path), pattern, SearchOption.TopDirectoryOnly))
+            {
+                yield return file;
+            }
+
+            foreach (var directory in Directory.EnumerateDirectories(GetLongPath(path)))
+            {
+                if (ShouldSkipDirectory(directory))
+                {
+                    continue;
+                }
+
+                foreach (var file in GetFiles(directory, pattern, currentDepth + 1, maxDepth))
+                {
+                    yield return file;
+                }
+            }
         }
 
-
-
-        internal static List<string> GetFiles(string path, string pattern, int currentDepth = 0, int maxDepth = 3)
+        private static bool ShouldSkipDirectory(string directory)
         {
-            var files = new List<string>();
-
-            try
+            if (IsReparsePoint(directory))
             {
-                Regex guidRegex = new Regex(@"^\\\\\?\\[a-fA-F]{1}:\\programData\\Microsoft\\Windows\\Containers\\Layers\\[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
-                if (currentDepth <= maxDepth)
-                {
-                    if (!Program.RunAsSystem)
-                    {
-                        files.AddRange(Directory.EnumerateFiles(GetLongPath(path), pattern, SearchOption.TopDirectoryOnly));
+                return true;
+            }
 
-                        foreach (var directory in Directory.EnumerateDirectories(GetLongPath(path)))
-                        {
-                            if (!IsReparsePoint(directory) &&
-                                !directory.Contains(":\\Windows\\WinSxS") &&
-                                !directory.Contains(":\\$") &&
-                                !directory.Contains(@":\programdata\microsoft\Windows\Containers\BaseImages") &&
-                                !guidRegex.IsMatch(directory) &&
-                                !directory.Contains(@"AppData\Local\Microsoft\WindowsApps"))
-                            {
-                                files.AddRange(GetFiles(directory, pattern, currentDepth + 1, maxDepth));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        files.AddRange(Directory.EnumerateFiles(GetLongPath(path), pattern, SearchOption.TopDirectoryOnly));
-                        foreach (var directory in Directory.EnumerateDirectories(GetLongPath(path)))
-                        {
-                            if (!IsReparsePoint(directory))
-                            {
-                                files.AddRange(GetFiles(directory, pattern, currentDepth + 1, maxDepth));
-                            }
-                        }
-                    }
+            if (!Program.RunAsSystem)
+            {
+                if (directory.IndexOf(":\\Windows\\WinSxS", StringComparison.OrdinalIgnoreCase) != -1 ||
+                    directory.IndexOf(":\\$", StringComparison.OrdinalIgnoreCase) != -1 ||
+                    directory.IndexOf(@":\programdata\microsoft\Windows\Containers\BaseImages", StringComparison.OrdinalIgnoreCase) != -1 ||
+                    ProgramDataLayersRegEx.IsMatch(directory) ||
+                    directory.IndexOf(@"AppData\Local\Microsoft\WindowsApps", StringComparison.OrdinalIgnoreCase) != -1)
+                {
+                    return true;
                 }
             }
-            catch (Exception ex)
-            {
-#if DEBUG
-                MessageBox.Show(ex.ToString());
-#else
-                Program.LL.LogErrorMessage("_Error", ex);
-#endif
-            }
 
-            return files;
+            return false;
         }
 
         internal static bool IsReparsePoint(string path)
@@ -720,15 +731,16 @@ namespace MSearch
 
         internal static void DeleteUser(string userName)
         {
-            PrincipalContext ctx = new PrincipalContext(ContextType.Machine);
-            UserPrincipal usrp = new UserPrincipal(ctx);
-            usrp.Name = userName;
-            PrincipalSearcher ps_usr = new PrincipalSearcher(usrp);
-            var user = ps_usr.FindOne();
-            user.Delete();
+            const int NERR_Success = 0;
+
+            int result = Native.NetUserDel(null, userName);
+            if (result != NERR_Success)
+            {
+                throw new InvalidOperationException($"HRESULT: 0x{result:X16}");
+            }
         }
 
-        internal void CheckWMI()
+        internal void CheckWMI(bool restartCheck)
         {
             string serviceName = "wi~nm~gm~t".Replace("~", "");
             try
@@ -751,23 +763,24 @@ namespace MSearch
 
                     try
                     {
-                        GetServiceImagePath("Dhcp");
+                        WmiTestQuery("Dhcp");
                     }
                     catch (ManagementException me)
                     {
-                        if (me.ErrorCode == ManagementStatus.InvalidClass || me.ErrorCode == ManagementStatus.ProviderLoadFailure)
+                        if (me.ErrorCode == ManagementStatus.InvalidClass || me.ErrorCode == ManagementStatus.ProviderLoadFailure || me.ErrorCode == ManagementStatus.ProviderFailure)
                         {
                             RestoreWMICorruption();
+                            if (!restartCheck)
+                            {
+                                CheckWMI(true);
+                            }
                         }
-                        throw me;
                     }
 
                 }
                 else
                 {
                     LocalizedLogger.LogError_СriticalServiceNotInstalled();
-                    Console.ReadLine();
-                    Environment.Exit(-5);
                 }
 
             }
@@ -775,15 +788,13 @@ namespace MSearch
             {
                 if (IsDotNetInstalled())
                 {
-                    MessageBox.Show(Program.LL.GetLocalizedString("_ErrorNoDotNet"), GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBoxCustom.Show(Program.LL.GetLocalizedString("_ErrorNoDotNet"), Program._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     Environment.Exit(1);
                 }
             }
             catch (Exception ex)
             {
                 Logger.WriteLog($"\t[xxx] {serviceName}: {ex.Message}", ConsoleColor.DarkRed, false);
-                Console.ReadLine();
-                Environment.Exit(-5);
             }
 
 
@@ -856,12 +867,6 @@ namespace MSearch
 
 
             Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
-            Program.LL.LogHeadMessage("_WMIRestartApplication");
-
-            Thread.Sleep(2000);
-            mutex.ReleaseMutex();
-            Process.Start(Application.ExecutablePath, "-R");
-            Environment.Exit(0);
         }
 
         internal void CheckTermService()
@@ -954,11 +959,102 @@ namespace MSearch
 
         }
 
+        internal static bool CheckSignature(string filePath, List<byte[]> targetSequences)
+        {
+            byte[] fileBytes = File.ReadAllBytes(filePath);
+            double entropy = CalculateShannonEntropy(fileBytes);
+
+            const int bufferSize = 4096;
+            byte[] buffer = new byte[bufferSize];
+            int fileIndex = 0;
+            bool found = false;
+
+            while (fileIndex < fileBytes.Length)
+            {
+                int bytesToRead = Math.Min(bufferSize, fileBytes.Length - fileIndex);
+                Array.Copy(fileBytes, fileIndex, buffer, 0, bytesToRead);
+
+                for (int i = 0; i <= bytesToRead - targetSequences[0].Length; i++)
+                {
+                    for (int index = 0; index < targetSequences.Count; index++)
+                    {
+                        byte[] targetSequence = targetSequences[index];
+                        bool sequenceFound = true;
+                        for (int j = 0; j < targetSequence.Length; j++)
+                        {
+                            if (i + j >= bytesToRead || buffer[i + j] != targetSequence[j])
+                            {
+                                sequenceFound = false;
+                                break;
+                            }
+                        }
+
+                        if (sequenceFound)
+                        {
+                            int globalOffset = fileIndex + i;
+
+                            found = true;
+
+                            if (index == 3 && (globalOffset > 544 || globalOffset < 544 || globalOffset == 544) && entropy < 7.5)
+                            {
+                                found = false;
+                            }
+
+                            if (index == 3 && globalOffset > 544 && entropy >= 7.5)
+                            {
+                                found = false;
+                            }
+
+                            if ((index == 7 && globalOffset > 4096))
+                            {
+                                found = false;
+                            }
+
+                            if ((index == 0 || index == 1 || index == 2) && globalOffset >= 4096)
+                            {
+                                found = false;
+                            }
+
+                            if (((index == 0 || index == 1 || index == 2) && entropy >= 7.5) || (index == 3 && globalOffset <= 544 && entropy >= 7.5))
+                            {
+                                found = true;
+                            }
+#if DEBUG
+                            if (found)
+                            {
+                                string tmp = "";
+                                foreach (var c in targetSequence)
+                                {
+                                    tmp += (char)c;
+                                }
+                                Console.WriteLine("FOUND by: " + tmp);
+                            }
+#endif
+                            break;
+                        }
+
+
+                    }
+                    if (found)
+                        break;
+                }
+
+                if (found)
+                    break;
+
+                fileIndex += bytesToRead;
+            }
+
+            return found;
+        }
+
         internal static bool CheckDynamicSignature(string filePath, int sequenceLength, int minOccurrences)
         {
             byte[] allBytes = File.ReadAllBytes(filePath);
 
-            Dictionary<string, int> sequenceCounts = new Dictionary<string, int>();
+            Dictionary<string, int> sequenceCounts = new Dictionary<string, int>(10000);
+            string cachedSequence = null;
+            int cachedCount = 0;
 
             for (int i = 0; i <= allBytes.Length - sequenceLength; i += sequenceLength)
             {
@@ -968,6 +1064,17 @@ namespace MSearch
                 if (!ContainsOnlyZeros(sequenceBytes))
                 {
                     string sequenceHash = BitConverter.ToString(sequenceBytes);
+
+                    if (sequenceCounts.Count >= 10000)
+                    {
+                        var mostFrequent = sequenceCounts.OrderByDescending(x => x.Value).First();
+                        cachedSequence = mostFrequent.Key;
+                        cachedCount = mostFrequent.Value;
+
+                        sequenceCounts.Clear();
+
+                        sequenceCounts[cachedSequence] = cachedCount;
+                    }
 
                     if (sequenceCounts.TryGetValue(sequenceHash, out int count))
                     {
@@ -1066,17 +1173,6 @@ namespace MSearch
             return true;
         }
 
-        static int SequenceSum(string strBytes)
-        {
-            string[] bytesFromString = strBytes.Split('-');
-            int sum = 0;
-            foreach (string byteStr in bytesFromString)
-            {
-                sum += Convert.ToByte(byteStr, 16);
-            }
-            return sum;
-        }
-
         static double ShannonEntropy(string message)
         {
 
@@ -1087,6 +1183,17 @@ namespace MSearch
                 sumnation += temp * Math.Log(temp, 2.0f);
             }
             return -1.0f * sumnation;
+        }
+
+        static int SequenceSum(string strBytes)
+        {
+            string[] bytesFromString = strBytes.Split('-');
+            int sum = 0;
+            foreach (string byteStr in bytesFromString)
+            {
+                sum += Convert.ToByte(byteStr, 16);
+            }
+            return sum;
         }
 
         internal static double CalculateShannonEntropy(byte[] fileBytes)
@@ -1118,7 +1225,7 @@ namespace MSearch
             return entropy;
         }
 
-        private static double Log2(double x)
+        static double Log2(double x)
         {
             return Math.Log(x) / Math.Log(2);
         }
@@ -1219,6 +1326,11 @@ namespace MSearch
 
             Guid MachineId = new Guid((string)machineIdValue);
             return MachineId.ToString();
+        }
+
+        internal static bool IsSystemDrive(string path)
+        {
+            return string.Equals(Path.GetPathRoot(path), Environment.GetEnvironmentVariable("homedrive") + "\\", StringComparison.OrdinalIgnoreCase);
         }
 
         internal static bool IsTaskEmpty(Microsoft.Win32.TaskScheduler.Task task)
@@ -1372,7 +1484,7 @@ namespace MSearch
             try
             {
                 Native.LSA_OBJECT_ATTRIBUTES objectAttributes = new Native.LSA_OBJECT_ATTRIBUTES();
-                Native.LSA_UNICODE_STRING systemName = new Native.LSA_UNICODE_STRING();
+                Native.UNICODE_STRING systemName = new Native.UNICODE_STRING();
 
                 int result = Native.LsaOpenPolicy(ref objectAttributes, ref systemName, Native.POLICY_ALL_ACCESS, out policyHandle);
                 if (result != 0)
@@ -1393,8 +1505,8 @@ namespace MSearch
                     throw new Exception("Error getting admin group SID");
                 }
 
-                Native.LSA_UNICODE_STRING[] userRights = new Native.LSA_UNICODE_STRING[1];
-                userRights[0] = new Native.LSA_UNICODE_STRING
+                Native.UNICODE_STRING[] userRights = new Native.UNICODE_STRING[1];
+                userRights[0] = new Native.UNICODE_STRING
                 {
                     Buffer = Marshal.StringToHGlobalUni(privilege),
                     Length = (ushort)(privilege.Length * UnicodeEncoding.CharSize),
@@ -1468,59 +1580,24 @@ namespace MSearch
             return null;
         }
 
-
-
         internal static bool IsStartedFromArchive()
         {
             string currentPath = Process.GetCurrentProcess().MainModule.FileName;
-
-            if (currentPath.ToLower().Contains(@"appdata\local\temp"))
-            {
-                return true;
-            }
-            return false;
+            return currentPath.IndexOf(@"appdata\local\temp", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
-        internal static string GetServiceImagePath(string serviceName)
+        internal static string WmiTestQuery(string serviceName)
         {
-            try
-            {
-                using (var service = new ManagementObject($"Win32_Service.Name='{serviceName}'"))
-                {
-                    service.Get();
-                    string sPath = service["PathName"]?.ToString();
 
-                    return string.IsNullOrEmpty(sPath) ? "" : sPath;
-                }
-            }
-            catch (Exception ex)
-            {
-                Program.LL.LogErrorMessage("_Error", ex);
-                return "";
-            }
-
-        }
-
-        internal static void SetServiceStartType(string serviceName, ServiceStartMode startMode)
-        {
             using (var service = new ManagementObject($"Win32_Service.Name='{serviceName}'"))
             {
                 service.Get();
-                var inParams = service.GetMethodParameters("ChangeStartMode");
-                inParams["StartMode"] = startMode.ToString();
-                service.InvokeMethod("ChangeStartMode", inParams, null);
+                string sPath = service["PathName"]?.ToString();
+
+                return string.IsNullOrEmpty(sPath) ? "" : sPath;
             }
         }
 
-        internal static ServiceStartMode GetServiceStartType(string serviceName)
-        {
-
-            using (var service = new System.Management.ManagementObject($"Win32_Service.Name='{serviceName}'"))
-            {
-                return (ServiceStartMode)Enum.Parse(typeof(ServiceStartMode), service["StartMode"].ToString().Replace("Auto", "Automatic"));
-            }
-
-        }
 
         internal static byte[] SerializeObject(object obj)
         {
@@ -1638,13 +1715,7 @@ namespace MSearch
 
             try
             {
-                byte[] signatureBytes = new byte[3];
-                using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                {
-                    fs.Read(signatureBytes, 0, 3);
-                }
-
-                if (signatureBytes[0] == 0x4D && signatureBytes[1] == 0x5A && signatureBytes[2] == 0x90)
+                if (IsExecutable(path))
                 {
                     FileInfo fileInfo = new FileInfo(path);
                     long fileLength = fileInfo.Length;
@@ -1665,7 +1736,6 @@ namespace MSearch
                         if (match)
                             return true;
                     }
-
                 }
                 return false;
             }
@@ -1674,6 +1744,29 @@ namespace MSearch
                 Console.WriteLine($"Error: {ex.Message}");
                 return false;
             }
+        }
+
+        internal static bool IsExecutable(string filepath)
+        {
+            try
+            {
+                byte[] signatureBytes = new byte[3];
+                using (FileStream fs = new FileStream(filepath, FileMode.Open, FileAccess.Read))
+                {
+                    fs.Read(signatureBytes, 0, 3);
+                }
+
+                if (signatureBytes[0] == 0x4D && signatureBytes[1] == 0x5A && signatureBytes[2] == 0x90)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (IOException) { return false; }
+
+            catch (UnauthorizedAccessException) { return false; }
+
+
         }
 
         internal static bool IsAccessibleFile(string path)
@@ -1720,10 +1813,10 @@ namespace MSearch
             return false;
         }
 
-        internal void ProccedFileFromArgs(string[] checkDirs, string fullpath, string arguments)
+        internal void ProceedFileFromArgs(string[] checkDirs, string fullpath, string arguments)
         {
 
-            if (fullpath.ToLower().Contains("rundll32"))
+            if (fullpath.IndexOf("rundll32", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 int notFoundFailures = 0;
                 string rundll32Args = ResolveFilePathFromString(arguments).Split(',')[0];
@@ -1765,18 +1858,18 @@ namespace MSearch
                     fullPathToFileFromArgs = rundll32Args;
                 }
 
-
+                string filePathFromArgs_tmp = "";
                 try
                 {
                     if (File.Exists(fullPathToFileFromArgs))
                     {
-
+                        filePathFromArgs_tmp = fullPathToFileFromArgs;
                         Program.LL.LogMessage("[.]", "_Just_File", fullPathToFileFromArgs, ConsoleColor.Gray);
                         var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
                         if (trustResult != WinVerifyTrustResult.Success)
                         {
                             Program.LL.LogWarnMediumMessage("_InvalidCertificateSignature", rundll32Args);
-                            AddToQuarantine(fullPathToFileFromArgs, Encoding.UTF8.GetBytes(CalculateMD5(fullPathToFileFromArgs)));
+                            AddToQuarantine(fullPathToFileFromArgs);
                             if (!File.Exists(fullPathToFileFromArgs))
                             {
                                 Program.totalFoundThreats++;
@@ -1795,9 +1888,13 @@ namespace MSearch
                         Program.LL.LogWarnMessage("_FileIsNotFound", fullPathToFileFromArgs);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
                 {
-                    Program.LL.LogErrorMessage("_Error", ex);
+                    Program.LL.LogCautionMessage("_ErrorLockedByWD", filePathFromArgs_tmp);
+                }
+                catch (Exception e)
+                {
+                    Program.LL.LogErrorMessage("_Error", e);
                 }
 
                 if (notFoundFailures == checkDirs.Length)
@@ -1807,7 +1904,7 @@ namespace MSearch
 
             }
 
-            if (fullpath.ToLower().Contains("pcalua"))
+            if (fullpath.IndexOf("pcalua", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 string pcaluaArgs = ResolveFilePathFromString(arguments.Replace("-a ", ""));
 
@@ -1830,7 +1927,7 @@ namespace MSearch
                             if (trustResult != WinVerifyTrustResult.Success)
                             {
                                 Program.LL.LogWarnMediumMessage("_InvalidCertificateSignature", pcaluaArgs);
-                                AddToQuarantine(fullPathToFileFromArgs, Encoding.UTF8.GetBytes(CalculateMD5(fullPathToFileFromArgs)));
+                                AddToQuarantine(fullPathToFileFromArgs);
                                 if (!File.Exists(fullPathToFileFromArgs))
                                 {
                                     Program.totalFoundThreats++;
@@ -1908,10 +2005,32 @@ namespace MSearch
             return false;
         }
 
-        internal static void AddToQuarantine(string sourceFilePath, byte[] key)
+        internal static void AddToQuarantine(string sourceFilePath)
         {
             if (!File.Exists(sourceFilePath))
                 return;
+
+            try
+            {
+                long fileSize = new FileInfo(sourceFilePath).Length;
+                if (fileSize >= 200 * 1024 * 1024)
+                {
+                    UnlockObjectClass.KillAndDelete(sourceFilePath);
+                    if (!File.Exists(sourceFilePath))
+                    {
+                        Program.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_Deleted");
+                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Deleted));
+                        return;
+                    }
+                }
+            }
+            catch (Exception ex1)
+            {
+                Program.LL.LogErrorMessage("_ErrorCannotRemove", ex1, sourceFilePath, "_File");
+                Program.totalNeutralizedThreats--;
+                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error));
+                return;
+            }
 
             try
             {
@@ -1923,13 +2042,6 @@ namespace MSearch
                     UnlockObjectClass.UnblockRegistry(quarantineKeyPathMain);
                 }
 
-                byte[] fileBytes = File.ReadAllBytes(sourceFilePath);
-
-                for (int i = 0; i < fileBytes.Length; i++)
-                {
-                    fileBytes[i] ^= key[i % key.Length];
-                }
-
                 string fileHash;
                 using (var md5 = MD5.Create())
                 {
@@ -1937,11 +2049,11 @@ namespace MSearch
                     fileHash = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
                 }
 
-                using (var baseKey = Registry.CurrentUser.CreateSubKey(quarantineKeyPath))
+                const int blockSize = 1024 * 512;
+                using (var baseKey = Registry.LocalMachine.CreateSubKey(quarantineKeyPath))
                 {
                     if (baseKey == null)
                         return;
-
 
                     using (var subKey = baseKey.CreateSubKey(fileHash))
                     {
@@ -1949,10 +2061,33 @@ namespace MSearch
                             throw new InvalidOperationException($"Unable to create subkey: {fileHash}");
 
                         subKey.SetValue("OriginalPath", sourceFilePath, RegistryValueKind.String);
-                        subKey.SetValue("FileData", fileBytes, RegistryValueKind.Binary);
 
+                        using (var fileStream = new FileStream(sourceFilePath, FileMode.Open, FileAccess.Read, FileShare.None))
+                        {
+                            long fileSize = fileStream.Length;
+                            int totalParts = (int)Math.Ceiling((double)fileSize / blockSize);
+                            subKey.SetValue("TotalParts", totalParts, RegistryValueKind.DWord);
+
+                            byte[] buffer = new byte[blockSize];
+                            for (int i = 0; i < totalParts; i++)
+                            {
+                                int bytesRead = fileStream.Read(buffer, 0, buffer.Length);
+                                if (bytesRead > 0)
+                                {
+                                    byte[] actualData = buffer;
+                                    if (bytesRead < blockSize)
+                                    {
+                                        actualData = new byte[bytesRead];
+                                        Array.Copy(buffer, actualData, bytesRead);
+                                    }
+
+                                    subKey.SetValue($"FileData_Part{i}", actualData, RegistryValueKind.Binary);
+                                }
+                            }
+                        }
                     }
                 }
+
 
                 try
                 {
@@ -2311,13 +2446,6 @@ namespace MSearch
 
         }
 
-        internal static int GetServiceId(string serviceName)
-        {
-            ManagementObject service = new ManagementObject(@"Win32_service.Name='" + serviceName + "'");
-            object serviceObject = service.GetPropertyValue("ProcessId");
-            return (int)(uint)serviceObject;
-        }
-
         internal static List<string> GetOpenFilesInDirectory(string directoryPath)
         {
             var openFiles = new List<string>();
@@ -2325,7 +2453,6 @@ namespace MSearch
             IntPtr handleInfoPtr = Marshal.AllocHGlobal(handleInfoSize);
             int returnLength = 0;
 
-            // Запросить информацию о всех дескрипторах системы
             while (Native.NtQuerySystemInformation(Native.SystemHandleInformation, handleInfoPtr, handleInfoSize, ref returnLength) == unchecked((int)0xc0000004))
             {
                 handleInfoSize = returnLength;
@@ -2400,7 +2527,7 @@ namespace MSearch
 
                     if (!IsLatestVersion(current, latest.StartsWith("v") ? latest.Substring(1).Replace(".", "") : latest.Replace(".", "")))
                     {
-                        var message = MessageBox.Show(Program.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), latest, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                        var message = MessageBoxCustom.Show(Program.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), latest, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                         if (message == DialogResult.Yes)
                         {
                             Process.Start("explorer", "https://github.com/BlendLog/MinerSearch/releases/latest");
@@ -2416,7 +2543,7 @@ namespace MSearch
                 }
                 catch (FileNotFoundException)
                 {
-                    MessageBox.Show(Program.LL.GetLocalizedString("_ErrorNotFoundComponent"), "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBoxCustom.Show(Program.LL.GetLocalizedString("_ErrorNotFoundComponent"), Program._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 catch (Exception ex)
                 {
@@ -2446,5 +2573,7 @@ namespace MSearch
 
             return currentVersionAsDouble >= latestVersionAsDouble;
         }
+
+
     }
 }

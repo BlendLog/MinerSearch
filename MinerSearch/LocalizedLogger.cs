@@ -113,7 +113,7 @@ namespace MSearch
 
         }
 
-        public static void LogScanning(string processName)
+        public static void LogScanning(string processName, string processArgs = "")
         {
             string message = Resources._Scanning_EN;
             switch (Program.ActiveLanguage)
@@ -126,7 +126,11 @@ namespace MSearch
                     break;
             }
 
-            Logger.WriteLog($"{message} {processName}.exe", ConsoleColor.White);
+            if (!Program.verbose)
+            {
+                Logger.WriteLog($"{message} {processName}.exe", ConsoleColor.White);
+            }
+            else Logger.WriteLog($"{message} {processName}.exe | {processArgs}", ConsoleColor.White);
 
 
         }
@@ -280,24 +284,6 @@ namespace MSearch
             Logger.WriteLog($"\t[i] {message}", ConsoleColor.Blue);
         }
 
-        public static void LogRestoredFile(string filePath)
-        {
-            string message = Resources._RestoredFile_EN;
-            switch (Program.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._RestoredFile_RU;
-                    break;
-                case "EN":
-                    message = Resources._RestoredFile_EN;
-                    break;
-            }
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"\t[+] {message}: {filePath}");
-            Console.ResetColor();
-            Console.ReadKey();
-        }
-
         public static void LogAnalyzingFile(string file)
         {
             string message = Resources._AnalyzingFile_EN;
@@ -310,7 +296,27 @@ namespace MSearch
                     message = Resources._AnalyzingFile_EN;
                     break;
             }
-            Console.WriteLine($" {message}: {file}...");
+
+            if (Program.verbose)
+            {
+                Logger.WriteLog($" {message}: {file}...", ConsoleColor.White);
+            }
+            else Console.WriteLine($" {message}: {file}...");
+
+        }
+
+        public static void LogOK()
+        {
+            if (Program.verbose)
+            {
+                Logger.WriteLog("\t[OK]", ConsoleColor.DarkGreen, false);
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("\t[OK]");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
         }
 
         //-------------------------------------------------
@@ -331,7 +337,11 @@ namespace MSearch
         public void LogHeadMessage(string ResourceKey)
         {
             string message = GetLocalizedString(ResourceKey);
-            Logger.WriteLog($"\t\t{message}".Replace("?", ""), Logger.head, false);
+            if (!Program.RunAsSystem)
+            {
+                Logger.WriteLog($"\t\t{message}".Replace("?", ""), Logger.head, false);
+            }
+            else Logger.WriteLog($"\t\t{message}".Replace("?", ""), ConsoleColor.Magenta, false);
         }
 
         public void LogWarnMessage(string ResourceKey, string target = "")

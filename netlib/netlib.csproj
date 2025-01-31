@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="dbase, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="dbase, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\MinerSearch\bin\Release\dbase.dll</HintPath>
     </Reference>

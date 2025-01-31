@@ -9,13 +9,16 @@ namespace MSearch
         string sber = "";
         string yoomoney = "";
         string usdt = "";
+        bool IsOpenedByButton;
 
-        public SplashForm()
+
+        public SplashForm(bool _value = false)
         {
             InitializeComponent();
             sber = textBox1.Text;
             yoomoney = textBox2.Text;
             usdt = textBox4.Text;
+            IsOpenedByButton = _value;
         }
 
         void TranslateForm()
@@ -62,17 +65,28 @@ namespace MSearch
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Environment.Exit(0);
-        }
-
-        private void label6_Click(object sender, EventArgs e)
-        {
-
+            OnExit();
         }
 
         private void Exit_btn_Click(object sender, EventArgs e)
         {
-            Environment.Exit(0);
+            OnExit();
+        }
+
+
+        void OnExit()
+        {
+            if (IsOpenedByButton)
+            {
+                FinishEx finishEx = Owner as FinishEx;
+                finishEx.Opacity = 1;
+                finishEx.Enabled = true;
+                Close();
+            }
+            else
+            {
+                Environment.Exit(0);
+            }
         }
 
         private void SplashForm_Load(object sender, EventArgs e)

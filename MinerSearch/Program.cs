@@ -5,9 +5,12 @@ using Microsoft.Win32;
 using MSearch.Properties;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -31,12 +34,16 @@ namespace MSearch
         public static bool fullScan = false;
         public static bool RestoredWMI = false;
         public static bool RunAsSystem = false;
+        public static bool verbose = false;
+        private static bool demandSelection = false;
         public static int maxSubfolders = 8;
         public static int totalFoundThreats = 0;
         public static int totalFoundSuspiciousObjects = 0;
         public static int totalNeutralizedThreats = 0;
         public static string drive_letter = "C";
+        public static string selectedPath = "";
         public static string ActiveLanguage = "EN";
+        public static string _title = new StringBuilder("Mi").Append("ner").Append("Sea").Append("rch").ToString();
         internal static BootMode bootMode = Utils.GetBootMode();
         public static LocalizedLogger LL = new LocalizedLogger();
         public static Utils _utils = new Utils();
@@ -55,34 +62,41 @@ namespace MSearch
             }
             catch (FileNotFoundException)
             {
-                MessageBox.Show(LL.GetLocalizedString("_ErrorNotFoundComponent"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBoxCustom.Show(LL.GetLocalizedString("_ErrorNotFoundComponent"), _title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Environment.Exit(1);
             }
 #else
-            ActiveLanguage = Utils.GetSystemLanguage();
+
+            //ActiveLanguage = Utils.GetSystemLanguage();
             Init(args);
+
 #endif
         }
 
         static void Init(string[] args)
         {
+            NameValueCollection section = ConfigurationManager.GetSection("System.Windows.Forms.ApplicationConfigurationSection") as NameValueCollection;
+            if (section != null)
+            {
+                section["DpiAwareness"] = "PerMonitorV2";
+            }
+
             if (!Utils.IsDotNetInstalled())
             {
-                MessageBox.Show(LL.GetLocalizedString("_ErrorNoDotNet"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBoxCustom.Show(LL.GetLocalizedString("_ErrorNoDotNet"), _title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Environment.Exit(1);
             }
 
-
             if (!Utils.IsOneAppCopy())
             {
-                MessageBox.Show(LL.GetLocalizedString("_AppAlreadyRunning"), Console.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                Environment.Exit(1);
+                var result = MessageBoxCustom.Show(LL.GetLocalizedString("_AppAlreadyRunning"), _title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Environment.Exit(0);
             }
 
             if (!Utils.IsRebootMtx())
             {
                 Utils.mutex.ReleaseMutex();
-                MessageBox.Show(LL.GetLocalizedString("_RebootRequired"), Utils.GetRndString());
+                MessageBoxCustom.Show(LL.GetLocalizedString("_RebootRequired"), _title);
                 Environment.Exit(0);
             }
 
@@ -104,7 +118,7 @@ namespace MSearch
 
             if (Utils.GetCurrentProcessOwner().IsSystem && !WinPEMode)
             {
-                var msg = MessageBox.Show(LL.GetLocalizedString("_MessageRunAsSystemWarn"), Utils.GetRndString(), MessageBoxButtons.YesNo);
+                var msg = MessageBoxCustom.Show(LL.GetLocalizedString("_MessageRunAsSystemWarn"), _title, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                 if (msg != DialogResult.Yes)
                 {
                     Environment.Exit(0);
@@ -132,7 +146,7 @@ namespace MSearch
 
             if (Utils.IsStartedFromArchive())
             {
-                MessageBox.Show(LL.GetLocalizedString("_ArchiveWarn"), LL.GetLocalizedString("_ArchiveWarn_caption"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBoxCustom.Show(LL.GetLocalizedString("_ArchiveWarn"), LL.GetLocalizedString("_ArchiveWarn_caption"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Environment.Exit(1);
             }
 
@@ -167,7 +181,7 @@ namespace MSearch
                 }
             }
 
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
             if (args.Length > 0)
             {
@@ -196,60 +210,61 @@ namespace MSearch
                         return;
                     }
 
-                    if (arg == "--no-logs")
+                    if (arg == "--no-logs" || arg == "-nl")
                     {
                         no_logs = true;
                     }
-                    else if (arg == "--no-scantime")
+                    else if (arg == "--no-scantime" || arg == "-nstm")
                     {
                         no_scantime = true;
                     }
-                    else if (arg == "--no-signature-scan")
+                    else if (arg == "--no-signature-scan" || arg == "-nss")
                     {
                         nosignaturescan = true;
                     }
-                    else if (arg == "--no-runtime")
+                    else if (arg == "--no-runtime" || arg == "-nr")
                     {
                         no_runtime = true;
                     }
-                    else if (arg == "--no-scan-tasks")
+                    else if (arg == "--no-scan-tasks" || arg == "-nst")
                     {
                         no_scan_tasks = true;
                     }
-                    else if (arg == "--pause")
+                    else if (arg == "--pause" || arg == "-p")
                     {
                         pause = true;
                     }
-                    else if (arg == "--remove-empty-tasks")
+                    else if (arg == "--remove-empty-tasks" || arg == "-ret")
                     {
                         RemoveEmptyTasks = true;
                     }
-                    else if (arg.StartsWith("--depth="))
+                    else if (arg.StartsWith("--depth=") || arg.StartsWith("-d="))
                     {
-                        int.TryParse(arg.Remove(0, 8), out maxSubfolders);
-                        if (maxSubfolders <= 0 || maxSubfolders > 16)
+                        string depthValue = arg.Substring(arg.IndexOf('=') + 1);
+
+                        if (!int.TryParse(depthValue, out maxSubfolders) || maxSubfolders <= 0 || maxSubfolders > 16)
                         {
                             Console.WriteLine($"\nThe number in {arg} command cannot be negative, = 0 or > 16");
                             Console.ReadLine();
                             return;
                         }
                     }
-                    else if (arg == "--no-roo?tki?t-check".Replace("?", ""))
+                    else if (arg == "--no-roo?tki?t-check".Replace("?", "") || arg == "-nrc")
                     {
                         NoRootkitCheck = true;
                     }
-                    else if (arg == "--no-services")
+                    else if (arg == "--no-services" || arg == "-nse")
                     {
                         no_services = true;
                     }
-                    else if (arg == "--scan-only")
+                    else if (arg == "--scan-only" || arg == "-so")
                     {
                         ScanOnly = true;
                         NoRootkitCheck = true;
                         RemoveEmptyTasks = false;
 
                     }
-                    else if (arg == "--full-scan")
+                    else if (arg == "--full-scan" || arg == "-fs")
                     {
                         fullScan = true;
                     }
@@ -259,7 +274,7 @@ namespace MSearch
                         QuarantineForm qForm = new QuarantineForm();
                         qForm.ShowDialog();
                     }
-                    else if (arg == "--winpemode")
+                    else if (arg == "--winpemode" || arg == "-w")
                     {
                     drive_letter_lbl:
                         LocalizedLogger.LogSpecifyDrive();
@@ -286,6 +301,30 @@ namespace MSearch
                     else if (arg == "-R")
                     {
                         RestoredWMI = true;
+                    }
+                    else if (arg == "--verbose" || arg == "-v")
+                    {
+                        verbose = true;
+                    }
+                    else if (arg == "--run-as-system" || arg == "-ras")
+                    {
+                        Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_MINIMIZE);
+                        Utils.mutex.ReleaseMutex();
+                        StringBuilder argsBuilder = new StringBuilder("");
+                        foreach (string _arg in args)
+                        {
+                            argsBuilder.Append(" " + _arg.ToLower());
+                        }
+                        Native.RunAs(Bfs.Create(
+                            new StringBuilder("xq").Append("vY").Append("ab").Append("pF").Append("Rk").Append("S3").Append("8f").Append("0U").Append("BX").Append("5m").Append("3g").Append("==").ToString(),
+                            new StringBuilder("KV").Append("/K").Append("6+").Append("Aq").Append("Y9").Append("P0").Append("Af").Append("Bo").Append("QQ").Append("dY").Append("M5").Append("qv").Append("iJ").Append("kq").Append("e2").Append("tY").Append("HX").Append("Rn").Append("cL").Append("hy").Append("/q").Append("8=").ToString(),
+                            new StringBuilder("WF").Append("EF").Append("OW").Append("Yz").Append("RK").Append("pU").Append("oG").Append("EN").Append("ce").Append("yO").Append("SQ").Append("==").ToString()),
+                            argsBuilder.ToString().Replace("--run-as-system", "").Replace("-ras", ""));
+                        Environment.Exit(0);
+                    }
+                    else if (arg == "--select" || arg == "-s")
+                    {
+                        demandSelection = true;
                     }
                     else
                     {
@@ -379,8 +418,6 @@ namespace MSearch
             }
             pmodules = null;
 
-            _utils.CheckWMI();
-
             Stopwatch startTime = Stopwatch.StartNew();
 
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
@@ -389,6 +426,37 @@ namespace MSearch
             {
                 LL.LogWriteWithoutDisplay(true, false);
             }
+
+            if (demandSelection)
+            {
+                if (!WinPEMode && string.IsNullOrEmpty(selectedPath))
+                {
+                    using (var dialog = new FolderBrowserDialog())
+                    {
+                        dialog.Description = LL.GetLocalizedString("_SelectFolderDialog");
+                        dialog.ShowNewFolderButton = false;
+                        dialog.RootFolder = Environment.SpecialFolder.MyComputer;
+
+                        if (dialog.ShowDialog() == DialogResult.OK)
+                        {
+#if DEBUG
+                            Console.WriteLine($"\t[DBG] Selected path: {dialog.SelectedPath}");
+#endif
+                            selectedPath = Utils.GetLongPath(dialog.SelectedPath);
+                        }
+                        else
+                        {
+                            var noFolderDialog = MessageBoxCustom.Show(LL.GetLocalizedString("_MessageCancelFolderDialog"), _title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            if (noFolderDialog != DialogResult.Yes)
+                            {
+                                Environment.Exit(0);
+                            }
+
+                        }
+                    }
+                }
+            }
+
 
             MinerSearch mk = new MinerSearch();
 
@@ -407,8 +475,8 @@ namespace MSearch
 
                     if (_utils.GrantPrivilegeToGroup(groupName, privilegename))
                     {
-                        MessageBox.Show(LL.GetLocalizedString("_SuccessGrantPrivilege"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        var result = MessageBox.Show(Program.LL.GetLocalizedString("_RebootPCNowDialog"), Utils.GetRndString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        MessageBoxCustom.Show(LL.GetLocalizedString("_SuccessGrantPrivilege"), _title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        var result = MessageBoxCustom.Show(Program.LL.GetLocalizedString("_RebootPCNowDialog"), _title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (result == DialogResult.Yes)
                         {
                             Process.Start(new ProcessStartInfo()
@@ -425,7 +493,7 @@ namespace MSearch
                     }
                     else
                     {
-                        MessageBox.Show(LL.GetLocalizedString("_ErrorGrantPrivilege"), Utils.GetRndString(), MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBoxCustom.Show(LL.GetLocalizedString("_ErrorGrantPrivilege"), _title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         Environment.Exit(0);
                     }
                 }
@@ -451,16 +519,13 @@ namespace MSearch
                 LocalizedLogger.LogPAUSE();
                 Console.ReadKey(true);
             }
-            if (mk.mlwrPids.Count > 0)
-            {
-                LL.LogCautionMessage("_MlwrProcessesCount", mk.mlwrPids.Count.ToString());
-            }
             mk.Clean();
 
             if (!nosignaturescan)
             {
                 mk.SignatureScan();
             }
+            GC.Collect();
 
             startTime.Stop();
             TimeSpan resultTime = startTime.Elapsed;
@@ -475,7 +540,6 @@ namespace MSearch
 
             Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_MINIMIZE);
 
-
             FinishEx finish = new FinishEx(totalFoundThreats, totalNeutralizedThreats + totalFoundThreats, totalFoundSuspiciousObjects, elapsedTime) //+ sign because neutralized threats is negative
             {
                 TopMost = true
@@ -489,7 +553,11 @@ namespace MSearch
         }
         private static void WaterMark()
         {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            if (RunAsSystem)
+            {
+                Console.ForegroundColor = ConsoleColor.Magenta;
+            }
+            else Console.ForegroundColor = ConsoleColor.DarkCyan;
 
             Console.WriteLine("\t╔════════════════════════════════════════════════════════════════════════════════════════╗");
             Console.WriteLine("\t║███╗   ███╗██╗███╗   ██╗███████╗██████╗ ███████╗███████╗ █████╗ ██████╗  ██████╗██╗  ██╗║");

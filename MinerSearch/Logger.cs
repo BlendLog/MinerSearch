@@ -20,10 +20,12 @@ namespace MSearch
 
         public static void WriteLog(string currentText, ConsoleColor LogLevel)
         {
-
-            if (currentText == previousWhiteText || currentText == previousNonWhiteText)
+            if (!Program.verbose)
             {
-                return;
+                if (currentText == previousWhiteText || currentText == previousNonWhiteText)
+                {
+                    return;
+                }
             }
 
             try
@@ -34,13 +36,16 @@ namespace MSearch
                 Console.WriteLine(logMessage);
                 Console.ForegroundColor = ConsoleColor.White;
 
-                if (LogLevel == ConsoleColor.White)
+                if (!Program.verbose)
                 {
-                    previousWhiteText = currentText;
-                }
-                if (LogLevel != ConsoleColor.White)
-                {
-                    previousNonWhiteText = currentText;
+                    if (LogLevel == ConsoleColor.White)
+                    {
+                        previousWhiteText = currentText;
+                    }
+                    if (LogLevel != ConsoleColor.White)
+                    {
+                        previousNonWhiteText = currentText;
+                    }
                 }
 
                 if (!Program.no_logs)
@@ -66,9 +71,12 @@ namespace MSearch
         {
             if (!ignorePrevious)
             {
-                if (currentText == previousWhiteText || currentText == previousNonWhiteText)
+                if (!Program.verbose)
                 {
-                    return;
+                    if (currentText == previousWhiteText || currentText == previousNonWhiteText)
+                    {
+                        return;
+                    }
                 }
             }
 
@@ -89,13 +97,16 @@ namespace MSearch
 
                 if (!ignorePrevious)
                 {
-                    if (color == ConsoleColor.White)
+                    if (!Program.verbose)
                     {
-                        previousWhiteText = currentText;
-                    }
-                    if (color != ConsoleColor.White)
-                    {
-                        previousNonWhiteText = currentText;
+                        if (color == ConsoleColor.White)
+                        {
+                            previousWhiteText = currentText;
+                        }
+                        if (color != ConsoleColor.White)
+                        {
+                            previousNonWhiteText = currentText;
+                        }
                     }
                 }
 
@@ -120,10 +131,12 @@ namespace MSearch
 
         public static void WriteLog(string currentText, ConsoleColor color, bool DisplayTime = true)
         {
-
-            if (currentText == previousWhiteText || currentText == previousNonWhiteText)
+            if (!Program.verbose)
             {
-                return;
+                if (currentText == previousWhiteText || currentText == previousNonWhiteText)
+                {
+                    return;
+                }
             }
 
             try
@@ -141,14 +154,19 @@ namespace MSearch
                 Console.WriteLine(logMessage);
                 Console.ForegroundColor = ConsoleColor.White;
 
-                if (color == ConsoleColor.White)
+                if (!Program.verbose)
                 {
-                    previousWhiteText = currentText;
+                    if (color == ConsoleColor.White)
+                    {
+                        previousWhiteText = currentText;
+                    }
+                    if (color != ConsoleColor.White)
+                    {
+                        previousNonWhiteText = currentText;
+                    }
+
                 }
-                if (color != ConsoleColor.White)
-                {
-                    previousNonWhiteText = currentText;
-                }
+
 
                 if (!Program.no_logs)
                 {

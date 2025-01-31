@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using DBase;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +15,9 @@ namespace MSearch
     {
         int threatsCount = 0;
         int curedCount = 0;
+        string registryPath = @"Software\M1nerSearch";
+        string valueName = "allowstatistics";
+
 
         public FinishEx(int _totalThreats, int _neutralizedThreats, int _suspObj, string _elapsedTime)
         {
@@ -25,7 +29,7 @@ namespace MSearch
             LBL_threatsCount.Text = _totalThreats.ToString();
             LBL_curedCount.Text = _neutralizedThreats.ToString();
             LBL_susCount.Text = _suspObj.ToString();
-            LBL_scanElapsedTime.Text = _elapsedTime;
+            LBL_ScanTime.Text = $"{Program.LL.GetLocalizedString("_Elapse")} {_elapsedTime}";
         }
 
         private void TranslateForm()
@@ -52,10 +56,12 @@ namespace MSearch
             LBL_totalThreats.Text = Program.LL.GetLocalizedString("_TotalThreatsFound");
             LBL_neutralizedThreats.Text = Program.LL.GetLocalizedString("_TotalNeutralizedThreats");
             LBL_susObjects.Text = Program.LL.GetLocalizedString("_SuspiciousObjects");
-            LBL_ScanTime.Text = Program.LL.GetLocalizedString("_Elapse");
+            Label_allowStatistics.Text = Program.LL.GetLocalizedString("_LabelAllowStatistics");
             Label_showAllLogs.Text = Program.LL.GetLocalizedString("_ShowFolderLogs");
             top.TextAlign = ContentAlignment.MiddleRight;
             top.Text = Program.LL.GetLocalizedString("_PleaseWaitMessage");
+            OpenQuarantineBtn.Text = Program.LL.GetLocalizedString("_OpenQuarantine");
+            DonateBtn.Text = Program.LL.GetLocalizedString("_DonateBtn");
             finishBtn.Text = Program.LL.GetLocalizedString("_PleaseWaitMessage");
             finishBtn.BackColor = Color.DimGray;
 
@@ -92,7 +98,7 @@ namespace MSearch
         {
             if (curedCount < threatsCount)
             {
-                var result = MessageBox.Show(Program.LL.GetLocalizedString("_RebootPCNowDialog"), Utils.GetRndString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = MessageBoxCustom.Show(Program.LL.GetLocalizedString("_RebootPCNowDialog"), Program._title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
                     Process.Start(new ProcessStartInfo()
@@ -137,13 +143,30 @@ namespace MSearch
             }
 
             string argument = "/c \"" + logpath + "\"";
-            Process.Start(new ProcessStartInfo()
+            if (Program.RunAsSystem && !Program.WinPEMode)
             {
-                FileName = "cmd",
-                Arguments = argument,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            });
+                string pname = Bfs.Create("N9XIBtsBAwsaOCAS47VSlw==", "OV4slK+9TC2rM31I3yr7un/YzjaNRhuwHewT0IER6XA=", "arDhPxZCQgPB0m1IazJQmA==");
+            restart:
+                if (Process.GetProcessesByName(pname).Length > 0)
+                {
+                    Native.RunAsUser(pname, argument);
+                }
+                else
+                {
+                    Process.Start(pname);
+                    goto restart;
+                }
+            }
+            else
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "cmd",
+                    Arguments = argument,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                });
+            }
         }
 
 
@@ -169,12 +192,11 @@ namespace MSearch
 
         private void ConfigureDataGridView()
         {
-#if !DEBUG
             if (Program.totalFoundThreats == 0 && Program.totalFoundSuspiciousObjects == 0)
             {
                 dataGridThreats.Visible = false;
             }
-#endif
+
             dataGridThreats.RowHeadersVisible = false;
             dataGridThreats.AutoGenerateColumns = false;
 
@@ -221,158 +243,113 @@ namespace MSearch
         {
             dataGridThreats.ClearSelection();
             TranslateForm();
-            string registryPath = @"Software\M1nerSearch";
-            string valueName = "allowstatistics";
             CollectStatistics(registryPath, valueName);
+            UpdateToggle(registryPath, valueName);
         }
 
         async void CollectStatistics(string registryPath, string valueName)
         {
             if (Program.no_logs)
             {
-                top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-                top.Text = "MinerSearch";
-                CloseBtn.Visible = true;
-                finishBtn.Enabled = true;
-                finishBtn.BackColor = Color.RoyalBlue;
-                finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
+                UpdateUIToDefaultState();
                 return;
             }
 
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath, true);
-
-            if (key == null)
+            using (var key = Registry.CurrentUser.OpenSubKey(registryPath, true) ?? Registry.CurrentUser.CreateSubKey(registryPath))
             {
-                key = Registry.CurrentUser.CreateSubKey(registryPath);
-            }
+                if (key == null) return;
 
-            object regValue = key.GetValue(valueName);
-
-            if (regValue == null)
-            {
-                if (Utils.GetWindowsVersion().Contains("Windows 7"))
+                object regValue = key.GetValue(valueName);
+                if (regValue == null)
                 {
-                    key.SetValue(valueName, 0, RegistryValueKind.DWord);
-                    regValue = 0;
-                }
-                else
-                {
-                    key.SetValue(valueName, 2, RegistryValueKind.DWord);
-                    regValue = 2;
-                }
-            }
+                    regValue = Utils.GetWindowsVersion().IndexOf("Windows 7", StringComparison.OrdinalIgnoreCase) >= 0 ? 0 : 2;
+                    key.SetValue(valueName, regValue, RegistryValueKind.DWord);
 
-            int allowStatistics = (int)regValue;
-
-            if (allowStatistics == 2)
-            {
-                var result = MessageBox.Show(Program.LL.GetLocalizedString("_AllowSentStatistics"), Utils.GetRndString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                if (result == DialogResult.Yes)
-                {
-                    key.SetValue(valueName, 1, RegistryValueKind.DWord);
-
-                    if (!Program.no_logs)
+                    if ((int)regValue == 0)
                     {
-                        try
+                        DisableStatisticsUI();
+                    }
+                }
+
+                int allowStatistics = (int)regValue;
+
+                switch (allowStatistics)
+                {
+                    case 2:
+                        if (MessageBoxCustom.Show(Program.LL.GetLocalizedString("_AllowSentStatistics"), Program._title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
-                            await Task.Run(() =>
-                            {
-                                Task.Delay(new Random().Next(10, 3000));
-                                MinerSearch.SentLog();
-                            });
-                            top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-                            top.Text = "MinerSearch";
-                            CloseBtn.Visible = true;
-                            finishBtn.Enabled = true;
-                            finishBtn.BackColor = Color.RoyalBlue;
-                            finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
+                            key.SetValue(valueName, 1, RegistryValueKind.DWord);
+                            await SendLogAndHandleErrors();
                         }
-                        catch (System.IO.FileNotFoundException fnf)
+                        else
                         {
-                            Program.LL.LogErrorMessage("_Error", fnf);
-                            top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-                            top.Text = "MinerSearch";
-                            CloseBtn.Visible = true;
-                            finishBtn.Enabled = true;
-                            finishBtn.BackColor = Color.RoyalBlue;
-                            finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
+                            key.SetValue(valueName, 0, RegistryValueKind.DWord);
+                            UpdateUIToDefaultState();
                         }
-                        catch (Exception ex)
-                        {
-                            Program.LL.LogErrorMessage("_Error", ex);
-                            top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-                            top.Text = "MinerSearch";
-                            CloseBtn.Visible = true;
-                            finishBtn.Enabled = true;
-                            finishBtn.BackColor = Color.RoyalBlue;
-                            finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
-                        }
+                        break;
 
-                    }
-                }
-                else
-                {
-                    key.SetValue(valueName, 0, RegistryValueKind.DWord);
-                    top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-                    top.Text = "MinerSearch";
-                    CloseBtn.Visible = true;
-                    finishBtn.Enabled = true;
-                    finishBtn.BackColor = Color.RoyalBlue;
-                    finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
-                }
-            }
-            else if (allowStatistics == 1)
-            {
-                if (!Program.no_logs)
-                {
-                    try
-                    {
-                        await Task.Run(() =>
-                        {
-                            Task.Delay(new Random().Next(10, 3000));
-                            MinerSearch.SentLog();
-                        });
-                        top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-                        top.Text = "MinerSearch";
-                        CloseBtn.Visible = true;
-                        finishBtn.Enabled = true;
-                        finishBtn.BackColor = Color.RoyalBlue;
-                        finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
-                    }
-                    catch (System.IO.FileNotFoundException fnf)
-                    {
-                        Program.LL.LogErrorMessage("_Error", fnf);
-                        top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-                        top.Text = "MinerSearch";
-                        CloseBtn.Visible = true;
-                        finishBtn.Enabled = true;
-                        finishBtn.BackColor = Color.RoyalBlue;
-                        finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
+                    case 1:
+                        await SendLogAndHandleErrors();
+                        break;
 
-                    }
-                    catch (Exception ex)
-                    {
-                        Program.LL.LogErrorMessage("_Error", ex);
-                        top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-                        top.Text = "MinerSearch";
-                        CloseBtn.Visible = true;
-                        finishBtn.Enabled = true;
-                        finishBtn.BackColor = Color.RoyalBlue;
-                        finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
-                    }
+                    default:
+                        UpdateUIToDefaultState();
+                        break;
                 }
             }
-            else
+        }
+
+        void UpdateUIToDefaultState()
+        {
+            top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            top.Text = Program._title;
+            CloseBtn.Visible = true;
+            DonateBtn.Visible = true;
+            finishBtn.Enabled = true;
+            finishBtn.BackColor = Color.RoyalBlue;
+            finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
+
+            if (Utils.GetWindowsVersion().IndexOf("Windows 7", StringComparison.OrdinalIgnoreCase) == -1)
             {
-                top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-                top.Text = "MinerSearch";
-                CloseBtn.Visible = true;
-                finishBtn.Enabled = true;
-                finishBtn.BackColor = Color.RoyalBlue;
-                finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
+                ts_AllowCollectStatistics.Enabled = true;
+                ts_AllowCollectStatistics.OffBackColor = Color.Gray;
+                ts_AllowCollectStatistics.OffToggleColor = Color.White;
+                ts_AllowCollectStatistics.OnBackColor = Color.RoyalBlue;
+                ts_AllowCollectStatistics.OnToggleColor = Color.White;
             }
-            key.Close();
+        }
+
+        void DisableStatisticsUI()
+        {
+            ts_AllowCollectStatistics.Enabled = false;
+            ts_AllowCollectStatistics.OffBackColor = Color.Gainsboro;
+            ts_AllowCollectStatistics.OffToggleColor = Color.Silver;
+            ts_AllowCollectStatistics.OnBackColor = Color.Gainsboro;
+            ts_AllowCollectStatistics.OnToggleColor = Color.Silver;
+        }
+
+        async Task SendLogAndHandleErrors()
+        {
+            try
+            {
+                await Task.Run(() =>
+                {
+                    Task.Delay(new Random().Next(10, 3000)).Wait();
+                    MinerSearch.SentLog();
+                });
+            }
+            catch (FileNotFoundException fnf)
+            {
+                Program.LL.LogErrorMessage("_Error", fnf);
+            }
+            catch (Exception ex)
+            {
+                Program.LL.LogErrorMessage("_Error", ex);
+            }
+            finally
+            {
+                UpdateUIToDefaultState();
+            }
         }
 
         private void dataGridThreats_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
@@ -415,6 +392,27 @@ namespace MSearch
                         case ScanActionType.Active:
                             row.Cells[row.Cells.Count - 1].Style.BackColor = Color.LightSalmon;
                             break;
+                        case ScanActionType.Inaccassible:
+                            row.Cells[row.Cells.Count - 1].Style.BackColor = Color.FromArgb(255, 248, 140, 248); //LightViolet
+                            break;
+                    }
+                }
+            }
+        }
+
+        void UpdateToggle(string registryPath, string valueName)
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath, true))
+            {
+                if (key != null)
+                {
+                    object regValue = key.GetValue(valueName);
+
+                    if (regValue != null)
+                    {
+                        ts_AllowCollectStatistics.CheckedChanged -= ts_AllowCollectStatistics_CheckedChanged;
+                        ts_AllowCollectStatistics.Checked = (int)regValue == 1;
+                        ts_AllowCollectStatistics.CheckedChanged += ts_AllowCollectStatistics_CheckedChanged;
                     }
                 }
             }
@@ -446,6 +444,48 @@ namespace MSearch
                 Owner = this
             };
             qForm.ShowDialog();
+        }
+
+        private void DonateBtn_Click(object sender, EventArgs e)
+        {
+            this.Opacity = 0.6;
+            Enabled = false;
+            using (SplashForm splashForm = new SplashForm(true)
+            {
+                Owner = this
+            })
+                splashForm.ShowDialog();
+        }
+
+        private void ts_AllowCollectStatistics_CheckedChanged(object sender, EventArgs e)
+        {
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath, true);
+
+            if (key == null)
+            {
+                key = Registry.CurrentUser.CreateSubKey(registryPath);
+            }
+
+            object regValue = key.GetValue(valueName);
+
+            if (regValue != null)
+            {
+                if (ts_AllowCollectStatistics.CheckState == CheckState.Checked)
+                {
+                    key.SetValue(valueName, 1, RegistryValueKind.DWord);
+                }
+                else
+                {
+                    key.SetValue(valueName, 0, RegistryValueKind.DWord);
+                }
+            }
+            else key.SetValue(valueName, 0, RegistryValueKind.DWord);
+
+            if (key != null)
+            {
+                key.Close();
+            }
+
         }
     }
 }

@@ -71,6 +71,16 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _32 {
+            get {
+                object obj = ResourceManager.GetObject("32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Yes.
         /// </summary>
         internal static string _accept_en {
@@ -157,6 +167,24 @@ namespace MSearch.Properties {
         internal static string _ActionType_Error_RU {
             get {
                 return ResourceManager.GetString("_ActionType_Error_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Inaccassible for changes.
+        /// </summary>
+        internal static string _ActionType_Inaccessible_EN {
+            get {
+                return ResourceManager.GetString("_ActionType_Inaccessible_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Недоступно для изменений.
+        /// </summary>
+        internal static string _ActionType_Inaccessible_RU {
+            get {
+                return ResourceManager.GetString("_ActionType_Inaccessible_RU", resourceCulture);
             }
         }
         
@@ -445,6 +473,24 @@ namespace MSearch.Properties {
         internal static string _BtnDetails_RU {
             get {
                 return ResourceManager.GetString("_BtnDetails_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Cancel.
+        /// </summary>
+        internal static string _CancelBtn_EN {
+            get {
+                return ResourceManager.GetString("_CancelBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отмена.
+        /// </summary>
+        internal static string _CancelBtn_RU {
+            get {
+                return ResourceManager.GetString("_CancelBtn_RU", resourceCulture);
             }
         }
         
@@ -881,12 +927,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Warning! The application has identified many services with invalid digital signatures. 
-        ///
-        ///It is assumed that the system:
-        /// - was installed from an unverified source;
-        /// - has Insider Preview status;
-        /// - or modified by third-party programs.
+        ///   Ищет локализованную строку, похожую на Warning! The application has identified many services with invalid digital signatures. It is assumed that the system was installed from an unverified source.
         ///
         ///The following services will be disabled, which may lead to system instability:
         ///#InvalidServices#
@@ -900,12 +941,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Внимание! Приложение выявило множество служб с недействительной цифровой подписью. 
-        ///
-        ///Предполагается, что система:
-        /// - была установлена из непроверенного источника;
-        /// - имеет статус Insider Preview;
-        /// - либо модифицирована сторонними программами.
+        ///   Ищет локализованную строку, похожую на Внимание! Приложение выявило множество служб с недействительной цифровой подписью. Предполагается, что система была установлена из непроверенного источника.
         ///
         ///Перечисленные ниже службы будут отключены, что возможно приведёт к нестабильности системы:
         ///#InvalidServices#
@@ -915,6 +951,24 @@ namespace MSearch.Properties {
         internal static string _DisableServiceWarning_RU {
             get {
                 return ResourceManager.GetString("_DisableServiceWarning_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Donate $$$.
+        /// </summary>
+        internal static string _DonateBtn_EN {
+            get {
+                return ResourceManager.GetString("_DonateBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Поддержать проект $$$.
+        /// </summary>
+        internal static string _DonateBtn_RU {
+            get {
+                return ResourceManager.GetString("_DonateBtn_RU", resourceCulture);
             }
         }
         
@@ -1171,7 +1225,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на The file is blocked: #file#. Reading is not possible..
+        ///   Ищет локализованную строку, похожую на The file is blocked: #file#. Write changes is not possible..
         /// </summary>
         internal static string _ErrorLockedFile_EN {
             get {
@@ -1180,7 +1234,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Файл заблокирован: #file#. Чтение невозможно..
+        ///   Ищет локализованную строку, похожую на Файл заблокирован: #file#. Внесение изменений невозможно..
         /// </summary>
         internal static string _ErrorLockedFile_RU {
             get {
@@ -1293,6 +1347,24 @@ namespace MSearch.Properties {
         internal static string _ErrorTaskDeleteFail_RU {
             get {
                 return ResourceManager.GetString("_ErrorTaskDeleteFail_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error on task deletion.
+        /// </summary>
+        internal static string _ErrorTaskDeletion_EN {
+            get {
+                return ResourceManager.GetString("_ErrorTaskDeletion_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка удаление задачи.
+        /// </summary>
+        internal static string _ErrorTaskDeletion_RU {
+            get {
+                return ResourceManager.GetString("_ErrorTaskDeletion_RU", resourceCulture);
             }
         }
         
@@ -1623,14 +1695,15 @@ namespace MSearch.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Startup params:
         ///
-        ///--help                        This help message
-        ///--no-logs                     Don&apos;t write logs in text file
-        ///--no-scantime                 Scan processes only
-        ///--no-runtime                  Static scan only (Malware dirs, files, registry keys, etc)
-        ///--no-services                 Skip scan services
-        ///--no-signature-scan           Skip scan files by signatures
-        ///--no-rootkit-check            Skip checking rootkit present
-        ///--depth=&lt;number&gt;              Where &lt;number&gt; specify the number for ma [остаток строки не уместился]&quot;;.
+        ///-h     --help                 This help message
+        ///-nl    --no-logs              Don&apos;t write logs in text file
+        ///-nstm  --no-scantime          Scan processes only
+        ///-nr    --no-runtime           Static scan only (Malware dirs, files, registry keys, etc)
+        ///-nse   --no-services          Skip scan services
+        ///-nss   --no-signature-scan    Skip scan files by signatures
+        ///-nrc   --no-rootkit-check     Skip checking rootkit present
+        ///-p     --pause                Pause before cleanup
+        ///-ret   --remove-em [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _Help_EN {
             get {
@@ -1641,14 +1714,14 @@ namespace MSearch.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Параметры запуска:
         ///
-        ///--help                       Вызов этой справки
-        ///--no-logs                    Не записывать лог в файл
-        ///--no-scantime                Сканировать только процессы
-        ///--no-runtime                 Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)
-        ///--no-services                Пропустить сканирование служб
-        ///--no-signature-scan          Пропустить сигнатурное сканирование файлов
-        ///--no-rootkit-check           Не проверять присутствие руткита
-        ///--depth=&lt;число&gt;              Г [остаток строки не уместился]&quot;;.
+        ///-h     --help                 Вызов этой справки
+        ///-nl    --no-logs              Не записывать лог в файл
+        ///-nstm  --no-scantime          Сканировать только процессы
+        ///-nr    --no-runtime           Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)
+        ///-nse   --no-services          Пропустить сканирование служб
+        ///-nss   --no-signature-scan    Пропустить сигнатурное сканирование файлов
+        ///-nrc   --no-rootkit-check     Не проверять присутствие руткита
+        ///-p     --pause          [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _Help_RU {
             get {
@@ -1887,6 +1960,24 @@ namespace MSearch.Properties {
         internal static string _Just_Service_RU {
             get {
                 return ResourceManager.GetString("_Just_Service_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Send anonymous scan results to developer.
+        /// </summary>
+        internal static string _LabelAllowStatistics_EN {
+            get {
+                return ResourceManager.GetString("_LabelAllowStatistics_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отправлять анонимные отчёты разработчику о результатах проверки.
+        /// </summary>
+        internal static string _LabelAllowStatistics_RU {
+            get {
+                return ResourceManager.GetString("_LabelAllowStatistics_RU", resourceCulture);
             }
         }
         
@@ -2166,6 +2257,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Mali?cio?us? task.
+        /// </summary>
+        internal static string _Malic1ousTask_EN {
+            get {
+                return ResourceManager.GetString("_Malic1ousTask_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вредоносная задача.
+        /// </summary>
+        internal static string _Malic1ousTask_RU {
+            get {
+                return ResourceManager.GetString("_Malic1ousTask_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Mali?cious file:.
         /// </summary>
         internal static string _Malici0usFile_EN {
@@ -2292,6 +2401,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на No folder selected. Continue usual scanning?.
+        /// </summary>
+        internal static string _MessageCancelFolderDialog_EN {
+            get {
+                return ResourceManager.GetString("_MessageCancelFolderDialog_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Каталог не выбран. Продолжить обычное сканирование?.
+        /// </summary>
+        internal static string _MessageCancelFolderDialog_RU {
+            get {
+                return ResourceManager.GetString("_MessageCancelFolderDialog_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Текущий.
         /// </summary>
         internal static string _MessageForGrantPrivilege_RU {
@@ -2319,7 +2446,10 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Caution! Running this application with SYSTEM privileges may accidentally harm the system. If you want to scan another disk, use the --winpemode option. Continue scanning as a SYSTEM?.
+        ///   Ищет локализованную строку, похожую на Attention! This application is running with SYSTEM privileges. It&apos;s recommended to use this option with caution and understanding of the possible consequences.
+        ///
+        ///Do you want to continue?
+        ///.
         /// </summary>
         internal static string _MessageRunAsSystemWarn_EN {
             get {
@@ -2328,7 +2458,10 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Осторожно! Запуская это приложение с СИСТЕМНЫМИ привилегиями может случайно навредить системе. Если вы хотите просканировать другой диск, используйте параметр --winpemode. Продолжить сканирование от имени СИСТЕМЫ?.
+        ///   Ищет локализованную строку, похожую на Внимание! Приложение запущено с СИСТЕМНЫМИ привилегиями. Данную опцию рекомендуется использовать с осторожностью и пониманием возможных последствий.
+        ///
+        ///Желаете продолжить?
+        ///.
         /// </summary>
         internal static string _MessageRunAsSystemWarn_RU {
             get {
@@ -2391,6 +2524,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на No.
+        /// </summary>
+        internal static string _NoBtn_EN {
+            get {
+                return ResourceManager.GetString("_NoBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Нет.
+        /// </summary>
+        internal static string _NoBtn_RU {
+            get {
+                return ResourceManager.GetString("_NoBtn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на No internet connection.
         /// </summary>
         internal static string _NoInternetConnection_EN {
@@ -2441,6 +2592,24 @@ namespace MSearch.Properties {
         internal static string _NoThreats_RU {
             get {
                 return ResourceManager.GetString("_NoThreats_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Open quarantine.
+        /// </summary>
+        internal static string _OpenQuarantine_EN {
+            get {
+                return ResourceManager.GetString("_OpenQuarantine_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Открыть карантин.
+        /// </summary>
+        internal static string _OpenQuarantine_RU {
+            get {
+                return ResourceManager.GetString("_OpenQuarantine_RU", resourceCulture);
             }
         }
         
@@ -2951,7 +3120,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Restored file.
+        ///   Ищет локализованную строку, похожую на The file has been restored.
         /// </summary>
         internal static string _RestoredFile_EN {
             get {
@@ -3217,6 +3386,24 @@ namespace MSearch.Properties {
         internal static string _SelectAllButton_RU {
             get {
                 return ResourceManager.GetString("_SelectAllButton_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Select folder for scanning.
+        /// </summary>
+        internal static string _SelectFolderDialog_EN {
+            get {
+                return ResourceManager.GetString("_SelectFolderDialog_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выберите каталог для проверки.
+        /// </summary>
+        internal static string _SelectFolderDialog_RU {
+            get {
+                return ResourceManager.GetString("_SelectFolderDialog_RU", resourceCulture);
             }
         }
         
@@ -4189,6 +4376,24 @@ namespace MSearch.Properties {
         internal static string _WMIRestartService_RU {
             get {
                 return ResourceManager.GetString("_WMIRestartService_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Yes.
+        /// </summary>
+        internal static string _YesBtn_EN {
+            get {
+                return ResourceManager.GetString("_YesBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Да.
+        /// </summary>
+        internal static string _YesBtn_RU {
+            get {
+                return ResourceManager.GetString("_YesBtn_RU", resourceCulture);
             }
         }
         

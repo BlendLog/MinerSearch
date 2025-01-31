@@ -1409,8 +1409,10 @@ namespace netlib
 {
     public class Config
     {
+
         public string CI = "";
         public string TT = "";
+
     }
 
     public class TelegramAPI

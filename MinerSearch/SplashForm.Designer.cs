@@ -450,7 +450,6 @@ namespace MSearch
             this.Label_chatHelp.Size = new System.Drawing.Size(343, 23);
             this.Label_chatHelp.TabIndex = 21;
             this.Label_chatHelp.Text = "Обсуждение и помощь в удалении угроз";
-            this.Label_chatHelp.Click += new System.EventHandler(this.label6_Click);
             // 
             // Label_BlogNews
             // 

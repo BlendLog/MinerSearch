@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
@@ -108,21 +109,18 @@ namespace MSearch
         {
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey(keyPath, RegistryKeyPermissionCheck.ReadSubTree, RegistryRights.ReadPermissions))
             {
-                if (key == null)
+                if (key != null)
                 {
-                    Registry.CurrentUser.CreateSubKey(keyPath);
-                }
+                    var security = key.GetAccessControl();
+                    var rules = security.GetAccessRules(true, true, typeof(NTAccount));
 
-                var security = key.GetAccessControl();
-                var rules = security.GetAccessRules(true, true, typeof(NTAccount));
-
-                foreach (AuthorizationRule rule in rules)
-                {
-                    if (rule is RegistryAccessRule accessRule &&
-                        accessRule.AccessControlType == AccessControlType.Deny)
+                    foreach (AuthorizationRule rule in rules)
                     {
-                        return true;
-
+                        if (rule is RegistryAccessRule accessRule &&
+                            accessRule.AccessControlType == AccessControlType.Deny)
+                        {
+                            return true;
+                        }
                     }
                 }
             }
@@ -133,35 +131,84 @@ namespace MSearch
         {
             using (RegistryKey baseKey = Registry.CurrentUser.OpenSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions))
             {
-                if (baseKey == null) return;
-
-                var security = baseKey.GetAccessControl(AccessControlSections.Access);
-                var rules = security.GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount));
-
-                bool changesMade = false;
-
-                foreach (AuthorizationRule rule in rules)
+                if (baseKey != null)
                 {
-                    if (rule is RegistryAccessRule accessRule &&
-                        accessRule.AccessControlType == AccessControlType.Deny)
+                    var security = baseKey.GetAccessControl(AccessControlSections.Access);
+                    var rules = security.GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount));
+
+                    bool changesMade = false;
+
+                    foreach (AuthorizationRule rule in rules)
                     {
-                        security.RemoveAccessRuleSpecific(accessRule);
-                        changesMade = true;
+                        if (rule is RegistryAccessRule accessRule &&
+                            accessRule.AccessControlType == AccessControlType.Deny)
+                        {
+                            security.RemoveAccessRuleSpecific(accessRule);
+                            changesMade = true;
 #if DEBUG
                         Console.WriteLine($"[DBG] Removed rule Deny: {accessRule.IdentityReference.Value} (Inheritance: {accessRule.InheritanceFlags})");
 #endif
+                        }
                     }
-                }
 
-                if (changesMade)
-                {
-                    baseKey.SetAccessControl(security);
+                    if (changesMade)
+                    {
+                        baseKey.SetAccessControl(security);
 #if DEBUG
                     Console.WriteLine($"[DBG] Update Access rules for key: {baseKey.Name}");
 #endif
+                    }
                 }
             }
         }
 
+        internal static void KillAndDelete(string filePath)
+        {
+            try
+            {
+                File.SetAttributes(filePath, FileAttributes.Normal);
+                File.Delete(filePath);
+                if (!File.Exists(filePath))
+                {
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+                Program.LL.LogMessage("\t[.]", "_FindBlockingProcess", "", ConsoleColor.White);
+
+                try
+                {
+                    uint processId = Utils.GetProcessIdByFilePath(filePath);
+
+                    if (processId != 0)
+                    {
+                        Process process = Process.GetProcessById((int)processId);
+                        if (!process.HasExited)
+                        {
+
+                            Utils.UnProtect(new int[] { process.Id });
+                            process.Kill();
+                            Program.LL.LogSuccessMessage("_BlockingProcessClosed", $"PID: {processId}");
+
+                        }
+                    }
+                }
+                catch (System.ComponentModel.Win32Exception win32e)
+                {
+#if DEBUG
+                    Console.WriteLine($"[DBG] Win32Error {win32e.Message}");
+#endif
+                }
+                catch (Exception e)
+                {
+#if DEBUG
+                    Console.WriteLine($"[DBG] Error {e.Message}");
+#endif
+                }
+            }
+
+            
+        }
     }
 }

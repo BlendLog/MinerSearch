@@ -51,6 +51,7 @@ namespace MSearch
             LBL_Quarantine.Text = Program.LL.GetLocalizedString("_Quarantine");
             LBL_QuarantinedFiles.Text = Program.LL.GetLocalizedString("_LabelQuarantinedFiles");
             finishBtn.Text = Program.LL.GetLocalizedString("_exit");
+            top.Text = Program._title;
         }
 
         private void QuarantineForm_Load_1(object sender, EventArgs e)
@@ -165,12 +166,6 @@ namespace MSearch
                 DataPropertyName = "Hash"
             });
 
-            // Calculate all coloumns width
-            int totalWidth = dataGridQuarantineFiles.ClientSize.Width;
-            int columnCount = dataGridQuarantineFiles.Columns.Count;
-
-            int columnWidth = totalWidth / columnCount;
-
             foreach (DataGridViewColumn column in dataGridQuarantineFiles.Columns)
             {
 
@@ -178,16 +173,20 @@ namespace MSearch
                 {
                     case "Delete":
                     case "Restore":
-                        column.Width = 150;
-                        column.MinimumWidth = 150;
+                        column.Width = 165;
+                        column.MinimumWidth = 165;
                         break;
                     case "PathColumn":
-                        column.Width += 210;
-                        column.MinimumWidth += 210;
+                        column.Width += 220;
+                        column.MinimumWidth += 220;
+                        break;
+                    case "FileSizeColumn":
+                        column.Width = 200;
+                        column.MinimumWidth = 200;
                         break;
                     default:
-                        column.Width = columnWidth;
-                        column.MinimumWidth = columnWidth;
+                        column.Width = 400;
+                        column.MinimumWidth = 400;
                         break;
                 }
 
@@ -200,26 +199,64 @@ namespace MSearch
 
             using (var baseKey = Registry.CurrentUser.OpenSubKey(quarantineKeyPath))
             {
-                if (baseKey == null)
-                    return items;
-
-                foreach (var subKeyName in baseKey.GetSubKeyNames())
+                if (baseKey != null)
                 {
-                    using (var subKey = baseKey.OpenSubKey(subKeyName))
+                    foreach (var subKeyName in baseKey.GetSubKeyNames())
                     {
-                        if (subKey == null) continue;
-
-                        var originalPath = subKey.GetValue("OriginalPath") as string;
-                        var fileData = subKey.GetValue("FileData") as byte[];
-
-                        if (originalPath != null && fileData != null)
+                        using (var subKey = baseKey.OpenSubKey(subKeyName))
                         {
-                            items.Add(new QuarantineItem
+                            if (subKey == null) continue;
+
+                            var originalPath = subKey.GetValue("OriginalPath") as string;
+                            var fileData = subKey.GetValue("FileData") as byte[];
+
+                            if (originalPath != null && fileData != null)
                             {
-                                OriginalPath = originalPath,
-                                FileSize = Utils.Sizer(fileData.Length),
-                                FileHash = subKeyName,
-                            });
+                                items.Add(new QuarantineItem
+                                {
+                                    OriginalPath = originalPath,
+                                    FileSize = Utils.Sizer(fileData.Length),
+                                    FileHash = subKeyName,
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            using (var baseKey = Registry.LocalMachine.OpenSubKey(quarantineKeyPath))
+            {
+                if (baseKey != null)
+                {
+                    foreach (var subKeyName in baseKey.GetSubKeyNames())
+                    {
+                        using (var subKey = baseKey.OpenSubKey(subKeyName))
+                        {
+                            if (subKey == null) continue;
+
+                            var originalPath = subKey.GetValue("OriginalPath") as string;
+                            var totalParts = subKey.GetValue("TotalParts") as int?;
+
+                            if (originalPath != null && totalParts != null)
+                            {
+                                long totalSize = 0;
+
+                                for (int i = 0; i < totalParts; i++)
+                                {
+                                    var partData = subKey.GetValue($"FileData_Part{i}") as byte[];
+                                    if (partData != null)
+                                    {
+                                        totalSize += partData.Length;
+                                    }
+                                }
+
+                                items.Add(new QuarantineItem
+                                {
+                                    OriginalPath = originalPath,
+                                    FileSize = Utils.Sizer(totalSize),
+                                    FileHash = subKeyName,
+                                });
+                            }
                         }
                     }
                 }
@@ -228,26 +265,35 @@ namespace MSearch
             return items;
         }
 
-        private void dataGridThreats_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-
-            foreach (DataGridViewRow row in dataGridQuarantineFiles.Rows)
-            {
-                row.Cells[0].Style.Font = new Font("Verdana", 10.2F, FontStyle.Bold);
-                row.Cells[0].Style.Alignment = DataGridViewContentAlignment.MiddleRight;
-                row.Cells[row.Cells.Count - 1].Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            }
-        }
-
         void UpdateQuarantineCount(string quarantineKeyPath)
         {
             int quarantineCount = 0;
 
-            using (var baseKey = Registry.CurrentUser.OpenSubKey(quarantineKeyPath))
+            using (var HKCU_baseKey = Registry.CurrentUser.OpenSubKey(quarantineKeyPath))
             {
-                if (baseKey != null)
+                if (HKCU_baseKey != null)
                 {
-                    quarantineCount = baseKey.SubKeyCount;
+                    foreach (var subKey in HKCU_baseKey.GetSubKeyNames())
+                    {
+                        if (HKCU_baseKey.OpenSubKey(subKey).GetValueNames().Length > 0)
+                        {
+                            quarantineCount += 1;
+                        }
+                    }
+                }
+            }
+
+            using (var HKLM_baseKey = Registry.LocalMachine.OpenSubKey(quarantineKeyPath))
+            {
+                if (HKLM_baseKey != null)
+                {
+                    foreach (string subKey in HKLM_baseKey.GetSubKeyNames())
+                    {
+                        if (HKLM_baseKey.OpenSubKey(subKey).GetValueNames().Length > 0)
+                        {
+                            quarantineCount += 1;
+                        }
+                    }
                 }
             }
 
@@ -280,16 +326,16 @@ namespace MSearch
                 {
                     dataGridQuarantineFiles.Rows.RemoveAt(e.RowIndex);
                     UpdateQuarantineCount(registryPath);
-                    MessageBox.Show($"{Program.LL.GetLocalizedString("_RestoredFile")} {originalPath.Replace(@"\\?\", "")}", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBoxCustom.Show($"{Program.LL.GetLocalizedString("_RestoredFile")} {originalPath.Replace(@"\\?\", "")}", Program.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
 
             // Delete
             if (e.ColumnIndex == 1)
             {
-                var fileHash = dataGridQuarantineFiles.Rows[e.RowIndex].Cells[4].Value.ToString(); 
+                var fileHash = dataGridQuarantineFiles.Rows[e.RowIndex].Cells[4].Value.ToString();
 
-                if (MessageBox.Show(Program.LL.GetLocalizedString("_DataGridRemoveBtn"), "", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                if (MessageBoxCustom.Show(Program.LL.GetLocalizedString("_DataGridRemoveBtn"), Program.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     DeleteFileFromQuarantine(registryPath, fileHash);
                     dataGridQuarantineFiles.Rows.RemoveAt(e.RowIndex);
@@ -309,6 +355,15 @@ namespace MSearch
                     if (baseKey?.OpenSubKey(fileHash) != null)
                     {
                         baseKey.DeleteSubKey(fileHash);
+                        return;
+                    }
+                }
+
+                using (var baseKey = Registry.LocalMachine.OpenSubKey(quarantineKeyPath, true))
+                {
+                    if (baseKey?.OpenSubKey(fileHash) != null)
+                    {
+                        baseKey.DeleteSubKey(fileHash);
                     }
                 }
             }
@@ -318,30 +373,64 @@ namespace MSearch
             }
         }
 
-        private bool RestoreFileFromQuarantine(string quarantineKeyPath, string fileHash, string restorePath)
+        bool RestoreFileFromQuarantine(string quarantineKeyPath, string fileHash, string restorePath)
         {
             try
             {
+
                 using (var baseKey = Registry.CurrentUser.OpenSubKey(quarantineKeyPath, true))
                 {
+                    if (baseKey != null)
+                    {
+                        using (var fileKey = baseKey.OpenSubKey(fileHash))
+                        {
+                            if (fileKey != null)
+                            {
+                                var encryptedData = fileKey.GetValue("FileData") as byte[];
+                                if (encryptedData != null)
+                                {
+                                    byte[] decryptedData = DecryptData(encryptedData, Encoding.UTF8.GetBytes(fileHash.Remove(8)));
+
+                                    Directory.CreateDirectory(Path.GetDirectoryName(restorePath));
+                                    File.WriteAllBytes(restorePath, decryptedData);
+
+                                    baseKey.DeleteSubKey(fileHash);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                using (var baseKey = Registry.LocalMachine.OpenSubKey(quarantineKeyPath, true))
+                {
                     if (baseKey == null)
-                        throw new InvalidOperationException("Quarantine is empty");
+                        return false;
 
                     using (var fileKey = baseKey.OpenSubKey(fileHash))
                     {
-                        if (fileKey == null)
-                            throw new InvalidOperationException("File not found in quarantine");
+                        if (fileKey != null)
+                        {
+                            int? totalParts = fileKey.GetValue("TotalParts") as int?;
+                            List<byte> DataList = new List<byte>();
 
-                        var encryptedData = fileKey.GetValue("FileData") as byte[];
-                        if (encryptedData == null)
-                            throw new InvalidOperationException("File data is absent");
+                            if (totalParts.HasValue)
+                            {
+                                for (int i = 0; i < totalParts.Value; i++)
+                                {
+                                    byte[] part = fileKey.GetValue($"FileData_Part{i}") as byte[];
+                                    if (part == null) return false;
+                                    DataList.AddRange(part);
+                                }
 
-                        byte[] decryptedData = DecryptData(encryptedData, Encoding.UTF8.GetBytes(fileHash.Remove(8)));
+                                Directory.CreateDirectory(Path.GetDirectoryName(restorePath));
+                                File.WriteAllBytes(restorePath, DataList.ToArray());
 
-                        Directory.CreateDirectory(Path.GetDirectoryName(restorePath));
-                        File.WriteAllBytes(restorePath, decryptedData);
-
-                        baseKey.DeleteSubKey(fileHash);
+                                baseKey.DeleteSubKey(fileHash);
+                                return true;
+                            }
+                            else return false;
+                        }
                     }
                 }
 
@@ -367,6 +456,11 @@ namespace MSearch
             }
 
             return decryptedData;
+        }
+
+        private void dataGridQuarantineFiles_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+        {
+            LBL_QFilesCount.Text = dataGridQuarantineFiles.Columns.GetColumnsWidth(DataGridViewElementStates.Visible).ToString();
         }
     }
 }
