@@ -9,6 +9,19 @@
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 
+Патч 1.4.7.81
+
+- Устранено ложное срабатывание на MinimumStackCommitInBytes для svchost.exe
+- Устранение ошибки "Файл или папка повреждены"
+- Удаление новых вредоносных задач с рекламным и вредоносным ПО
+- Более точное определение удаленного порта в аргументах командной строки
+- Улучшена стратегия блокировки вредоносных процессов
+- Улучшена стратегия разблокировки каталогов и файлов
+- Добавлена обработка исключения при удалении пустых каталогов, когда каталог заблокирован Защитником Windows
+- Добавлена опция --silent, которое включает тихий (фоновый) режим без диалоговых окон. Приложение переходит в фоновый режим, сообщения не отображаются, но по-прежнему записываются в лог. Несовместимо с параметрами --select или --winpemode.
+- Обновление оффлайн базы данных сигнатур
+- Исправление логгирования
+
 Версия 1.4.7.8
 
 - Поиск и удаление новых майнеров, в том числе nanominer
@@ -101,6 +114,19 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 https://t.me/MinerSearch_blog
 
 ## NET Framework 4.7.1 is required
+
+Patch 1.4.7.81
+
+- Fixed a false positive on MinimumStackCommitInBytes for svchost.exe
+- Fixed the "File or directory is corrupted" error
+- Remove new malicious tasks with adware and malware
+- More accurate remote port detection in command line arguments
+- Improved strategy for blocking malicious processes
+- Improved strategy for unlocking directories and files
+- Added exception handling when deleting empty directories when the directory is locked by Windows Defender
+- Added the --silent option, which enables a silent (background) mode without dialog forms. The app goes into the background, messages are not displayed, but are still written to the log. Incompatible with the --select or --winpemode parameters.
+- Update offline signature database
+- Fix logging
 
 Version 1.4.7.8
 
@@ -204,60 +230,52 @@ https://t.me/MinerSearch_blog
 
 ## 需要.NET Framework 4.7.1
 
-版本1.4.7.6
+补丁 1.4.7.81
 
-- 修正了在检查rootkit和没有它时"仅部分请求已完成"的消息
-- 修复了Windows PowerShell中rundll的路径解析，包括"/d"键
-- 修正主机中删除行数不正确（包括可疑行）
-- 添加了更新检查（在github上） 
-- 下载Windows更新时的错误数量最小化
-- 自动检测WinPE模式
-- 增加了WinPE中扫描目录的范围
-- Winpe中的最小异常处理
-- 确定管理员组的必要权限的可用性
-- 显示AppInit_DLLs中的内容，如果它不是空的 
-- 侦测及清除新矿工
-- 新窗口设计
-- 增加了可疑对象的计数器
+- 修复了 svchost.exe 的 MinimumStackCommitInBytes 误报问题
+- 修复了“文件或目录已损坏”错误
+- 删除带有广告软件和恶意软件的新恶意任务
+- 命令行参数中更准确的远程端口检测
+- 改进了阻止恶意进程的策略
+- 改进了解锁目录和文件的策略
+- 当目录被 Windows Defender 锁定时，添加删除空目录时的异常处理
+- 添加了 --silent 选项，该选项启用了无对话框的静默（后台）模式。应用程序进入后台，不显示消息，但仍会写入日志。与 --select 或 --winpemode 参数不兼容。
+- 更新离线签名数据库
+- 修复日志记录
 
-版本 1.4.7.5
+版本 1.4.7.8
 
-- 更客观的威胁移除
-- 如果第一次未能中和所有威胁，增加了重启计算机的建议。
-- 最小化在hosts文件中移除遥测阻止
-- 修复了解锁已安装应用程序目录时的错误
-- 尝试禁用关键服务的行为已最小化（显示警告）
-- 排除了删除合法文件分析工具（例如Detect It Easy）的尝试
-- 排除了删除磁盘上不存在的恶意目录的尝试
-- 修复了删除注册表中不存在的恶意子项
-- 更准确地检查系统进程
-- 文件分析速度更快
-- 修复了在Win 8.1上检测到的威胁日志收集不正确的问题（不支持Windows 7）
-- 修复了其他小缺陷
-
-版本 1.4.7.4
-
-- 修复威胁移除统计（用户可选）
-- 恢复已存在应用程序的访问权限，来自被阻止目录的列表
-- 增加了对CPU使用时间的进程彻底检查
-- 增加了日志中的符号图例
-- 增加了“显示详细信息”按钮以打开日志文件夹
-- 更准确地检测矿工的根套件
-- 日志文件名中的正常日期格式
-- 改进了服务验证，包括远程桌面（TermService）
-- 恢复WMI数据库
-- 移除新恶意版本的系统程序
-[热修复]
-- 修复hosts文件读取不正确的问题
-- 修复日志中设备标识符的创建
-- 改进任务调度程序处理
-- 修复合法powershell脚本（UnusedSmb1.ps1）的误报
-- 增加了从任务调度程序中移除根套件任务
-- 改进了通过RunDLL运行的威胁检测
-- 可疑的恶意文件被移动到隔离区
-- 符号图例已移至日志文件的开头
-- 修复了摘要报告窗口中“关闭”按钮消失的问题
-- 检查已安装的.NET Framework 4.5.2版本（适用于Windows 7）
+- 搜索并删除新矿工，包括 nanominer
+- 在扫描结果表单上添加“捐赠”按钮
+- 添加了手动允许或禁止向开发人员发送扫描结果的功能
+- --full-scan 选项现在允许您扫描整个系统分区，而不仅仅是默认目录
+- 添加了 --verbose 选项以获取有关进程的详细信息，以及将一行不被视为恶意的文件写入日志
+- 添加了 --run-as-system 参数以使用 SYSTEM 权限运行应用程序
+- 添加了 --select 选项，这将允许您仅扫描选定的目录，包括嵌套目录
+- 正确使用 --scan-only 选项
+- 添加了 C:\Users\ 目录进行扫描
+- 添加了启动参数的简短形式（请参阅 --help \ -h）
+- 添加了对进程所消耗内存的检查
+- 添加了自定义消息框，因为系统消息框可以与 explorer.exe 或其他应用程序的窗口重叠
+- 添加了Windows Defender 对 .dll 阻止的处理
+- 修复了“隔离”按钮的本地化
+- 修复了 Win 7 上桌面冻结的问题
+- 修复了使用 --full-scan 选项重新扫描目录的问题
+- 修复了移动到隔离区时删除文件的问题
+- 修复了在 Win 7、Win 8.1 上部分删除伪装成 explorer.exe 的挖矿程序的问题
+- 修复了删除恶意 John 配置文件时出现的“服务器服务未启动”错误
+- 修复了检查服务时出现的“提供程序加载失败”问题
+- 修复了 VS Code 上的误报
+- 修复了隔离文件计数器中的错误
+- 从任务计划程序中删除了将广告添加到自动运行的条目
+- 通过 forfiles 和 wscript 删除任务计划程序中的新恶意脚本
+- 删除 IFEO 中所有子部分中干扰程序正常启动的不正确的 MinimumStackCommitInBytes 参数
+- 删除任务计划程序中的 java 挖矿程序
+- 删除 uTorrent、MS Teams 和Steam
+- 使用内存时优化
+- 现在仅在感染的情况下更正 hosts 文件，不会导致错误
+- 帮助已更新 --help
+- 现在所有用户均可使用隔离
 
 -----------------------------------------
 
