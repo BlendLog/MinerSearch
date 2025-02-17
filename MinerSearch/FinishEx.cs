@@ -255,6 +255,7 @@ namespace MSearch
                 return;
             }
 
+
             using (var key = Registry.CurrentUser.OpenSubKey(registryPath, true) ?? Registry.CurrentUser.CreateSubKey(registryPath))
             {
                 if (key == null) return;
@@ -262,7 +263,7 @@ namespace MSearch
                 object regValue = key.GetValue(valueName);
                 if (regValue == null)
                 {
-                    regValue = Utils.GetWindowsVersion().IndexOf("Windows 7", StringComparison.OrdinalIgnoreCase) >= 0 ? 0 : 2;
+                    regValue = OSExtensions.GetWindowsVersion().IndexOf("Windows 7", StringComparison.OrdinalIgnoreCase) >= 0 ? 0 : 2;
                     key.SetValue(valueName, regValue, RegistryValueKind.DWord);
 
                     if ((int)regValue == 0)
@@ -309,7 +310,7 @@ namespace MSearch
             finishBtn.BackColor = Color.RoyalBlue;
             finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
 
-            if (Utils.GetWindowsVersion().IndexOf("Windows 7", StringComparison.OrdinalIgnoreCase) == -1)
+            if (OSExtensions.GetWindowsVersion().IndexOf("Windows 7", StringComparison.OrdinalIgnoreCase) == -1)
             {
                 ts_AllowCollectStatistics.Enabled = true;
                 ts_AllowCollectStatistics.OffBackColor = Color.Gray;

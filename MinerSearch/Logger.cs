@@ -30,11 +30,15 @@ namespace MSearch
 
             try
             {
+
                 string logMessage = $"[{DateTime.Now}]: {currentText}";
 
-                Console.ForegroundColor = LogLevel;
-                Console.WriteLine(logMessage);
-                Console.ForegroundColor = ConsoleColor.White;
+                if (!Program.silent)
+                {
+                    Console.ForegroundColor = LogLevel;
+                    Console.WriteLine(logMessage);
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
 
                 if (!Program.verbose)
                 {
@@ -47,6 +51,7 @@ namespace MSearch
                         previousNonWhiteText = currentText;
                     }
                 }
+
 
                 if (!Program.no_logs)
                 {
@@ -90,10 +95,12 @@ namespace MSearch
                 else
                     logMessage = currentText;
 
-
-                Console.ForegroundColor = color;
-                Console.WriteLine(logMessage);
-                Console.ForegroundColor = ConsoleColor.White;
+                if (!Program.silent)
+                {
+                    Console.ForegroundColor = color;
+                    Console.WriteLine(logMessage);
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
 
                 if (!ignorePrevious)
                 {
@@ -149,10 +156,15 @@ namespace MSearch
                 else
                     logMessage = currentText;
 
+                if (!Program.silent)
+                {
 
-                Console.ForegroundColor = color;
-                Console.WriteLine(logMessage);
-                Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = color;
+                    Console.WriteLine(logMessage);
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+
+
 
                 if (!Program.verbose)
                 {

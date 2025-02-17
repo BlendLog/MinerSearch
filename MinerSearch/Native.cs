@@ -1,11 +1,18 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.ServiceProcess;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace MSearch
 {
@@ -110,6 +117,7 @@ namespace MSearch
         internal const int SW_SHOW = 5;
         internal const int SW_MINIMIZE = 6;
 
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         internal struct USER_INFO_0
         {
@@ -118,6 +126,19 @@ namespace MSearch
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         internal static extern uint GetFileAttributes(string lpFileName);
+
+        [DllImport("advapi32.dll", SetLastError = true)]
+        internal static extern int SetNamedSecurityInfo(string pObjectName, int objectType, int securityInfo, IntPtr psidOwner, IntPtr psidGroup, IntPtr pDacl, IntPtr pSacl);
+
+        [DllImport("advapi32.dll", SetLastError = true)]
+        internal static extern bool InitializeAcl(IntPtr pAcl, int nAclLength, int dwAclRevision);
+
+        internal const int SE_FILE_OBJECT = 1;
+        internal const int OWNER_SECURITY_INFORMATION = 0x00000001;
+        internal const int DACL_SECURITY_INFORMATION = 0x00000004;
+        internal const int UNPROTECTED_DACL_SECURITY_INFORMATION = 0x20000000;
+        internal const int ACL_REVISION = 2;
+        internal const int ACL_SIZE = 1024; // Достаточно для пустой ACL
 
         [DllImport("psapi.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -222,6 +243,86 @@ namespace MSearch
             public IntPtr Buffer;
         }
 
+        internal static bool GrantPrivilegeToGroup(string groupName, string privilege)
+        {
+            IntPtr policyHandle = IntPtr.Zero;
+            IntPtr sid = IntPtr.Zero;
+            try
+            {
+                LSA_OBJECT_ATTRIBUTES objectAttributes = new Native.LSA_OBJECT_ATTRIBUTES();
+                UNICODE_STRING systemName = new Native.UNICODE_STRING();
+
+                int result = LsaOpenPolicy(ref objectAttributes, ref systemName, Native.POLICY_ALL_ACCESS, out policyHandle);
+                if (result != 0)
+                {
+                    throw new Exception("Cannot open security descriptor: " + Native.LsaNtStatusToWinError(result));
+                }
+
+                int sidSize = 0;
+                int domainNameLength = 0;
+                int use;
+                LookupAccountName(null, groupName, sid, ref sidSize, null, ref domainNameLength, out use);
+
+                sid = Marshal.AllocHGlobal(sidSize);
+                var domainName = new System.Text.StringBuilder(domainNameLength);
+
+                if (!LookupAccountName(null, groupName, sid, ref sidSize, domainName, ref domainNameLength, out use))
+                {
+                    throw new Exception("Error getting admin group SID");
+                }
+
+                UNICODE_STRING[] userRights = new Native.UNICODE_STRING[1];
+                userRights[0] = new Native.UNICODE_STRING
+                {
+                    Buffer = Marshal.StringToHGlobalUni(privilege),
+                    Length = (ushort)(privilege.Length * UnicodeEncoding.CharSize),
+                    MaximumLength = (ushort)((privilege.Length + 1) * UnicodeEncoding.CharSize)
+                };
+
+                result = LsaAddAccountRights(policyHandle, sid, userRights, userRights.Length);
+                if (result != 0)
+                {
+                    throw new Exception("Error assign privilege:" + LsaNtStatusToWinError(result));
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                if (policyHandle != IntPtr.Zero)
+                {
+                    LsaClose(policyHandle);
+                }
+
+                if (sid != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(sid);
+                }
+            }
+        }
+
+        internal static string ConvertWellKnowSIDToGroupName(string GroupSid)
+        {
+            IntPtr pSid;
+            if (!ConvertStringSidToSid(GroupSid, out pSid))
+            {
+                return null;
+            }
+
+            string groupName = OSExtensions.GetAccountNameFromSid(pSid);
+            if (groupName != null)
+            {
+                return groupName;
+            }
+
+            LocalFree(pSid);
+            return null;
+
+        }
 
         public const int POLICY_ALL_ACCESS = 0x000F0FFF;
         public const int ERROR_SUCCESS = 0;
@@ -553,7 +654,7 @@ namespace MSearch
                 {
                     try
                     {
-                        if (!Utils.IsSystemProcess(process.Id))
+                        if (!ProcessManager.IsSystemProcess(process.Id))
                         {
                             handle = process.Handle;
                             break;
@@ -1108,6 +1209,238 @@ namespace MSearch
             Normal = 0x00000001,
             Severe = 0x00000002,
             Critical = 0x00000003
+        }
+
+        internal static void CheckWMI(bool restartCheck)
+        {
+            string serviceName = "wi~nm~gm~t".Replace("~", "");
+            try
+            {
+                if (ServiceIsInstalled(serviceName))
+                {
+                    var serviceinfo = GetServiceInfo(serviceName);
+
+                    if ((ServiceBootFlag)serviceinfo.StartType != ServiceBootFlag.AutoStart)
+                    {
+                        ChangeStartMode(serviceName, ServiceBootFlag.AutoStart);
+                        Program.LL.LogSuccessMessage("_CriticalServiceStartup");
+                    }
+
+                    if (GetServiceState(serviceName) != ServiceState.Running)
+                    {
+                        StartService(serviceName);
+                        Program.LL.LogSuccessMessage("_CriticalServiceRestart");
+                    }
+
+                    try
+                    {
+                        WmiTestQuery("Dhcp");
+                    }
+                    catch (ManagementException me)
+                    {
+                        if (me.ErrorCode == ManagementStatus.InvalidClass || me.ErrorCode == ManagementStatus.ProviderLoadFailure || me.ErrorCode == ManagementStatus.ProviderFailure)
+                        {
+                            RestoreWMICorruption();
+                            if (!restartCheck)
+                            {
+                                CheckWMI(true);
+                            }
+                        }
+                    }
+
+                }
+                else
+                {
+                    LocalizedLogger.LogError_СriticalServiceNotInstalled();
+                }
+
+            }
+            catch (MissingMethodException)
+            {
+                if (OSExtensions.IsDotNetInstalled())
+                {
+                    MessageBoxCustom.Show(Program.LL.GetLocalizedString("_ErrorNoDotNet"), Program._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Environment.Exit(1);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"\t[xxx] {serviceName}: {ex.Message}", ConsoleColor.DarkRed, false);
+            }
+
+
+        }
+
+        static void RestoreWMICorruption()
+        {
+            if (Program.RestoredWMI)
+            {
+                throw new Exception("WMI_Corruption");
+            }
+
+            Program.LL.LogMessage("\t\t[xxx]", "_WMICorruption", "", ConsoleColor.Red, false);
+
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+
+            Program.LL.LogHeadMessage("_WMIRecompilation");
+
+            string wbemPath = Path.Combine(Environment.SystemDirectory, "Wbem");
+
+            List<string> filteredMof = Directory
+                    .EnumerateFiles(wbemPath, "*.*", SearchOption.AllDirectories)
+                    .Where(file => new FileInfo(file).Extension.Equals(".mof") || new FileInfo(file).Extension.Equals(".mfl"))
+                    .ToList();
+
+            foreach (var file in filteredMof)
+            {
+                if (File.Exists(file))
+                {
+                    Process.Start(new ProcessStartInfo()
+                    {
+                        FileName = "mofcomp.exe",
+                        Arguments = $"\"{file}\"",
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }).WaitForExit();
+                }
+            }
+
+            Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
+            Program.LL.LogHeadMessage("_WMIRegister");
+
+            foreach (var file in Directory.GetFiles(wbemPath, "*.dll", SearchOption.AllDirectories))
+            {
+                if (File.Exists(file))
+                {
+                    Process.Start(new ProcessStartInfo()
+                    {
+                        FileName = "regsvr32.exe",
+                        Arguments = $"-s \"{file}\"",
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }).WaitForExit();
+                }
+            }
+
+
+            Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
+            Program.LL.LogHeadMessage("_WMIRestartService");
+
+            ServiceController service = new ServiceController("winmgmt");
+            if (service.Status != ServiceControllerStatus.Stopped)
+            {
+                service.Stop();
+                service.WaitForStatus(ServiceControllerStatus.Stopped);
+            }
+            Thread.Sleep(3000);
+            service.Start();
+            service.WaitForStatus(ServiceControllerStatus.Running);
+
+
+            Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
+        }
+
+        internal static string WmiTestQuery(string serviceName)
+        {
+
+            using (var service = new ManagementObject($"Win32_Service.Name='{serviceName}'"))
+            {
+                service.Get();
+                string sPath = service["PathName"]?.ToString();
+
+                return string.IsNullOrEmpty(sPath) ? "" : sPath;
+            }
+        }
+
+        internal static void CheckTermService()
+        {
+
+            string registryPath = FileChecker.msData.queries[13]; //SYSTEM\CurrentControlSet\Services\TermService\Parameters
+            string desiredValue = FileChecker.msData.queries[14]; //%SystemRoot%\System32\termsrv.dll
+
+            string paramName = "Ser/vice/Dll".Replace("/", "");
+
+            using (var regkey = Registry.LocalMachine.OpenSubKey(registryPath, true))
+            {
+                if (regkey != null)
+                {
+                    string currentValue = (string)regkey.GetValue(paramName);
+                    if (currentValue != null)
+                    {
+                        if (currentValue != Environment.ExpandEnvironmentVariables(desiredValue))
+                        {
+                            Program.LL.LogWarnMessage("_TermServiceInvalidPath", currentValue);
+                            Program.totalFoundThreats++;
+
+
+                            if (!Program.ScanOnly)
+                            {
+                                try
+                                {
+                                    string termsrv = "TermService";
+                                    string UmRdpSrv = "UmRdpService";
+
+                                    var UmRdpSrvInfo = GetServiceInfo(UmRdpSrv);
+                                    var termSrvInfo = GetServiceInfo(termsrv);
+
+                                    if (GetServiceState(UmRdpSrv) == ServiceState.Running)
+                                    {
+                                        StopService(UmRdpSrv);
+                                    }
+
+                                    if ((ServiceBootFlag)UmRdpSrvInfo.StartType != ServiceBootFlag.DemandStart)
+                                    {
+                                        ChangeStartMode(UmRdpSrv, ServiceBootFlag.DemandStart);
+                                    }
+
+                                    if (GetServiceState(termsrv) == ServiceState.Running)
+                                    {
+                                        StopService(termsrv);
+                                    }
+
+                                    if ((ServiceBootFlag)termSrvInfo.StartType != ServiceBootFlag.DemandStart)
+                                    {
+                                        ChangeStartMode(termsrv, ServiceBootFlag.DemandStart);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Program.LL.LogErrorMessage("_Error", ex);
+                                    return;
+                                }
+
+                                regkey.SetValue(paramName, desiredValue, RegistryValueKind.ExpandString);
+                                currentValue = (string)regkey.GetValue(paramName);
+                                if (currentValue == Environment.ExpandEnvironmentVariables(desiredValue))
+                                {
+                                    Program.LL.LogSuccessMessage("_TermServiceRestored");
+                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, Program.LL.GetLocalizedString("_Just_Service") + " -> " + "TermService", ScanActionType.Cured));
+
+                                }
+                                else
+                                {
+                                    Program.LL.LogErrorMessage("_TermServiceFailedRestore", new Exception(""));
+                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, Program.LL.GetLocalizedString("_Just_Service") + " -> " + "TermService", ScanActionType.Error));
+
+                                }
+                            }
+                            else
+                            {
+                                LocalizedLogger.LogScanOnlyMode();
+                            }
+                        }
+                        else
+                        {
+                            LocalizedLogger.LogNoThreatsFound();
+                        }
+                    }
+                }
+                else
+                {
+                    Program.LL.LogWarnMediumMessage("_ServiceNotInstalled", "T?ermS?ervi?ce".Replace("?", ""));
+                }
+            }
+
         }
     }
 

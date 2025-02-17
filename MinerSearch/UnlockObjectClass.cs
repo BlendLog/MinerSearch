@@ -2,106 +2,104 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
 
 namespace MSearch
 {
-    class UnlockObjectClass
+    internal static class UnlockObjectClass
     {
-        public static void UnlockFile(string filePath)
+
+        public static bool ResetObjectACL(string path)
         {
-            if (!File.Exists(filePath))
-            {
-                return;
-            }
+            IntPtr pAcl = IntPtr.Zero;
+
             try
             {
-                WindowsIdentity currentUser = WindowsIdentity.GetCurrent();
-                SecurityIdentifier currentUserIdentity = currentUser.User;
+                pAcl = Marshal.AllocHGlobal(Native.ACL_SIZE);
 
-                FileSecurity fileSecurity = new FileSecurity();
-                fileSecurity.SetOwner(currentUserIdentity);
-
-                fileSecurity.SetAccessRuleProtection(false, true);
-
-                AuthorizationRuleCollection accessRules = fileSecurity.GetAccessRules(true, true, typeof(SecurityIdentifier));
-                foreach (AuthorizationRule rule in accessRules)
+                if (!Native.InitializeAcl(pAcl, Native.ACL_SIZE, Native.ACL_REVISION))
                 {
-                    if (rule is FileSystemAccessRule fileRule && fileRule.AccessControlType == AccessControlType.Deny)
-                    {
-                        fileSecurity.RemoveAccessRuleSpecific(fileRule);
-                    }
+                    throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
                 }
 
-                FileSystemAccessRule currentUserRule = new FileSystemAccessRule(
-                    currentUserIdentity,
-                    FileSystemRights.FullControl,
-                    InheritanceFlags.None,
-                    PropagationFlags.None,
-                    AccessControlType.Allow
+                // Set empty DACL and enable inheritance
+                int result = Native.SetNamedSecurityInfo(
+                    path,
+                    Native.SE_FILE_OBJECT,
+                    Native.DACL_SECURITY_INFORMATION | Native.UNPROTECTED_DACL_SECURITY_INFORMATION,
+                    IntPtr.Zero, 
+                    IntPtr.Zero, 
+                    pAcl,        
+                    IntPtr.Zero  
                 );
-                fileSecurity.AddAccessRule(currentUserRule);
 
-                SecurityIdentifier administratorsGroup = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
-                FileSystemAccessRule administratorsRule = new FileSystemAccessRule(
-                    administratorsGroup,
-                    FileSystemRights.FullControl,
-                    InheritanceFlags.None,
-                    PropagationFlags.None,
-                    AccessControlType.Allow
-                );
-                fileSecurity.AddAccessRule(administratorsRule);
+                if (result != 0)
+                {
+                    throw new System.ComponentModel.Win32Exception(result);
+                }
 
-                SecurityIdentifier usersGroup = new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null);
-                FileSystemAccessRule usersRule = new FileSystemAccessRule(
-                    usersGroup,
-                    FileSystemRights.FullControl,
-                    InheritanceFlags.None,
-                    PropagationFlags.None,
-                    AccessControlType.Allow
-                );
-                fileSecurity.AddAccessRule(usersRule);
-
-                SecurityIdentifier systemIdentity = new SecurityIdentifier(WellKnownSidType.LocalSystemSid, null);
-                FileSystemAccessRule systemRule = new FileSystemAccessRule(
-                    systemIdentity,
-                    FileSystemRights.FullControl,
-                    InheritanceFlags.None,
-                    PropagationFlags.None,
-                    AccessControlType.Allow
-                );
-                fileSecurity.AddAccessRule(systemRule);
-
-                File.SetAccessControl(filePath, fileSecurity);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Program.LL.LogWarnMediumMessage("_ErrorOnUnlock", filePath);
+#if DEBUG
+                Console.WriteLine($"ACL has been resetted: {path}");
+#endif
+                return true;
             }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_ErrorOnUnlock", ex, filePath, "_File");
+#if DEBUG
+                Console.WriteLine($"ResetObjACL: {ex.Message}");
+#endif
+                return false;
+            }
+            finally
+            {
+                if (pAcl != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(pAcl);
+                }
             }
         }
 
         internal static bool IsLockedObject(string path)
         {
-            WindowsIdentity currentUser = WindowsIdentity.GetCurrent();
-            SecurityIdentifier currentUserIdentity = currentUser.User;
-
-            FileSecurity fileSecurity = new FileSecurity(path, AccessControlSections.All);
-            fileSecurity.SetOwner(currentUserIdentity);
-
-            AuthorizationRuleCollection accessRules = fileSecurity.GetAccessRules(true, true, typeof(SecurityIdentifier));
-            foreach (AuthorizationRule rule in accessRules)
+            try
             {
-                if (rule is FileSystemAccessRule fileRule && fileRule.AccessControlType == AccessControlType.Deny)
+                FileSystemSecurity security;
+
+                if (Directory.Exists(path))
+                    security = new DirectorySecurity(path, AccessControlSections.Access);
+                else if (File.Exists(path))
+                    security = new FileSecurity(path, AccessControlSections.Access);
+                else
+                    return false;
+
+                AuthorizationRuleCollection accessRules = security.GetAccessRules(true, true, typeof(SecurityIdentifier));
+
+                foreach (AuthorizationRule rule in accessRules)
                 {
-                    return true;
+                    if (rule is FileSystemAccessRule fileRule && fileRule.AccessControlType == AccessControlType.Deny)
+                    {
+                        return true;
+                    }
                 }
             }
+            catch (UnauthorizedAccessException)
+            {
+                return true;
+            }
+            catch (SecurityException)
+            {
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Program.LL.LogErrorMessage("_ErrorCheckingLock", ex, path);
+                return true;
+            }
+
             return false;
         }
 
@@ -179,7 +177,7 @@ namespace MSearch
 
                 try
                 {
-                    uint processId = Utils.GetProcessIdByFilePath(filePath);
+                    uint processId = ProcessManager.GetProcessIdByFilePath(filePath);
 
                     if (processId != 0)
                     {
@@ -187,7 +185,7 @@ namespace MSearch
                         if (!process.HasExited)
                         {
 
-                            Utils.UnProtect(new int[] { process.Id });
+                            ProcessManager.UnProtect(new int[] { process.Id });
                             process.Kill();
                             Program.LL.LogSuccessMessage("_BlockingProcessClosed", $"PID: {processId}");
 
@@ -208,7 +206,31 @@ namespace MSearch
                 }
             }
 
-            
+
+        }
+
+        internal static void DisableExecute(string filePath)
+        {
+            try
+            {
+                FileSecurity fileSecurity = File.GetAccessControl(filePath);
+
+                FileSystemAccessRule denyReadExecuteRule = new FileSystemAccessRule(
+                    new SecurityIdentifier(WellKnownSidType.WorldSid, null), // Everyone group
+                    FileSystemRights.ExecuteFile,
+                    AccessControlType.Deny);
+
+                fileSecurity.AddAccessRule(denyReadExecuteRule);
+
+                File.SetAccessControl(filePath, fileSecurity);
+            }
+            catch (ArgumentException) { }
+            catch (FileNotFoundException) { }
+            catch (Exception e)
+            {
+                Program.LL.LogWarnMessage("_WarnCannotDisableExecution", e.Message);
+            }
+
         }
     }
 }

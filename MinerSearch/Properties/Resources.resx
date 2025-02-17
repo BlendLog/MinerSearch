@@ -165,7 +165,7 @@
     <value>Total suspcisious objects:</value>
   </data>
   <data name="_ErrorLockedByWD_EN" xml:space="preserve">
-    <value>File locked by Wi?ndo?ws Def?end?er:</value>
+    <value>The object locked by Wi?ndo?ws Def?end?er:</value>
   </data>
   <data name="_AnalyzingFile_EN" xml:space="preserve">
     <value>Analyzing</value>
@@ -348,7 +348,7 @@ Thank you for your help!</value>
     <value>Continue</value>
   </data>
   <data name="_PresentInCmdArgs_RU" xml:space="preserve">
-    <value>присутствует в парам. командной строки</value>
+    <value>Подозрительный паттерн присутствует в парам. командной строки</value>
   </data>
   <data name="_Path_EN" xml:space="preserve">
     <value>Path:</value>
@@ -375,6 +375,8 @@ Thank you for your help!</value>
 -fs    --full-scan            Add other entire local drives for signature scan
 -ras   --run-as-system        Start scannning with SYSTEM privilege (for advanced users)
 -s     --select               Only selected folder will be scanned, including subfolders
+-si    --silent               Enables silent (background) mode without any dialog forms. The app switches to background mode, messages will not be displayed, 
+                              but will still be written to the log file. Incompatible with --select or --winpemode options.
 -d=    --depth=&lt;number&gt;       Where &lt;number&gt; specify the number for maximum search depth. Usage example -d=5 (default 8)
 -v     --verbose              Displays more info to the console and a log file, 
                               including lines about files that are not considered malicious. It may increase the size of the log file.
@@ -539,7 +541,7 @@ Click \b Exit\b0  to exit.\par
     <value>Найдено угроз:</value>
   </data>
   <data name="_ErrorLockedByWD_RU" xml:space="preserve">
-    <value>Файл заблокирован Защитником Windows:</value>
+    <value>Объект заблокирован Защитником Windows:</value>
   </data>
   <data name="_TotalNeutralizedThreats_EN" xml:space="preserve">
     <value>Total cured threats:</value>
@@ -813,6 +815,8 @@ Would you like to continue?</value>
 -fs    --full-scan            Целиком добавляет другие локальные диски для сигнатурного сканирования
 -ras   --run-as-system        Запустить проверку от имени SYSTEM (для опытных пользователей)	
 -s     --select               Сканировать только выбранный каталог, включая вложенные каталоги
+-si    --silent               Включает тихий (фоновый) режим без диалоговых окон. Приложение переходит в фоновый режим, сообщения
+                              не отображаются, но по-прежнему записываются в лог. Несовместимо с параметрами --select или --winpemode.
 -d=    --depth=&lt;num&gt;          Где &lt;num&gt; - уровень максимальной глубины поиска. Пример использования: -d=5 (по-умолчанию 8)
 -v     --verbose              Выводит подробные сведения о процессах в консоль, а также 
                               отключает фильтр строк с файлами не признанных вредоносными. Может увеличить размер лог-файла.
@@ -1155,7 +1159,7 @@ Press any key to continue...</value>
     <value>..\Resources\sber.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="_PresentInCmdArgs_EN" xml:space="preserve">
-    <value>is present in cmd args</value>
+    <value>One of suspicious patterns present in cmd args</value>
   </data>
   <data name="_MaliciousProfile_RU" xml:space="preserve">
     <value>Вредоносный профиль</value>
@@ -1702,5 +1706,11 @@ Press any key to continue...</value>
   </data>
   <data name="_SelectFolderDialog_RU" xml:space="preserve">
     <value>Выберите каталог для проверки</value>
+  </data>
+  <data name="_WarnCannotDisableExecution_EN" xml:space="preserve">
+    <value>Error on disable file execution</value>
+  </data>
+  <data name="_WarnCannotDisableExecution_RU" xml:space="preserve">
+    <value>Не удалось заблокировать выполнение файла</value>
   </data>
 </root>

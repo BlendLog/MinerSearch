@@ -215,7 +215,7 @@ namespace MSearch
                                 items.Add(new QuarantineItem
                                 {
                                     OriginalPath = originalPath,
-                                    FileSize = Utils.Sizer(fileData.Length),
+                                    FileSize = FileChecker.GetFileSize(fileData.Length),
                                     FileHash = subKeyName,
                                 });
                             }
@@ -253,7 +253,7 @@ namespace MSearch
                                 items.Add(new QuarantineItem
                                 {
                                     OriginalPath = originalPath,
-                                    FileSize = Utils.Sizer(totalSize),
+                                    FileSize = FileChecker.GetFileSize(totalSize),
                                     FileHash = subKeyName,
                                 });
                             }

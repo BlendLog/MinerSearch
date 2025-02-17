@@ -262,6 +262,7 @@ namespace MSearch
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "HostsDeletionForm";
             this.TopMost = true;
+            this.Load += new System.EventHandler(this.HostsDeletionForm_Load);
             this.panel1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);

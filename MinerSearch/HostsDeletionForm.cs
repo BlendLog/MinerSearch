@@ -104,5 +104,14 @@ namespace MSearch
         {
             closeBtn.PerformClick();
         }
+
+        private void HostsDeletionForm_Load(object sender, EventArgs e)
+        {
+            if (Program.silent)
+            {
+                selectAllButton.PerformClick();
+                continueButton.PerformClick();
+            }
+        }
     }
 }

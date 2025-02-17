@@ -1207,7 +1207,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на File locked by Wi?ndo?ws Def?end?er:.
+        ///   Ищет локализованную строку, похожую на The object locked by Wi?ndo?ws Def?end?er:.
         /// </summary>
         internal static string _ErrorLockedByWD_EN {
             get {
@@ -1216,7 +1216,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Файл заблокирован Защитником Windows:.
+        ///   Ищет локализованную строку, похожую на Объект заблокирован Защитником Windows:.
         /// </summary>
         internal static string _ErrorLockedByWD_RU {
             get {
@@ -2724,7 +2724,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на is present in cmd args.
+        ///   Ищет локализованную строку, похожую на One of suspicious patterns present in cmd args.
         /// </summary>
         internal static string _PresentInCmdArgs_EN {
             get {
@@ -2733,7 +2733,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на присутствует в парам. командной строки.
+        ///   Ищет локализованную строку, похожую на Подозрительный паттерн присутствует в парам. командной строки.
         /// </summary>
         internal static string _PresentInCmdArgs_RU {
             get {
@@ -4196,6 +4196,24 @@ namespace MSearch.Properties {
         internal static string _Version_RU {
             get {
                 return ResourceManager.GetString("_Version_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error on disable file execution.
+        /// </summary>
+        internal static string _WarnCannotDisableExecution_EN {
+            get {
+                return ResourceManager.GetString("_WarnCannotDisableExecution_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось заблокировать выполнение файла.
+        /// </summary>
+        internal static string _WarnCannotDisableExecution_RU {
+            get {
+                return ResourceManager.GetString("_WarnCannotDisableExecution_RU", resourceCulture);
             }
         }
         
