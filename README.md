@@ -79,6 +79,7 @@
 | -fs    --full-scan          |  Целиком добавляет другие локальные диски для сигнатурного сканирования                                |
 | -ras   --run-as-system      |  Запустить проверку от имени SYSTEM (для опытных пользователей)	                                       |
 | -s     --select             |  Сканировать только выбранный каталог, включая вложенные каталоги                                      |
+| -si    --silent             |  Включает тихий (фоновый) режим без диалоговых окон. Приложение переходит в фоновый режим, сообщения не отображаются, но по-прежнему записываются в лог. Несовместимо с параметрами --select или --winpemode. |
 | -d=    --depth=<num>        |  Где <num> - уровень максимальной глубины поиска. Пример использования: -d=5 (по-умолчанию 8)          |
 | -v     --verbose            |  Выводит подробные сведения о процессах в консоль, а также                                             |
 |                             |  отключает фильтр строк с файлами не признанных вредоносными. Может увеличить размер лог-файла.        |
@@ -194,6 +195,7 @@ Additional command line args (usually is not required):
 | -fs    --full-scan           | Add other entire local drives for signature scan                                                         |
 | -ras   --run-as-system       | Start scannning with SYSTEM privilege (for advanced users)                                               |
 | -s     --select              | Only selected folder will be scanned, including subfolders                                               |
+| -si    --silent              | Enables silent (background) mode without any dialog forms. The app switches to background mode, messages will not be displayed, but will still be written to the log file. Incompatible with --select or --winpemode options |
 | -d=    --depth=<number>      | Where <number> specify the number for maximum search depth. Usage example -d=5 (default 8)               |
 | -v     --verbose             | Displays more info to the console and a log file,                                                        |
 |                              | including lines about files that are not considered malicious. It may increase the size of the log file. |
