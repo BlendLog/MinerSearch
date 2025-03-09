@@ -9,6 +9,22 @@
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 
+Патч 1.4.7.82
+
+- Исправлен баг, при которой часть каталогов удалялось не полностью
+- Добавлена блокировка файлов служб и файлов из планировщика задач, если таковой файл считается зараженным
+- Удаление новой версии майнера с действительной подписью
+- Удаление поддельной задачи MS Teams
+- Улучшен алгоритм обработки параметра Debugger в реестре
+- Опцимизация системы ведения логов
+- Исправить ошибку "Нет процессов связанных с этим объектом" при удалении руткита
+- Скорректирована обработка путей запущенных процессов (Razer Synapse больше не выдаёт ошибку)
+- Добавлен отсутствующий локализованный ресурс _ErrorCheckingLock
+- Устранено пустое окно, если обнаружено множество служб с недействительной подписью
+- Обработка задач с pcalua.exe теперь выдает предупреждение, если файл отсутствует
+- Исправлено ложное срабатывание на службы принтера HP, Xerox и другие
+- Принудительное удаление вредоносного ключа tektonit
+
 Патч 1.4.7.81
 
 - Устранено ложное срабатывание на MinimumStackCommitInBytes для svchost.exe
@@ -62,6 +78,11 @@
 
 Полностью распакуйте архив с программой в отдельную папку и запустите приложение. Дождитесь окончания сканирования. При первом использовании программы предлагается сообщать о результатах проверки автору на ваше усмотрение. После окончания будет показана форма с кратким отчётом об угрозах, которые были устранены. С подробным отчётом можно ознакомиться, нажав на кнопку "Открыть отчёт". При нажатии на кнопку Карантин откроется Менеджер карантина, в котором вы можете полностью удалить файл или восстановить.
 
+Приложение также поддерживает дополнительные параметры запуска (приведенные ниже). Чтобы воспользоваться ими следует:
+1) Запустить командную строку (cmd) от администратора
+2) зажать shift и кликнуть правой кнопкой мыши по приложению - выбрать пункт "Копировать как путь"
+3) Вставить путь в командную строку и через пробел дописать необходимые параметры*
+
 Дополнительные параметры запуска (обычно не требуется):
 
 | Параметр | описание |
@@ -86,6 +107,7 @@
 | -w     --winpemode          |  Запускает сканирование в режиме WinPE                                                                 |
 |                             | (без сканирования процессов, реестра, правил фаерволла, служб, задач планировщика)                     |
 
+* Необязательно в строгом порядке
 ----------------------------
 
 Условные обозначения в логах
@@ -115,6 +137,22 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 https://t.me/MinerSearch_blog
 
 ## NET Framework 4.7.1 is required
+
+Patch 1.4.7.82
+
+- Fixed a bug where some directories were not completely deleted
+- Added blocking of service files and files from the task scheduler if such a file is considered malicious
+- Removal of a new version of the miner with a valid signature
+- Removal of a fake MS Teams task
+- Improved the algorithm for processing the Debugger parameter in the registry
+- Optimization of the logging system
+- Fix the error "No processes associated with this object" when removing a rootkit
+- Adjusted the processing of paths of running processes (Razer Synapse no longer returns an error)
+- Added a missing localized resource _ErrorCheckingLock
+- Eliminated an empty window if multiple services with an invalid signature are detected
+- Processing of tasks with pcalua.exe now issues a warning if the file is missing
+- Fixed a false positive of printer services for HP, Xerox and other vendors 
+- Forced removal of the malicious tektonit key
 
 Patch 1.4.7.81
 
@@ -178,6 +216,11 @@ Version 1.4.72 [PostFix]
 
 Completely unzip the archive with the program into a separate folder and launch the application. Wait for the scan to complete. When using the program for the first time, you are offered to report the results of the scan to the author at your wish. After completion, a form will be shown with a brief report on the threats that have been eliminated. You can view the detailed log by clicking on the "Show log" button. Clicking on the "Quarantine" button will open the Quarantine Manager, in which you can completely delete the file or restore it.
 
+The application also supports additional launch parameters (listed below). To use them, you should:
+1) Run the command line (cmd) as administrator
+2) Hold down shift and right-click on the application - select "Copy as path"
+3) Paste the path into the command line and add the necessary parameters* after a space
+
 Additional command line args (usually is not required):
 
 | Startup params | Description |                                                                                                           
@@ -202,6 +245,7 @@ Additional command line args (usually is not required):
 | -w     --winpemode           | Start scanning in WinPE environment by specifying a different drive letter                               |
 |                              | (without scanning processes, registry, firewall and task scheduler entries)                              |
 
+* Not necessarily in strict order
 --------------------------------------------------------------
 
 Symbols in logs
