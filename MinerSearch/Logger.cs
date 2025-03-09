@@ -18,6 +18,39 @@ namespace MSearch
         public static string previousNonWhiteText = "";
         public static ConsoleColor previousColor;
 
+        internal static readonly object _logLock = new object();
+        static StreamWriter _writer;
+
+        public static void InitLogger()
+        {
+            if (!Directory.Exists(Logger.LogsFolder))
+            {
+                try
+                {
+                    Directory.CreateDirectory(Logger.LogsFolder);
+                }
+                catch (IOException)
+                {
+                    Logger.LogsFolder += Utils.GetRndString(16);
+                    Directory.CreateDirectory(Logger.LogsFolder);
+                }
+            }
+            else if (!UnlockObjectClass.ResetObjectACL(Logger.LogsFolder))
+            {
+                Logger.LogsFolder += Utils.GetRndString(16);
+                Directory.CreateDirectory(Logger.LogsFolder);
+            }
+            _writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true) { AutoFlush = true };
+        }
+
+        public static void DisposeLogger()
+        {
+            lock (_logLock)
+            {
+                _writer?.Dispose();
+            }
+        }
+
         public static void WriteLog(string currentText, ConsoleColor LogLevel)
         {
             if (!Program.verbose)
@@ -33,31 +66,32 @@ namespace MSearch
 
                 string logMessage = $"[{DateTime.Now}]: {currentText}";
 
-                if (!Program.silent)
-                {
-                    Console.ForegroundColor = LogLevel;
-                    Console.WriteLine(logMessage);
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
 
-                if (!Program.verbose)
+                lock (_logLock)
                 {
-                    if (LogLevel == ConsoleColor.White)
+                    if (!Program.silent)
                     {
-                        previousWhiteText = currentText;
+                        Console.ForegroundColor = LogLevel;
+                        Console.WriteLine(logMessage);
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
-                    if (LogLevel != ConsoleColor.White)
+
+                    if (!Program.verbose)
                     {
-                        previousNonWhiteText = currentText;
+                        if (LogLevel == ConsoleColor.White)
+                        {
+                            previousWhiteText = currentText;
+                        }
+                        if (LogLevel != ConsoleColor.White)
+                        {
+                            previousNonWhiteText = currentText;
+                        }
                     }
-                }
 
 
-                if (!Program.no_logs)
-                {
-                    using (StreamWriter writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true))
+                    if (!Program.no_logs)
                     {
-                        writer.WriteLine(logMessage);
+                        _writer.WriteLine(logMessage);
                     }
                 }
             }
@@ -88,40 +122,42 @@ namespace MSearch
             try
             {
                 string logMessage = "";
-                if (DisplayTime)
-                {
-                    logMessage = $"[{DateTime.Now}]: {currentText}";
-                }
-                else
-                    logMessage = currentText;
 
-                if (!Program.silent)
+                lock (_logLock)
                 {
-                    Console.ForegroundColor = color;
-                    Console.WriteLine(logMessage);
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
 
-                if (!ignorePrevious)
-                {
-                    if (!Program.verbose)
+                    if (DisplayTime)
                     {
-                        if (color == ConsoleColor.White)
+                        logMessage = $"[{DateTime.Now}]: {currentText}";
+                    }
+                    else
+                        logMessage = currentText;
+
+                    if (!Program.silent)
+                    {
+                        Console.ForegroundColor = color;
+                        Console.WriteLine(logMessage);
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+
+                    if (!ignorePrevious)
+                    {
+                        if (!Program.verbose)
                         {
-                            previousWhiteText = currentText;
-                        }
-                        if (color != ConsoleColor.White)
-                        {
-                            previousNonWhiteText = currentText;
+                            if (color == ConsoleColor.White)
+                            {
+                                previousWhiteText = currentText;
+                            }
+                            if (color != ConsoleColor.White)
+                            {
+                                previousNonWhiteText = currentText;
+                            }
                         }
                     }
-                }
 
-                if (!Program.no_logs)
-                {
-                    using (StreamWriter writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true))
+                    if (!Program.no_logs)
                     {
-                        writer.WriteLine(logMessage);
+                        _writer.WriteLine(logMessage);
                     }
                 }
             }
@@ -149,42 +185,44 @@ namespace MSearch
             try
             {
                 string logMessage = "";
-                if (DisplayTime)
-                {
-                    logMessage = $"[{DateTime.Now}]: {currentText}";
-                }
-                else
-                    logMessage = currentText;
 
-                if (!Program.silent)
+                lock (_logLock)
                 {
 
-                    Console.ForegroundColor = color;
-                    Console.WriteLine(logMessage);
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
-
-
-
-                if (!Program.verbose)
-                {
-                    if (color == ConsoleColor.White)
+                    if (DisplayTime)
                     {
-                        previousWhiteText = currentText;
+                        logMessage = $"[{DateTime.Now}]: {currentText}";
                     }
-                    if (color != ConsoleColor.White)
+                    else
+                        logMessage = currentText;
+
+                    if (!Program.silent)
                     {
-                        previousNonWhiteText = currentText;
+
+                        Console.ForegroundColor = color;
+                        Console.WriteLine(logMessage);
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
 
-                }
 
 
-                if (!Program.no_logs)
-                {
-                    using (StreamWriter writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true))
+                    if (!Program.verbose)
                     {
-                        writer.WriteLine(logMessage);
+                        if (color == ConsoleColor.White)
+                        {
+                            previousWhiteText = currentText;
+                        }
+                        if (color != ConsoleColor.White)
+                        {
+                            previousNonWhiteText = currentText;
+                        }
+
+                    }
+
+
+                    if (!Program.no_logs)
+                    {
+                        _writer.WriteLine(logMessage);
                     }
                 }
             }
@@ -204,25 +242,27 @@ namespace MSearch
             try
             {
                 string logMessage = "";
-                if (DisplayTime)
-                {
-                    logMessage = $"[{DateTime.Now}]: {currentText}";
-                }
-                else
-                    logMessage = currentText;
 
-                if (!WriteOnly)
+                lock (_logLock)
                 {
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine(logMessage);
-                    Console.ResetColor();
-                }
 
-                if (!Program.no_logs)
-                {
-                    using (StreamWriter writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true))
+                    if (DisplayTime)
                     {
-                        writer.WriteLine(logMessage);
+                        logMessage = $"[{DateTime.Now}]: {currentText}";
+                    }
+                    else
+                        logMessage = currentText;
+
+                    if (!WriteOnly)
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine(logMessage);
+                        Console.ResetColor();
+                    }
+
+                    if (!Program.no_logs)
+                    {
+                        _writer.WriteLine(logMessage);
                     }
                 }
             }
@@ -240,25 +280,27 @@ namespace MSearch
             try
             {
                 string logMessage = "";
-                if (DisplayTime)
-                {
-                    logMessage = $"[{DateTime.Now}]: {currentText}";
-                }
-                else
-                    logMessage = currentText;
 
-                if (!WriteOnly)
+                lock (_logLock)
                 {
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine(logMessage);
-                    Console.ResetColor();
-                }
 
-                if (!Program.no_logs || force)
-                {
-                    using (StreamWriter writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true))
+                    if (DisplayTime)
                     {
-                        writer.WriteLine(logMessage);
+                        logMessage = $"[{DateTime.Now}]: {currentText}";
+                    }
+                    else
+                        logMessage = currentText;
+
+                    if (!WriteOnly)
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine(logMessage);
+                        Console.ResetColor();
+                    }
+
+                    if (!Program.no_logs || force)
+                    {
+                        _writer.WriteLine(logMessage);
                     }
                 }
             }

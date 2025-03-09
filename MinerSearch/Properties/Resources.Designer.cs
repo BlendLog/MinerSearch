@@ -153,6 +153,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Disabled.
+        /// </summary>
+        internal static string _ActionType_Disabled_EN {
+            get {
+                return ResourceManager.GetString("_ActionType_Disabled_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отключено.
+        /// </summary>
+        internal static string _ActionType_Disabled_RU {
+            get {
+                return ResourceManager.GetString("_ActionType_Disabled_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Error.
         /// </summary>
         internal static string _ActionType_Error_EN {
@@ -279,7 +297,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Already proceeded.
+        ///   Ищет локализованную строку, похожую на Already processed. Skipped..
         /// </summary>
         internal static string _AlreadyProceeded_EN {
             get {
@@ -288,7 +306,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Уже обработан.
+        ///   Ищет локализованную строку, похожую на Уже обработан. Пропускаем..
         /// </summary>
         internal static string _AlreadyProceeded_RU {
             get {
@@ -927,12 +945,11 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Warning! The application has identified many services with invalid digital signatures. It is assumed that the system was installed from an unverified source.
+        ///   Ищет локализованную строку, похожую на Warning! The application has detected multiple services (#COUNT#) with invalid digital signatures. It is assumed that the system was installed from an unverified source, has the Insider Preview status, or has an outdated version.
         ///
-        ///The following services will be disabled, which may lead to system instability:
-        ///#InvalidServices#
+        ///Services marked as malicious will be disabled, which may lead to system instability!
         ///
-        ///Would you like to continue?.
+        ///Do you want to continue?.
         /// </summary>
         internal static string _DisableServiceWarning_EN {
             get {
@@ -941,10 +958,9 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Внимание! Приложение выявило множество служб с недействительной цифровой подписью. Предполагается, что система была установлена из непроверенного источника.
+        ///   Ищет локализованную строку, похожую на Внимание! Приложение выявило множество служб (#COUNT#) с недействительной цифровой подписью. Предполагается, что система была установлена из непроверенного источника, имеет статус Insider Preview, либо имеет устаревшую версию.
         ///
-        ///Перечисленные ниже службы будут отключены, что возможно приведёт к нестабильности системы:
-        ///#InvalidServices#
+        ///Службы, отмеченные как вредоносные, будут отключены, что возможно приведёт к повреждению системы!
         ///
         ///Желаете продолжить?.
         /// </summary>
@@ -1131,6 +1147,24 @@ namespace MSearch.Properties {
         internal static string _ErrorCannotRemove_RU {
             get {
                 return ResourceManager.GetString("_ErrorCannotRemove_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Unable to check locked object.
+        /// </summary>
+        internal static string _ErrorCheckingLock_EN {
+            get {
+                return ResourceManager.GetString("_ErrorCheckingLock_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось проверить заблокированный объект.
+        /// </summary>
+        internal static string _ErrorCheckingLock_RU {
+            get {
+                return ResourceManager.GetString("_ErrorCheckingLock_RU", resourceCulture);
             }
         }
         
@@ -1513,6 +1547,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Attributes:.
+        /// </summary>
+        internal static string _FileAttributes_EN {
+            get {
+                return ResourceManager.GetString("_FileAttributes_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Атрибуты:.
+        /// </summary>
+        internal static string _FileAttributes_RU {
+            get {
+                return ResourceManager.GetString("_FileAttributes_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на File is not found:.
         /// </summary>
         internal static string _FileIsNotFound_EN {
@@ -1563,6 +1615,24 @@ namespace MSearch.Properties {
         internal static string _FileRenamed_RU {
             get {
                 return ResourceManager.GetString("_FileRenamed_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на File size:.
+        /// </summary>
+        internal static string _FileSize_EN {
+            get {
+                return ResourceManager.GetString("_FileSize_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Размер файла:.
+        /// </summary>
+        internal static string _FileSize_RU {
+            get {
+                return ResourceManager.GetString("_FileSize_RU", resourceCulture);
             }
         }
         
@@ -4142,6 +4212,24 @@ namespace MSearch.Properties {
         internal static string _Userprofile_RU {
             get {
                 return ResourceManager.GetString("_Userprofile_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Service #SERVICENAME# loads fake DLL #DLLNAME#.
+        /// </summary>
+        internal static string _ValidServiceDLLHijacking_EN {
+            get {
+                return ResourceManager.GetString("_ValidServiceDLLHijacking_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Служба #SERVICENAME# загружает поддельную DLL #DLLNAME#.
+        /// </summary>
+        internal static string _ValidServiceDLLHijacking_RU {
+            get {
+                return ResourceManager.GetString("_ValidServiceDLLHijacking_RU", resourceCulture);
             }
         }
         

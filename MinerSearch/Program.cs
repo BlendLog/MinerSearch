@@ -77,6 +77,8 @@ namespace MSearch
 
         static void Init(string[] args)
         {
+            Logger.InitLogger();
+
             foreach (string arg in args)
             {
                 arg.ToLower();
@@ -377,26 +379,7 @@ namespace MSearch
 
 #endif
 
-            if (!no_logs)
-            {
-                if (!Directory.Exists(Logger.LogsFolder))
-                {
-                    try
-                    {
-                        Directory.CreateDirectory(Logger.LogsFolder);
-                    }
-                    catch (IOException)
-                    {
-                        Logger.LogsFolder += Utils.GetRndString(16);
-                        Directory.CreateDirectory(Logger.LogsFolder);
-                    }
-                }
-                else if (!UnlockObjectClass.ResetObjectACL(Logger.LogsFolder))
-                {
-                    Logger.LogsFolder += Utils.GetRndString(16);
-                    Directory.CreateDirectory(Logger.LogsFolder);
-                }
-            }
+
 
 #if !DEBUG
             if (!silent)
@@ -570,7 +553,7 @@ namespace MSearch
 
             if (!nosignaturescan)
             {
-                mk.SignatureScan();
+               mk.SignatureScan();
             }
             GC.Collect();
 
@@ -584,6 +567,7 @@ namespace MSearch
             Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
 
             Utils.SwitchMouseSelection(true);
+            Logger.DisposeLogger();
 
             if (!silent)
             {

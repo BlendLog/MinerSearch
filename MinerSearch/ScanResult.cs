@@ -15,7 +15,8 @@ namespace MSearch
         Active,
         Terminated,
         Error,
-        Inaccassible
+        Inaccassible,
+        Disabled
     }
 
     public enum ScanObjectType
@@ -78,6 +79,8 @@ namespace MSearch
                     return Program.LL.GetLocalizedString("_ActionType_Terminated");
                 case ScanActionType.Inaccassible:
                     return Program.LL.GetLocalizedString("_ActionType_Inaccessible");
+                case ScanActionType.Disabled:
+                    return Program.LL.GetLocalizedString("_ActionType_Disabled");
                 default:
                     return Program.LL.GetLocalizedString("_ActionType_Skipped");
             }

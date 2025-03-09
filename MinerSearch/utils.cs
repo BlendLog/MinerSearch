@@ -106,6 +106,48 @@ namespace MSearch
             }
         }
 
+        internal static bool ShouldRemoveDebugger(string debuggerPath)
+        {
+            if (string.IsNullOrWhiteSpace(debuggerPath))
+                return true;
+
+            if (debuggerPath.Contains(":\\"))
+            {
+                string debuggerPathNormal = debuggerPath.Replace("\"", "");
+                if (File.Exists(debuggerPathNormal))
+                {
+                    if (new WinTrust().VerifyEmbeddedSignature(debuggerPathNormal) == WinVerifyTrustResult.Success)
+                    {
+                        return false;
+                    }
+                    return true;
+                }
+            }
+
+            if (debuggerPath.Equals("/") || debuggerPath.Equals("*")) return false;
+
+            string resolvedPath = FileSystemManager.ResolveFilePathFromString(debuggerPath).Trim();
+
+            string[] allowedRedir = { "taskkill.exe", "dllhost.exe", "svchost.exe", "systray.exe" };
+
+            if (!File.Exists(resolvedPath)) return true;
+
+            string system32Path = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32");
+            string syswow64Path = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "SysWOW64");
+            bool isInSystemFolder = resolvedPath.StartsWith(system32Path, StringComparison.OrdinalIgnoreCase) || resolvedPath.StartsWith(syswow64Path, StringComparison.OrdinalIgnoreCase);
+
+            if (isInSystemFolder)
+            {
+                foreach (string allowed in allowedRedir)
+                {
+                    if (resolvedPath.EndsWith("\\" + allowed, StringComparison.OrdinalIgnoreCase))
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
         internal static bool IsTaskEmpty(Microsoft.Win32.TaskScheduler.Task task)
         {
             try
@@ -255,21 +297,12 @@ namespace MSearch
                     }
                 }
 
-
-                try
+                UnlockObjectClass.KillAndDelete(sourceFilePath);
+                if (!File.Exists(sourceFilePath))
                 {
-                    File.Delete(sourceFilePath);
-                    if (!File.Exists(sourceFilePath))
-                    {
-                        Program.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_MovedToQuarantine");
-                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Quarantine));
-                    }
+                    Program.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_MovedToQuarantine");
+                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Quarantine));
                 }
-                catch (Exception e)
-                {
-                    Program.LL.LogErrorMessage("_Error", e, sourceFilePath, "_File");
-                }
-
             }
             catch (Exception ex)
             {
@@ -653,9 +686,9 @@ namespace MSearch
                 process.Close();
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Program.LL.LogErrorMessage("_Error", ex);
+                Program.LL.LogErrorMessage("_Error", new Exception("SuspendProcess()"));
             }
         }
 
@@ -764,6 +797,24 @@ namespace MSearch
                 Program.LL.LogErrorMessage("_Error", ex);
             }
             return false;
+        }
+
+        internal static bool IsTrustedProcess(MSData msdata, string originalFileName, bool isValidSig)
+        {
+            try
+            {
+                if (msdata == null || string.IsNullOrEmpty(originalFileName))
+                    return false;
+
+                if (!isValidSig)
+                    return false;
+
+                return msdata.trustedProcesses.Contains(originalFileName, StringComparer.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         internal static void InitPrivileges()
@@ -1056,93 +1107,71 @@ namespace MSearch
             return signatures;
         }
 
+
+
         internal static bool CheckSignature(string filePath, List<byte[]> targetSequences)
         {
-            byte[] fileBytes = File.ReadAllBytes(filePath);
-            double entropy = CalculateShannonEntropy(fileBytes);
-
-            const int bufferSize = 4096;
+            const int bufferSize = 1024 * 1024; // 1 МБ – оптимально для диска
             byte[] buffer = new byte[bufferSize];
-            int fileIndex = 0;
+
+            double entropy;
             bool found = false;
+            long globalOffset = 0;
 
-            while (fileIndex < fileBytes.Length)
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, FileOptions.SequentialScan))
             {
-                int bytesToRead = Math.Min(bufferSize, fileBytes.Length - fileIndex);
-                Array.Copy(fileBytes, fileIndex, buffer, 0, bytesToRead);
+                byte[] entropyCalcBuffer = new byte[Math.Min(bufferSize, fs.Length)];
+                fs.Read(entropyCalcBuffer, 0, entropyCalcBuffer.Length);
+                entropy = CalculateShannonEntropy(entropyCalcBuffer);
+                fs.Seek(0, SeekOrigin.Begin);
 
-                for (int i = 0; i <= bytesToRead - targetSequences[0].Length; i++)
+                int bytesRead;
+                while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    for (int index = 0; index < targetSequences.Count; index++)
+                    for (int i = 0; i <= bytesRead - targetSequences[0].Length; i++)
                     {
-                        byte[] targetSequence = targetSequences[index];
-                        bool sequenceFound = true;
-                        for (int j = 0; j < targetSequence.Length; j++)
+                        for (int index = 0; index < targetSequences.Count; index++)
                         {
-                            if (i + j >= bytesToRead || buffer[i + j] != targetSequence[j])
-                            {
-                                sequenceFound = false;
-                                break;
-                            }
-                        }
+                            byte[] targetSequence = targetSequences[index];
+                            bool sequenceFound = true;
 
-                        if (sequenceFound)
-                        {
-                            int globalOffset = fileIndex + i;
-
-                            found = true;
-
-                            if (index == 3 && (globalOffset > 544 || globalOffset < 544 || globalOffset == 544) && entropy < 7.5)
+                            for (int j = 0; j < targetSequence.Length; j++)
                             {
-                                found = false;
-                            }
-
-                            if (index == 3 && globalOffset > 544 && entropy >= 7.5)
-                            {
-                                found = false;
-                            }
-
-                            if ((index == 7 && globalOffset > 4096))
-                            {
-                                found = false;
-                            }
-
-                            if ((index == 0 || index == 1 || index == 2) && globalOffset >= 4096)
-                            {
-                                found = false;
-                            }
-
-                            if (((index == 0 || index == 1 || index == 2) && entropy >= 7.5) || (index == 3 && globalOffset <= 544 && entropy >= 7.5))
-                            {
-                                found = true;
-                            }
-#if DEBUG
-                            if (found)
-                            {
-                                string tmp = "";
-                                foreach (var c in targetSequence)
+                                if (buffer[i + j] != targetSequence[j])
                                 {
-                                    tmp += (char)c;
+                                    sequenceFound = false;
+                                    break;
                                 }
-                                Console.WriteLine("FOUND by: " + tmp);
                             }
+
+                            if (sequenceFound)
+                            {
+                                long absoluteOffset = globalOffset + i;
+                                found = EvaluateConditions(index, absoluteOffset, entropy);
+
+#if DEBUG
+                                if (found)
+                                {
+                                    string tmp = "";
+                                    foreach (var c in targetSequence)
+                                    {
+                                        tmp += (char)c;
+                                    }
+                                    Console.WriteLine($"FOUND by: {tmp}, Offset: {absoluteOffset}, Entropy: {entropy}");
+                                }
 #endif
-                            break;
+                                if (found)
+                                {
+                                    return true;
+                                }
+                            }
                         }
-
-
                     }
-                    if (found)
-                        break;
+                    globalOffset += bytesRead;
                 }
-
-                if (found)
-                    break;
-
-                fileIndex += bytesToRead;
             }
 
-            return found;
+            return false;
         }
 
         internal static bool CheckDynamicSignature(string filePath, int sequenceLength, int minOccurrences)
@@ -1203,6 +1232,9 @@ namespace MSearch
             double shannonEntropy = ShannonEntropy(mostCommonSequence);
             int bytesSum = SequenceSum(mostCommonSequence);
 
+#if DEBUG
+            Console.WriteLine($"[DEBUG] Entropy: {shannonEntropy:F4}, ByteSum: {bytesSum}, Occurrences: {maxOccurrences}, Sequence: {mostCommonSequence}");
+#endif
             sequenceCounts.Clear();
             return maxOccurrences >= minOccurrences && shannonEntropy >= 2.5 && shannonEntropy <= 2.9 &&
                    IsInRange(mostCommonSequence, 0x61, 0x7A) && bytesSum >= 1750 && bytesSum <= 1800;
@@ -1211,38 +1243,84 @@ namespace MSearch
 
         internal static bool CheckDynamicSignature(string filePath, int offset, byte[] startSequence, byte[] endSequence)
         {
-            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            const int sequenceLength = 16;
+
+            if (startSequence.Length > sequenceLength || endSequence.Length > sequenceLength)
             {
-                byte[] buffer = new byte[fs.Length];
-                fs.Read(buffer, 0, buffer.Length);
-
-                byte[] sequenceInRange = new byte[16];
-                Array.Copy(buffer, offset, sequenceInRange, 0, sequenceInRange.Length);
-
-                bool isStartSequence = true;
-                for (int i = 0; i < startSequence.Length; i++)
-                {
-                    if (sequenceInRange[i] != startSequence[i])
-                    {
-                        isStartSequence = false;
-                        break;
-                    }
-                }
-
-                bool isEndSequence = true;
-                for (int i = endSequence.Length - 1; i >= 0; i--)
-                {
-                    if (sequenceInRange[sequenceInRange.Length - endSequence.Length + i] != endSequence[i])
-                    {
-                        isEndSequence = false;
-                        break;
-                    }
-                }
-
-
-                return isStartSequence && isEndSequence;
+                throw new ArgumentException("Start or end sequence is longer than the expected sequence length.");
             }
+
+            byte[] sequenceInRange = new byte[sequenceLength];
+
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                if (fs.Length < offset + sequenceLength)
+                {
+                    return false;
+                }
+
+                fs.Seek(offset, SeekOrigin.Begin);
+                int readBytes = fs.Read(sequenceInRange, 0, sequenceLength);
+
+                if (readBytes < sequenceLength)
+                {
+                    return false;
+                }
+            }
+
+            bool isStartSequence = true;
+            for (int i = 0; i < startSequence.Length; i++)
+            {
+                if (sequenceInRange[i] != startSequence[i])
+                {
+                    isStartSequence = false;
+                    break;
+                }
+            }
+
+            bool isEndSequence = true;
+            for (int i = 0; i < endSequence.Length; i++)
+            {
+                if (sequenceInRange[sequenceLength - endSequence.Length + i] != endSequence[i])
+                {
+                    isEndSequence = false;
+                    break;
+                }
+            }
+
+            return isStartSequence && isEndSequence;
         }
+
+        private static bool EvaluateConditions(int index, long globalOffset, double entropy)
+        {
+            if (index == 3 && (globalOffset > 544 || globalOffset < 544 || globalOffset == 544) && entropy < 7.5)
+            {
+                return false;
+            }
+
+            if (index == 3 && globalOffset > 544 && entropy >= 7.5)
+            {
+                return false;
+            }
+
+            if (index == 7 && globalOffset > 4096)
+            {
+                return false;
+            }
+
+            if ((index == 0 || index == 1 || index == 2) && globalOffset >= 4096)
+            {
+                return false;
+            }
+
+            if (((index == 0 || index == 1 || index == 2) && entropy >= 7.5) || (index == 3 && globalOffset <= 544 && entropy >= 7.5))
+            {
+                return true;
+            }
+
+            return true;
+        }
+
 
         static bool ContainsOnlyZeros(byte[] sequenceBytes)
         {
@@ -1270,6 +1348,7 @@ namespace MSearch
             return true;
         }
 
+
         static double ShannonEntropy(string message)
         {
 
@@ -1281,6 +1360,7 @@ namespace MSearch
             }
             return -1.0f * sumnation;
         }
+
 
         static int SequenceSum(string strBytes)
         {
@@ -1475,8 +1555,8 @@ namespace MSearch
     public class FileEnumerator
     {
         internal static readonly Regex ProgramDataLayersRegEx = new Regex(
-@"^\\\\\?\\[a-fA-F]{1}:\\programData\\Microsoft\\Windows\\Containers\\Layers\\[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
-RegexOptions.Compiled);
+    @"^(\\\\\?\\)?[a-fA-F]:\\ProgramData\\Microsoft\\Windows\\Containers\\Layers\\[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+    RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         internal static IEnumerable<string> GetFiles(string path, string pattern, int currentDepth = 0, int maxDepth = 3)
         {
@@ -1485,13 +1565,11 @@ RegexOptions.Compiled);
                 yield break;
             }
 
-            // Перечисление файлов с обработкой исключений
             foreach (var file in SafeEnumerateFiles(path, pattern))
             {
                 yield return file;
             }
 
-            // Перечисление папок с обработкой исключений
             foreach (var directory in SafeEnumerateDirectories(path))
             {
                 if (ShouldSkipDirectory(directory))
@@ -1514,8 +1592,10 @@ RegexOptions.Compiled);
             }
             catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
             {
-                Console.WriteLine($"Ошибка при доступе к файлам в {path}: {ex.Message}");
-                return Array.Empty<string>(); // Возвращаем пустой список
+#if DEBUG
+                Program.LL.LogErrorMessage("_ErrorCannotProceed", ex, path, "_Directory");
+#endif
+                return Array.Empty<string>();
             }
         }
 
@@ -1527,8 +1607,10 @@ RegexOptions.Compiled);
             }
             catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
             {
-                Console.WriteLine($"Ошибка при доступе к папкам в {path}: {ex.Message}");
-                return Array.Empty<string>(); // Возвращаем пустой список
+#if DEBUG
+                Program.LL.LogErrorMessage("_ErrorCannotProceed", ex, path, "_Directory");
+#endif
+                return Array.Empty<string>();
             }
         }
 
@@ -1575,14 +1657,51 @@ RegexOptions.Compiled);
             return true;
         }
 
+        internal static int CountFilesInDirectory(string dirPath)
+        {
+            int fileCount = 0;
+
+            fileCount += Directory.EnumerateFiles(dirPath, "*", SearchOption.TopDirectoryOnly).Count();
+
+            return fileCount;
+        }
+
         internal static bool IsReparsePoint(string path)
         {
             return (Native.GetFileAttributes(path) & (uint)Native.FILE_ATTRIBUTE.REPARSE_POINT) == (uint)Native.FILE_ATTRIBUTE.REPARSE_POINT;
         }
 
-        internal static bool IsSystemDrive(string path)
+        internal static bool HasSystemHiddenAttribute(string path)
         {
-            return string.Equals(Path.GetPathRoot(path), Environment.GetEnvironmentVariable("homedrive") + "\\", StringComparison.OrdinalIgnoreCase);
+            FileAttributes attributes = File.GetAttributes(path);
+            FileAttributes targetAttributes = FileAttributes.System | FileAttributes.Hidden;
+            return (attributes & targetAttributes) == targetAttributes;
+        }
+
+        internal static void ResetAttributes(string path)
+        {
+            try
+            {
+                if (!Directory.Exists(path))
+                {
+                    if (!File.Exists(path))
+                    {
+                        return;
+                    }
+
+                    File.SetAttributes(path, FileAttributes.Normal);
+                    return;
+                }
+
+                File.SetAttributes(path, FileAttributes.Normal);
+
+                foreach (string entry in Directory.GetFileSystemEntries(path))
+                {
+                    File.SetAttributes(entry, FileAttributes.Normal);
+                }
+            }
+            catch (Exception) { };
+
         }
 
         internal static bool IsAccessibleFile(string path)
@@ -1630,6 +1749,11 @@ RegexOptions.Compiled);
 
             // Prepend the long path prefix
             return @"\\?\" + path;
+        }
+
+        internal static string GetOriginalFileName(string filePath)
+        {
+            return FileVersionInfo.GetVersionInfo(filePath).OriginalFilename;
         }
 
         internal static string ResolveFilePathFromString(RegistryKey key, string keyName)
@@ -1744,7 +1868,7 @@ RegexOptions.Compiled);
 
         }
 
-        internal static void ProceedFileFromArgs(string[] checkDirs, string fullpath, string arguments)
+        internal static void ProcessFileFromArgs(string[] checkDirs, string fullpath, string arguments)
         {
             WinTrust winTrust = new WinTrust();
 
@@ -1839,10 +1963,12 @@ RegexOptions.Compiled);
             if (fullpath.IndexOf("pcalua", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 string pcaluaArgs = ResolveFilePathFromString(arguments.Replace("-a ", ""));
+                int checkCount = checkDirs.Length;
+                string fullPathToFileFromArgs = "";
 
                 foreach (string checkDir in checkDirs)
                 {
-                    string fullPathToFileFromArgs = Path.Combine(checkDir, pcaluaArgs);
+                    fullPathToFileFromArgs = Path.Combine(checkDir, pcaluaArgs);
                     if (!fullPathToFileFromArgs.EndsWith(".exe"))
                     {
                         fullPathToFileFromArgs += ".exe";
@@ -1872,12 +1998,22 @@ RegexOptions.Compiled);
                             }
                             return;
                         }
+                        else
+                        {
+                            checkCount--;
+                        }
                     }
                     catch (Exception ex)
                     {
                         Program.LL.LogErrorMessage("_Error", ex);
                     }
                 }
+
+                if (checkCount.Equals(0))
+                {
+                    Program.LL.LogWarnMessage("_FileIsNotFound", fullPathToFileFromArgs);
+                }
+
             }
         }
 

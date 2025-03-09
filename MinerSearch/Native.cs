@@ -641,7 +641,7 @@ namespace MSearch
 
         internal static void RunAsUser(string filename, string cmdLine)
         {
-            string location = $"{Program.drive_letter}:\\Windows\\System32\\cmd.exe";
+            string location = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32", "cmd.exe");
 
             IntPtr handle = IntPtr.Zero;
             if (Program.WinPEMode)
@@ -1414,13 +1414,13 @@ namespace MSearch
                                 if (currentValue == Environment.ExpandEnvironmentVariables(desiredValue))
                                 {
                                     Program.LL.LogSuccessMessage("_TermServiceRestored");
-                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, Program.LL.GetLocalizedString("_Just_Service") + " -> " + "TermService", ScanActionType.Cured));
+                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, Program.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Cured));
 
                                 }
                                 else
                                 {
                                     Program.LL.LogErrorMessage("_TermServiceFailedRestore", new Exception(""));
-                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, Program.LL.GetLocalizedString("_Just_Service") + " -> " + "TermService", ScanActionType.Error));
+                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, Program.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Error));
 
                                 }
                             }

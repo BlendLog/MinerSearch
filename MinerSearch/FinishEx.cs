@@ -145,7 +145,7 @@ namespace MSearch
             string argument = "/c \"" + logpath + "\"";
             if (Program.RunAsSystem && !Program.WinPEMode)
             {
-                string pname = Bfs.Create("N9XIBtsBAwsaOCAS47VSlw==", "OV4slK+9TC2rM31I3yr7un/YzjaNRhuwHewT0IER6XA=", "arDhPxZCQgPB0m1IazJQmA==");
+                string pname = Bfs.Create("XowZueZ4My9sRztk+8mdpA==", "IQ70zViMhrk1BBJC+eBfce4X9xr/dKa73zS+8a8DgdQ=", "Mxx86B7zZeNAUe7VPZMT/w==");
             restart:
                 if (Process.GetProcessesByName(pname).Length > 0)
                 {
@@ -161,7 +161,7 @@ namespace MSearch
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = "cmd",
+                    FileName = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32", "cmd.exe"),
                     Arguments = argument,
                     UseShellExecute = false,
                     CreateNoWindow = true
@@ -335,7 +335,7 @@ namespace MSearch
             {
                 await Task.Run(() =>
                 {
-                    Task.Delay(new Random().Next(10, 3000)).Wait();
+                    Task.Delay(new Random().Next(10, 5000)).Wait();
                     MinerSearch.SentLog();
                 });
             }
@@ -384,6 +384,7 @@ namespace MSearch
                         case ScanActionType.Deleted:
                         case ScanActionType.Quarantine:
                         case ScanActionType.Terminated:
+                        case ScanActionType.Disabled:
                             row.Cells[row.Cells.Count - 1].Style.BackColor = Color.PaleGreen;
                             break;
                         case ScanActionType.Skipped:

@@ -8,6 +8,7 @@ namespace MSearch
 {
     public class LocalizedLogger
     {
+        
         ResourceManager resourceManager = new ResourceManager("M$Sear$ch.Properties.Resources".Replace("$", ""), Assembly.GetExecutingAssembly());
 
         #region TopRegion
@@ -297,25 +298,34 @@ namespace MSearch
                     break;
             }
 
-            if (Program.verbose)
+            lock (Logger._logLock)
             {
-                Logger.WriteLog($" {message}: {file}...", ConsoleColor.White);
+                if (Program.verbose)
+                {
+                    Logger.WriteLog($" {message}: {file}...", ConsoleColor.White);
+                }
+                else Console.WriteLine($" {message}: {file}...");
             }
-            else Console.WriteLine($" {message}: {file}...");
+
 
         }
 
         public static void LogOK()
         {
-            if (Program.verbose)
+            lock (Logger._logLock)
             {
-                Logger.WriteLog("\t[OK]", ConsoleColor.DarkGreen, false);
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine("\t[OK]");
-                Console.ForegroundColor = ConsoleColor.White;
+
+                if (Program.verbose)
+                {
+                    Logger.WriteLog("\t[OK]", ConsoleColor.DarkGreen, false);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine("\t[OK]");
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                }
             }
         }
 
@@ -328,10 +338,13 @@ namespace MSearch
 
         public void LogJustDisplayMessage(string sign, string ResourceKey, string target, ConsoleColor consoleColor)
         {
-            string message = GetLocalizedString(ResourceKey);
-            Console.ForegroundColor = consoleColor;
-            Console.Write($"{sign}{message} {target}");
-            Console.ResetColor();
+            lock (Logger._logLock)
+            {
+                string message = GetLocalizedString(ResourceKey);
+                Console.ForegroundColor = consoleColor;
+                Console.Write($"{sign}{message} {target}");
+                Console.ResetColor();
+            }
         }
 
         public void LogHeadMessage(string ResourceKey)

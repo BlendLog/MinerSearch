@@ -31,10 +31,10 @@ namespace MSearch
                     path,
                     Native.SE_FILE_OBJECT,
                     Native.DACL_SECURITY_INFORMATION | Native.UNPROTECTED_DACL_SECURITY_INFORMATION,
-                    IntPtr.Zero, 
-                    IntPtr.Zero, 
-                    pAcl,        
-                    IntPtr.Zero  
+                    IntPtr.Zero,
+                    IntPtr.Zero,
+                    pAcl,
+                    IntPtr.Zero
                 );
 
                 if (result != 0)
@@ -94,6 +94,11 @@ namespace MSearch
             {
                 return true;
             }
+            catch (Exception ex) when (ex.HResult.Equals(unchecked((int)0x800700E1)) || ex.HResult.Equals(0xE1))
+            {
+                Program.LL.LogWarnMediumMessage("_ErrorLockedByWD", path);
+                return true;
+            }
             catch (Exception ex)
             {
                 Program.LL.LogErrorMessage("_ErrorCheckingLock", ex, path);
@@ -144,7 +149,7 @@ namespace MSearch
                             security.RemoveAccessRuleSpecific(accessRule);
                             changesMade = true;
 #if DEBUG
-                        Console.WriteLine($"[DBG] Removed rule Deny: {accessRule.IdentityReference.Value} (Inheritance: {accessRule.InheritanceFlags})");
+                            Console.WriteLine($"[DBG] Removed rule Deny: {accessRule.IdentityReference.Value} (Inheritance: {accessRule.InheritanceFlags})");
 #endif
                         }
                     }
@@ -153,7 +158,7 @@ namespace MSearch
                     {
                         baseKey.SetAccessControl(security);
 #if DEBUG
-                    Console.WriteLine($"[DBG] Update Access rules for key: {baseKey.Name}");
+                        Console.WriteLine($"[DBG] Update Access rules for key: {baseKey.Name}");
 #endif
                     }
                 }
@@ -162,50 +167,54 @@ namespace MSearch
 
         internal static void KillAndDelete(string filePath)
         {
+
             try
             {
-                File.SetAttributes(filePath, FileAttributes.Normal);
-                File.Delete(filePath);
-                if (!File.Exists(filePath))
+                if (File.Exists(filePath))
                 {
+                    File.Delete(filePath);
                     return;
                 }
             }
-            catch (Exception)
+            catch (IOException) { }
+            catch (UnauthorizedAccessException) { }
+
+            try
             {
-                Program.LL.LogMessage("\t[.]", "_FindBlockingProcess", "", ConsoleColor.White);
+                uint processId = ProcessManager.GetProcessIdByFilePath(filePath);
 
-                try
+                if (processId != 0)
                 {
-                    uint processId = ProcessManager.GetProcessIdByFilePath(filePath);
-
-                    if (processId != 0)
+                    Process process = Process.GetProcessById((int)processId);
+                    if (process != null || !process.HasExited)
                     {
-                        Process process = Process.GetProcessById((int)processId);
-                        if (!process.HasExited)
+                        ProcessManager.UnProtect(new int[] { process.Id });
+                        process.Kill();
+                        if (process == null || process.HasExited)
                         {
-
-                            ProcessManager.UnProtect(new int[] { process.Id });
-                            process.Kill();
                             Program.LL.LogSuccessMessage("_BlockingProcessClosed", $"PID: {processId}");
-
                         }
+
                     }
                 }
-                catch (System.ComponentModel.Win32Exception win32e)
+
+                if (File.Exists(filePath))
                 {
+                    File.Delete(filePath);
+                }
+            }
+            catch (System.ComponentModel.Win32Exception win32e)
+            {
 #if DEBUG
                     Console.WriteLine($"[DBG] Win32Error {win32e.Message}");
 #endif
-                }
-                catch (Exception e)
-                {
+            }
+            catch (Exception e)
+            {
 #if DEBUG
                     Console.WriteLine($"[DBG] Error {e.Message}");
 #endif
-                }
             }
-
 
         }
 

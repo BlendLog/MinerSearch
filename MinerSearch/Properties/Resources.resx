@@ -139,10 +139,9 @@
     <value>Вредоносный файл:</value>
   </data>
   <data name="_DisableServiceWarning_RU" xml:space="preserve">
-    <value>Внимание! Приложение выявило множество служб с недействительной цифровой подписью. Предполагается, что система была установлена из непроверенного источника.
+    <value>Внимание! Приложение выявило множество служб (#COUNT#) с недействительной цифровой подписью. Предполагается, что система была установлена из непроверенного источника, имеет статус Insider Preview, либо имеет устаревшую версию.
 
-Перечисленные ниже службы будут отключены, что возможно приведёт к нестабильности системы:
-#InvalidServices#
+Службы, отмеченные как вредоносные, будут отключены, что возможно приведёт к повреждению системы!
 
 Желаете продолжить?</value>
   </data>
@@ -441,7 +440,7 @@ Do you want to continue?
 </value>
   </data>
   <data name="_AlreadyProceeded_RU" xml:space="preserve">
-    <value>Уже обработан</value>
+    <value>Уже обработан. Пропускаем.</value>
   </data>
   <data name="_CertSignatureOrFileCorrupt_EN" xml:space="preserve">
     <value>File or signature was probably corrupt</value>
@@ -511,7 +510,7 @@ Click \b Exit\b0  to exit.\par
 }</value>
   </data>
   <data name="_AlreadyProceeded_EN" xml:space="preserve">
-    <value>Already proceeded</value>
+    <value>Already processed. Skipped.</value>
   </data>
   <data name="_Just_File_RU" xml:space="preserve">
     <value>Файл:</value>
@@ -610,12 +609,11 @@ Click \b Exit\b0  to exit.\par
     <value>Служба пропущена -</value>
   </data>
   <data name="_DisableServiceWarning_EN" xml:space="preserve">
-    <value>Warning! The application has identified many services with invalid digital signatures. It is assumed that the system was installed from an unverified source.
+    <value>Warning! The application has detected multiple services (#COUNT#) with invalid digital signatures. It is assumed that the system was installed from an unverified source, has the Insider Preview status, or has an outdated version.
 
-The following services will be disabled, which may lead to system instability:
-#InvalidServices#
+Services marked as malicious will be disabled, which may lead to system instability!
 
-Would you like to continue?</value>
+Do you want to continue?</value>
   </data>
   <data name="_BlacklistedPortCMD_RU" xml:space="preserve">
     <value>Нежелательный порт в парам. командной строки -</value>
@@ -1712,5 +1710,35 @@ Press any key to continue...</value>
   </data>
   <data name="_WarnCannotDisableExecution_RU" xml:space="preserve">
     <value>Не удалось заблокировать выполнение файла</value>
+  </data>
+  <data name="_ErrorCheckingLock_EN" xml:space="preserve">
+    <value>Unable to check locked object</value>
+  </data>
+  <data name="_ErrorCheckingLock_RU" xml:space="preserve">
+    <value>Не удалось проверить заблокированный объект</value>
+  </data>
+  <data name="_ValidServiceDLLHijacking_EN" xml:space="preserve">
+    <value>Service #SERVICENAME# loads fake DLL #DLLNAME#</value>
+  </data>
+  <data name="_ValidServiceDLLHijacking_RU" xml:space="preserve">
+    <value>Служба #SERVICENAME# загружает поддельную DLL #DLLNAME#</value>
+  </data>
+  <data name="_FileAttributes_EN" xml:space="preserve">
+    <value>Attributes:</value>
+  </data>
+  <data name="_FileAttributes_RU" xml:space="preserve">
+    <value>Атрибуты:</value>
+  </data>
+  <data name="_FileSize_EN" xml:space="preserve">
+    <value>File size:</value>
+  </data>
+  <data name="_FileSize_RU" xml:space="preserve">
+    <value>Размер файла:</value>
+  </data>
+  <data name="_ActionType_Disabled_EN" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="_ActionType_Disabled_RU" xml:space="preserve">
+    <value>Отключено</value>
   </data>
 </root>
