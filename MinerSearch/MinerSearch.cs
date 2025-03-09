@@ -102,9 +102,14 @@ namespace MSearch
                 foreach (Process process in ProcessManager.SafeGetProcesses())
                 {
                     if (!process.ProcessName.StartsWith(new StringBuilder("di").Append("al").Append("er").ToString())) continue;
-                    ProcessManager.SuspendProcess(process);
-                    mlwrPids.Add(process.Id);
-                    Program.totalFoundThreats++;
+                    try
+                    {
+                        ProcessManager.SuspendProcess(process);
+                        mlwrPids.Add(process.Id);
+                        Program.totalFoundThreats++;
+                    }
+                    catch (Exception) { }
+
                 }
 
             }
@@ -202,15 +207,15 @@ namespace MSearch
                             string fileDescription = p.MainModule.FileVersionInfo.FileDescription;
 
 
-                            //if (ProcessManager.IsTrustedProcess(msData, originalFileName, isValidProcess))
-                            //{
-                            //    continue;
-                            //}
+                            if (ProcessManager.IsTrustedProcess(msData, originalFileName, isValidProcess))
+                            {
+                                continue;
+                            }
 
 
                             if (fileDescription != null)
                             {
-                                if (fileDescription.IndexOf("svhost", StringComparison.OrdinalIgnoreCase) >= 0)
+                                if (fileDescription.Equals("svhost", StringComparison.OrdinalIgnoreCase))
                                 {
                                     Program.LL.LogWarnMediumMessage("_ProbablyRAT", $"{p.MainModule.FileName} PID: {processId}");
                                     suspFls_path.Add(p.MainModule.FileName);
@@ -507,11 +512,9 @@ namespace MSearch
 
                     try
                     {
-                        if (processName.Equals(msData.SysFileName[17], StringComparison.OrdinalIgnoreCase) && p.MainModule.FileName.IndexOf(@":\w?in?do?ws\s?yst?em3?2\wb?em".Replace("?", ""), StringComparison.OrdinalIgnoreCase) == -1)
+                        if (processName.Equals(msData.SysFileName[17], StringComparison.OrdinalIgnoreCase) && p.MainModule.FileName.Equals("?di?al?er.ex?e".Replace("?", ""), StringComparison.OrdinalIgnoreCase))
                         {
                             Program.LL.LogWarnMediumMessage("_WatchdogProcess", $"PID: {processId}");
-
-                            isSuspiciousPath = true;
                             riskLevel += 3;
                         }
                     }
@@ -1616,6 +1619,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
+
                 Program.LL.LogErrorMessage("_ErrorCannotOpen", ex, "HKCU\\...\\Explorer");
                 scanResults.Add(new ScanResult(ScanObjectType.Malware, "Registry:Dis?allo?wRun".Replace("?", ""), ScanActionType.Error));
 
