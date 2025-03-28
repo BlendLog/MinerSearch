@@ -107,14 +107,14 @@ namespace MSearch
                 {
                     var result = MessageBoxCustom.Show(LL.GetLocalizedString("_AppAlreadyRunning"), _title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-                Environment.Exit(0);
+                return;
             }
 
             if (!Utils.IsRebootMtx())
             {
                 Utils.mutex.ReleaseMutex();
                 MessageBoxCustom.Show(LL.GetLocalizedString("_RebootRequired"), _title);
-                Environment.Exit(0);
+                return;
             }
 
             if (OSExtensions.IsWinPEEnv())
@@ -583,7 +583,7 @@ namespace MSearch
                 Console.ReadLine();
             }
 
-            Environment.Exit(0);
+            return;
         }
         private static void WaterMark()
         {

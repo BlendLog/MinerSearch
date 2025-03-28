@@ -3292,9 +3292,9 @@ namespace MSearch
                 return false;
             }
 
-            if (displayProgress) //for SignatureScan
+            if (displayProgress)
             {
-                LocalizedLogger.LogAnalyzingFile(file);
+                LocalizedLogger.LogAnalyzingFile(file); //static
             }
 
             try
@@ -3306,7 +3306,7 @@ namespace MSearch
                 {
                     if (displayProgress)
                     {
-                        LocalizedLogger.LogOK();
+                        LocalizedLogger.LogOK(); //static
                     }
                     return false;
                 }
@@ -3316,23 +3316,22 @@ namespace MSearch
                 {
                     if (displayProgress)
                     {
-                        LocalizedLogger.LogOK();
+                        LocalizedLogger.LogOK(); //static
                     }
                     return false;
                 }
 
-                if (FileChecker.IsSfxArchive(file))
+                if (FileChecker.IsSfxArchive(file)) //static
                 {
                     Program.LL.LogWarnMediumMessage("_sfxArchive", file);
-                    Program.totalFoundSuspiciousObjects++;
-                    scanResults.Add(new ScanResult(ScanObjectType.Suspicious, file, ScanActionType.Skipped));
+                    Program.totalFoundSuspiciousObjects++; //static
+                    scanResults.Add(new ScanResult(ScanObjectType.Suspicious, file, ScanActionType.Skipped)); //static
 
                     return false;
                 }
 
-                //#if !DEBUG
 
-                bool sequenceFound = FileChecker.CheckSignature(file, msData.signatures);
+                bool sequenceFound = FileChecker.CheckSignature(file, msData.signatures); //static
 
                 if (sequenceFound)
                 {
@@ -3341,9 +3340,8 @@ namespace MSearch
                     founded_mlwrFiles.Add(file);
                     return true;
                 }
-                //#endif
 
-                bool computedSequence = FileChecker.CheckDynamicSignature(file, 16, 100);
+                bool computedSequence = FileChecker.CheckDynamicSignature(file, 16, 100); //static
                 if (computedSequence)
                 {
                     founded_mlwrFiles.Add(file);
@@ -3352,9 +3350,8 @@ namespace MSearch
 
                     return true;
                 }
-                //#if !DEBUG
 
-                bool computedSequence2 = FileChecker.CheckDynamicSignature(file, 2096, startSequence, endSequence);
+                bool computedSequence2 = FileChecker.CheckDynamicSignature(file, 2096, startSequence, endSequence); //static
                 if (computedSequence2)
                 {
                     founded_mlwrFiles.Add(file);
@@ -3362,11 +3359,10 @@ namespace MSearch
                     Program.LL.LogCautionMessage("_Found", file);
                     return true;
                 }
-                //#endif
 
                 if (displayProgress)
                 {
-                    LocalizedLogger.LogOK();
+                    LocalizedLogger.LogOK(); //static
                 }
             }
             catch (DirectoryNotFoundException)

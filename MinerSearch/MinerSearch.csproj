@@ -127,67 +127,67 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MessageBoxCustom.cs">
+    <Compile Include="UI\MessageBoxCustom.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MessageBoxCustom.Designer.cs">
+    <Compile Include="UI\MessageBoxCustom.Designer.cs">
       <DependentUpon>MessageBoxCustom.cs</DependentUpon>
     </Compile>
-    <Compile Include="PanelCustom.cs">
+    <Compile Include="UI\PanelCustom.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="QuarantineForm.cs">
+    <Compile Include="UI\QuarantineForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="QuarantineForm.Designer.cs">
+    <Compile Include="UI\QuarantineForm.Designer.cs">
       <DependentUpon>QuarantineForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FinishEx.cs">
+    <Compile Include="UI\FinishEx.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FinishEx.Designer.cs">
+    <Compile Include="UI\FinishEx.Designer.cs">
       <DependentUpon>FinishEx.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormShadow.cs">
+    <Compile Include="UI\FormShadow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="HostsDeletionForm.cs">
+    <Compile Include="UI\HostsDeletionForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="HostsDeletionForm.Designer.cs">
+    <Compile Include="UI\HostsDeletionForm.Designer.cs">
       <DependentUpon>HostsDeletionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="License.cs">
+    <Compile Include="UI\License.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="License.Designer.cs">
+    <Compile Include="UI\License.Designer.cs">
       <DependentUpon>License.cs</DependentUpon>
     </Compile>
-    <Compile Include="LocalizedLogger.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="MinerSearch.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Infrastructure\LocalizedLogger.cs" />
+    <Compile Include="Infrastructure\Logger.cs" />
+    <Compile Include="Core\MinerSearch.cs" />
+    <Compile Include="Core\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="QuarantineItem.cs" />
-    <Compile Include="ScanResult.cs" />
-    <Compile Include="SplashForm.cs">
+    <Compile Include="UI\QuarantineItem.cs" />
+    <Compile Include="UI\ScanResult.cs" />
+    <Compile Include="UI\SplashForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SplashForm.Designer.cs">
+    <Compile Include="UI\SplashForm.Designer.cs">
       <DependentUpon>SplashForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ToggleSwitch.cs">
+    <Compile Include="UI\ToggleSwitch.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UnlockObjectClass.cs" />
-    <Compile Include="Utils.cs" />
-    <Compile Include="Native.cs" />
-    <Compile Include="WinTrust.cs" />
+    <Compile Include="Infrastructure\UnlockObjectClass.cs" />
+    <Compile Include="Infrastructure\Utils.cs" />
+    <Compile Include="Infrastructure\Native.cs" />
+    <Compile Include="Infrastructure\WinTrust.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -195,8 +195,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="256.ico" />
-    <Content Include="64.ico" />
-    <Content Include="msch.ico" />
     <None Include="Resources\32.png" />
     <None Include="Resources\quarantine_logo.png" />
     <None Include="Resources\sber.jpg" />
@@ -209,25 +207,25 @@
     <None Include="bin\Release\Microsoft.Win32.TaskScheduler.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MessageBoxCustom.resx">
+    <EmbeddedResource Include="UI\MessageBoxCustom.resx">
       <DependentUpon>MessageBoxCustom.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="QuarantineForm.resx">
+    <EmbeddedResource Include="UI\QuarantineForm.resx">
       <DependentUpon>QuarantineForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FinishEx.resx">
+    <EmbeddedResource Include="UI\FinishEx.resx">
       <DependentUpon>FinishEx.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormShadow.resx">
+    <EmbeddedResource Include="UI\FormShadow.resx">
       <DependentUpon>FormShadow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="HostsDeletionForm.resx">
+    <EmbeddedResource Include="UI\HostsDeletionForm.resx">
       <DependentUpon>HostsDeletionForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="License.resx">
+    <EmbeddedResource Include="UI\License.resx">
       <DependentUpon>License.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -235,7 +233,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SplashForm.resx">
+    <EmbeddedResource Include="UI\SplashForm.resx">
       <DependentUpon>SplashForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
