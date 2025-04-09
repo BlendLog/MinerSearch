@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -167,6 +168,34 @@ namespace MSearch
         {
             return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(path) == null;
         }
+
+        internal static void RemoveDefenderExclusion(string type, string value)
+        {
+
+            string exclusionType = "";
+
+            if (type == "Paths")
+                exclusionType = "Path";
+            else if (type == "Processes")
+                exclusionType = "Process";
+            else if (type == "Extensions")
+                exclusionType = "Extension";
+
+            if (exclusionType == "") return;
+
+            ProcessStartInfo psi = new ProcessStartInfo();
+            psi.FileName = "powershell.exe";
+            psi.Arguments = "-ExecutionPolicy Bypass -c \"Remove-MpPreference -Exclusion" + exclusionType + " '" + value + "'\"";
+            psi.UseShellExecute = false;
+            psi.CreateNoWindow = true;
+
+            using (Process process = Process.Start(psi))
+            {
+                process.WaitForExit();
+            }
+
+        }
+
         internal List<string> GetSubkeys(string parentKeyPath)
         {
             List<string> subkeys = new List<string>();
@@ -1081,10 +1110,7 @@ namespace MSearch
 
     public class FileChecker
     {
-        internal static MSData msData = new MSData();
-
-        static string batchSig = msData.queries[12]; //Add-MpPreference -ExclusionPath
-
+        static string batchSig = MSData.Instance.queries["Defender_AddExclusionPath"];
 
         internal static List<byte[]> RestoreSignatures(List<byte[]> signatures)
         {
@@ -1538,6 +1564,23 @@ namespace MSearch
             return false;
         }
 
+        internal static bool IsDotNetAssembly(string filePath)
+        {
+            try
+            {
+                var an = AssemblyName.GetAssemblyName(filePath);
+                return true;
+            }
+            catch (BadImageFormatException)
+            {
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         internal static string GetFileSize(long CountBytes)
         {
             string[] type = { "B", "KB", "MB", "GB" };
@@ -1588,7 +1631,7 @@ namespace MSearch
         {
             try
             {
-                return Directory.EnumerateFiles(FileSystemManager.GetLongPath(path), pattern, SearchOption.TopDirectoryOnly);
+                return Directory.EnumerateFiles(FileSystemManager.GetUNCPath(path), pattern, SearchOption.TopDirectoryOnly);
             }
             catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
             {
@@ -1603,7 +1646,7 @@ namespace MSearch
         {
             try
             {
-                return Directory.EnumerateDirectories(FileSystemManager.GetLongPath(path));
+                return Directory.EnumerateDirectories(FileSystemManager.GetUNCPath(path));
             }
             catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
             {
@@ -1671,10 +1714,10 @@ namespace MSearch
             return (Native.GetFileAttributes(path) & (uint)Native.FILE_ATTRIBUTE.REPARSE_POINT) == (uint)Native.FILE_ATTRIBUTE.REPARSE_POINT;
         }
 
-        internal static bool HasSystemHiddenAttribute(string path)
+        internal static bool HasHiddenAttribute(string path)
         {
             FileAttributes attributes = File.GetAttributes(path);
-            FileAttributes targetAttributes = FileAttributes.System | FileAttributes.Hidden;
+            FileAttributes targetAttributes = FileAttributes.Hidden;
             return (attributes & targetAttributes) == targetAttributes;
         }
 
@@ -1739,7 +1782,7 @@ namespace MSearch
             }
         }
 
-        public static string GetLongPath(string path)
+        public static string GetUNCPath(string path)
         {
             // Check if the path already contains the long path prefix
             if (path.StartsWith(@"\\?\"))
@@ -1749,6 +1792,13 @@ namespace MSearch
 
             // Prepend the long path prefix
             return @"\\?\" + path;
+        }
+
+        internal static string ExpandShortPath(string shortPath)
+        {
+            StringBuilder longPath = new StringBuilder(260);
+            uint result = Native.GetLongPathName(shortPath, longPath, (uint)longPath.Capacity);
+            return result > 0 ? longPath.ToString() : shortPath;
         }
 
         internal static string GetOriginalFileName(string filePath)
@@ -1866,6 +1916,25 @@ namespace MSearch
             }
 
 
+        }
+
+        internal static string ExtractDllPath(string commandLine)
+        {
+            int firstQuote = commandLine.IndexOf('"');
+            int lastQuote = commandLine.LastIndexOf('"');
+
+            if (firstQuote != -1 && lastQuote > firstQuote)
+            {
+                return commandLine.Substring(firstQuote + 1, lastQuote - firstQuote - 1);
+            }
+
+            string[] parts = commandLine.Split(' ');
+            foreach (string part in parts)
+            {
+                if (part.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                    return part;
+            }
+            return string.Empty;
         }
 
         internal static void ProcessFileFromArgs(string[] checkDirs, string fullpath, string arguments)

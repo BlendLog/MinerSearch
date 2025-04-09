@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using DBase;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +19,12 @@ namespace MSearch
 {
     internal class Native
     {
+        [DllImport("user32.dll")]
+        public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern uint GetLongPathName(string shortPath, StringBuilder longPath, uint longPathLength);
+
         [DllImport("advapi32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
@@ -1355,8 +1362,8 @@ namespace MSearch
         internal static void CheckTermService()
         {
 
-            string registryPath = FileChecker.msData.queries[13]; //SYSTEM\CurrentControlSet\Services\TermService\Parameters
-            string desiredValue = FileChecker.msData.queries[14]; //%SystemRoot%\System32\termsrv.dll
+            string registryPath = MSData.Instance.queries["TermServiceParameters"]; //SYSTEM\CurrentControlSet\Services\TermService\Parameters
+            string desiredValue = MSData.Instance.queries["TermsrvDll"]; //%SystemRoot%\System32\termsrv.dll
 
             string paramName = "Ser/vice/Dll".Replace("/", "");
 
@@ -1534,14 +1541,14 @@ namespace MSearch
             IntPtr scManager = OpenSCManager(null, null, SERVICE_CHANGE_CONFIG);
             if (scManager == IntPtr.Zero)
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "Ошибка при открытии SCManager.");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "SetServiceStartType(): Cannot open SCManager");
             }
 
             IntPtr serviceHandle = OpenService(scManager, serviceName, SERVICE_CHANGE_CONFIG);
             if (serviceHandle == IntPtr.Zero)
             {
                 CloseServiceHandle(scManager);
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "Ошибка при открытии службы.");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "SetServiceStartType(): Cannot open service");
             }
 
             if (!ChangeServiceConfig(
@@ -1559,7 +1566,7 @@ namespace MSearch
             {
                 CloseServiceHandle(serviceHandle);
                 CloseServiceHandle(scManager);
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "Ошибка при изменении конфигурации службы.");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "SetServiceStartType(): Error on getting service config");
             }
 
             CloseServiceHandle(serviceHandle);
@@ -1571,17 +1578,17 @@ namespace MSearch
             IntPtr scManager = OpenSCManager(null, null, SERVICE_QUERY_CONFIG);
             if (scManager == IntPtr.Zero)
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "Ошибка при открытии SCManager.");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceStartType(): Cannot open SCManager");
             }
 
             IntPtr serviceHandle = OpenService(scManager, serviceName, SERVICE_QUERY_CONFIG);
             if (serviceHandle == IntPtr.Zero)
             {
                 CloseServiceHandle(scManager);
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "Ошибка при открытии службы.");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceStartType(): Cannot open service");
             }
 
-            int bufferSize = 1024;
+            int bufferSize = 2048;
             IntPtr buffer = Marshal.AllocHGlobal(bufferSize);
 
             if (!QueryServiceConfig(serviceHandle, buffer, bufferSize, out int bytesNeeded))
@@ -1589,7 +1596,7 @@ namespace MSearch
                 Marshal.FreeHGlobal(buffer);
                 CloseServiceHandle(serviceHandle);
                 CloseServiceHandle(scManager);
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "Ошибка при запросе конфигурации службы.");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceStartType(): Error on getting service config");
             }
 
             QUERY_SERVICE_CONFIG config = Marshal.PtrToStructure<QUERY_SERVICE_CONFIG>(buffer);
@@ -1605,17 +1612,17 @@ namespace MSearch
             IntPtr scManager = OpenSCManager(null, null, SERVICE_QUERY_CONFIG);
             if (scManager == IntPtr.Zero)
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "Ошибка при открытии SCManager.");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceImagePath(): Cannot open SCManager");
             }
 
             IntPtr serviceHandle = OpenService(scManager, serviceName, SERVICE_QUERY_CONFIG);
             if (serviceHandle == IntPtr.Zero)
             {
                 CloseServiceHandle(scManager);
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "Ошибка при открытии службы.");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceImagePath(): Cannot open service");
             }
 
-            int bufferSize = 1024;
+            int bufferSize = 2048;
             IntPtr buffer = Marshal.AllocHGlobal(bufferSize);
 
             if (!QueryServiceConfig(serviceHandle, buffer, bufferSize, out int bytesNeeded))
@@ -1623,7 +1630,7 @@ namespace MSearch
                 Marshal.FreeHGlobal(buffer);
                 CloseServiceHandle(serviceHandle);
                 CloseServiceHandle(scManager);
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "Ошибка при запросе конфигурации службы.");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceImagePath(): Error on getting service config"); //GetServiceImagePath(): Error on get service config
             }
 
             QUERY_SERVICE_CONFIG config = Marshal.PtrToStructure<QUERY_SERVICE_CONFIG>(buffer);

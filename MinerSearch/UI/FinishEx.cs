@@ -305,6 +305,7 @@ namespace MSearch
             top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             top.Text = Program._title;
             CloseBtn.Visible = true;
+            MinimizeBtn.Visible = true;
             DonateBtn.Visible = true;
             finishBtn.Enabled = true;
             finishBtn.BackColor = Color.RoyalBlue;
@@ -488,6 +489,12 @@ namespace MSearch
                 key.Close();
             }
 
+        }
+
+        private void MinimizeBtn_Click(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+            TopMost = false;
         }
     }
 }

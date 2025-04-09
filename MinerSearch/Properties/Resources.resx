@@ -896,7 +896,7 @@ Press any key to continue...</value>
     <value>Пропустить</value>
   </data>
   <data name="_MessageNewVersion_EN" xml:space="preserve">
-    <value>A new version is available #LATEST#. Go to the download page?</value>
+    <value>A new version is available #LATEST#. It is strongly recommended to use the latest version of this app to remove new threats. Go to the download page?</value>
   </data>
   <data name="_LockedDir_RU" xml:space="preserve">
     <value>Заблокированный каталог</value>
@@ -1595,7 +1595,7 @@ Press any key to continue...</value>
     <value>Блокирующий процесс был закрыт -</value>
   </data>
   <data name="_MessageNewVersion_RU" xml:space="preserve">
-    <value>Доступна новая версия #LATEST#. Перейти на станицу загрузки?</value>
+    <value>Доступна новая версия #LATEST#. Настоятельно рекомендуется использовать последнюю версию приложения для устранения новых угроз. Перейти на страницу загрузки?</value>
   </data>
   <data name="_Exclusion_RU" xml:space="preserve">
     <value>исключение</value>
@@ -1740,5 +1740,11 @@ Press any key to continue...</value>
   </data>
   <data name="_ActionType_Disabled_RU" xml:space="preserve">
     <value>Отключено</value>
+  </data>
+  <data name="_BtnBack_EN" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="_BtnBack_RU" xml:space="preserve">
+    <value>Назад</value>
   </data>
 </root>

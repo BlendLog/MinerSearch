@@ -477,6 +477,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Back.
+        /// </summary>
+        internal static string _BtnBack_EN {
+            get {
+                return ResourceManager.GetString("_BtnBack_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Назад.
+        /// </summary>
+        internal static string _BtnBack_RU {
+            get {
+                return ResourceManager.GetString("_BtnBack_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Show Log.
         /// </summary>
         internal static string _BtnDetails_EN {
@@ -2498,7 +2516,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на A new version is available #LATEST#. Go to the download page?.
+        ///   Ищет локализованную строку, похожую на A new version is available #LATEST#. It is strongly recommended to use the latest version of this app to remove new threats. Go to the download page?.
         /// </summary>
         internal static string _MessageNewVersion_EN {
             get {
@@ -2507,7 +2525,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Доступна новая версия #LATEST#. Перейти на станицу загрузки?.
+        ///   Ищет локализованную строку, похожую на Доступна новая версия #LATEST#. Настоятельно рекомендуется использовать последнюю версию приложения для устранения новых угроз. Перейти на страницу загрузки?.
         /// </summary>
         internal static string _MessageNewVersion_RU {
             get {

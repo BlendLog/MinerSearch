@@ -472,7 +472,7 @@ namespace MSearch
 #if DEBUG
                             Console.WriteLine($"\t[DBG] Selected path: {dialog.SelectedPath}");
 #endif
-                            selectedPath = FileSystemManager.GetLongPath(dialog.SelectedPath);
+                            selectedPath = FileSystemManager.GetUNCPath(dialog.SelectedPath);
                         }
                         else
                         {
@@ -487,11 +487,11 @@ namespace MSearch
                 }
             }
 
-
+            MSData.InitOnce(RunAsSystem);
             MinerSearch mk = new MinerSearch();
 
             LL.LogHeadMessage("_PreparingToScan");
-            FileChecker.RestoreSignatures(mk.msData.signatures);
+            FileChecker.RestoreSignatures(MSData.Instance.signatures);
 
             ProcessManager.InitPrivileges();
 
