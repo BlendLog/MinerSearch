@@ -5,6 +5,8 @@
 
 ## Новости об обновлениях теперь в телеграм! 
 ## https://t.me/MinerSearch_blog
+## ⬇ ![Скачать последнюю версию](https://github.com/BlendLog/MinerSearch/releases/latest)
+
 ### Для работы приложения требуется NET Framework 4.7.1
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
