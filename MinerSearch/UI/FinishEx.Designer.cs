@@ -32,6 +32,7 @@ namespace MSearch
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FinishEx));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.Label_allowStatistics = new System.Windows.Forms.Label();
@@ -51,6 +52,7 @@ namespace MSearch
             this.panel6 = new System.Windows.Forms.Panel();
             this.FinalStatus_label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.MinimizeBtn = new System.Windows.Forms.Button();
             this.DonateBtn = new System.Windows.Forms.Button();
             this.CloseBtn = new System.Windows.Forms.Button();
             this.top = new System.Windows.Forms.Label();
@@ -84,15 +86,15 @@ namespace MSearch
             this.tableLayoutPanel1.Controls.Add(this.panelCustom1, 0, 3);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.029197F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 21.95122F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 54.36364F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15.81818F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1244, 585);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(933, 475);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // panel3
@@ -101,10 +103,10 @@ namespace MSearch
             this.panel3.Controls.Add(this.ts_AllowCollectStatistics);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
-            this.panel3.Location = new System.Drawing.Point(0, 543);
+            this.panel3.Location = new System.Drawing.Point(0, 441);
             this.panel3.Margin = new System.Windows.Forms.Padding(0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1244, 42);
+            this.panel3.Size = new System.Drawing.Size(933, 34);
             this.panel3.TabIndex = 4;
             // 
             // Label_allowStatistics
@@ -113,9 +115,10 @@ namespace MSearch
             this.Label_allowStatistics.BackColor = System.Drawing.Color.Transparent;
             this.Label_allowStatistics.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.Label_allowStatistics.ForeColor = System.Drawing.Color.Black;
-            this.Label_allowStatistics.Location = new System.Drawing.Point(6, 10);
+            this.Label_allowStatistics.Location = new System.Drawing.Point(4, 8);
+            this.Label_allowStatistics.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_allowStatistics.Name = "Label_allowStatistics";
-            this.Label_allowStatistics.Size = new System.Drawing.Size(1175, 23);
+            this.Label_allowStatistics.Size = new System.Drawing.Size(881, 19);
             this.Label_allowStatistics.TabIndex = 15;
             this.Label_allowStatistics.Text = "_label_allowStatistics";
             this.Label_allowStatistics.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -126,14 +129,15 @@ namespace MSearch
             this.ts_AllowCollectStatistics.AutoSize = true;
             this.ts_AllowCollectStatistics.BackColor = System.Drawing.Color.Transparent;
             this.ts_AllowCollectStatistics.Enabled = false;
-            this.ts_AllowCollectStatistics.Location = new System.Drawing.Point(1187, 10);
-            this.ts_AllowCollectStatistics.MinimumSize = new System.Drawing.Size(45, 22);
+            this.ts_AllowCollectStatistics.Location = new System.Drawing.Point(890, 8);
+            this.ts_AllowCollectStatistics.Margin = new System.Windows.Forms.Padding(2);
+            this.ts_AllowCollectStatistics.MinimumSize = new System.Drawing.Size(34, 18);
             this.ts_AllowCollectStatistics.Name = "ts_AllowCollectStatistics";
             this.ts_AllowCollectStatistics.OffBackColor = System.Drawing.Color.Gainsboro;
             this.ts_AllowCollectStatistics.OffToggleColor = System.Drawing.Color.Silver;
             this.ts_AllowCollectStatistics.OnBackColor = System.Drawing.Color.Gainsboro;
             this.ts_AllowCollectStatistics.OnToggleColor = System.Drawing.Color.Silver;
-            this.ts_AllowCollectStatistics.Size = new System.Drawing.Size(45, 22);
+            this.ts_AllowCollectStatistics.Size = new System.Drawing.Size(34, 18);
             this.ts_AllowCollectStatistics.TabIndex = 0;
             this.ts_AllowCollectStatistics.UseVisualStyleBackColor = false;
             this.ts_AllowCollectStatistics.CheckedChanged += new System.EventHandler(this.ts_AllowCollectStatistics_CheckedChanged);
@@ -144,10 +148,10 @@ namespace MSearch
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.tableLayoutPanel2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 43);
+            this.panel2.Location = new System.Drawing.Point(0, 35);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1244, 119);
+            this.panel2.Size = new System.Drawing.Size(933, 97);
             this.panel2.TabIndex = 1;
             // 
             // tableLayoutPanel2
@@ -161,12 +165,12 @@ namespace MSearch
             this.tableLayoutPanel2.Controls.Add(this.panel6, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 97F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1242, 117);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 95F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(931, 95);
             this.tableLayoutPanel2.TabIndex = 13;
             // 
             // panel5
@@ -178,7 +182,7 @@ namespace MSearch
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Margin = new System.Windows.Forms.Padding(0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(414, 117);
+            this.panel5.Size = new System.Drawing.Size(310, 95);
             this.panel5.TabIndex = 0;
             // 
             // LBL_ScanTime
@@ -186,9 +190,10 @@ namespace MSearch
             this.LBL_ScanTime.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.LBL_ScanTime.Font = new System.Drawing.Font("Trebuchet MS", 10F, System.Drawing.FontStyle.Bold);
             this.LBL_ScanTime.ForeColor = System.Drawing.Color.Gainsboro;
-            this.LBL_ScanTime.Location = new System.Drawing.Point(0, 78);
+            this.LBL_ScanTime.Location = new System.Drawing.Point(0, 63);
+            this.LBL_ScanTime.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_ScanTime.Name = "LBL_ScanTime";
-            this.LBL_ScanTime.Size = new System.Drawing.Size(414, 39);
+            this.LBL_ScanTime.Size = new System.Drawing.Size(310, 32);
             this.LBL_ScanTime.TabIndex = 9;
             this.LBL_ScanTime.Text = "labe_scanTime";
             this.LBL_ScanTime.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -203,7 +208,7 @@ namespace MSearch
             this.LBL_ScanComplete.Location = new System.Drawing.Point(0, 0);
             this.LBL_ScanComplete.Margin = new System.Windows.Forms.Padding(0);
             this.LBL_ScanComplete.Name = "LBL_ScanComplete";
-            this.LBL_ScanComplete.Size = new System.Drawing.Size(414, 97);
+            this.LBL_ScanComplete.Size = new System.Drawing.Size(310, 79);
             this.LBL_ScanComplete.TabIndex = 4;
             this.LBL_ScanComplete.Text = "label_scanComplete";
             this.LBL_ScanComplete.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -218,10 +223,10 @@ namespace MSearch
             this.panel7.Controls.Add(this.LBL_susCount);
             this.panel7.Controls.Add(this.LBL_totalThreats);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel7.Location = new System.Drawing.Point(828, 0);
+            this.panel7.Location = new System.Drawing.Point(620, 0);
             this.panel7.Margin = new System.Windows.Forms.Padding(0);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(414, 117);
+            this.panel7.Size = new System.Drawing.Size(311, 95);
             this.panel7.TabIndex = 2;
             // 
             // LBL_threatsCount
@@ -231,9 +236,10 @@ namespace MSearch
             this.LBL_threatsCount.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_threatsCount.ForeColor = System.Drawing.Color.White;
             this.LBL_threatsCount.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LBL_threatsCount.Location = new System.Drawing.Point(333, 18);
+            this.LBL_threatsCount.Location = new System.Drawing.Point(251, 15);
+            this.LBL_threatsCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_threatsCount.Name = "LBL_threatsCount";
-            this.LBL_threatsCount.Size = new System.Drawing.Size(21, 20);
+            this.LBL_threatsCount.Size = new System.Drawing.Size(18, 17);
             this.LBL_threatsCount.TabIndex = 7;
             this.LBL_threatsCount.Text = "0";
             this.LBL_threatsCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -244,9 +250,10 @@ namespace MSearch
             this.LBL_neutralizedThreats.AutoSize = true;
             this.LBL_neutralizedThreats.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_neutralizedThreats.ForeColor = System.Drawing.Color.White;
-            this.LBL_neutralizedThreats.Location = new System.Drawing.Point(33, 84);
+            this.LBL_neutralizedThreats.Location = new System.Drawing.Point(25, 68);
+            this.LBL_neutralizedThreats.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_neutralizedThreats.Name = "LBL_neutralizedThreats";
-            this.LBL_neutralizedThreats.Size = new System.Drawing.Size(206, 20);
+            this.LBL_neutralizedThreats.Size = new System.Drawing.Size(167, 17);
             this.LBL_neutralizedThreats.TabIndex = 11;
             this.LBL_neutralizedThreats.Text = "label_neutralizedThr";
             this.LBL_neutralizedThreats.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -258,9 +265,10 @@ namespace MSearch
             this.LBL_curedCount.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_curedCount.ForeColor = System.Drawing.Color.White;
             this.LBL_curedCount.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LBL_curedCount.Location = new System.Drawing.Point(333, 84);
+            this.LBL_curedCount.Location = new System.Drawing.Point(251, 68);
+            this.LBL_curedCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_curedCount.Name = "LBL_curedCount";
-            this.LBL_curedCount.Size = new System.Drawing.Size(21, 20);
+            this.LBL_curedCount.Size = new System.Drawing.Size(18, 17);
             this.LBL_curedCount.TabIndex = 12;
             this.LBL_curedCount.Text = "0";
             this.LBL_curedCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -271,9 +279,10 @@ namespace MSearch
             this.LBL_susObjects.AutoSize = true;
             this.LBL_susObjects.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_susObjects.ForeColor = System.Drawing.Color.White;
-            this.LBL_susObjects.Location = new System.Drawing.Point(33, 51);
+            this.LBL_susObjects.Location = new System.Drawing.Point(25, 41);
+            this.LBL_susObjects.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_susObjects.Name = "LBL_susObjects";
-            this.LBL_susObjects.Size = new System.Drawing.Size(132, 20);
+            this.LBL_susObjects.Size = new System.Drawing.Size(108, 17);
             this.LBL_susObjects.TabIndex = 10;
             this.LBL_susObjects.Text = "label_susObj";
             this.LBL_susObjects.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -285,9 +294,10 @@ namespace MSearch
             this.LBL_susCount.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_susCount.ForeColor = System.Drawing.Color.White;
             this.LBL_susCount.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LBL_susCount.Location = new System.Drawing.Point(333, 51);
+            this.LBL_susCount.Location = new System.Drawing.Point(251, 41);
+            this.LBL_susCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_susCount.Name = "LBL_susCount";
-            this.LBL_susCount.Size = new System.Drawing.Size(21, 20);
+            this.LBL_susCount.Size = new System.Drawing.Size(18, 17);
             this.LBL_susCount.TabIndex = 10;
             this.LBL_susCount.Text = "0";
             this.LBL_susCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -298,9 +308,10 @@ namespace MSearch
             this.LBL_totalThreats.AutoSize = true;
             this.LBL_totalThreats.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_totalThreats.ForeColor = System.Drawing.Color.White;
-            this.LBL_totalThreats.Location = new System.Drawing.Point(33, 18);
+            this.LBL_totalThreats.Location = new System.Drawing.Point(25, 15);
+            this.LBL_totalThreats.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_totalThreats.Name = "LBL_totalThreats";
-            this.LBL_totalThreats.Size = new System.Drawing.Size(184, 20);
+            this.LBL_totalThreats.Size = new System.Drawing.Size(148, 17);
             this.LBL_totalThreats.TabIndex = 5;
             this.LBL_totalThreats.Text = "label_totalThreats";
             this.LBL_totalThreats.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -310,10 +321,10 @@ namespace MSearch
             this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(95)))), ((int)(((byte)(215)))));
             this.panel6.Controls.Add(this.FinalStatus_label);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(414, 0);
+            this.panel6.Location = new System.Drawing.Point(310, 0);
             this.panel6.Margin = new System.Windows.Forms.Padding(0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(414, 117);
+            this.panel6.Size = new System.Drawing.Size(310, 95);
             this.panel6.TabIndex = 1;
             // 
             // FinalStatus_label
@@ -325,13 +336,14 @@ namespace MSearch
             this.FinalStatus_label.Location = new System.Drawing.Point(0, 0);
             this.FinalStatus_label.Margin = new System.Windows.Forms.Padding(0);
             this.FinalStatus_label.Name = "FinalStatus_label";
-            this.FinalStatus_label.Size = new System.Drawing.Size(414, 117);
+            this.FinalStatus_label.Size = new System.Drawing.Size(310, 95);
             this.FinalStatus_label.TabIndex = 3;
             this.FinalStatus_label.Text = "ResultDescription1";
             this.FinalStatus_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.MinimizeBtn);
             this.panel1.Controls.Add(this.DonateBtn);
             this.panel1.Controls.Add(this.CloseBtn);
             this.panel1.Controls.Add(this.top);
@@ -339,8 +351,30 @@ namespace MSearch
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1244, 43);
+            this.panel1.Size = new System.Drawing.Size(933, 35);
             this.panel1.TabIndex = 0;
+            // 
+            // MinimizeBtn
+            // 
+            this.MinimizeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.MinimizeBtn.BackColor = System.Drawing.Color.RoyalBlue;
+            this.MinimizeBtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.MinimizeBtn.FlatAppearance.BorderSize = 0;
+            this.MinimizeBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.MinimizeBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MinimizeBtn.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Bold);
+            this.MinimizeBtn.ForeColor = System.Drawing.Color.White;
+            this.MinimizeBtn.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.MinimizeBtn.Location = new System.Drawing.Point(875, 6);
+            this.MinimizeBtn.Margin = new System.Windows.Forms.Padding(0);
+            this.MinimizeBtn.Name = "MinimizeBtn";
+            this.MinimizeBtn.Size = new System.Drawing.Size(22, 24);
+            this.MinimizeBtn.TabIndex = 102;
+            this.MinimizeBtn.Text = "_";
+            this.MinimizeBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.MinimizeBtn.UseVisualStyleBackColor = false;
+            this.MinimizeBtn.Visible = false;
+            this.MinimizeBtn.Click += new System.EventHandler(this.MinimizeBtn_Click);
             // 
             // DonateBtn
             // 
@@ -355,10 +389,10 @@ namespace MSearch
             this.DonateBtn.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold);
             this.DonateBtn.ForeColor = System.Drawing.Color.Yellow;
             this.DonateBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.DonateBtn.Location = new System.Drawing.Point(829, 3);
-            this.DonateBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.DonateBtn.Location = new System.Drawing.Point(622, 2);
+            this.DonateBtn.Margin = new System.Windows.Forms.Padding(2);
             this.DonateBtn.Name = "DonateBtn";
-            this.DonateBtn.Size = new System.Drawing.Size(281, 39);
+            this.DonateBtn.Size = new System.Drawing.Size(211, 32);
             this.DonateBtn.TabIndex = 101;
             this.DonateBtn.Text = "donateBtn";
             this.DonateBtn.UseVisualStyleBackColor = false;
@@ -376,10 +410,10 @@ namespace MSearch
             this.CloseBtn.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Bold);
             this.CloseBtn.ForeColor = System.Drawing.Color.White;
             this.CloseBtn.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.CloseBtn.Location = new System.Drawing.Point(1201, 9);
+            this.CloseBtn.Location = new System.Drawing.Point(901, 7);
             this.CloseBtn.Margin = new System.Windows.Forms.Padding(0);
             this.CloseBtn.Name = "CloseBtn";
-            this.CloseBtn.Size = new System.Drawing.Size(29, 30);
+            this.CloseBtn.Size = new System.Drawing.Size(22, 24);
             this.CloseBtn.TabIndex = 100;
             this.CloseBtn.Text = "X";
             this.CloseBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -397,8 +431,8 @@ namespace MSearch
             this.top.Location = new System.Drawing.Point(0, 0);
             this.top.Margin = new System.Windows.Forms.Padding(0);
             this.top.Name = "top";
-            this.top.Padding = new System.Windows.Forms.Padding(20, 0, 40, 0);
-            this.top.Size = new System.Drawing.Size(1244, 43);
+            this.top.Padding = new System.Windows.Forms.Padding(15, 0, 30, 0);
+            this.top.Size = new System.Drawing.Size(933, 35);
             this.top.TabIndex = 2;
             this.top.Text = "_title";
             this.top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -430,7 +464,7 @@ namespace MSearch
             this.dataGridThreats.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridThreats.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridThreats.GridColor = System.Drawing.Color.LightGray;
-            this.dataGridThreats.Location = new System.Drawing.Point(0, 162);
+            this.dataGridThreats.Location = new System.Drawing.Point(0, 132);
             this.dataGridThreats.Margin = new System.Windows.Forms.Padding(0);
             this.dataGridThreats.MultiSelect = false;
             this.dataGridThreats.Name = "dataGridThreats";
@@ -447,7 +481,7 @@ namespace MSearch
             this.dataGridThreats.RowHeadersWidth = 51;
             this.dataGridThreats.RowTemplate.Height = 24;
             this.dataGridThreats.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridThreats.Size = new System.Drawing.Size(1244, 295);
+            this.dataGridThreats.Size = new System.Drawing.Size(933, 240);
             this.dataGridThreats.TabIndex = 1;
             this.dataGridThreats.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridThreats_RowsAdded);
             // 
@@ -462,14 +496,14 @@ namespace MSearch
             this.panelCustom1.Controls.Add(this.Label_OpenLogsFolder);
             this.panelCustom1.Controls.Add(this.btnDetails);
             this.panelCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelCustom1.Location = new System.Drawing.Point(0, 457);
+            this.panelCustom1.Location = new System.Drawing.Point(0, 372);
             this.panelCustom1.Margin = new System.Windows.Forms.Padding(0);
             this.panelCustom1.Name = "panelCustom1";
             this.panelCustom1.ShowBottomBorder = true;
             this.panelCustom1.ShowLeftBorder = false;
             this.panelCustom1.ShowRightBorder = false;
             this.panelCustom1.ShowTopBorder = true;
-            this.panelCustom1.Size = new System.Drawing.Size(1244, 86);
+            this.panelCustom1.Size = new System.Drawing.Size(933, 69);
             this.panelCustom1.TabIndex = 5;
             // 
             // OpenQuarantineBtn
@@ -482,10 +516,10 @@ namespace MSearch
             this.OpenQuarantineBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OpenQuarantineBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.OpenQuarantineBtn.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.OpenQuarantineBtn.Location = new System.Drawing.Point(987, 25);
-            this.OpenQuarantineBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.OpenQuarantineBtn.Location = new System.Drawing.Point(740, 19);
+            this.OpenQuarantineBtn.Margin = new System.Windows.Forms.Padding(2);
             this.OpenQuarantineBtn.Name = "OpenQuarantineBtn";
-            this.OpenQuarantineBtn.Size = new System.Drawing.Size(243, 43);
+            this.OpenQuarantineBtn.Size = new System.Drawing.Size(182, 35);
             this.OpenQuarantineBtn.TabIndex = 14;
             this.OpenQuarantineBtn.Text = "OpenQuarantineBtn";
             this.OpenQuarantineBtn.UseVisualStyleBackColor = false;
@@ -496,9 +530,10 @@ namespace MSearch
             this.Label_showAllLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.Label_showAllLogs.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.Label_showAllLogs.ForeColor = System.Drawing.Color.Black;
-            this.Label_showAllLogs.Location = new System.Drawing.Point(12, 21);
+            this.Label_showAllLogs.Location = new System.Drawing.Point(9, 16);
+            this.Label_showAllLogs.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_showAllLogs.Name = "Label_showAllLogs";
-            this.Label_showAllLogs.Size = new System.Drawing.Size(362, 21);
+            this.Label_showAllLogs.Size = new System.Drawing.Size(272, 17);
             this.Label_showAllLogs.TabIndex = 13;
             this.Label_showAllLogs.Text = "label_showAllLogs";
             this.Label_showAllLogs.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -514,10 +549,10 @@ namespace MSearch
             this.finishBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.finishBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.finishBtn.ForeColor = System.Drawing.Color.AliceBlue;
-            this.finishBtn.Location = new System.Drawing.Point(634, 25);
-            this.finishBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.finishBtn.Location = new System.Drawing.Point(476, 19);
+            this.finishBtn.Margin = new System.Windows.Forms.Padding(2);
             this.finishBtn.Name = "finishBtn";
-            this.finishBtn.Size = new System.Drawing.Size(213, 43);
+            this.finishBtn.Size = new System.Drawing.Size(160, 35);
             this.finishBtn.TabIndex = 11;
             this.finishBtn.Text = "finishBtn";
             this.finishBtn.UseVisualStyleBackColor = false;
@@ -532,9 +567,10 @@ namespace MSearch
             this.Label_OpenLogsFolder.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.Label_OpenLogsFolder.ForeColor = System.Drawing.Color.MediumSlateBlue;
             this.Label_OpenLogsFolder.LinkColor = System.Drawing.Color.RoyalBlue;
-            this.Label_OpenLogsFolder.Location = new System.Drawing.Point(7, 45);
+            this.Label_OpenLogsFolder.Location = new System.Drawing.Point(5, 36);
+            this.Label_OpenLogsFolder.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_OpenLogsFolder.Name = "Label_OpenLogsFolder";
-            this.Label_OpenLogsFolder.Size = new System.Drawing.Size(367, 23);
+            this.Label_OpenLogsFolder.Size = new System.Drawing.Size(275, 19);
             this.Label_OpenLogsFolder.TabIndex = 12;
             this.Label_OpenLogsFolder.TabStop = true;
             this.Label_OpenLogsFolder.Text = "label_OpenLogsFolder";
@@ -551,10 +587,10 @@ namespace MSearch
             this.btnDetails.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDetails.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnDetails.ForeColor = System.Drawing.Color.Black;
-            this.btnDetails.Location = new System.Drawing.Point(415, 25);
-            this.btnDetails.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnDetails.Location = new System.Drawing.Point(311, 19);
+            this.btnDetails.Margin = new System.Windows.Forms.Padding(2);
             this.btnDetails.Name = "btnDetails";
-            this.btnDetails.Size = new System.Drawing.Size(213, 43);
+            this.btnDetails.Size = new System.Drawing.Size(160, 35);
             this.btnDetails.TabIndex = 10;
             this.btnDetails.Text = "btnDetails";
             this.btnDetails.UseVisualStyleBackColor = false;
@@ -562,18 +598,18 @@ namespace MSearch
             // 
             // FinishEx
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1244, 585);
+            this.ClientSize = new System.Drawing.Size(933, 475);
             this.Controls.Add(this.tableLayoutPanel1);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FinishEx";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.FinishEx_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
@@ -623,5 +659,6 @@ namespace MSearch
         private ToggleSwitch ts_AllowCollectStatistics;
         private System.Windows.Forms.Label Label_allowStatistics;
         private PanelCustom panelCustom1;
+        private System.Windows.Forms.Button MinimizeBtn;
     }
 }

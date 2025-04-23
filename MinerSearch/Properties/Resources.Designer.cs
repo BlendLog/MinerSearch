@@ -477,6 +477,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Back.
+        /// </summary>
+        internal static string _BtnBack_EN {
+            get {
+                return ResourceManager.GetString("_BtnBack_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Назад.
+        /// </summary>
+        internal static string _BtnBack_RU {
+            get {
+                return ResourceManager.GetString("_BtnBack_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Show Log.
         /// </summary>
         internal static string _BtnDetails_EN {
@@ -2498,7 +2516,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на A new version is available #LATEST#. Go to the download page?.
+        ///   Ищет локализованную строку, похожую на A new version is available #LATEST#. It is strongly recommended to use the latest version of this app to remove new threats. Go to the download page?.
         /// </summary>
         internal static string _MessageNewVersion_EN {
             get {
@@ -2507,7 +2525,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Доступна новая версия #LATEST#. Перейти на станицу загрузки?.
+        ///   Ищет локализованную строку, похожую на Доступна новая версия #LATEST#. Настоятельно рекомендуется использовать последнюю версию приложения для устранения новых угроз. Перейти на страницу загрузки?.
         /// </summary>
         internal static string _MessageNewVersion_RU {
             get {
@@ -2848,7 +2866,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Ma??li??cio??us process detected! Risk level.
+        ///   Ищет локализованную строку, похожую на Ma??li??cio??us process detected! Risk level:.
         /// </summary>
         internal static string _ProcessFound_EN {
             get {
@@ -2857,7 +2875,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Обнаружен вредоносный процесс! Уровень риска.
+        ///   Ищет локализованную строку, похожую на Обнаружен вредоносный процесс! Уровень риска:.
         /// </summary>
         internal static string _ProcessFound_RU {
             get {
@@ -2898,6 +2916,78 @@ namespace MSearch.Properties {
         internal static string _ProcessNotRunning_RU {
             get {
                 return ResourceManager.GetString("_ProcessNotRunning_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на extremely high.
+        /// </summary>
+        internal static string _ProcessRiskLevel_ExtremelyHigh_EN {
+            get {
+                return ResourceManager.GetString("_ProcessRiskLevel_ExtremelyHigh_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на экстримально высокий.
+        /// </summary>
+        internal static string _ProcessRiskLevel_ExtremelyHigh_RU {
+            get {
+                return ResourceManager.GetString("_ProcessRiskLevel_ExtremelyHigh_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на high.
+        /// </summary>
+        internal static string _ProcessRiskLevel_High_EN {
+            get {
+                return ResourceManager.GetString("_ProcessRiskLevel_High_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на высокий.
+        /// </summary>
+        internal static string _ProcessRiskLevel_High_RU {
+            get {
+                return ResourceManager.GetString("_ProcessRiskLevel_High_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на middle.
+        /// </summary>
+        internal static string _ProcessRiskLevel_Medium_EN {
+            get {
+                return ResourceManager.GetString("_ProcessRiskLevel_Medium_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на средний.
+        /// </summary>
+        internal static string _ProcessRiskLevel_Medium_RU {
+            get {
+                return ResourceManager.GetString("_ProcessRiskLevel_Medium_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на very high.
+        /// </summary>
+        internal static string _ProcessRiskLevel_VeryHigh_EN {
+            get {
+                return ResourceManager.GetString("_ProcessRiskLevel_VeryHigh_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на очень высокий.
+        /// </summary>
+        internal static string _ProcessRiskLevel_VeryHigh_RU {
+            get {
+                return ResourceManager.GetString("_ProcessRiskLevel_VeryHigh_RU", resourceCulture);
             }
         }
         
@@ -4546,9 +4636,19 @@ namespace MSearch.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap usdt_ton {
+        internal static System.Drawing.Bitmap tether_usdt_logo {
             get {
-                object obj = ResourceManager.GetObject("usdt_ton", resourceCulture);
+                object obj = ResourceManager.GetObject("tether-usdt-logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ton_png {
+            get {
+                object obj = ResourceManager.GetObject("ton_png", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

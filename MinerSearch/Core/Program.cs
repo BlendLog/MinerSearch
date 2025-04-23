@@ -107,14 +107,14 @@ namespace MSearch
                 {
                     var result = MessageBoxCustom.Show(LL.GetLocalizedString("_AppAlreadyRunning"), _title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-                Environment.Exit(0);
+                return;
             }
 
             if (!Utils.IsRebootMtx())
             {
                 Utils.mutex.ReleaseMutex();
                 MessageBoxCustom.Show(LL.GetLocalizedString("_RebootRequired"), _title);
-                Environment.Exit(0);
+                return;
             }
 
             if (OSExtensions.IsWinPEEnv())
@@ -133,15 +133,7 @@ namespace MSearch
                 RunAsSystem = true;
             }
 
-            Console.Title = Utils.GetRndString();
-            IntPtr mHandle = Process.GetCurrentProcess().MainWindowHandle;
-
-            var bitmap = (Bitmap)ProcessManager.GetSmallWindowIcon(mHandle);
-            Random rnd = new Random();
-            bitmap.SetPixel(rnd.Next(0, 16), rnd.Next(0, 16), Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255)));
-            bitmap.SetPixel(rnd.Next(0, 16), rnd.Next(0, 16), Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255)));
-            bitmap.SetPixel(rnd.Next(0, 16), rnd.Next(0, 16), Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255)));
-            ProcessManager.SetConsoleWindowIcon(bitmap, mHandle);
+            ProcessManager.SetSmallWindowIconRandomHash();
 
             if (!silent)
             {
@@ -149,8 +141,11 @@ namespace MSearch
                 {
                     if (Console.LargestWindowWidth >= 150)
                     {
-                        Console.SetWindowSize(150, 40);
-                        WaterMark();
+                        if (!ProcessManager.IsPwshAsParentProcess(Process.GetCurrentProcess().Id))
+                        {
+                            Console.SetWindowSize(150, 40);
+                            WaterMark();
+                        }
                     }
                 }
             }
@@ -472,7 +467,7 @@ namespace MSearch
 #if DEBUG
                             Console.WriteLine($"\t[DBG] Selected path: {dialog.SelectedPath}");
 #endif
-                            selectedPath = FileSystemManager.GetLongPath(dialog.SelectedPath);
+                            selectedPath = FileSystemManager.GetUNCPath(dialog.SelectedPath);
                         }
                         else
                         {
@@ -487,11 +482,11 @@ namespace MSearch
                 }
             }
 
-
+            MSData.InitOnce(RunAsSystem);
             MinerSearch mk = new MinerSearch();
 
             LL.LogHeadMessage("_PreparingToScan");
-            FileChecker.RestoreSignatures(mk.msData.signatures);
+            FileChecker.RestoreSignatures(MSData.Instance.signatures);
 
             ProcessManager.InitPrivileges();
 
@@ -553,7 +548,7 @@ namespace MSearch
 
             if (!nosignaturescan)
             {
-               mk.SignatureScan();
+                mk.SignatureScan();
             }
             GC.Collect();
 
@@ -583,7 +578,7 @@ namespace MSearch
                 Console.ReadLine();
             }
 
-            Environment.Exit(0);
+            return;
         }
         private static void WaterMark()
         {

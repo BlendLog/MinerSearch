@@ -71,7 +71,6 @@ namespace MSearch
 
         public static List<ScanResult> scanResults = new List<ScanResult>() { };
 
-        internal MSData msData = new MSData();
         WinTrust winTrust = new WinTrust();
 
         public void DetectRk()
@@ -124,7 +123,7 @@ namespace MSearch
         {
             Program.LL.LogHeadMessage("_ScanProcesses");
 
-            string myExePath = FileSystemManager.GetLongPath(Assembly.GetExecutingAssembly().Location);
+            string myExePath = FileSystemManager.GetUNCPath(Assembly.GetExecutingAssembly().Location);
 
             string processName = "";
             int riskLevel = 0;
@@ -133,20 +132,13 @@ namespace MSearch
             bool isValidProcess;
             List<Process> procs = ProcessManager.SafeGetProcesses();
 
-            if (!Program.RunAsSystem)
-            {
-                msData.obfStr2.Add(Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"), "clienthelper-updater", "installer.exe"));
-                msData.obfStr2.Add(Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"), "torrentpro-updater", "installer.exe"));
-                msData.obfStr2.Add(Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"), "Programs", "Common", "OneDriveCloud", "ta?sk?hos?tw.e?xe".Replace("?", "")));
-                msData.obfStr2.Add(Path.Combine(Environment.GetEnvironmentVariable("AppData"), "Microsoft", "U?pda?teTa?skMa?nage?r.e?xe".Replace("?", "")));
-                msData.obfStr2.Add(Path.Combine(Environment.GetEnvironmentVariable("temp"), "btma" + "insvc.exe"));
-            }
-
             HashSet<string> badStringInArgs = new HashSet<string>()
             {
+               new StringBuilder("--").Append("pa").Append("ss").ToString(),
+               new StringBuilder("--").Append("al").Append("go").ToString(),
+               new StringBuilder("po").Append("ol").Append(".").ToString(),
                new StringBuilder("st").Append("ra").Append("tu").Append("m").ToString(),
                new StringBuilder("na").Append("no").Append("po").Append("ol").ToString(),
-               new StringBuilder("po").Append("ol").Append(".").ToString(),
                new StringBuilder("mi").Append("ni").Append("ng").Append("oc").Append("ea").Append("n.").ToString(),
             };
 
@@ -159,7 +151,7 @@ namespace MSearch
 
                 try
                 {
-                    string processPath = FileSystemManager.GetLongPath(Path.GetFullPath(p.MainModule.FileName));
+                    string processPath = FileSystemManager.GetUNCPath(Path.GetFullPath(p.MainModule.FileName));
                     if (processPath.Equals(myExePath))
                     {
                         continue;
@@ -207,7 +199,7 @@ namespace MSearch
                             string fileDescription = p.MainModule.FileVersionInfo.FileDescription;
 
 
-                            if (ProcessManager.IsTrustedProcess(msData, originalFileName, isValidProcess))
+                            if (ProcessManager.IsTrustedProcess(MSData.Instance, originalFileName, isValidProcess))
                             {
                                 continue;
                             }
@@ -291,7 +283,7 @@ namespace MSearch
                         }
                     }
 
-                    if (processName.Equals(msData.SysFileName[19], StringComparison.OrdinalIgnoreCase))
+                    if (processName.Equals(MSData.Instance.SysFileName[19], StringComparison.OrdinalIgnoreCase))
                     {
                         Program.LL.LogCautionMessage("_ProcessInj3cti0n", $"PID: {processId}");
                         riskLevel += 3;
@@ -338,7 +330,7 @@ namespace MSearch
 
                         }
 
-                        if ((processName.Equals(msData.SysFileName[3], StringComparison.OrdinalIgnoreCase) && args.IndexOf($"\\??\\{Program.drive_letter}:\\", StringComparison.OrdinalIgnoreCase) == -1))
+                        if ((processName.Equals(MSData.Instance.SysFileName[3], StringComparison.OrdinalIgnoreCase) && args.IndexOf($"\\??\\{Program.drive_letter}:\\", StringComparison.OrdinalIgnoreCase) == -1))
                         {
                             riskLevel += 3;
                             if (args.IndexOf($"\\\\?\\{Program.drive_letter}:\\", StringComparison.OrdinalIgnoreCase) >= 0)
@@ -350,12 +342,12 @@ namespace MSearch
                                 Program.LL.LogWarnMediumMessage("_WatchdogProcess", $"PID: {processId}");
                             }
                         }
-                        if (processName.Equals(msData.SysFileName[4], StringComparison.OrdinalIgnoreCase) && args.IndexOf($"{msData.SysFileName[4]}.exe -k", StringComparison.OrdinalIgnoreCase) == -1)
+                        if (processName.Equals(MSData.Instance.SysFileName[4], StringComparison.OrdinalIgnoreCase) && args.IndexOf($"{MSData.Instance.SysFileName[4]}.exe -k", StringComparison.OrdinalIgnoreCase) == -1)
                         {
                             Program.LL.LogCautionMessage("_ProcessInj3cti0n", $"PID: {processId}");
                             riskLevel += 3;
                         }
-                        if (processName.Equals(msData.SysFileName[4], StringComparison.OrdinalIgnoreCase) && (args.IndexOf($"{msData.SysFileName[4]}.exe -k dcomlaunch", StringComparison.OrdinalIgnoreCase) >= 0))
+                        if (processName.Equals(MSData.Instance.SysFileName[4], StringComparison.OrdinalIgnoreCase) && (args.IndexOf($"{MSData.Instance.SysFileName[4]}.exe -k dcomlaunch", StringComparison.OrdinalIgnoreCase) >= 0))
                         {
                             foreach (ProcessModule pMod in p.Modules)
                             {
@@ -366,7 +358,7 @@ namespace MSearch
                                 }
                             }
                         }
-                        if (processName.Equals(msData.SysFileName[5], StringComparison.OrdinalIgnoreCase) && !Program.RunAsSystem)
+                        if (processName.Equals(MSData.Instance.SysFileName[5], StringComparison.OrdinalIgnoreCase) && !Program.RunAsSystem)
                         {
                             bool isFakeDwm = false;
                             if (OSExtensions.GetWindowsVersion().IndexOf("Windows 7", StringComparison.OrdinalIgnoreCase) == -1) //is not Win7
@@ -382,7 +374,7 @@ namespace MSearch
                                     try
                                     {
                                         Process dwmParent = Process.GetProcessById(dwmParentPID);
-                                        if (dwmParent.HasExited || !dwmParent.ProcessName.Equals(msData.SysFileName[7], StringComparison.OrdinalIgnoreCase))
+                                        if (dwmParent.HasExited || !dwmParent.ProcessName.Equals(MSData.Instance.SysFileName[7], StringComparison.OrdinalIgnoreCase))
                                         {
                                             isFakeDwm = true;
                                         }
@@ -403,7 +395,7 @@ namespace MSearch
                                     try
                                     {
                                         Process dwmParent = Process.GetProcessById(dwmParentPID);
-                                        if (dwmParent.HasExited || !dwmParent.ProcessName.Equals(msData.SysFileName[4], StringComparison.OrdinalIgnoreCase))
+                                        if (dwmParent.HasExited || !dwmParent.ProcessName.Equals(MSData.Instance.SysFileName[4], StringComparison.OrdinalIgnoreCase))
                                         {
                                             isFakeDwm = true;
                                         }
@@ -432,19 +424,19 @@ namespace MSearch
                                 riskLevel += 3;
                             }
                         }
-                        if (processName.Equals(msData.SysFileName[17], StringComparison.OrdinalIgnoreCase) && args.IndexOf("\\dia?ler.exe ".Replace("?", ""), StringComparison.OrdinalIgnoreCase) >= 0)
+                        if (processName.Equals(MSData.Instance.SysFileName[17], StringComparison.OrdinalIgnoreCase))
                         {
                             Program.LL.LogCautionMessage("_ProcessInj3cti0n", $"PID: {processId}");
                             riskLevel += 3;
                         }
 
-                        if (processName.Equals(msData.SysFileName[32], StringComparison.OrdinalIgnoreCase) && args.IndexOf("#system32", StringComparison.OrdinalIgnoreCase) >= 0)
+                        if (processName.Equals(MSData.Instance.SysFileName[32], StringComparison.OrdinalIgnoreCase) && args.IndexOf("#system32", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
                             Program.LL.LogWarnMediumMessage("_ProbablyRAT", $"{p.MainModule.FileName} PID: {processId}");
                             riskLevel += 3;
                         }
 
-                        if (processName.Equals(msData.SysFileName[31], StringComparison.OrdinalIgnoreCase) && !p.HasExited ? (DateTime.Now - p.StartTime).TotalSeconds >= 60 : false)
+                        if (processName.Equals(MSData.Instance.SysFileName[31], StringComparison.OrdinalIgnoreCase) && !p.HasExited ? (DateTime.Now - p.StartTime).TotalSeconds >= 60 : false)
                         {
                             Program.LL.LogWarnMediumMessage("_ProbablyRAT", $"{p.MainModule.FileName} PID: {processId}");
                             riskLevel += 3;
@@ -459,8 +451,15 @@ namespace MSearch
 
                     bool isSuspiciousPath = false;
                     string fullPath = p.MainModule.FileName;
+                    string appData = Environment.GetEnvironmentVariable("AppData") ?? "";
+                    if (!isValidProcess && fullPath.StartsWith(appData, StringComparison.OrdinalIgnoreCase) && string.IsNullOrEmpty(Path.GetExtension(fullPath)))
+                    {
+                        Program.LL.LogWarnMessage("_SuspiciousPath", fullPath);
+                        isSuspiciousPath = true;
+                        riskLevel += 2;
+                    }
 
-                    if (processName.Equals(msData.SysFileName[28], StringComparison.OrdinalIgnoreCase) && fullPath.IndexOf($"{Program.drive_letter}:\\windows\\system32", StringComparison.OrdinalIgnoreCase) == -1)
+                    if (processName.Equals(MSData.Instance.SysFileName[28], StringComparison.OrdinalIgnoreCase) && fullPath.IndexOf($"{Program.drive_letter}:\\windows\\system32", StringComparison.OrdinalIgnoreCase) == -1)
                     {
                         Program.LL.LogWarnMessage("_SuspiciousPath", fullPath);
                         isSuspiciousPath = true;
@@ -476,15 +475,16 @@ namespace MSearch
                         Program.LL.LogErrorMessage("_Error", ex);
                     }
 
-                    for (int i = 0; i < msData.SysFileName.Length; i++)
+                    for (int i = 0; i < MSData.Instance.SysFileName.Length; i++)
                     {
 
-                        if (processName.Equals(msData.SysFileName[i], StringComparison.OrdinalIgnoreCase))
+                        if (processName.Equals(MSData.Instance.SysFileName[i], StringComparison.OrdinalIgnoreCase))
                         {
 
                             if (fullPath.IndexOf($"{Program.drive_letter}:\\windows\\system32", StringComparison.OrdinalIgnoreCase) == -1
                                 && fullPath.IndexOf($"{Program.drive_letter}:\\windows\\syswow64", StringComparison.OrdinalIgnoreCase) == -1
                                 && fullPath.IndexOf($"{Program.drive_letter}:\\windows\\winsxs\\amd64", StringComparison.OrdinalIgnoreCase) == -1
+                                && fullPath.IndexOf($"{Program.drive_letter}:\\windows\\winsxs\\x86", StringComparison.OrdinalIgnoreCase) == -1
                                 && fullPath.IndexOf($"{Program.drive_letter}:\\windows\\microsoft.net\\framework64", StringComparison.OrdinalIgnoreCase) == -1
                                 && fullPath.IndexOf($"{Program.drive_letter}:\\windows\\microsoft.net\\framework", StringComparison.OrdinalIgnoreCase) == -1)
                             {
@@ -494,7 +494,7 @@ namespace MSearch
                                 riskLevel += 2;
                             }
 
-                            if (fileSize >= msData.constantFileSize[i] * 3 && !isValidProcess)
+                            if (fileSize >= MSData.Instance.constantFileSize[i] * 3 && !isValidProcess)
                             {
                                 Program.LL.LogWarnMessage("_SuspiciousFileSize", FileChecker.GetFileSize(fileSize));
                                 riskLevel += 1;
@@ -512,7 +512,7 @@ namespace MSearch
 
                     try
                     {
-                        if (processName.Equals(msData.SysFileName[17], StringComparison.OrdinalIgnoreCase) && p.MainModule.FileName.Equals("?di?al?er.ex?e".Replace("?", ""), StringComparison.OrdinalIgnoreCase))
+                        if (processName.Equals(MSData.Instance.SysFileName[17], StringComparison.OrdinalIgnoreCase) && p.MainModule.FileName.Equals("?di?al?er.ex?e".Replace("?", ""), StringComparison.OrdinalIgnoreCase))
                         {
                             Program.LL.LogWarnMediumMessage("_WatchdogProcess", $"PID: {processId}");
                             riskLevel += 3;
@@ -568,16 +568,25 @@ namespace MSearch
                         }
                     }
 
-                    if (p.TotalProcessorTime > new TimeSpan(0, 1, 0) || (p.PagedMemorySize64 / 1024 * 1024) >= 2048)
+                    if (processName.Equals("notepad", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if ((ProcessManager.IsSystemProcess(p.Id) && !OSExtensions.IsWinPEEnv()) || p.TotalProcessorTime >= new TimeSpan(0, 0, 5))
+                        {
+                            riskLevel += 3;
+                        }
+                    }
+
+                    if (p.TotalProcessorTime > new TimeSpan(0, 1, 0) || (p.PagedMemorySize64 / (1024 * 1024) >= 2048))
                     {
 
                         if (File.Exists(processPath))
                         {
-                            if (IsMalic1ousFile(FileSystemManager.GetLongPath(processPath), false))
+                            if (IsMalic1ousFile(FileSystemManager.GetUNCPath(processPath), false))
                             {
                                 riskLevel += 3;
                                 isMaliciousProcess = true;
                             }
+
                         }
                         else
                         {
@@ -585,7 +594,28 @@ namespace MSearch
                         }
                     }
 
-                    if (msData.obfStr2.Any(s => FileSystemManager.GetLongPath(s).Equals(processPath, StringComparison.OrdinalIgnoreCase)))
+                    if (processPath.Contains(@":\Windows\Microsoft.NET\Framework"))
+                    {
+                        try
+                        {
+                            if (ProcessManager.GetParentProcessId(p.Id) == 0)
+                            {
+                                riskLevel += 1;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            riskLevel += 1;
+                        }
+
+                        if (p.TotalProcessorTime <= new TimeSpan(0, 0, 15) && (p.PrivateMemorySize64 / (1024 * 1024) <= 100))
+                        {
+                            Program.LL.LogWarnMediumMessage("_WatchdogProcess", $"PID: {processId}");
+                            riskLevel += 3;
+                        }
+                    }
+
+                    if (MSData.Instance.obfStr2.Any(s => FileSystemManager.GetUNCPath(s).Equals(processPath, StringComparison.OrdinalIgnoreCase)))
                     {
                         riskLevel += 3;
                         isMaliciousProcess = true;
@@ -593,12 +623,14 @@ namespace MSearch
 
                     if (riskLevel >= 3)
                     {
-                        Program.LL.LogCautionMessage("_ProcessFound", riskLevel.ToString());
+                        Program.LL.LogCautionMessage("_ProcessFound", ProcessManager.GetLocalizedRiskLevel(riskLevel));
                         Program.totalFoundThreats++;
                         if (!Program.ScanOnly)
                         {
                             ProcessManager.SuspendProcess(p);
                         }
+
+
 
                         if (isSuspiciousPath || isMaliciousProcess)
                         {
@@ -675,40 +707,32 @@ namespace MSearch
 
             if (Program.fullScan)
             {
-                msData.obfStr6.Clear();
-                msData.obfStr6.Add(Program.drive_letter + ":\\");
+                MSData.Instance.obfStr6.Clear();
+                MSData.Instance.obfStr6.Add(Program.drive_letter + ":\\");
             }
 
             if (!Program.WinPEMode)
             {
 
-                if (!Program.RunAsSystem)
-                {
-                    msData.obfStr1.Add(Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"), "clienthelper-updater"));
-                    msData.obfStr1.Add(Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"), "torrentpro-updater"));
-                    msData.obfStr1.Add(Path.Combine(Environment.GetEnvironmentVariable("LocalAppData"), "Programs", "Common", "OneDriveCloud"));
-                }
-
-
                 string DesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 if (DesktopPath != null && !Program.RunAsSystem)
                 {
-                    msData.obfStr5.Add(Path.Combine(DesktopPath, "aut~olo~~gger".Replace("~", "")));
-                    msData.obfStr5.Add(Path.Combine(DesktopPath, "av~_bl~~ock~_rem~~over".Replace("~", "")));
+                    MSData.Instance.obfStr5.Add(Path.Combine(DesktopPath, "aut~olo~~gger".Replace("~", "")));
+                    MSData.Instance.obfStr5.Add(Path.Combine(DesktopPath, "av~_bl~~ock~_rem~~over".Replace("~", "")));
                     if (!Path.GetPathRoot(DesktopPath).Equals("C:\\", StringComparison.OrdinalIgnoreCase) && !Program.WinPEMode && !Program.fullScan)
                     {
-                        msData.obfStr6.Add(DesktopPath);
+                        MSData.Instance.obfStr6.Add(DesktopPath);
                     }
                 }
                 //#if !DEBUG
                 string DownloadsPath = FileSystemManager.GetDownloadsPath();
                 if (DownloadsPath != null && !Program.RunAsSystem)
                 {
-                    msData.obfStr5.Add(Path.Combine(DownloadsPath, "auto~lo~gge~~r".Replace("~", "")));
-                    msData.obfStr5.Add(Path.Combine(DownloadsPath, "av_~bl~o~ck~_re~m~over".Replace("~", "")));
+                    MSData.Instance.obfStr5.Add(Path.Combine(DownloadsPath, "auto~lo~gge~~r".Replace("~", "")));
+                    MSData.Instance.obfStr5.Add(Path.Combine(DownloadsPath, "av_~bl~o~ck~_re~m~over".Replace("~", "")));
                     if (!Path.GetPathRoot(DownloadsPath).Equals("C:\\", StringComparison.OrdinalIgnoreCase) && !Program.WinPEMode && !Program.fullScan)
                     {
-                        msData.obfStr6.Add(DownloadsPath);
+                        MSData.Instance.obfStr6.Add(DownloadsPath);
                     }
                 }
                 //#endif
@@ -716,13 +740,13 @@ namespace MSearch
 
             if (!string.IsNullOrEmpty(Program.selectedPath) && Directory.Exists(Program.selectedPath) && !Program.fullScan)
             {
-                msData.obfStr6.Clear();
-                msData.obfStr6.Add(Program.selectedPath);
+                MSData.Instance.obfStr6.Clear();
+                MSData.Instance.obfStr6.Add(Program.selectedPath);
             }
 
-            msData.obfStr6 = msData.obfStr6.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+            MSData.Instance.obfStr6 = MSData.Instance.obfStr6.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
 
-            ScanDirectories(msData.obfStr5, founded_suspLockedPaths, true);
+            ScanDirectories(MSData.Instance.obfStr5, founded_suspLockedPaths, true);
 
             if (!Program.ScanOnly)
             {
@@ -748,15 +772,13 @@ namespace MSearch
                     {
                         if (FileChecker.CalculateMD5(file).Equals("0c0195c48b6b8582fa6f6373032118da"))
                         {
-                            msData.obfStr1.Add(directory);
+                            MSData.Instance.obfStr1.Add(directory);
                         }
                     }
                 }
             }
 
-            msData.obfStr1.Add(Path.Combine(Environment.GetEnvironmentVariable("appdata"), "sys?fi?les".Replace("?", "")));
-
-            ScanDirectories(msData.obfStr1, founded_mlwrDirs);
+            ScanDirectories(MSData.Instance.obfStr1, founded_mlwrDirs);
             if (!Program.ScanOnly)
             {
                 if (founded_mlwrDirs.Count == 0)
@@ -830,6 +852,7 @@ namespace MSearch
 
         public void Clean()
         {
+
             if (mlwrPids.Count != 0)
             {
                 Program.LL.LogHeadMessage("_Malici0usProcesses");
@@ -902,7 +925,7 @@ namespace MSearch
 
 
 
-            foreach (string path in msData.obfStr2)
+            foreach (string path in MSData.Instance.obfStr2)
             {
                 if (File.Exists(path))
                 {
@@ -923,7 +946,7 @@ namespace MSearch
                             {
                                 if (UnlockObjectClass.ResetObjectACL(Path.GetDirectoryName(path)))
                                 {
-                                    Program.LL.LogSuccessMessage("_UnlockSuccess");
+                                    Program.LL.LogSuccessMessage("_UnlockSuccess", path);
                                 }
                                 UnlockObjectClass.KillAndDelete(path);
                                 if (!File.Exists(path))
@@ -991,8 +1014,10 @@ namespace MSearch
 
                                 if (UnlockObjectClass.IsLockedObject(Path.GetDirectoryName(path)))
                                 {
-                                    UnlockObjectClass.ResetObjectACL(Path.GetDirectoryName(path));
-                                    Program.LL.LogSuccessMessage("_UnlockSuccess");
+                                    if (UnlockObjectClass.ResetObjectACL(Path.GetDirectoryName(path)))
+                                    {
+                                        Program.LL.LogSuccessMessage("_UnlockSuccess", path);
+                                    }
                                 }
                                 try
                                 {
@@ -1273,7 +1298,7 @@ namespace MSearch
                 dynamic fwPolicy2 = Activator.CreateInstance(typeFWPolicy2);
 
                 INetFwRules rules = fwPolicy2.Rules;
-                foreach (string programPath in msData.obfStr2)
+                foreach (string programPath in MSData.Instance.obfStr2)
                 {
                     foreach (INetFwRule rule in rules)
                     {
@@ -1298,7 +1323,7 @@ namespace MSearch
                                     scanResults.Add(new ScanResult(ScanObjectType.Malware, $"Fir?ewa?ll:{ruleName}".Replace("?", ""), ScanActionType.Skipped));
                                 }
 
-                                Logger.WriteLog($"------------------------------", ConsoleColor.White);
+                                Logger.WriteLog($"------------------------------", ConsoleColor.White, true, true);
                             }
                         }
 
@@ -1372,7 +1397,7 @@ namespace MSearch
             Program.LL.LogHeadMessage("_ScanningHosts");
 
             List<string> linesToDelete = new List<string>();
-            string hostsPath_full = $"{Program.drive_letter}:\\Windows\\System32\\drivers\\etc\\hosts";
+            string hostsPath_full = $"{Program.drive_letter}{MSData.Instance.queries["h0sts"]}";
             string hostsPath_tmp = Path.Combine(Path.GetTempPath(), $"hosts{Utils.GetRndString(16)}");
 
             if (!File.Exists(hostsPath_full))
@@ -1387,12 +1412,19 @@ namespace MSearch
                 {
                     Directory.CreateDirectory(hostsdir);
                 }
-
-                File.Create(hostsPath_full).Close();
-                Thread.Sleep(100);
-                if (File.Exists(hostsPath_full))
+                try
                 {
-                    Program.LL.LogSuccessMessage("_HostsFileCreated");
+                    File.Create(hostsPath_full).Close();
+                    Thread.Sleep(100);
+                    if (File.Exists(hostsPath_full))
+                    {
+                        Program.LL.LogSuccessMessage("_HostsFileCreated");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Program.LL.LogErrorMessage("_ErrorCleanHosts", e);
+                    scanResults.Add(new ScanResult(ScanObjectType.Unknown, hostsPath_full, ScanActionType.Inaccassible));
                 }
                 return;
             }
@@ -1435,7 +1467,7 @@ namespace MSearch
                     {
                         string line = lines[i];
 
-                        if (line.StartsWith("#") || msData.whiteListedWords.Any(word => line.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0))
+                        if (line.StartsWith("#") || MSData.Instance.whiteListedWords.Any(word => line.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0))
                         {
                             continue;
                         }
@@ -1444,9 +1476,10 @@ namespace MSearch
                         if (parts.Length < 2) continue;
 
                         string ipAddress = parts[0];
-                        string domain = parts[1];
+                        string domain = parts[1].ToLower();
+                        if (domain.StartsWith("www.")) domain = domain.Substring(4);
 
-                        foreach (HashedString hLine in msData.hStrings)
+                        foreach (HashedString hLine in MSData.Instance.hStrings)
                         {
                             if (hLine.OriginalLength <= domain.Length)
                             {
@@ -1456,7 +1489,7 @@ namespace MSearch
                                 {
                                     if (!Program.ScanOnly)
                                     {
-                                        if (!msData.hStrings.Any(h => Utils.StringMD5(domain).Equals(h.Hash)))
+                                        if (!MSData.Instance.hStrings.Any(h => Utils.StringMD5(domain).Equals(h.Hash)))
                                         {
                                             linesToDelete.Add(line);
                                         }
@@ -1558,7 +1591,7 @@ namespace MSearch
                 {
                     File.Delete(tmpFile);
                 }
-                msData.hStrings.Clear();
+                MSData.Instance.hStrings.Clear();
             }
         }
 
@@ -1572,7 +1605,7 @@ namespace MSearch
             Logger.WriteLog(@"[Reg] Dis?allo?wRun...".Replace("?", ""), ConsoleColor.DarkCyan);
             try
             {
-                RegistryKey DisallowRunKey = Registry.CurrentUser.OpenSubKey(msData.queries[1], true);
+                RegistryKey DisallowRunKey = Registry.CurrentUser.OpenSubKey(MSData.Instance.queries["ExplorerPolicies"], true);
                 if (DisallowRunKey != null)
                 {
                     if (DisallowRunKey.GetValueNames().Contains("Dis?allo?wRun".Replace("?", "")))
@@ -1600,12 +1633,12 @@ namespace MSearch
 
                     if (!Program.ScanOnly)
                     {
-                        RegistryKey DisallowRunSub = Registry.CurrentUser.OpenSubKey(msData.queries[2], true);
+                        RegistryKey DisallowRunSub = Registry.CurrentUser.OpenSubKey(MSData.Instance.queries["ExplorerDisallowRun"], true);
                         if (DisallowRunSub != null)
                         {
                             Program.totalFoundThreats++;
                             DisallowRunKey.DeleteSubKeyTree("Di?sall?owR?un".Replace("?", ""));
-                            DisallowRunSub = Registry.CurrentUser.OpenSubKey(msData.queries[2], true);
+                            DisallowRunSub = Registry.CurrentUser.OpenSubKey(MSData.Instance.queries["ExplorerDisallowRun"], true);
                             if (DisallowRunSub == null)
                             {
                                 Program.LL.LogSuccessMessage("_RegistryKeyRemoved", "Dis?allo?wRun (hive)");
@@ -1631,7 +1664,7 @@ namespace MSearch
             Logger.WriteLog(@"[Reg] AppInitDLL...", ConsoleColor.DarkCyan);
             try
             {
-                RegistryKey appinit_key = Registry.LocalMachine.OpenSubKey(msData.queries[3], true);
+                RegistryKey appinit_key = Registry.LocalMachine.OpenSubKey(MSData.Instance.queries["WindowsNT_CurrentVersion_Windows"], true);
                 if (appinit_key != null)
                 {
                     string appInitDllsValue = appinit_key.GetValue("AppI?nit?_DLLs".Replace("?", "")).ToString();
@@ -1691,7 +1724,7 @@ namespace MSearch
 
             try
             {
-                RegistryKey IFEOKey = Registry.LocalMachine.OpenSubKey(msData.queries[15], true);
+                RegistryKey IFEOKey = Registry.LocalMachine.OpenSubKey(MSData.Instance.queries["IFEO"], true);
 
                 if (IFEOKey != null)
                 {
@@ -1780,7 +1813,7 @@ namespace MSearch
 
             try
             {
-                RegistryKey IFEOKey = Registry.LocalMachine.OpenSubKey(msData.queries[16], true);
+                RegistryKey IFEOKey = Registry.LocalMachine.OpenSubKey(MSData.Instance.queries["Wow6432Node_IFEO"], true);
 
                 if (IFEOKey != null)
                 {
@@ -1828,7 +1861,7 @@ namespace MSearch
                                     }
                                 }
 
-                                object mmStackValue = subKey.GetValue("Min?imu?mSt?ack?Com?mit?InB?yte?s".Replace("?", ""));
+                                object mmStackValue = subKey.GetValue("Min?im?umSta?ckC?om?mit?InB?yte?s".Replace("?", ""));
                                 if (mmStackValue != null && mmStackValue is int @int)
                                 {
                                     int _dvalue = @int;
@@ -1866,7 +1899,7 @@ namespace MSearch
 
             try
             {
-                RegistryKey baseKey = Registry.LocalMachine.OpenSubKey(msData.queries[17], writable: true);
+                RegistryKey baseKey = Registry.LocalMachine.OpenSubKey(MSData.Instance.queries["SilentProcessExit"], writable: true);
 
                 if (baseKey != null)
                 {
@@ -1910,7 +1943,7 @@ namespace MSearch
             #region HKLM
             try
             {
-                RegistryKey AutorunKey = Registry.LocalMachine.OpenSubKey(msData.queries[4], true);
+                RegistryKey AutorunKey = Registry.LocalMachine.OpenSubKey(MSData.Instance.queries["StartupRun"], true);
                 if (AutorunKey != null)
                 {
                     Logger.WriteLog(@"[Reg] HKLM Autorun...", ConsoleColor.DarkCyan);
@@ -1932,7 +1965,7 @@ namespace MSearch
                         }
 
                         string AutorunKeyValue = AutorunKey.GetValue(value).ToString();
-                        if (AutorunKeyValue == $@"{Program.drive_letter}:\Pro?gra?mDa?ta\Re?aItek?HD\task?host?w.e?x?e".Replace("?", ""))
+                        if (AutorunKeyValue.IndexOf("Re??a?l?te?kH?D\\t?ask".Replace("?", ""), StringComparison.InvariantCultureIgnoreCase) >= 0 || AutorunKeyValue.IndexOf("Re?aI?te??kHD\\tas?k".Replace("?", ""), StringComparison.InvariantCultureIgnoreCase) >= 0)
                         {
                             Program.totalFoundThreats++;
 
@@ -1972,6 +2005,27 @@ namespace MSearch
 
                             }
                         }
+
+                        if ((AutorunKeyValue.IndexOf(" /c cd ", StringComparison.OrdinalIgnoreCase) >= 0 && (AutorunKeyValue.IndexOf(" && ", StringComparison.OrdinalIgnoreCase) >= 0)))
+                        {
+                            Program.totalFoundThreats++;
+                            if (!Program.ScanOnly)
+                            {
+                                AutorunKey.DeleteValue(value);
+                                if (AutorunKey.GetValue(value) == null)
+                                {
+                                    Program.LL.LogSuccessMessage("_RegistryKeyRemoved", value);
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                    affected_items++;
+                                }
+                            }
+                            else
+                            {
+                                Program.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+
+                            }
+                        }
                     }
                 }
             }
@@ -1986,7 +2040,7 @@ namespace MSearch
             Logger.WriteLog(@"[Reg] HKCU Autorun...", ConsoleColor.DarkCyan);
             try
             {
-                RegistryKey AutorunKey = Registry.CurrentUser.OpenSubKey(msData.queries[4], true);
+                RegistryKey AutorunKey = Registry.CurrentUser.OpenSubKey(MSData.Instance.queries["StartupRun"], true);
                 if (AutorunKey != null)
                 {
 
@@ -2015,13 +2069,34 @@ namespace MSearch
                             {
                                 AutorunKey.DeleteValue(value);
                                 Program.LL.LogSuccessMessage("_RegistryKeyRemoved", value);
-                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"HKCU:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
                                 affected_items++;
                             }
                             else
                             {
                                 Program.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"HKCU:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+
+                            }
+                        }
+
+                        if ((AutorunKeyValue.IndexOf(" /c cd ", StringComparison.OrdinalIgnoreCase) >= 0 && (AutorunKeyValue.IndexOf(" && ", StringComparison.OrdinalIgnoreCase) >= 0)))
+                        {
+                            Program.totalFoundThreats++;
+                            if (!Program.ScanOnly)
+                            {
+                                AutorunKey.DeleteValue(value);
+                                if (AutorunKey.GetValue(value) == null)
+                                {
+                                    Program.LL.LogSuccessMessage("_RegistryKeyRemoved", value);
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKCU:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                    affected_items++;
+                                }
+                            }
+                            else
+                            {
+                                Program.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKCU:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
 
                             }
                         }
@@ -2186,97 +2261,91 @@ namespace MSearch
             #region WindowsDefender
             StringBuilder sbWD = new StringBuilder("Re").Append("gi").Append("st").Append("ry").Append(":W").Append("in").Append("De").Append("fe").Append("nd").Append(" P").Append("ol").Append("ic").Append("y");
             Logger.WriteLog($"[Reg] {new StringBuilder("Wi").Append("nd").Append("ow").Append("s ").Append("De").Append("fe").Append("nd").Append("er")}...".Replace("~", ""), ConsoleColor.DarkCyan);
+
             try
             {
-                RegistryKey winDfndr = Registry.LocalMachine.OpenSubKey(msData.queries[5], true);
-                if (winDfndr != null)
+                string[] baseKeys =
                 {
-                    foreach (string path in msData.obfStr3)
+                    MSData.Instance.queries["WDExclusionsLocal"],
+                    MSData.Instance.queries["WDExclusionsPolicies"]
+                };
+
+                string[] subKeys = { "Paths", "Processes", "Extensions" };
+
+                foreach (string baseKey in baseKeys)
+                {
+                    RegistryKey winDefenderKey = baseKey == baseKeys[0] ? Registry.LocalMachine.OpenSubKey(baseKey) : Registry.LocalMachine.OpenSubKey(baseKey, true);
+                    if (winDefenderKey == null) continue;
+
+                    foreach (string subKey in subKeys)
                     {
-                        RegistryKey key = Registry.LocalMachine.OpenSubKey(msData.queries[6], true);
+                        string fullKeyPath = baseKey + "\\" + subKey;
+                        RegistryKey key = baseKey == baseKeys[0] ? Registry.LocalMachine.OpenSubKey(fullKeyPath) : Registry.LocalMachine.OpenSubKey(fullKeyPath, true);
+                        if (key == null) continue;
 
-                        if (key != null)
+                        string[] valueNames = key.GetValueNames();
+                        List<string> checkList;
+
+                        if (subKey == "Processes")
+                            checkList = MSData.Instance.obfStr4;
+                        else if (subKey == "Extensions")
+                            checkList = new List<string> { ".exe", ".tmp" };
+                        else
+                            checkList = MSData.Instance.obfStr3;
+
+                        foreach (string valueName in valueNames)
                         {
-                            string[] valueNames = key.GetValueNames();
 
-                            foreach (string valueName in valueNames)
+                            if (checkList.Contains(valueName, StringComparer.OrdinalIgnoreCase))
                             {
+                                Program.totalFoundThreats++;
+
                                 try
                                 {
-                                    if (valueName.ToString().Equals(path, StringComparison.OrdinalIgnoreCase))
+                                    if (!Program.ScanOnly)
                                     {
-                                        Program.totalFoundThreats++;
-
-                                        if (!Program.ScanOnly)
+                                        if (baseKey == MSData.Instance.queries["WDExclusionsLocal"])
                                         {
-                                            key.DeleteValue(valueName);
-                                            scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{sbWD} -> {valueName}".Replace("?", ""), ScanActionType.Deleted));
-                                            Program.LL.LogSuccessMessage("_RegistryKeyRemoved", valueName);
-                                            affected_items++;
+                                            Utils.RemoveDefenderExclusion(subKey, valueName);
+                                            if (key.GetValue(valueName) == null)
+                                            {
+                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " -> " + valueName, ScanActionType.Deleted));
+                                                Program.LL.LogSuccessMessage("_RegistryKeyRemoved", valueName);
+                                                affected_items++;
+                                            }
                                         }
                                         else
                                         {
-                                            Program.LL.LogWarnMediumMessage("_FoundMlwrKey", valueName);
-                                            scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{sbWD} -> {valueName}".Replace("?", ""), ScanActionType.Skipped));
-
+                                            key.DeleteValue(valueName);
+                                            if (key.GetValue(valueName) == null)
+                                            {
+                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " -> " + valueName, ScanActionType.Deleted));
+                                                Program.LL.LogSuccessMessage("_RegistryKeyRemoved", valueName);
+                                                affected_items++;
+                                            }
                                         }
                                     }
+                                    else
+                                    {
+                                        Program.LL.LogWarnMediumMessage("_FoundMlwrKey", valueName);
+                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " -> " + valueName, ScanActionType.Skipped));
+                                    }
+
                                 }
                                 catch (Exception ex)
                                 {
+                                    Program.totalNeutralizedThreats--;
                                     Program.LL.LogErrorMessage("_ErrorCannotOpen", ex, valueName);
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " -> " + valueName, ScanActionType.Error));
                                 }
-
                             }
 
-                            key.Close();
                         }
+
+                        key.Close();
                     }
 
-                    foreach (string process in msData.obfStr4)
-                    {
-                        RegistryKey key = Registry.LocalMachine.OpenSubKey(msData.queries[7], true);
-
-                        if (key != null)
-                        {
-                            string[] valueNames = key.GetValueNames();
-
-                            foreach (string valueName in valueNames)
-                            {
-                                try
-                                {
-                                    if (valueName.ToString().Equals(process, StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        Program.totalFoundThreats++;
-                                        if (!Program.ScanOnly)
-                                        {
-                                            key.DeleteValue(valueName);
-                                            Program.LL.LogSuccessMessage("_Exclusion", valueName, "_Deleted");
-                                            scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{sbWD} -> {valueName}".Replace("?", ""), ScanActionType.Deleted));
-
-                                            affected_items++;
-                                        }
-                                        else
-                                        {
-                                            Program.LL.LogWarnMediumMessage("_MaliciousEntry", $"{valueName} (WinD?efen?der)");
-                                            scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{sbWD} -> {valueName}".Replace("?", ""), ScanActionType.Skipped));
-
-                                        }
-
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Program.LL.LogErrorMessage("_ErrorCannotOpen", ex, valueName, "_Exclusion");
-                                    scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{sbWD} -> {valueName}".Replace("?", ""), ScanActionType.Error));
-
-                                }
-
-                            }
-
-                            key.Close();
-                        }
-                    }
+                    winDefenderKey.Close();
                 }
             }
             catch (Exception ex)
@@ -2289,7 +2358,7 @@ namespace MSearch
             #region WOW6432Node
             try
             {
-                RegistryKey AutorunKey = Registry.LocalMachine.OpenSubKey(msData.queries[8], true);
+                RegistryKey AutorunKey = Registry.LocalMachine.OpenSubKey(MSData.Instance.queries["Wow6432Node_StartupRun"], true);
                 if (AutorunKey != null)
                 {
                     Logger.WriteLog(@"[Reg] Wow64Node Autorun...", ConsoleColor.DarkCyan);
@@ -2336,7 +2405,7 @@ namespace MSearch
                 Environment.SystemDirectory, // System32
                 new StringBuilder(Program.drive_letter).Append(":\\W").Append("in").Append("do").Append("ws").Append("\\S").Append("ys").Append("WO").Append("W6").Append("4").ToString(),
                 new StringBuilder(Program.drive_letter).Append(":\\W").Append("in").Append("do").Append("ws").Append("\\S").Append("ys").Append("te").Append("m3").Append("2\\").Append("wb").Append("em").ToString(),
-                msData.queries[9], // PowerShell
+                MSData.Instance.queries["PowerShellPath"],
             };
 
             string[] badArgStrings =
@@ -2522,7 +2591,10 @@ namespace MSearch
                             }
                         }
 
-                        FileSystemManager.ProcessFileFromArgs(checkDirectories, filePath, arguments);
+                        if (!string.IsNullOrEmpty(arguments))
+                        {
+                            FileSystemManager.ProcessFileFromArgs(checkDirectories, filePath, arguments);
+                        }
 
                         if (!Program.RemoveEmptyTasks && Utils.IsTaskEmpty(task))
                         {
@@ -2600,7 +2672,7 @@ namespace MSearch
                             return;
                         }
 
-                        if (arguments.Replace("'", "").IndexOf(" -e ", StringComparison.OrdinalIgnoreCase) >= 0 || arguments.Replace("'", "").IndexOf("-encodedcommand", StringComparison.OrdinalIgnoreCase) >= 0)
+                        if (arguments.Length >= 500 || arguments.Replace("'", "").IndexOf(" -e ", StringComparison.OrdinalIgnoreCase) >= 0 || arguments.Replace("'", "").IndexOf("-encodedcommand", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
                             Program.LL.LogCautionMessage("_MaliciousEntry", taskName);
 
@@ -2688,52 +2760,110 @@ namespace MSearch
                         }
                     }
 
-                    if (filePath.IndexOf(new StringBuilder("ws").Append("cri").Append("pt").ToString(), StringComparison.OrdinalIgnoreCase) >= 0 && arguments.EndsWith(".wsf\"", StringComparison.OrdinalIgnoreCase))
+                    if (filePath.IndexOf(new StringBuilder("ws").Append("cri").Append("pt").ToString(), StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        try
+                        if (!Program.ScanOnly)
                         {
-                            Program.totalFoundThreats++;
-                            taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
-                            if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                            try
                             {
-                                Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
-                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
-                            }
+                                Program.totalFoundThreats++;
+                                taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
+                                if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                                {
+                                    Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                                }
 
-                            return;
+                                return;
+                            }
+                            catch (Exception ex)
+                            {
+                                Program.totalNeutralizedThreats--;
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Error));
+                                Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                            }
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            Program.totalNeutralizedThreats--;
-                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Error));
-                            Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
                         }
+
                     }
 
                     if (filePath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) && arguments.Equals("/LHS", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (File.Exists(filePath))
+                        if (!Program.ScanOnly)
                         {
-                            Program.totalFoundThreats++;
-                            Utils.AddToQuarantine(filePath);
-                        }
-
-                        try
-                        {
-
-                            taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
-                            if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                            Program.LL.LogCautionMessage("_Malici0usFile", filePath);
+                            if (founded_mlwrFiles.Add(filePath))
                             {
-                                Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
-                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                                Program.totalFoundThreats++;
+                                UnlockObjectClass.DisableExecute(filePath);
+                            }
+                            else Program.LL.LogSuccessMessage("_AlreadyProceeded");
+
+                            try
+                            {
+
+                                taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
+                                if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                                {
+                                    Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                                }
+
+                                return;
+                            }
+                            catch (Exception ex)
+                            {
+                                Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                                Program.totalNeutralizedThreats--;
+                            }
+                        }
+                        else
+                        {
+                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
+                        }
+                    }
+
+                    if (filePath.IndexOf("regasm", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        if (!Program.ScanOnly)
+                        {
+                            string dllPath = FileSystemManager.ExtractDllPath(arguments);
+                            if (!string.IsNullOrEmpty(dllPath) && File.Exists(dllPath))
+                            {
+                                Program.LL.LogCautionMessage("_Malici0usFile", dllPath);
+                                if (founded_mlwrFiles.Add(dllPath))
+                                {
+                                    Program.totalFoundThreats++;
+                                    UnlockObjectClass.DisableExecute(dllPath);
+                                }
+                                else Program.LL.LogSuccessMessage("_AlreadyProceeded");
                             }
 
-                            return;
+                            try
+                            {
+                                Program.LL.LogCautionMessage("_Malic1ousTask", taskName);
+                                Program.totalFoundThreats++;
+                                taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
+                                if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                                {
+                                    Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                                }
+
+                                return;
+                            }
+                            catch (Exception ex)
+                            {
+                                Program.totalNeutralizedThreats--;
+                                Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                            }
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
-                            Program.totalNeutralizedThreats--;
+                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
                         }
                     }
 
@@ -2743,33 +2873,82 @@ namespace MSearch
                         return;
                     }
 
-                    long fileSize = new FileInfo(filePath).Length;
-                    if (fileSize >= maxFileSize)
+                    if (filePath.StartsWith(Environment.GetEnvironmentVariable("AppData"), StringComparison.OrdinalIgnoreCase))
                     {
-
-                        Program.LL.LogCautionMessage("_Malici0usFile", filePath);
-                        if (founded_mlwrFiles.Add(filePath))
+                        if (arguments.Equals(new StringBuilder("/v").Append("er").Append("ys").Append("il").Append("en").Append("t").ToString(), StringComparison.OrdinalIgnoreCase) || (FileChecker.IsExecutable(filePath) && string.IsNullOrEmpty(Path.GetExtension(filePath))))
                         {
-                            Program.totalFoundThreats++;
-                            UnlockObjectClass.DisableExecute(filePath);
-                        }
-                        else Program.LL.LogSuccessMessage("_AlreadyProceeded");
-
-                        try
-                        {
-                            taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
-                            if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                            if (!Program.ScanOnly)
                             {
-                                Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
-                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                                Program.LL.LogCautionMessage("_Malici0usFile", filePath);
+                                if (founded_mlwrFiles.Add(filePath))
+                                {
+                                    Program.totalFoundThreats++;
+                                    UnlockObjectClass.DisableExecute(filePath);
+                                }
+                                else Program.LL.LogSuccessMessage("_AlreadyProceeded");
+
+                                try
+                                {
+
+                                    taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
+                                    if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                                    {
+                                        Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
+                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                                    }
+
+                                    return;
+                                }
+                                catch (Exception ex)
+                                {
+                                    Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                                    Program.totalNeutralizedThreats--;
+                                }
+                            }
+                            else
+                            {
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
                             }
 
-                            return;
                         }
-                        catch (Exception ex)
+
+                    }
+
+
+
+                    long fileSize = new FileInfo(filePath).Length;
+                    if (fileSize >= maxFileSize || FileChecker.IsJarFile(filePath) || (FileChecker.IsDotNetAssembly(filePath) && FileSystemManager.HasHiddenAttribute(filePath)))
+                    {
+                        if (!Program.ScanOnly)
                         {
-                            Program.totalNeutralizedThreats--;
-                            Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                            Program.LL.LogCautionMessage("_Malici0usFile", filePath);
+                            if (founded_mlwrFiles.Add(filePath))
+                            {
+                                Program.totalFoundThreats++;
+                                UnlockObjectClass.DisableExecute(filePath);
+                            }
+                            else Program.LL.LogSuccessMessage("_AlreadyProceeded");
+
+                            try
+                            {
+                                taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
+                                if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                                {
+                                    Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                                }
+
+                                return;
+                            }
+                            catch (Exception ex)
+                            {
+                                Program.totalNeutralizedThreats--;
+                                Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                            }
+                        }
+                        else
+                        {
+                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
                         }
                     }
 
@@ -2786,7 +2965,7 @@ namespace MSearch
                         return;
                     }
 
-                    if (FileChecker.CheckSignature(filePath, msData.signatures) || FileChecker.CheckDynamicSignature(filePath, 16, 100))
+                    if (FileChecker.CheckSignature(filePath, MSData.Instance.signatures) || FileChecker.CheckDynamicSignature(filePath, 16, 100))
                     {
                         Program.LL.LogCautionMessage("_Found", filePath);
                         if (founded_mlwrFiles.Add(filePath))
@@ -2805,7 +2984,7 @@ namespace MSearch
                         filesCount++;
                     }
 
-                    if (filesCount.Equals(1) && FileSystemManager.HasSystemHiddenAttribute(filePath) && fileSize > 1024 * 1024)
+                    if (filesCount.Equals(1) && FileSystemManager.HasHiddenAttribute(filePath) && fileSize > 1024 * 1024)
                     {
                         Program.LL.LogMessage("\t[!]", "_FileSize", $"{FileChecker.GetFileSize(fileSize)} | {Program.LL.GetLocalizedString("_FileAttributes")} \"{File.GetAttributes(filePath)}\"", Logger.warn);
                         Program.LL.LogCautionMessage("_Found", filePath);
@@ -2816,6 +2995,10 @@ namespace MSearch
                         }
                         else Program.LL.LogSuccessMessage("_AlreadyProceeded");
                     }
+                }
+                catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
+                {
+                    Program.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
                 }
                 catch (Exception ex)
                 {
@@ -2837,25 +3020,22 @@ namespace MSearch
         {
             Program.LL.LogHeadMessage("_ScanServices");
 
-            Dictionary<ServiceController, bool> suspiciousServiceList = new Dictionary<ServiceController, bool>();
+            Dictionary<ServiceController, SuspiciousServiceInfo> suspiciousServiceList = new Dictionary<ServiceController, SuspiciousServiceInfo>();
             HashSet<string> suspiciousServiceDlls = new HashSet<string>() { };
+            HashSet<string> trustedPaths = new HashSet<string>();
+            string registryPath = new StringBuilder("SY").Append("ST").Append("EM").Append("\\C").Append("ur").Append("re").Append("nt").Append("Co").Append("nt").Append("ro").Append("lS").Append("et").Append("\\S").Append("er").Append("vi").Append("ce").Append("s").ToString();
+
+            Regex nameRegex = new Regex(@"^[a-zA-Z]{8}$");
+            Regex pathRegex = new Regex(@"^(\\\\\?\\)?[a-fA-F]:\\ProgramData\\[a-zA-Z]{12}\\[a-zA-Z]{12}\.exe$");
+
 
             // Get all services
             ServiceController[] services = ServiceController.GetServices();
-            string[] sideloadableDlls = { "SbieDll.dll", "MSASN1.dll" };
-
-            HashSet<string> trustedPaths = new HashSet<string>();
-            string registryPath = new StringBuilder("SY").Append("ST").Append("EM").Append("\\C").Append("ur").Append("re").Append("nt").Append("Co").Append("nt").Append("ro").Append("lS").Append("et").Append("\\S").Append("er").Append("vi").Append("ce").Append("s").ToString();
-            string ValidServicePath = "";
-            bool isMlwrSignature = false;
-            bool isLoadDLL = false;
-
 
             foreach (ServiceController service in services)
             {
                 string serviceName = service.ServiceName;
-                isMlwrSignature = false;
-                isLoadDLL = false;
+                SuspiciousServiceInfo svcinfo = new SuspiciousServiceInfo();
 
                 try
                 {
@@ -2875,19 +3055,21 @@ namespace MSearch
 
                     if (File.Exists(servicePath))
                     {
-                        ValidServicePath = servicePath;
-                        FileInfo fi = new FileInfo(ValidServicePath);
+                        FileInfo fi = new FileInfo(servicePath);
                         Program.LL.LogMessage("[.]", "_FileSize", FileChecker.GetFileSize(fi.Length), ConsoleColor.White);
                         if (!trustedPaths.Contains(servicePath))
                         {
                             WinVerifyTrustResult servicePathSignature = winTrust.VerifyEmbeddedSignature(Environment.ExpandEnvironmentVariables(servicePath));
                             if (servicePathSignature != WinVerifyTrustResult.Success && servicePathSignature != WinVerifyTrustResult.Error)
                             {
-                                if (fi.Length >= maxFileSize || FileChecker.CheckSignature(servicePath, msData.signatures) || FileChecker.CheckDynamicSignature(servicePath, 2096, startSequence, endSequence) || FileChecker.CheckDynamicSignature(servicePath, 16, 100))
+                                if (fi.Length >= maxFileSize || (nameRegex.IsMatch(serviceName) && pathRegex.IsMatch(servicePath)) || FileChecker.CheckSignature(servicePath, MSData.Instance.signatures) || FileChecker.CheckDynamicSignature(servicePath, 2096, startSequence, endSequence) || FileChecker.CheckDynamicSignature(servicePath, 16, 100))
                                 {
                                     Program.LL.LogCautionMessage("_Found", $"{service.ServiceName} {servicePath}");
-                                    isMlwrSignature = true;
-                                    suspiciousServiceList.Add(service, isMlwrSignature);
+
+                                    svcinfo.FilePath = servicePath;
+                                    svcinfo.IsMlwrSignature = true;
+
+                                    suspiciousServiceList.Add(service, svcinfo);
                                     UnlockObjectClass.DisableExecute(servicePath);
                                 }
                             }
@@ -2905,15 +3087,19 @@ namespace MSearch
                                     foreach (string dll in Directory.GetFiles(serviceDir, "*.dll"))
                                     {
                                         string dllName = Path.GetFileName(dll);
-                                        if (Array.Exists(sideloadableDlls, s => dllName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0))
+                                        if (Array.Exists(MSData.Instance.sideloadableDlls, s => dllName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0))
                                         {
                                             WinVerifyTrustResult dllSignature = winTrust.VerifyEmbeddedSignature(dll);
 
                                             if (dllSignature != WinVerifyTrustResult.Success)
                                             {
                                                 Program.LL.LogCautionMessage("_Found", Program.LL.GetLocalizedString("_ValidServiceDLLHijacking").Replace("#SERVICENAME#", service.ServiceName).Replace("#DLLNAME#", dll));
-                                                suspiciousServiceList.Add(service, isMlwrSignature);
-                                                isLoadDLL = true;
+
+                                                svcinfo.FilePath = servicePath;
+                                                svcinfo.HasHijackedDll = true;
+
+                                                suspiciousServiceList.Add(service, svcinfo);
+                                                suspiciousServiceDlls.Add(dll);
                                                 UnlockObjectClass.DisableExecute(dll);
                                                 break;
                                             }
@@ -2922,7 +3108,7 @@ namespace MSearch
                                 }
                             }
 
-                            if (!isLoadDLL)
+                            if (!svcinfo.HasHijackedDll)
                             {
                                 trustedPaths.Add(servicePath);
                                 Logger.WriteLog($"\t[OK]", Logger.success, true, true);
@@ -2948,7 +3134,11 @@ namespace MSearch
                                                 if (serviceDllSignature != WinVerifyTrustResult.Success && serviceDllSignature != WinVerifyTrustResult.SubjectCertExpired && serviceDllSignature != WinVerifyTrustResult.Error)
                                                 {
                                                     Program.LL.LogCautionMessage("_Found", $"{service.ServiceName} {serviceDll}");
-                                                    suspiciousServiceList.Add(service, isMlwrSignature);
+
+                                                    svcinfo.FilePath = servicePath;
+                                                    svcinfo.HasHijackedDll = true;
+
+                                                    suspiciousServiceList.Add(service, svcinfo);
                                                     suspiciousServiceDlls.Add(serviceDll);
                                                 }
                                                 else
@@ -2976,7 +3166,7 @@ namespace MSearch
                     Program.LL.LogErrorMessage("_ErrorCannotProceed", ex, serviceName, "_Service");
                 }
 
-                Logger.WriteLog("------------", ConsoleColor.White);
+                Logger.WriteLog("------------", ConsoleColor.White, true, true);
             }
 
             if (!Program.ScanOnly)
@@ -2996,7 +3186,7 @@ namespace MSearch
                     {
                         foreach (var suspiciousService in suspiciousServiceList)
                         {
-                            DisableService(suspiciousService.Key, ValidServicePath, suspiciousService.Value, suspiciousServiceDlls);
+                            DisableService(suspiciousService.Key, suspiciousService.Value, suspiciousServiceDlls);
                         }
                     }
                     else
@@ -3012,7 +3202,7 @@ namespace MSearch
                 {
                     foreach (var suspiciousService in suspiciousServiceList)
                     {
-                        DisableService(suspiciousService.Key, ValidServicePath, suspiciousService.Value, suspiciousServiceDlls);
+                        DisableService(suspiciousService.Key, suspiciousService.Value, suspiciousServiceDlls);
                     }
                 }
             }
@@ -3026,7 +3216,7 @@ namespace MSearch
             }
         }
 
-        private void DisableService(ServiceController service, string servicePath, bool isMlwrSigChk, HashSet<string> serviceDlls = null)
+        void DisableService(ServiceController service, SuspiciousServiceInfo serviceInfo, HashSet<string> serviceDlls = null)
         {
 
             string serviceName = service.ServiceName;
@@ -3037,12 +3227,24 @@ namespace MSearch
             if (startMode != NativeServiceController.ServiceStartMode.Disabled)
             {
                 Program.totalFoundThreats++;
-                NativeServiceController.SetServiceStartType(service.ServiceName, NativeServiceController.ServiceStartMode.Disabled);
-                if (NativeServiceController.GetServiceStartType(service.ServiceName) == NativeServiceController.ServiceStartMode.Disabled)
+                try
                 {
-                    Program.LL.LogSuccessMessage("_ServiceDisabled", serviceName);
-                    scanResults.Add(new ScanResult(ScanObjectType.Suspicious, Program.LL.GetLocalizedString("_Just_Service") + $" {serviceName} -> " + servicePath, ScanActionType.Disabled));
+                    NativeServiceController.SetServiceStartType(service.ServiceName, NativeServiceController.ServiceStartMode.Disabled);
+                    if (NativeServiceController.GetServiceStartType(service.ServiceName) == NativeServiceController.ServiceStartMode.Disabled)
+                    {
+                        Program.LL.LogSuccessMessage("_ServiceDisabled", serviceName);
+                        scanResults.Add(new ScanResult(ScanObjectType.Suspicious, Program.LL.GetLocalizedString("_Just_Service") + $" {serviceName} -> " + serviceInfo.FilePath, ScanActionType.Disabled));
+                    }
                 }
+                catch (Win32Exception w32e)
+                {
+                    if (serviceDlls != null)
+                    {
+                        Program.totalNeutralizedThreats--;
+                    }
+                    Program.LL.LogErrorMessage("_ErrorCannotProceed", w32e, service.ServiceName, "_Service");
+                }
+
             }
 
             if (status == ServiceControllerStatus.Running)
@@ -3082,7 +3284,7 @@ namespace MSearch
             status = service.Status;
             if (startMode != NativeServiceController.ServiceStartMode.Disabled || status != ServiceControllerStatus.Stopped)
             {
-                Program.totalNeutralizedThreats--;
+                //Program.totalNeutralizedThreats--;
                 scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{Program.LL.GetLocalizedString("_Just_Service")} { service.ServiceName }", ScanActionType.Error));
             }
 
@@ -3095,37 +3297,39 @@ namespace MSearch
                         if (File.Exists(serviceDll))
                         {
                             Utils.AddToQuarantine(serviceDll);
+                            if (!File.Exists(serviceDll))
+                            {
+                                Program.totalFoundThreats++;
+                            }
+                            else Program.totalNeutralizedThreats--;
                         }
                     }
                 }
             }
 
-            if (isMlwrSigChk)
+            if (serviceInfo.IsMlwrSignature)
             {
 
                 try
                 {
                     try
                     {
-                        if (File.Exists(servicePath))
+                        if (File.Exists(serviceInfo.FilePath))
                         {
-                            if (new FileInfo(servicePath).Length >= maxFileSize)
+                            UnlockObjectClass.KillAndDelete(serviceInfo.FilePath);
+                            if (!File.Exists(serviceInfo.FilePath))
                             {
-                                UnlockObjectClass.KillAndDelete(servicePath);
-                                if (!File.Exists(servicePath))
-                                {
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, servicePath, ScanActionType.Deleted));
-                                }
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, serviceInfo.FilePath, ScanActionType.Deleted));
                             }
                         }
                     }
                     catch (IOException)
                     {
-                        scanResults.Add(new ScanResult(ScanObjectType.Malware, servicePath, ScanActionType.Error));
+                        scanResults.Add(new ScanResult(ScanObjectType.Malware, serviceInfo.FilePath, ScanActionType.Error));
                     }
                     catch (UnauthorizedAccessException)
                     {
-                        scanResults.Add(new ScanResult(ScanObjectType.Malware, servicePath, ScanActionType.Error));
+                        scanResults.Add(new ScanResult(ScanObjectType.Malware, serviceInfo.FilePath, ScanActionType.Error));
                     }
 
 
@@ -3149,7 +3353,7 @@ namespace MSearch
                 {
                     Program.LL.LogErrorMessage("_ErrorCannotRemove", ex, serviceName, "_Service");
                     Program.totalNeutralizedThreats--;
-                    scanResults.Add(new ScanResult(ScanObjectType.Malware, Program.LL.GetLocalizedString("_Just_Service") + $" {serviceName} -> " + servicePath, ScanActionType.Error));
+                    scanResults.Add(new ScanResult(ScanObjectType.Malware, Program.LL.GetLocalizedString("_Just_Service") + $" {serviceName} -> " + serviceInfo.FilePath, ScanActionType.Error));
 
                 }
             }
@@ -3163,14 +3367,14 @@ namespace MSearch
 #if !DEBUG
             if (!Program.WinPEMode)
             {
-                msData.obfStr6.Add(Path.GetTempPath());
+                MSData.Instance.obfStr6.Add(Path.GetTempPath());
             }
 #endif
 
             if (!string.IsNullOrEmpty(Program.selectedPath) && Directory.Exists(Program.selectedPath) && !Program.fullScan)
             {
-                msData.obfStr6.Clear();
-                msData.obfStr6.Add(Program.selectedPath);
+                MSData.Instance.obfStr6.Clear();
+                MSData.Instance.obfStr6.Add(Program.selectedPath);
             }
 
             if (Program.fullScan)
@@ -3179,16 +3383,15 @@ namespace MSearch
                 var localDrives = allDrives.Where(drive => drive.DriveType == DriveType.Fixed && !drive.Name.Contains(Environment.SystemDirectory.Substring(0, 2)));
                 foreach (var drive in localDrives)
                 {
-                    msData.obfStr6.Add(drive.Name);
+                    MSData.Instance.obfStr6.Add(drive.Name);
                 }
             }
 
 
 
-            msData.obfStr6 = msData.obfStr6.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+            MSData.Instance.obfStr6 = MSData.Instance.obfStr6.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
 
-            //foreach (string path in new List<string> { @"D:\share\_evil\" })
-            foreach (string path in msData.obfStr6)
+            foreach (string path in MSData.Instance.obfStr6)
             {
                 if (!Directory.Exists(path))
                 {
@@ -3198,9 +3401,9 @@ namespace MSearch
 
                 foreach (var filepath in FileEnumerator.GetFiles(path, "*.exe", 0, Program.maxSubfolders))
                 {
-                    if (IsMalic1ousFile(FileSystemManager.GetLongPath(filepath)))
+                    if (IsMalic1ousFile(FileSystemManager.GetUNCPath(filepath)))
                     {
-                        UnlockObjectClass.DisableExecute(FileSystemManager.GetLongPath(filepath));
+                        UnlockObjectClass.DisableExecute(FileSystemManager.GetUNCPath(filepath));
                     }
                 }
 
@@ -3292,7 +3495,7 @@ namespace MSearch
                 return false;
             }
 
-            if (displayProgress) //for SignatureScan
+            if (displayProgress)
             {
                 LocalizedLogger.LogAnalyzingFile(file);
             }
@@ -3330,9 +3533,8 @@ namespace MSearch
                     return false;
                 }
 
-                //#if !DEBUG
 
-                bool sequenceFound = FileChecker.CheckSignature(file, msData.signatures);
+                bool sequenceFound = FileChecker.CheckSignature(file, MSData.Instance.signatures);
 
                 if (sequenceFound)
                 {
@@ -3341,7 +3543,6 @@ namespace MSearch
                     founded_mlwrFiles.Add(file);
                     return true;
                 }
-                //#endif
 
                 bool computedSequence = FileChecker.CheckDynamicSignature(file, 16, 100);
                 if (computedSequence)
@@ -3352,7 +3553,6 @@ namespace MSearch
 
                     return true;
                 }
-                //#if !DEBUG
 
                 bool computedSequence2 = FileChecker.CheckDynamicSignature(file, 2096, startSequence, endSequence);
                 if (computedSequence2)
@@ -3362,7 +3562,6 @@ namespace MSearch
                     Program.LL.LogCautionMessage("_Found", file);
                     return true;
                 }
-                //#endif
 
                 if (displayProgress)
                 {
@@ -3416,7 +3615,7 @@ namespace MSearch
                 }
             }
 
-            TelegramAPI.UploadFile(Path.Combine(Logger.LogsFolder, Logger.logFileName), OSExtensions.GetDeviceId());
+            TelegramAPI.UploadFile(Path.Combine(Logger.LogsFolder, Logger.logFileName), $"{OSExtensions.GetDeviceId()}\nv{Program.CurrentVersion}");
         }
     }
 }

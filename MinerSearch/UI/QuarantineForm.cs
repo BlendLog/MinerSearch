@@ -50,7 +50,7 @@ namespace MSearch
         {
             LBL_Quarantine.Text = Program.LL.GetLocalizedString("_Quarantine");
             LBL_QuarantinedFiles.Text = Program.LL.GetLocalizedString("_LabelQuarantinedFiles");
-            finishBtn.Text = Program.LL.GetLocalizedString("_exit");
+            finishBtn.Text = Program.LL.GetLocalizedString("_BtnBack");
             top.Text = Program._title;
         }
 
