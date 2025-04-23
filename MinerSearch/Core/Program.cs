@@ -133,15 +133,7 @@ namespace MSearch
                 RunAsSystem = true;
             }
 
-            Console.Title = Utils.GetRndString();
-            IntPtr mHandle = Process.GetCurrentProcess().MainWindowHandle;
-
-            var bitmap = (Bitmap)ProcessManager.GetSmallWindowIcon(mHandle);
-            Random rnd = new Random();
-            bitmap.SetPixel(rnd.Next(0, 16), rnd.Next(0, 16), Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255)));
-            bitmap.SetPixel(rnd.Next(0, 16), rnd.Next(0, 16), Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255)));
-            bitmap.SetPixel(rnd.Next(0, 16), rnd.Next(0, 16), Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255)));
-            ProcessManager.SetConsoleWindowIcon(bitmap, mHandle);
+            ProcessManager.SetSmallWindowIconRandomHash();
 
             if (!silent)
             {
@@ -149,8 +141,11 @@ namespace MSearch
                 {
                     if (Console.LargestWindowWidth >= 150)
                     {
-                        Console.SetWindowSize(150, 40);
-                        WaterMark();
+                        if (!ProcessManager.IsPwshAsParentProcess(Process.GetCurrentProcess().Id))
+                        {
+                            Console.SetWindowSize(150, 40);
+                            WaterMark();
+                        }
                     }
                 }
             }
@@ -553,7 +548,7 @@ namespace MSearch
 
             if (!nosignaturescan)
             {
-               mk.SignatureScan();
+                mk.SignatureScan();
             }
             GC.Collect();
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 
 namespace MSearch
 {
@@ -20,6 +21,7 @@ namespace MSearch
 
         internal static readonly object _logLock = new object();
         static StreamWriter _writer;
+        static Timer _flushTimer;
 
         public static void InitLogger()
         {
@@ -40,7 +42,8 @@ namespace MSearch
                 Logger.LogsFolder += Utils.GetRndString(16);
                 Directory.CreateDirectory(Logger.LogsFolder);
             }
-            _writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true) { AutoFlush = true };
+            _writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true, System.Text.Encoding.UTF8);
+            _writer.AutoFlush = true;
         }
 
         public static void DisposeLogger()

@@ -34,6 +34,14 @@ namespace MSearch
         SafeNetworking = 2
     }
 
+    internal class SuspiciousServiceInfo
+    {
+        public string FilePath { get; set; } = "";
+        public bool IsMlwrSignature { get; set; } = false;
+        public bool HasHijackedDll { get; set; } = false;
+    }
+
+
     public static class ExeptionHandler
     {
         public static void HookExeption(object sender, UnhandledExceptionEventArgs args)
@@ -630,6 +638,16 @@ namespace MSearch
             return parentProcessId;
         }
 
+        internal static string GetLocalizedRiskLevel(int riskLevel)
+        {
+
+            if (riskLevel == 3) return $"{Program.LL.GetLocalizedString("_ProcessRiskLevel_Medium")} ({riskLevel})";
+            if (riskLevel >= 4 && riskLevel <= 5) return $"{Program.LL.GetLocalizedString("_ProcessRiskLevel_High")} ({riskLevel})";
+            if (riskLevel >= 6 && riskLevel < 10) return $"{Program.LL.GetLocalizedString("_ProcessRiskLevel_VeryHigh")} ({riskLevel})";
+
+            return $"{Program.LL.GetLocalizedString("_ProcessRiskLevel_ExtremelyHigh")} ({riskLevel})";
+        }
+
         internal static void UnProtect(int[] pids)
         {
             int _pid = 0;
@@ -772,6 +790,20 @@ namespace MSearch
             Native.SendMessage(mwHandle, Native.WM_SETICON, IntPtr.Zero, icon.Handle);
         }
 
+        internal static void SetSmallWindowIconRandomHash()
+        {
+            Console.Title = Utils.GetRndString();
+            IntPtr mHandle = Process.GetCurrentProcess().MainWindowHandle;
+
+            var bitmap = (Bitmap)GetSmallWindowIcon(mHandle);
+            Random rnd = new Random();
+            bitmap.SetPixel(rnd.Next(0, 16), rnd.Next(0, 16), Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255)));
+            bitmap.SetPixel(rnd.Next(0, 16), rnd.Next(0, 16), Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255)));
+            bitmap.SetPixel(rnd.Next(0, 16), rnd.Next(0, 16), Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255)));
+            SetConsoleWindowIcon(bitmap, mHandle);
+        }
+
+
         internal static Image GetSmallWindowIcon(IntPtr hWnd)
         {
             try
@@ -846,6 +878,24 @@ namespace MSearch
             }
         }
 
+        internal static bool IsPwshAsParentProcess(int pid)
+        {
+            try
+            {
+                int targetPid = Process.GetProcessById(pid).Id;
+                int desiredPid = GetParentProcessId(targetPid);
+                if (desiredPid != 0)
+                {
+                    return Process.GetProcessById(desiredPid).ProcessName.Equals("powershell", StringComparison.OrdinalIgnoreCase);
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return false;
+        }
+
         internal static void InitPrivileges()
         {
             IntPtr hToken;
@@ -895,7 +945,6 @@ namespace MSearch
             Native.CloseHandle(hToken);
         }
 
-
         internal static bool HasDebugPrivilege()
         {
             IntPtr hToken;
@@ -941,6 +990,8 @@ namespace MSearch
             string currentPath = Process.GetCurrentProcess().MainModule.FileName;
             return currentPath.IndexOf(@"appdata\local\temp", StringComparison.OrdinalIgnoreCase) >= 0;
         }
+
+
     }
 
     public class RkRemover
@@ -1137,7 +1188,7 @@ namespace MSearch
 
         internal static bool CheckSignature(string filePath, List<byte[]> targetSequences)
         {
-            const int bufferSize = 1024 * 1024; // 1 МБ – оптимально для диска
+            const int bufferSize = 1024 * 1024;
             byte[] buffer = new byte[bufferSize];
 
             double entropy;
@@ -1512,6 +1563,47 @@ namespace MSearch
             }
         }
 
+        internal static bool IsJarFile(string path)
+        {
+
+            // JAR files are ZIP archives with a specific signature at the beginning
+            byte[] jarSignature = { 0x51, 0x4C, 0x04, 0x05 }; // PK\003\004
+
+            for (int i = 0; i < jarSignature.Length; i++)
+            {
+                jarSignature[i] -= (byte)1;
+            }
+
+            try
+            {
+                FileInfo fileInfo = new FileInfo(path);
+                long fileLength = fileInfo.Length;
+                byte[] fileBytes = File.ReadAllBytes(path);
+
+                if (fileLength >= jarSignature.Length)
+                {
+                    bool match = true;
+                    for (int j = 0; j < jarSignature.Length; j++)
+                    {
+                        if (fileBytes[j] != jarSignature[j])
+                        {
+                            match = false;
+                            break;
+                        }
+                    }
+
+                    return match;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return false;
+            }
+        }
+
+
         internal static bool IsExecutable(string filepath)
         {
             try
@@ -1592,7 +1684,6 @@ namespace MSearch
             double num = Math.Round(bytes / Math.Pow(1024, place), 1);
             return $"{Math.Sign(CountBytes) * num} {type[place]}";
         }
-
     }
 
     public class FileEnumerator
@@ -1633,13 +1724,14 @@ namespace MSearch
             {
                 return Directory.EnumerateFiles(FileSystemManager.GetUNCPath(path), pattern, SearchOption.TopDirectoryOnly);
             }
-            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+            catch (IOException iox) { }
+            catch (UnauthorizedAccessException) { Program.LL.LogWarnMessage("_Error", path); }
+            catch (Exception ex)
             {
-#if DEBUG
-                Program.LL.LogErrorMessage("_ErrorCannotProceed", ex, path, "_Directory");
-#endif
-                return Array.Empty<string>();
+                Program.LL.LogErrorMessage("_Error", ex, path, "_File");
             }
+
+            return Array.Empty<string>();
         }
 
         static IEnumerable<string> SafeEnumerateDirectories(string path)
@@ -1648,13 +1740,15 @@ namespace MSearch
             {
                 return Directory.EnumerateDirectories(FileSystemManager.GetUNCPath(path));
             }
-            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+            catch (IOException) { }
+            catch (UnauthorizedAccessException) { Program.LL.LogWarnMessage("_Error", path); }
+            catch (Exception ex)
             {
-#if DEBUG
-                Program.LL.LogErrorMessage("_ErrorCannotProceed", ex, path, "_Directory");
-#endif
-                return Array.Empty<string>();
+                Program.LL.LogErrorMessage("_Error", ex, path, "_Directory");
             }
+
+            return Array.Empty<string>();
+
         }
 
         static bool ShouldSkipDirectory(string directory)

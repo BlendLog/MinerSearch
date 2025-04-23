@@ -1630,7 +1630,7 @@ namespace MSearch
                 Marshal.FreeHGlobal(buffer);
                 CloseServiceHandle(serviceHandle);
                 CloseServiceHandle(scManager);
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceImagePath(): Error on getting service config"); //GetServiceImagePath(): Error on get service config
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceImagePath(): Error on getting service config");
             }
 
             QUERY_SERVICE_CONFIG config = Marshal.PtrToStructure<QUERY_SERVICE_CONFIG>(buffer);

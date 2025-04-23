@@ -105,7 +105,8 @@
       <HintPath>bin\Release\netlib.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Release\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -195,11 +196,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="256.ico" />
+    <None Include="Resources\tether-usdt-logo.png" />
+    <None Include="Resources\ton_png.png" />
     <None Include="Resources\32.png" />
     <None Include="Resources\quarantine_logo.png" />
     <None Include="Resources\sber.jpg" />
-    <None Include="Resources\usdt_ton.png" />
-    <None Include="packages.config" />
     <None Include="Resources\128.png" />
     <None Include="Resources\yoomoney.png" />
     <None Include="Resources\blendlog-donate.png" />

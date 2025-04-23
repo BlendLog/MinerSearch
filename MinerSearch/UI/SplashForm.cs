@@ -8,6 +8,7 @@ namespace MSearch
     {
         string sber = "";
         string yoomoney = "";
+        string ton = "";
         string usdt = "";
         bool IsOpenedByButton;
 
@@ -17,6 +18,7 @@ namespace MSearch
             InitializeComponent();
             sber = textBox1.Text;
             yoomoney = textBox2.Text;
+            ton = textBox3.Text;
             usdt = textBox4.Text;
             IsOpenedByButton = _value;
         }
@@ -137,6 +139,16 @@ namespace MSearch
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             OpenExternalLink(linkLabel3.Text);
+        }
+
+        private void textBox3_MouseClick(object sender, MouseEventArgs e)
+        {
+            OnMouseClick(textBox3);
+        }
+
+        private void textBox3_MouseLeave(object sender, EventArgs e)
+        {
+            OnMouseLeave(ton, textBox3);
         }
     }
 }

@@ -1418,8 +1418,6 @@ namespace netlib
     public class TelegramAPI
     {
 
-        public static string LogID { get; set; }
-
         public static void sendFile(string file, string caption = "", string type = "Document")
         {
             // If file does not exist
