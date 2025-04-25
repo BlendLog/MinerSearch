@@ -11,6 +11,22 @@
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 
+Версия 1.4.7.9
+
+- Реализовано удаление 8 новых вариантов угроз
+- Добавлена кнопка "Свернуть" в форме краткого отчёта
+- Изменён числовой уровень риска на категориальный
+- Добавлен механизм очистки исключенных расширений в Windows Defender
+- Реализовано удаление задач автозапуска с подозрительно длинными параметрами
+- Добавлена очистка задач планировщика, использующих сторонние исполняемые среды (JVM)
+- Исправлена некорректная классификация V2RayN
+- Повышена стабильность обработки служб NVIDIA
+- Повышена стабильность обработки файлов при сигнатурном анализе
+- Исправлен баг генерации пустых отчётов
+- Улучшено выявление заблокированных доверенных сайтов через hosts
+- Исправлен визуальный баг на форме с кратким отчётом, где отображался неточный путь нейтрализованной службы
+- Улучшена навигация в менеджере карантина
+
 Патч 1.4.7.82
 
 - Исправлен баг, при которой часть каталогов удалялось не полностью
@@ -140,6 +156,22 @@ https://t.me/MinerSearch_blog
 
 ## NET Framework 4.7.1 is required
 
+Version 1.4.7.9
+
+- Implemented deletion of 8 new threat variants
+- Added "Collapse" button in the final scanning results form
+- Changed the numerical risk level to categorical
+- Added a mechanism for cleaning excluded extensions in Windows Defender
+- Implemented deletion of autorun tasks with suspiciously long parameters
+- Added cleaning of scheduler tasks that use third-party executable environments (JVM)
+- Fixed incorrect classification of V2RayN
+- Improved stability of NVIDIA service processing
+- Improved stability of file processing during signature analysis
+- Fixed a bug in generating empty logs
+- Improved detection of blocked trusted sites via hosts
+- Fixed a visual bug in the final scanning results form, where an inaccurate path of the neutralized service was displayed
+- Improved navigation in the quarantine manager
+
 Patch 1.4.7.82
 
 - Fixed a bug where some directories were not completely deleted
@@ -202,15 +234,6 @@ Version 1.4.7.8
 - The hosts file is now corrected only in case of infection and does not cause an error
 - Help has been updated --help
 - Quarantine is now available for all users
-
-Version 1.4.72 [PostFix]
-
-- Improved miner search algorithm. ((TLauncher Legacy, goodbyedpi, RustMe and others are no longer considered a threat)
-- Fixed the inability to move a file to quarantine
-- Removing malicious scripts from the task scheduler that run the miner
-> [What's new]
-- Added a quarantine manager (option -q or --open-quarantine, or in the report form just click on "Quarantine" button)
-- Removed the "--restore" option, since the strategy for moving files to quarantine has also been changed (incompatible with previous versions of MinerSearch)
 
 -----------------------------------------
 
