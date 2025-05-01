@@ -177,6 +177,16 @@ namespace MSearch
             return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(path) == null;
         }
 
+        internal static void DebugLog(string message)
+        {
+            var stackTrace = new StackTrace(true);
+            var frame = stackTrace.GetFrame(1);
+            var lineNumber = frame.GetFileLineNumber();
+            var fileName = frame.GetFileName();
+
+            Console.WriteLine($"[DBG] FileName:{Path.GetFileName(fileName)} | Line:{lineNumber} | {message}");
+        }
+
         internal static void RemoveDefenderExclusion(string type, string value)
         {
 
@@ -193,7 +203,7 @@ namespace MSearch
 
             ProcessStartInfo psi = new ProcessStartInfo();
             psi.FileName = "powershell.exe";
-            psi.Arguments = "-ExecutionPolicy Bypass -c \"Remove-MpPreference -Exclusion" + exclusionType + " '" + value + "'\"";
+            psi.Arguments = "-Exe~cuti~onPo~~licy By~pa~ss -c \"Re~mo~ve~-~M~p~Prefe~~rence -Ex~~clus~ion".Replace("~", "") + exclusionType + " '" + value + "'\"";
             psi.UseShellExecute = false;
             psi.CreateNoWindow = true;
 
@@ -790,16 +800,16 @@ namespace MSearch
             Native.SendMessage(mwHandle, Native.WM_SETICON, IntPtr.Zero, icon.Handle);
         }
 
-        internal static void SetSmallWindowIconRandomHash()
+        internal static void SetSmallWindowIconRandomHash(IntPtr mHandle)
         {
-            Console.Title = Utils.GetRndString();
-            IntPtr mHandle = Process.GetCurrentProcess().MainWindowHandle;
-
             var bitmap = (Bitmap)GetSmallWindowIcon(mHandle);
             Random rnd = new Random();
-            bitmap.SetPixel(rnd.Next(0, 16), rnd.Next(0, 16), Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255)));
-            bitmap.SetPixel(rnd.Next(0, 16), rnd.Next(0, 16), Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255)));
-            bitmap.SetPixel(rnd.Next(0, 16), rnd.Next(0, 16), Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255)));
+
+            for (int i = 0; i < 4; i++)
+            {
+                bitmap.SetPixel(rnd.Next(0, 16), rnd.Next(0, 16), Color.FromArgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255)));
+            }
+
             SetConsoleWindowIcon(bitmap, mHandle);
         }
 
@@ -1523,7 +1533,7 @@ namespace MSearch
 
         internal static bool IsSfxArchive(string path)
         {
-            byte[] archiveSignature = { 0x01, 0x53, 0x62, 0x73, 0x22, 0x1B, 0x08, 0x02, 0x01 };
+            byte[] archiveSignature = { 0x01, 0x01, 0x01, 0x53, 0x62, 0x73, 0x22, 0x1B, 0x08, 0x02, 0x01 };
 
             for (int i = 0; i < archiveSignature.Length; i++)
             {
@@ -1720,35 +1730,64 @@ namespace MSearch
 
         static IEnumerable<string> SafeEnumerateFiles(string path, string pattern)
         {
+            var result = new List<string>();
+
             try
             {
-                return Directory.EnumerateFiles(FileSystemManager.GetUNCPath(path), pattern, SearchOption.TopDirectoryOnly);
+                foreach (var file in Directory.EnumerateFiles(FileSystemManager.GetUNCPath(path), pattern, SearchOption.TopDirectoryOnly))
+                {
+                    result.Add(file);
+                }
             }
-            catch (IOException iox) { }
-            catch (UnauthorizedAccessException) { Program.LL.LogWarnMessage("_Error", path); }
+            catch (UnauthorizedAccessException uax)
+            {
+                if (Program.verbose)
+                {
+                    Program.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_File");
+                }
+            }
+            catch (Win32Exception) { Program.LL.LogWarnMessage("_Error", path); }
+            catch (IOException ioex) { Program.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_File"); }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_Error", ex, path, "_File");
+                if (Program.verbose)
+                {
+                    Program.LL.LogErrorMessage("_Error", ex, path, "_File");
+                }
             }
 
-            return Array.Empty<string>();
+            return result;
         }
 
         static IEnumerable<string> SafeEnumerateDirectories(string path)
         {
+            var result = new List<string>();
+
             try
             {
-                return Directory.EnumerateDirectories(FileSystemManager.GetUNCPath(path));
+                foreach (var dir in Directory.EnumerateDirectories(FileSystemManager.GetUNCPath(path)))
+                {
+                    result.Add(dir);
+                }
             }
-            catch (IOException) { }
-            catch (UnauthorizedAccessException) { Program.LL.LogWarnMessage("_Error", path); }
+            catch (UnauthorizedAccessException uax)
+            {
+                if (Program.verbose)
+                {
+                    Program.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_Directory");
+                }
+            }
+            catch (Win32Exception) { Program.LL.LogWarnMessage("_Error", path); }
+            catch (IOException ioex) { Program.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_Directory"); }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_Error", ex, path, "_Directory");
+                if (Program.verbose)
+                {
+                    Program.LL.LogErrorMessage("_Error", ex, path, "_Directory");
+                }
             }
 
-            return Array.Empty<string>();
-
+            return result;
         }
 
         static bool ShouldSkipDirectory(string directory)
@@ -2320,59 +2359,8 @@ namespace MSearch
             }
             return "";
         }
-        public static string GetDeviceId()
-        {
-            string path = Path.Combine(Registry.LocalMachine.Name, @"SOFTWARE\Microsoft\SQMClient");
-            var machineIdValue = Registry.GetValue(path, "MachineId", null);
-            if (machineIdValue == null)
-            {
-                return "N/A";
-            }
 
-            Guid MachineId = new Guid((string)machineIdValue);
-            return MachineId.ToString();
-        }
-        internal static string GetSystemLanguage()
-        {
 
-            string registryKeyPath = @"SYS~TEM~\Cu~rrentC~ontrol~Set\Co~n~tro~l\Nls\La~ngu~ag~e".Replace("~", "");
-            string registryValueName = "Ins~tall~~Language".Replace("~", "");
-
-            string[] CodeLang = new string[]
-            {
-                "0409", //English
-                "0419", //Русский
-            };
-
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(registryKeyPath))
-            {
-                if (key != null)
-                {
-                    var value = key.GetValue(registryValueName) as string;
-                    if (value != null)
-                    {
-                        if (value.Equals(CodeLang[0]))
-                        {
-                            return "EN";
-                        }
-                        else if (value.Equals(CodeLang[1]))
-                        {
-                            return "RU";
-                        }
-
-                    }
-                    else
-                    {
-                        return "EN";
-                    }
-                }
-                else
-                {
-                    return "EN";
-                }
-            }
-            return "EN";
-        }
         internal static bool CheckUserExists(string username)
         {
 #if DEBUG
@@ -2423,6 +2411,179 @@ namespace MSearch
             {
                 throw new InvalidOperationException($"HRESULT: 0x{result:X16}");
             }
+        }
+    }
+
+    public static class LanguageManager
+    {
+
+        public const string CfgFile = "language.cfg";
+        const string DefaultLanguage = "EN";
+
+        static string GetSystemLanguage()
+        {
+
+            string registryKeyPath = Bfs.Create("bKnf6GFc0gfZZvOGBYBR9qozb+SGVL5fr6qztlS0RtDwh7nUeKzulNFz6HvnRS3i", "0/yJ+tQOcZCHOvHfASeMuskMMYWBCumo5al/o2VgxXc=", "PWQxrIQJMaDkKDMdo9VG9g=="); //SYSTEM\CurrentControlSet\Control\Nls\Language
+            string registryValueName = "Install~Language".Replace("~", "");
+
+            string[] CodeLang = new string[]
+            {
+                "0409", //English
+                "0419", //Русский
+            };
+
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(registryKeyPath))
+            {
+                if (key != null)
+                {
+                    var value = key.GetValue(registryValueName) as string;
+                    if (value != null)
+                    {
+                        if (value.Equals(CodeLang[0]))
+                        {
+                            return DefaultLanguage;
+                        }
+                        else if (value.Equals(CodeLang[1]))
+                        {
+                            return "RU";
+                        }
+
+                    }
+                    else
+                    {
+                        return DefaultLanguage;
+                    }
+                }
+                else
+                {
+                    return DefaultLanguage;
+                }
+            }
+            return DefaultLanguage;
+        }
+
+        public static string LoadLanguageSetting()
+        {
+            try
+            {
+                if (File.Exists(CfgFile))
+                {
+                    string languageCode = File.ReadAllText(CfgFile).Trim();
+                    return IsLanguageSupported(languageCode) ? languageCode : DefaultLanguage;
+                }
+                else return GetSystemLanguage();
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"\t[x] Language config error: {ex.Message}", Logger.error, false);
+            }
+            return DefaultLanguage;
+        }
+
+        public static void SaveLanguageSetting(string languageCode)
+        {
+            try
+            {
+                if (IsLanguageSupported(languageCode))
+                {
+                    if (!Directory.Exists(CfgFile))
+                    {
+                        File.WriteAllText(CfgFile, languageCode);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"\t[x] Error saving language: {ex.Message}", Logger.error, false);
+            }
+        }
+
+        static bool IsLanguageSupported(string languageCode)
+        {
+            return languageCode == "RU" || languageCode == "EN";
+        }
+    }
+
+    public static class DeviceIdProvider
+    {
+        [DllImport("kernel32.dll")]
+        static extern void GetSystemInfo(out SYSTEM_INFO lpSystemInfo);
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        static extern bool GetVolumeInformation(
+            string lpRootPathName,
+            StringBuilder lpVolumeNameBuffer,
+            int nVolumeNameSize,
+            out uint lpVolumeSerialNumber,
+            out uint lpMaximumComponentLength,
+            out uint lpFileSystemFlags,
+            StringBuilder lpFileSystemNameBuffer,
+            int nFileSystemNameSize);
+
+        [StructLayout(LayoutKind.Sequential)]
+        struct SYSTEM_INFO
+        {
+            public ushort processorArchitecture;
+            public ushort reserved;
+            public uint pageSize;
+            public IntPtr minimumApplicationAddress;
+            public IntPtr maximumApplicationAddress;
+            public IntPtr activeProcessorMask;
+            public uint numberOfProcessors;
+            public uint processorType;
+            public uint allocationGranularity;
+            public ushort processorLevel;
+            public ushort processorRevision;
+        }
+
+        public static string GetDeviceId()
+        {
+            string path = Path.Combine(Registry.LocalMachine.Name, @"SOFTWARE\Microsoft\SQMClient");
+            var machineIdValue = Registry.GetValue(path, "MachineId", null);
+
+            if (machineIdValue != null)
+            {
+                string str = machineIdValue.ToString();
+                if (Guid.TryParse(str, out Guid existingGuid) && existingGuid != Guid.Empty)
+                {
+                    return existingGuid.ToString();
+                }
+            }
+
+            string cpuId = GetCpuId();
+            string winVer = Environment.OSVersion.VersionString;
+            string diskSerial = GetSystemDriveSerial();
+
+            string combined = cpuId + winVer + diskSerial;
+            using (var md5 = MD5.Create())
+            {
+                byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(combined));
+                Guid newGuid = new Guid(hash);
+                return newGuid.ToString();
+            }
+        }
+
+        static string GetCpuId()
+        {
+            SYSTEM_INFO sysInfo;
+            GetSystemInfo(out sysInfo);
+
+            return $"{sysInfo.processorType}-{sysInfo.processorLevel}-{sysInfo.processorRevision}";
+        }
+
+        static string GetSystemDriveSerial()
+        {
+            uint serialNumber, maxComponentLen, fileSystemFlags;
+            var volumeName = new StringBuilder(261);
+            var fileSystemName = new StringBuilder(261);
+
+            string rootPath = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System));
+            if (GetVolumeInformation(rootPath, volumeName, volumeName.Capacity, out serialNumber, out maxComponentLen, out fileSystemFlags, fileSystemName, fileSystemName.Capacity))
+            {
+                return serialNumber.ToString("X8");
+            }
+
+            return "00000000";
         }
     }
 }

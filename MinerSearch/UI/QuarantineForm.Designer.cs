@@ -29,9 +29,9 @@ namespace MSearch
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.dataGridQuarantineFiles = new System.Windows.Forms.DataGridView();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -58,6 +58,7 @@ namespace MSearch
             // 
             // tableLayoutPanel1
             // 
+            this.tableLayoutPanel1.BackColor = System.Drawing.Color.RoyalBlue;
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.dataGridQuarantineFiles, 0, 2);
@@ -66,14 +67,14 @@ namespace MSearch
             this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1260, 535);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 49F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(945, 435);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // dataGridQuarantineFiles
@@ -84,56 +85,56 @@ namespace MSearch
             this.dataGridQuarantineFiles.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dataGridQuarantineFiles.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridQuarantineFiles.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridQuarantineFiles.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridQuarantineFiles.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridQuarantineFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Verdana", 10F);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridQuarantineFiles.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Verdana", 10F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridQuarantineFiles.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridQuarantineFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridQuarantineFiles.GridColor = System.Drawing.Color.LightGray;
-            this.dataGridQuarantineFiles.Location = new System.Drawing.Point(0, 159);
-            this.dataGridQuarantineFiles.Margin = new System.Windows.Forms.Padding(0);
+            this.dataGridQuarantineFiles.Location = new System.Drawing.Point(1, 129);
+            this.dataGridQuarantineFiles.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.dataGridQuarantineFiles.MultiSelect = false;
             this.dataGridQuarantineFiles.Name = "dataGridQuarantineFiles";
             this.dataGridQuarantineFiles.ReadOnly = true;
             this.dataGridQuarantineFiles.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridQuarantineFiles.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridQuarantineFiles.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridQuarantineFiles.RowHeadersWidth = 51;
             this.dataGridQuarantineFiles.RowTemplate.Height = 24;
             this.dataGridQuarantineFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridQuarantineFiles.Size = new System.Drawing.Size(1260, 316);
+            this.dataGridQuarantineFiles.Size = new System.Drawing.Size(943, 257);
             this.dataGridQuarantineFiles.TabIndex = 1;
             this.dataGridQuarantineFiles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridQuarantineFiles_CellClick);
             // 
             // panel4
             // 
-            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.BackColor = System.Drawing.SystemColors.Control;
             this.panel4.Controls.Add(this.finishBtn);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
-            this.panel4.Location = new System.Drawing.Point(0, 475);
-            this.panel4.Margin = new System.Windows.Forms.Padding(0);
+            this.panel4.Location = new System.Drawing.Point(1, 386);
+            this.panel4.Margin = new System.Windows.Forms.Padding(1, 0, 1, 1);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1260, 60);
+            this.panel4.Size = new System.Drawing.Size(943, 48);
             this.panel4.TabIndex = 3;
             // 
             // finishBtn
@@ -146,10 +147,10 @@ namespace MSearch
             this.finishBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.finishBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.finishBtn.ForeColor = System.Drawing.Color.Black;
-            this.finishBtn.Location = new System.Drawing.Point(539, 8);
-            this.finishBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.finishBtn.Location = new System.Drawing.Point(403, 6);
+            this.finishBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.finishBtn.Name = "finishBtn";
-            this.finishBtn.Size = new System.Drawing.Size(220, 44);
+            this.finishBtn.Size = new System.Drawing.Size(165, 36);
             this.finishBtn.TabIndex = 11;
             this.finishBtn.Text = "exitBtn";
             this.finishBtn.UseVisualStyleBackColor = false;
@@ -161,10 +162,10 @@ namespace MSearch
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.tableLayoutPanel2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 40);
+            this.panel2.Location = new System.Drawing.Point(0, 32);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1260, 119);
+            this.panel2.Size = new System.Drawing.Size(945, 97);
             this.panel2.TabIndex = 1;
             // 
             // tableLayoutPanel2
@@ -176,12 +177,12 @@ namespace MSearch
             this.tableLayoutPanel2.Controls.Add(this.panel6, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 117F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1258, 117);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 95F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(943, 95);
             this.tableLayoutPanel2.TabIndex = 13;
             // 
             // LBL_Quarantine
@@ -194,7 +195,7 @@ namespace MSearch
             this.LBL_Quarantine.Location = new System.Drawing.Point(0, 0);
             this.LBL_Quarantine.Margin = new System.Windows.Forms.Padding(0);
             this.LBL_Quarantine.Name = "LBL_Quarantine";
-            this.LBL_Quarantine.Size = new System.Drawing.Size(452, 117);
+            this.LBL_Quarantine.Size = new System.Drawing.Size(339, 95);
             this.LBL_Quarantine.TabIndex = 5;
             this.LBL_Quarantine.Text = "label_quarantine";
             this.LBL_Quarantine.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -206,10 +207,10 @@ namespace MSearch
             this.panel6.Controls.Add(this.LBL_QFilesCount);
             this.panel6.Controls.Add(this.LBL_QuarantinedFiles);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(452, 0);
+            this.panel6.Location = new System.Drawing.Point(339, 0);
             this.panel6.Margin = new System.Windows.Forms.Padding(0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(806, 117);
+            this.panel6.Size = new System.Drawing.Size(604, 95);
             this.panel6.TabIndex = 1;
             // 
             // pb_quarantine
@@ -217,10 +218,10 @@ namespace MSearch
             this.pb_quarantine.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.pb_quarantine.BackColor = System.Drawing.Color.Transparent;
             this.pb_quarantine.Image = global::MSearch.Properties.Resources.quarantine_logo;
-            this.pb_quarantine.Location = new System.Drawing.Point(662, -4);
-            this.pb_quarantine.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pb_quarantine.Location = new System.Drawing.Point(496, -3);
+            this.pb_quarantine.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pb_quarantine.Name = "pb_quarantine";
-            this.pb_quarantine.Size = new System.Drawing.Size(131, 119);
+            this.pb_quarantine.Size = new System.Drawing.Size(98, 97);
             this.pb_quarantine.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pb_quarantine.TabIndex = 6;
             this.pb_quarantine.TabStop = false;
@@ -232,9 +233,10 @@ namespace MSearch
             this.LBL_QFilesCount.Font = new System.Drawing.Font("Trebuchet MS", 14F, System.Drawing.FontStyle.Bold);
             this.LBL_QFilesCount.ForeColor = System.Drawing.Color.White;
             this.LBL_QFilesCount.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LBL_QFilesCount.Location = new System.Drawing.Point(310, 44);
+            this.LBL_QFilesCount.Location = new System.Drawing.Point(232, 36);
+            this.LBL_QFilesCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_QFilesCount.Name = "LBL_QFilesCount";
-            this.LBL_QFilesCount.Size = new System.Drawing.Size(27, 29);
+            this.LBL_QFilesCount.Size = new System.Drawing.Size(21, 24);
             this.LBL_QFilesCount.TabIndex = 8;
             this.LBL_QFilesCount.Text = "0";
             this.LBL_QFilesCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -245,9 +247,10 @@ namespace MSearch
             this.LBL_QuarantinedFiles.AutoSize = true;
             this.LBL_QuarantinedFiles.Font = new System.Drawing.Font("Trebuchet MS", 14F, System.Drawing.FontStyle.Bold);
             this.LBL_QuarantinedFiles.ForeColor = System.Drawing.Color.White;
-            this.LBL_QuarantinedFiles.Location = new System.Drawing.Point(26, 44);
+            this.LBL_QuarantinedFiles.Location = new System.Drawing.Point(20, 36);
+            this.LBL_QuarantinedFiles.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_QuarantinedFiles.Name = "LBL_QuarantinedFiles";
-            this.LBL_QuarantinedFiles.Size = new System.Drawing.Size(256, 29);
+            this.LBL_QuarantinedFiles.Size = new System.Drawing.Size(203, 24);
             this.LBL_QuarantinedFiles.TabIndex = 6;
             this.LBL_QuarantinedFiles.Text = "label_quarantineFiles";
             this.LBL_QuarantinedFiles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -260,7 +263,7 @@ namespace MSearch
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1260, 40);
+            this.panel1.Size = new System.Drawing.Size(945, 32);
             this.panel1.TabIndex = 0;
             // 
             // CloseBtn
@@ -274,10 +277,10 @@ namespace MSearch
             this.CloseBtn.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Bold);
             this.CloseBtn.ForeColor = System.Drawing.Color.White;
             this.CloseBtn.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.CloseBtn.Location = new System.Drawing.Point(1218, 9);
+            this.CloseBtn.Location = new System.Drawing.Point(914, 7);
             this.CloseBtn.Margin = new System.Windows.Forms.Padding(0);
             this.CloseBtn.Name = "CloseBtn";
-            this.CloseBtn.Size = new System.Drawing.Size(29, 30);
+            this.CloseBtn.Size = new System.Drawing.Size(22, 24);
             this.CloseBtn.TabIndex = 100;
             this.CloseBtn.Text = "X";
             this.CloseBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -294,8 +297,8 @@ namespace MSearch
             this.top.Location = new System.Drawing.Point(0, 0);
             this.top.Margin = new System.Windows.Forms.Padding(0);
             this.top.Name = "top";
-            this.top.Padding = new System.Windows.Forms.Padding(8, 0, 40, 0);
-            this.top.Size = new System.Drawing.Size(1260, 40);
+            this.top.Padding = new System.Windows.Forms.Padding(6, 0, 30, 0);
+            this.top.Size = new System.Drawing.Size(945, 32);
             this.top.TabIndex = 2;
             this.top.Text = "_title";
             this.top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -303,14 +306,14 @@ namespace MSearch
             // 
             // QuarantineForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1260, 535);
+            this.ClientSize = new System.Drawing.Size(945, 435);
             this.Controls.Add(this.tableLayoutPanel1);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "QuarantineForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

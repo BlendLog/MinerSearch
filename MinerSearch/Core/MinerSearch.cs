@@ -73,6 +73,7 @@ namespace MSearch
 
         WinTrust winTrust = new WinTrust();
 
+
         public void DetectRk()
         {
             Program.LL.LogHeadMessage("_ChekingR00tkit");
@@ -570,9 +571,14 @@ namespace MSearch
 
                     if (processName.Equals("notepad", StringComparison.OrdinalIgnoreCase))
                     {
-                        if ((ProcessManager.IsSystemProcess(p.Id) && !OSExtensions.IsWinPEEnv()) || p.TotalProcessorTime >= new TimeSpan(0, 0, 5))
+                        if ((ProcessManager.IsSystemProcess(p.Id) && !OSExtensions.IsWinPEEnv()))
                         {
-                            riskLevel += 3;
+                            riskLevel += 2;
+                        }
+
+                        if (p.TotalProcessorTime > new TimeSpan(0, 1, 0) || (p.PagedMemorySize64 / (1024 * 1024) >= 2048))
+                        {
+                            riskLevel += 2;
                         }
                     }
 
@@ -598,19 +604,39 @@ namespace MSearch
                     {
                         try
                         {
-                            if (ProcessManager.GetParentProcessId(p.Id) == 0)
+                            int processParentId = ProcessManager.GetParentProcessId(p.Id);
+                            if (processParentId == 0)
                             {
                                 riskLevel += 1;
                             }
+                            else
+                            {
+                                Process parentProcess = Process.GetProcessById(processParentId);
+                                if (parentProcess != null)
+                                {
+                                    if (parentProcess.ProcessName.Equals(MSData.Instance.SysFileName[9], StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        riskLevel -= 1;
+                                    }
+
+                                    try
+                                    {
+                                        _ = parentProcess.MainModule.FileName;
+                                        riskLevel += 1;
+                                    }
+                                    catch (Win32Exception) { }
+                                }
+                            }
+
                         }
                         catch (Exception)
                         {
                             riskLevel += 1;
                         }
 
+
                         if (p.TotalProcessorTime <= new TimeSpan(0, 0, 15) && (p.PrivateMemorySize64 / (1024 * 1024) <= 100))
                         {
-                            Program.LL.LogWarnMediumMessage("_WatchdogProcess", $"PID: {processId}");
                             riskLevel += 3;
                         }
                     }
@@ -724,7 +750,7 @@ namespace MSearch
                         MSData.Instance.obfStr6.Add(DesktopPath);
                     }
                 }
-                //#if !DEBUG
+
                 string DownloadsPath = FileSystemManager.GetDownloadsPath();
                 if (DownloadsPath != null && !Program.RunAsSystem)
                 {
@@ -735,7 +761,6 @@ namespace MSearch
                         MSData.Instance.obfStr6.Add(DownloadsPath);
                     }
                 }
-                //#endif
             }
 
             if (!string.IsNullOrEmpty(Program.selectedPath) && Directory.Exists(Program.selectedPath) && !Program.fullScan)
@@ -787,7 +812,6 @@ namespace MSearch
                 }
             }
 
-            //#if DEBUG
             Program.LL.LogHeadMessage("_ScanFiles");
 
             string _baseDirectory = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData).Replace("x:", $@"{Program.drive_letter}:");
@@ -845,9 +869,13 @@ namespace MSearch
                         break;
                 }
             }
-            //#if !DEBUG
-            CleanHosts();
-            //#endif
+
+            if (!Program.no_check_hosts)
+            {
+                CleanHosts();
+            }
+
+
         }
 
         public void Clean()
@@ -934,8 +962,7 @@ namespace MSearch
                     {
                         try
                         {
-                            UnlockObjectClass.KillAndDelete(path);
-                            if (!File.Exists(path))
+                            if (UnlockObjectClass.KillAndDelete(path))
                             {
                                 Program.LL.LogSuccessMessage("_Malici0usFile", path, "_Deleted");
                                 scanResults.Add(new ScanResult(ScanObjectType.Malware, path, ScanActionType.Deleted));
@@ -948,13 +975,19 @@ namespace MSearch
                                 {
                                     Program.LL.LogSuccessMessage("_UnlockSuccess", path);
                                 }
-                                UnlockObjectClass.KillAndDelete(path);
-                                if (!File.Exists(path))
+
+                                if (UnlockObjectClass.KillAndDelete(path))
                                 {
                                     Program.LL.LogSuccessMessage("_Malici0usFile", path, "_Deleted");
                                     scanResults.Add(new ScanResult(ScanObjectType.Malware, path, ScanActionType.Deleted));
                                     deletedFilesCount++;
                                     continue;
+                                }
+                                else
+                                {
+                                    Program.LL.LogErrorMessage("_ErrorCannotRemove", new Exception(""), path, "_File");
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, path, ScanActionType.Error));
+                                    Program.totalNeutralizedThreats--;
                                 }
                             }
                         }
@@ -2108,6 +2141,55 @@ namespace MSearch
                 Program.LL.LogErrorMessage("_ErrorCannotOpen", ex, "HKCU\\...\\run");
             }
 
+
+            Logger.WriteLog(@"[Reg] HKCU System policies...", ConsoleColor.DarkCyan);
+            try
+            {
+                string regPath = MSData.Instance.queries["SystemPolicies"];
+                string[] valueNames = { "Di?sable?TaskM?gr".Replace("?", ""), "Di??sab?leRe?gistr??yToo?ls".Replace("?", "") };
+
+                using (RegistryKey systemKey = Registry.CurrentUser.OpenSubKey(regPath, true))
+                {
+                    if (systemKey != null)
+                    {
+                        foreach (string policiesVal in valueNames)
+                        {
+                            if (systemKey.GetValue(policiesVal) != null)
+                            {
+                                Program.totalFoundThreats++;
+                                if (!Program.ScanOnly)
+                                {
+                                    systemKey.DeleteValue(policiesVal, false);
+                                    if (systemKey.GetValue(policiesVal) == null)
+                                    {
+                                        Program.LL.LogSuccessMessage("_RegistryKeyRemoved", policiesVal);
+                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKCU:SystemPolicies: {policiesVal}", ScanActionType.Deleted));
+                                        affected_items++;
+                                    }
+                                    else
+                                    {
+                                        Program.totalNeutralizedThreats--;
+                                        Program.LL.LogErrorMessage("_ErrorCannotRemove", null, policiesVal);
+                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKCU:SystemPolicies: {policiesVal}", ScanActionType.Inaccassible));
+                                    }
+
+                                }
+                                else
+                                {
+                                    Program.LL.LogWarnMediumMessage("_FoundMlwrKey", policiesVal);
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKCU:SystemPolicies: {policiesVal}", ScanActionType.Skipped));
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.LL.LogErrorMessage("_ErrorCannotOpen", ex, "HKCU\\...\\System");
+            }
+
             StringBuilder sb = new StringBuilder();
             sb.Append("tek").Append("to").Append("nit");
             string subkeyNameTektonit = sb.ToString();
@@ -2126,10 +2208,21 @@ namespace MSearch
 
                     if (!Program.ScanOnly)
                     {
-                        if (UnlockObjectClass.IsRegistryKeyBlocked(Path.Combine("Software", subkeyNameTektonit)))
+                        try
                         {
+                            if (UnlockObjectClass.IsRegistryKeyBlocked(Path.Combine("Software", subkeyNameTektonit)))
+                            {
+                                UnlockObjectClass.UnblockRegistry(Path.Combine("Software", subkeyNameTektonit));
+                            }
+                        }
+                        catch (SecurityException)
+                        {
+                            UnlockObjectClass.TakeownRegKey(Path.Combine(@"Software", subkeyNameTektonit));
+                            UnlockObjectClass.ResetPermissionsToDefault(Path.Combine(@"Software", subkeyNameTektonit));
                             UnlockObjectClass.UnblockRegistry(Path.Combine("Software", subkeyNameTektonit));
                         }
+
+
                         if (tektonit.GetSubKeyNames().Contains(subkeyNameTektonit))
                         {
                             var tektonitSubKeys = tektonit.GetSubKeyNames();
@@ -2148,6 +2241,11 @@ namespace MSearch
                             }
                         }
                     }
+                    else
+                    {
+                        Program.LL.LogWarnMediumMessage("_FoundMlwrKey", subkeyNameTektonit);
+                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"Registry:HKCU:{subkeyNameTektonit}".Replace("?", ""), ScanActionType.Skipped));
+                    }
                 }
             }
             catch (Exception ex)
@@ -2157,64 +2255,13 @@ namespace MSearch
                 scanResults.Add(new ScanResult(ScanObjectType.Malware, $"Registry:HKCU:{subkeyNameTektonit}".Replace("?", ""), ScanActionType.Error));
 
             }
+
             #endregion
 
             #region Applocker
 
             Logger.WriteLog(@"[Reg] Applocker...", ConsoleColor.DarkCyan);
-            string registryPath = @"SOFTWARE\Policies\Microsoft\Windows\SrpV2\Exe";
-            List<string> badSubkeys = new List<string>()
-            {
-                "046f9638-b658-43ee-97f8-e15031db0b6f",
-                "0cfc12f8-7909-4835-90dd-68d33e7f0f10",
-                "10635fa4-7a5b-425d-838b-689f9b246807",
-                "17034547-0c43-4381-b97a-ce8a2d5e96f8",
-                "36bced03-d5ef-47fa-a598-a6693a3bc59f",
-                "3fb8bf6b-9eed-456b-94e4-00022745779e",
-                "443594ac-609b-4dd7-816d-f4f1e3efc726",
-                "489640ba-736f-4381-9b78-b11b5fa07fea",
-                "5766b2e3-7cad-4f73-9c67-762db4f8d63a",
-                "5c158d85-7483-455d-8f96-a1888217e308",
-                "6a0278ea-9b21-4c53-a18c-a0e6411ea624",
-                "701deaa1-2dad-4f95-a15a-1aa778b4b812",
-                "71e498b6-68f4-4c4c-9831-b37fa2483e24",
-                "72b5c9be-1cf7-43eb-af80-63feaf6bb690",
-                "7b63de66-5456-46bc-9a2a-2fe7a84cd763",
-                "7fde4b58-4627-49c7-baef-4a881d3ef94c",
-                "808be0f0-b8ab-46c7-a3a0-bdeb742ccde9",
-                "839d18ed-9e08-492b-bfca-4a53c1e7c8c4",
-                "85a18717-d5f9-4f3b-89b4-1ed4f02b1eeb",
-                "8c9ead7d-b294-4159-9607-9b9b7766f860",
-                "8e27ae66-7447-4de5-8759-475393f09764",
-                "93b1f30a-51e3-4582-a3e0-582d1ba1987d",
-                "97e69d73-af4e-4d3b-93c0-de2d00492518",
-                "9cfdfc36-6bd5-4b9c-baf1-56ba7df44ec6",
-                "a395fe35-b771-44e1-b640-8877314b2643",
-                "a439a434-146a-4c9f-8743-051f522f36bb",
-                "af801e3f-3fa4-4910-b559-b9c956783ee5",
-                "b1a2abe0-68e5-4632-866f-2c6215dec459",
-                "baac2a1e-8890-4bad-998a-c11534e1b44d",
-                "bae342c0-8b15-4823-80a8-fe5067a75f90",
-                "be235b32-21ab-4dd8-bc6e-61649ec11f3d",
-                "c1abb5ee-85f8-47dd-b567-cfbe3ea51516",
-                "c2d49146-e267-4fe6-9867-b2d42fdf52e2",
-                "c888e849-8015-4f41-b2a2-d18e4c6bf02c",
-                "ca90426a-78be-4a8b-af20-d13452175d73",
-                "cb5f59ee-d2be-4d9d-99dc-7657843cece2",
-                "d16c6ab4-3721-4e52-9902-64e76212094c",
-                "d8ee32c1-472b-41dd-a204-b198cb1ae9b8",
-                "ea9fa9c5-2743-44a1-99ed-d9ac26a135e7",
-                "ec544bd8-4a5d-4ae7-8c5c-044f4b6d60fb",
-                "ec77c5b9-3955-44f4-804b-c678504c16b6",
-                "f025c3b3-d9d1-4c09-be3b-bfc05fdbe243",
-                "f2be1651-b3c6-477d-a183-8f2946538210",
-                "f9729781-9d66-46b8-8553-f0099fd924d3",
-                "f9b3908f-4f58-45ec-a9a8-c1b88e9dbe98",
-                "d8e659be-d4a5-4cd6-bf96-c92736039685",
-                "e8a3f75c-ee02-4c96-958e-7e31352c196c",
-                "eedeed7f-e2e7-4181-8050-4a4f90361328",
-                "adb6a6f1-9af9-496f-b8d4-ba695911f83a"
-            };
+            string registryPath = MSData.Instance.queries["appl0cker"];
 
             bool isContainsBadPolicies = false;
 
@@ -2226,32 +2273,29 @@ namespace MSearch
                 {
                     foreach (var subkeyName in allSubkeys)
                     {
-                        if (badSubkeys.Contains(subkeyName, StringComparer.OrdinalIgnoreCase))
+                        if (MSData.Instance.badSubkeys.Contains(subkeyName, StringComparer.OrdinalIgnoreCase))
                         {
                             isContainsBadPolicies = true;
-                            Program.totalFoundThreats++;
                             try
                             {
                                 parentKey.DeleteSubKeyTree(subkeyName);
                                 if (!Utils.RegistryKeyExists(registryPath))
                                 {
                                     Program.LL.LogSuccessMessage("_RegistryKeyRemoved", subkeyName);
-
-
                                     affected_items++;
                                 }
                             }
                             catch (Exception ex)
                             {
                                 Program.LL.LogErrorMessage("_ErrorCannotOpen", ex, subkeyName);
-
                             }
                         }
                     }
 
                     if (isContainsBadPolicies)
                     {
-                        scanResults.Add(new ScanResult(ScanObjectType.Infected, $"Registry:Applocker".Replace("?", ""), ScanActionType.Deleted));
+                        Program.totalFoundThreats++;
+                        scanResults.Add(new ScanResult(ScanObjectType.Infected, $"Reg?istry:Appl?ocker".Replace("?", ""), ScanActionType.Cured));
                     }
                 }
             }
@@ -2259,7 +2303,7 @@ namespace MSearch
             #endregion
 
             #region WindowsDefender
-            StringBuilder sbWD = new StringBuilder("Re").Append("gi").Append("st").Append("ry").Append(":W").Append("in").Append("De").Append("fe").Append("nd").Append(" P").Append("ol").Append("ic").Append("y");
+            StringBuilder sbWD = new StringBuilder("Re").Append("gi").Append("st").Append("ry").Append(":W").Append("in").Append("De").Append("fe").Append("nd").Append(" Ex").Append("cl").Append("us").Append("io").Append("ns");
             Logger.WriteLog($"[Reg] {new StringBuilder("Wi").Append("nd").Append("ow").Append("s ").Append("De").Append("fe").Append("nd").Append("er")}...".Replace("~", ""), ConsoleColor.DarkCyan);
 
             try
@@ -2309,9 +2353,15 @@ namespace MSearch
                                             Utils.RemoveDefenderExclusion(subKey, valueName);
                                             if (key.GetValue(valueName) == null)
                                             {
-                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " -> " + valueName, ScanActionType.Deleted));
-                                                Program.LL.LogSuccessMessage("_RegistryKeyRemoved", valueName);
+                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " (Local) -> " + valueName, ScanActionType.Deleted));
+                                                Program.LL.LogSuccessMessage("_RegistryKeyRemoved", $"{valueName} (local)");
                                                 affected_items++;
+                                            }
+                                            else
+                                            {
+                                                Program.totalNeutralizedThreats--;
+                                                Program.LL.LogErrorMessage("_ErrorCannotRemove", new Exception($"{sbWD} is turned off possible"), $"{valueName} (local)");
+                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " (Local) -> " + valueName, ScanActionType.Inaccassible));
                                             }
                                         }
                                         else
@@ -2319,8 +2369,8 @@ namespace MSearch
                                             key.DeleteValue(valueName);
                                             if (key.GetValue(valueName) == null)
                                             {
-                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " -> " + valueName, ScanActionType.Deleted));
-                                                Program.LL.LogSuccessMessage("_RegistryKeyRemoved", valueName);
+                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " (Policies) -> " + valueName, ScanActionType.Deleted));
+                                                Program.LL.LogSuccessMessage("_RegistryKeyRemoved", $"{valueName} (policy)");
                                                 affected_items++;
                                             }
                                         }
@@ -2335,7 +2385,7 @@ namespace MSearch
                                 catch (Exception ex)
                                 {
                                     Program.totalNeutralizedThreats--;
-                                    Program.LL.LogErrorMessage("_ErrorCannotOpen", ex, valueName);
+                                    Program.LL.LogErrorMessage("_ErrorCannotRemove", ex, valueName);
                                     scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " -> " + valueName, ScanActionType.Error));
                                 }
                             }
@@ -3615,7 +3665,7 @@ namespace MSearch
                 }
             }
 
-            TelegramAPI.UploadFile(Path.Combine(Logger.LogsFolder, Logger.logFileName), $"{OSExtensions.GetDeviceId()}\nv{Program.CurrentVersion}");
+            TelegramAPI.UploadFile(Path.Combine(Logger.LogsFolder, Logger.logFileName), $"{DeviceIdProvider.GetDeviceId()}\nv{Program.CurrentVersion}");
         }
     }
 }

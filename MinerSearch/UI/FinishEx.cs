@@ -17,11 +17,14 @@ namespace MSearch
         int curedCount = 0;
         string registryPath = @"Software\M1nerSearch";
         string valueName = "allowstatistics";
-
+        string LBL_id_text = "";
 
         public FinishEx(int _totalThreats, int _neutralizedThreats, int _suspObj, string _elapsedTime)
         {
             InitializeComponent();
+            ProcessManager.SetSmallWindowIconRandomHash(Handle);
+            Text = Utils.GetRndString();
+
             ConfigureDataGridView();
 
             threatsCount = _totalThreats;
@@ -30,6 +33,8 @@ namespace MSearch
             LBL_curedCount.Text = _neutralizedThreats.ToString();
             LBL_susCount.Text = _suspObj.ToString();
             LBL_ScanTime.Text = $"{Program.LL.GetLocalizedString("_Elapse")} {_elapsedTime}";
+            LBL_id_text = DeviceIdProvider.GetDeviceId();
+            LBL_ID.Text = LBL_id_text;
         }
 
         private void TranslateForm()
@@ -192,11 +197,6 @@ namespace MSearch
 
         private void ConfigureDataGridView()
         {
-            if (Program.totalFoundThreats == 0 && Program.totalFoundSuspiciousObjects == 0)
-            {
-                dataGridThreats.Visible = false;
-            }
-
             dataGridThreats.RowHeadersVisible = false;
             dataGridThreats.AutoGenerateColumns = false;
 
@@ -231,6 +231,11 @@ namespace MSearch
             {
                 column.Width = columnWidth;
                 column.MinimumWidth = columnWidth;
+            }
+
+            if (Program.totalFoundThreats == 0 && Program.totalFoundSuspiciousObjects == 0)
+            {
+                dataGridThreats.Columns.Clear();
             }
         }
 
@@ -416,6 +421,8 @@ namespace MSearch
                         ts_AllowCollectStatistics.CheckedChanged -= ts_AllowCollectStatistics_CheckedChanged;
                         ts_AllowCollectStatistics.Checked = (int)regValue == 1;
                         ts_AllowCollectStatistics.CheckedChanged += ts_AllowCollectStatistics_CheckedChanged;
+
+                        LBL_ID.Visible = (int)regValue == 1;
                     }
                 }
             }
@@ -476,13 +483,20 @@ namespace MSearch
                 if (ts_AllowCollectStatistics.CheckState == CheckState.Checked)
                 {
                     key.SetValue(valueName, 1, RegistryValueKind.DWord);
+                    LBL_ID.Visible = true;
                 }
                 else
                 {
                     key.SetValue(valueName, 0, RegistryValueKind.DWord);
+                    LBL_ID.Visible = false;
                 }
             }
-            else key.SetValue(valueName, 0, RegistryValueKind.DWord);
+            else
+            {
+                key.SetValue(valueName, 0, RegistryValueKind.DWord);
+                LBL_ID.Visible = false;
+            }
+
 
             if (key != null)
             {
@@ -495,6 +509,29 @@ namespace MSearch
         {
             WindowState = FormWindowState.Minimized;
             TopMost = false;
+        }
+
+        private void LBL_ID_Click(object sender, EventArgs e)
+        {
+            OnMouseClick(LBL_ID);
+        }
+
+        void OnMouseClick(Label control)
+        {
+            Clipboard.SetText(control.Text);
+            control.TextAlign = ContentAlignment.MiddleLeft;
+            control.Text = Program.LL.GetLocalizedString("_EventCopyText");
+        }
+
+        private void LBL_ID_MouseEnter(object sender, EventArgs e)
+        {
+            LBL_ID.ForeColor = Color.Black;
+        }
+
+        private void LBL_ID_MouseLeave(object sender, EventArgs e)
+        {
+            LBL_ID.ForeColor = Color.DarkGray;
+            LBL_ID.Text = LBL_id_text;
         }
     }
 }

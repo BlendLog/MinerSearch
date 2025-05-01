@@ -35,6 +35,7 @@ namespace MSearch
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FinishEx));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.LBL_ID = new System.Windows.Forms.Label();
             this.Label_allowStatistics = new System.Windows.Forms.Label();
             this.ts_AllowCollectStatistics = new MSearch.ToggleSwitch();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -77,6 +78,7 @@ namespace MSearch
             // 
             // tableLayoutPanel1
             // 
+            this.tableLayoutPanel1.BackColor = System.Drawing.Color.RoyalBlue;
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.panel3, 0, 4);
@@ -99,15 +101,34 @@ namespace MSearch
             // 
             // panel3
             // 
+            this.panel3.BackColor = System.Drawing.SystemColors.Control;
+            this.panel3.Controls.Add(this.LBL_ID);
             this.panel3.Controls.Add(this.Label_allowStatistics);
             this.panel3.Controls.Add(this.ts_AllowCollectStatistics);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
-            this.panel3.Location = new System.Drawing.Point(0, 441);
-            this.panel3.Margin = new System.Windows.Forms.Padding(0);
+            this.panel3.Location = new System.Drawing.Point(1, 441);
+            this.panel3.Margin = new System.Windows.Forms.Padding(1, 0, 1, 1);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(933, 34);
+            this.panel3.Size = new System.Drawing.Size(931, 33);
             this.panel3.TabIndex = 4;
+            // 
+            // LBL_ID
+            // 
+            this.LBL_ID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.LBL_ID.BackColor = System.Drawing.Color.Transparent;
+            this.LBL_ID.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.LBL_ID.ForeColor = System.Drawing.Color.DarkGray;
+            this.LBL_ID.Location = new System.Drawing.Point(11, 8);
+            this.LBL_ID.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.LBL_ID.Name = "LBL_ID";
+            this.LBL_ID.Size = new System.Drawing.Size(298, 19);
+            this.LBL_ID.TabIndex = 16;
+            this.LBL_ID.Text = "_label_ID";
+            this.LBL_ID.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LBL_ID.Click += new System.EventHandler(this.LBL_ID_Click);
+            this.LBL_ID.MouseEnter += new System.EventHandler(this.LBL_ID_MouseEnter);
+            this.LBL_ID.MouseLeave += new System.EventHandler(this.LBL_ID_MouseLeave);
             // 
             // Label_allowStatistics
             // 
@@ -115,7 +136,7 @@ namespace MSearch
             this.Label_allowStatistics.BackColor = System.Drawing.Color.Transparent;
             this.Label_allowStatistics.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.Label_allowStatistics.ForeColor = System.Drawing.Color.Black;
-            this.Label_allowStatistics.Location = new System.Drawing.Point(4, 8);
+            this.Label_allowStatistics.Location = new System.Drawing.Point(2, 8);
             this.Label_allowStatistics.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_allowStatistics.Name = "Label_allowStatistics";
             this.Label_allowStatistics.Size = new System.Drawing.Size(881, 19);
@@ -129,7 +150,7 @@ namespace MSearch
             this.ts_AllowCollectStatistics.AutoSize = true;
             this.ts_AllowCollectStatistics.BackColor = System.Drawing.Color.Transparent;
             this.ts_AllowCollectStatistics.Enabled = false;
-            this.ts_AllowCollectStatistics.Location = new System.Drawing.Point(890, 8);
+            this.ts_AllowCollectStatistics.Location = new System.Drawing.Point(888, 8);
             this.ts_AllowCollectStatistics.Margin = new System.Windows.Forms.Padding(2);
             this.ts_AllowCollectStatistics.MinimumSize = new System.Drawing.Size(34, 18);
             this.ts_AllowCollectStatistics.Name = "ts_AllowCollectStatistics";
@@ -360,7 +381,7 @@ namespace MSearch
             this.MinimizeBtn.BackColor = System.Drawing.Color.RoyalBlue;
             this.MinimizeBtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.MinimizeBtn.FlatAppearance.BorderSize = 0;
-            this.MinimizeBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.MinimizeBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(120)))), ((int)(((byte)(255)))));
             this.MinimizeBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MinimizeBtn.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Bold);
             this.MinimizeBtn.ForeColor = System.Drawing.Color.White;
@@ -464,8 +485,8 @@ namespace MSearch
             this.dataGridThreats.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridThreats.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridThreats.GridColor = System.Drawing.Color.LightGray;
-            this.dataGridThreats.Location = new System.Drawing.Point(0, 132);
-            this.dataGridThreats.Margin = new System.Windows.Forms.Padding(0);
+            this.dataGridThreats.Location = new System.Drawing.Point(1, 132);
+            this.dataGridThreats.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.dataGridThreats.MultiSelect = false;
             this.dataGridThreats.Name = "dataGridThreats";
             this.dataGridThreats.ReadOnly = true;
@@ -481,14 +502,14 @@ namespace MSearch
             this.dataGridThreats.RowHeadersWidth = 51;
             this.dataGridThreats.RowTemplate.Height = 24;
             this.dataGridThreats.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridThreats.Size = new System.Drawing.Size(933, 240);
+            this.dataGridThreats.Size = new System.Drawing.Size(931, 240);
             this.dataGridThreats.TabIndex = 1;
             this.dataGridThreats.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridThreats_RowsAdded);
             // 
             // panelCustom1
             // 
             this.panelCustom1.BackColor = System.Drawing.SystemColors.Control;
-            this.panelCustom1.BorderColor = System.Drawing.Color.Black;
+            this.panelCustom1.BorderColor = System.Drawing.Color.RoyalBlue;
             this.panelCustom1.BorderWidth = 1;
             this.panelCustom1.Controls.Add(this.OpenQuarantineBtn);
             this.panelCustom1.Controls.Add(this.Label_showAllLogs);
@@ -496,14 +517,14 @@ namespace MSearch
             this.panelCustom1.Controls.Add(this.Label_OpenLogsFolder);
             this.panelCustom1.Controls.Add(this.btnDetails);
             this.panelCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelCustom1.Location = new System.Drawing.Point(0, 372);
-            this.panelCustom1.Margin = new System.Windows.Forms.Padding(0);
+            this.panelCustom1.Location = new System.Drawing.Point(1, 372);
+            this.panelCustom1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.panelCustom1.Name = "panelCustom1";
             this.panelCustom1.ShowBottomBorder = true;
             this.panelCustom1.ShowLeftBorder = false;
             this.panelCustom1.ShowRightBorder = false;
             this.panelCustom1.ShowTopBorder = true;
-            this.panelCustom1.Size = new System.Drawing.Size(933, 69);
+            this.panelCustom1.Size = new System.Drawing.Size(931, 69);
             this.panelCustom1.TabIndex = 5;
             // 
             // OpenQuarantineBtn
@@ -516,7 +537,7 @@ namespace MSearch
             this.OpenQuarantineBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OpenQuarantineBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.OpenQuarantineBtn.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.OpenQuarantineBtn.Location = new System.Drawing.Point(740, 19);
+            this.OpenQuarantineBtn.Location = new System.Drawing.Point(738, 19);
             this.OpenQuarantineBtn.Margin = new System.Windows.Forms.Padding(2);
             this.OpenQuarantineBtn.Name = "OpenQuarantineBtn";
             this.OpenQuarantineBtn.Size = new System.Drawing.Size(182, 35);
@@ -533,7 +554,7 @@ namespace MSearch
             this.Label_showAllLogs.Location = new System.Drawing.Point(9, 16);
             this.Label_showAllLogs.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_showAllLogs.Name = "Label_showAllLogs";
-            this.Label_showAllLogs.Size = new System.Drawing.Size(272, 17);
+            this.Label_showAllLogs.Size = new System.Drawing.Size(270, 17);
             this.Label_showAllLogs.TabIndex = 13;
             this.Label_showAllLogs.Text = "label_showAllLogs";
             this.Label_showAllLogs.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -549,7 +570,7 @@ namespace MSearch
             this.finishBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.finishBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.finishBtn.ForeColor = System.Drawing.Color.AliceBlue;
-            this.finishBtn.Location = new System.Drawing.Point(476, 19);
+            this.finishBtn.Location = new System.Drawing.Point(474, 19);
             this.finishBtn.Margin = new System.Windows.Forms.Padding(2);
             this.finishBtn.Name = "finishBtn";
             this.finishBtn.Size = new System.Drawing.Size(160, 35);
@@ -570,7 +591,7 @@ namespace MSearch
             this.Label_OpenLogsFolder.Location = new System.Drawing.Point(5, 36);
             this.Label_OpenLogsFolder.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_OpenLogsFolder.Name = "Label_OpenLogsFolder";
-            this.Label_OpenLogsFolder.Size = new System.Drawing.Size(275, 19);
+            this.Label_OpenLogsFolder.Size = new System.Drawing.Size(273, 19);
             this.Label_OpenLogsFolder.TabIndex = 12;
             this.Label_OpenLogsFolder.TabStop = true;
             this.Label_OpenLogsFolder.Text = "label_OpenLogsFolder";
@@ -587,7 +608,7 @@ namespace MSearch
             this.btnDetails.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDetails.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnDetails.ForeColor = System.Drawing.Color.Black;
-            this.btnDetails.Location = new System.Drawing.Point(311, 19);
+            this.btnDetails.Location = new System.Drawing.Point(309, 19);
             this.btnDetails.Margin = new System.Windows.Forms.Padding(2);
             this.btnDetails.Name = "btnDetails";
             this.btnDetails.Size = new System.Drawing.Size(160, 35);
@@ -660,5 +681,6 @@ namespace MSearch
         private System.Windows.Forms.Label Label_allowStatistics;
         private PanelCustom panelCustom1;
         private System.Windows.Forms.Button MinimizeBtn;
+        private System.Windows.Forms.Label LBL_ID;
     }
 }
