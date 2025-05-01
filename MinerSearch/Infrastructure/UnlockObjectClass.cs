@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -165,57 +166,109 @@ namespace MSearch
             }
         }
 
-        internal static void KillAndDelete(string filePath)
+        //https://learn.microsoft.com/en-us/answers/questions/726748/how-can-i-change-particular-registry-owner-in-c
+        public static void TakeownRegKey(string keyPath)
         {
+            string sName = Environment.UserName;
+            NTAccount ntAccount = new NTAccount(sName);
+            string sSid = ntAccount.Translate(typeof(SecurityIdentifier)).Value;
+            IntPtr pSid = IntPtr.Zero;
+            Native.ConvertStringSidToSid(sSid, out pSid);
+            IntPtr hKey = IntPtr.Zero;
+            uint dwErr = Native.RegOpenKeyEx((IntPtr)Native.HKEY_CURRENT_USER, keyPath, 0, Native.KEY_WOW64_64KEY | Native.WRITE_OWNER, ref hKey);
+            if (dwErr == 0)
+            {
+                uint dwRet = Native.SetSecurityInfo(hKey,
+                      Native.SE_OBJECT_TYPE.SE_REGISTRY_KEY,
+                      Native.OWNER_SECURITY_INFORMATION,
+                      pSid,
+                      IntPtr.Zero,
+                      IntPtr.Zero,
+                      IntPtr.Zero);
+                Native.RegCloseKey(hKey);
+            }
+        }
 
+        public static void ResetPermissionsToDefault(string keyPath)
+        {
+            IntPtr hKey = IntPtr.Zero;
+            uint err = Native.RegOpenKeyEx(
+                (IntPtr)Native.HKEY_CURRENT_USER,
+                keyPath,
+                0,
+                Native.KEY_WOW64_64KEY | Native.WRITE_DAC,
+                ref hKey);
+
+            if (err != 0 || hKey == IntPtr.Zero)
+                throw new Win32Exception((int)err, "RegOpenKeyEx failed");
+
+            try
+            {
+                uint result = Native.SetSecurityInfo(
+                    hKey,
+                    Native.SE_OBJECT_TYPE.SE_REGISTRY_KEY,
+                    Native.DACL_SECURITY_INFORMATION,
+                    IntPtr.Zero,
+                    IntPtr.Zero,
+                    IntPtr.Zero,
+                    IntPtr.Zero 
+                );
+
+                if (result != 0)
+                    throw new Win32Exception((int)result, "SetSecurityInfo failed");
+            }
+            finally
+            {
+                Native.RegCloseKey(hKey);
+            }
+        }
+
+        internal static bool KillAndDelete(string filePath)
+        {
             try
             {
                 if (File.Exists(filePath))
                 {
+                    File.SetAttributes(filePath, FileAttributes.Normal);
                     File.Delete(filePath);
-                    return;
+                    if (!File.Exists(filePath))
+                        return true;
                 }
             }
-            catch (IOException) { }
-            catch (UnauthorizedAccessException) { }
+            catch (Exception) { }
 
             try
             {
                 uint processId = ProcessManager.GetProcessIdByFilePath(filePath);
-
+                string tmpProcName = "";
                 if (processId != 0)
                 {
                     Process process = Process.GetProcessById((int)processId);
-                    if (process != null || !process.HasExited)
+                    if (process != null && !process.HasExited)
                     {
+                        tmpProcName = process.ProcessName;
                         ProcessManager.UnProtect(new int[] { process.Id });
                         process.Kill();
-                        if (process == null || process.HasExited)
-                        {
-                            Program.LL.LogSuccessMessage("_BlockingProcessClosed", $"PID: {processId}");
-                        }
-
+                        process.WaitForExit(1000);
+                        Program.LL.LogSuccessMessage("_BlockingProcessClosed", $"{tmpProcName} | PID: {processId}");
                     }
+                    else Program.LL.LogWarnMessage("_ProcessNotRunning");
                 }
 
                 if (File.Exists(filePath))
                 {
+                    File.SetAttributes(filePath, FileAttributes.Normal);
                     File.Delete(filePath);
+                    if (!File.Exists(filePath))
+                        return true;
                 }
             }
-            catch (System.ComponentModel.Win32Exception win32e)
+            catch (Exception ex)
             {
-#if DEBUG
-                    Console.WriteLine($"[DBG] Win32Error {win32e.Message}");
-#endif
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                    Console.WriteLine($"[DBG] Error {e.Message}");
-#endif
+                Program.LL.LogErrorMessage("_ErrorCannotRemove", ex, filePath, "_File");
             }
 
+            return false;
         }
 
         internal static void DisableExecute(string filePath)

@@ -21,7 +21,6 @@ namespace MSearch
 
         internal static readonly object _logLock = new object();
         static StreamWriter _writer;
-        static Timer _flushTimer;
 
         public static void InitLogger()
         {

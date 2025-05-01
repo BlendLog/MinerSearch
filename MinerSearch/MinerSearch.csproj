@@ -57,6 +57,7 @@
     <FileAlignment>512</FileAlignment>
     <DocumentationFile>
     </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>

@@ -401,6 +401,7 @@ Thank you for your help!</value>
 -nse   --no-services          Skip scan services
 -nss   --no-signature-scan    Skip scan files by signatures
 -nrc   --no-rootkit-check     Skip checking rootkit present
+-nch   --no-check-hosts       Skip checking hosts file
 -p     --pause                Pause before cleanup
 -ret   --remove-empty-tasks   Delete a task from the Task Scheduler if the application file does not exist in it
 -so    --scan-only            Display malicious or suspicious objects, but do nothing
@@ -523,11 +524,23 @@ Do you want to continue?
     <value>TermService успешно восстановлен</value>
   </data>
   <data name="_License_EN" xml:space="preserve">
-    <value>{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049\deflangfe1049{\fonttbl{\f0\fnil\fcharset204 Times New Roman;}}
+    <value>{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049\deflangfe1049{\fonttbl{\f0\froman\fprq2\fcharset204 Times New Roman;}{\f1\fnil\fcharset2 Symbol;}}
 {\colortbl ;\red118\green113\blue113;}
-{\*\generator Riched20 10.0.19041}{\*\mmathPr\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
+{\*\generator Riched20 10.0.19041}{\*\mmathPr\mnaryLim0\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
 \pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\f0\fs28\par
 This software provided "as is" and was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurrency. The author is not responsible for incidental, indirect or unintentional damage of any kind during the use of this software. You may use it at your own risk.\par
+\par
+\b Collecting technical information\par
+\b0 The application automatically generates an anonymous identifier key (Device ID) based on the device configuration (hardware characteristics, OS version). It is used exclusively for:\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\widctlpar\fi-360\li1572\ri212\sa160\sl276\slmult1\qj Diagnosis of errors in the application;\par
+{\pntext\f1\'B7\tab}Technical support;\par
+{\pntext\f1\'B7\tab}Device ID does not contain any personal data;\par
+{\pntext\f1\'B7\tab}Is not shared with third parties and is not used for advertising or tracking.\par
+
+\pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\par
+\b Where is the DeviceID displayed?\par
+\b0 The identifier key is indicated on the final application window with the summary report.\par
 \par
 \cf1\b FAQ:\par
 \cf0 Why does my antivirus indicate that the software contains a Trojan/virus?\par
@@ -537,10 +550,19 @@ This software provided "as is" and was created exclusively to search and remove 
 
 \pard 
 {\pntext\f0 1)\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pndec{\pntxta)}}
-\fi710\li142\ri212\sa160\sl276\slmult1\qj Third-party antivirus interferes with normal operation;\par
-{\pntext\f0 2)\tab}incorrect startup parameters / path too long / important components disabled or not installed;\par
-{\pntext\f0 3)\tab}Malicious software blocks its operation - in this case, you need to rename the executable file "Min\'e5rSearch_\{version number\}.exe" to anything else.\par
-{\pntext\f0 4)\tab}There was an error in the code that requires correction. Write about an error in an issue in the official github repository.\par
+\nowidctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj Third-party antivirus interferes with normal operation;\par
+
+\pard 
+{\pntext\f0 2)\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pndec{\pntxta)}}
+\nowidctlpar\fi710\li142\ri212\sa160\sl276\slmult1 incorrect startup parameters / path too long / important components disabled or not installed;\par
+
+\pard 
+{\pntext\f0 3)\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pndec{\pntxta)}}
+\nowidctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj Malicious software blocks its operation - in this case, you need to rename the executable file "Min\'e5rSearch_\{version number\}.exe" to anything else.\par
+
+\pard 
+{\pntext\f0 4)\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pndec{\pntxta)}}
+\nowidctlpar\fi710\li142\ri212\sa160\sl276\slmult1 There was an error in the code that requires correction. Write about an error in an issue in the official github repository.\par
 
 \pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj This license agreement applies to all copies, and to previous and subsequent versions of the software.\par
 Are you sure you want to continue? \par
@@ -673,7 +695,7 @@ Do you want to continue?</value>
     <value>Регистрация необходимых DLL...</value>
   </data>
   <data name="_LabelAllowStatistics_RU" xml:space="preserve">
-    <value>Отправлять анонимные отчёты разработчику о результатах проверки</value>
+    <value>Отправлять анонимные отчёты разработчику о результатах проверки в следующий раз</value>
   </data>
   <data name="_ActionType_Quarantine_EN" xml:space="preserve">
     <value>Moved to quarantine</value>
@@ -703,7 +725,7 @@ Do you want to continue?</value>
     <value>Правило</value>
   </data>
   <data name="_LabelAllowStatistics_EN" xml:space="preserve">
-    <value>Send anonymous scan results to developer</value>
+    <value>Send anonymous scan results to developer next time</value>
   </data>
   <data name="_SpecDrive_RU" xml:space="preserve">
     <value>Укажите букву диска:</value>
@@ -727,7 +749,7 @@ Do you want to continue?</value>
     <value>&lt;-- Доступно обновление #LATEST#</value>
   </data>
   <data name="_License_RU" xml:space="preserve">
-    <value>{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049\deflangfe1049{\fonttbl{\f0\fnil\fcharset204 Times New Roman;}}
+    <value>{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049\deflangfe1049{\fonttbl{\f0\froman\fprq2\fcharset204 Times New Roman;}{\f1\fnil\fcharset2 Symbol;}}
 {\colortbl ;\red128\green128\blue128;}
 {\*\listtable 
 {\list\listhybrid
@@ -745,14 +767,32 @@ Do you want to continue?</value>
 \pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\tx284\f0\fs28\par
 \'c4\'e0\'ed\'ed\'ee\'e5 \'ef\'f0\'ee\'e3\'f0\'e0\'ec\'ec\'ed\'ee\'e5 \'ee\'e1\'e5\'f1\'ef\'e5\'f7\'e5\'ed\'e8\'e5 (\'c4\'e0\'eb\'e5\'e5 \'cf\'ce) \'ef\'f0\'e5\'e4\'ee\'f1\'f2\'e0\'e2\'eb\'ff\'e5\'f2\'f1\'ff "\'ea\'e0\'ea \'e5\'f1\'f2\'fc" \'e8 \'f1\'ee\'e7\'e4\'e0\'ed\'ee \'e8\'f1\'ea\'eb\'fe\'f7\'e8\'f2\'e5\'eb\'fc\'ed\'ee \'e4\'eb\'ff \'ef\'ee\'e8\'f1\'ea\'e0 \'e8 \'f3\'e4\'e0\'eb\'e5\'ed\'e8\'ff \'e2\'f0\'e5\'e4\'ee\'ed\'ee\'f1\'ed\'ee\'e3\'ee \'cf\'ce, \'f2\'e0\'e9\'ed\'ee \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'f3\'fe\'f9\'e5\'e5 \'f0\'e5\'f1\'f3\'f0\'f1\'fb \'ea\'ee\'ec\'ef\'fc\'fe\'f2\'e5\'f0\'e0 \'e4\'eb\'ff \'e4\'ee\'e1\'fb\'f7\'e8 (\'ec\'e0\'e9\'ed\'e8\'ed\'e3\'e0) \'ea\'f0\'e8\'ef\'f2\'ee\'e2\'e0\'eb\'fe\'f2\'fb. \'c0\'e2\'f2\'ee\'f0 \'ed\'e5 \'ed\'e5\'f1\'e5\'f2 \'ee\'f2\'e2\'e5\'f2\'f1\'f2\'e2\'e5\'ed\'ed\'ee\'f1\'f2\'e8 \'e7\'e0 \'ef\'f0\'e8\'f7\'e8\'ed\'e5\'ed\'ed\'fb\'e9 \'f1\'eb\'f3\'f7\'e0\'e9\'ed\'fb\'e9, \'ea\'ee\'f1\'e2\'e5\'ed\'ed\'fb\'e9 \'e8\'eb\'e8 \'ed\'e5\'ef\'f0\'e5\'e4\'ed\'e0\'ec\'e5\'f0\'e5\'ed\'ed\'fb\'e9 \'f3\'f9\'e5\'f0\'e1 \'eb\'fe\'e1\'ee\'e3\'ee \'f0\'ee\'e4\'e0 \'e2 \'f5\'ee\'e4\'e5 \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'ee\'e2\'e0\'ed\'e8\'ff \'e4\'e0\'ed\'ed\'ee\'e3\'ee \'cf\'ce. \'c2\'fb \'ec\'ee\'e6\'e5\'f2\'e5 \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'ee\'e2\'e0\'f2\'fc \'e5\'e3\'ee \'ed\'e0 \'f1\'e2\'ee\'e9 \'f1\'f2\'f0\'e0\'f5 \'e8 \'f0\'e8\'f1\'ea. \par
 \par
-\cf1\b\'d7\'e0\'f1\'f2\'ee \'e7\'e0\'e4\'e0\'e2\'e0\'e5\'ec\'fb\'e5 \'e2\'ee\'ef\'f0\'ee\'f1\'fb:\par
+
+\pard\widctlpar\fi852\sa160\sl276\slmult1\kerning2\b\'d1\'e1\'ee\'f0 \'f2\'e5\'f5\'ed\'e8\'f7\'e5\'f1\'ea\'ee\'e9 \'e8\'ed\'f4\'ee\'f0\'ec\'e0\'f6\'e8\'e8\par
+
+\pard\widctlpar\li142\sa160\sl276\slmult1\b0\'cf\'f0\'e8\'eb\'ee\'e6\'e5\'ed\'e8\'e5 \'e0\'e2\'f2\'ee\'ec\'e0\'f2\'e8\'f7\'e5\'f1\'ea\'e8 \'e3\'e5\'ed\'e5\'f0\'e8\'f0\'f3\'e5\'f2 \'e0\'ed\'ee\'ed\'e8\'ec\'ed\'fb\'e9 \'ea\'eb\'fe\'f7-\'e8\'e4\'e5\'ed\'f2\'e8\'f4\'e8\'ea\'e0\'f2\'ee\'f0 (DeviceID) \'ed\'e0 \'ee\'f1\'ed\'ee\'e2\'e5 \'ea\'ee\'ed\'f4\'e8\'e3\'f3\'f0\'e0\'f6\'e8\'e8 \'f3\'f1\'f2\'f0\'ee\'e9\'f1\'f2\'e2\'e0 (\'e0\'ef\'ef\'e0\'f0\'e0\'f2\'ed\'fb\'e5 \'f5\'e0\'f0\'e0\'ea\'f2\'e5\'f0\'e8\'f1\'f2\'e8\'ea\'e8, \'e2\'e5\'f0\'f1\'e8\'ff \'ce\'d1). \'ce\'ed \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'f3\'e5\'f2\'f1\'ff \'e8\'f1\'ea\'eb\'fe\'f7\'e8\'f2\'e5\'eb\'fc\'ed\'ee \'e4\'eb\'ff:\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa160\sl276\slmult1\'c4\'e8\'e0\'e3\'ed\'ee\'f1\'f2\'e8\'ea\'e8 \'ee\'f8\'e8\'e1\'ee\'ea \'e2 \'f0\'e0\'e1\'ee\'f2\'e5 \'ef\'f0\'e8\'eb\'ee\'e6\'e5\'ed\'e8\'ff;\par
+{\pntext\f1\'B7\tab}\'d3\'f1\'ea\'ee\'f0\'e5\'ed\'e8\'ff \'ee\'e1\'f0\'e0\'f9\'e5\'ed\'e8\'ff \'e2 \'f2\'e5\'f5\'ed\'e8\'f7\'e5\'f1\'ea\'f3\'fe \'ef\'ee\'e4\'e4\'e5\'f0\'e6\'ea\'f3;\par
+{\pntext\f1\'B7\tab}DeviceID \'ed\'e5 \'f1\'ee\'e4\'e5\'f0\'e6\'e8\'f2 \'ef\'e5\'f0\'f1\'ee\'ed\'e0\'eb\'fc\'ed\'fb\'f5 \'e4\'e0\'ed\'ed\'fb\'f5;\par
+{\pntext\f1\'B7\tab}\'cd\'e5 \'ef\'e5\'f0\'e5\'e4\'e0\'b8\'f2\'f1\'ff \'f2\'f0\'e5\'f2\'fc\'e8\'ec \'eb\'e8\'f6\'e0\'ec \'e8 \'ed\'e5 \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'f3\'e5\'f2\'f1\'ff \'e4\'eb\'ff \'f0\'e5\'ea\'eb\'e0\'ec\'fb \'e8\'eb\'e8 \'f2\'f0\'e5\'ea\'e8\'ed\'e3\'e0.\par
+
+\pard\widctlpar\sa160\sl276\slmult1\par
+
+\pard\widctlpar\fi710\li142\sa160\sl276\slmult1\b\'c3\'e4\'e5 \'ee\'f2\'ee\'e1\'f0\'e0\'e6\'e0\'e5\'f2\'f1\'ff DeviceID?\par
+
+\pard\widctlpar\li142\sa160\sl276\slmult1\b0\'ca\'eb\'fe\'f7-\'e8\'e4\'e5\'ed\'f2\'e8\'f4\'e8\'ea\'e0\'f2\'ee\'f0 \'f3\'ea\'e0\'e7\'e0\'ed \'ed\'e0 \'f4\'e8\'ed\'e0\'eb\'fc\'ed\'ee\'ec \'ee\'ea\'ed\'e5 \'ef\'f0\'e8\'eb\'ee\'e6\'e5\'ed\'e8\'ff c \'ea\'f0\'e0\'f2\'ea\'e8\'ec \'ee\'f2\'f7\'b8\'f2\'ee\'ec. \par
+
+\pard\widctlpar\sa160\sl276\slmult1\par
+
+\pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\tx284\cf1\kerning0\b\'d7\'e0\'f1\'f2\'ee \'e7\'e0\'e4\'e0\'e2\'e0\'e5\'ec\'fb\'e5 \'e2\'ee\'ef\'f0\'ee\'f1\'fb:\par
 \cf0\'cf\'ee\'f7\'e5\'ec\'f3 \'ec\'ee\'e9 \'e0\'ed\'f2\'e8\'e2\'e8\'f0\'f3\'f1 \'f3\'ea\'e0\'e7\'fb\'e2\'e0\'e5\'f2, \'f7\'f2\'ee \'cf\'ce \'f1\'ee\'e4\'e5\'f0\'e6\'e8\'f2 \'f2\'f0\'ee\'ff\'ed/\'e2\'e8\'f0\'f3\'f1?\par
 \'ce\'f2\'e2\'e5\'f2\b0 : \'d1\'f2\'ee\'f0\'ee\'ed\'ed\'e8\'e9 \'e0\'ed\'f2\'e8\'e2\'e8\'f0\'f3\'f1 \'f0\'e5\'e3\'e8\'f1\'f2\'f0\'e8\'f0\'f3\'e5\'f2 \'f1\'e0\'ec \'f4\'e0\'ea\'f2 \'e2\'ec\'e5\'f8\'e0\'f2\'e5\'eb\'fc\'f1\'f2\'e2\'e0 \'e2 \'f1\'e8\'f1\'f2\'e5\'ec\'f3 \'e8 \'ed\'e5 \'ec\'ee\'e6\'e5\'f2 \'ee\'f2\'eb\'e8\'f7\'e8\'f2\'fc \'ea\'ee\'ed\'ea\'f0\'e5\'f2\'ed\'ee\'e5 \'e4\'e5\'e9\'f1\'f2\'e2\'e8\'e5 (\'e8\'e7\'ec\'e5\'ed\'e5\'ed\'e8\'e5), \'f7\'f2\'ee \'ea\'e0\'ea \'f0\'e0\'e7 \'ef\'ee\'f0\'ee\'e6\'e4\'e0\'e5\'f2 \'f2\'e0\'ea\'f3\'fe \'f0\'e5\'e0\'ea\'f6\'e8\'fe. \'cd\'e5\'e2\'ee\'e7\'ec\'ee\'e6\'ed\'ee \'ff\'e2\'ed\'ee \'f3\'ea\'e0\'e7\'e0\'f2\'fc, \'f7\'f2\'ee \'ef\'f0\'ee\'e8\'e7\'e2\'ee\'e4\'e8\'ec\'ee\'e5 \'e4\'e5\'e9\'f1\'f2\'e2\'e8\'e5 (\'e8\'e7\'ec\'e5\'ed\'e5\'ed\'e8\'e5) \'e2\'fb\'ef\'ee\'eb\'ed\'ff\'e5\'f2\'f1\'ff \'e2 \'e1\'eb\'e0\'e3\'e8\'f5 \'f6\'e5\'eb\'ff\'f5. \par
 \b\'cf\'ce \'e7\'e0\'ea\'f0\'fb\'e2\'e0\'e5\'f2\'f1\'ff \'e2\'ee \'e2\'f0\'e5\'ec\'ff \'f0\'e0\'e1\'ee\'f2\'fb / \'e7\'e0\'e2\'e8\'f1\'e0\'e5\'f2 / \'ed\'e5 \'e7\'e0\'ef\'f3\'f1\'ea\'e0\'e5\'f2\'f1\'ff\par
 \'ce\'f2\'e2\'e5\'f2\b0 : \par
 
 \pard 
-{\listtext\f0 1)\tab}\ls1\ilvl8\fi142\li710\ri212\sa160\sl276\slmult1\qj\tx284\'d1\'f2\'ee\'f0\'ee\'ed\'ed\'e8\'e9 \'e0\'ed\'f2\'e8\'e2\'e8\'f0\'f3\'f1 \'ec\'e5\'f8\'e0\'e5\'f2 \'ed\'ee\'f0\'ec\'e0\'eb\'fc\'ed\'ee\'e9 \'f0\'e0\'e1\'ee\'f2\'e5;\par
+{\listtext\f0 1)\tab}\ls1\ilvl8\nowidctlpar\fi142\li710\ri212\sa160\sl276\slmult1\qj\tx284\'d1\'f2\'ee\'f0\'ee\'ed\'ed\'e8\'e9 \'e0\'ed\'f2\'e8\'e2\'e8\'f0\'f3\'f1 \'ec\'e5\'f8\'e0\'e5\'f2 \'ed\'ee\'f0\'ec\'e0\'eb\'fc\'ed\'ee\'e9 \'f0\'e0\'e1\'ee\'f2\'e5;\par
 {\listtext\f0 2)\tab}\'ed\'e5\'e2\'e5\'f0\'ed\'fb\'e5 \'ef\'e0\'f0\'e0\'ec\'e5\'f2\'f0\'fb \'e7\'e0\'ef\'f3\'f1\'ea\'e0 / \'f1\'eb\'e8\'f8\'ea\'ee\'ec \'e4\'eb\'e8\'ed\'ed\'fb\'e9 \'ef\'f3\'f2\'fc / \'ed\'e5 \'f3\'f1\'f2\'e0\'ed\'ee\'e2\'eb\'e5\'ed\'fb \'e8\'eb\'e8 \'ee\'f2\'ea\'eb\'fe\'f7\'e5\'ed\'fb \'e2\'e0\'e6\'ed\'fb\'e5 \'ea\'ee\'ec\'ef\'ee\'ed\'e5\'ed\'f2\'fb;\par
 {\listtext\f0 3)\tab}\'c2\'f0\'e5\'e4\'ee\'ed\'ee\'f1\'ed\'ee\'e5 \'cf\'ce \'e1\'eb\'ee\'ea\'e8\'f0\'f3\'e5\'f2 \'e5\'e3\'ee \'f0\'e0\'e1\'ee\'f2\'f3 - \'e2 \'f2\'e0\'ea\'ee\'ec \'f1\'eb\'f3\'f7\'e0\'e5 \'ed\'e5\'ee\'e1\'f5\'ee\'e4\'e8\'ec\'ee \'ef\'e5\'f0\'e5\'e8\'ec\'e5\'ed\'ee\'e2\'e0\'f2\'fc \'e8\'f1\'ef\'ee\'eb\'ed\'ff\'e5\'ec\'fb\'e9 \'f4\'e0\'e9\'eb "Min\'e5rSearch_\{\'ed\'ee\'ec\'e5\'f0-\'e2\'e5\'f0\'f1\'e8\'e8\}.exe" \'e2 \'eb\'fe\'e1\'ee\'e5 \'e4\'f0\'f3\'e3\'ee\'e5.\par
 {\listtext\f0 4)\tab}\'c2 \'ea\'ee\'e4\'e5 \'e1\'fb\'eb\'e0 \'e4\'ee\'ef\'f3\'f9\'e5\'ed\'e0 \'ee\'f8\'e8\'e1\'ea\'e0, \'ea\'ee\'f2\'ee\'f0\'e0\'ff \'f2\'f0\'e5\'e1\'f3\'e5\'f2 \'e8\'f1\'ef\'f0\'e0\'e2\'eb\'e5\'ed\'e8\'ff. \'ce\'e1 \'ee\'f8\'e8\'e1\'ea\'e5 \'ef\'e8\'f1\'e0\'f2\'fc \'e2 issue \'e2 \'ee\'f4\'e8\'f6\'e8\'e0\'eb\'fc\'ed\'fb\'e9 \'f0\'e5\'ef\'ee\'e7\'e8\'f2\'ee\'f0\'e8\'e9 github. \par
@@ -864,6 +904,7 @@ Do you want to continue?</value>
 -nse   --no-services          Пропустить сканирование служб
 -nss   --no-signature-scan    Пропустить сигнатурное сканирование файлов
 -nrc   --no-rootkit-check     Не проверять присутствие руткита
+-nch   --no-check-hosts       Пропустить проверку файла hosts
 -p     --pause                Пауза перед очисткой
 -ret   --remove-empty-tasks   Удалять задачу из Планировщика задач, если файл приложения в ней не существует
 -so    --scan-only            Отображать вредоносный или подозрительный объект, но не выполнять лечение

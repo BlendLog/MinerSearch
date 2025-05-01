@@ -1790,8 +1790,8 @@ namespace MSearch.Properties {
         ///-nse   --no-services          Skip scan services
         ///-nss   --no-signature-scan    Skip scan files by signatures
         ///-nrc   --no-rootkit-check     Skip checking rootkit present
-        ///-p     --pause                Pause before cleanup
-        ///-ret   --remove-em [остаток строки не уместился]&quot;;.
+        ///-nch   --no-check-hosts       Skip checking hosts file
+        ///-p     --pause [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _Help_EN {
             get {
@@ -1809,7 +1809,7 @@ namespace MSearch.Properties {
         ///-nse   --no-services          Пропустить сканирование служб
         ///-nss   --no-signature-scan    Пропустить сигнатурное сканирование файлов
         ///-nrc   --no-rootkit-check     Не проверять присутствие руткита
-        ///-p     --pause          [остаток строки не уместился]&quot;;.
+        ///-nch   --no-check-hosts [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _Help_RU {
             get {
@@ -2052,7 +2052,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Send anonymous scan results to developer.
+        ///   Ищет локализованную строку, похожую на Send anonymous scan results to developer next time.
         /// </summary>
         internal static string _LabelAllowStatistics_EN {
             get {
@@ -2061,7 +2061,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Отправлять анонимные отчёты разработчику о результатах проверки.
+        ///   Ищет локализованную строку, похожую на Отправлять анонимные отчёты разработчику о результатах проверки в следующий раз.
         /// </summary>
         internal static string _LabelAllowStatistics_RU {
             get {
@@ -2200,11 +2200,11 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на {\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049\deflangfe1049{\fonttbl{\f0\fnil\fcharset204 Times New Roman;}}
+        ///   Ищет локализованную строку, похожую на {\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049\deflangfe1049{\fonttbl{\f0\froman\fprq2\fcharset204 Times New Roman;}{\f1\fnil\fcharset2 Symbol;}}
         ///{\colortbl ;\red118\green113\blue113;}
-        ///{\*\generator Riched20 10.0.19041}{\*\mmathPr\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
+        ///{\*\generator Riched20 10.0.19041}{\*\mmathPr\mnaryLim0\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
         ///\pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\f0\fs28\par
-        ///This software provided &quot;as is&quot; and was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurrency. The author is not responsible for incident [остаток строки не уместился]&quot;;.
+        ///This software provided &quot;as is&quot; and was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurren [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _License_EN {
             get {
@@ -2213,14 +2213,13 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на {\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049\deflangfe1049{\fonttbl{\f0\fnil\fcharset204 Times New Roman;}}
+        ///   Ищет локализованную строку, похожую на {\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049\deflangfe1049{\fonttbl{\f0\froman\fprq2\fcharset204 Times New Roman;}{\f1\fnil\fcharset2 Symbol;}}
         ///{\colortbl ;\red128\green128\blue128;}
         ///{\*\listtable 
         ///{\list\listhybrid
         ///{\listlevel\levelnfc0\leveljc0\levelstartat1{\leveltext\&apos;02\&apos;00.;}{\levelnumbers\&apos;01;}\jclisttab\tx0}
         ///{\listlevel\levelnfc4\leveljc0\levelstartat1{\leveltext\&apos;02\&apos;01.;}{\levelnumbers\&apos;01;}\jclisttab\tx0}
-        ///{\listlevel\levelnfc3\leveljc0\levelstartat1{\leveltext\&apos;02\&apos;02.;}{\levelnumbers\&apos;01;}\jclisttab\tx0}
-        ///{\listlevel [остаток строки не уместился]&quot;;.
+        ///{\listlevel\levelnfc3\leveljc0\levelstartat1{\leveltext\&apos;02\&apos;02.;}{\levelnumbe [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _License_RU {
             get {

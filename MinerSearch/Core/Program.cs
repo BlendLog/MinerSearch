@@ -37,6 +37,7 @@ namespace MSearch
         public static bool RunAsSystem = false;
         public static bool verbose = false;
         public static bool silent = false;
+        public static bool no_check_hosts = false;
         private static bool demandSelection = false;
         public static int maxSubfolders = 8;
         public static int totalFoundThreats = 0;
@@ -54,10 +55,17 @@ namespace MSearch
         [STAThread]
         static void Main(string[] args)
         {
-
+            Console.Title = Utils.GetRndString();
+            RunAsSystem = ProcessManager.IsSystemProcess(Process.GetCurrentProcess().Id);
+            Logger.InitLogger();
 #if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(ExeptionHandler.HookExeption);
-            ActiveLanguage = OSExtensions.GetSystemLanguage();
+            ActiveLanguage = LanguageManager.LoadLanguageSetting();
+            if (!File.Exists(LanguageManager.CfgFile))
+            {
+                LanguageManager.SaveLanguageSetting(ActiveLanguage);
+            }
+
             try
             {
                 Init(args);
@@ -69,7 +77,11 @@ namespace MSearch
             }
 #else
 
-            ActiveLanguage = OSExtensions.GetSystemLanguage();
+            ActiveLanguage = LanguageManager.LoadLanguageSetting();
+            if (!File.Exists(LanguageManager.CfgFile))
+            {
+                LanguageManager.SaveLanguageSetting(ActiveLanguage);
+            }
             Init(args);
 
 #endif
@@ -77,7 +89,6 @@ namespace MSearch
 
         static void Init(string[] args)
         {
-            Logger.InitLogger();
 
             foreach (string arg in args)
             {
@@ -130,10 +141,9 @@ namespace MSearch
                 args = newargs.ToArray();
 
                 WinPEMode = true;
-                RunAsSystem = true;
             }
 
-            ProcessManager.SetSmallWindowIconRandomHash();
+            ProcessManager.SetSmallWindowIconRandomHash(Process.GetCurrentProcess().MainWindowHandle);
 
             if (!silent)
             {
@@ -336,6 +346,10 @@ namespace MSearch
                     {
                         demandSelection = true;
                     }
+                    else if (arg == "--no-check-hosts" || arg == "-nch")
+                    {
+                        no_check_hosts = true;
+                    }
                     else
                     {
                         LocalizedLogger.LogUnknownCommand(arg);
@@ -363,7 +377,6 @@ namespace MSearch
                 }
                 else Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_HIDE);
 
-                RunAsSystem = true;
             }
 
 #if !DEBUG
@@ -383,7 +396,7 @@ namespace MSearch
             }
 
 #endif
-            Logger.WriteLog("\t\tID: " + OSExtensions.GetDeviceId(), ConsoleColor.White, false, true);
+            Logger.WriteLog("\t\tID: " + DeviceIdProvider.GetDeviceId(), ConsoleColor.White, false, true);
 
 
             if (!help && !silent)

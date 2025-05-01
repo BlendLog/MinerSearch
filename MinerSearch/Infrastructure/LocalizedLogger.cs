@@ -396,8 +396,15 @@ namespace MSearch
             }
         }
 
-        public void LogErrorMessage(string MessageResourceKey, Exception ex, string target = "", string targetType = "")
+        public void LogErrorMessage(string MessageResourceKey, Exception ex = null, string target = "", string targetType = "")
         {
+            if (ex == null)
+            {
+                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {target}".Replace("?", ""), Logger.error);
+                return;
+            }
+
+#if !DEBUG
             if (targetType != "")
             {
                 Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {GetLocalizedString(targetType)} {target} | {ex.Message}".Replace("?", ""), Logger.error);
@@ -406,7 +413,19 @@ namespace MSearch
             {
                 Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {target} | {ex.Message}".Replace("?", ""), Logger.error);
             }
+#else
+            if (targetType != "")
+            {
+                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {GetLocalizedString(targetType)} {target} | {ex.Message} | {ex.StackTrace}".Replace("?", ""), Logger.error);
+            }
+            else
+            {
+                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {target} | {ex.Message} | {ex.StackTrace}".Replace("?", ""), Logger.error);
+            }
+#endif
         }
+
+
 
         public void LogStatusMessage(string MessageResourceKey)
         {
@@ -450,7 +469,7 @@ namespace MSearch
                     message = Resources._Elapse_EN;
                     break;
             }
-            Logger.WriteLog($"\t\t[$] {message}: {elapsedTime}", ConsoleColor.White, false);
+            Logger.WriteLog($"\t\t[$] {message} {elapsedTime}", ConsoleColor.White, false);
         }
 
         public static void LogTotalScanResult(int _totalThreats, int _neutralizedThreats, int _suspObjects)

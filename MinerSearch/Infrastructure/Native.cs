@@ -250,6 +250,48 @@ namespace MSearch
             public IntPtr Buffer;
         }
 
+        [DllImport("Advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern uint RegOpenKeyEx(IntPtr hKey, string lpSubKey, uint ulOptions, int samDesired, ref IntPtr phkResult);
+
+        public const int HKEY_CURRENT_USER = unchecked((int)0x80000001);
+        public const int HKEY_CLASSES_ROOT = unchecked((int)0x80000000);
+
+        public const int KEY_WOW64_64KEY = 0x0100;
+        public const int WRITE_OWNER = 0x00080000;
+        public const int WRITE_DAC = 0x00040000;
+
+        [DllImport("Advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern uint RegCloseKey(IntPtr hKey);
+
+        public const int TOKEN_ASSIGN_PRIMARY = 0x1;
+        public const int TOKEN_DUPLICATE = 0x2;
+        public const int TOKEN_IMPERSONATE = 0x4;
+        public const int TOKEN_QUERY_SOURCE = 0x10;
+        public const int TOKEN_ADJUST_GROUPS = 0x40;
+        public const int TOKEN_ADJUST_DEFAULT = 0x80;
+
+        [DllImport("Advapi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern uint SetSecurityInfo(IntPtr handle, SE_OBJECT_TYPE ObjectType, uint SecurityInfo,
+            IntPtr psidOwner, IntPtr psidGroup, IntPtr pDacl, IntPtr pSacl);
+
+        public enum SE_OBJECT_TYPE
+        {
+            SE_UNKNOWN_OBJECT_TYPE = 0,
+            SE_FILE_OBJECT,
+            SE_SERVICE,
+            SE_PRINTER,
+            SE_REGISTRY_KEY,
+            SE_LMSHARE,
+            SE_KERNEL_OBJECT,
+            SE_WINDOW_OBJECT,
+            SE_DS_OBJECT,
+            SE_DS_OBJECT_ALL,
+            SE_PROVIDER_DEFINED_OBJECT,
+            SE_WMIGUID_OBJECT,
+            SE_REGISTRY_WOW64_32KEY,
+            SE_REGISTRY_WOW64_64KEY,
+        }
+
         internal static bool GrantPrivilegeToGroup(string groupName, string privilege)
         {
             IntPtr policyHandle = IntPtr.Zero;
@@ -457,6 +499,7 @@ namespace MSearch
         public static string SE_TAKE_OWNERSHIP_NAME = "S~eTa~keOw~ner~ship~Privi~leg~e".Replace("~", "");
         public const int SM_CLEANBOOT = 67;
 
+
         public const int SC_MANAGER_CONNECT = 0x0001;
         public const int SC_MANAGER_CREATE_SERVICE = 0x0002;
         public const int SERVICE_QUERY_CONFIG = 0x0001;
@@ -478,7 +521,6 @@ namespace MSearch
         public static IntPtr ICON_SMALL2 = new IntPtr(2);
         public static IntPtr IDI_APPLICATION = new IntPtr(0x7F00);
         public static int GCL_HICON = -14;
-
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct LUID
@@ -1588,7 +1630,7 @@ namespace MSearch
                 throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceStartType(): Cannot open service");
             }
 
-            int bufferSize = 2048;
+            int bufferSize = 4096;
             IntPtr buffer = Marshal.AllocHGlobal(bufferSize);
 
             if (!QueryServiceConfig(serviceHandle, buffer, bufferSize, out int bytesNeeded))
@@ -1622,7 +1664,7 @@ namespace MSearch
                 throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceImagePath(): Cannot open service");
             }
 
-            int bufferSize = 2048;
+            int bufferSize = 4096;
             IntPtr buffer = Marshal.AllocHGlobal(bufferSize);
 
             if (!QueryServiceConfig(serviceHandle, buffer, bufferSize, out int bytesNeeded))
