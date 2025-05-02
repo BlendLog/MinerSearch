@@ -11,84 +11,18 @@
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 
-Версия 1.4.7.9
+Версия 1.4.7.91
 
-- Реализовано удаление 8 новых вариантов угроз
-- Добавлена кнопка "Свернуть" в форме краткого отчёта
-- Изменён числовой уровень риска на категориальный
-- Добавлен механизм очистки исключенных расширений в Windows Defender
-- Реализовано удаление задач автозапуска с подозрительно длинными параметрами
-- Добавлена очистка задач планировщика, использующих сторонние исполняемые среды (JVM)
-- Исправлена некорректная классификация V2RayN
-- Повышена стабильность обработки служб NVIDIA
-- Повышена стабильность обработки файлов при сигнатурном анализе
-- Исправлен баг генерации пустых отчётов
-- Улучшено выявление заблокированных доверенных сайтов через hosts
-- Исправлен визуальный баг на форме с кратким отчётом, где отображался неточный путь нейтрализованной службы
-- Улучшена навигация в менеджере карантина
-
-Патч 1.4.7.82
-
-- Исправлен баг, при которой часть каталогов удалялось не полностью
-- Добавлена блокировка файлов служб и файлов из планировщика задач, если таковой файл считается зараженным
-- Удаление новой версии майнера с действительной подписью
-- Удаление поддельной задачи MS Teams
-- Улучшен алгоритм обработки параметра Debugger в реестре
-- Опцимизация системы ведения логов
-- Исправить ошибку "Нет процессов связанных с этим объектом" при удалении руткита
-- Скорректирована обработка путей запущенных процессов (Razer Synapse больше не выдаёт ошибку)
-- Добавлен отсутствующий локализованный ресурс _ErrorCheckingLock
-- Устранено пустое окно, если обнаружено множество служб с недействительной подписью
-- Обработка задач с pcalua.exe теперь выдает предупреждение, если файл отсутствует
-- Исправлено ложное срабатывание на службы принтера HP, Xerox и другие
-- Принудительное удаление вредоносного ключа tektonit
-
-Патч 1.4.7.81
-
-- Устранено ложное срабатывание на MinimumStackCommitInBytes для svchost.exe
-- Устранение ошибки "Файл или папка повреждены"
-- Удаление новых вредоносных задач с рекламным и вредоносным ПО
-- Более точное определение удаленного порта в аргументах командной строки
-- Улучшена стратегия блокировки вредоносных процессов
-- Улучшена стратегия разблокировки каталогов и файлов
-- Добавлена обработка исключения при удалении пустых каталогов, когда каталог заблокирован Защитником Windows
-- Добавлена опция --silent, которое включает тихий (фоновый) режим без диалоговых окон. Приложение переходит в фоновый режим, сообщения не отображаются, но по-прежнему записываются в лог. Несовместимо с параметрами --select или --winpemode.
-- Обновление оффлайн базы данных сигнатур
-- Исправление логгирования
-
-Версия 1.4.7.8
-
-- Поиск и удаление новых майнеров, в том числе nanominer
-- Добавлена кнопка "Поддержать проект" на форме с отчетом
-- Добавлена возможность вручную разрешать или запрещать отправку результатов проверки разработчику
-- Опция --full-scan теперь позволяет сканировать весь системный раздел, не только указанные по-умолчанию каталоги
-- Добавлена опция --verbose для подробных сведений о процессах, а также запись в лог строки с файлами, не признанными вредоносными
-- Добавлен параметр --run-as-system для запуска приложения с правами системы
-- Добавлена опция --select, которая позволит сканировать только выбранный каталог, включая вложенные каталоги
-- Корректная работа с опцией --scan-only
-- Добавлен каталог C:\Users\ для сканирования
-- добавлена краткая форма параметров запуска (смотрите в --help \ -h)
-- Добавлена проверка потребляемой памяти процессов
-- Добавлен кастомный MessageBox, так как системный может быть перекрыт окнами проводника или другим приложением
-- Добавлена обработка блокировки .dll защитником Windows
-- Исправлена локализация кнопки "Карантин"
-- Исправление замирания рабочего стола на Win 7
-- Исправлено повторное сканирование каталогов с опцией --full-scan
-- Исправлено удаление файлов при перемещении в карантин
-- Исправлено частичное удаление майнера, маскирующегося под explorer.exe на Win 7, Win 8.1
-- Исправлена ошибка "Не запущена служба сервера" при удалении вредоносного профиля John
-- Исправлен "Сбой загрузки поставщика" при проверке служб
-- Исправлено ложное срабатывание на VS Code
-- Исправлен баг счётчика файлов в карантине
-- Удаление записей из планировщика задач, которые добавляют рекламу в автозапуск
-- Удаление новых вредоносных скриптов в планировщике задач через forfiles и wscript
-- Удаление некорректных параметров MinimumStackCommitInBytes для всех подразделов в IFEO, мешающие нормальному запуску программ
-- Удаление java-майнера в планировщике задач
-- Удаление вредоносных версии uTorrent, MS Teams и Steam
-- Оптимизация при работе с памятью
-- Файл hosts теперь корректируется только в случае заражения и не вызывает ошибку
-- Обновлена справка --help
-- Карантин теперь доступен для всех пользователей
+- Исправлен визуальный баг неверного количества найденных угроз
+- Устранён сбой приложения при ошибках чтения файлов и каталогов
+- Улучшен алгоритм определения подозрительных файлов
+- Повышена стабильность обработки сторонних сетевых служб
+- Добавлен функционал переключения языка. Создайте language.cfg (содержимое должно быть RU или EN)
+- Устранённые ограничения Windows Defender больше не дублируются в лог
+- Добавлен аргумент --no-check-hosts - пропускает проверку файла hosts
+- Добавлен ключ-идентификатор на форму общих сведений для быстрой обработки отчётов (подробнее [здесь](https://github.com/BlendLog/MinerSearch?tab=License-1-ov-file#readme))
+- Реализован механизм разблокировки диспетчера задач и редактора реестра
+- Нормальный цвет кнопки Свернуть
 
 --------------------------------------------
 
@@ -96,6 +30,14 @@
 
 Полностью распакуйте архив с программой в отдельную папку и запустите приложение. Дождитесь окончания сканирования. При первом использовании программы предлагается сообщать о результатах проверки автору на ваше усмотрение. После окончания будет показана форма с кратким отчётом об угрозах, которые были устранены. С подробным отчётом можно ознакомиться, нажав на кнопку "Открыть отчёт". При нажатии на кнопку Карантин откроется Менеджер карантина, в котором вы можете полностью удалить файл или восстановить.
 
+----------------
+Как переключить язык в приложении?
+
+1) Создайте файл language.cfg, если его ещё нет
+2) Откройте с помощью любого текстового редактора
+3) Задайте предпочитаемый язык: RU или EN
+
+----------------
 Приложение также поддерживает дополнительные параметры запуска (приведенные ниже). Чтобы воспользоваться ими следует:
 1) Запустить командную строку (cmd) от администратора
 2) зажать shift и кликнуть правой кнопкой мыши по приложению - выбрать пункт "Копировать как путь"
@@ -112,6 +54,7 @@
 | -nse   --no-services        |  Пропустить сканирование служб                                                                         |
 | -nss   --no-signature-scan  |  Пропустить сигнатурное сканирование файлов                                                            |
 | -nrc   --no-rootkit-check   |  Не проверять присутствие руткита                                                                      |
+| -nch   --no-check-hosts     |  Пропустить проверку файла hosts                                                                       |
 | -p     --pause              |  Пауза перед очисткой                                                                                  |
 | -ret   --remove-empty-tasks |  Удалять задачу из Планировщика задач, если файл приложения в ней не существует                        |
 | -so    --scan-only          |  Отображать вредоносный или подозрительный объект, но не выполнять лечение                             |
@@ -156,90 +99,33 @@ https://t.me/MinerSearch_blog
 
 ## NET Framework 4.7.1 is required
 
-Version 1.4.7.9
+Version v1.4.7.91
 
-- Implemented deletion of 8 new threat variants
-- Added "Collapse" button in the final scanning results form
-- Changed the numerical risk level to categorical
-- Added a mechanism for cleaning excluded extensions in Windows Defender
-- Implemented deletion of autorun tasks with suspiciously long parameters
-- Added cleaning of scheduler tasks that use third-party executable environments (JVM)
-- Fixed incorrect classification of V2RayN
-- Improved stability of NVIDIA service processing
-- Improved stability of file processing during signature analysis
-- Fixed a bug in generating empty logs
-- Improved detection of blocked trusted sites via hosts
-- Fixed a visual bug in the final scanning results form, where an inaccurate path of the neutralized service was displayed
-- Improved navigation in the quarantine manager
-
-Patch 1.4.7.82
-
-- Fixed a bug where some directories were not completely deleted
-- Added blocking of service files and files from the task scheduler if such a file is considered malicious
-- Removal of a new version of the miner with a valid signature
-- Removal of a fake MS Teams task
-- Improved the algorithm for processing the Debugger parameter in the registry
-- Optimization of the logging system
-- Fix the error "No processes associated with this object" when removing a rootkit
-- Adjusted the processing of paths of running processes (Razer Synapse no longer returns an error)
-- Added a missing localized resource _ErrorCheckingLock
-- Eliminated an empty window if multiple services with an invalid signature are detected
-- Processing of tasks with pcalua.exe now issues a warning if the file is missing
-- Fixed a false positive of printer services for HP, Xerox and other vendors 
-- Forced removal of the malicious tektonit key
-
-Patch 1.4.7.81
-
-- Fixed a false positive on MinimumStackCommitInBytes for svchost.exe
-- Fixed the "File or directory is corrupted" error
-- Remove new malicious tasks with adware and malware
-- More accurate remote port detection in command line arguments
-- Improved strategy for blocking malicious processes
-- Improved strategy for unlocking directories and files
-- Added exception handling when deleting empty directories when the directory is locked by Windows Defender
-- Added the --silent option, which enables a silent (background) mode without dialog forms. The app goes into the background, messages are not displayed, but are still written to the log. Incompatible with the --select or --winpemode parameters.
-- Update offline signature database
-- Fix logging
-
-Version 1.4.7.8
-
-- Search and remove new miners, including nanominer
-- Added "Donate" button on the scan results form
-- Added the ability to manually allow or prohibit sending scan results to the developer
-- The --full-scan option now allows you to scan the entire system partition, not just the default directories
-- Added the --verbose option for detailed info about processes, as well as writing to the log a line with files that are not considered as malicious
-- Added the --run-as-system parameter to run the application with SYSTEM privileges
-- Added the --select option, which will allow you to scan only the selected directory, including nested directories
-- Correct work with the --scan-only option
-- Added the C:\Users\ directory for scanning
-- Added a short form of launch parameters (see --help \ -h)
-- Added a check for the memory consumed by processes
-- Added a custom MessageBox, since the system one can be overlapped by windows of explorer.exe or another application
-- Added handling of .dll blocking by Windows Defender
-- Fixed localization of the "Quarantine" button
-- Fixed freezing of the desktop on Win 7
-- Fixed re-scanning of directories with the --full-scan option
-- Fixed deleting files when moving to quarantine
-- Fixed partial removal of the miner disguised as explorer.exe on Win 7, Win 8.1
-- Fixed the error "The Server service not started" when deleting the malicious John profile
-- Fixed "Provider loading failure" when checking services
-- Fixed a false positive on VS Code
-- Fixed a bug in the quarantine file counter
-- Removing entries from the task scheduler that add ads to autorun
-- Removing new malicious scripts in the task scheduler via forfiles and wscript
-- Removing incorrect MinimumStackCommitInBytes parameters for all subsections in IFEO that interfere with the normal launch of programs
-- Removing the java miner in task scheduler
-- Removal of malicious versions of uTorrent, MS Teams and Steam
-- Optimization when working with memory
-- The hosts file is now corrected only in case of infection and does not cause an error
-- Help has been updated --help
-- Quarantine is now available for all users
+- Fixed application crashes when reading files and directories.
+- Fixed a visual bug with an incorrect number of threats found
+- Improved algorithm for detecting suspicious files
+- Improved stability processing of third-party network services
+- Added language switching functionality. Create a language.cfg (the content should be EN or RU)
+- Removed restrictions of Windows Defender are no longer duplicated in the log
+- Added the --no-check-hosts argument - skips checking the hosts file
+- Added an identifier key (Devide ID) to the short report form for quick report processing (more details here)
+- Implemented a mechanism for unblocking the task manager and registry editor
+- The normal color of the Collapse button
 
 -----------------------------------------
 
 ## How to use
 
 Completely unzip the archive with the program into a separate folder and launch the application. Wait for the scan to complete. When using the program for the first time, you are offered to report the results of the scan to the author at your wish. After completion, a form will be shown with a brief report on the threats that have been eliminated. You can view the detailed log by clicking on the "Show log" button. Clicking on the "Quarantine" button will open the Quarantine Manager, in which you can completely delete the file or restore it.
+
+----------------
+How to switch language in the app?
+
+1) Create language.cfg file if not exist
+2) Open it with any text editor
+3) Choose your preferred language: EN or RU
+
+----------------
 
 The application also supports additional launch parameters (listed below). To use them, you should:
 1) Run the command line (cmd) as administrator
@@ -257,6 +143,7 @@ Additional command line args (usually is not required):
 | -nse   --no-services         | Skip scan services                                                                                       |
 | -nss   --no-signature-scan   | Skip scan files by signatures                                                                            |
 | -nrc   --no-rootkit-check    | Skip checking rootkit present                                                                            |
+| -nch   --no-check-hosts      | Skip checking hosts file                                                                                 |
 | -p     --pause               | Pause before cleanup                                                                                     |
 | -ret   --remove-empty-tasks  | Delete a task from the Task Scheduler if the application file does not exist in it                       |
 | -so    --scan-only           | Display malicious or suspicious objects, but do nothing                                                  |
