@@ -97,5 +97,5 @@ Stop and remove malicious processes and his support components, that makes delet
 Останавливает и удаляет вредоносные процессы, а также вспомогательных компоненты вируса, затрудняющие его удаление
 ![first](https://github.com/user-attachments/assets/29828484-6d57-4e71-ad5c-641913ce34f7)
 
-Форма общищ сведений
+Форма общих сведений
 ![second](https://github.com/user-attachments/assets/309e7625-bc57-4b80-9052-4805c33f9486)
