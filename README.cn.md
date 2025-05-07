@@ -79,9 +79,8 @@
 
 --------------------------------------------------------------
 
-##截图
+## 截图
 停止和删除恶意进程和他的支持组件，这使得删除恶意软件更难
-![第一](https://github.com/user-attachments/assets/29828484-6d57-4e71-ad5c-641913ce34f7）
 
-最终报告表格
-![第二](https://github.com/user-attachments/assets/309e7625-bc57-4b80-9052-4805c33f9486）
+![first](https://github.com/user-attachments/assets/29828484-6d57-4e71-ad5c-641913ce34f7)
+![second](https://github.com/user-attachments/assets/309e7625-bc57-4b80-9052-4805c33f9486)
