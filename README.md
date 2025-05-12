@@ -12,6 +12,14 @@ https://t.me/MinerSearch_blog
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 
+Version 1.4.7.92 \[patch\]
+
+- Improvement of process handling rules
+- Detection and removal of new miners
+- Fixed incorrect classification of the copilot address in the hosts file
+- Fixed a short-term hang when generating reports on the threat summary form
+- More information about scheduler tasks with the --verbose option
+- Other minor fixes
 
 Version v1.4.7.91
 
