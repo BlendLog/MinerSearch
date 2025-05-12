@@ -42,6 +42,7 @@ namespace MSearch
             9980,
             9999,
             10191,
+            10343,
             14433,
             20009,
         };
@@ -137,7 +138,12 @@ namespace MSearch
             {
                new StringBuilder("--").Append("pa").Append("ss").ToString(),
                new StringBuilder("--").Append("al").Append("go").ToString(),
-               new StringBuilder("po").Append("ol").Append(".").ToString(),
+               new StringBuilder("--").Append("co").Append("in").ToString(),
+               new StringBuilder("po").Append("ol").Append(".m").ToString(),
+               new StringBuilder(".p").Append("oo").Append("l.").ToString(),
+               new StringBuilder("-o").Append(" x").Append("mr").Append(".").ToString(),
+               new StringBuilder("-o").Append(" p").Append("oo").Append("l.").ToString(),
+               new StringBuilder("po").Append("ol").Append(".с").Append("om").ToString(),
                new StringBuilder("st").Append("ra").Append("tu").Append("m").ToString(),
                new StringBuilder("na").Append("no").Append("po").Append("ol").ToString(),
                new StringBuilder("mi").Append("ni").Append("ng").Append("oc").Append("ea").Append("n.").ToString(),
@@ -483,6 +489,7 @@ namespace MSearch
                         {
 
                             if (fullPath.IndexOf($"{Program.drive_letter}:\\windows\\system32", StringComparison.OrdinalIgnoreCase) == -1
+                                && fullPath.IndexOf($"{Program.drive_letter}:\\windows\\system32\\wbem", StringComparison.OrdinalIgnoreCase) == -1
                                 && fullPath.IndexOf($"{Program.drive_letter}:\\windows\\syswow64", StringComparison.OrdinalIgnoreCase) == -1
                                 && fullPath.IndexOf($"{Program.drive_letter}:\\windows\\winsxs\\amd64", StringComparison.OrdinalIgnoreCase) == -1
                                 && fullPath.IndexOf($"{Program.drive_letter}:\\windows\\winsxs\\x86", StringComparison.OrdinalIgnoreCase) == -1
@@ -2477,8 +2484,7 @@ namespace MSearch
 
                 var filteredTasks = taskService.AllTasks
                     .Where(task => task != null)
-                    .OrderBy(task => task.Name)
-                    .ToList();
+                    .OrderBy(task => task.Name);
 
                 foreach (var task in filteredTasks)
                 {
@@ -2708,50 +2714,134 @@ namespace MSearch
 
         void ProcessFilePath(string filePath, string arguments, TaskService taskService, string taskFolder, string taskName)
         {
-            if (File.Exists(filePath))
+
+            Program.LL.LogMessage("\t[.]", "_Just_File", $"{filePath} {arguments}", ConsoleColor.Gray);
+
+            try
             {
-                Program.LL.LogMessage("\t[.]", "_Just_File", $"{filePath} {arguments}", ConsoleColor.Gray);
 
-                try
+                if (filePath.IndexOf("powershell", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-
-                    if (filePath.IndexOf("powershell", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (arguments.IndexOf(Bfs.Create("gKZ8iLuNHQyRVA79WjU7aoXiqb8RaBszXxkY+xqD1svbXNY1/TjBQs1rAuYNW8a1VfzC9TMVgNg3zIpuaOxzXGIQO+jQOj5W5HHHczm+CIu2x3Jy9gGCXjOu9NG0lF00", "WO7vfK83a1gysefdgmTKUwvH0alCzL+8xqJuf+A8uQI=", "sULHw8R24176yOiD2c9b3Q=="), StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        if (arguments.IndexOf(Bfs.Create("gKZ8iLuNHQyRVA79WjU7aoXiqb8RaBszXxkY+xqD1svbXNY1/TjBQs1rAuYNW8a1VfzC9TMVgNg3zIpuaOxzXGIQO+jQOj5W5HHHczm+CIu2x3Jy9gGCXjOu9NG0lF00", "WO7vfK83a1gysefdgmTKUwvH0alCzL+8xqJuf+A8uQI=", "sULHw8R24176yOiD2c9b3Q=="), StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            return;
-                        }
+                        return;
+                    }
 
-                        if (arguments.Length >= 500 || arguments.Replace("'", "").IndexOf(" -e ", StringComparison.OrdinalIgnoreCase) >= 0 || arguments.Replace("'", "").IndexOf("-encodedcommand", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (arguments.Length >= 500 || arguments.Replace("'", "").IndexOf(" -e ", StringComparison.OrdinalIgnoreCase) >= 0 || arguments.Replace("'", "").IndexOf("-encodedcommand", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        Program.LL.LogCautionMessage("_MaliciousEntry", taskName);
+                        Program.totalFoundThreats++;
+
+                        if (!Program.ScanOnly)
+                        {
+                            Program._utils.DeleteTask(taskService, taskFolder, taskName);
+                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+
+                        }
+                        else
+                        {
+                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
+                        }
+                        return;
+                    }
+                }
+
+                long fileSize = new FileInfo(filePath).Length;
+                if ((filePath.EndsWith(".bat", StringComparison.OrdinalIgnoreCase) || filePath.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase)))
+                {
+                    try
+                    {
+                        if (fileSize >= 1024 * 1024)
                         {
                             Program.LL.LogCautionMessage("_MaliciousEntry", taskName);
-
                             Program.totalFoundThreats++;
+
+                            if (!Program.ScanOnly)
+                            {
+                                try
+                                {
+                                    Utils.AddToQuarantine(filePath);
+
+                                    taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
+                                    if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                                    {
+                                        Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
+                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                                    }
+                                    else
+                                    {
+                                        Program.LL.LogErrorMessage("_ErrorTaskDeletion", new Exception($"Task deletion failed without exception for {taskFolder}\\{taskName}"));
+                                        Program.totalNeutralizedThreats--;
+                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Error));
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                                    Program.totalNeutralizedThreats--;
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Error));
+                                }
+                                return;
+                            }
+                            else
+                            {
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
+                                return;
+                            }
+                        }
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        Program.LL.LogWarnMessage("_FileIsNotFound", filePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Program.LL.LogErrorMessage("_ErrorGettingFileInfo", ex);
+                    }
+                }
+
+                if (filePath.IndexOf("msiexec", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    foreach (var argsPart in arguments.Split(' '))
+                    {
+                        if (argsPart.StartsWith("/", StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        string msiFile = FileSystemManager.ResolveFilePathFromString(argsPart);
+                        if (msiFile.IndexOf(":\\", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            Program.LL.LogCautionMessage("_MaliciousEntry", taskName);
+                            Program.totalFoundThreats++;
+
                             if (!Program.ScanOnly)
                             {
                                 Program._utils.DeleteTask(taskService, taskFolder, taskName);
                                 scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                                Utils.AddToQuarantine(msiFile);
 
                             }
                             else
                             {
                                 scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
                             }
+
                             return;
                         }
                     }
 
-                    if (filePath.IndexOf("msiexec", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        foreach (var argsPart in arguments.Split(' '))
-                        {
-                            if (argsPart.StartsWith("/", StringComparison.OrdinalIgnoreCase))
-                            {
-                                continue;
-                            }
+                }
 
-                            string msiFile = FileSystemManager.ResolveFilePathFromString(argsPart);
-                            if (msiFile.IndexOf(":\\", StringComparison.OrdinalIgnoreCase) >= 0)
+                if (filePath.IndexOf(new StringBuilder("for").Append("files").ToString(), StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    if (arguments.Count(c => c == '^') == 2)
+                    {
+                        string wsfFile = arguments.Split('^')[1].Remove(0, 1);
+
+                        if (wsfFile.Remove(0, 1).StartsWith(":\\"))
+                        {
+                            if (File.Exists(wsfFile))
                             {
                                 Program.LL.LogCautionMessage("_MaliciousEntry", taskName);
                                 Program.totalFoundThreats++;
@@ -2760,7 +2850,7 @@ namespace MSearch
                                 {
                                     Program._utils.DeleteTask(taskService, taskFolder, taskName);
                                     scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
-                                    Utils.AddToQuarantine(msiFile);
+                                    Utils.AddToQuarantine(wsfFile);
 
                                 }
                                 else
@@ -2770,300 +2860,352 @@ namespace MSearch
 
                                 return;
                             }
+                            else
+                            {
+                                Program.LL.LogWarnMessage("_FileIsNotFound", wsfFile);
+                            }
+                        }
+
+                    }
+                }
+
+                if (filePath.IndexOf(new StringBuilder("ws").Append("cri").Append("pt").ToString(), StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    if (!Program.ScanOnly)
+                    {
+                        try
+                        {
+                            Program.totalFoundThreats++;
+                            taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
+                            if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                            {
+                                Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                            }
+
+                            return;
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.totalNeutralizedThreats--;
+                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Error));
+                            Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                        }
+                    }
+                    else
+                    {
+                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
+                    }
+
+                }
+
+                if (filePath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) && arguments.Equals("/LHS", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (!Program.ScanOnly)
+                    {
+                        Program.LL.LogCautionMessage("_Malici0usFile", filePath);
+                        if (founded_mlwrFiles.Add(filePath))
+                        {
+                            Program.totalFoundThreats++;
+                            UnlockObjectClass.DisableExecute(filePath);
+                        }
+                        else Program.LL.LogSuccessMessage("_AlreadyProceeded");
+
+                        try
+                        {
+
+                            taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
+                            if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                            {
+                                Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                            }
+
+                            return;
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                            Program.totalNeutralizedThreats--;
+                        }
+                    }
+                    else
+                    {
+                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
+                    }
+                }
+
+                if (filePath.IndexOf("regasm", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    if (!Program.ScanOnly)
+                    {
+                        string dllPath = FileSystemManager.ExtractDllPath(arguments);
+                        if (!string.IsNullOrEmpty(dllPath) && File.Exists(dllPath))
+                        {
+                            Program.LL.LogCautionMessage("_Malici0usFile", dllPath);
+                            if (founded_mlwrFiles.Add(dllPath))
+                            {
+                                Program.totalFoundThreats++;
+                                UnlockObjectClass.DisableExecute(dllPath);
+                            }
+                            else Program.LL.LogSuccessMessage("_AlreadyProceeded");
+                        }
+
+                        try
+                        {
+                            Program.LL.LogCautionMessage("_Malic1ousTask", taskName);
+                            Program.totalFoundThreats++;
+                            taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
+                            if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                            {
+                                Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                            }
+
+                            return;
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.totalNeutralizedThreats--;
+                            Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                        }
+                    }
+                    else
+                    {
+                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
+                    }
+                }
+
+                if (!Program.verbose && winTrust.VerifyEmbeddedSignature(filePath) == WinVerifyTrustResult.Success)
+                {
+                    Logger.WriteLog($"\t[OK]", Logger.success, false);
+                    return;
+                }
+
+
+                if (filePath.StartsWith(Environment.GetEnvironmentVariable("AppData"), StringComparison.OrdinalIgnoreCase))
+                {
+                    if (arguments.Equals(new StringBuilder("/v").Append("er").Append("ys").Append("il").Append("en").Append("t").ToString(), StringComparison.OrdinalIgnoreCase) || (FileChecker.IsExecutable(filePath) && string.IsNullOrEmpty(Path.GetExtension(filePath))))
+                    {
+                        if (!Program.ScanOnly)
+                        {
+                            Program.LL.LogCautionMessage("_Malici0usFile", filePath);
+                            if (founded_mlwrFiles.Add(filePath))
+                            {
+                                Program.totalFoundThreats++;
+                                UnlockObjectClass.DisableExecute(filePath);
+                            }
+                            else Program.LL.LogSuccessMessage("_AlreadyProceeded");
+
+                            try
+                            {
+
+                                taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
+                                if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                                {
+                                    Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                                }
+
+                                return;
+                            }
+                            catch (Exception ex)
+                            {
+                                Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                                Program.totalNeutralizedThreats--;
+                            }
+                        }
+                        else
+                        {
+                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
                         }
 
                     }
 
-                    if (filePath.IndexOf(new StringBuilder("for").Append("files").ToString(), StringComparison.OrdinalIgnoreCase) >= 0)
+                }
+
+                try
+                {
+                    string fileName = Path.GetFileName(filePath);
+                    string directory = Path.GetDirectoryName(filePath) ?? string.Empty;
+                    string directoryName = Path.GetFileName(directory) ?? string.Empty;
+
+                    HashSet<string> sysFileNamesHashset = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                    if (MSData.Instance.SysFileName != null)
                     {
-                        if (arguments.Count(c => c == '^') == 2)
+                        sysFileNamesHashset.Clear();
+
+                        foreach (string _fileName in MSData.Instance.SysFileName)
                         {
-                            string wsfFile = arguments.Split('^')[1].Remove(0, 1);
-
-                            if (wsfFile.Remove(0, 1).StartsWith(":\\"))
+                            if (!string.IsNullOrEmpty(_fileName))
                             {
-                                if (File.Exists(wsfFile))
+                                sysFileNamesHashset.Add(_fileName.Trim() + ".exe");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Program.LL.LogErrorMessage("Initialization", new Exception("Cannot initialize sysFileNames Hashset"));
+                    }
+
+                    bool isInSuspiciousLocation = filePath.IndexOf(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                                  filePath.IndexOf(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                                  filePath.IndexOf(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), StringComparison.OrdinalIgnoreCase) >= 0;
+
+
+                    bool isSuspiciousDirectoryNameWithClsid = false;
+                    if (!string.IsNullOrEmpty(directoryName) && directoryName.Contains(".{") && directoryName.EndsWith("}"))
+                    {
+                        if (Regex.IsMatch(directoryName, @"^.*\.{[0-9A-F]{8}(-[0-9A-F]{4}){3}-[0-9A-F]{12}\}$", RegexOptions.IgnoreCase))
+                        {
+                            isSuspiciousDirectoryNameWithClsid = true;
+                        }
+                    }
+
+                    bool isSystemProcessName = sysFileNamesHashset.Contains(fileName);
+
+                    if (isInSuspiciousLocation && (isSuspiciousDirectoryNameWithClsid || isSystemProcessName))
+                    {
+                        Program.LL.LogCautionMessage("_Malic1ousTask", taskName);
+                        Program.totalFoundThreats++;
+
+                        if (!Program.ScanOnly)
+                        {
+                            if (founded_mlwrFiles.Add(filePath))
+                            {
+                                Program.totalFoundThreats++;
+                                UnlockObjectClass.DisableExecute(filePath);
+                            }
+                            else Program.LL.LogSuccessMessage("_AlreadyProceeded");
+
+                            string fullTaskPath = $"{taskFolder}\\{taskName}";
+                            try
+                            {
+                                taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
+                                fullTaskPath = $"{taskFolder}\\{taskName}";
+                                if (taskService.GetTask(fullTaskPath) == null)
                                 {
-                                    Program.LL.LogCautionMessage("_MaliciousEntry", taskName);
-                                    Program.totalFoundThreats++;
-
-                                    if (!Program.ScanOnly)
-                                    {
-                                        Program._utils.DeleteTask(taskService, taskFolder, taskName);
-                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
-                                        Utils.AddToQuarantine(wsfFile);
-
-                                    }
-                                    else
-                                    {
-                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
-                                    }
-
-                                    return;
+                                    Program.LL.LogSuccessMessage("_Malic1ousTask", fullTaskPath, "_Deleted");
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {fullTaskPath}", ScanActionType.Deleted));
                                 }
                                 else
                                 {
-                                    Program.LL.LogWarnMessage("_FileIsNotFound", wsfFile);
-                                }
-                            }
-
-                        }
-                    }
-
-                    if (filePath.IndexOf(new StringBuilder("ws").Append("cri").Append("pt").ToString(), StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        if (!Program.ScanOnly)
-                        {
-                            try
-                            {
-                                Program.totalFoundThreats++;
-                                taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
-                                if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
-                                {
-                                    Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
-                                }
-
-                                return;
-                            }
-                            catch (Exception ex)
-                            {
-                                Program.totalNeutralizedThreats--;
-                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Error));
-                                Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
-                            }
-                        }
-                        else
-                        {
-                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
-                        }
-
-                    }
-
-                    if (filePath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) && arguments.Equals("/LHS", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (!Program.ScanOnly)
-                        {
-                            Program.LL.LogCautionMessage("_Malici0usFile", filePath);
-                            if (founded_mlwrFiles.Add(filePath))
-                            {
-                                Program.totalFoundThreats++;
-                                UnlockObjectClass.DisableExecute(filePath);
-                            }
-                            else Program.LL.LogSuccessMessage("_AlreadyProceeded");
-
-                            try
-                            {
-
-                                taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
-                                if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
-                                {
-                                    Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
-                                }
-
-                                return;
-                            }
-                            catch (Exception ex)
-                            {
-                                Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
-                                Program.totalNeutralizedThreats--;
-                            }
-                        }
-                        else
-                        {
-                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
-                        }
-                    }
-
-                    if (filePath.IndexOf("regasm", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        if (!Program.ScanOnly)
-                        {
-                            string dllPath = FileSystemManager.ExtractDllPath(arguments);
-                            if (!string.IsNullOrEmpty(dllPath) && File.Exists(dllPath))
-                            {
-                                Program.LL.LogCautionMessage("_Malici0usFile", dllPath);
-                                if (founded_mlwrFiles.Add(dllPath))
-                                {
-                                    Program.totalFoundThreats++;
-                                    UnlockObjectClass.DisableExecute(dllPath);
-                                }
-                                else Program.LL.LogSuccessMessage("_AlreadyProceeded");
-                            }
-
-                            try
-                            {
-                                Program.LL.LogCautionMessage("_Malic1ousTask", taskName);
-                                Program.totalFoundThreats++;
-                                taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
-                                if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
-                                {
-                                    Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
-                                }
-
-                                return;
-                            }
-                            catch (Exception ex)
-                            {
-                                Program.totalNeutralizedThreats--;
-                                Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
-                            }
-                        }
-                        else
-                        {
-                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
-                        }
-                    }
-
-                    if (winTrust.VerifyEmbeddedSignature(filePath) == WinVerifyTrustResult.Success)
-                    {
-                        Logger.WriteLog($"\t[OK]", Logger.success, false);
-                        return;
-                    }
-
-                    if (filePath.StartsWith(Environment.GetEnvironmentVariable("AppData"), StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (arguments.Equals(new StringBuilder("/v").Append("er").Append("ys").Append("il").Append("en").Append("t").ToString(), StringComparison.OrdinalIgnoreCase) || (FileChecker.IsExecutable(filePath) && string.IsNullOrEmpty(Path.GetExtension(filePath))))
-                        {
-                            if (!Program.ScanOnly)
-                            {
-                                Program.LL.LogCautionMessage("_Malici0usFile", filePath);
-                                if (founded_mlwrFiles.Add(filePath))
-                                {
-                                    Program.totalFoundThreats++;
-                                    UnlockObjectClass.DisableExecute(filePath);
-                                }
-                                else Program.LL.LogSuccessMessage("_AlreadyProceeded");
-
-                                try
-                                {
-
-                                    taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
-                                    if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
-                                    {
-                                        Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
-                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
-                                    }
-
-                                    return;
-                                }
-                                catch (Exception ex)
-                                {
-                                    Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                                    Program.LL.LogErrorMessage("_ErrorTaskDeletion", new Exception($"Task deletion failed without exception for {fullTaskPath}"));
                                     Program.totalNeutralizedThreats--;
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {fullTaskPath}", ScanActionType.Error));
                                 }
                             }
-                            else
+                            catch (Exception deletionEx)
                             {
-                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
-                            }
-
-                        }
-
-                    }
-
-
-
-                    long fileSize = new FileInfo(filePath).Length;
-                    if (fileSize >= maxFileSize || FileChecker.IsJarFile(filePath) || (FileChecker.IsDotNetAssembly(filePath) && FileSystemManager.HasHiddenAttribute(filePath)))
-                    {
-                        if (!Program.ScanOnly)
-                        {
-                            Program.LL.LogCautionMessage("_Malici0usFile", filePath);
-                            if (founded_mlwrFiles.Add(filePath))
-                            {
-                                Program.totalFoundThreats++;
-                                UnlockObjectClass.DisableExecute(filePath);
-                            }
-                            else Program.LL.LogSuccessMessage("_AlreadyProceeded");
-
-                            try
-                            {
-                                taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
-                                if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
-                                {
-                                    Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
-                                }
-
-                                return;
-                            }
-                            catch (Exception ex)
-                            {
+                                Program.LL.LogErrorMessage("_ErrorTaskDeletion", deletionEx);
                                 Program.totalNeutralizedThreats--;
-                                Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {fullTaskPath}", ScanActionType.Error));
                             }
+
+
                         }
                         else
                         {
                             scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
                         }
-                    }
-
-                    if (FileChecker.IsSfxArchive(filePath))
-                    {
-                        Program.LL.LogWarnMediumMessage("_sfxArchive", filePath);
-                        if (founded_mlwrFiles.Add(filePath))
-                        {
-                            Program.totalFoundThreats++;
-                            UnlockObjectClass.DisableExecute(filePath);
-                        }
-                        else Program.LL.LogSuccessMessage("_AlreadyProceeded");
-
                         return;
                     }
 
-                    if (FileChecker.CheckSignature(filePath, MSData.Instance.signatures) || FileChecker.CheckDynamicSignature(filePath, 16, 100))
-                    {
-                        Program.LL.LogCautionMessage("_Found", filePath);
-                        if (founded_mlwrFiles.Add(filePath))
-                        {
-                            Program.totalFoundThreats++;
-                            UnlockObjectClass.DisableExecute(filePath);
-                        }
-                        else Program.LL.LogSuccessMessage("_AlreadyProceeded");
-
-                        return;
-                    }
-
-                    int filesCount = 0;
-                    foreach (string file in Directory.EnumerateFiles(Path.GetDirectoryName(filePath), "*.*", SearchOption.TopDirectoryOnly))
-                    {
-                        filesCount++;
-                    }
-
-                    if (filesCount.Equals(1) && FileSystemManager.HasHiddenAttribute(filePath) && fileSize > 1024 * 1024)
-                    {
-                        Program.LL.LogMessage("\t[!]", "_FileSize", $"{FileChecker.GetFileSize(fileSize)} | {Program.LL.GetLocalizedString("_FileAttributes")} \"{File.GetAttributes(filePath)}\"", Logger.warn);
-                        Program.LL.LogCautionMessage("_Found", filePath);
-                        if (founded_mlwrFiles.Add(filePath))
-                        {
-                            Program.totalFoundThreats++;
-                            UnlockObjectClass.DisableExecute(filePath);
-                        }
-                        else Program.LL.LogSuccessMessage("_AlreadyProceeded");
-                    }
-                }
-                catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
-                {
-                    Program.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
                 }
                 catch (Exception ex)
                 {
-                    Program.LL.LogErrorMessage("_Error", ex);
+                    Program.LL.LogErrorMessage("_ErrorCannotProceed", ex, taskName);
                 }
-            }
-            else
-            {
-                Program.LL.LogWarnMessage("_FileIsNotFound", filePath);
 
-                if (Program.RemoveEmptyTasks)
+                if (fileSize >= maxFileSize || FileChecker.IsJarFile(filePath) || (FileChecker.IsDotNetAssembly(filePath) && FileSystemManager.HasHiddenAttribute(filePath)))
                 {
-                    Program._utils.DeleteTask(taskService, taskFolder, taskName);
+                    if (!Program.ScanOnly)
+                    {
+                        Program.LL.LogCautionMessage("_Malici0usFile", filePath);
+                        if (founded_mlwrFiles.Add(filePath))
+                        {
+                            Program.totalFoundThreats++;
+                            UnlockObjectClass.DisableExecute(filePath);
+                        }
+                        else Program.LL.LogSuccessMessage("_AlreadyProceeded");
+
+                        try
+                        {
+                            taskService.GetFolder(taskFolder)?.DeleteTask(taskName);
+                            if (taskService.GetTask($"{taskFolder}\\{taskName}") == null)
+                            {
+                                Program.LL.LogSuccessMessage("_Malic1ousTask", $"{taskFolder}\\{taskName}", "_Deleted");
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Deleted));
+                            }
+
+                            return;
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.totalNeutralizedThreats--;
+                            Program.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                        }
+                    }
+                    else
+                    {
+                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"TaskScheduler -> {taskFolder}\\{taskName}", ScanActionType.Skipped));
+                    }
+                }
+
+                if (FileChecker.IsSfxArchive(filePath))
+                {
+                    Program.LL.LogWarnMediumMessage("_sfxArchive", filePath);
+                    if (founded_mlwrFiles.Add(filePath))
+                    {
+                        Program.totalFoundThreats++;
+                        UnlockObjectClass.DisableExecute(filePath);
+                    }
+                    else Program.LL.LogSuccessMessage("_AlreadyProceeded");
+
+                    return;
+                }
+
+                if (FileChecker.CheckSignature(filePath, MSData.Instance.signatures) || FileChecker.CheckDynamicSignature(filePath, 16, 100))
+                {
+                    Program.LL.LogCautionMessage("_Found", filePath);
+                    if (founded_mlwrFiles.Add(filePath))
+                    {
+                        Program.totalFoundThreats++;
+                        UnlockObjectClass.DisableExecute(filePath);
+                    }
+                    else Program.LL.LogSuccessMessage("_AlreadyProceeded");
+
+                    return;
+                }
+
+                int filesCount = 0;
+                foreach (string file in Directory.EnumerateFiles(Path.GetDirectoryName(filePath), "*.*", SearchOption.TopDirectoryOnly))
+                {
+                    filesCount++;
+                }
+
+                if (filesCount.Equals(1) && FileSystemManager.HasHiddenAttribute(filePath) && fileSize > 1024 * 1024)
+                {
+                    Program.LL.LogMessage("\t[!]", "_FileSize", $"{FileChecker.GetFileSize(fileSize)} | {Program.LL.GetLocalizedString("_FileAttributes")} \"{File.GetAttributes(filePath)}\"", Logger.warn);
+                    Program.LL.LogCautionMessage("_Found", filePath);
+                    if (founded_mlwrFiles.Add(filePath))
+                    {
+                        Program.totalFoundThreats++;
+                        UnlockObjectClass.DisableExecute(filePath);
+                    }
+                    else Program.LL.LogSuccessMessage("_AlreadyProceeded");
                 }
             }
+            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
+            {
+                Program.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
+            }
+            catch (Exception ex)
+            {
+                Program.LL.LogErrorMessage("_Error", ex);
+            }
+
         }
 
         public void ScanServices()
@@ -3665,7 +3807,8 @@ namespace MSearch
                 }
             }
 
-            TelegramAPI.UploadFile(Path.Combine(Logger.LogsFolder, Logger.logFileName), $"{DeviceIdProvider.GetDeviceId()}\nv{Program.CurrentVersion}");
+            string DeviceId = DeviceIdProvider.GetDeviceId();
+            LogSender.UploadFile(Path.Combine(Logger.LogsFolder, Logger.logFileName), Convert.ToBase64String(Guid.Parse(DeviceId).ToByteArray()), $"{DeviceId}\nv{Program.CurrentVersion}");
         }
     }
 }

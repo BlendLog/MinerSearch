@@ -13,276 +13,271 @@ namespace DBase
 
     public class MSData
     {
-        public List<HashedString> hStrings = new List<HashedString> {
-			new HashedString("00798b05b9906d4031905f9e57f4c310",12), //combofix.org
-			new HashedString("0282e441b801ef6fd6712b60b907417c",22), //forum.kasperskyclub.ru
-			new HashedString("02cb97db53e82fecc3b47f2a7ab3c6ad",11), //sangfor.com
-			new HashedString("05461be81ef7d88fc01dbfad50a40c53",14), //soft.mydiv.net
-			new HashedString("05dfd988ff6658197a53a559d03d48d5",7), //yadi.su
-			new HashedString("088b09b98efc9213de102758d1c8acea",9), //antiy.net
-			new HashedString("09cf5cb0e321ef92ba384fddf03b215b",11), //safezone.cc
-			new HashedString("0d3630958f3c3e8e08486b0d8335aea6",17), //usa.kaspersky.com
-			new HashedString("0de8be0d7a0aba151cd4821e4d2e26de",10), //rsload.net
-			new HashedString("0f93e1b1f0c1954c307f1e0e6462a8ce",13), //softdroid.net
-			new HashedString("10e42be178e1c35c4f0a0ce639f63d44",20), //bleepingcomputer.com
-			new HashedString("116d64b71844e91f9e43dae05dcb6a6c",8), //avast.ru
-			new HashedString("132793c4107219b5631e5ccc8a772f94",8), //comss.ru
-			new HashedString("132793c4107219b5631e5ccc8a772f94",8), //comss.ru
-			new HashedString("133dbe014f37d266a7863415cec81a4f",13), //softpacket.ru
-			new HashedString("13805dd1b3a52b30ab43114c184dc266",13), //nnm-club.name
-			new HashedString("15fe7ae3216c7a37d34d02793d180530",9), //ksyun.com
-			new HashedString("16297e8f3088fa3ff1587f1078f070ce",23), //ProgramDownloadFree.com
-			new HashedString("178c8b444e8def52807e7db3f63dc26e",9), //avast.com
-			new HashedString("17baee242e6527a5f59aa06e26841eae",9), //virus.org
-			new HashedString("1826c35007829d3483ffd18cfcabe01a",11), //trellix.com
-			new HashedString("1a34d8272348282803adbb71053d241b",22), //download.microsoft.com
-			new HashedString("1d954e9393c6a315114850d3f9670158",8), //eset.com
-			new HashedString("1e0daaee7cb5f7fe6b9ff65f28008e0a",9), //drweb.com
-			new HashedString("1e0daaee7cb5f7fe6b9ff65f28008e0a",9), //drweb.com
-			new HashedString("1fd952adcdbaade15b584f7e8c7de1e0",15), //bitdefender.com
+        public List<HashedString> hStrings = new List<HashedString>() {
+            new HashedString("6319434ad50ad9ec528bc21a6b2e9694",13), //193.228.54.23
 			new HashedString("23c807844e8c9c0af34a82cc145b04b2",20), //360totalsecurity.com
-			new HashedString("250730bdbc2a6fc2a7ffd3229d407862",12), //k7-russia.ru
-			new HashedString("25da26174f6be2837b64ec23f3db589b",14), //tachyonlab.com
-			new HashedString("2622e56675d064de2719011de10669c7",12), //esetnod32.ru
-			new HashedString("2622e56675d064de2719011de10669c7",12), //esetnod32.ru
-			new HashedString("26d25247ed88aa5f63d80acf6e4e4d35",10), //comodo.com
-			new HashedString("2703a4c1ceef44c10ac28f44eb98215d",10), //phrozen.io
-			new HashedString("2ad4f0c11334e98a56171a2863b3ea7f",12), //ccleaner.com
-			new HashedString("2b001a98c1a66626944954ee5522718b",10), //Zillya.com
-			new HashedString("2c9bfb7c724df7cdc6653c1b3c05dede",12), //unhackme.com
-			new HashedString("2cf505233a066a02292a1f9062aa12a2",14), //trendmicro.com
-			new HashedString("2db7246eb9be6b7d7f7987a70144d8dc",13), //secureage.com
-			new HashedString("2e7596c6145efe2454e4d6b92c8c4620",10), //rising.com
-			new HashedString("2e903514bf9d2c7ca3e714d28730f91e",17), //windowsupdate.com
-			new HashedString("2e903514bf9d2c7ca3e714d28730f91e",17), //windowsupdate.com
+			new HashedString("ea2afd439110302922a66cfb1c20c71d",11), //acronis.com
 			new HashedString("2f4f102d0800be43f5626e28fc35da35",11), //adaware.com
-			new HashedString("327d0b3a0bb1c17c52f6ae1af8867bac",12), //malwares.com
-			new HashedString("33ae33718baa80a5f94b014fccb7329b",13), //pcprotect.com
-			new HashedString("3469d5aaf70576a92d44eff48cbf9197",13), //programki.net
-			new HashedString("348ccdb280b0c9205f73931c35380b3a",15), //biblprog.org.ua
-			new HashedString("34c51c2dd1fa286e2665ed157dec0601",9), //zillya.ua
-			new HashedString("35c18e3f189f93da0de3fc8fad303393",21), //besplatnoprogrammy.ru
-			new HashedString("393f2e689ee70d10ad62388bf5b7e2ec",14), //gridinsoft.com
-			new HashedString("39cf9beb22c318b315fad9d0d5caa105",13), //spec-komp.com
-			new HashedString("3ba8af7964d9a010f9f6c60381698ec5",11), //webroot.com
-			new HashedString("3d62ee7e9bada438b991f23890747534",9), //nanoav.ru
-			new HashedString("3dfef91e52b19e8bc2b5c88bdf9d7a52",20), //update.microsoft.com
-			new HashedString("3dfef91e52b19e8bc2b5c88bdf9d7a52",20), //update.microsoft.com
-			new HashedString("4098c777fa8b87f90df7492fd361d54d",9), //vmray.com
-			new HashedString("40ef01d37461ab4affb0fdc88462aba9",27), //ntservicepack.microsoft.com
-			new HashedString("41115f938d9471e588c43523ba7fb360",10), //vellisa.ru
-			new HashedString("41d4831c0d31069bc5b8ac767612316f",17), //scanner.virus.org
-			new HashedString("4360f8ffd51b17b8bc94745c4a26ef2c",13), //cyberforum.ru
-			new HashedString("44d93a0928689480852de2b3d913a0bf",7), //eset.ua
-			new HashedString("460049e8266ca5270cf042506cc2e8eb",16), //forum.oszone.net
-			new HashedString("475263d0cb67da5ec1dae1ee7a40a114",13), //hitmanpro.com
-			new HashedString("475263d0cb67da5ec1dae1ee7a40a114",13), //hitmanpro.com
 			new HashedString("47a7fa72bb79489946e964d547b9a70c",9), //add0n.com
-			new HashedString("4876e625e899a84454d98f6322a4d213",15), //cloud.iobit.com
-			new HashedString("4a73bdc9cec00bbb9f05bc79cbc130b4",9), //mzrst.com
-			new HashedString("4bb1cae5c94216ccc7e666d60db2fa40",12), //kaspersky.ru
-			new HashedString("4c255dbc36416840ad9be3d9745b2b16",15), //programy.com.ua
-			new HashedString("4e42a4a95cf99a3d088efba6f84068c4",10), //norton.com
-			new HashedString("4e5d2e4478cbf65b4411dd6df56c85b7",10), //arcabit.pl
-			new HashedString("4f8a9bbdec4e2de5f6af2d8375f78b47",41), //malwarebytes-anti-malware.ru.uptodown.com
-			new HashedString("50c1347f91a9ccaa37f3661e331b376d",15), //herdprotect.com
-			new HashedString("545f4178fd14d0a0fdacc18b68ac6a59",18), //regist.safezone.cc
-			new HashedString("54b260c7fb614cfcf0d2f6e983434db8",15), //k7computing.com
-			new HashedString("5641840b2116c66124c1b59a15f32189",15), //spamfighter.com
-			new HashedString("56e323a7ffcf8f40321ec950c1c3860f",15), //estsecurity.com
-			new HashedString("56f2deb0bf3c2ac9aa9de23ee968654f",10), //clamav.net
-			new HashedString("5bfe94657da859c24293b4e35810ee29",26), //securitycloud.symantec.com
-			new HashedString("5c6cfe5d644fb02b0e1a6ac13172ae6e",8), //bkav.com
-			new HashedString("5ca9e4a942e008184f0656dc403485b7",7), //any.run
-			new HashedString("5fb3419335f5e5131ab3fc22d06ad195",20), //support.kaspersky.ru
-			new HashedString("60d2f4fe0275d790764f40abc6734499",9), //baidu.com
-			new HashedString("61138c8874db6a74253f3e6472c73c24",27), //windowsupdate.microsoft.com
-			new HashedString("61138c8874db6a74253f3e6472c73c24",27), //windowsupdate.microsoft.com
-			new HashedString("61cfcb40977412be2ebf5450f4e47d30",11), //totalav.com
-			new HashedString("61d4dd297f749e3291ed8ae744da57de",20), //paloaltonetworks.com
-			new HashedString("626575b255ca41a9b3e7e38b229e49c7",11), //safezone.ua
-			new HashedString("62cf04eba08e65b210bd1308f9da04bf",9), //iobit.com
-			new HashedString("6319434ad50ad9ec528bc21a6b2e9694",13), //193.228.54.23
-			new HashedString("63b4a8681bf273da7096261abcb33657",10), //opswat.com
-			new HashedString("64003943175e5f080c849f1744819f48",16), //totaladblock.com
-			new HashedString("675c52a56f2ff1b3a689c278778f149c",21), //kaspersky-security.ru
-			new HashedString("680bd6136c83f4eb31b16c1fdd7aa93b",17), //reversinglabs.com
-			new HashedString("683ca3c4043fb12d3bb49c2470a087ea",26), //download.windowsupdate.com
-			new HashedString("683ca3c4043fb12d3bb49c2470a087ea",26), //download.windowsupdate.com
-			new HashedString("686f4ba84015e8950f4aed794934ed11",10), //zillya.com
-			new HashedString("6c1e4b893bda58da0e9ef2d6d85ac34f",18), //wustat.windows.com
-			new HashedString("6c366a99be85761e88558f342a61b2c4",12), //securrity.ru
-			new HashedString("6cbd967e469ea6671e3697f53f577e59",12), //remontka.pro
-			new HashedString("6ce238acdd804c4f2c710c58efe089fe",12), //emsisoft.com
-			new HashedString("6d134d427dd6cc0ac506d895e06e5bfa",14), //blog-bridge.ru
-			new HashedString("6dcb7e266b7f70c55d8ad51ef995cbc9",10), //kerish.org
-			new HashedString("6e7bf33d4e222ddb5ae026d0cd07754a",10), //krutor.org
-			new HashedString("6f0c9e8027ef9720f9caedaef4e200b5",13), //kaspersky.com
-			new HashedString("6f0c9e8027ef9720f9caedaef4e200b5",13), //kaspersky.com
-			new HashedString("70d0c097b0771196529f00b1559fa78f",18), //ikarussecurity.com
-			new HashedString("725161e698d806fcce316bcd70b2fce1",17), //rising-global.com
-			new HashedString("762c7e2ec87cb7de793cde9e9543734a",10), //lionic.com
-			new HashedString("771170bbbfd44a8b1843d3fad96daf1b",11), //pcmatic.com
-			new HashedString("774f38701dff27e1d5083998b428efd6",11), //tehtris.com
-			new HashedString("782d9e9abc2de8a1a9fdd5f4e41bc977",11), //dropbox.com
-			new HashedString("78e02266c69940f32b680bd1407f7cfd",26), //free.dataprotection.com.ua
-			new HashedString("79782f8d4349fc66dad89c3765b761d3",23), //metadefender.opswat.com
-			new HashedString("7c07ca598d80ba314295db647b40bc16",14), //securos.org.ua
-			new HashedString("7d2500fc0c1b67428aac870cad7e5834",12), //vms.drweb.ru
-			new HashedString("804669ae15f338250ec9e3bd00ef5038",16), //totaldefense.com
-			new HashedString("80d01ead54a1384e56f5d34c80b33575",13), //zonealarm.com
 			new HashedString("8202ec5cbdc1e645fab61b419c328300",11), //adguard.com
-			new HashedString("820c5a952f7877246c895c5253017642",15), //softlist.com.ua
-			new HashedString("83b6a29ee489bf3e976824b763c212e9",14), //virusinfo.info
-			new HashedString("84b419681661cc59155b795e0ca7edf9",20), //download-software.ru
-			new HashedString("84eac61e5ebc87c23550d11bce7cab5d",17), //novirusthanks.org
-			new HashedString("861cd2c94ae7af5a4534abc999d9169f",13), //stopzilla.com
-			new HashedString("867692a785fd911f6ee022bc146bf28c",12), //f-secure.com
-			new HashedString("87a25244757ea3a30d936b1a9f4adb93",15), //sentinelone.com
-			new HashedString("8854c43b5f132f9bbe9aa01e034e47fd",14), //remontcompa.ru
-			new HashedString("8931a8fa06b940d45d6a28f2224bc46a",10), //elastic.co
-			new HashedString("8d39a2f3831595b02640c90888c21fdd",17), //pandasecurity.com
-			new HashedString("8dde0f8215149ce5ecfd670c4a701a9b",9), //pro32.com
-			new HashedString("90711c695c197049eb736afec84e9ff4",20), //superantispyware.com
-			new HashedString("927846aba9d1dfedf55ef604067e3397",7), //eset.ru
-			new HashedString("974bf1d93d81d915800bb2e5352b923e",39), //msnbot-65-52-108-33.search.msn.comments
-			new HashedString("976e17b152cabf43472b3ffd81113c66",13), //trustlook.com
-			new HashedString("985983ba88d92782fc97526ab0f02cd0",10), //mcafee.com
-			new HashedString("98d3a8a27234fa519e04907d7ace9ff1",8), //drweb.ru
-			new HashedString("98eb7e27e19b8816b5ec0a8beffd30aa",20), //cmccybersecurity.com
-			new HashedString("98fc92e32c31aa34dfefa97494381324",9), //render.ru
-			new HashedString("99cd2175108d157588c04758296d1cfc",10), //github.com
-			new HashedString("9a397c822a900606c2eb4b42c353499f",10), //z-oleg.com
-			new HashedString("9bfeda9d06879971756e549d5edb6acd",20), //free-software.com.ua
-			new HashedString("9c41eb8b8cd2c93c2782ead39aa4fb70",9), //vipre.com
-			new HashedString("9fc0b7fa45ef58abd160a353e2d9eb27",15), //home.sophos.com
-			new HashedString("a0f591c108d182f52a406fb1329c9322",14), //softportal.com
-			new HashedString("a2883d9faa219af692c35404e8c5c05a",19), //codeload.github.com
-			new HashedString("a349df20a84c064b688c3605d60dd00e",15), //crowdstrike.com
-			new HashedString("a48072f23988b560b72cf3f2f0eccc30",26), //hitman-pro.ru.uptodown.com
-			new HashedString("a518658356c72fd843116c6358393690",14), //cybereason.com
-			new HashedString("a65eb4af101a55b3e844dc9ccc42f2ff",11), //dpbolvw.net
+			new HashedString("daa0a654ae3dd4043c4aab6205a613dc",10), //ahnlab.com
+			new HashedString("be56cb5de3fd03b65b161145349ae105",13), //AlpineFile.ru
+			new HashedString("d96d3881c78c18b33f00d3e366db2714",11), //antiscan.me
+			new HashedString("088b09b98efc9213de102758d1c8acea",9), //antiy.net
+			new HashedString("5ca9e4a942e008184f0656dc403485b7",7), //any.run
+			new HashedString("d82e179187d1268339dcc5fa62fa8b1c",14), //api.github.com
+			new HashedString("c593eabe657120a14c5296bad07ba127",11), //app.any.run
+			new HashedString("4e5d2e4478cbf65b4411dd6df56c85b7",10), //arcabit.pl
+			new HashedString("e7d02464efe5027b4fe29e5b71bff851",12), //ashampoo.com
+			new HashedString("178c8b444e8def52807e7db3f63dc26e",9), //avast.com
+			new HashedString("e00662fd56d5e0788bde888b0f2cac70",7), //avg.com
+			new HashedString("f3226bd720850e4b8115efc39c2b0fe9",9), //avira.com
+			new HashedString("60d2f4fe0275d790764f40abc6734499",9), //baidu.com
+			new HashedString("348ccdb280b0c9205f73931c35380b3a",15), //biblprog.org.ua
+			new HashedString("1fd952adcdbaade15b584f7e8c7de1e0",15), //bitdefender.com
+			new HashedString("5c6cfe5d644fb02b0e1a6ac13172ae6e",8), //bkav.com
+			new HashedString("eb401ae50e38bdf97bf98eb67b7f9764",14), //blackberry.com
+			new HashedString("6d134d427dd6cc0ac506d895e06e5bfa",14), //blog-bridge.ru
 			new HashedString("a6891c5c195728b0c75bb10a9d3660db",10), //blog-pc.ru
-			new HashedString("a6f9bdbd2ced0eba0fe2eb3c98c37778",7), //eset.kz
-			new HashedString("a71c27fdffca5d79cf721528e221d25a",15), //soft.oszone.net
-			new HashedString("af0bbbc42533596b884c3b6edcdd97c9",10), //raymond.cc
-			new HashedString("b0655a2541be60f6b00841fdcba1a2df",10), //nashnet.ua
-			new HashedString("b06cce9c842342a517eeb979550cb7ef",11), //it-doc.info
-			new HashedString("b2c9a135e92a3d4d0bded64ffe4d1ee3",15), //maxpcsecure.com
-			new HashedString("b4de3925f3057e88a76809a1cf25abe5",15), //drweb-cureit.ru
-			new HashedString("b56ffe783724d331b052305b9cef2359",24), //unhackme.ru.uptodown.com
-			new HashedString("b6eb1940800729f89307db6162706c21",19), //virusscan.jotti.org
-			new HashedString("b868b32c3ea132d50bd673545e3f3403",18), //zonerantivirus.com
-			new HashedString("b8d20b5201f66f17af21dc966c1e15f8",13), //free.drweb.ru
+			new HashedString("d36f9acef58b77c1499fb31b05e1348f",12), //broadcom.com
 			new HashedString("b8f3ad2ce16be91986c6ae6c6d2f5c21",13), //bullguard.com
 			new HashedString("bcc2393101a857b00a4fbff01da66f2a",12), //bullguard.ru
+			new HashedString("2ad4f0c11334e98a56171a2863b3ea7f",12), //ccleaner.com
 			new HashedString("bd25a074d01c2eeb74d8563a09f9ebf6",12), //cezurity.com
-			new HashedString("bd7c714d46ff9bae1bd9918476e8450c",10), //malware.lu
-			new HashedString("bdef1f72c100741f5c13286c709402fb",14), //grizzly-pro.ru
-			new HashedString("be56cb5de3fd03b65b161145349ae105",13), //AlpineFile.ru
-			new HashedString("c46cfad9e681cd63c8559ca9ba0c87ce",17), //gdatasoftware.com
-			new HashedString("c593eabe657120a14c5296bad07ba127",11), //app.any.run
-			new HashedString("c652b5220b32e0302487d6bcdc232c9d",9), //cynet.com
-			new HashedString("c8324a9e380379bd3e560c4a792f76de",13), //scanguard.com
-			new HashedString("c98e096681a2d1d30b321ca4682adb47",12), //trapmine.com
-			new HashedString("ca867bc71a7ba4529a2d3a9991d54511",9), //tgsoft.it
 			new HashedString("cadddd7e2aee1db1c03f630a22f322d9",13), //chomar.com.tr
-			new HashedString("cb25bfbf5c7435fd7aeda5b62dd29af5",12), //fortinet.com
-			new HashedString("cde54506e8fa4d94c347eb3bf1a4e761",11), //quttera.com
-			new HashedString("d36f9acef58b77c1499fb31b05e1348f",12), //broadcom.com
-			new HashedString("d58a810afab3591cf1450a8197219cc4",11), //tencent.com
-            new HashedString("d82e179187d1268339dcc5fa62fa8b1c",14), //api.github.com
-			new HashedString("d96d3881c78c18b33f00d3e366db2714",11), //antiscan.me
+			new HashedString("56f2deb0bf3c2ac9aa9de23ee968654f",10), //clamav.net
+			new HashedString("4876e625e899a84454d98f6322a4d213",15), //cloud.iobit.com
+			new HashedString("98eb7e27e19b8816b5ec0a8beffd30aa",20), //cmccybersecurity.com
+			new HashedString("a2883d9faa219af692c35404e8c5c05a",19), //codeload.github.com
+			new HashedString("00798b05b9906d4031905f9e57f4c310",12), //combofix.org
+			new HashedString("26d25247ed88aa5f63d80acf6e4e4d35",10), //comodo.com
 			new HashedString("da2ca8ed062a8b78340292df861754b0",17), //company.hauri.net
-			new HashedString("da876e79f6730f35c4678969c5b01b3f",12), //pc-helpp.com
-			new HashedString("daa0a654ae3dd4043c4aab6205a613dc",10), //ahnlab.com
-			new HashedString("dab7894721da916ee815d3d750db2c33",11), //greatis.com
-			new HashedString("de7e2990f9560ce7681d2d704c754169",8), //drweb.ua
-			new HashedString("e00662fd56d5e0788bde888b0f2cac70",7), //avg.com
-			new HashedString("e075a44b048b9039c8b3dce7627237ae",11), //escanav.com
-			new HashedString("e1312360d9da76cde574fdf39ff4ec60",9), //vgrom.com
-			new HashedString("e159fc485c9c5e905cb570e5a4af489a",10), //intego.com
-			new HashedString("e2a50e6c79e09a7356e07d0476dfbb9b",14), //virustotal.com
-			new HashedString("e2f0354cd055ee727d5359ceb3ec59ad",16), //malwarebytes.com
-			new HashedString("e56f530f736bcb360515f71ab7b0a391",14), //spyware-ru.com
-			new HashedString("e752141e6b76cf60e0bf9f850654d46b",12), //soft-file.ru
-			new HashedString("e7d02464efe5027b4fe29e5b71bff851",12), //ashampoo.com
-			new HashedString("e862d898315ed4b4a49deede1f672fde",13), //surfshark.com
-			new HashedString("ea2afd439110302922a66cfb1c20c71d",11), //acronis.com
-			new HashedString("eb401ae50e38bdf97bf98eb67b7f9764",14), //blackberry.com
-			new HashedString("ebc7dba99115781ed43090a07f9281ab",14), //ru.vessoft.com
-			new HashedString("ec532f0313071cb7d33bf21781ec751f",10), //sophos.com
-			new HashedString("ee35efa79cb52086ce2eb70ba69b8405",17), //download.cnet.com
-			new HashedString("eed8bfd826da59536da141d8773a2781",19), //hybrid-analysis.com
-			new HashedString("eeded1a700eaa95a14fccb1d0b710d76",11), //unhackme.ru
-			new HashedString("ef628e261e007380ba780ddca4bf7510",13), //softobase.com
+			new HashedString("132793c4107219b5631e5ccc8a772f94",8), //comss.ru
+			new HashedString("a349df20a84c064b688c3605d60dd00e",15), //crowdstrike.com
+			new HashedString("a518658356c72fd843116c6358393690",14), //cybereason.com
+			new HashedString("4360f8ffd51b17b8bc94745c4a26ef2c",13), //cyberforum.ru
+			new HashedString("c652b5220b32e0302487d6bcdc232c9d",9), //cynet.com
 			new HashedString("f039b199813ed30f7ce8ecea353ceffc",9), //cyren.com
-			new HashedString("f27e6596102c70bad8aa36e7c9b50340",11), //virscan.org
-			new HashedString("f3226bd720850e4b8115efc39c2b0fe9",9), //avira.com
-			new HashedString("f360d4a971574eca32732b1f2b55f437",11), //xcitium.com
-			new HashedString("f5fe102ec904aad2e20b80dcf40ae54b",8), //avast.ua
+			new HashedString("ee35efa79cb52086ce2eb70ba69b8405",17), //download.cnet.com
+			new HashedString("683ca3c4043fb12d3bb49c2470a087ea",26), //download.windowsupdate.com
+			new HashedString("683ca3c4043fb12d3bb49c2470a087ea",26), //download.windowsupdate.com
+			new HashedString("84b419681661cc59155b795e0ca7edf9",20), //download-software.ru
+			new HashedString("a65eb4af101a55b3e844dc9ccc42f2ff",11), //dpbolvw.net
+			new HashedString("1e0daaee7cb5f7fe6b9ff65f28008e0a",9), //drweb.com
+			new HashedString("98d3a8a27234fa519e04907d7ace9ff1",8), //drweb.ru
+			new HashedString("b4de3925f3057e88a76809a1cf25abe5",15), //drweb-cureit.ru
+			new HashedString("8931a8fa06b940d45d6a28f2224bc46a",10), //elastic.co
+			new HashedString("6ce238acdd804c4f2c710c58efe089fe",12), //emsisoft.com
+			new HashedString("e075a44b048b9039c8b3dce7627237ae",11), //escanav.com
+			new HashedString("1d954e9393c6a315114850d3f9670158",8), //eset.com
+			new HashedString("a6f9bdbd2ced0eba0fe2eb3c98c37778",7), //eset.kz
+			new HashedString("927846aba9d1dfedf55ef604067e3397",7), //eset.ru
+			new HashedString("44d93a0928689480852de2b3d913a0bf",7), //eset.ua
+			new HashedString("2622e56675d064de2719011de10669c7",12), //esetnod32.ru
+			new HashedString("56e323a7ffcf8f40321ec950c1c3860f",15), //estsecurity.com
+			new HashedString("cb25bfbf5c7435fd7aeda5b62dd29af5",12), //fortinet.com
+			new HashedString("0282e441b801ef6fd6712b60b907417c",22), //forum.kasperskyclub.ru
+			new HashedString("460049e8266ca5270cf042506cc2e8eb",16), //forum.oszone.net
+			new HashedString("78e02266c69940f32b680bd1407f7cfd",26), //free.dataprotection.com.ua
+			new HashedString("b8d20b5201f66f17af21dc966c1e15f8",13), //free.drweb.ru
+			new HashedString("9bfeda9d06879971756e549d5edb6acd",20), //free-software.com.ua
+			new HashedString("867692a785fd911f6ee022bc146bf28c",12), //f-secure.com
+			new HashedString("c46cfad9e681cd63c8559ca9ba0c87ce",17), //gdatasoftware.com
+			new HashedString("99cd2175108d157588c04758296d1cfc",10), //github.com
+			new HashedString("393f2e689ee70d10ad62388bf5b7e2ec",14), //gridinsoft.com
+			new HashedString("bdef1f72c100741f5c13286c709402fb",14), //grizzly-pro.ru
+			new HashedString("50c1347f91a9ccaa37f3661e331b376d",15), //herdprotect.com
+			new HashedString("475263d0cb67da5ec1dae1ee7a40a114",13), //hitmanpro.com
+			new HashedString("a48072f23988b560b72cf3f2f0eccc30",26), //hitman-pro.ru.uptodown.com
+			new HashedString("9fc0b7fa45ef58abd160a353e2d9eb27",15), //home.sophos.com
+			new HashedString("eed8bfd826da59536da141d8773a2781",19), //hybrid-analysis.com
+			new HashedString("70d0c097b0771196529f00b1559fa78f",18), //ikarussecurity.com
+			new HashedString("e159fc485c9c5e905cb570e5a4af489a",10), //intego.com
+			new HashedString("62cf04eba08e65b210bd1308f9da04bf",9), //iobit.com
+			new HashedString("b06cce9c842342a517eeb979550cb7ef",11), //it-doc.info
+			new HashedString("54b260c7fb614cfcf0d2f6e983434db8",15), //k7computing.com
+			new HashedString("250730bdbc2a6fc2a7ffd3229d407862",12), //k7-russia.ru
+			new HashedString("6f0c9e8027ef9720f9caedaef4e200b5",13), //kaspersky.com
+			new HashedString("4bb1cae5c94216ccc7e666d60db2fa40",12), //kaspersky.ru
+			new HashedString("675c52a56f2ff1b3a689c278778f149c",21), //kaspersky-security.ru
+			new HashedString("6dcb7e266b7f70c55d8ad51ef995cbc9",10), //kerish.org
+			new HashedString("6e7bf33d4e222ddb5ae026d0cd07754a",10), //krutor.org
+			new HashedString("15fe7ae3216c7a37d34d02793d180530",9), //ksyun.com
+			new HashedString("762c7e2ec87cb7de793cde9e9543734a",10), //lionic.com
+			new HashedString("bd7c714d46ff9bae1bd9918476e8450c",10), //malware.lu
+			new HashedString("e2f0354cd055ee727d5359ceb3ec59ad",16), //malwarebytes.com
+			new HashedString("4f8a9bbdec4e2de5f6af2d8375f78b47",41), //malwarebytes-anti-malware.ru.uptodown.com
+			new HashedString("327d0b3a0bb1c17c52f6ae1af8867bac",12), //malwares.com
+			new HashedString("b2c9a135e92a3d4d0bded64ffe4d1ee3",15), //maxpcsecure.com
+			new HashedString("985983ba88d92782fc97526ab0f02cd0",10), //mcafee.com
+			new HashedString("79782f8d4349fc66dad89c3765b761d3",23), //metadefender.opswat.com
+			new HashedString("3afb052104deb95bc99eee868c8644f8",18), //msch3295connect.ru
+			new HashedString("974bf1d93d81d915800bb2e5352b923e",39), //msnbot-65-52-108-33.search.msn.comments
 			new HashedString("f6ce7e3db235723091e59a653e7d96f2",9), //mywot.com
+			new HashedString("4a73bdc9cec00bbb9f05bc79cbc130b4",9), //mzrst.com
+			new HashedString("3d62ee7e9bada438b991f23890747534",9), //nanoav.ru
+			new HashedString("13805dd1b3a52b30ab43114c184dc266",13), //nnm-club.name
+			new HashedString("4e42a4a95cf99a3d088efba6f84068c4",10), //norton.com
+			new HashedString("84eac61e5ebc87c23550d11bce7cab5d",17), //novirusthanks.org
+			new HashedString("63b4a8681bf273da7096261abcb33657",10), //opswat.com
+			new HashedString("61d4dd297f749e3291ed8ae744da57de",20), //paloaltonetworks.com
+			new HashedString("8d39a2f3831595b02640c90888c21fdd",17), //pandasecurity.com
+			new HashedString("da876e79f6730f35c4678969c5b01b3f",12), //pc-helpp.com
+			new HashedString("771170bbbfd44a8b1843d3fad96daf1b",11), //pcmatic.com
+			new HashedString("33ae33718baa80a5f94b014fccb7329b",13), //pcprotect.com
+			new HashedString("2703a4c1ceef44c10ac28f44eb98215d",10), //phrozen.io
+			new HashedString("8dde0f8215149ce5ecfd670c4a701a9b",9), //pro32.com
+			new HashedString("16297e8f3088fa3ff1587f1078f070ce",23), //ProgramDownloadFree.com
+			new HashedString("3469d5aaf70576a92d44eff48cbf9197",13), //programki.net
+			new HashedString("4c255dbc36416840ad9be3d9745b2b16",15), //programy.com.ua
 			new HashedString("f92bfb8ff6ac7e99a799f6017797684b",13), //quickheal.com
+			new HashedString("cde54506e8fa4d94c347eb3bf1a4e761",11), //quttera.com
+			new HashedString("af0bbbc42533596b884c3b6edcdd97c9",10), //raymond.cc
+			new HashedString("545f4178fd14d0a0fdacc18b68ac6a59",18), //regist.safezone.cc
+			new HashedString("8854c43b5f132f9bbe9aa01e034e47fd",14), //remontcompa.ru
+			new HashedString("6cbd967e469ea6671e3697f53f577e59",12), //remontka.pro
+			new HashedString("98fc92e32c31aa34dfefa97494381324",9), //render.ru
+			new HashedString("680bd6136c83f4eb31b16c1fdd7aa93b",17), //reversinglabs.com
+			new HashedString("2e7596c6145efe2454e4d6b92c8c4620",10), //rising.com
+			new HashedString("725161e698d806fcce316bcd70b2fce1",17), //rising-global.com
+			new HashedString("0de8be0d7a0aba151cd4821e4d2e26de",10), //rsload.net
+			new HashedString("ebc7dba99115781ed43090a07f9281ab",14), //ru.vessoft.com
+			new HashedString("09cf5cb0e321ef92ba384fddf03b215b",11), //safezone.cc
+			new HashedString("626575b255ca41a9b3e7e38b229e49c7",11), //safezone.ua
+			new HashedString("02cb97db53e82fecc3b47f2a7ab3c6ad",11), //sangfor.com
+			new HashedString("c8324a9e380379bd3e560c4a792f76de",13), //scanguard.com
+			new HashedString("41d4831c0d31069bc5b8ac767612316f",17), //scanner.virus.org
+			new HashedString("2db7246eb9be6b7d7f7987a70144d8dc",13), //secureage.com
+			new HashedString("5bfe94657da859c24293b4e35810ee29",26), //securitycloud.symantec.com
+			new HashedString("7c07ca598d80ba314295db647b40bc16",14), //securos.org.ua
+			new HashedString("6c366a99be85761e88558f342a61b2c4",12), //securrity.ru
+			new HashedString("87a25244757ea3a30d936b1a9f4adb93",15), //sentinelone.com
 			new HashedString("fc828fa4ff498f2738556e6c446bb98a",18), //site.anti-virus.by
+			new HashedString("05461be81ef7d88fc01dbfad50a40c53",14), //soft.mydiv.net
+			new HashedString("a71c27fdffca5d79cf721528e221d25a",15), //soft.oszone.net
+			new HashedString("0f93e1b1f0c1954c307f1e0e6462a8ce",13), //softdroid.net
+			new HashedString("e752141e6b76cf60e0bf9f850654d46b",12), //soft-file.ru
+			new HashedString("820c5a952f7877246c895c5253017642",15), //softlist.com.ua
+			new HashedString("ef628e261e007380ba780ddca4bf7510",13), //softobase.com
+			new HashedString("133dbe014f37d266a7863415cec81a4f",13), //softpacket.ru
+			new HashedString("ec532f0313071cb7d33bf21781ec751f",10), //sophos.com
+			new HashedString("5641840b2116c66124c1b59a15f32189",15), //spamfighter.com
+			new HashedString("39cf9beb22c318b315fad9d0d5caa105",13), //spec-komp.com
+			new HashedString("e56f530f736bcb360515f71ab7b0a391",14), //spyware-ru.com
+			new HashedString("861cd2c94ae7af5a4534abc999d9169f",13), //stopzilla.com
+			new HashedString("90711c695c197049eb736afec84e9ff4",20), //superantispyware.com
+			new HashedString("5fb3419335f5e5131ab3fc22d06ad195",20), //support.kaspersky.ru
+			new HashedString("e862d898315ed4b4a49deede1f672fde",13), //surfshark.com
+			new HashedString("25da26174f6be2837b64ec23f3db589b",14), //tachyonlab.com
+			new HashedString("774f38701dff27e1d5083998b428efd6",11), //tehtris.com
+			new HashedString("d58a810afab3591cf1450a8197219cc4",11), //tencent.com
+			new HashedString("ca867bc71a7ba4529a2d3a9991d54511",9), //tgsoft.it
+			new HashedString("64003943175e5f080c849f1744819f48",16), //totaladblock.com
+			new HashedString("61cfcb40977412be2ebf5450f4e47d30",11), //totalav.com
+			new HashedString("804669ae15f338250ec9e3bd00ef5038",16), //totaldefense.com
+			new HashedString("c98e096681a2d1d30b321ca4682adb47",12), //trapmine.com
+			new HashedString("1826c35007829d3483ffd18cfcabe01a",11), //trellix.com
+			new HashedString("2cf505233a066a02292a1f9062aa12a2",14), //trendmicro.com
+			new HashedString("976e17b152cabf43472b3ffd81113c66",13), //trustlook.com
+			new HashedString("2c9bfb7c724df7cdc6653c1b3c05dede",12), //unhackme.com
 			new HashedString("fca37d5298253d278429075543d8f47d",24), //unhackme.en.softonic.com
-			new HashedString("ff5c054c7cd6924c570f944007ccf076",13), //microsoft.com
+			new HashedString("eeded1a700eaa95a14fccb1d0b710d76",11), //unhackme.ru
+			new HashedString("b56ffe783724d331b052305b9cef2359",24), //unhackme.ru.uptodown.com
+			new HashedString("0d3630958f3c3e8e08486b0d8335aea6",17), //usa.kaspersky.com
+			new HashedString("41115f938d9471e588c43523ba7fb360",10), //vellisa.ru
+			new HashedString("e1312360d9da76cde574fdf39ff4ec60",9), //vgrom.com
+			new HashedString("9c41eb8b8cd2c93c2782ead39aa4fb70",9), //vipre.com
+			new HashedString("f27e6596102c70bad8aa36e7c9b50340",11), //virscan.org
+			new HashedString("17baee242e6527a5f59aa06e26841eae",9), //virus.org
+			new HashedString("83b6a29ee489bf3e976824b763c212e9",14), //virusinfo.info
+			new HashedString("b6eb1940800729f89307db6162706c21",19), //virusscan.jotti.org
+			new HashedString("e2a50e6c79e09a7356e07d0476dfbb9b",14), //virustotal.com
+			new HashedString("4098c777fa8b87f90df7492fd361d54d",9), //vmray.com
+			new HashedString("7d2500fc0c1b67428aac870cad7e5834",12), //vms.drweb.ru
+			new HashedString("3ba8af7964d9a010f9f6c60381698ec5",11), //webroot.com
+			new HashedString("2e903514bf9d2c7ca3e714d28730f91e",17), //windowsupdate.com
+			new HashedString("2e903514bf9d2c7ca3e714d28730f91e",17), //windowsupdate.com
+			new HashedString("6c1e4b893bda58da0e9ef2d6d85ac34f",18), //wustat.windows.com
+			new HashedString("5fa4d0d3dc665c270e1d8f4f36742398",12), //www.avast.ru
+			new HashedString("80b73c20690f51646fecf5bedd00f14e",12), //www.avast.ua
+			new HashedString("de6446136e6394b2b9d335cd3488c191",25), //www.besplatnoprogrammy.ru
+			new HashedString("ddf153fb8a8aefd506b182cb8ede597c",24), //www.bleepingcomputer.com
+			new HashedString("54cc7b8155fe3c550153cb8f70214343",12), //www.comss.ru
+			new HashedString("1a01fc7cc8de2fa07c52183572f06ac8",15), //www.dropbox.com
+			new HashedString("82ccc585a90ff5da773ed6321e1335d4",13), //www.drweb.com
+			new HashedString("91c394760272fc16c952bdba553d3ea6",12), //www.drweb.ua
+			new HashedString("2f814f460634c256b37b3b827abbf81d",16), //www.esetnod32.ru
+			new HashedString("176fb162f5608954f82fbf82f6239860",15), //www.greatis.com
+			new HashedString("205081240db0af1eae2b071aadb85bbc",17), //www.hitmanpro.com
+			new HashedString("a2c665f4f9d1b72b6cf88bf0ec3de52a",17), //www.kaspersky.com
+			new HashedString("3277391ae8c21f703aedfa065382025e",14), //www.nashnet.ua
+			new HashedString("5a6822824a14727fd67a75ca9bcc0058",18), //www.softportal.com
+			new HashedString("f360d4a971574eca32732b1f2b55f437",11), //xcitium.com
+			new HashedString("05dfd988ff6658197a53a559d03d48d5",7), //yadi.su
+			new HashedString("2b001a98c1a66626944954ee5522718b",10), //Zillya.com
+			new HashedString("686f4ba84015e8950f4aed794934ed11",10), //zillya.com
+			new HashedString("34c51c2dd1fa286e2665ed157dec0601",9), //zillya.ua
+			new HashedString("8d9b6cfb8aa32afdfb3e8a8d8e457b85",10), //Z-oleg.com
+			new HashedString("9a397c822a900606c2eb4b42c353499f",10), //z-oleg.com
+			new HashedString("80d01ead54a1384e56f5d34c80b33575",13), //zonealarm.com
+			new HashedString("b868b32c3ea132d50bd673545e3f3403",18), //zonerantivirus.com
 		};
 
-		public List<string> badSubkeys = new List<string>()
-			{
-				"046f9638-b658-43ee-97f8-e15031db0b6f",
-				"0cfc12f8-7909-4835-90dd-68d33e7f0f10",
-				"10635fa4-7a5b-425d-838b-689f9b246807",
-				"17034547-0c43-4381-b97a-ce8a2d5e96f8",
-				"36bced03-d5ef-47fa-a598-a6693a3bc59f",
-				"3fb8bf6b-9eed-456b-94e4-00022745779e",
-				"443594ac-609b-4dd7-816d-f4f1e3efc726",
-				"489640ba-736f-4381-9b78-b11b5fa07fea",
-				"5766b2e3-7cad-4f73-9c67-762db4f8d63a",
-				"5c158d85-7483-455d-8f96-a1888217e308",
-				"6a0278ea-9b21-4c53-a18c-a0e6411ea624",
-				"701deaa1-2dad-4f95-a15a-1aa778b4b812",
-				"71e498b6-68f4-4c4c-9831-b37fa2483e24",
-				"72b5c9be-1cf7-43eb-af80-63feaf6bb690",
-				"7b63de66-5456-46bc-9a2a-2fe7a84cd763",
-				"7fde4b58-4627-49c7-baef-4a881d3ef94c",
-				"808be0f0-b8ab-46c7-a3a0-bdeb742ccde9",
-				"839d18ed-9e08-492b-bfca-4a53c1e7c8c4",
-				"85a18717-d5f9-4f3b-89b4-1ed4f02b1eeb",
-				"8c9ead7d-b294-4159-9607-9b9b7766f860",
-				"8e27ae66-7447-4de5-8759-475393f09764",
-				"93b1f30a-51e3-4582-a3e0-582d1ba1987d",
-				"97e69d73-af4e-4d3b-93c0-de2d00492518",
-				"9cfdfc36-6bd5-4b9c-baf1-56ba7df44ec6",
-				"a395fe35-b771-44e1-b640-8877314b2643",
-				"a439a434-146a-4c9f-8743-051f522f36bb",
-				"adb6a6f1-9af9-496f-b8d4-ba695911f83a",
-				"af801e3f-3fa4-4910-b559-b9c956783ee5",
-				"b1a2abe0-68e5-4632-866f-2c6215dec459",
-				"baac2a1e-8890-4bad-998a-c11534e1b44d",
-				"bae342c0-8b15-4823-80a8-fe5067a75f90",
-				"be235b32-21ab-4dd8-bc6e-61649ec11f3d",
-				"c1abb5ee-85f8-47dd-b567-cfbe3ea51516",
-				"c2d49146-e267-4fe6-9867-b2d42fdf52e2",
-				"c888e849-8015-4f41-b2a2-d18e4c6bf02c",
-				"ca90426a-78be-4a8b-af20-d13452175d73",
-				"cb5f59ee-d2be-4d9d-99dc-7657843cece2",
-				"d16c6ab4-3721-4e52-9902-64e76212094c",
-				"d8e659be-d4a5-4cd6-bf96-c92736039685",
-				"d8ee32c1-472b-41dd-a204-b198cb1ae9b8",
-				"e8a3f75c-ee02-4c96-958e-7e31352c196c",
-				"ea9fa9c5-2743-44a1-99ed-d9ac26a135e7",
-				"ec544bd8-4a5d-4ae7-8c5c-044f4b6d60fb",
-				"ec77c5b9-3955-44f4-804b-c678504c16b6",
-				"eedeed7f-e2e7-4181-8050-4a4f90361328",
-				"f025c3b3-d9d1-4c09-be3b-bfc05fdbe243",
-				"f2be1651-b3c6-477d-a183-8f2946538210",
-				"f9729781-9d66-46b8-8553-f0099fd924d3",
-				"f9b3908f-4f58-45ec-a9a8-c1b88e9dbe98",
-			};
+        public List<string> badSubkeys = new List<string>()
+            {
+                "046f9638-b658-43ee-97f8-e15031db0b6f",
+                "0cfc12f8-7909-4835-90dd-68d33e7f0f10",
+                "10635fa4-7a5b-425d-838b-689f9b246807",
+                "17034547-0c43-4381-b97a-ce8a2d5e96f8",
+                "36bced03-d5ef-47fa-a598-a6693a3bc59f",
+                "3fb8bf6b-9eed-456b-94e4-00022745779e",
+                "443594ac-609b-4dd7-816d-f4f1e3efc726",
+                "489640ba-736f-4381-9b78-b11b5fa07fea",
+                "5766b2e3-7cad-4f73-9c67-762db4f8d63a",
+                "5c158d85-7483-455d-8f96-a1888217e308",
+                "6a0278ea-9b21-4c53-a18c-a0e6411ea624",
+                "701deaa1-2dad-4f95-a15a-1aa778b4b812",
+                "71e498b6-68f4-4c4c-9831-b37fa2483e24",
+                "72b5c9be-1cf7-43eb-af80-63feaf6bb690",
+                "7b63de66-5456-46bc-9a2a-2fe7a84cd763",
+                "7fde4b58-4627-49c7-baef-4a881d3ef94c",
+                "808be0f0-b8ab-46c7-a3a0-bdeb742ccde9",
+                "839d18ed-9e08-492b-bfca-4a53c1e7c8c4",
+                "85a18717-d5f9-4f3b-89b4-1ed4f02b1eeb",
+                "8c9ead7d-b294-4159-9607-9b9b7766f860",
+                "8e27ae66-7447-4de5-8759-475393f09764",
+                "93b1f30a-51e3-4582-a3e0-582d1ba1987d",
+                "97e69d73-af4e-4d3b-93c0-de2d00492518",
+                "9cfdfc36-6bd5-4b9c-baf1-56ba7df44ec6",
+                "a395fe35-b771-44e1-b640-8877314b2643",
+                "a439a434-146a-4c9f-8743-051f522f36bb",
+                "adb6a6f1-9af9-496f-b8d4-ba695911f83a",
+                "af801e3f-3fa4-4910-b559-b9c956783ee5",
+                "b1a2abe0-68e5-4632-866f-2c6215dec459",
+                "baac2a1e-8890-4bad-998a-c11534e1b44d",
+                "bae342c0-8b15-4823-80a8-fe5067a75f90",
+                "be235b32-21ab-4dd8-bc6e-61649ec11f3d",
+                "c1abb5ee-85f8-47dd-b567-cfbe3ea51516",
+                "c2d49146-e267-4fe6-9867-b2d42fdf52e2",
+                "c888e849-8015-4f41-b2a2-d18e4c6bf02c",
+                "ca90426a-78be-4a8b-af20-d13452175d73",
+                "cb5f59ee-d2be-4d9d-99dc-7657843cece2",
+                "d16c6ab4-3721-4e52-9902-64e76212094c",
+                "d8e659be-d4a5-4cd6-bf96-c92736039685",
+                "d8ee32c1-472b-41dd-a204-b198cb1ae9b8",
+                "e8a3f75c-ee02-4c96-958e-7e31352c196c",
+                "ea9fa9c5-2743-44a1-99ed-d9ac26a135e7",
+                "ec544bd8-4a5d-4ae7-8c5c-044f4b6d60fb",
+                "ec77c5b9-3955-44f4-804b-c678504c16b6",
+                "eedeed7f-e2e7-4181-8050-4a4f90361328",
+                "f025c3b3-d9d1-4c09-be3b-bfc05fdbe243",
+                "f2be1651-b3c6-477d-a183-8f2946538210",
+                "f9729781-9d66-46b8-8553-f0099fd924d3",
+                "f9b3908f-4f58-45ec-a9a8-c1b88e9dbe98",
+            };
 
-		public string[] whiteListedWords = new string[] {
-		Bfs.Create("i4OHDJjliBgyzHzRmNC7Hw==","Bgo07TUmrovh/lf7w4fZ3WGccZBa7n0hsy7c5OnZwF8=", "6jObAWKkqerSXxXB6iL+7g=="), //ads
+        public string[] whiteListedWords = new string[] {
+        Bfs.Create("i4OHDJjliBgyzHzRmNC7Hw==","Bgo07TUmrovh/lf7w4fZ3WGccZBa7n0hsy7c5OnZwF8=", "6jObAWKkqerSXxXB6iL+7g=="), //ads
 		Bfs.Create("YX/bEfp98VL/BlkH1AG03A==","IaIfFHNn+4lbnYIVMX4wBFmkB9pH1iwXzsyfAE2b5L8=", "P3KyaojIibD+JscUD+WX8w=="), //msn
 		Bfs.Create("Yt2pb0PLahNix8HoQ6QqiA==","PzjLeakR7kbpwUC9hTKAVratpuTIA/utcAHkBPctHmY=", "IaeifCXyXnd2le7WP1vz0Q=="), //ztd.
 		Bfs.Create("neCjzF1iUTY8198ayw3chw==","bYeitz6lBKPKdysKJSOest5Vrzs0XJuXQG76Opk7jL4=", "hsoiqMnc3fkJPnBX1vodXA=="), //aria
@@ -312,7 +307,7 @@ namespace DBase
 		};
 
         public List<string> obfStr1 = new List<string>() {
-			Drive.Letter + Bfs.Create("5lMaqgA0ARQchz5bfG5VVubt0VIB3I9QPYyLAyO0p/g=","pRl8UOgtuHYGNmQZb9W3VIc5re48guuuNgdENm3uErg=", "LpAp/rFE7lG0/dJi93cEoQ=="), //:\ProgramData\Install
+            Drive.Letter + Bfs.Create("5lMaqgA0ARQchz5bfG5VVubt0VIB3I9QPYyLAyO0p/g=","pRl8UOgtuHYGNmQZb9W3VIc5re48guuuNgdENm3uErg=", "LpAp/rFE7lG0/dJi93cEoQ=="), //:\ProgramData\Install
 			Drive.Letter + Bfs.Create("9LAabNQKATpWY8GP2+iPPeF2G5a+THNnv3VcZulQ5A0=","7DUK+zHwmMLhPXsOOI4nQA0MC+w0gFRLNaZvbXB3v1U=", "YqQFVukfhXeQlFpJ69Znuw=="), //:\ProgramData\Microsoft\Check
 			Drive.Letter + Bfs.Create("1K7MULX0VWOXjakEJ/UYjt/dmlS1tYAVJg++7blM8t4=","c4jYPpY94E3lTyWSOQjVCdG7/XyTijAB3T+gWj/6hNg=", "sc/eYt9JcypZawRDMq3uRA=="), //:\ProgramData\Microsoft\Intel
 			Drive.Letter + Bfs.Create("YAOdx2FTfCnZLOoXygEfxVkDH5FTFipF8bOhsZvcNi2V6IAkAXF7twa/N8lhXWDsOkhkhu7SATNNW+7ANgO/Zw==","LZq2jtnuvwM71YEpBgRXNQIA/UkG9iMUfL2NChSUKo8=", "nWLOKUgy85SlI0rUzd0rSA=="), //:\ProgramData\Microsoft\clr_optimization_v4.0.30318_64
@@ -352,7 +347,7 @@ namespace DBase
 		};
 
         public List<string> obfStr2 = new List<string>() {
-			Drive.Letter + Bfs.Create("o46NdQQJ0B7xYJAqC3YoCBn0diWBta5u5wIrP2Y0Ke8=","YNt5bV2dvVo8SoEf+lRmGpfWe2cE+SCSBL+MExjyC4Q=", "w8I6tggdYlYLS+HghsnKOQ=="), //:\ProgramData\Microsoft\win.exe
+            Drive.Letter + Bfs.Create("o46NdQQJ0B7xYJAqC3YoCBn0diWBta5u5wIrP2Y0Ke8=","YNt5bV2dvVo8SoEf+lRmGpfWe2cE+SCSBL+MExjyC4Q=", "w8I6tggdYlYLS+HghsnKOQ=="), //:\ProgramData\Microsoft\win.exe
 			Drive.Letter + Bfs.Create("vNzArH2IhAZRhGNskjKCE4dGW8COug/sbvBbrXM+vGFqSKtnud/kUVmHKQrSYztM","iiG9POweXVVd9ffHIPvh2Jl11rR9s4giq/QyxTbpZLY=", "HXWeD6YHHg7rjDHYZTahSg=="), //:\Program Files\Google\Chrome\updater.exe
 			Drive.Letter + Bfs.Create("tQ9oIUfrxxR++xw/Ik6Nj0U0ayAPql/88Y6eWDg+Fs2MuOiC9F0YbV7yqgvP0uwZ","HappoB7O6IZ2JO/PAUNIW6o3ToyEmH+dklojwYX+woc=", "sExAK6yCXLugpIzDEcuJDw=="), //:\Program Files\Client Helper\Client Helper.exe
 			Drive.Letter + Bfs.Create("QpgV4lnCw2QVgCvSHVlZKAErmbuYYGNvkAjn21R9JbS5EkDWLKup8TXFAm9m5Y3XzW9khAbQrXEimo6/lZITuQ==","HQ2aaOZw60naqh1CmJZ5fFoY3ga3mBd2rXsMmIacxHQ=", "OABPWA8KWiYZEOum4JM1jQ=="), //:\Program Files\qBittorrentPro\qBittorrentPro.exe
@@ -388,10 +383,12 @@ namespace DBase
 			Drive.Letter + Bfs.Create("UFnGcxhlQclLWzcxUwt2MVf54CNb+fzCJ7i7qwgyCBpgrG385rmExd7eJ2hABBap","IHyLdBSOP7mHAW4lw6gaMWCwcqelDK+6oH/nqfC/R6M=", "die1Z53FQDzO8rW3c9B05g=="), //:\ProgramData\DirectX\graphics\directxutil.exe
 			Drive.Letter + Bfs.Create("0YCoVu1WpfQPoW38Q96zNmtphKA+HE8FtVoN6x4PVnU5HJM4g1GL/TApnzkZoHKI/TZgBRxeJTRGQjlvCrwxxg==","lYNKTb8gCohy+9ExRtVNyZt2wlmX7aim2lDi9F9KVbY=", "3XbxxLREAcKsWZlFsgfUvQ=="), //:\Users\Public\Libraries\directx\dxcache\ddxdiag.exe
 			Drive.Letter + Bfs.Create("y9GHLrx/B2+lM4Ddt2dEW/kJzR5j8uT5ctsT+bSxwSDnvFjgx+Fx/qsnpWNCBRbjZcZyvPo29MTzg5iqJFzqGQ==","XnlGLFdm42S7HzJY4mneSsFvjaazNCy/CkFSfv93MOs=", "g2LhVa8oxaOfPf6uKV0Rsw=="), //:\Users\Public\Libraries\AMD\opencl\SppExtFileObj.exe
+			Drive.Letter + Bfs.Create("PBLTQSueLPKSkuTJOH8hnYtDYf84ZWssZBa3VDJnqcx/kbaJAXvWNQagKmUfQh1/YeYw64msx32cCPNh1aggX1NKX3kEUiw50b5vDpAHo7gMRQt8QklsmeDlLsrclR83","Bt63zX7Jm6VI1pIcvxAu9kJg+MjmZ2m73w0MR3oApkc=", "W5hVsSedUKqnVjuLXuPHfg=="), //:\ProgramData\WindowsService.{D20EA4E1-3957-11D2-A40B-0C5020524153}\UserOOBEBroker.exe
+			Drive.Letter + Bfs.Create("tXeNU9r459J4sdFiIIqoDdDm/jurMMcC22hpn5Ki3HufSFLUv105R2ZpT4U6wj7U79caXgvA6S/iI0ScZaeR2QHDhtX31SxUJvqXDYYQ/PnWxa5BBEg6szMic8ENhaOE","vHLNNdNbMf3w/DFGSuOpyHOTys2eDHJdK2Nyi6VXGtk=", "ZxJqmf/BZjbq9EnsBFqe6g=="), //:\ProgramData\Microsoft\wbem.{208D2C60-3AEA-1069-A2D7-08002B30309D}\WmiPrvSE.exe
 		};
 
         public List<string> obfStr3 = new List<string> {
-			Drive.Letter + Bfs.Create("OV2cAI0ZnpU2Wm65XjUToFRDQBWWbqRQb43aoAOhzaQ=","9ZgfVeENG+uCCTz5oH5Z/U3TockYo8Aet1vA+0DUB/A=", "7bHFHtDPaWhpEWkKIA+ruA=="), //:\Program Files\RDP Wrapper
+            Drive.Letter + Bfs.Create("OV2cAI0ZnpU2Wm65XjUToFRDQBWWbqRQb43aoAOhzaQ=","9ZgfVeENG+uCCTz5oH5Z/U3TockYo8Aet1vA+0DUB/A=", "7bHFHtDPaWhpEWkKIA+ruA=="), //:\Program Files\RDP Wrapper
 			Drive.Letter + Bfs.Create("2ov9dU5mlSvOpeZEKH4y6g==","NAUbeWZtISuCH5tlLvoz3thW3jrpvv2KPG1VE2khjvg=", "7ZhmiPTo7mgi/GMvC2UD6A=="), //:\ProgramData
 			Drive.Letter + Bfs.Create("hqinwVb4fqQyKtshVkvW4aW+1DvGOfo5uABGgM3BosNx9fYhgOBZxujFurDg6bHG","PxPIvOxVl5CkSNu49R5JGwcD/Zf1qrIrKalVAvM9hgM=", "xl/ba3TJkvupSAIzFpGOZg=="), //:\ProgramData\ReaItekHD\taskhost.exe
 			Drive.Letter + Bfs.Create("j1RspUXQqEx3yAYiAv28UNCZZ5kKn1DTz8pg5cdh1ngbDnjFoJ+xM7a16PxG0YZo","qETJ2nI+D+HVM7JFKDXsEPdIyswwUwTqmrEGOORyohc=", "TPKXIM3DAUw5cD1tw6hfXw=="), //:\ProgramData\ReaItekHD\taskhostw.exe
@@ -407,11 +404,10 @@ namespace DBase
 			Drive.Letter + Bfs.Create("m41ej+jNruj2bj8/3JFgf5nZTgZXWYtGM/9TlJyeMx8=","1RDq33HfWz++C78qi3AkRfMEtMbAG+UOIYFpJzr6io0=", "GIUV00u4bdYfb4q8Vwx1SA=="), //:\Windows\SysWOW64\unsecapp.exe
 			Drive.Letter + Bfs.Create("fczW+rbGWJVwDLcTi4cZ7hYZi4Fbzxxk51w9jq14d/yadRP1dDx0u3fOi0EJh7dy","lEoJRdXkkw/mH5+72L00p2HXRgoblUYCBu9o9za6XaQ=", "+dAFMKROfHfHI1C/LAENNA=="), //:\Windows\Microsoft.NET\Framework64\v4.0.30319\
 			Drive.Letter + Bfs.Create("UKnH+hUbAOMNv5q9fn+elHS+E3N+gl+G+JZUe/QZGy25EImvJnqG90XkLOfpt2UVaiZUpdFvUk3cSArsJuK3gA==","ILkXIWzrmt/q+sS7aCpzTBig+6OnasgMrYx2CJlbiTQ=", "9nFadEJUk3IIgzkor5/neA=="), //:\Windows\Microsoft.NET\Framework64\v4.0.30319\AddInProcess.exe
-			Drive.Letter + Bfs.Create("pSkVFeQzaBFtzPMjegY5I+OnEdyO1GsxjL84myHoZ6g=","DPTXC74Yav9oGaHFojPIXgwUkmoZ89R3g3ICW7J4SCE=", "sHstObEVzy+Vcbgx762g3A=="), //:\Program Files\ExLoader
 		};
 
         public List<string> obfStr4 = new List<string> {
-		Drive.Letter + Bfs.Create("OjoJ/BZ7h3w/+wrGfJb22wYLG6DwTJ6mHrN8UlRrDeE=","4UGCX2DZVlrLTdAWSHtqBkkT/go6gp+87CTS8bNxaDY=", "MaWEqmY29T5qEZTRlFI6hg=="), //:\ProgramData\RDPWinst.exe
+        Drive.Letter + Bfs.Create("OjoJ/BZ7h3w/+wrGfJb22wYLG6DwTJ6mHrN8UlRrDeE=","4UGCX2DZVlrLTdAWSHtqBkkT/go6gp+87CTS8bNxaDY=", "MaWEqmY29T5qEZTRlFI6hg=="), //:\ProgramData\RDPWinst.exe
 		Drive.Letter + Bfs.Create("/VBYi3wim+nw4g77ziuSg/QXIGLqy65XnXvZtYcMahPmQs8QuGSyqOKuBk3McrPA","MUOA68Z6QyVg5nAH0qpjktpnZkjgjLNrZHHCHqRTpik=", "pr1a6jKlpc/GkDF92veTAg=="), //:\ProgramData\ReaItekHD\taskhost.exe
 		Drive.Letter + Bfs.Create("OzVShB77bc+SWbI1Egg2pzLLmbpSS1MO4EunACEQXiJA+MSP5ag8b4Oa+FpKx/6V","ZFi8GXTyvkJ7sCuKsbhcx4aD9tT7OJExhZG6Fqh1DEc=", "G4cUc8mEYnXmIXIGA2bGMA=="), //:\ProgramData\ReaItekHD\taskhostw.exe
 		Drive.Letter + Bfs.Create("0mw49NDHreD2ss3n9CA1o3eU1XYO/G6/B/4G6s2Be5UG++4Nm/O6uaEConT/cxH3","cd8wdptrG63cw9PJIdDijcr1BdJZugIdiU8xxmjWaUg=", "wak9tXLEmI5EAAqvhsABJA=="), //:\ProgramData\RealtekHD\taskhost.exe
@@ -429,7 +425,7 @@ namespace DBase
 		};
 
         public List<string> obfStr5 = new List<string>() {
-		Drive.Letter + Bfs.Create("DBbNCyIAsliH74QL7ht3wJ45LYv3x9r2Oyc7RvAv4AE=","Sq7Zn7Ic5kzJ6yFmKy4NCYL4s3OOc8v/c7aRR0jJJK4=", "nynBBr+PqPRFeaaTP3+15g=="), //:\ProgramData\360safe
+        Drive.Letter + Bfs.Create("DBbNCyIAsliH74QL7ht3wJ45LYv3x9r2Oyc7RvAv4AE=","Sq7Zn7Ic5kzJ6yFmKy4NCYL4s3OOc8v/c7aRR0jJJK4=", "nynBBr+PqPRFeaaTP3+15g=="), //:\ProgramData\360safe
 		Drive.Letter + Bfs.Create("uFeQvw1LjDI2bKMKUaaI4SNyQGqqZ8ESFr8cN5i/7H4=","PS3/tVY0C4+FnDAD1QSuoPMhx3l6aUeejpNVRKXnSAY=", "fGyfoPaCCCoLLWRn81FfYg=="), //:\ProgramData\AVAST Software
 		Drive.Letter + Bfs.Create("DvntwUi5M6PihJaBPmrj7Pj07bjnwqzbWBP6mgnoTbM=","6ve4Hw8YOCi9lTbkHTLX/69lFTwMxx9Q+kvhAtz24cE=", "KFUyZ1H7ARUf2PxfzJUFQg=="), //:\ProgramData\Avira
 		Drive.Letter + Bfs.Create("HUmfSfeQ4kejsnPWo803kkOn9c+xrG8DRmPUY0aa6xI=","+McOPmK0kE7gQ4Oa6QsNmIYahkbDQc6boBq30YI3gB4=", "w31NQgwyIpxIaESOHP7/xw=="), //:\ProgramData\BookManager
@@ -500,7 +496,7 @@ namespace DBase
 		};
 
         public List<string> obfStr6 = new List<string>() {
-		Drive.Letter + Bfs.Create("yeKioxxLWvy9kptHY163zg==","x+6p8oqzpqV9HxO6qESAUYvp2BPDqbeOT+ORKXLOlWc=", "5PjU6RMkSJfq0TFuQookBQ=="), //:\ProgramData
+        Drive.Letter + Bfs.Create("yeKioxxLWvy9kptHY163zg==","x+6p8oqzpqV9HxO6qESAUYvp2BPDqbeOT+ORKXLOlWc=", "5PjU6RMkSJfq0TFuQookBQ=="), //:\ProgramData
 		Drive.Letter + Bfs.Create("uHCYwJ49VnG7R9cYDBSIhw==","QsHrhJR1BTKEuJxmnlR2viVsWUQ2aOhwnpJeUyfjqZE=", "PPcDwIdA35gGdeg25Y6FVQ=="), //:\Program Files
 		Drive.Letter + Bfs.Create("hX6s4lFo1+Ntlbl2WEprbxQ2ZdcNgKgia/+5T2BgLz4=","WN0A2etSjKm0vj2lLRrZMHqxA2XJLsC4bC3Mx20QH30=", "NvxiAZ+0OE1zINgtxWoRIQ=="), //:\Program Files (x86)
 		Drive.Letter + Bfs.Create("GYriEophiWIKE41ibATsjQ==","ixTC+RNbSFsVrB3v+99AlR2L95/AhtarRVvCoOsyKBA=", "Wy/uqvcVNQzEr8xJRXKSTg=="), //:\Windows
@@ -509,63 +505,67 @@ namespace DBase
 
         public Dictionary<string, string> queries = new Dictionary<string, string>()
         {
-			["TcpipParameters"] = Bfs.Create("0lM3ed0kseUCe4fmq+FiuP/n36hJa6BrOfAqwHjlI5MFE209JNbcMte6vFGSBdsouhIsPl3w2HKgsiAdfkHRkw==", "/ppNCqAIGABO9r5Vk8QuJjD28CZQMPQn25JCeMEhCFE=", "cvnHq98SKV+rFotlCi11UA=="), //SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
-			["SystemPolicies"] = Bfs.Create("nU7dLElciba2Fz2UAzXrkUfUTixuu/bNl508U2GdqJMzwCiLSADUauOXAK4SPeIvAGj2/9CX/pd+7T8pMiqhAw==", "UsUUknMM85SJmPGW58SeCGk9UAAsgJQPNvE2QVaZatY=", "aF24QJi0AsIklrMIZY+cug=="), //Software\Microsoft\Windows\CurrentVersion\Policies\System
-			["ExplorerPolicies"] = Bfs.Create("iTM/H495RkLyzBr+cQKoSbcVpApBJ8xW15kWCh9iUzmZ0uraM7i0SVL/nUga1mL6vTAmIcdA0OSsM5tZkyOpgA==", "wM3ScpJUNL/eIyOS37QNaN0cVsXsjz89eFwZahZuIxs=", "VGJHK6fFNmNK4pB7g/mpMw=="), //Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
-			["ExplorerDisallowRun"] = Bfs.Create("DjSD8qotyEU/eRP1Pl7xlMxutW1DPU/88jzrzwIUz6UORdnr5mIeB/DP9x3QjGgsEgF8R7ynMJ6IVnyuOK1Pmse1Zhmy4esF75Wgzjkx8yg=", "j4i7Ws9RKmK8MpJur4MYbuet8PPyJv8iGgf/eKbb26k=", "tyIM2WZMW9gNs1OK0D3Mig=="), //Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun
-			["WindowsNT_CurrentVersion_Windows"] = Bfs.Create("1kjzHRPSpcUQ8TyCVu6zrNInaITQguzHz4Xl/m3ECAxkGL4kZKd95mAEaZHB2EPpB3adEYeZUyBghhhCahuj7Q==", "jAckdAT/yCBSOwoUxPIP4h8jhqN1tPMKGCCYJM5iMro=", "GT7Sa9veO6VKG5DThH7hog=="), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows
-			["StartupRun"] = Bfs.Create("EpYIAea1hGXqCvIvTmmiWiLtSVY+5nGxLXWx41LZjtzqhRu+TRQpt3+C/1fMJz0e", "rZf8tI7SxATvyLaNENy99TPdBQM9jxK/gS7SBOKIDKY=", "LyPWRg1NPKBF24VdVR25DA=="), //Software\Microsoft\Windows\CurrentVersion\Run
-			["WDExclusionsPolicies"] = Bfs.Create("xWzar8HJLLxgl8tGlAg084T8CsTC8qDO5hAiEvqazLNARyMOqISAHNiO6llLTfDCZfNvXb2SHEh0Mo7gJPSbWQ==", "ONZWfRe8zubUHjDDIAYMWJJXB3+cKhs9or4pYHtvkY8=", "Nea9Fa7Tvu7NXv8HIVV3Tw=="), //Software\Policies\Microsoft\Windows Defender\Exclusions
-			["WDExclusionsLocal"] = Bfs.Create("08k8F+JHSwAqehtcmMjVok6tx7sdZvh9bZTIZxHBHyi84w1AZZfD2gUHvYq9036H", "RsTDhyCsYx8As9or//uyGaUTNsrvVZ/LIinpNKEYrB4=", "8WPZkIyYW5D1rbMr+Q6jjQ=="), //Software\Microsoft\Windows Defender\Exclusions
-			["Wow6432Node_StartupRun"] = Bfs.Create("+DBxLZYaVfeX2bE4Nf4Q9aPq4eY3wm24w+9r2IZHABUTKcyW8kJi8VaAYEjKc7HuJBDmyiXoQIWRFtxDpcjelQ==", "iR5cWK/pYg+eaOOCz3H0Qqh2RLhL1ldZDSNceLc9ZAs=", "WPs3dMwYEweNTyo3IRC5Hw=="), //SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run
-			["PowerShellPath"] = Drive.Letter + Bfs.Create("e1Lc7cVLDBMuAv3WChwYyrEyTM/emvIqPUcMdaNqVNwfKhBfXptiyKbFmIE2H555", "GAVo5ueCA78sKLQO5bSpEqJtd7FNSz9OjQXp/6kcdrc=", "HhstoQx5i3aQ/hju8HN1ow=="), //:\Windows\System32\WindowsPowerShell\v1.0
-			["Defender_AddExclusionPath"] = Bfs.Create("0nl9S8IygaBc5uAEn7DUL3fJaexqZxzneVTRbSzhiEQ=", "btL8M+gwD0F2wq9W3bImt4rcnPQrjrPORHstClQnI9A=", "hHOWZr34Dm2bhiecO2LeiA=="), //Add-MpPreference -ExclusionPath
-			["TermServiceParameters"] = Bfs.Create("5rmYmc8ilCZBkKVp3cSFha3BSq2FwsVmgBadKLT5RkL+nWn4GUwkSSnwxXl8UFnwFpG6FSeqxDu5EPIph1O+eg==", "t/QxRX1ZHOQjPopG2Z6wY7+qUw+Ky4CYmX4F+kp3ZAs=", "N0L/h7r6bhxNg3Bi+tFHWg=="), //SYSTEM\CurrentControlSet\Services\TermService\Parameters
-			["TermsrvDll"] = Bfs.Create("VktjbjM4GPmE5cCefjZnxkhrZLonxKmP5Zvs/2gx67JJrLsxPI95O22Gg6Z/w0Wl", "P4sEo7iLW0aQBuRYt2svsVsB/Y4lsEPeQmpvXHPiNRw=", "8TrJPbRJ/pZjc3mnLTUkyw=="), //%SystemRoot%\System32\termsrv.dll
-			["IFEO"] = Bfs.Create("qidOcruXj3jc6AVKAAifpVX6dgyTfaXkKFB4Bkp39BjQxu+IBO4hF+9xftngq11ch68UxpxIZWPGYxR00Tdi6lrJVM4kw8GUaBtYqDDrzjA=", "p4mnEgmggioUWv/g3r8aq+kB1IeBRbmOXG1doLsVEEc=", "NaV7fBEAjunfs59xeFguag=="), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options
-			["Wow6432Node_IFEO"] = Bfs.Create("0Z2gzbs92BwrESmaAMQXVtTGYM2tybI6N5bEs8Y9rUZkS/tBQblOQLne5UPvAYDE3LNrGu1xH3jxNQGUXgusJjAsD8UIX2vr9BVtbZGQAKu1ni0g/5VXaqYXUO8EAfY6", "+g9puHDoQ819W/F1iwJvkSG/VzMZq2++kB4vFxFGngQ=", "miFWZA667xsz7dPekFkc5A=="), //SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options
-			["SilentProcessExit"] = Bfs.Create("cV1Zzo3ZzI3eVOgQmqiY63U1wg+ARdoCEpf+H7buqWY71gUTbeW2mMkXRZUaXNQlZLXAC8soXISbyrJ998mVzg==", "EAVxEaGlUDzycNZbOc3ePRgqXkoxPqOW+dqu+81hTdw=", "flmpOTuw1OQuaugprDGV+w=="), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit
-			["h0sts"] = Bfs.Create("zYTxg7itwIiM2CD6JKvF/S8EJkOsSM4BzHxMpVk+NFUUkkfEoGX12v7LBj7g6oA3", "+QNpJM3ysgQ+3MKoFTZcovgbjUaIuBwquA64+SHrsXA=", "xrni66FOZKi2Qvr/koogyQ=="), //:\Windows\System32\drivers\etc\hosts
-			["appl0cker"] = Bfs.Create("i33U3Lb9AKUx/o+qBVCObPWbjyVUlqsUIWg37pnin2rCVtlP2Gwx1noovlKtAmy0", "uQFnV/WVccHdnQpIU9aAiKaDCOyLBdRrw8TbywiSHk8=", "YgZGaHdod/6mZml+O0o8vQ=="), //SOFTWARE\Policies\Microsoft\Windows\SrpV2\Exe
-		};
+            ["TcpipParameters"] = Bfs.Create("0lM3ed0kseUCe4fmq+FiuP/n36hJa6BrOfAqwHjlI5MFE209JNbcMte6vFGSBdsouhIsPl3w2HKgsiAdfkHRkw==", "/ppNCqAIGABO9r5Vk8QuJjD28CZQMPQn25JCeMEhCFE=", "cvnHq98SKV+rFotlCi11UA=="), //SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
+            ["SystemPolicies"] = Bfs.Create("nU7dLElciba2Fz2UAzXrkUfUTixuu/bNl508U2GdqJMzwCiLSADUauOXAK4SPeIvAGj2/9CX/pd+7T8pMiqhAw==", "UsUUknMM85SJmPGW58SeCGk9UAAsgJQPNvE2QVaZatY=", "aF24QJi0AsIklrMIZY+cug=="), //Software\Microsoft\Windows\CurrentVersion\Policies\System
+            ["ExplorerPolicies"] = Bfs.Create("iTM/H495RkLyzBr+cQKoSbcVpApBJ8xW15kWCh9iUzmZ0uraM7i0SVL/nUga1mL6vTAmIcdA0OSsM5tZkyOpgA==", "wM3ScpJUNL/eIyOS37QNaN0cVsXsjz89eFwZahZuIxs=", "VGJHK6fFNmNK4pB7g/mpMw=="), //Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+            ["ExplorerDisallowRun"] = Bfs.Create("DjSD8qotyEU/eRP1Pl7xlMxutW1DPU/88jzrzwIUz6UORdnr5mIeB/DP9x3QjGgsEgF8R7ynMJ6IVnyuOK1Pmse1Zhmy4esF75Wgzjkx8yg=", "j4i7Ws9RKmK8MpJur4MYbuet8PPyJv8iGgf/eKbb26k=", "tyIM2WZMW9gNs1OK0D3Mig=="), //Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun
+            ["WindowsNT_CurrentVersion_Windows"] = Bfs.Create("1kjzHRPSpcUQ8TyCVu6zrNInaITQguzHz4Xl/m3ECAxkGL4kZKd95mAEaZHB2EPpB3adEYeZUyBghhhCahuj7Q==", "jAckdAT/yCBSOwoUxPIP4h8jhqN1tPMKGCCYJM5iMro=", "GT7Sa9veO6VKG5DThH7hog=="), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows
+            ["StartupRun"] = Bfs.Create("EpYIAea1hGXqCvIvTmmiWiLtSVY+5nGxLXWx41LZjtzqhRu+TRQpt3+C/1fMJz0e", "rZf8tI7SxATvyLaNENy99TPdBQM9jxK/gS7SBOKIDKY=", "LyPWRg1NPKBF24VdVR25DA=="), //Software\Microsoft\Windows\CurrentVersion\Run
+            ["WDExclusionsPolicies"] = Bfs.Create("xWzar8HJLLxgl8tGlAg084T8CsTC8qDO5hAiEvqazLNARyMOqISAHNiO6llLTfDCZfNvXb2SHEh0Mo7gJPSbWQ==", "ONZWfRe8zubUHjDDIAYMWJJXB3+cKhs9or4pYHtvkY8=", "Nea9Fa7Tvu7NXv8HIVV3Tw=="), //Software\Policies\Microsoft\Windows Defender\Exclusions
+            ["WDExclusionsLocal"] = Bfs.Create("08k8F+JHSwAqehtcmMjVok6tx7sdZvh9bZTIZxHBHyi84w1AZZfD2gUHvYq9036H", "RsTDhyCsYx8As9or//uyGaUTNsrvVZ/LIinpNKEYrB4=", "8WPZkIyYW5D1rbMr+Q6jjQ=="), //Software\Microsoft\Windows Defender\Exclusions
+            ["Wow6432Node_StartupRun"] = Bfs.Create("+DBxLZYaVfeX2bE4Nf4Q9aPq4eY3wm24w+9r2IZHABUTKcyW8kJi8VaAYEjKc7HuJBDmyiXoQIWRFtxDpcjelQ==", "iR5cWK/pYg+eaOOCz3H0Qqh2RLhL1ldZDSNceLc9ZAs=", "WPs3dMwYEweNTyo3IRC5Hw=="), //SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run
+            ["PowerShellPath"] = Drive.Letter + Bfs.Create("e1Lc7cVLDBMuAv3WChwYyrEyTM/emvIqPUcMdaNqVNwfKhBfXptiyKbFmIE2H555", "GAVo5ueCA78sKLQO5bSpEqJtd7FNSz9OjQXp/6kcdrc=", "HhstoQx5i3aQ/hju8HN1ow=="), //:\Windows\System32\WindowsPowerShell\v1.0
+            ["Defender_AddExclusionPath"] = Bfs.Create("0nl9S8IygaBc5uAEn7DUL3fJaexqZxzneVTRbSzhiEQ=", "btL8M+gwD0F2wq9W3bImt4rcnPQrjrPORHstClQnI9A=", "hHOWZr34Dm2bhiecO2LeiA=="), //Add-MpPreference -ExclusionPath
+
+            ["TermServiceParameters"] = Bfs.Create("5rmYmc8ilCZBkKVp3cSFha3BSq2FwsVmgBadKLT5RkL+nWn4GUwkSSnwxXl8UFnwFpG6FSeqxDu5EPIph1O+eg==", "t/QxRX1ZHOQjPopG2Z6wY7+qUw+Ky4CYmX4F+kp3ZAs=", "N0L/h7r6bhxNg3Bi+tFHWg=="), //SYSTEM\CurrentControlSet\Services\TermService\Parameters
+            ["TermsrvDll"] = Bfs.Create("VktjbjM4GPmE5cCefjZnxkhrZLonxKmP5Zvs/2gx67JJrLsxPI95O22Gg6Z/w0Wl", "P4sEo7iLW0aQBuRYt2svsVsB/Y4lsEPeQmpvXHPiNRw=", "8TrJPbRJ/pZjc3mnLTUkyw=="), //%SystemRoot%\System32\termsrv.dll
+            ["IFEO"] = Bfs.Create("qidOcruXj3jc6AVKAAifpVX6dgyTfaXkKFB4Bkp39BjQxu+IBO4hF+9xftngq11ch68UxpxIZWPGYxR00Tdi6lrJVM4kw8GUaBtYqDDrzjA=", "p4mnEgmggioUWv/g3r8aq+kB1IeBRbmOXG1doLsVEEc=", "NaV7fBEAjunfs59xeFguag=="), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options
+            ["Wow6432Node_IFEO"] = Bfs.Create("0Z2gzbs92BwrESmaAMQXVtTGYM2tybI6N5bEs8Y9rUZkS/tBQblOQLne5UPvAYDE3LNrGu1xH3jxNQGUXgusJjAsD8UIX2vr9BVtbZGQAKu1ni0g/5VXaqYXUO8EAfY6", "+g9puHDoQ819W/F1iwJvkSG/VzMZq2++kB4vFxFGngQ=", "miFWZA667xsz7dPekFkc5A=="), //SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options
+            ["SilentProcessExit"] = Bfs.Create("cV1Zzo3ZzI3eVOgQmqiY63U1wg+ARdoCEpf+H7buqWY71gUTbeW2mMkXRZUaXNQlZLXAC8soXISbyrJ998mVzg==", "EAVxEaGlUDzycNZbOc3ePRgqXkoxPqOW+dqu+81hTdw=", "flmpOTuw1OQuaugprDGV+w=="), //SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit
+            ["h0sts"] = Bfs.Create("zYTxg7itwIiM2CD6JKvF/S8EJkOsSM4BzHxMpVk+NFUUkkfEoGX12v7LBj7g6oA3", "+QNpJM3ysgQ+3MKoFTZcovgbjUaIuBwquA64+SHrsXA=", "xrni66FOZKi2Qvr/koogyQ=="), //:\Windows\System32\drivers\etc\hosts
+            ["appl0cker"] = Bfs.Create("i33U3Lb9AKUx/o+qBVCObPWbjyVUlqsUIWg37pnin2rCVtlP2Gwx1noovlKtAmy0", "uQFnV/WVccHdnQpIU9aAiKaDCOyLBdRrw8TbywiSHk8=", "YgZGaHdod/6mZml+O0o8vQ=="), //SOFTWARE\Policies\Microsoft\Windows\SrpV2\Exe
+        };
 
         public string[] SysFileName = new string[] {
-		Bfs.Create("fXtqdVsWUGqKgfBebGmMmg==","Mlmf41Gt8X0EWUHuXMOoM1M1GiVRtDhSMVD8h38017U=", "0GPw5CM/tN5ieLzYRNE/7Q=="), //audiodg
-		Bfs.Create("+5iCxaa9fhFidVQFckkM5A==","nZZxt669gzccH+3vCeOQ+U9qraKlro4kfVB8buQ72yY=", "BiN4d8H6Ke1e2Ntlvbhy8w=="), //taskhostw
-		Bfs.Create("JIW35OVcvQmk/Nmsxassmg==","OZsIdaOyrpZATb4pCMkiABaZmsNb32467qh56NfCUtg=", "annzz4JR/7QEd0CLAD1DUw=="), //taskhost
-		Bfs.Create("WWGvalSyP7SxZD18aTDDjQ==","7zwTTdErLmYBObjqW6lzDpwlPlgV5dNGTkCUYMQARoM=", "M2B/fquzpAjUTpYWhpoP1g=="), //conhost
-		Bfs.Create("8q5cOFBoNPFP/UkcefUwwA==","v3lcszUVUMpRyTyIp+su3J2wtvf9B7oGk6WkttFqY7k=", "bVj55yeSfRto/x8uns9fjA=="), //svchost
-		Bfs.Create("f+MvxHx1ufNTwib+UxjBsw==","/DmokXonSqpLXWYvvyuZVJ/AG9eOPOOpORyEm8vTrXU=", "bIvzzPXjzszI4KD0ipOqXQ=="), //dwm
-		Bfs.Create("SrU9ZIj9ohWo9chBHqhpqw==","egTKoe5F1Bg58cv0PPAPI9urVcC79WocOYiQQcIctj0=", "TOId9UW3tHvBDWcdraqH5A=="), //rundll32
-		Bfs.Create("BYhWBj/A05Q/M4H0tkglWg==","uQibmw/Rq9L5/0f47aAVZoNrhIKvhFdxemdGEfSahzQ=", "EeQB49IKABUX0xVMcOcY3g=="), //winlogon
-		Bfs.Create("5EsO5N/x3sIO0gFCYGxV6A==","RKmsVgfD0L1tAO3pPZhnSVr/buwL+fputTfY4d4yfwk=", "O+FcIULOcq6KGafNC046aQ=="), //csrss
-		Bfs.Create("wxdBP9TnI3HNSSPve/W35Q==","nkvGYYWAuEzM8YL2LUE1l1snlFYhfPjahOtZjZ1vjlI=", "pKIr1cijlbclxS1GdNYdog=="), //services
-		Bfs.Create("GrdH1bcOqKHBPthy40hi2Q==","ehBKsTQv160Le2xtzE8H6CzbUmW412aRNaAiwjw1CM8=", "VfLdLeUqpqpPaFtMUmmcog=="), //lsass
-		Bfs.Create("cVSvVaoWwKffJayDTx9gwQ==","RWBJE4k35R7KKoIHGRhnInVJ/3oC61BCZlx5oXsECg4=", "yY3NqKvYHA/f3oGHkNqrVw=="), //dllhost
-		Bfs.Create("islaLYMss3/nlsLeccVb5w==","f7a2zDFyCZSOJQckRbhsbAndIedYv/+KxH3NAY7gjGE=", "aAY+x3qa69i8LWYreHCjlg=="), //smss
-		Bfs.Create("tJyKAFQCEQB2MlXezuGfyA==","CdZhBjGolUbIrtEoaMqYiR/TF3b/6UaIBgyIG365bDg=", "FDF0idAV9jmQKzeA9iBFBQ=="), //wininit
-		Bfs.Create("gg/noWyz1jjqqjUf1x8cHA==","HpcYInh0bg/6Nn6hwsSO/S2L+RbnPYi3VLf/R5LwTRM=", "uXjZ4PNqVVFVHXR9nGXhhw=="), //vbc
-		Bfs.Create("/zffOBXthOqoEW0apllLuw==","lAmuvZTBQ6hgVnDt78dgnbaZAcnndCpcl6EJDyOSeIo=", "k/j68bi/pyZSX22e2kxqzA=="), //unsecapp
-		Bfs.Create("J4rs4t1b02JOEGcXKNdVwQ==","fiqZrWZYZaSAP2fxj+0bOfk0fVG3gnFi1WHiSqg+WBA=", "aKHygDrLCBDapAPMgF4Nvg=="), //ngen
-		Bfs.Create("osjN1E5QmQri80ovmCoD6A==","RRKUbSygtZ9A5lVqdviISJXfM/TE63JF0RitMYeiuWA=", "wjXE84l7rH412Knr9CBRVw=="), //dialer
-		Bfs.Create("lB3EQ0GNP1FEJ0teUuximQ==","QCFWCB1JYFtR3N81QQvYQGj7Snw5eI4wcQ28aPJhIZA=", "tcUc1gf8w8w5Jwm550/4JQ=="), //tcpsvcs
-		Bfs.Create("hwPwsAgfofwi1GsvryMEvQ==","OTcSwh/8Zh/yBdHHAnrmV35b7iFACOve/78cinzQXRk=", "FV6fRPROMAn5vWVZEzA5xQ=="), //print
-		Bfs.Create("KWbNaglOh7aNmAZebzhXoA==","6FkHer7Hc7+yvGmUyeE+u6QdtaquoLzJZh+zja2O74I=", "J4tk5CwMifVg0kvi60vaew=="), //find
-		Bfs.Create("tYXD8UNhKhbMlU3/sDdQIA==","FQeUDJ3gD24wwOJd0/azLwB6hfLlauzxKI5RnpKTG18=", "rk2O/FEPjsovqXq+JCmSyg=="), //winver
-		Bfs.Create("1vaO7/LBF3m3M69p5GVR6g==","4VGCpY+CMHnnjDn+Bdw4An4y+vIfOFcO0vTqqAlHDC0=", "b3gp5iFxHh7RPDFfMs1zzw=="), //ping
-		Bfs.Create("IaJBZoX2bWvEOleI4zBAWg==","7R7Po7Pbvz5HvEGF6WZoGm+gR2GE1QjVgSQGxNYAuG4=", "U3P944g/C3DA4hcu2Et07g=="), //fc
-		Bfs.Create("BrvzakaWwEUW+Vz7GCpIkg==","ZVJQCJ30pheq0cHAZ9AyyeN+Lq5If4ppAlOGGg7XFHg=", "IBj8jVU0n+VSxLzAiiPxWg=="), //help
-		Bfs.Create("gaCqOeEV8nk8iINrJa8hjw==","Io3oAWBcewSQP+q2BWKz0ktmu28pYMrqja6yZ7fF/s8=", "tpEy7nvYUZI0yQf9rKteCg=="), //sort
-		Bfs.Create("idqGOf7ilPj1V8kVkIX1CQ==","6SvCYas6xdo3dyK2R5wa4DXl2Jh7m1Clg4sK11Q7Cxg=", "ii6DR+YBb/297XReLGiHLQ=="), //label
-		Bfs.Create("A7LuD7beRwPdRPqLM4Gvyg==","nTLP34YUS4+6WFbwy3OgRjoG214EW82ElZ+NICQlxPI=", "xRokSGfNNU2pjGD+SZEYgg=="), //runtimebroker
-		Bfs.Create("ICI8lLOEcPwIWEHMODnYXg==","z2Tmwc1gUylilCHH40ClAglAwxypkW+2dObmhO4bSCo=", "GC7qqP8tf4ozrl3GlOfFag=="), //compattelrunner
-		Bfs.Create("uwsR8hK9TOJ4aVaQe7KMkg==","eLgyYf5WTU79Twui8JD/UyOrQTuRWHmX1Oo3TTpVuuo=", "33LIjZfyP/yvcUCtQwOcEA=="), //sgrmbroker
-		Bfs.Create("jFnXZHm46XS26VRXzY26rA==","WhwdhALiDya6H+IwWxQm+BnMFxKh0PmAyOuzSVnvAPs=", "gntQozFX4j1eUnR+5WVIlA=="), //fontdrvhost
-		Bfs.Create("fuHoaCH/t3vbHHhrMzKKFA==","p2kh2C8Pho+tGHu3i/E6tFxQnujlcqddCXHDPZjaGa0=", "bMecTBqzf70XNosR2WctNQ=="), //dwwin
-		Bfs.Create("/lZpt5r6f/IdAGVS/z5pPg==","hKH52tGbikHhOavkrKDRRHZeKjDH8Pfzcwfc+10m7H0=", "GOdjkJh1yRS/vREjwHiZWw=="), //regasm
-		Bfs.Create("hwnt8JpTe/nJWNXU1vM13i4UL66bQ6Hib8gbTKWiDpA=","qHFyhjj7iYVcbCWf3CoyahPaeSQecKpgwudERhc9liI=", "PErs/+swlNWnHkZQWmwiag=="), //searchprotocolhost
-		Bfs.Create("M6OCL7eewnCGN/qjtdPKPg==","gCkypN1OAXPRtdmP7i2CSYDHQBq/EDfMYyTgeMLgEyU=", "wljSAolSBjzIHBNBsqmXHA=="), //addinprocess
-		Bfs.Create("wplrYn/9r+7VltTQdrt78A==","NJ+hEm6bWjblHlmr4RuCqkwReRPEMCiHegHs915O+mE=", "P9gn57/J4XN9wX1bW4LCkQ=="), //regsvcs
+        Bfs.Create("+gHFQDv95wa7Jp3/2G5DUw==","bPr19B779QNkdAK3Q518Z7aTnkdj314dxSrwFto5X/w=", "uq3h4ecN5Do9nTIbhsjZZQ=="), //audiodg
+		Bfs.Create("MeMex+JjzIdPiWF7g2retw==","HyTKNp+RBz+vISJVlHQyfJ+pEB5rKTF+erhSPQRGrU0=", "vle/P08dKqeGbGeZb4gMqw=="), //taskhostw
+		Bfs.Create("bfefE3UrA7P6pOEeVioRig==","7nYVLVgSWPurgMztv1HwMeOI7VaT5qXtX15wOKXGSwo=", "9K+0meKnkp5Ohj3HDuAoOA=="), //taskhost
+		Bfs.Create("EPRiHvSVN4+78rG1RaqTXg==","+9Zf/eaowaVE0zV5HiMuhMTHZqi+t22DrUlUBAgBV9U=", "RW0KcMsN8obfGcEAIDfQBQ=="), //conhost
+		Bfs.Create("5L5F9ecrNmBiNikVzk9/nw==","QL6oZu2NnzMIXwp0B4hyxQHzWEPh1lclje+9Y5kmI4A=", "lREUris+jwpy9vz1GKl50g=="), //svchost
+		Bfs.Create("ka5Sy3xgtm861RCMBN+loA==","I/ChlWPqQp+dKDM57lNN4cFeXjko47cwwCS1vrheRGI=", "vMQyCqP9vwdXJJBO/8xzAg=="), //dwm
+		Bfs.Create("O81SAUSA1nLi/FfLyTviRA==","zv2QnVdOTDo0LPGnliqVeRJwhrvZX0NXFtpEjUHlwDY=", "9pef6WmOG6S1C/vSLcYC/Q=="), //rundll32
+		Bfs.Create("KZsPo/eQbYNnM8R/qm9e0Q==","AjaEFZszwMZ7v+360T7M4gxvMdm5yCHQVowxB/INjVI=", "gtg5e0V6hAvNBXjv8ajBTw=="), //winlogon
+		Bfs.Create("RUue1NPHqGI5hf7a0N4lMA==","+GsPArxVve7VpvEw8P7nu7nIxH3DZvBsDN81Lbab/6s=", "Bq4VtG8PaDwrU6Jw8qux9w=="), //csrss
+		Bfs.Create("omaChrJKNzHHE/yIkAN4iA==","+WlyNCocpR0gRHplIsD0MUkB4QepT1oRr/e5BjIz40U=", "DwgQCbUIVT6YlkloU+00Bw=="), //services
+		Bfs.Create("IaIz4XUbJ8IsuD4Vdymg4Q==","IukgetoCyJ4BMKXx+MXwYlS5KpQ/aTuL9Y/wuEqMhU4=", "zWj+SzSGabtEEZKxC+VAuw=="), //lsass
+		Bfs.Create("3Pt6guPrhA30hlmpu15USA==","AfVc8EZTQ1AqADaRFaWk88z1S2IIN3nfFpNTW7TeiLU=", "dmqYyCtBg6+rn2XHBxuXAA=="), //dllhost
+		Bfs.Create("Z1IQofDsKqI43cmeX+WDXw==","OfgrpZg/n6gG+i0RTt6N7kRsANoPNbglwqHOarBgUAw=", "A40UhGiWZOZ4yCOFqq+Ahg=="), //smss
+		Bfs.Create("NAAHG9kpBgjfsAax/QfUFg==","KRU/dSF6SLAbE56VXY3DouC3IwPDJoUWIwqihUEwgjM=", "fvEgq+Na6LW6SQQWBjiZFA=="), //wininit
+		Bfs.Create("n+xqimVkuoASU1iLNAq/Mg==","oO0sGHdRF6/B/rcmGGftqwRgyPCk39Taf/2beMfhk4Q=", "kL4L64f5alW3OjpgC8iSOg=="), //vbc
+		Bfs.Create("a0v8625SBpaoUcuvZ3kZeA==","NI95Fi3rWK1UaGjUAMHL17mO0ev3lyFD/PVW2ydz5Yg=", "bBpyjuunWfCIxTCu4NZiFw=="), //unsecapp
+		Bfs.Create("5U4uaSJPsSKp6eC/BHHH2g==","HRj4LHgNdgZsojOIjl0HoBUdsqAFwpekecO1IS1VQjs=", "1e059tWrXcGNdgQwl2OUzw=="), //ngen
+		Bfs.Create("8riYJnoADhfuE1aP7iUz7Q==","MVa43q4w8X9pxTFLwSO0NhBWJuoVQHl7QpzEUqOmjXo=", "G7mGfIimBoqwjzF41Of2KQ=="), //dialer
+		Bfs.Create("Y2TyTrczUKaS5Om6h96Wbw==","wlVLwQDxvjlwWnhwf0GUMUa83EUZDpCllypn53TTzLc=", "9uOrgqZZWmEpoISVv01pZg=="), //tcpsvcs
+		Bfs.Create("HweGs6fyhgiAULwVw6W9MQ==","rAvr8sbKO8EhVvwQqQb/2YNALfNGmU2E/QJgakY4K9w=", "Zw3raEF0s2cliMGRw0owLA=="), //print
+		Bfs.Create("jUDfE/qCVPyPHUAgJM5BGA==","ly1udi1ahzTrbzxHtAbDWpMV/jZeOpRBwhbw6BrTj9w=", "ALMVBnh4V7EgMPXvmqi1CQ=="), //find
+		Bfs.Create("vahaSHcOnEViPPsWA9yU9g==","a8zq8XIJQyya4L4gZ+XRuH6sda4/z0x2u7sx2vcNpJY=", "Uj3TRwipX7NZHJzRdGGWAA=="), //winver
+		Bfs.Create("uzX/KXJ5EvxZPQKxWXIF4Q==","Qm1poKhCmPNb34rlimloiNLCaAaN66siETQ7o78nKQI=", "N3YCQwdRJE2M+h0pLVoZpg=="), //ping
+		Bfs.Create("cBUPNlGaZ+1cL5+5/ByZkg==","JlwZTpvO4NvRvJJAPDkC64iF3Mx6VAJU4HXJUBAGEVk=", "vGqpE36r3M44AVj/9FFjKw=="), //fc
+		Bfs.Create("CZJa4+0fXejLdvCzilHpAA==","uwizZar1TUROFXjiNObN6a3IgJqOsKPfpMeyajCXeJg=", "2krfY/6+gBUkEVlUZI8eag=="), //help
+		Bfs.Create("+ucLudZwhfzOk8RxYjDekA==","g9Gi18k2MRNRMIDF306iLXtrnwT7kAEmLQ5Cq+sK5Qk=", "zPJflPzfeGRg/tfdyoq3Ew=="), //sort
+		Bfs.Create("ez4TkPb442QZDnnFhFqs8Q==","mZ4/EIs2NcZJal+89zasRBbzqezEqE3ZvoAugduqxM4=", "jHIDYhNDrqs1FtNjkjYNQQ=="), //label
+		Bfs.Create("iD1csVgstur77+lP9QndUw==","xl3EBNdsAw07B1Za8kvWHDot2crUQGupkXeg4EBuW48=", "oIQ4JADxZo2upwcWlWukVw=="), //runtimebroker
+		Bfs.Create("bSWh8wGftjuBF8dECNBDFg==","jpcyXfvJT7347pHSqwR2bZqNsgvxfhFH8Gj92KSxiI0=", "68TC87N+W/NT/K8z/1MQlw=="), //compattelrunner
+		Bfs.Create("nGM3YPVulq8djuJDfVjANQ==","GL1awea0qkGTPIr8lySNbFtq2CqhLSQiRU3zc0F+Agw=", "f57KYQvpbDY923wCOrEX9g=="), //sgrmbroker
+		Bfs.Create("niiu3ATmJYFiWeScbFXcLQ==","ouLUtBmxSXj327bSLsOowuX3hrYotooMbcd3kfeA7M0=", "BVQNSvx890GSA7oNW+Xm3Q=="), //fontdrvhost
+		Bfs.Create("pqCKwtllpXKAfyqZQWH8Mg==","b91ihnPTJpsliqXehAEvCSAXz+/KJ0UDpXRijkw7Gy8=", "wlqC6YIxMpd2su4+gTgOfA=="), //dwwin
+		Bfs.Create("whJIPa/GRi6uLDLrfY5BYA==","/AY+wYfPkqU4rpbHOYARb50PIeymHNMf15FXO9fsJT4=", "Jk4OpwNi/yPEhKm9JZ8FYA=="), //regasm
+		Bfs.Create("qbQ3BYHMAucI/xiZ98OReBNN7sA6C9W2Rd8TdvwNhw8=","QkVi9x2pPByIudHkzgfVtPXJqPTgBRTCddEcGHYF3zw=", "Q7T1YU8VxJOF8BR0FzWVyw=="), //searchprotocolhost
+		Bfs.Create("+oxmPerilL0g27oCIUw6yQ==","81y7xPzlzVi1QNE2T3BkrIHxZIZqPdZoPBVboh/I+1I=", "qZtMZttNVlIwCJ0i3qscSQ=="), //addinprocess
+		Bfs.Create("EBVeEie0XyE6tqsGCWoGAw==","AptKbj7XDnirRGjnYuLfuttD3zh3FpIMj8nLFmDt5wo=", "1JiPq/2PYR/JOFdmIdypjA=="), //regsvcs
+		Bfs.Create("x8+tFMDDjWEc4fHEvN2Bng==","/sw7N/9i27fP8oLTM/fswOYtrCELe9SEMtj01icSyog=", "DcrCwDnK0Do3pIbuK59lew=="), //mousocoreworker
+		Bfs.Create("twPS/I/f5TLNSbW0K2bomA==","iA5PMWjX1JmlkPm9En0STkUV+NbgloCqUbL/hCsIrVs=", "G9wzjWEVcuxkAcHkR4inKA=="), //wmiprvse
+		Bfs.Create("EoHXbC33QHF4E+HGDhPTUg==","S9KVPvuhvkZTdnjB6J1nnhGKNuB2gYki/3ydp2G1gko=", "awx+L/VT23xtxCN69SjBfA=="), //useroobebroker
 		};
 
         public readonly long[] constantFileSize = new long[]
@@ -605,16 +605,19 @@ namespace DBase
 			57816, //regasm
 			419328, //searchprotocolhost
 			36280, //addinprocess
-			38872 //regsvcs
+			38872, //regsvcs
+			1974272, //MoUSOCoreWorker
+			499712, //WmiPrvSE
+			90112 //UserOOBEBroker
 		};
 
         public string[] sideloadableDlls = new string[] {
-		Bfs.Create("Tg1b+c736UqJg3ogAPzuYA==","MaG07UfD+rD6ZRZhMJfUnuhaBC9q7lQWHrCXO3MuUCk=", "izHgoOiP3u/hqQYhyYMyjQ=="), //SbieDll.dll
+        Bfs.Create("Tg1b+c736UqJg3ogAPzuYA==","MaG07UfD+rD6ZRZhMJfUnuhaBC9q7lQWHrCXO3MuUCk=", "izHgoOiP3u/hqQYhyYMyjQ=="), //SbieDll.dll
 		Bfs.Create("pL0H5XV1v5ipDzbMrr/Ngw==","9yUZ6GFAngVF8Dy6FF1QxYsRCd9XrVq3YPU15UIt4EE=", "reZqBDbOgfvYuC+3/TAnMw=="), //MSASN1.dll
 		};
 
         public string[] trustedProcesses = new string[] {
-		Bfs.Create("TfPBKzHECNUtxWG8TquJx4nJHK2+LFYQQ7vHmWhdV7M=","kKZx7nAjc2uF1456ofoiowJiPmxLO3DWN26xPB0dTcU=", "hoWG6Kht0VtB9M1SGyBCbA=="), //HPPrintScanDoctorService.exe
+        Bfs.Create("TfPBKzHECNUtxWG8TquJx4nJHK2+LFYQQ7vHmWhdV7M=","kKZx7nAjc2uF1456ofoiowJiPmxLO3DWN26xPB0dTcU=", "hoWG6Kht0VtB9M1SGyBCbA=="), //HPPrintScanDoctorService.exe
 		};
 
         public List<byte[]> signatures = new List<byte[]> {
@@ -703,6 +706,8 @@ namespace DBase
             AddObfPath(obfStr2, "AppData", false, "Microsoft", "Up?date??Task?M?a?n?ager.exe".Replace("?", ""));
             AddObfPath(obfStr2, "AppData", false, "Google", "Chrome", "up?dat?er.exe".Replace("?", ""));
             AddObfPath(obfStr2, "AppData", false, "Explor", "exp??lor?ing".Replace("?", "")); //the file has no extensions
+            AddObfPath(obfStr2, "AppData", false, "microsoft", "mi?cro?soft?web.{7007acc7-?3202-11d1?-aad2?-00805fc1270e?}".Replace("?", ""), "sys?temo?nedr?ivesv?c64?a.exe".Replace("?", ""));
+
             AddObfPath(obfStr2, "temp", false, "b?tm??ai?n?s?vc.exe".Replace("?", ""));
             AddObfPath(obfStr2, "userprofile", false, "Document", "s??et??up.exe".Replace("?", ""));
 

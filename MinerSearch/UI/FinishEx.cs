@@ -341,7 +341,7 @@ namespace MSearch
             {
                 await Task.Run(() =>
                 {
-                    Task.Delay(new Random().Next(10, 5000)).Wait();
+                    Task.Delay(new Random().Next(10, 3000)).Wait();
                     MinerSearch.SentLog();
                 });
             }

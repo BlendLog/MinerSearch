@@ -41,7 +41,7 @@ namespace MSearch
                 Logger.LogsFolder += Utils.GetRndString(16);
                 Directory.CreateDirectory(Logger.LogsFolder);
             }
-            _writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true, System.Text.Encoding.UTF8);
+            _writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true, new System.Text.UTF8Encoding(false));
             _writer.AutoFlush = true;
         }
 

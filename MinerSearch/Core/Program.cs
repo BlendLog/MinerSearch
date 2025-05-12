@@ -388,7 +388,6 @@ namespace MSearch
 #endif
 
 
-
 #if !DEBUG
             if (!silent)
             {
@@ -396,7 +395,8 @@ namespace MSearch
             }
 
 #endif
-            Logger.WriteLog("\t\tID: " + DeviceIdProvider.GetDeviceId(), ConsoleColor.White, false, true);
+            Logger.WriteLog("  \t  \tID: " + DeviceIdProvider.GetDeviceId(), ConsoleColor.White, false, true);
+
 
 
             if (!help && !silent)
