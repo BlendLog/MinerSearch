@@ -2,6 +2,16 @@
 
 Данное программное обеспечение (Далее ПО) создано исключительно для поиска и удаления вредоносного ПО, тайно использующее ресурсы компьютера для добычи (майнинга) криптовалюты. Автор не несет ответсвенности за причиненный случайный, косвенный или непреднамеренный ущерб любого рода в ходе использования данного ПО. Вы можете использовать его на свой страх и риск. 
 
+## Сбор технической информации
+Приложение автоматически генерирует анонимный ключ-идентификатор (DeviceID) на основе конфигурации устройства (аппаратные характеристики, версия ОС). Он используется исключительно для:
+- Диагностики ошибок в работе приложения;
+- Технической поддержки;
+- DeviceID не содержит персональных данных;
+- Не передаётся третьим лицам и не используется для рекламы или трекинга.
+
+## Где отображается DeviceID?
+Ключ-идентификатор указан на финальном окне приложения c кратким отчётом. 
+
 ## Часто задаваемые вопросы:
 
 Вопрос: Почему мой антивирус указывает, что ПО содержит троян/вирус?
@@ -21,6 +31,16 @@
 ## Denial of responsibility
 
 This software (hereinafter referred to as the software) was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurrency. The author is not responsible for incidental, indirect or unintentional damage of any kind during the use of this software. You may use it at your own risk.
+
+## Collecting technical information
+The application automatically generates an anonymous identifier key (Device ID) based on the device configuration (hardware characteristics, OS version). It is used exclusively for:
+- Diagnosis of errors in the application;
+- Technical support;
+- Device ID does not contain any personal data;
+- Is not shared with third parties and is not used for advertising or tracking.
+
+## Where is the DeviceID displayed?
+The identifier key is indicated on the final application window with the summary log.
 
 ## FAQ:
 
