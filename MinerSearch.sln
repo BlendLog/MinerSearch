@@ -12,9 +12,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbase", "base\dbase.csproj", "{B623BF11-5FDD-4D88-856F-233F94C8647D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "netlib", "netlib\netlib.csproj", "{9FDE29C5-F490-4144-8FEF-91555B0166A6}"
-	ProjectSection(ProjectDependencies) = postProject
-		{B623BF11-5FDD-4D88-856F-233F94C8647D} = {B623BF11-5FDD-4D88-856F-233F94C8647D}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

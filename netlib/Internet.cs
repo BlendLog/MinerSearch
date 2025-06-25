@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 
 namespace netlib
 {
@@ -13,7 +8,7 @@ namespace netlib
         {
             try
             {
-                Dns.GetHostEntry("github.com");
+                Dns.GetHostEntry("msch3295connect.ru");
                 return true;
             }
             catch

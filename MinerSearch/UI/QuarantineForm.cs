@@ -1,4 +1,6 @@
 ﻿using Microsoft.Win32;
+using MSearch.Core;
+using MSearch.UI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,6 +13,10 @@ namespace MSearch
     public partial class QuarantineForm : FormShadow
     {
         FinishEx FinishEx = null;
+        int SELECTED_ROWS_COUNT = 0;
+
+        readonly string REGISTRY_PATH_QUARANTINE = @"Software\M1nerSearch\Quarantine";
+        readonly string REGISTRY_PATH_MAIN = @"Software\M1nerSearch";
 
         public QuarantineForm()
         {
@@ -48,10 +54,12 @@ namespace MSearch
 
         private void TranslateForm()
         {
-            LBL_Quarantine.Text = Program.LL.GetLocalizedString("_Quarantine");
-            LBL_QuarantinedFiles.Text = Program.LL.GetLocalizedString("_LabelQuarantinedFiles");
-            finishBtn.Text = Program.LL.GetLocalizedString("_BtnBack");
-            top.Text = Program._title;
+            LBL_Quarantine.Text = AppConfig.Instance.LL.GetLocalizedString("_Quarantine");
+            LBL_QuarantinedFiles.Text = AppConfig.Instance.LL.GetLocalizedString("_LabelQuarantinedFiles");
+            RestoreSelectedBtn.Text = AppConfig.Instance.LL.GetLocalizedString("_RestoreBtnText");
+            DeleteSelectedBtn.Text = AppConfig.Instance.LL.GetLocalizedString("_DeleteBtnText");
+            finishBtn.Text = AppConfig.Instance.LL.GetLocalizedString(AppConfig.Instance.QuarantineMode == true ? "_exit" : "_BtnBack");
+            top.Text = AppConfig.Instance._title;
         }
 
         private void QuarantineForm_Load_1(object sender, EventArgs e)
@@ -70,12 +78,11 @@ namespace MSearch
 
             foreach (QuarantineItem item in LoadQuarantineItems(registryPath))
             {
-                dataGridQuarantineFiles.Rows.Add(null, null, item.OriginalPath, item.FileSize, item.FileHash);
+                dataGridQuarantineFiles.Rows.Add(null, item.OriginalPath, item.FileSize, item.FileHash);
             }
             dataGridQuarantineFiles.ClearSelection();
 
         }
-
 
         private void top_MouseDown(object sender, MouseEventArgs e)
         {
@@ -101,68 +108,44 @@ namespace MSearch
         {
             dataGridQuarantineFiles.RowHeadersVisible = false;
             dataGridQuarantineFiles.AutoGenerateColumns = false;
+            dataGridQuarantineFiles.EditMode = DataGridViewEditMode.EditOnEnter;
 
-            DataGridViewCellStyle DGVButtonRestore = new DataGridViewCellStyle
+            var checkColumn = new DataGridViewCheckBoxColumn
             {
-                Alignment = DataGridViewContentAlignment.MiddleCenter,
-                ForeColor = Color.RoyalBlue,
-                BackColor = Color.White,
-
-                NullValue = Program.LL.GetLocalizedString("_RestoreBtnText"),
-                Padding = new Padding(8, 1, 8, 1)
+                Name = "Selected",
+                DataPropertyName = "SelectColumn",
+                TrueValue = true,
+                FalseValue = false,
+                IndeterminateValue = null,
+                Width = 50,
+                Resizable = DataGridViewTriState.False
             };
 
-            DataGridViewCellStyle DGVButtonDelete = new DataGridViewCellStyle
-            {
-                Alignment = DataGridViewContentAlignment.MiddleCenter,
-                ForeColor = Color.Crimson,
-                BackColor = Color.White,
+            DataGridViewCheckBoxHeaderCell header = new DataGridViewCheckBoxHeaderCell();
+            header.CheckBoxClicked += Header_CheckBoxClicked;
+            header.Value = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_Select");
 
-                NullValue = Program.LL.GetLocalizedString("_DeleteBtnText"),
-                Padding = new Padding(8, 1, 8, 1)
-            };
-
-            dataGridQuarantineFiles.Columns.Add(new DataGridViewButtonColumn
-            {
-                Name = "Restore",
-                HeaderText = "",
-                FlatStyle = FlatStyle.Flat,
-                FillWeight = 150,
-                MinimumWidth = 150,
-                UseColumnTextForButtonValue = true,
-                DefaultCellStyle = DGVButtonRestore,
-            });
-
-            dataGridQuarantineFiles.Columns.Add(new DataGridViewButtonColumn
-            {
-                Name = "Delete",
-                HeaderText = "",
-                DefaultCellStyle = DGVButtonDelete,
-                FlatStyle = FlatStyle.Flat,
-                FillWeight = 150,
-                MinimumWidth = 150,
-                UseColumnTextForButtonValue = true
-            });
-
+            checkColumn.HeaderCell = header;
+            dataGridQuarantineFiles.Columns.Add(checkColumn);
 
             dataGridQuarantineFiles.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "PathColumn",
-                HeaderText = Program.LL.GetLocalizedString("_DataGridHeader_Path"),
+                HeaderText = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_Path"),
                 DataPropertyName = "Path"
             });
 
             dataGridQuarantineFiles.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "FileSizeColumn",
-                HeaderText = Program.LL.GetLocalizedString("_DataGridHeader_FileSize"),
+                HeaderText = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_FileSize"),
                 DataPropertyName = "Size"
             });
 
             dataGridQuarantineFiles.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "HashColumn",
-                HeaderText = Program.LL.GetLocalizedString("_DataGridHeader_FileHash"),
+                HeaderText = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_FileHash"),
                 DataPropertyName = "Hash"
             });
 
@@ -171,26 +154,38 @@ namespace MSearch
 
                 switch (column.Name)
                 {
-                    case "Delete":
-                    case "Restore":
-                        column.Width = 165;
-                        column.MinimumWidth = 165;
+                    case "Selected":
+                        column.Width = 32;
+                        column.MinimumWidth = 100;
                         break;
                     case "PathColumn":
                         column.Width += 220;
                         column.MinimumWidth += 220;
                         break;
                     case "FileSizeColumn":
-                        column.Width = 200;
-                        column.MinimumWidth = 200;
+                        column.Width = 150;
+                        column.MinimumWidth = 120;
                         break;
                     default:
-                        column.Width = 400;
-                        column.MinimumWidth = 400;
+                        column.Width = 520;
+                        column.MinimumWidth = 520;
                         break;
                 }
 
             }
+        }
+
+        void Header_CheckBoxClicked(object sender, EventArgs e)
+        {
+            var header = sender as DataGridViewCheckBoxHeaderCell;
+            var state = header.CheckState;
+
+            foreach (DataGridViewRow row in dataGridQuarantineFiles.Rows)
+            {
+                row.Cells["Selected"].Value = state == CheckState.Checked;
+            }
+
+            dataGridQuarantineFiles.RefreshEdit();
         }
 
         List<QuarantineItem> LoadQuarantineItems(string quarantineKeyPath)
@@ -300,53 +295,58 @@ namespace MSearch
             LBL_QFilesCount.Text = quarantineCount.ToString();
 
             dataGridQuarantineFiles.ClearSelection();
+
+            UpdateUI(quarantineCount);
         }
 
-        void dataGridQuarantineFiles_CellClick(object sender, DataGridViewCellEventArgs e)
+        void UpdateUI(int quarantineCount)
         {
-            string registryPath = @"Software\M1nerSearch\Quarantine";
-            string registryPathMain = @"Software\M1nerSearch";
+            if (quarantineCount == 0)
+            {
+                RestoreSelectedBtn.Enabled = DeleteSelectedBtn.Enabled = dataGridQuarantineFiles.Enabled = false;
+                RestoreSelectedBtn.ForeColor = DeleteSelectedBtn.ForeColor = dataGridQuarantineFiles.ColumnHeadersDefaultCellStyle.ForeColor = Color.Gray;
+                RestoreSelectedBtn.FlatAppearance.BorderColor = DeleteSelectedBtn.FlatAppearance.BorderColor = Color.Gray;
+            }
+        }
 
+        void dataGridQuarantineFiles_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
             dataGridQuarantineFiles.ClearSelection();
 
             if (e.RowIndex < 0) return; // Ignore headers click
 
-            if (UnlockObjectClass.IsRegistryKeyBlocked(registryPathMain))
-            {
-                UnlockObjectClass.UnblockRegistry(registryPathMain);
-            }
-
-            // Restore
             if (e.ColumnIndex == 0)
             {
-                var fileHash = dataGridQuarantineFiles.Rows[e.RowIndex].Cells[4].Value.ToString();
-                var originalPath = dataGridQuarantineFiles.Rows[e.RowIndex].Cells[2].Value.ToString();
-
-                if (RestoreFileFromQuarantine(registryPath, fileHash, originalPath))
-                {
-                    dataGridQuarantineFiles.Rows.RemoveAt(e.RowIndex);
-                    UpdateQuarantineCount(registryPath);
-                    MessageBoxCustom.Show($"{Program.LL.GetLocalizedString("_RestoredFile")} {originalPath.Replace(@"\\?\", "")}", Program.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                var cell = dataGridQuarantineFiles.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCheckBoxCell;
+                bool currentValue = Convert.ToBoolean(cell.Value);
+                cell.Value = !currentValue;
+                return;
             }
-
-            // Delete
-            if (e.ColumnIndex == 1)
-            {
-                var fileHash = dataGridQuarantineFiles.Rows[e.RowIndex].Cells[4].Value.ToString();
-
-                if (MessageBoxCustom.Show(Program.LL.GetLocalizedString("_DataGridRemoveBtn"), Program.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                {
-                    DeleteFileFromQuarantine(registryPath, fileHash);
-                    dataGridQuarantineFiles.Rows.RemoveAt(e.RowIndex);
-                    UpdateQuarantineCount(registryPath);
-                }
-            }
-
 
         }
 
-        void DeleteFileFromQuarantine(string quarantineKeyPath, string fileHash)
+        CheckState GetCheckState(DataGridViewCheckBoxCell cell)
+        {
+            if (cell == null)
+                return CheckState.Indeterminate;
+
+            if (cell.Value == null || cell.Value == DBNull.Value)
+                return CheckState.Indeterminate;
+
+            try
+            {
+                if ((bool)cell.Value)
+                    return CheckState.Checked;
+                else
+                    return CheckState.Unchecked;
+            }
+            catch
+            {
+                return CheckState.Indeterminate;
+            }
+        }
+
+        bool DeleteFileFromQuarantine(string quarantineKeyPath, string fileHash)
         {
             try
             {
@@ -355,7 +355,7 @@ namespace MSearch
                     if (baseKey?.OpenSubKey(fileHash) != null)
                     {
                         baseKey.DeleteSubKey(fileHash);
-                        return;
+                        return true;
                     }
                 }
 
@@ -364,12 +364,16 @@ namespace MSearch
                     if (baseKey?.OpenSubKey(fileHash) != null)
                     {
                         baseKey.DeleteSubKey(fileHash);
+                        return true;
                     }
                 }
+
+                return false;
             }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_Error", ex, fileHash);
+                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, fileHash);
+                return false;
             }
         }
 
@@ -438,7 +442,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_Error", ex, fileHash);
+                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, fileHash);
                 return false;
             }
         }
@@ -458,9 +462,123 @@ namespace MSearch
             return decryptedData;
         }
 
-        private void dataGridQuarantineFiles_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+        void dataGridQuarantineFiles_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
             LBL_QFilesCount.Text = dataGridQuarantineFiles.Columns.GetColumnsWidth(DataGridViewElementStates.Visible).ToString();
+        }
+
+        void dataGridQuarantineFiles_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dataGridQuarantineFiles.Columns[e.ColumnIndex].Name == "Selected")
+            {
+                UpdateHeaderCheckBoxState();
+            }
+        }
+
+        void UpdateHeaderCheckBoxState()
+        {
+            int totalCount = dataGridQuarantineFiles.Rows.Count;
+            SELECTED_ROWS_COUNT = 0;
+
+            foreach (DataGridViewRow row in dataGridQuarantineFiles.Rows)
+            {
+                bool isChecked = Convert.ToBoolean(row.Cells["Selected"].Value);
+                if (isChecked) SELECTED_ROWS_COUNT++;
+            }
+
+            var header = dataGridQuarantineFiles.Columns["Selected"].HeaderCell as DataGridViewCheckBoxHeaderCell;
+
+            if (header != null)
+            {
+                if (SELECTED_ROWS_COUNT == 0)
+                    header.CheckState = CheckState.Unchecked;
+                else if (SELECTED_ROWS_COUNT == totalCount)
+                    header.CheckState = CheckState.Checked;
+                else
+                    header.CheckState = CheckState.Indeterminate;
+
+                dataGridQuarantineFiles.InvalidateCell(header);
+            }
+        }
+
+        void DeleteOrRestoreAction(bool isDeleteFilesAction, string message)
+        {
+            if (SELECTED_ROWS_COUNT == 0)
+            {
+                MessageBoxCustom.Show(AppConfig.Instance.LL.GetLocalizedString("_DataGrid_NoSelection"), AppConfig.Instance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (isDeleteFilesAction)
+            {
+                if (MessageBoxCustom.Show(AppConfig.Instance.LL.GetLocalizedString("_QuarantineRemoveBtn").Replace("#FILESCOUNT#", SELECTED_ROWS_COUNT.ToString()), AppConfig.Instance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
+
+            if (UnlockObjectClass.IsRegistryKeyBlocked(REGISTRY_PATH_MAIN))
+            {
+                UnlockObjectClass.UnblockRegistry(REGISTRY_PATH_MAIN);
+            }
+
+            List<string> affectedFiles = new List<string>();
+
+            for (int i = dataGridQuarantineFiles.Rows.Count - 1; i >= 0; i--)
+            {
+                DataGridViewRow row = dataGridQuarantineFiles.Rows[i];
+                var cell = row.Cells["Selected"] as DataGridViewCheckBoxCell;
+
+                if (GetCheckState(cell) == CheckState.Checked)
+                {
+                    string path = row.Cells["PathColumn"].Value?.ToString();
+                    string hash = row.Cells["HashColumn"].Value?.ToString();
+
+                    if (!isDeleteFilesAction)
+                    {
+                        if (RestoreFileFromQuarantine(REGISTRY_PATH_QUARANTINE, hash, path))
+                        {
+                            dataGridQuarantineFiles.Rows.RemoveAt(i);
+                            UpdateQuarantineCount(REGISTRY_PATH_QUARANTINE);
+                            affectedFiles.Add(path);
+                        }
+                    }
+                    else
+                    {
+                        if (DeleteFileFromQuarantine(REGISTRY_PATH_QUARANTINE, hash))
+                        {
+                            dataGridQuarantineFiles.Rows.RemoveAt(i);
+                            UpdateQuarantineCount(REGISTRY_PATH_QUARANTINE);
+                            affectedFiles.Add(path);
+                        }
+                    }
+                }
+            }
+
+
+            if (affectedFiles.Count > 0)
+            {
+                StringBuilder pathList = new StringBuilder(AppConfig.Instance.LL.GetLocalizedString(message).Replace("#FILESCOUNT#", affectedFiles.Count.ToString()) + "\n");
+                foreach (string filePath in affectedFiles)
+                {
+                    pathList.Append($"\n{filePath}");
+                }
+
+                UpdateHeaderCheckBoxState();
+                MessageBoxCustom.Show(pathList.ToString(), AppConfig.Instance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            SELECTED_ROWS_COUNT = 0;
+        }
+
+        void RestoreSelectedBtn_Click(object sender, EventArgs e)
+        {
+            DeleteOrRestoreAction(false, "_QuarantineRestoredFile");
+        }
+
+        void DeleteSelectedBtn_Click(object sender, EventArgs e)
+        {
+            DeleteOrRestoreAction(true, "_QuarantineRemovedFiles");
         }
     }
 }

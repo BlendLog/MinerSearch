@@ -53,8 +53,8 @@ namespace MSearch
             this.top.Location = new System.Drawing.Point(0, 0);
             this.top.Margin = new System.Windows.Forms.Padding(0);
             this.top.Name = "top";
-            this.top.Padding = new System.Windows.Forms.Padding(20, 0, 40, 0);
-            this.top.Size = new System.Drawing.Size(580, 39);
+            this.top.Padding = new System.Windows.Forms.Padding(15, 0, 30, 0);
+            this.top.Size = new System.Drawing.Size(534, 32);
             this.top.TabIndex = 3;
             this.top.Text = "title";
             this.top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -74,20 +74,21 @@ namespace MSearch
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(1);
             this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 78F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(582, 246);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 63F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(536, 200);
             this.tableLayoutPanel1.TabIndex = 4;
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.CloseBtn);
             this.panel1.Controls.Add(this.top);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(1, 1);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(580, 39);
+            this.panel1.Size = new System.Drawing.Size(534, 32);
             this.panel1.TabIndex = 4;
             // 
             // CloseBtn
@@ -101,10 +102,10 @@ namespace MSearch
             this.CloseBtn.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Bold);
             this.CloseBtn.ForeColor = System.Drawing.Color.White;
             this.CloseBtn.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.CloseBtn.Location = new System.Drawing.Point(547, 9);
+            this.CloseBtn.Location = new System.Drawing.Point(509, 7);
             this.CloseBtn.Margin = new System.Windows.Forms.Padding(0);
             this.CloseBtn.Name = "CloseBtn";
-            this.CloseBtn.Size = new System.Drawing.Size(29, 25);
+            this.CloseBtn.Size = new System.Drawing.Size(22, 20);
             this.CloseBtn.TabIndex = 101;
             this.CloseBtn.Text = "X";
             this.CloseBtn.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -117,14 +118,15 @@ namespace MSearch
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 18.32192F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 81.67809F));
-            this.tableLayoutPanel2.Controls.Add(this.labelMessage, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.pictureBox1, 0, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(1, 40);
+            this.tableLayoutPanel2.Controls.Add(this.labelMessage, 1, 0);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(1, 33);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(580, 145);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(534, 118);
             this.tableLayoutPanel2.TabIndex = 6;
             // 
             // labelMessage
@@ -132,10 +134,10 @@ namespace MSearch
             this.labelMessage.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelMessage.AutoSize = true;
             this.labelMessage.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.labelMessage.Location = new System.Drawing.Point(151, 60);
-            this.labelMessage.Margin = new System.Windows.Forms.Padding(45, 0, 0, 0);
+            this.labelMessage.Location = new System.Drawing.Point(122, 49);
+            this.labelMessage.Margin = new System.Windows.Forms.Padding(25, 0, 0, 0);
             this.labelMessage.Name = "labelMessage";
-            this.labelMessage.Size = new System.Drawing.Size(58, 25);
+            this.labelMessage.Size = new System.Drawing.Size(45, 20);
             this.labelMessage.TabIndex = 5;
             this.labelMessage.Text = "blank";
             this.labelMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -144,10 +146,10 @@ namespace MSearch
             // pictureBox1
             // 
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox1.Location = new System.Drawing.Point(21, 40);
+            this.pictureBox1.Location = new System.Drawing.Point(24, 33);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(64, 64);
+            this.pictureBox1.Size = new System.Drawing.Size(48, 52);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
@@ -158,22 +160,22 @@ namespace MSearch
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelButtons.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.panelButtons.Location = new System.Drawing.Point(1, 185);
-            this.panelButtons.Margin = new System.Windows.Forms.Padding(0, 0, 0, 18);
+            this.panelButtons.Location = new System.Drawing.Point(1, 151);
+            this.panelButtons.Margin = new System.Windows.Forms.Padding(0, 0, 0, 15);
             this.panelButtons.Name = "panelButtons";
-            this.panelButtons.Size = new System.Drawing.Size(580, 60);
+            this.panelButtons.Size = new System.Drawing.Size(534, 48);
             this.panelButtons.TabIndex = 7;
             // 
             // MessageBoxCustom
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClientSize = new System.Drawing.Size(582, 246);
+            this.ClientSize = new System.Drawing.Size(536, 200);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "MessageBoxCustom";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

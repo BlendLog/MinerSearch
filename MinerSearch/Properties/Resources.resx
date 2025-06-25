@@ -129,8 +129,8 @@
   <data name="_ScanRegistry_RU" xml:space="preserve">
     <value>Сканирование реестра...</value>
   </data>
-  <data name="_DataGridRemoveBtn_RU" xml:space="preserve">
-    <value>Удалить файл из карантина?</value>
+  <data name="_QuarantineRemoveBtn_RU" xml:space="preserve">
+    <value>Удалить файл(ы) (#FILESCOUNT#) из карантина?</value>
   </data>
   <data name="_DeleteBtnText_EN" xml:space="preserve">
     <value>Delete</value>
@@ -143,13 +143,13 @@
 
 Службы, отмеченные как вредоносные, будут отключены, что возможно приведёт к повреждению системы!
 
-Желаете продолжить?</value>
+Вы точно хотите продолжить?</value>
   </data>
   <data name="_BlockingProcessClosed_EN" xml:space="preserve">
     <value>Blocking process has been closed -</value>
   </data>
   <data name="_Winver_RU" xml:space="preserve">
-    <value>Версия W??indo??ws:</value>
+    <value>Версия Windows:</value>
   </data>
   <data name="_Username_RU" xml:space="preserve">
     <value>Имя пользователя:</value>
@@ -211,7 +211,7 @@ Thank you for your help!</value>
     <value>Too much GPU libs usage:</value>
   </data>
   <data name="_Winver_EN" xml:space="preserve">
-    <value>Wi?ndo?ws ??ve??rsion:</value>
+    <value>Windows version:</value>
   </data>
   <data name="_FoundMlwrKey_RU" xml:space="preserve">
     <value>Найден вредоносный ключ реестра - </value>
@@ -244,7 +244,7 @@ Thank you for your help!</value>
     <value>Scanning:</value>
   </data>
   <data name="_RegistryKeyRemoved_EN" xml:space="preserve">
-    <value>Key successfully removed -</value>
+    <value>Registry Key successfully deleted -</value>
   </data>
   <data name="_ErrorSetMitigationPolicy_EN" xml:space="preserve">
     <value>Failed to apply mitigation policy</value>
@@ -290,7 +290,7 @@ Thank you for your help!</value>
     <value>Событие WMI</value>
   </data>
   <data name="_SafeBootHint_RU" xml:space="preserve">
-    <value>Безопасный режим: проверка задач планировщика и правил брандмауэра недоступна. </value>
+    <value>Безопасный режим: проверка правил брандмауера недоступна. </value>
   </data>
   <data name="_ProcessSuspended_RU" xml:space="preserve">
     <value>Процесс был приостановлен -</value>
@@ -350,7 +350,7 @@ Thank you for your help!</value>
     <value>Ошибка:</value>
   </data>
   <data name="_AppInitNotEmpty_RU" xml:space="preserve">
-    <value>Параметр A?ppIn??it_DLL?s не пуст</value>
+    <value>Параметр A?ppIn??it_DLL?s содержит путь к DLL</value>
   </data>
   <data name="_ServiceDcomAbusing_RU" xml:space="preserve">
     <value>Модуль перехвата Svchost:</value>
@@ -389,35 +389,43 @@ Thank you for your help!</value>
     <value>Checking TermService...</value>
   </data>
   <data name="_SignedAppInitNotFound_RU" xml:space="preserve">
-    <value>Параметр RequireSignedAp?pIn??it_DLLs не найден</value>
+    <value>Параметр RequireSignedAppInit_DLLs не найден – могут загружаться неподписанные DLL</value>
   </data>
   <data name="_Help_EN" xml:space="preserve">
     <value>Startup params:
 
--h     --help                 This help message
--nl    --no-logs              Don't write logs in text file
--nstm  --no-scantime          Scan processes only
--nr    --no-runtime           Static scan only (Malware dirs, files, registry keys, etc)
--nse   --no-services          Skip scan services
--nss   --no-signature-scan    Skip scan files by signatures
--nrc   --no-rootkit-check     Skip checking rootkit present
--nch   --no-check-hosts       Skip checking hosts file
+-h     --help                 Display this help message
+-a     --accept-eula          Accept the End-User License Agreement (EULA)
+-nl    --no-logs              Do not write logs to a file
+-nstm  --no-scantime          Scan only running processes
+-nr    --no-runtime           Do not scan running processes (only directories, files, registry keys, etc.)
+-nse   --no-services          Skip scanning services
+-nss   --no-signature-scan    Skip file signature scanning
+-nrc   --no-rootkit-check     Disable the rootkit check
+-nch   --no-check-hosts       Skip checking the hosts file
+-nfw   --no-firewall          Skip scanning firewall rules
+-cm    --console-mode         Enable console mode (no dialog boxes)
 -p     --pause                Pause before cleanup
--ret   --remove-empty-tasks   Delete a task from the Task Scheduler if the application file does not exist in it
--so    --scan-only            Display malicious or suspicious objects, but do nothing
--fs    --full-scan            Add other entire local drives for signature scan
--ras   --run-as-system        Start scannning with SYSTEM privilege (for advanced users)
--s     --select               Only selected folder will be scanned, including subfolders
--si    --silent               Enables silent (background) mode without any dialog forms. The app switches to background mode, messages will not be displayed, 
-                              but will still be written to the log file. Incompatible with --select or --winpemode options.
--d=    --depth=&lt;number&gt;       Where &lt;number&gt; specify the number for maximum search depth. Usage example -d=5 (default 8)
--v     --verbose              Displays more info to the console and a log file, 
-                              including lines about files that are not considered malicious. It may increase the size of the log file.
--w     --winpemode            Start scanning in WinPE environment by specifying a different drive letter 
-                              (without scanning processes, registry, firewall and task scheduler entries)</value>
+-ret   --remove-empty-tasks   Remove a task from Task Scheduler if its executable file does not exist
+-so    --scan-only            Report malicious or suspicious objects but do not remove or quarantine them
+-fs    --full-scan            Include all local drives in the signature scan
+-ras   --run-as-system        Run the scan as the SYSTEM account (for advanced users only)
+-f     --force                Suppress confirmation prompts for potentially dangerous actions
+-s     --select               Scan only the selected directory and its subdirectories (recursively)
+-s=    --select= &lt;path&gt;       Same as --select (-s). Specifies the directory path to scan.
+-si    --silent               Enable silent mode. The application runs in the background without dialog boxes. 
+                              Messages are suppressed but still written to the log file. Incompatible with --select and --winpemode.
+-d=    --depth=&lt;num&gt;          Sets the maximum scan depth. Example: -d=5 (default is 8).
+-v     --verbose              Enable verbose output. Displays detailed process information and includes non-malicious files in the output. 
+                              This may significantly increase the log file size.
+-w     --winpemode            Run the scan in WinPE mode 
+                              (skips scanning processes, registry, firewall rules, services, and scheduled tasks).
+-q     --open-quarantine      Open the Quarantine Manager
+-res   --restore= &lt;list&gt;      Restore files from quarantine in console mode (e.g., 1,2,3). Use '-q -cm' to see the list of quarantined items.
+-del   --delete= &lt;list&gt;       Delete files from quarantine in console mode (e.g., 1,2,3). Use '-q -cm' to see the list of quarantined items.</value>
   </data>
   <data name="_SignedAppInitValue_EN" xml:space="preserve">
-    <value>Incorrent value on RequireS?ign?edApp?Init_DLLs</value>
+    <value>The value RequireSignedAppInit_DLLs is set, but it data is 0 (signature is not required)</value>
   </data>
   <data name="_ProbablyRAT_RU" xml:space="preserve">
     <value>Вероятно RAT-процесс (бэкдор):</value>
@@ -483,7 +491,7 @@ Do you want to continue?
     <value>Уже обработан. Пропускаем.</value>
   </data>
   <data name="_CertSignatureOrFileCorrupt_EN" xml:space="preserve">
-    <value>File or signature was probably corrupt</value>
+    <value>The signed file is modified or does not match this signature.</value>
   </data>
   <data name="_ErrorVerifySignature_EN" xml:space="preserve">
     <value>Error verify signature</value>
@@ -613,7 +621,7 @@ Click \b Exit\b0  to exit.\par
     <value>Продолжить</value>
   </data>
   <data name="_ErrorLockedByWD_RU" xml:space="preserve">
-    <value>Объект заблокирован Защитником Windows:</value>
+    <value>Объект заблокирован Защитником Windows</value>
   </data>
   <data name="_TotalNeutralizedThreats_EN" xml:space="preserve">
     <value>Total cured threats:</value>
@@ -811,7 +819,7 @@ Do you want to continue?</value>
     <value>Try to find blocking process...</value>
   </data>
   <data name="_SafeBootHint_EN" xml:space="preserve">
-    <value>Safe boot: scan tasks and firewall rules is not available.</value>
+    <value>Safe boot: firewall rules is not available.</value>
   </data>
   <data name="_ScanDirectories_EN" xml:space="preserve">
     <value>Scanning directories...</value>
@@ -838,7 +846,7 @@ Do you want to continue?</value>
     <value>Service name:</value>
   </data>
   <data name="_ErrorNoDotNet_EN" xml:space="preserve">
-    <value>NET Framework version 4.7.1 or higher is required to run this application. Check this component and try again</value>
+    <value>NET Framework version 4.7.2 or higher is required to run this application. Check this component and try again</value>
   </data>
   <data name="_TryCloseProcess_EN" xml:space="preserve">
     <value>Try to close processes...</value>
@@ -847,7 +855,7 @@ Do you want to continue?</value>
     <value>Готово. Нажмите ENTER, чтобы закрыть...</value>
   </data>
   <data name="_DataGridHeader_FileHash_RU" xml:space="preserve">
-    <value>Хеш файла</value>
+    <value>Хеш</value>
   </data>
   <data name="_ErrorNotFoundComponent_RU" xml:space="preserve">
     <value>Не удалось загрузить важные компоненты, так как вероятно архив был извлечён не полностью. </value>
@@ -883,13 +891,13 @@ Do you want to continue?</value>
     <value>Try to unlock directory...</value>
   </data>
   <data name="_AppInitNotEmpty_EN" xml:space="preserve">
-    <value>A?ppIn??it_DLL?s is not empty</value>
+    <value>The value A?ppIn??it_DLL?s contains path to DLL</value>
   </data>
   <data name="_ChekingR00tkit_RU" xml:space="preserve">
     <value>Проверка присутствия руткита...</value>
   </data>
-  <data name="_RestoredFile_RU" xml:space="preserve">
-    <value>Файл восстановлен</value>
+  <data name="_QuarantineRestoredFile_RU" xml:space="preserve">
+    <value>Файлы восстановлены (#FILESCOUNT#)</value>
   </data>
   <data name="_WinPEMode_EN" xml:space="preserve">
     <value>Activated WinPE mode. Specified drive letter -</value>
@@ -898,6 +906,7 @@ Do you want to continue?</value>
     <value>Параметры запуска:
 
 -h     --help                 Вызов этой справки
+-a     --accept-eula          Принять лицензионное соглашение
 -nl    --no-logs              Не записывать лог в файл
 -nstm  --no-scantime          Сканировать только процессы
 -nr    --no-runtime           Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)
@@ -905,19 +914,26 @@ Do you want to continue?</value>
 -nss   --no-signature-scan    Пропустить сигнатурное сканирование файлов
 -nrc   --no-rootkit-check     Не проверять присутствие руткита
 -nch   --no-check-hosts       Пропустить проверку файла hosts
+-nfw   --no-firewall          Пропустить сканирование правил брандмауера
+-cm    --console-mode         Активировать консольный режим без диалоговых окон
 -p     --pause                Пауза перед очисткой
 -ret   --remove-empty-tasks   Удалять задачу из Планировщика задач, если файл приложения в ней не существует
 -so    --scan-only            Отображать вредоносный или подозрительный объект, но не выполнять лечение
 -fs    --full-scan            Целиком добавляет другие локальные диски для сигнатурного сканирования
--ras   --run-as-system        Запустить проверку от имени SYSTEM (для опытных пользователей)	
+-ras   --run-as-system        Запустить проверку от имени SYSTEM (для опытных пользователей)
+-f     --force                Служит для подавления запроса подтверждения потенциально опасных функций
 -s     --select               Сканировать только выбранный каталог, включая вложенные каталоги
+-s=    --select= &lt;путь&gt;       Аналогично --select (-s). Где &lt;путь&gt; укажите путь на каталог для проверки
 -si    --silent               Включает тихий (фоновый) режим без диалоговых окон. Приложение переходит в фоновый режим, сообщения
                               не отображаются, но по-прежнему записываются в лог. Несовместимо с параметрами --select или --winpemode.
 -d=    --depth=&lt;num&gt;          Где &lt;num&gt; - уровень максимальной глубины поиска. Пример использования: -d=5 (по-умолчанию 8)
 -v     --verbose              Выводит подробные сведения о процессах в консоль, а также 
                               отключает фильтр строк с файлами не признанных вредоносными. Может увеличить размер лог-файла.
--w     --winpemode            Запускает сканирование в режиме WinPE 
-                              (без сканирования процессов, реестра, правил фаерволла, служб, задач планировщика)</value>
+-w     --winpemode            Запускает сканирование в режиме WinPE
+                              (без сканирования процессов, реестра, правил фаерволла, служб, задач планировщика)
+-q     --open-quarantine      Открыть менеджер карантина
+-res   --restore= &lt;list&gt;      Восстановление файлов из карантина в консольном режиме (например, 1,2,3). Введите -q -cm для просмотра списка.
+-del   --delete= &lt;list&gt;       Удаление файлов из карантина в консольном режиме (например, 1,2,3). Введите -q -cm для просмотра списка.</value>
   </data>
   <data name="_ErrorGrantPrivilege_EN" xml:space="preserve">
     <value>This application has found missing privileges for the Administrators group, but could not restore them. How to assign privileges manually read the blog https://t.me/MinerSearch_blog/24</value>
@@ -954,7 +970,7 @@ Do you want to continue?</value>
     <value>TermService: non original library path</value>
   </data>
   <data name="_SignedAppInitValue_RU" xml:space="preserve">
-    <value>RequireS?ign?edApp?Init_DLLs - установлено неверное значение</value>
+    <value>Параметр RequireSignedAppInit_DLLs задан, но его значение = 0 (подпись не требуется)</value>
   </data>
   <data name="_LabelSupportCaption_EN" xml:space="preserve">
     <value>Support the project!</value>
@@ -963,7 +979,7 @@ Do you want to continue?</value>
     <value>directory</value>
   </data>
   <data name="_ValueSetTo1_EN" xml:space="preserve">
-    <value>The value was set to 1</value>
+    <value>The value of RequireSignedAppInit_DLLs was changed to 1</value>
   </data>
   <data name="_LogCheckingUpdates_RU" xml:space="preserve">
     <value>Проверка обновлений. Подождите...</value>
@@ -979,7 +995,7 @@ Press any key to continue...</value>
     <value>[OK] У вас последняя версия</value>
   </data>
   <data name="_WMIHead_EN" xml:space="preserve">
-    <value>WMI Database check...</value>
+    <value>Checking the WMI database...</value>
   </data>
   <data name="_FoundMlwrKey_EN" xml:space="preserve">
     <value>Found mali?cio?us registry key - </value>
@@ -1021,7 +1037,7 @@ Press any key to continue...</value>
     <value>Только проверка</value>
   </data>
   <data name="_RegistryKeyRemoved_RU" xml:space="preserve">
-    <value>Ключ успешно удалён -</value>
+    <value>Каталог реестра успешно удалён -</value>
   </data>
   <data name="_FileRenamed_EN" xml:space="preserve">
     <value>File renamed to</value>
@@ -1036,10 +1052,10 @@ Press any key to continue...</value>
     <value>Error on disable file execution</value>
   </data>
   <data name="_ErrorLockedByWD_EN" xml:space="preserve">
-    <value>The object locked by Wi?ndo?ws Def?end?er:</value>
+    <value>The object locked by Wi?ndo?ws Def?end?er</value>
   </data>
   <data name="_ValueWasCreated_RU" xml:space="preserve">
-    <value>Параметр был создан</value>
+    <value>Создан параметр RequireSignedAppInit_DLLs со значением 1</value>
   </data>
   <data name="_SuspiciousFileSize_RU" xml:space="preserve">
     <value>Подозрительный размер файла</value>
@@ -1168,7 +1184,7 @@ Press any key to continue...</value>
     <value>Восстановить</value>
   </data>
   <data name="_CheckUserJohn_EN" xml:space="preserve">
-    <value>Checking user John...</value>
+    <value>Checking user John existence...</value>
   </data>
   <data name="_MaliciousService_EN" xml:space="preserve">
     <value>Malicious Service -</value>
@@ -1188,9 +1204,6 @@ Press any key to continue...</value>
   <data name="_ActionType_Cured_EN" xml:space="preserve">
     <value>Cured</value>
   </data>
-  <data name="_SafeBootNetworkingHint_EN" xml:space="preserve">
-    <value>Safe boot networking: task scheduler check not available</value>
-  </data>
   <data name="_RemovedEmptyDir_RU" xml:space="preserve">
     <value>Удален пустой каталог</value>
   </data>
@@ -1204,7 +1217,7 @@ Press any key to continue...</value>
     <value>Exit</value>
   </data>
   <data name="_DataGridHeader_FileSize_EN" xml:space="preserve">
-    <value>File size</value>
+    <value>Size</value>
   </data>
   <data name="_SpecDrive_EN" xml:space="preserve">
     <value>Specify drive letter:</value>
@@ -1219,7 +1232,7 @@ Press any key to continue...</value>
     <value>Do you allow sending a log file (scan log of detected threats) to the developer every time you use it? This will help to improve the operation of the application.</value>
   </data>
   <data name="_ValueSetTo1_RU" xml:space="preserve">
-    <value>Задано значение 1</value>
+    <value>Значение параметра RequireSignedAppInit_DLLs изменено на 1</value>
   </data>
   <data name="_RebootPCNowDialog_EN" xml:space="preserve">
     <value>Do you want to restart your computer right now?</value>
@@ -1324,7 +1337,7 @@ Press any key to continue...</value>
     <value>Пропущено</value>
   </data>
   <data name="_CertSignatureOrFileCorrupt_RU" xml:space="preserve">
-    <value>Файл или подпись вероятно были повреждены</value>
+    <value>Подписанный файл модифицирован или не соответствует этой подписи</value>
   </data>
   <data name="_ActionType_Error_EN" xml:space="preserve">
     <value>Error</value>
@@ -1378,7 +1391,7 @@ Press any key to continue...</value>
     <value>Объемное потребление ресурсов ГП:</value>
   </data>
   <data name="_CheckUserJohn_RU" xml:space="preserve">
-    <value>Проверка пользователя John...</value>
+    <value>Проверка наличия пользователя John...</value>
   </data>
   <data name="quarantine_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\quarantine_logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -1387,7 +1400,7 @@ Press any key to continue...</value>
     <value>Не удалось удалить задачу</value>
   </data>
   <data name="_DataGridHeader_FileHash_EN" xml:space="preserve">
-    <value>File hash</value>
+    <value>Hash</value>
   </data>
   <data name="_RemovingFoundMlwrFiles_EN" xml:space="preserve">
     <value>Removing found mal?ici?ous files...</value>
@@ -1429,7 +1442,7 @@ Press any key to continue...</value>
     <value>Вредоносная запись -</value>
   </data>
   <data name="_ScanTasks_EN" xml:space="preserve">
-    <value>Scanning scheduled tasks...</value>
+    <value>Scanning scheduler's tasks...</value>
   </data>
   <data name="_ErrorCheckingLock_RU" xml:space="preserve">
     <value>Не удалось проверить заблокированный объект</value>
@@ -1569,8 +1582,8 @@ Press any key to continue...</value>
   <data name="_ProcessRiskLevel_ExtremelyHigh_EN" xml:space="preserve">
     <value>extremely high</value>
   </data>
-  <data name="_RestoredFile_EN" xml:space="preserve">
-    <value>The file has been restored</value>
+  <data name="_QuarantineRestoredFile_EN" xml:space="preserve">
+    <value>The files has been restored (#FILESCOUNT#)</value>
   </data>
   <data name="_NoBtn_EN" xml:space="preserve">
     <value>No</value>
@@ -1588,7 +1601,7 @@ Press any key to continue...</value>
     <value>Время сканирования:</value>
   </data>
   <data name="_SignedAppInitNotFound_EN" xml:space="preserve">
-    <value>RequireSignedAp?pIn??it_DLLs key is not found</value>
+    <value>Missing RequireSignedAp?pIn??it_DLLs value – unsigned DLLs may be loaded</value>
   </data>
   <data name="_HostsCleanupSkipBtn_EN" xml:space="preserve">
     <value>Skip</value>
@@ -1602,8 +1615,8 @@ Press any key to continue...</value>
   <data name="_FileIsNotFound_RU" xml:space="preserve">
     <value>Файл не найден:</value>
   </data>
-  <data name="_DataGridRemoveBtn_EN" xml:space="preserve">
-    <value>Remove file from quarantine?</value>
+  <data name="_QuarantineRemoveBtn_EN" xml:space="preserve">
+    <value>Remove #FILESCOUNT# file(s) from quarantine?</value>
   </data>
   <data name="_SuspiciousPath_RU" xml:space="preserve">
     <value>Подозрительный путь</value>
@@ -1645,7 +1658,7 @@ Press any key to continue...</value>
     <value>Перемещено в карантин</value>
   </data>
   <data name="_ValueWasCreated_EN" xml:space="preserve">
-    <value>The value was created</value>
+    <value>RequireSignedAppInit_DLLs was created with data 1</value>
   </data>
   <data name="_ScanProcesses_RU" xml:space="preserve">
     <value>Сканирование процессов...</value>
@@ -1690,7 +1703,7 @@ Press any key to continue...</value>
     <value>Not all threads are suspended</value>
   </data>
   <data name="_DataGridHeader_FileSize_RU" xml:space="preserve">
-    <value>Размер файла</value>
+    <value>Размер</value>
   </data>
   <data name="_NoInternetConnection_EN" xml:space="preserve">
     <value>No internet connection</value>
@@ -1758,9 +1771,6 @@ Press any key to continue...</value>
   <data name="_DataGridHeader_ObjectType_RU" xml:space="preserve">
     <value>Тип объекта</value>
   </data>
-  <data name="_SafeBootNetworkingHint_RU" xml:space="preserve">
-    <value>Безопасный режим с поддержкой сети: проверка задач планировщика недоступна.</value>
-  </data>
   <data name="_BtnDetails_RU" xml:space="preserve">
     <value>Показать отчёт</value>
   </data>
@@ -1768,7 +1778,7 @@ Press any key to continue...</value>
     <value>Use "--help" option to display list of available commands</value>
   </data>
   <data name="_ErrorNoDotNet_RU" xml:space="preserve">
-    <value>Для работы приложения требуется .NET Framework 4.7.1 и выше. Проверьте установлен ли компонент и повторите попытку</value>
+    <value>Для работы приложения требуется .NET Framework 4.7.2 и выше. Проверьте установлен ли компонент и повторите попытку</value>
   </data>
   <data name="_ErrorCleanHosts_RU" xml:space="preserve">
     <value>Ошибка очистки файла hosts:</value>
@@ -1814,5 +1824,253 @@ Press any key to continue...</value>
   </data>
   <data name="tether-usdt-logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tether-usdt-logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_CertFileNotSigned_EN" xml:space="preserve">
+    <value>No signature was present in the subject</value>
+  </data>
+  <data name="_CertFileNotSigned_RU" xml:space="preserve">
+    <value>В этом объекте нет подписи</value>
+  </data>
+  <data name="_ScanStarupFolder_EN" xml:space="preserve">
+    <value>Scanning startup folder...</value>
+  </data>
+  <data name="_ScanStarupFolder_RU" xml:space="preserve">
+    <value>Сканирование каталога автозагрузки...</value>
+  </data>
+  <data name="_ActionType_LockedByAV_EN" xml:space="preserve">
+    <value>Blocked by antivirus</value>
+  </data>
+  <data name="_ActionType_LockedByAV_RU" xml:space="preserve">
+    <value>Заблокировано антивирусом</value>
+  </data>
+  <data name="_CertActionUnknown_EN" xml:space="preserve">
+    <value>The trust verification action specified is not supported by the specified trust provider</value>
+  </data>
+  <data name="_CertActionUnknown_RU" xml:space="preserve">
+    <value>Указанная операция проверки доверия не поддерживается выбранным поставщиком доверия</value>
+  </data>
+  <data name="_CertDigsigDecode_EN" xml:space="preserve">
+    <value>Error due to problem in ASN.1 decoding process</value>
+  </data>
+  <data name="_CertDigsigDecode_RU" xml:space="preserve">
+    <value>Ошибка при расшифровке ASN.1</value>
+  </data>
+  <data name="_CertDigsigEncode_EN" xml:space="preserve">
+    <value>Error due to problem in ASN.1 encoding process</value>
+  </data>
+  <data name="_CertDigsigEncode_RU" xml:space="preserve">
+    <value>Ошибка при шифровании ASN.1</value>
+  </data>
+  <data name="_CertProviderUnknown_EN" xml:space="preserve">
+    <value>Unknown trust provider</value>
+  </data>
+  <data name="_CertProviderUnknown_RU" xml:space="preserve">
+    <value>Неизвестный поставщик доверия</value>
+  </data>
+  <data name="_CertSubjectFormUnknown_EN" xml:space="preserve">
+    <value>The form specified for the subject is not one supported or known by the specified trust provider</value>
+  </data>
+  <data name="_CertSubjectFormUnknown_RU" xml:space="preserve">
+    <value>Указанная форма субъекта не поддерживается выбранным поставщиком доверия</value>
+  </data>
+  <data name="_CertUnknownResult_EN" xml:space="preserve">
+    <value>Unknown result of verification of the signature certificate</value>
+  </data>
+  <data name="_CertUnknownResult_RU" xml:space="preserve">
+    <value>Неизвестный результат проверки сертификата подписи</value>
+  </data>
+  <data name="_ErrorOpenFileForCatalog_EN" xml:space="preserve">
+    <value>Unable to open security catalog file</value>
+  </data>
+  <data name="_ErrorOpenFileForCatalog_RU" xml:space="preserve">
+    <value>Не удалось открыть каталог безопасности</value>
+  </data>
+  <data name="_ValidFileDllHijacking_EN" xml:space="preserve">
+    <value>File #FILENAME# loads fake DLL #DLLNAME#</value>
+  </data>
+  <data name="_ValidFileDllHijacking_RU" xml:space="preserve">
+    <value>Файл #FILENAME# загружает поддельную DLL #DLLNAME#</value>
+  </data>
+  <data name="_RegistryValueRemoved_EN" xml:space="preserve">
+    <value>Registry Value successfully deleted -</value>
+  </data>
+  <data name="_RegistryValueRemoved_RU" xml:space="preserve">
+    <value>Параметр реестра успешно удалён -</value>
+  </data>
+  <data name="_IsDotnetAssembly_EN" xml:space="preserve">
+    <value>Dotnet assembly</value>
+  </data>
+  <data name="_IsDotnetAssembly_RU" xml:space="preserve">
+    <value>Dotnet сборка</value>
+  </data>
+  <data name="_DataGridHeader_Select_EN" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="_DataGridHeader_Select_RU" xml:space="preserve">
+    <value>Выбрать</value>
+  </data>
+  <data name="_DataGrid_NoSelection_EN" xml:space="preserve">
+    <value>No files selected</value>
+  </data>
+  <data name="_DataGrid_NoSelection_RU" xml:space="preserve">
+    <value>Ни один файл не выбран</value>
+  </data>
+  <data name="_QuarantineRemovedFiles_EN" xml:space="preserve">
+    <value>Files successfully removed</value>
+  </data>
+  <data name="_QuarantineRemovedFiles_RU" xml:space="preserve">
+    <value>Файлы успешно удалены</value>
+  </data>
+  <data name="_DataGridHeader_Note_EN" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="_DataGridHeader_Note_RU" xml:space="preserve">
+    <value>Примечание</value>
+  </data>
+  <data name="_CertCannotCalcHash_EN" xml:space="preserve">
+    <value>Cannot calculate hash</value>
+  </data>
+  <data name="_CertCannotCalcHash_RU" xml:space="preserve">
+    <value>Не удалось вычислить хеш</value>
+  </data>
+  <data name="_CertCannotGetCatalogInfo_EN" xml:space="preserve">
+    <value>Cannot get security catalog info</value>
+  </data>
+  <data name="_CertCannotGetCatalogInfo_RU" xml:space="preserve">
+    <value>Не удалось получить информацию о каталоге безопасности</value>
+  </data>
+  <data name="_CertCannotGetHashSize_EN" xml:space="preserve">
+    <value>Cannot get hash size</value>
+  </data>
+  <data name="_CertCannotGetHashSize_RU" xml:space="preserve">
+    <value>Не удалось получить размер хеша</value>
+  </data>
+  <data name="_ErrorSpecifiedPathIsNull_EN" xml:space="preserve">
+    <value>The expected path for #ARG# is not specified</value>
+  </data>
+  <data name="_ErrorSpecifiedPathIsNull_RU" xml:space="preserve">
+    <value>Ожидаемый путь для опции #ARG# не указан</value>
+  </data>
+  <data name="_ErrorSpecifiedPathNotFound_EN" xml:space="preserve">
+    <value>The specified path #PATH# is not found</value>
+  </data>
+  <data name="_ErrorSpecifiedPathNotFound_RU" xml:space="preserve">
+    <value>Указанный путь #PATH# не найден</value>
+  </data>
+  <data name="_License_console_EN" xml:space="preserve">
+    <value>[Denial of responsibility]
+Before proceeding, you must read the license agreement (license.rtf or a copy of it on https://github.com/BlendLog/MinerSearch/blob/master/LICENSE.MD ). Continue?</value>
+  </data>
+  <data name="_License_console_RU" xml:space="preserve">
+    <value>[Отказ от ответветственности]
+Прежде чем продолжить, вы должны ознакомится с лицензионным соглашением (license.rtf или его копию на https://github.com/BlendLog/MinerSearch/blob/master/LICENSE.MD). Продолжить?</value>
+  </data>
+  <data name="_DepthInvalidValue_EN" xml:space="preserve">
+    <value>The number in the #ARG# argument cannot be negative, equal to 0, or greater than 16</value>
+  </data>
+  <data name="_DepthInvalidValue_RU" xml:space="preserve">
+    <value>Число в аргументе #ARG# не может быть отрицательным, быть равным 0 или больше 16 </value>
+  </data>
+  <data name="_Q_CLI_ForceRequired_EN" xml:space="preserve">
+    <value>[Warning] This operation is potentially dangerous. Use --force if you are sure.</value>
+  </data>
+  <data name="_Q_CLI_IndexListInvalid_EN" xml:space="preserve">
+    <value>Invalid indices provided.</value>
+  </data>
+  <data name="_Q_CLI_RestoreCommandSyntax_EN" xml:space="preserve">
+    <value>Usage: --restore 1,2  OR  --delete 1</value>
+  </data>
+  <data name="_Q_CLI_Empty_EN" xml:space="preserve">
+    <value>No quarantined files found.</value>
+  </data>
+  <data name="_Q_CLI_Title_EN" xml:space="preserve">
+    <value>[Quarantine Manager - Console Mode]</value>
+  </data>
+  <data name="_Q_CLI_ActionHint_EN" xml:space="preserve">
+    <value>Enter row numbers (e.g. 1,2,3):</value>
+  </data>
+  <data name="_Q_CLI_FileDeleted_EN" xml:space="preserve">
+    <value>Deleted: #COUNT#</value>
+  </data>
+  <data name="_Q_CLI_FileRestored_EN" xml:space="preserve">
+    <value>Restored: #COUNT#</value>
+  </data>
+  <data name="_Q_CLI_FileFailed_EN" xml:space="preserve">
+    <value>Failed to {0}: {1}</value>
+  </data>
+  <data name="_Q_CLI_ForceRequired_RU" xml:space="preserve">
+    <value>Эта операция потенциально опасна. Используйте --force, если уверены.</value>
+  </data>
+  <data name="_Q_CLI_IndexListInvalid_RU" xml:space="preserve">
+    <value>Указаны неверные индексы.</value>
+  </data>
+  <data name="_Q_CLI_RestoreCommandSyntax_RU" xml:space="preserve">
+    <value>Как использовать: --restore 1,2  ИЛИ  --delete 1</value>
+  </data>
+  <data name="_Q_CLI_Empty_RU" xml:space="preserve">
+    <value>Файлы не найдены.</value>
+  </data>
+  <data name="_Q_CLI_Title_RU" xml:space="preserve">
+    <value>[Менеджер карантина – консольный режим]</value>
+  </data>
+  <data name="_Q_CLI_ActionHint_RU" xml:space="preserve">
+    <value>Введите номера строк (например, 1,2,3):</value>
+  </data>
+  <data name="_Q_CLI_FileDeleted_RU" xml:space="preserve">
+    <value>Удалено: #COUNT#</value>
+  </data>
+  <data name="_Q_CLI_FileRestored_RU" xml:space="preserve">
+    <value>Восстановлено: #COUNT#</value>
+  </data>
+  <data name="_Q_CLI_FileFailed_RU" xml:space="preserve">
+    <value>Не удалось {0}: {1}</value>
+  </data>
+  <data name="_Console_NotSupportedOption_EN" xml:space="preserve">
+    <value>#ARG# argument is not supported from non-interactive mode</value>
+  </data>
+  <data name="_Console_NotSupportedOption_RU" xml:space="preserve">
+    <value>#ARG# не поддерживается в неинтерактивном режиме</value>
+  </data>
+  <data name="_ErrorQuarantineListEnumIsNull_EN" xml:space="preserve">
+    <value>The expected list of indexes for files from quarantine cannot be empty. To view the list, use "-q [-cm]"</value>
+  </data>
+  <data name="_ErrorQuarantineListEnumIsNull_RU" xml:space="preserve">
+    <value>Ожидаемый список индексов для файлов из карантина не может быть пустым. Для просмотра списка используйте "-q [-cm]"</value>
+  </data>
+  <data name="_MessageRemoteSystemSessionBlocked_EN" xml:space="preserve">
+    <value>Non-interactive or remote sessions are not allowed in SYSTEM context.</value>
+  </data>
+  <data name="_MessageRemoteSystemSessionBlocked_RU" xml:space="preserve">
+    <value>Работа в удалённой или неинтерактивной сессии от SYSTEM запрещена.</value>
+  </data>
+  <data name="_Q_CLI_InvlaidOptionSelection_EN" xml:space="preserve">
+    <value>Simultaneous use of the delete and restore options is not allowed.</value>
+  </data>
+  <data name="_Q_CLI_InvlaidOptionSelection_RU" xml:space="preserve">
+    <value>Одновременное использование опций удаления и восстановления запрещено.</value>
+  </data>
+  <data name="_ErrorLockedByAnotherProcess_EN" xml:space="preserve">
+    <value>File used by another process</value>
+  </data>
+  <data name="_ErrorLockedByAnotherProcess_RU" xml:space="preserve">
+    <value>Файл используется другим процессом</value>
+  </data>
+  <data name="_NoteInvalidRegistryValue_EN" xml:space="preserve">
+    <value>Invalid Registry Value</value>
+  </data>
+  <data name="_NoteInvalidRegistryValue_RU" xml:space="preserve">
+    <value>Нештатное значение параметра реестра</value>
+  </data>
+  <data name="_NoteSilentProcessExitFlag_EN" xml:space="preserve">
+    <value>Process termination hook</value>
+  </data>
+  <data name="_NoteSilentProcessExitFlag_RU" xml:space="preserve">
+    <value>Перехват нештатного завершения процесса</value>
+  </data>
+  <data name="_WarnSetAttributes_EN" xml:space="preserve">
+    <value>Unable to reset attributes</value>
+  </data>
+  <data name="_WarnSetAttributes_RU" xml:space="preserve">
+    <value>Не удалось сбросить атрибуты</value>
   </data>
 </root>

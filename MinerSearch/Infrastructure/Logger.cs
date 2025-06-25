@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSearch.Core;
+using System;
 using System.IO;
 using System.Threading;
 
@@ -7,7 +8,7 @@ namespace MSearch
     public static class Logger
     {
         internal static string logFileName = $"M?in?er?Sea?rch_{DateTime.Now}.log".Replace("/", "_").Replace("?", "").Replace(":", "-").Replace(" ", "_");
-        public static string LogsFolder = Path.Combine(Program.drive_letter + ":\\", "_Mi?n?erSe?a?rchLogs".Replace("?", ""));
+        public static string LogsFolder = Path.Combine(AppConfig.Instance.drive_letter + ":\\", "_Mi?n?erSe?a??rchLogs".Replace("?", ""));
 
         public static readonly ConsoleColor error = ConsoleColor.Red;
         public static readonly ConsoleColor success = ConsoleColor.Green;
@@ -22,27 +23,48 @@ namespace MSearch
         internal static readonly object _logLock = new object();
         static StreamWriter _writer;
 
-        public static void InitLogger()
+        public static void InitLogger(bool logSupression)
         {
             if (!Directory.Exists(Logger.LogsFolder))
             {
                 try
                 {
                     Directory.CreateDirectory(Logger.LogsFolder);
+                    File.SetAttributes(Logger.LogsFolder, FileAttributes.Normal);
                 }
-                catch (IOException)
+                catch (IOException) 
                 {
                     Logger.LogsFolder += Utils.GetRndString(16);
                     Directory.CreateDirectory(Logger.LogsFolder);
+                    File.SetAttributes(Logger.LogsFolder, FileAttributes.Normal);
                 }
             }
-            else if (!UnlockObjectClass.ResetObjectACL(Logger.LogsFolder))
+            else
             {
-                Logger.LogsFolder += Utils.GetRndString(16);
-                Directory.CreateDirectory(Logger.LogsFolder);
+                if (UnlockObjectClass.ResetObjectACL(Logger.LogsFolder))
+                {
+                    try
+                    {
+                        File.SetAttributes(Logger.LogsFolder, FileAttributes.Normal);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Warning: Failed to reset attributes for {Logger.LogsFolder}. {ex.Message}");
+                    }
+                }
+                else
+                {
+                    Logger.LogsFolder += Utils.GetRndString(16);
+                    Directory.CreateDirectory(Logger.LogsFolder);
+                    File.SetAttributes(Logger.LogsFolder, FileAttributes.Normal);
+                }
             }
-            _writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true, System.Text.Encoding.UTF8);
-            _writer.AutoFlush = true;
+
+            if (!logSupression)
+            {
+                _writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true, new System.Text.UTF8Encoding(false));
+                _writer.AutoFlush = true;
+            }
         }
 
         public static void DisposeLogger()
@@ -55,7 +77,7 @@ namespace MSearch
 
         public static void WriteLog(string currentText, ConsoleColor LogLevel)
         {
-            if (!Program.verbose)
+            if (!AppConfig.Instance.verbose)
             {
                 if (currentText == previousWhiteText || currentText == previousNonWhiteText)
                 {
@@ -71,14 +93,14 @@ namespace MSearch
 
                 lock (_logLock)
                 {
-                    if (!Program.silent)
+                    if (!AppConfig.Instance.silent)
                     {
                         Console.ForegroundColor = LogLevel;
                         Console.WriteLine(logMessage);
                         Console.ForegroundColor = ConsoleColor.White;
                     }
 
-                    if (!Program.verbose)
+                    if (!AppConfig.Instance.verbose)
                     {
                         if (LogLevel == ConsoleColor.White)
                         {
@@ -91,7 +113,7 @@ namespace MSearch
                     }
 
 
-                    if (!Program.no_logs)
+                    if (!AppConfig.Instance.no_logs)
                     {
                         _writer.WriteLine(logMessage);
                     }
@@ -112,7 +134,7 @@ namespace MSearch
         {
             if (!ignorePrevious)
             {
-                if (!Program.verbose)
+                if (!AppConfig.Instance.verbose)
                 {
                     if (currentText == previousWhiteText || currentText == previousNonWhiteText)
                     {
@@ -135,7 +157,7 @@ namespace MSearch
                     else
                         logMessage = currentText;
 
-                    if (!Program.silent)
+                    if (!AppConfig.Instance.silent)
                     {
                         Console.ForegroundColor = color;
                         Console.WriteLine(logMessage);
@@ -144,7 +166,7 @@ namespace MSearch
 
                     if (!ignorePrevious)
                     {
-                        if (!Program.verbose)
+                        if (!AppConfig.Instance.verbose)
                         {
                             if (color == ConsoleColor.White)
                             {
@@ -157,7 +179,7 @@ namespace MSearch
                         }
                     }
 
-                    if (!Program.no_logs)
+                    if (!AppConfig.Instance.no_logs)
                     {
                         _writer.WriteLine(logMessage);
                     }
@@ -176,7 +198,7 @@ namespace MSearch
 
         public static void WriteLog(string currentText, ConsoleColor color, bool DisplayTime = true)
         {
-            if (!Program.verbose)
+            if (!AppConfig.Instance.verbose)
             {
                 if (currentText == previousWhiteText || currentText == previousNonWhiteText)
                 {
@@ -198,7 +220,7 @@ namespace MSearch
                     else
                         logMessage = currentText;
 
-                    if (!Program.silent)
+                    if (!AppConfig.Instance.silent)
                     {
 
                         Console.ForegroundColor = color;
@@ -208,7 +230,7 @@ namespace MSearch
 
 
 
-                    if (!Program.verbose)
+                    if (!AppConfig.Instance.verbose)
                     {
                         if (color == ConsoleColor.White)
                         {
@@ -222,7 +244,7 @@ namespace MSearch
                     }
 
 
-                    if (!Program.no_logs)
+                    if (!AppConfig.Instance.no_logs)
                     {
                         _writer.WriteLine(logMessage);
                     }
@@ -262,7 +284,7 @@ namespace MSearch
                         Console.ResetColor();
                     }
 
-                    if (!Program.no_logs)
+                    if (!AppConfig.Instance.no_logs)
                     {
                         _writer.WriteLine(logMessage);
                     }
@@ -300,7 +322,7 @@ namespace MSearch
                         Console.ResetColor();
                     }
 
-                    if (!Program.no_logs || force)
+                    if (!AppConfig.Instance.no_logs || force)
                     {
                         _writer.WriteLine(logMessage);
                     }

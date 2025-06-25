@@ -1,5 +1,8 @@
 ﻿using DBase;
 using Microsoft.Win32;
+using Microsoft.Win32.SafeHandles;
+using MSearch.Core;
+using MSearch.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,11 +22,7 @@ namespace MSearch
 {
     internal class Native
     {
-        [DllImport("user32.dll")]
-        public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        public static extern uint GetLongPathName(string shortPath, StringBuilder longPath, uint longPathLength);
 
         [DllImport("advapi32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -134,6 +133,47 @@ namespace MSearch
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         internal static extern uint GetFileAttributes(string lpFileName);
 
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool GetFileAttributesEx(string lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        internal static extern SafeFileHandle CreateFile(
+    string lpFileName,
+    [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
+    [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
+    IntPtr lpSecurityAttributes,
+    [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
+    [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
+    IntPtr hTemplateFile);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool SetFileAttributes(string lpFileName, [MarshalAs(UnmanagedType.U4)] FileAttributes dwFileAttributes);
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct WIN32_FILE_ATTRIBUTE_DATA
+        {
+            public uint dwFileAttributes;
+            public System.Runtime.InteropServices.ComTypes.FILETIME ftCreationTime;
+            public System.Runtime.InteropServices.ComTypes.FILETIME ftLastAccessTime;
+            public System.Runtime.InteropServices.ComTypes.FILETIME ftLastWriteTime;
+            public uint nFileSizeHigh;
+            public uint nFileSizeLow;
+        }
+
+        internal enum GET_FILEEX_INFO_LEVELS
+        {
+            GetFileExInfoStandard,
+            GetFileExMaxInfoLevel
+        }
+
+        internal const uint FILE_ATTRIBUTE_DIRECTORY = 0x00000010;
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool DeleteFile(string lpFileName);
+
         [DllImport("advapi32.dll", SetLastError = true)]
         internal static extern int SetNamedSecurityInfo(string pObjectName, int objectType, int securityInfo, IntPtr psidOwner, IntPtr psidGroup, IntPtr pDacl, IntPtr pSacl);
 
@@ -161,6 +201,24 @@ namespace MSearch
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, out int lpNumberOfBytesRead);
+
+        [DllImport("psapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpFilename, [In][MarshalAs(UnmanagedType.U4)] int nSize);
+
+        [DllImport("psapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern uint GetMappedFileName(
+            IntPtr hProcess,
+            IntPtr lpv, // Address in the process
+            [Out] StringBuilder lpFilename,
+            [In][MarshalAs(UnmanagedType.U4)] int nSize
+        );
+
+        [DllImport("kernel32.dll")]
+        public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, int ucchMax);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern uint GetLogicalDrives();
+
 
         [DllImport("ntdll.dll")]
         public static extern int NtQuerySystemInformation(
@@ -250,15 +308,29 @@ namespace MSearch
             public IntPtr Buffer;
         }
 
+        [DllImport("advapi32.dll", CharSet = CharSet.Auto)]
+        public static extern int RegOpenKeyEx(IntPtr hKey, string subKey, int ulOptions, int samDesired, out IntPtr hkResult);
+
         [DllImport("Advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern uint RegOpenKeyEx(IntPtr hKey, string lpSubKey, uint ulOptions, int samDesired, ref IntPtr phkResult);
 
-        public const int HKEY_CURRENT_USER = unchecked((int)0x80000001);
-        public const int HKEY_CLASSES_ROOT = unchecked((int)0x80000000);
 
+        [DllImport("advapi32.dll", EntryPoint = "RegDeleteTreeW", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern int RegDeleteTree(IntPtr hKey, string lpSubKey);
+
+        public const int HKEY_CLASSES_ROOT = unchecked((int)0x80000000);
+        public const int HKEY_CURRENT_USER = unchecked((int)0x80000001);
+        public const int HKEY_LOCAL_MACHINE = unchecked((int)0x80000002);
+
+        public const int KEY_READ = 0x20019;
+        public const int KEY_WRITE = 0x20006;
         public const int KEY_WOW64_64KEY = 0x0100;
+        public const int KEY_ENUMERATE_SUB_KEYS = 0x0008;
         public const int WRITE_OWNER = 0x00080000;
         public const int WRITE_DAC = 0x00040000;
+        public const int DELETE = 0x00010000;
+        public const int READ_CONTROL = 0x00020000;
+        public const int KEY_ALL_ACCESS = 0xF003F;
 
         [DllImport("Advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern uint RegCloseKey(IntPtr hKey);
@@ -273,6 +345,9 @@ namespace MSearch
         [DllImport("Advapi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern uint SetSecurityInfo(IntPtr handle, SE_OBJECT_TYPE ObjectType, uint SecurityInfo,
             IntPtr psidOwner, IntPtr psidGroup, IntPtr pDacl, IntPtr pSacl);
+
+        [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern uint SetEntriesInAcl(uint cCountOfExplicitEntries, ref EXPLICIT_ACCESS pListOfExplicitEntries, IntPtr OldAcl, out IntPtr NewAcl);
 
         public enum SE_OBJECT_TYPE
         {
@@ -290,6 +365,64 @@ namespace MSearch
             SE_WMIGUID_OBJECT,
             SE_REGISTRY_WOW64_32KEY,
             SE_REGISTRY_WOW64_64KEY,
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct EXPLICIT_ACCESS
+        {
+            public uint grfAccessPermissions;
+            public ACCESS_MODE grfAccessMode;
+            public uint grfInheritance;
+            public TRUSTEE Trustee;
+        }
+
+        public enum ACCESS_MODE
+        {
+            NOT_USED_ACCESS = 0,
+            GRANT_ACCESS,
+            SET_ACCESS,
+            DENY_ACCESS,
+            REVOKE_ACCESS,
+            SET_AUDIT_SUCCESS,
+            SET_AUDIT_FAILURE
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TRUSTEE
+        {
+            public IntPtr pMultipleTrustee;
+            public MULTIPLE_TRUSTEE_OPERATION MultipleTrusteeOperation;
+            public TRUSTEE_FORM TrusteeForm;
+            public TRUSTEE_TYPE TrusteeType;
+            public IntPtr ptstrName;
+        }
+
+        public enum TRUSTEE_FORM
+        {
+            TRUSTEE_IS_SID,
+            TRUSTEE_IS_NAME,
+            TRUSTEE_BAD_FORM,
+            TRUSTEE_IS_OBJECTS_AND_SID,
+            TRUSTEE_IS_OBJECTS_AND_NAME
+        }
+
+        public enum TRUSTEE_TYPE
+        {
+            TRUSTEE_IS_UNKNOWN,
+            TRUSTEE_IS_USER,
+            TRUSTEE_IS_GROUP,
+            TRUSTEE_IS_DOMAIN,
+            TRUSTEE_IS_ALIAS,
+            TRUSTEE_IS_WELL_KNOWN_GROUP,
+            TRUSTEE_IS_DELETED,
+            TRUSTEE_IS_INVALID,
+            TRUSTEE_IS_COMPUTER
+        }
+
+        public enum MULTIPLE_TRUSTEE_OPERATION
+        {
+            NO_MULTIPLE_TRUSTEE,
+            TRUSTEE_IS_IMPERSONATE
         }
 
         internal static bool GrantPrivilegeToGroup(string groupName, string privilege)
@@ -693,7 +826,7 @@ namespace MSearch
             string location = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32", "cmd.exe");
 
             IntPtr handle = IntPtr.Zero;
-            if (Program.WinPEMode)
+            if (AppConfig.Instance.WinPEMode)
             {
                 handle = Process.GetProcessesByName(filename)[0].Handle;
             }
@@ -759,8 +892,6 @@ namespace MSearch
             public uint ProcessId;
             public ulong DetachAddress;
         }
-
-
     }
 
     // https://github.com/DavidXanatos/priv10/blob/master/MiscHelpers/API/ServiceHelper.cs
@@ -1272,13 +1403,13 @@ namespace MSearch
                     if ((ServiceBootFlag)serviceinfo.StartType != ServiceBootFlag.AutoStart)
                     {
                         ChangeStartMode(serviceName, ServiceBootFlag.AutoStart);
-                        Program.LL.LogSuccessMessage("_CriticalServiceStartup");
+                        AppConfig.Instance.LL.LogSuccessMessage("_CriticalServiceStartup");
                     }
 
                     if (GetServiceState(serviceName) != ServiceState.Running)
                     {
                         StartService(serviceName);
-                        Program.LL.LogSuccessMessage("_CriticalServiceRestart");
+                        AppConfig.Instance.LL.LogSuccessMessage("_CriticalServiceRestart");
                     }
 
                     try
@@ -1308,7 +1439,7 @@ namespace MSearch
             {
                 if (OSExtensions.IsDotNetInstalled())
                 {
-                    MessageBoxCustom.Show(Program.LL.GetLocalizedString("_ErrorNoDotNet"), Program._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_ErrorNoDotNet"), AppConfig.Instance._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     Environment.Exit(1);
                 }
             }
@@ -1322,16 +1453,16 @@ namespace MSearch
 
         static void RestoreWMICorruption()
         {
-            if (Program.RestoredWMI)
+            if (AppConfig.Instance.RestoredWMI)
             {
                 throw new Exception("WMI_Corruption");
             }
 
-            Program.LL.LogMessage("\t\t[xxx]", "_WMICorruption", "", ConsoleColor.Red, false);
+            AppConfig.Instance.LL.LogMessage("\t\t[xxx]", "_WMICorruption", "", ConsoleColor.Red, false);
 
             Console.ForegroundColor = ConsoleColor.DarkCyan;
 
-            Program.LL.LogHeadMessage("_WMIRecompilation");
+            AppConfig.Instance.LL.LogHeadMessage("_WMIRecompilation");
 
             string wbemPath = Path.Combine(Environment.SystemDirectory, "Wbem");
 
@@ -1355,7 +1486,7 @@ namespace MSearch
             }
 
             Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
-            Program.LL.LogHeadMessage("_WMIRegister");
+            AppConfig.Instance.LL.LogHeadMessage("_WMIRegister");
 
             foreach (var file in Directory.GetFiles(wbemPath, "*.dll", SearchOption.AllDirectories))
             {
@@ -1373,7 +1504,7 @@ namespace MSearch
 
 
             Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
-            Program.LL.LogHeadMessage("_WMIRestartService");
+            AppConfig.Instance.LL.LogHeadMessage("_WMIRestartService");
 
             ServiceController service = new ServiceController("winmgmt");
             if (service.Status != ServiceControllerStatus.Stopped)
@@ -1418,11 +1549,11 @@ namespace MSearch
                     {
                         if (currentValue != Environment.ExpandEnvironmentVariables(desiredValue))
                         {
-                            Program.LL.LogWarnMessage("_TermServiceInvalidPath", currentValue);
-                            Program.totalFoundThreats++;
+                            AppConfig.Instance.LL.LogWarnMessage("_TermServiceInvalidPath", currentValue);
+                            AppConfig.Instance.totalFoundThreats++;
 
 
-                            if (!Program.ScanOnly)
+                            if (!AppConfig.Instance.ScanOnly)
                             {
                                 try
                                 {
@@ -1454,7 +1585,7 @@ namespace MSearch
                                 }
                                 catch (Exception ex)
                                 {
-                                    Program.LL.LogErrorMessage("_Error", ex);
+                                    AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
                                     return;
                                 }
 
@@ -1462,14 +1593,14 @@ namespace MSearch
                                 currentValue = (string)regkey.GetValue(paramName);
                                 if (currentValue == Environment.ExpandEnvironmentVariables(desiredValue))
                                 {
-                                    Program.LL.LogSuccessMessage("_TermServiceRestored");
-                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, Program.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Cured));
+                                    AppConfig.Instance.LL.LogSuccessMessage("_TermServiceRestored");
+                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Cured));
 
                                 }
                                 else
                                 {
-                                    Program.LL.LogErrorMessage("_TermServiceFailedRestore", new Exception(""));
-                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, Program.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Error));
+                                    AppConfig.Instance.LL.LogErrorMessage("_TermServiceFailedRestore", new Exception(""));
+                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Error));
 
                                 }
                             }
@@ -1486,7 +1617,7 @@ namespace MSearch
                 }
                 else
                 {
-                    Program.LL.LogWarnMediumMessage("_ServiceNotInstalled", "T?ermS?ervi?ce".Replace("?", ""));
+                    AppConfig.Instance.LL.LogWarnMediumMessage("_ServiceNotInstalled", "T?ermS?ervi?ce".Replace("?", ""));
                 }
             }
 

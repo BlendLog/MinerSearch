@@ -1,8 +1,8 @@
 ﻿using DBase;
 using Microsoft.Win32;
+using MSearch.Core;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -27,75 +27,76 @@ namespace MSearch
 
             ConfigureDataGridView();
 
+
             threatsCount = _totalThreats;
             curedCount = _neutralizedThreats;
             LBL_threatsCount.Text = _totalThreats.ToString();
             LBL_curedCount.Text = _neutralizedThreats.ToString();
             LBL_susCount.Text = _suspObj.ToString();
-            LBL_ScanTime.Text = $"{Program.LL.GetLocalizedString("_Elapse")} {_elapsedTime}";
+            LBL_ScanTime.Text = $"{AppConfig.Instance.LL.GetLocalizedString("_Elapse")} {_elapsedTime}";
             LBL_id_text = DeviceIdProvider.GetDeviceId();
             LBL_ID.Text = LBL_id_text;
         }
 
         private void TranslateForm()
         {
-            if (Program.ScanOnly || Program.totalFoundThreats == 0)
+            if (AppConfig.Instance.ScanOnly || AppConfig.Instance.totalFoundThreats == 0)
             {
                 LBL_neutralizedThreats.Visible = false;
                 LBL_curedCount.Visible = false;
             }
 
-            if (Program.no_logs)
+            if (AppConfig.Instance.no_logs)
             {
                 btnDetails.Enabled = false;
                 btnDetails.BackColor = Color.FromArgb(10, 255, 255, 255);
                 btnDetails.FlatAppearance.BorderSize = 0;
-                btnDetails.Text = Program.LL.GetLocalizedString("_NoLogBtn");
+                btnDetails.Text = AppConfig.Instance.LL.GetLocalizedString("_NoLogBtn");
             }
             else
             {
-                btnDetails.Text = Program.LL.GetLocalizedString("_BtnDetails");
+                btnDetails.Text = AppConfig.Instance.LL.GetLocalizedString("_BtnDetails");
             }
 
-            LBL_ScanComplete.Text = Program.LL.GetLocalizedString("_End");
-            LBL_totalThreats.Text = Program.LL.GetLocalizedString("_TotalThreatsFound");
-            LBL_neutralizedThreats.Text = Program.LL.GetLocalizedString("_TotalNeutralizedThreats");
-            LBL_susObjects.Text = Program.LL.GetLocalizedString("_SuspiciousObjects");
-            Label_allowStatistics.Text = Program.LL.GetLocalizedString("_LabelAllowStatistics");
-            Label_showAllLogs.Text = Program.LL.GetLocalizedString("_ShowFolderLogs");
+            LBL_ScanComplete.Text = AppConfig.Instance.LL.GetLocalizedString("_End");
+            LBL_totalThreats.Text = AppConfig.Instance.LL.GetLocalizedString("_TotalThreatsFound");
+            LBL_neutralizedThreats.Text = AppConfig.Instance.LL.GetLocalizedString("_TotalNeutralizedThreats");
+            LBL_susObjects.Text = AppConfig.Instance.LL.GetLocalizedString("_SuspiciousObjects");
+            Label_allowStatistics.Text = AppConfig.Instance.LL.GetLocalizedString("_LabelAllowStatistics");
+            Label_showAllLogs.Text = AppConfig.Instance.LL.GetLocalizedString("_ShowFolderLogs");
             top.TextAlign = ContentAlignment.MiddleRight;
-            top.Text = Program.LL.GetLocalizedString("_PleaseWaitMessage");
-            OpenQuarantineBtn.Text = Program.LL.GetLocalizedString("_OpenQuarantine");
-            DonateBtn.Text = Program.LL.GetLocalizedString("_DonateBtn");
-            finishBtn.Text = Program.LL.GetLocalizedString("_PleaseWaitMessage");
+            top.Text = AppConfig.Instance.LL.GetLocalizedString("_PleaseWaitMessage");
+            OpenQuarantineBtn.Text = AppConfig.Instance.LL.GetLocalizedString("_OpenQuarantine");
+            DonateBtn.Text = AppConfig.Instance.LL.GetLocalizedString("_DonateBtn");
+            finishBtn.Text = AppConfig.Instance.LL.GetLocalizedString("_PleaseWaitMessage");
             finishBtn.BackColor = Color.DimGray;
 
             Label_OpenLogsFolder.Text = Logger.LogsFolder;
 
-            if (!Program.ScanOnly)
+            if (!AppConfig.Instance.ScanOnly)
             {
                 if (threatsCount > 0)
                 {
                     if (curedCount < threatsCount)
                     {
-                        FinalStatus_label.Text = Program.LL.GetLocalizedString("_FinishNotAllThreatsNeutralized");
+                        FinalStatus_label.Text = AppConfig.Instance.LL.GetLocalizedString("_FinishNotAllThreatsNeutralized");
                         FinalStatus_label.ForeColor = System.Drawing.Color.LightSalmon;
                     }
                     else if (curedCount == threatsCount)
                     {
-                        FinalStatus_label.Text = Program.LL.GetLocalizedString("_FinishAllThreatsNeutralized");
+                        FinalStatus_label.Text = AppConfig.Instance.LL.GetLocalizedString("_FinishAllThreatsNeutralized");
                         FinalStatus_label.ForeColor = System.Drawing.Color.LightGreen;
 
                     }
                 }
                 else
                 {
-                    FinalStatus_label.Text = Program.LL.GetLocalizedString("_NoThreats");
+                    FinalStatus_label.Text = AppConfig.Instance.LL.GetLocalizedString("_NoThreats");
                 }
             }
             else
             {
-                FinalStatus_label.Text = Program.LL.GetLocalizedString("_ScanOnlyMode");
+                FinalStatus_label.Text = AppConfig.Instance.LL.GetLocalizedString("_ScanOnlyMode");
             }
         }
 
@@ -103,7 +104,7 @@ namespace MSearch
         {
             if (curedCount < threatsCount)
             {
-                var result = MessageBoxCustom.Show(Program.LL.GetLocalizedString("_RebootPCNowDialog"), Program._title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = MessageBoxCustom.Show(AppConfig.Instance.LL.GetLocalizedString("_RebootPCNowDialog"), AppConfig.Instance._title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
                     Process.Start(new ProcessStartInfo()
@@ -119,7 +120,7 @@ namespace MSearch
             else if (curedCount == threatsCount && threatsCount > 0)
             {
 #if !DEBUG
-                if (!Program.ScanOnly)
+                if (!AppConfig.Instance.ScanOnly && !AppConfig.Instance.console_mode)
                 {
                     Hide();
                     SplashForm splashForm = new SplashForm();
@@ -148,7 +149,7 @@ namespace MSearch
             }
 
             string argument = "/c \"" + logpath + "\"";
-            if (Program.RunAsSystem && !Program.WinPEMode)
+            if (AppConfig.Instance.RunAsSystem && !AppConfig.Instance.WinPEMode)
             {
                 string pname = Bfs.Create("XowZueZ4My9sRztk+8mdpA==", "IQ70zViMhrk1BBJC+eBfce4X9xr/dKa73zS+8a8DgdQ=", "Mxx86B7zZeNAUe7VPZMT/w==");
             restart:
@@ -203,45 +204,73 @@ namespace MSearch
             dataGridThreats.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "TypeColumn",
-                HeaderText = Program.LL.GetLocalizedString("_DataGridHeader_ObjectType"),
-                DataPropertyName = "Type"
+                HeaderText = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_ObjectType"),
+                DataPropertyName = "Type",
+                MinimumWidth = 366
             });
 
             dataGridThreats.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "PathColumn",
-                HeaderText = Program.LL.GetLocalizedString("_DataGridHeader_Path"),
-                DataPropertyName = "Path"
+                HeaderText = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_Path"),
+                DataPropertyName = "Path",
+                MinimumWidth = 366
             });
 
             dataGridThreats.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "ActionColumn",
-                HeaderText = Program.LL.GetLocalizedString("_DataGridHeader_Action"),
-                DataPropertyName = "Action"
+                HeaderText = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_Action"),
+                DataPropertyName = "Action",
+                MinimumWidth = 250
+
             });
 
-            // Calculate all coloumns width
-            int totalWidth = dataGridThreats.ClientSize.Width;
-            int columnCount = dataGridThreats.Columns.Count;
-
-            int columnWidth = totalWidth / columnCount;
-
-            foreach (DataGridViewColumn column in dataGridThreats.Columns)
+            dataGridThreats.Columns.Add(new DataGridViewTextBoxColumn
             {
-                column.Width = columnWidth;
-                column.MinimumWidth = columnWidth;
-            }
+                Name = "NoteColumn",
+                HeaderText = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_Note"),
+                DataPropertyName = "Note",
+                MinimumWidth = 116
+            });
 
-            if (Program.totalFoundThreats == 0 && Program.totalFoundSuspiciousObjects == 0)
+            if (AppConfig.Instance.totalFoundThreats == 0 &&
+                AppConfig.Instance.totalFoundSuspiciousObjects == 0 &&
+                !AppConfig.Instance.hasLockedObjectsByAV)
             {
                 dataGridThreats.Columns.Clear();
             }
         }
 
+        private void AdjustNoteColumnWidth()
+        {
+            var noteColumn = dataGridThreats.Columns["NoteColumn"];
+            if (noteColumn == null)
+                return;
+
+            noteColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
+            bool hasNotes = false;
+            foreach (DataGridViewRow row in dataGridThreats.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                var value = row.Cells["NoteColumn"]?.Value;
+                if (value != null && !string.IsNullOrWhiteSpace(value.ToString()))
+                {
+                    hasNotes = true;
+                    break;
+                }
+            }
+
+            noteColumn.Width = hasNotes ? 380 : 116;
+        }
+
+
         public void LoadResults(List<ScanResult> results)
         {
             dataGridThreats.DataSource = results;
+            AdjustNoteColumnWidth();
         }
 
         private void FinishEx_Load(object sender, EventArgs e)
@@ -254,7 +283,7 @@ namespace MSearch
 
         async void CollectStatistics(string registryPath, string valueName)
         {
-            if (Program.no_logs)
+            if (AppConfig.Instance.no_logs)
             {
                 UpdateUIToDefaultState();
                 return;
@@ -282,7 +311,7 @@ namespace MSearch
                 switch (allowStatistics)
                 {
                     case 2:
-                        if (MessageBoxCustom.Show(Program.LL.GetLocalizedString("_AllowSentStatistics"), Program._title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        if (MessageBoxCustom.Show(AppConfig.Instance.LL.GetLocalizedString("_AllowSentStatistics"), AppConfig.Instance._title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             key.SetValue(valueName, 1, RegistryValueKind.DWord);
                             await SendLogAndHandleErrors();
@@ -308,13 +337,13 @@ namespace MSearch
         void UpdateUIToDefaultState()
         {
             top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            top.Text = Program._title;
+            top.Text = AppConfig.Instance._title;
             CloseBtn.Visible = true;
             MinimizeBtn.Visible = true;
             DonateBtn.Visible = true;
             finishBtn.Enabled = true;
             finishBtn.BackColor = Color.RoyalBlue;
-            finishBtn.Text = Program.LL.GetLocalizedString("_DataGrid_FinishBtn");
+            finishBtn.Text = AppConfig.Instance.LL.GetLocalizedString("_DataGrid_FinishBtn");
 
             if (OSExtensions.GetWindowsVersion().IndexOf("Windows 7", StringComparison.OrdinalIgnoreCase) == -1)
             {
@@ -341,17 +370,17 @@ namespace MSearch
             {
                 await Task.Run(() =>
                 {
-                    Task.Delay(new Random().Next(10, 5000)).Wait();
+                    Task.Delay(new Random().Next(10, 3000)).Wait();
                     MinerSearch.SentLog();
                 });
             }
             catch (FileNotFoundException fnf)
             {
-                Program.LL.LogErrorMessage("_Error", fnf);
+                AppConfig.Instance.LL.LogErrorMessage("_Error", fnf);
             }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_Error", ex);
+                AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
             }
             finally
             {
@@ -379,6 +408,7 @@ namespace MSearch
                             row.Cells[0].Style.ForeColor = Color.Orange;
                             break;
                         case ScanObjectType.Unknown:
+                            row.Cells[0].Style.ForeColor = Color.Black;
                             break;
                         default:
                             break;
@@ -391,17 +421,21 @@ namespace MSearch
                         case ScanActionType.Quarantine:
                         case ScanActionType.Terminated:
                         case ScanActionType.Disabled:
-                            row.Cells[row.Cells.Count - 1].Style.BackColor = Color.PaleGreen;
+                            row.Cells[row.Cells.Count - 2].Style.BackColor = Color.PaleGreen;
                             break;
                         case ScanActionType.Skipped:
-                            row.Cells[row.Cells.Count - 1].Style.BackColor = Color.White;
+                            row.Cells[row.Cells.Count - 2].Style.BackColor = Color.White;
                             break;
                         case ScanActionType.Error:
                         case ScanActionType.Active:
-                            row.Cells[row.Cells.Count - 1].Style.BackColor = Color.LightSalmon;
+                            row.Cells[row.Cells.Count - 2].Style.BackColor = Color.LightSalmon;
                             break;
                         case ScanActionType.Inaccassible:
-                            row.Cells[row.Cells.Count - 1].Style.BackColor = Color.FromArgb(255, 248, 140, 248); //LightViolet
+                            row.Cells[row.Cells.Count - 2].Style.BackColor = Color.FromArgb(255, 248, 140, 248); //LightViolet
+                            break;
+                        case ScanActionType.LockedByAntivirus:
+                            row.Cells[row.Cells.Count - 2].Style.Font = new Font("Segoe UI", 11F);
+                            row.Cells[row.Cells.Count - 2].Style.BackColor = Color.FromArgb(255, 206, 190, 250);
                             break;
                     }
                 }
@@ -430,7 +464,7 @@ namespace MSearch
 
         private void Label_OpenLogsFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (Program.no_logs)
+            if (AppConfig.Instance.no_logs)
             {
                 Process.Start("explorer.exe", Logger.LogsFolder);
                 return;
@@ -520,7 +554,7 @@ namespace MSearch
         {
             Clipboard.SetText(control.Text);
             control.TextAlign = ContentAlignment.MiddleLeft;
-            control.Text = Program.LL.GetLocalizedString("_EventCopyText");
+            control.Text = AppConfig.Instance.LL.GetLocalizedString("_EventCopyText");
         }
 
         private void LBL_ID_MouseEnter(object sender, EventArgs e)

