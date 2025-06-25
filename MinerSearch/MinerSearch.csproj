@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>MSearch</RootNamespace>
     <AssemblyName>MinerSearch</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -93,15 +93,11 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="dbase, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="dbase, Version=1.0.0.7, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Release\dbase.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.11.0.0, Culture=neutral, PublicKeyToken=e25603a88b3aa7da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Release\Microsoft.Win32.TaskScheduler.dll</HintPath>
-    </Reference>
-    <Reference Include="netlib, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="netlib, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Release\netlib.dll</HintPath>
     </Reference>
@@ -129,6 +125,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\AppConfig.cs" />
+    <Compile Include="Infrastructure\SafeModeTaskParser.cs" />
+    <Compile Include="Infrastructure\ScheduledTaskInfo.cs" />
+    <Compile Include="UI\DataGridViewCheckBoxHeaderCell.cs" />
+    <Compile Include="UI\DialogDispatcher.cs" />
     <Compile Include="UI\MessageBoxCustom.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,6 +139,7 @@
     <Compile Include="UI\PanelCustom.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UI\QuarantineConsoleHandler.cs" />
     <Compile Include="UI\QuarantineForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -197,6 +199,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="256.ico" />
+    <None Include="packages.config" />
     <None Include="Resources\tether-usdt-logo.png" />
     <None Include="Resources\ton_png.png" />
     <None Include="Resources\32.png" />

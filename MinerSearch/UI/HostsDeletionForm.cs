@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSearch.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -26,11 +27,11 @@ namespace MSearch
 
         private void TranslateForm()
         {
-            label_message.Text = Program.LL.GetLocalizedString("_HostsCleanupWarning");
-            selectAllButton.Text = Program.LL.GetLocalizedString("_SelectAllButton");
-            deselectAllButton.Text = Program.LL.GetLocalizedString("_DeselectAllButton");
-            continueButton.Text = Program.LL.GetLocalizedString("_ContinueButton");
-            skipBtn.Text = Program.LL.GetLocalizedString("_HostsCleanupSkipBtn");
+            label_message.Text = AppConfig.Instance.LL.GetLocalizedString("_HostsCleanupWarning");
+            selectAllButton.Text = AppConfig.Instance.LL.GetLocalizedString("_SelectAllButton");
+            deselectAllButton.Text = AppConfig.Instance.LL.GetLocalizedString("_DeselectAllButton");
+            continueButton.Text = AppConfig.Instance.LL.GetLocalizedString("_ContinueButton");
+            skipBtn.Text = AppConfig.Instance.LL.GetLocalizedString("_HostsCleanupSkipBtn");
         }
 
         protected override void WndProc(ref Message m)
@@ -107,7 +108,7 @@ namespace MSearch
 
         private void HostsDeletionForm_Load(object sender, EventArgs e)
         {
-            if (Program.silent)
+            if (AppConfig.Instance.silent)
             {
                 selectAllButton.PerformClick();
                 continueButton.PerformClick();

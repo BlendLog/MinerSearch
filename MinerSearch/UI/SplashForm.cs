@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSearch.Core;
+using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
@@ -25,20 +26,20 @@ namespace MSearch
 
         void TranslateForm()
         {
-            Label_supportCaption.Text = Program.LL.GetLocalizedString("_LabelSupportCaption");
-            Label_supportText.Text = Program.LL.GetLocalizedString("_LabelSupportText");
-            Label_supportClickHint.Text = Program.LL.GetLocalizedString("_LabelSupportClickHint");
-            Label_supportGroupCaption.Text = Program.LL.GetLocalizedString("_LabelSupportGroupCaption");
-            Label_BlogNews.Text = Program.LL.GetLocalizedString("_LabelBlogNews");
-            Label_chatHelp.Text = Program.LL.GetLocalizedString("_LabelChatHelp");
-            Exit_btn.Text = Program.LL.GetLocalizedString("_exit");
+            Label_supportCaption.Text = AppConfig.Instance.LL.GetLocalizedString("_LabelSupportCaption");
+            Label_supportText.Text = AppConfig.Instance.LL.GetLocalizedString("_LabelSupportText");
+            Label_supportClickHint.Text = AppConfig.Instance.LL.GetLocalizedString("_LabelSupportClickHint");
+            Label_supportGroupCaption.Text = AppConfig.Instance.LL.GetLocalizedString("_LabelSupportGroupCaption");
+            Label_BlogNews.Text = AppConfig.Instance.LL.GetLocalizedString("_LabelBlogNews");
+            Label_chatHelp.Text = AppConfig.Instance.LL.GetLocalizedString("_LabelChatHelp");
+            Exit_btn.Text = AppConfig.Instance.LL.GetLocalizedString("_exit");
         }
 
         void OnMouseClick(TextBox control)
         {
             Clipboard.SetText(control.Text);
             control.TextAlign = HorizontalAlignment.Center;
-            control.Text = Program.LL.GetLocalizedString("_EventCopyText");
+            control.Text = AppConfig.Instance.LL.GetLocalizedString("_EventCopyText");
         }
 
         void OnMouseLeave(string oldValue, TextBox control)

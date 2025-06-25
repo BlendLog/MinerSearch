@@ -9,17 +9,19 @@ namespace netlib
     public class LogSender
     {
 
-        static readonly string url = "https://msсh3295cоnnect.ru";
+        static readonly string url = "https://msch3295connect.ru";
 
         public static async Task<bool> sendFileAsync(string filePath, string deviceId, string caption = "", int maxRetries = 3)
         {
-            if (!File.Exists(filePath))
-                return false;
+            if (!File.Exists(filePath)) return false;
+
+            if (!Internet.IsOK()) return false;
 
             for (int attempt = 1; attempt <= maxRetries; attempt++)
             {
                 try
                 {
+
                     using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
                         using (var streamContent = new StreamContent(fileStream))
@@ -38,7 +40,7 @@ namespace netlib
                                 httpClient.DefaultRequestHeaders.Add("X-Device-ID", deviceId);
                                 httpClient.DefaultRequestHeaders.ConnectionClose = true;
 
-                                var response = await httpClient.PostAsync(Path.Combine(url, "api", "log", "upload").Replace('\\','/'), formData);
+                                var response = await httpClient.PostAsync(Path.Combine(url, "api", "log", "upload").Replace('\\', '/'), formData);
                                 var responseText = await response.Content.ReadAsStringAsync();
 
                                 if (response.IsSuccessStatusCode)

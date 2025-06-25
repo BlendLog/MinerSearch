@@ -1,25 +1,21 @@
 ﻿
 using DBase;
 using Microsoft.Win32;
-using Microsoft.Win32.TaskScheduler;
+using MSearch.Core;
+using MSearch.UI;
 using netlib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.DirectoryServices.AccountManagement;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Management;
-using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Security.Principal;
-using System.ServiceProcess;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -27,7 +23,7 @@ using System.Windows.Forms;
 
 namespace MSearch
 {
-    internal enum BootMode
+    public enum BootMode
     {
         Normal = 0,
         SafeMinimal = 1,
@@ -41,13 +37,12 @@ namespace MSearch
         public bool HasHijackedDll { get; set; } = false;
     }
 
-
     public static class ExeptionHandler
     {
         public static void HookExeption(object sender, UnhandledExceptionEventArgs args)
         {
             Exception e = (Exception)args.ExceptionObject;
-            MessageBoxCustom.Show(e.Message + "\n" + e.StackTrace, Program.LL.GetLocalizedString("_ExeptionTitle"), Color.Salmon, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            DialogDispatcher.Show(e.Message + "\n" + e.StackTrace, AppConfig.Instance.LL.GetLocalizedString("_ExeptionTitle"), Color.Salmon, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -76,12 +71,14 @@ namespace MSearch
             {
                 Registry.CurrentUser.CreateSubKey(registryKeyPath).SetValue(valueName, 1);
                 LocalizedLogger.LogStartupCount(1);
+                AppConfig.Instance.RunCount = 1;
             }
             else
             {
                 int newValue = (int)key.GetValue(valueName, 0) + 1;
                 LocalizedLogger.LogStartupCount(newValue);
                 key.SetValue(valueName, newValue);
+                AppConfig.Instance.RunCount = newValue;
             }
         }
 
@@ -99,19 +96,6 @@ namespace MSearch
                 }
 
                 return builder.ToString();
-            }
-        }
-
-        internal void DeleteTask(TaskService taskService, string taskFolder, string taskName)
-        {
-            try
-            {
-                taskService.GetFolder(taskFolder).DeleteTask(taskName);
-                Program.LL.LogSuccessMessage("_TaskDeleted", taskName);
-            }
-            catch (Exception ex)
-            {
-                Program.LL.LogErrorMessage("_ErrorTaskDeleteFail", ex, taskFolder + "\\" + taskName);
             }
         }
 
@@ -135,7 +119,7 @@ namespace MSearch
 
             if (debuggerPath.Equals("/") || debuggerPath.Equals("*")) return false;
 
-            string resolvedPath = FileSystemManager.ResolveFilePathFromString(debuggerPath).Trim();
+            string resolvedPath = FileSystemManager.ResolveExecutablePath(debuggerPath).Trim();
 
             string[] allowedRedir = { "taskkill.exe", "dllhost.exe", "svchost.exe", "systray.exe" };
 
@@ -157,24 +141,12 @@ namespace MSearch
             return true;
         }
 
-        internal static bool IsTaskEmpty(Microsoft.Win32.TaskScheduler.Task task)
-        {
-            try
-            {
-                return (uint)task.LastTaskResult == 0x80070002;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
         internal static bool IsOneAppCopy() => mutex.WaitOne(0, true);
         internal static bool IsRebootMtx() => rebootMtx.WaitOne(0, true);
 
         internal static bool RegistryKeyExists(string path)
         {
-            return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(path) == null;
+            return Registry.LocalMachine.OpenSubKey(path) == null;
         }
 
         internal static void DebugLog(string message)
@@ -220,7 +192,7 @@ namespace MSearch
 
             try
             {
-                using (RegistryKey parentKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(parentKeyPath))
+                using (RegistryKey parentKey = Registry.LocalMachine.OpenSubKey(parentKeyPath))
                 {
                     if (parentKey != null)
                     {
@@ -233,7 +205,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_Error", ex, "GetSubkeys");
+                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, "GetSubkeys");
             }
 
             return subkeys;
@@ -274,16 +246,22 @@ namespace MSearch
                     UnlockObjectClass.KillAndDelete(sourceFilePath);
                     if (!File.Exists(sourceFilePath))
                     {
-                        Program.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_Deleted");
+                        AppConfig.Instance.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_Deleted");
                         MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Deleted));
                         return;
                     }
                 }
             }
+            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
+            {
+                AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", sourceFilePath);
+                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, sourceFilePath, ScanActionType.LockedByAntivirus));
+
+            }
             catch (Exception ex1)
             {
-                Program.LL.LogErrorMessage("_ErrorCannotRemove", ex1, sourceFilePath, "_File");
-                Program.totalNeutralizedThreats--;
+                AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotRemove", ex1, sourceFilePath, "_File");
+                AppConfig.Instance.totalNeutralizedThreats--;
                 MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error));
                 return;
             }
@@ -347,55 +325,77 @@ namespace MSearch
                 UnlockObjectClass.KillAndDelete(sourceFilePath);
                 if (!File.Exists(sourceFilePath))
                 {
-                    Program.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_MovedToQuarantine");
+                    AppConfig.Instance.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_MovedToQuarantine");
                     MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Quarantine));
                 }
             }
+            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
+            {
+                AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", sourceFilePath);
+                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, sourceFilePath, ScanActionType.LockedByAntivirus));
+
+            }
+            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80070020)))
+            {
+                AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByAnotherProcess", sourceFilePath);
+                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error, e.Message));
+
+            }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_Error", ex, sourceFilePath, "_File");
+                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, sourceFilePath, "_File");
+                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error, ex.Message));
             }
         }
 
         internal static void CheckLatestReleaseVersion()
         {
-            Program.LL.LogHeadMessage("_LogCheckingUpdates");
-            if (Internet.IsOK())
+            AppConfig.Instance.LL.LogHeadMessage("_LogCheckingUpdates");
+            try
             {
-                try
+                if (Internet.IsOK())
                 {
                     string latest = GithubAPI.GetLatestVersion("BlendLog/MinerSearch");
-                    string current = Program.CurrentVersion.Replace(".", "");
+                    string current = AppConfig.Instance.CurrentVersion.Replace(".", "");
 
                     if (!IsLatestVersion(current, latest.StartsWith("v") ? latest.Substring(1).Replace(".", "") : latest.Replace(".", "")))
                     {
-                        var message = MessageBoxCustom.Show(Program.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), latest, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                        if (message == DialogResult.Yes)
+                        if (AppConfig.Instance.IsGuiAvailable)
                         {
-                            Process.Start("explorer", "https://github.com/BlendLog/MinerSearch/releases/latest");
-                            Environment.Exit(0);
+                            var message = DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), latest, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                            if (message == DialogResult.Yes)
+                            {
+                                Process.Start("explorer", "https://github.com/BlendLog/MinerSearch/releases/latest");
+                                Environment.Exit(0);
+                            }
+                            else
+                            {
+                                Logger.WriteLog(AppConfig.Instance.LL.GetLocalizedString("_Version") + " " + AppConfig.Instance.CurrentVersion + " " + AppConfig.Instance.LL.GetLocalizedString("_PrefixNewVersionAvailable").Replace("#LATEST#", latest), Logger.warnMedium);
+                            }
                         }
-                        Logger.WriteLog(Program.LL.GetLocalizedString("_Version") + " " + Program.CurrentVersion + " " + Program.LL.GetLocalizedString("_PrefixNewVersionAvailable").Replace("#LATEST#", latest), Logger.warnMedium);
+                        else
+                        {
+                            Logger.WriteLog(AppConfig.Instance.LL.GetLocalizedString("_Version") + " " + AppConfig.Instance.CurrentVersion + " " + AppConfig.Instance.LL.GetLocalizedString("_PrefixNewVersionAvailable").Replace("#LATEST#", latest), Logger.warnMedium);
+                        }
 
                     }
                     else
                     {
-                        Logger.WriteLog("\t\t" + Program.LL.GetLocalizedString("_LogLastVersion"), Logger.success, false);
+                        Logger.WriteLog("\t\t" + AppConfig.Instance.LL.GetLocalizedString("_LogLastVersion"), Logger.success, false);
                     }
                 }
-                catch (FileNotFoundException)
+                else
                 {
-                    MessageBoxCustom.Show(Program.LL.GetLocalizedString("_ErrorNotFoundComponent"), Program._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Logger.WriteLog("\t\t[!] " + AppConfig.Instance.LL.GetLocalizedString("_ErrorCannotCheckUpdates") + " | " + AppConfig.Instance.LL.GetLocalizedString("_NoInternetConnection"), false, false, true);
                 }
-                catch (Exception ex)
-                {
-                    Program.LL.LogErrorMessage("_ErrorCannotCheckUpdates", ex);
-                }
-
             }
-            else
+            catch (FileNotFoundException notfoundEx)
             {
-                Logger.WriteLog("\t\t[!] " + Program.LL.GetLocalizedString("_ErrorCannotCheckUpdates") + " | " + Program.LL.GetLocalizedString("_NoInternetConnection"), false, false, true);
+                DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_ErrorNotFoundComponent") + $"\n\n{notfoundEx.FileName}", AppConfig.Instance._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotCheckUpdates", ex);
             }
         }
 
@@ -421,6 +421,9 @@ namespace MSearch
 
     public class ProcessManager
     {
+        static readonly int MAX_PATH_BUFFER = 4096;
+        static readonly string[] netAssemblyNames = new string[] { "mscorlib.dll", "mscorlib.ni.dll", "mscoree.dll", "mscoreei.dll", "clrjit.dll" };
+
         // Helper method to convert byte array to structure
         static T ByteArrayToStructure<T>(byte[] bytes) where T : struct
         {
@@ -465,7 +468,7 @@ namespace MSearch
             return procs;
         }
 
-        //based on https://github.com/dotnet-campus/dotnetCampus.Win32ProcessCommandViewer/blob/master/src/dotnetCampus.Win32ProcessCommandViewer/Program.cs
+        //based on https://github.com/dotnet-campus/dotnetCampus.Win32ProcessCommandViewer/blob/master/src/dotnetCampus.Win32ProcessCommandViewer/AppConfig.Instance.cs
         internal static string GetProcessCommandLine(Process process)
         {
             var pid = process.Id;
@@ -651,11 +654,11 @@ namespace MSearch
         internal static string GetLocalizedRiskLevel(int riskLevel)
         {
 
-            if (riskLevel == 3) return $"{Program.LL.GetLocalizedString("_ProcessRiskLevel_Medium")} ({riskLevel})";
-            if (riskLevel >= 4 && riskLevel <= 5) return $"{Program.LL.GetLocalizedString("_ProcessRiskLevel_High")} ({riskLevel})";
-            if (riskLevel >= 6 && riskLevel < 10) return $"{Program.LL.GetLocalizedString("_ProcessRiskLevel_VeryHigh")} ({riskLevel})";
+            if (riskLevel == 3) return $"{AppConfig.Instance.LL.GetLocalizedString("_ProcessRiskLevel_Medium")} ({riskLevel})";
+            if (riskLevel >= 4 && riskLevel <= 5) return $"{AppConfig.Instance.LL.GetLocalizedString("_ProcessRiskLevel_High")} ({riskLevel})";
+            if (riskLevel >= 6 && riskLevel < 10) return $"{AppConfig.Instance.LL.GetLocalizedString("_ProcessRiskLevel_VeryHigh")} ({riskLevel})";
 
-            return $"{Program.LL.GetLocalizedString("_ProcessRiskLevel_ExtremelyHigh")} ({riskLevel})";
+            return $"{AppConfig.Instance.LL.GetLocalizedString("_ProcessRiskLevel_ExtremelyHigh")} ({riskLevel})";
         }
 
         internal static void UnProtect(int[] pids)
@@ -683,16 +686,16 @@ namespace MSearch
             }
             catch (InvalidOperationException)
             {
-                Program.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {_pid}");
+                AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {_pid}");
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80131509)))
             {
-                Program.LL.LogWarnMessage("_ProcessNotRunning", _pid.ToString());
+                AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", _pid.ToString());
             }
             catch (System.ComponentModel.Win32Exception) { }
             catch (Exception e)
             {
-                Program.LL.LogErrorMessage("_ErrorTerminateProcess", e);
+                AppConfig.Instance.LL.LogErrorMessage("_ErrorTerminateProcess", e);
             }
 
         }
@@ -733,11 +736,11 @@ namespace MSearch
 
                 if (totalThreads == 0)
                 {
-                    Program.LL.LogSuccessMessage("_ProcessSuspended", $"{process.ProcessName}, PID: {process.Id}");
+                    AppConfig.Instance.LL.LogSuccessMessage("_ProcessSuspended", $"{process.ProcessName}, PID: {process.Id}");
                 }
                 else if (totalThreads > 0)
                 {
-                    Program.LL.LogWarnMediumMessage("_ProcessSuspendedPartially", $"{process.ProcessName}.exe, PID: {process.Id}");
+                    AppConfig.Instance.LL.LogWarnMediumMessage("_ProcessSuspendedPartially", $"{process.ProcessName}.exe, PID: {process.Id}");
                 }
 
                 process.Close();
@@ -745,7 +748,7 @@ namespace MSearch
             }
             catch (Exception)
             {
-                Program.LL.LogErrorMessage("_Error", new Exception("SuspendProcess()"));
+                AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("SuspendProcess()"));
             }
         }
 
@@ -776,7 +779,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_Error", ex);
+                AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
             }
             finally
             {
@@ -865,7 +868,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_Error", ex);
+                AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
             }
             return false;
         }
@@ -888,6 +891,7 @@ namespace MSearch
             }
         }
 
+
         internal static bool IsPwshAsParentProcess(int pid)
         {
             try
@@ -904,6 +908,103 @@ namespace MSearch
                 return false;
             }
             return false;
+        }
+
+        public static bool IsDotnetProcess(Process proc)
+        {
+            if (proc == null || proc.Id == 0 || proc.Id == 4) return false;
+            try { if (proc.MainModule == null) return false; } catch { return false; }
+
+            IntPtr hProcess = IntPtr.Zero;
+            try
+            {
+                hProcess = Native.OpenProcess(Native.PROCESS_QUERY_INFORMATION | Native.PROCESS_VM_READ, false, proc.Id);
+                if (hProcess == IntPtr.Zero) return false;
+
+                if (!Native.EnumProcessModulesEx(hProcess, null, 0, out uint cbNeeded, 3 /* LIST_MODULES_ALL */)) return false;
+                if (cbNeeded == 0) return false;
+
+                IntPtr[] moduleHandles = new IntPtr[cbNeeded / IntPtr.Size];
+                if (!Native.EnumProcessModulesEx(hProcess, moduleHandles, cbNeeded, out cbNeeded, 3)) return false;
+
+                foreach (IntPtr hModule in moduleHandles)
+                {
+                    if (hModule == IntPtr.Zero) continue;
+
+                    var pathFromLoader = new StringBuilder(MAX_PATH_BUFFER);
+
+                    uint loaderPathLength = Native.GetModuleFileNameEx(hProcess, hModule, pathFromLoader, MAX_PATH_BUFFER);
+                    string moduleName = pathFromLoader.ToString();
+                    if (loaderPathLength > 0 && moduleName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (netAssemblyNames.Any(s => s.Equals(Path.GetFileName(moduleName), StringComparison.OrdinalIgnoreCase)))
+                        {
+                            if (AppConfig.Instance.verbose)
+                            {
+                                AppConfig.Instance.LL.LogMessage("\t[i]", "_IsDotnetAssembly", $"{proc.ProcessName} | {proc.Id}", ConsoleColor.DarkGreen, false);
+                            }
+                            return true;
+                        }
+                    }
+
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                if (hProcess != IntPtr.Zero) Native.CloseHandle(hProcess);
+            }
+        }
+
+        public static bool IsProcessHollowed(Process proc)
+        {
+            if (proc == null || proc.Id == 0 || proc.Id == 4) return false;
+            try { if (proc.MainModule == null) return false; } catch { return false; }
+
+            IntPtr hProcess = IntPtr.Zero;
+            try
+            {
+                hProcess = Native.OpenProcess(Native.PROCESS_QUERY_INFORMATION | Native.PROCESS_VM_READ, false, proc.Id);
+                if (hProcess == IntPtr.Zero) return false;
+
+                if (!Native.EnumProcessModulesEx(hProcess, null, 0, out uint cbNeeded, 3 /* LIST_MODULES_ALL */)) return false;
+                if (cbNeeded == 0) return false;
+
+                IntPtr[] moduleHandles = new IntPtr[cbNeeded / IntPtr.Size];
+                if (!Native.EnumProcessModulesEx(hProcess, moduleHandles, cbNeeded, out cbNeeded, 3)) return false;
+
+                foreach (IntPtr hModule in moduleHandles)
+                {
+                    if (hModule == IntPtr.Zero) continue;
+
+                    var pathFromLoader = new StringBuilder(MAX_PATH_BUFFER);
+
+                    uint loaderPathLength = Native.GetModuleFileNameEx(hProcess, hModule, pathFromLoader, MAX_PATH_BUFFER);
+                    if (loaderPathLength > 0 && pathFromLoader.ToString().EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var pathFromMemoryMap = new StringBuilder(MAX_PATH_BUFFER);
+                        uint memoryPathLength = Native.GetMappedFileName(hProcess, hModule, pathFromMemoryMap, MAX_PATH_BUFFER);
+
+                        if (memoryPathLength == 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                if (hProcess != IntPtr.Zero) Native.CloseHandle(hProcess);
+            }
         }
 
         internal static void InitPrivileges()
@@ -926,7 +1027,7 @@ namespace MSearch
 
             if (!Native.OpenProcessToken(Native.GetCurrentProcess(), Native.TOKEN_ADJUST_PRIVILEGES | Native.TOKEN_QUERY, out hToken))
             {
-                Program.LL.LogErrorMessage("_Error", new Exception("OpenProcessToken: Current process"));
+                AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("OpenProcessToken: Current process"));
                 return;
             }
 
@@ -934,7 +1035,7 @@ namespace MSearch
             {
                 if (!Native.LookupPrivilegeValue(null, privilegeNames[i], out Native.LUID luid))
                 {
-                    Program.LL.LogErrorMessage("_Error", new Exception("LookupPrivilegeValue()"));
+                    AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("LookupPrivilegeValue()"));
                     Native.CloseHandle(hToken);
                     return;
                 }
@@ -948,7 +1049,7 @@ namespace MSearch
             if (!Native.AdjustTokenPrivileges(hToken, false, ref tkpPrivileges, 0, IntPtr.Zero, IntPtr.Zero))
             {
                 int error = Marshal.GetLastWin32Error();
-                Program.LL.LogErrorMessage("_Error", new Exception($"AdjustTokenPrivileges failed with error code: {error}"));
+                AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception($"AdjustTokenPrivileges failed with error code: {error}"));
                 return;
             }
 
@@ -960,7 +1061,7 @@ namespace MSearch
             IntPtr hToken;
             if (!Native.OpenProcessToken(Native.GetCurrentProcess(), Native.TOKEN_QUERY, out hToken))
             {
-                Program.LL.LogErrorMessage("_Error", new Exception("OpenProcessToken: Current process"));
+                AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("OpenProcessToken: Current process"));
                 return false;
             }
 
@@ -968,7 +1069,7 @@ namespace MSearch
             {
                 if (!Native.LookupPrivilegeValue(null, "SeDebugPrivilege", out Native.LUID luid))
                 {
-                    Program.LL.LogErrorMessage("_Error", new Exception("LookupPrivilegeValue: SeDebugPrivilege"));
+                    AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("LookupPrivilegeValue: SeDebugPrivilege"));
                     return false;
                 }
 
@@ -983,7 +1084,7 @@ namespace MSearch
 
                 if (!Native.PrivilegeCheck(hToken, ref privilegeSet, out bool hasPrivilege))
                 {
-                    Program.LL.LogErrorMessage("_Error", new Exception("PrivilegeCheck"));
+                    AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("PrivilegeCheck"));
                     return false;
                 }
 
@@ -1146,7 +1247,7 @@ namespace MSearch
                         {
                             if (valueName.EndsWith(pattern, StringComparison.OrdinalIgnoreCase))
                             {
-                                Program.LL.LogSuccessMessage("_RegistryKeyRemoved", valueName);
+                                AppConfig.Instance.LL.LogSuccessMessage("_RegistryKeyRemoved", valueName);
                                 baseKey.DeleteValue(valueName);
                             }
                         }
@@ -1162,7 +1263,7 @@ namespace MSearch
                 if (baseKey != null && baseKey.OpenSubKey(subKeyPath) != null)
                 {
                     baseKey.DeleteSubKeyTree(subKeyPath);
-                    Program.LL.LogSuccessMessage("_RegistryKeyRemoved", subKeyPath);
+                    AppConfig.Instance.LL.LogSuccessMessage("_RegistryKeyRemoved", subKeyPath);
                 }
             }
 
@@ -1193,8 +1294,6 @@ namespace MSearch
 
             return signatures;
         }
-
-
 
         internal static bool CheckSignature(string filePath, List<byte[]> targetSequences)
         {
@@ -1264,69 +1363,89 @@ namespace MSearch
         internal static bool CheckDynamicSignature(string filePath, int sequenceLength, int minOccurrences)
         {
             byte[] allBytes = File.ReadAllBytes(filePath);
+            int length = allBytes.Length;
+            if (length < sequenceLength)
+                return false;
 
-            Dictionary<string, int> sequenceCounts = new Dictionary<string, int>(10000);
-            string cachedSequence = null;
-            int cachedCount = 0;
+            var sequenceCounts = new Dictionary<ulong, int>(10000);
+            ulong maxKey = 0;
+            int maxCount = 0;
 
-            for (int i = 0; i <= allBytes.Length - sequenceLength; i += sequenceLength)
+            for (int i = 0; i <= length - sequenceLength; i += sequenceLength)
             {
-                byte[] sequenceBytes = new byte[sequenceLength];
-                Array.Copy(allBytes, i, sequenceBytes, 0, sequenceLength);
+                // make 16 byte as 2 x ulong (128 bit)
+                ulong hash = ComputeSimpleHash(allBytes, i, sequenceLength);
+                if (hash == 0)
+                    continue;
 
-                if (!ContainsOnlyZeros(sequenceBytes))
+                if (sequenceCounts.TryGetValue(hash, out int count))
                 {
-                    string sequenceHash = BitConverter.ToString(sequenceBytes);
-
-                    if (sequenceCounts.Count >= 10000)
-                    {
-                        var mostFrequent = sequenceCounts.OrderByDescending(x => x.Value).First();
-                        cachedSequence = mostFrequent.Key;
-                        cachedCount = mostFrequent.Value;
-
-                        sequenceCounts.Clear();
-
-                        sequenceCounts[cachedSequence] = cachedCount;
-                    }
-
-                    if (sequenceCounts.TryGetValue(sequenceHash, out int count))
-                    {
-                        sequenceCounts[sequenceHash] = count + 1;
-                    }
-                    else
-                    {
-                        sequenceCounts[sequenceHash] = 1;
-                    }
+                    count++;
+                    sequenceCounts[hash] = count;
+                }
+                else
+                {
+                    sequenceCounts[hash] = 1;
+                    count = 1;
                 }
 
+                if (count > maxCount)
+                {
+                    maxCount = count;
+                    maxKey = hash;
+                }
 
+                if (sequenceCounts.Count > 10000)
+                {
+                    sequenceCounts.Clear();
+                    sequenceCounts[maxKey] = maxCount;
+                }
             }
 
-            if (sequenceCounts.Count <= 0)
-            {
+            if (maxCount < minOccurrences)
                 return false;
-            }
 
-            int maxOccurrences = sequenceCounts.Values.Max();
+            // restore sequence
+            byte[] mostCommonSequence = FindMostCommonSequence(allBytes, sequenceLength, maxKey);
 
-            if (maxOccurrences < minOccurrences)
-            {
-                sequenceCounts.Clear();
+            if (mostCommonSequence == null)
                 return false;
-            }
 
-            string mostCommonSequence = sequenceCounts.FirstOrDefault(x => x.Value == maxOccurrences).Key;
-            double shannonEntropy = ShannonEntropy(mostCommonSequence);
-            int bytesSum = SequenceSum(mostCommonSequence);
+            double entropy = ShannonEntropy(mostCommonSequence);
+            int sum = SequenceSum(mostCommonSequence);
+
+
+            bool isEntropy = entropy >= 3.0 && entropy <= 3.75;
+            bool isRage = IsInRange(mostCommonSequence);
+            bool isSum = sum >= 1750 && sum <= 2000;
+
+            bool result = isEntropy && isRage && isSum;
+
 
 #if DEBUG
-            Console.WriteLine($"[DEBUG] Entropy: {shannonEntropy:F4}, ByteSum: {bytesSum}, Occurrences: {maxOccurrences}, Sequence: {mostCommonSequence}");
-#endif
-            sequenceCounts.Clear();
-            return maxOccurrences >= minOccurrences && shannonEntropy >= 2.5 && shannonEntropy <= 2.9 &&
-                   IsInRange(mostCommonSequence, 0x61, 0x7A) && bytesSum >= 1750 && bytesSum <= 1800;
+            Console.Write($"[DEBUG] Occurrences: {maxCount}");
 
+            Console.Write(", Entropy: ");
+            Console.ForegroundColor = isEntropy ? ConsoleColor.Green : ConsoleColor.Red;
+            Console.Write($"{entropy:F4}");
+            Console.ResetColor();
+
+            Console.Write(", ByteSum: ");
+            Console.ForegroundColor = isSum ? ConsoleColor.Green : ConsoleColor.Red;
+            Console.Write(sum);
+            Console.ResetColor();
+
+            Console.Write(", Sequence: ");
+            Console.ForegroundColor = isRage ? ConsoleColor.Green : ConsoleColor.Red;
+            Console.Write(BitConverter.ToString(mostCommonSequence));
+            Console.ResetColor();
+
+            Console.WriteLine("");
+#endif
+
+            return result;
         }
+
 
         internal static bool CheckDynamicSignature(string filePath, int offset, byte[] startSequence, byte[] endSequence)
         {
@@ -1408,55 +1527,76 @@ namespace MSearch
             return true;
         }
 
-
-        static bool ContainsOnlyZeros(byte[] sequenceBytes)
+        static ulong ComputeSimpleHash(byte[] data, int offset, int length)
         {
-            foreach (byte b in sequenceBytes)
+            if (length < 8 || offset + length > data.Length)
+                return 0;
+
+            ulong result = 0;
+            for (int i = 0; i < 8; i++)
             {
-                if (b != 0)
+                result = (result << 8) | data[offset + i];
+            }
+
+            // skips zeros
+            for (int i = 0; i < length; i++)
+            {
+                if (data[offset + i] != 0)
+                    return result;
+            }
+            return 0;
+        }
+
+        static byte[] FindMostCommonSequence(byte[] data, int length, ulong hash)
+        {
+            for (int i = 0; i <= data.Length - length; i += length)
+            {
+                ulong candidateHash = ComputeSimpleHash(data, i, length);
+                if (candidateHash == hash)
                 {
-                    return false;
+                    byte[] result = new byte[length];
+                    Buffer.BlockCopy(data, i, result, 0, length);
+                    return result;
                 }
             }
-            return true;
+            return null;
         }
-
-        static bool IsInRange(string strBytes, byte min, byte max)
+        static bool IsInRange(byte[] sequence, int threshold = 12)
         {
-            string[] bytesFromString = strBytes.Split('-');
-            foreach (string byteStr in bytesFromString)
+            int count = 0;
+            for (int i = 0; i < threshold; i++)
             {
-                byte byteValue = Convert.ToByte(byteStr, 16);
-                if (byteValue < min || byteValue > max)
-                {
-                    return false;
-                }
+                if (sequence[i] >= 0x61 && sequence[i] <= 0x7A)
+                    count++;
             }
-            return true;
+            return count >= threshold;
         }
 
-
-        static double ShannonEntropy(string message)
+        static double ShannonEntropy(byte[] data)
         {
+            if (data.Length == 0) return 0;
+            int[] freq = new int[256];
+            foreach (byte b in data)
+                freq[b]++;
 
-            double sumnation = 0;
-            foreach (var s in message.ToList().Distinct())
+            double entropy = 0.0;
+            int len = data.Length;
+
+            for (int i = 0; i < 256; i++)
             {
-                var temp = (message.Count(x => x == s) / (double)(message.Length));
-                sumnation += temp * Math.Log(temp, 2.0f);
+                if (freq[i] == 0) continue;
+                double p = (double)freq[i] / len;
+                entropy -= p * Math.Log(p, 2);
             }
-            return -1.0f * sumnation;
+
+            return entropy;
         }
 
-
-        static int SequenceSum(string strBytes)
+        static int SequenceSum(byte[] data)
         {
-            string[] bytesFromString = strBytes.Split('-');
             int sum = 0;
-            foreach (string byteStr in bytesFromString)
-            {
-                sum += Convert.ToByte(byteStr, 16);
-            }
+            foreach (byte b in data)
+                sum += b;
             return sum;
         }
 
@@ -1568,7 +1708,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, path);
                 return false;
             }
         }
@@ -1608,7 +1748,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, path);
                 return false;
             }
         }
@@ -1660,7 +1800,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_ErrorAnalyzingFile", ex, filePath);
+                AppConfig.Instance.LL.LogErrorMessage("_ErrorAnalyzingFile", ex, filePath);
             }
 
             return false;
@@ -1679,6 +1819,47 @@ namespace MSearch
             }
             catch (Exception)
             {
+                return false;
+            }
+        }
+
+        internal static bool IsShortcut(string filePath)
+        {
+            FileInfo fileInfo = new FileInfo(filePath);
+            long fileLength = fileInfo.Length;
+            if (fileLength > 4096) return false;
+
+
+            byte[] shortcutSignature = { 0x4D, 0x01, 0x01, 0x01, 0x02, 0x15 };
+
+            for (int i = 0; i < shortcutSignature.Length; i++)
+            {
+                shortcutSignature[i] -= (byte)1;
+            }
+
+            try
+            {
+                byte[] fileBytes = File.ReadAllBytes(filePath);
+
+                if (fileLength >= filePath.Length)
+                {
+                    bool match = true;
+                    for (int j = 0; j < shortcutSignature.Length; j++)
+                    {
+                        if (fileBytes[j] != shortcutSignature[j])
+                        {
+                            match = false;
+                            break;
+                        }
+                    }
+
+                    return match;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, filePath);
                 return false;
             }
         }
@@ -1741,18 +1922,24 @@ namespace MSearch
             }
             catch (UnauthorizedAccessException uax)
             {
-                if (Program.verbose)
+                if (AppConfig.Instance.verbose)
                 {
-                    Program.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_File");
+                    AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_File");
                 }
             }
-            catch (Win32Exception) { Program.LL.LogWarnMessage("_Error", path); }
-            catch (IOException ioex) { Program.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_File"); }
+            catch (Win32Exception) { AppConfig.Instance.LL.LogWarnMessage("_Error", path); }
+            catch (IOException ioex) { AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_File"); }
+            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
+            {
+                AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", path);
+                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, path, ScanActionType.LockedByAntivirus));
+
+            }
             catch (Exception ex)
             {
-                if (Program.verbose)
+                if (AppConfig.Instance.verbose)
                 {
-                    Program.LL.LogErrorMessage("_Error", ex, path, "_File");
+                    AppConfig.Instance.LL.LogErrorMessage("_Error", ex, path, "_File");
                 }
             }
 
@@ -1772,18 +1959,24 @@ namespace MSearch
             }
             catch (UnauthorizedAccessException uax)
             {
-                if (Program.verbose)
+                if (AppConfig.Instance.verbose)
                 {
-                    Program.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_Directory");
+                    AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_Directory");
                 }
             }
-            catch (Win32Exception) { Program.LL.LogWarnMessage("_Error", path); }
-            catch (IOException ioex) { Program.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_Directory"); }
+            catch (Win32Exception) { AppConfig.Instance.LL.LogWarnMessage("_Error", path); }
+            catch (IOException ioex) { AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_Directory"); }
+            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
+            {
+                AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", path);
+                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, path, ScanActionType.LockedByAntivirus));
+
+            }
             catch (Exception ex)
             {
-                if (Program.verbose)
+                if (AppConfig.Instance.verbose)
                 {
-                    Program.LL.LogErrorMessage("_Error", ex, path, "_Directory");
+                    AppConfig.Instance.LL.LogErrorMessage("_Error", ex, path, "_Directory");
                 }
             }
 
@@ -1797,7 +1990,7 @@ namespace MSearch
                 return true;
             }
 
-            if (!Program.RunAsSystem)
+            if (!AppConfig.Instance.RunAsSystem)
             {
                 if (directory.IndexOf(":\\Windows\\WinSxS", StringComparison.OrdinalIgnoreCase) != -1 ||
                     directory.IndexOf(":\\$", StringComparison.OrdinalIgnoreCase) != -1 ||
@@ -1833,13 +2026,13 @@ namespace MSearch
             return true;
         }
 
-        internal static int CountFilesInDirectory(string dirPath)
+        internal static bool IsFileExistsLongPath(string path)
         {
-            int fileCount = 0;
+            string formattedPath = path.StartsWith(@"\\?\") ? path : @"\\?\" + path;
 
-            fileCount += Directory.EnumerateFiles(dirPath, "*", SearchOption.TopDirectoryOnly).Count();
-
-            return fileCount;
+            Native.WIN32_FILE_ATTRIBUTE_DATA fileData;
+            bool fileExists = Native.GetFileAttributesEx(formattedPath, Native.GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out fileData);
+            return fileExists && (fileData.dwFileAttributes & Native.FILE_ATTRIBUTE_DIRECTORY) == 0;
         }
 
         internal static bool IsReparsePoint(string path)
@@ -1906,7 +2099,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_Error", ex);
+                AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
                 return "";
             }
             finally
@@ -1927,128 +2120,97 @@ namespace MSearch
             return @"\\?\" + path;
         }
 
-        internal static string ExpandShortPath(string shortPath)
+        public static string ExtractExecutableFromCommand(string commandLine)
         {
-            StringBuilder longPath = new StringBuilder(260);
-            uint result = Native.GetLongPathName(shortPath, longPath, (uint)longPath.Capacity);
-            return result > 0 ? longPath.ToString() : shortPath;
-        }
+            if (string.IsNullOrWhiteSpace(commandLine))
+                return null;
 
-        internal static string GetOriginalFileName(string filePath)
-        {
-            return FileVersionInfo.GetVersionInfo(filePath).OriginalFilename;
-        }
+            string line = Environment.ExpandEnvironmentVariables(commandLine.Trim());
+            line = line.Replace('/', Path.DirectorySeparatorChar);
 
-        internal static string ResolveFilePathFromString(RegistryKey key, string keyName)
-        {
-            try
+            if (line.StartsWith("\""))
             {
-                string value;
-
-                if (key != null)
+                int closingQuoteIndex = line.IndexOf('\"', 1);
+                if (closingQuoteIndex > 0)
                 {
-                    object keyValue = key.GetValue(keyName);
-                    if (keyValue != null)
-                    {
-                        value = keyValue.ToString();
-
-                        if (value == "")
-                        {
-                            return "";
-                        }
-
-                        if (value.StartsWith("\"") && value.EndsWith("\"") || value.StartsWith("\"%") || value.StartsWith("%"))
-                        {
-                            value = Environment.ExpandEnvironmentVariables(value.Replace("\"", ""));
-                        }
-
-                        if (value.Contains(":\\"))
-                        {
-                            int index = value.IndexOf(".exe", StringComparison.OrdinalIgnoreCase);
-                            if (index > 0)
-                            {
-                                string executablePath = value.Substring(0, index + 4);
-                                return executablePath.Replace("\"", "");
-                            }
-                        }
-                        else if (!value.Contains(":\\") && value.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
-                        {
-                            if (File.Exists(Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32", value)))
-                            {
-                                return Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32", value);
-                            }
-                            else if (File.Exists(Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "SysWOW64", value)))
-                            {
-                                return Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "SysWOW64", value);
-                            }
-                        }
-                        return value;
-                    }
+                    string pathInQuotes = line.Substring(1, closingQuoteIndex - 1);
+                    return ResolveExecutablePath(pathInQuotes);
                 }
-                return "";
             }
-            catch (Exception ex)
-            {
-                Program.LL.LogErrorMessage("_Error", ex);
 
-                return "";
+            var tokens = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (tokens.Length == 0) return null;
+
+            var pathBuilder = new StringBuilder();
+            string lastFoundPath = null;
+
+            for (int i = 0; i < tokens.Length; i++)
+            {
+                if (i > 0) pathBuilder.Append(" ");
+                pathBuilder.Append(tokens[i]);
+
+                string currentPathCandidate = pathBuilder.ToString();
+
+                if (File.Exists(currentPathCandidate))
+                {
+                    lastFoundPath = currentPathCandidate;
+                }
             }
+
+            if (lastFoundPath != null)
+            {
+                return Path.GetFullPath(lastFoundPath);
+            }
+
+            return ResolveExecutablePath(tokens[0]);
         }
 
-        internal static string ResolveFilePathFromString(string line)
+        internal static string ResolveExecutablePath(string path)
         {
-            try
-            {
+            if (string.IsNullOrWhiteSpace(path))
+                return null;
 
-                if (line != null)
+            string expandedPath = Environment.ExpandEnvironmentVariables(path.Trim('\"'));
+
+            if (expandedPath.Contains('/'))
+            {
+                expandedPath = expandedPath.Replace('/', Path.DirectorySeparatorChar);
+            }
+
+            if (Path.IsPathRooted(expandedPath) && File.Exists(expandedPath))
+                return Path.GetFullPath(expandedPath);
+
+            var pathDirs = Environment.GetEnvironmentVariable("PATH")?.Split(';');
+            if (pathDirs != null)
+            {
+                var pathexts = Environment.GetEnvironmentVariable("PATHEXT")?.Split(';') ?? new[] { ".COM", ".EXE", ".BAT", ".CMD", ".MSI", ".VBS" };
+
+                foreach (var dir in pathDirs)
                 {
-                    if (line == "")
-                    {
-                        return "";
-                    }
+                    if (string.IsNullOrWhiteSpace(dir)) continue;
 
-
-                    if (line.StartsWith("\"") && line.EndsWith("\"") || line.StartsWith("\"%") || line.StartsWith("%"))
+                    try
                     {
-                        line = Environment.ExpandEnvironmentVariables(line.Replace("\"", ""));
-                    }
+                        string combinedPath = Path.Combine(dir.Trim(), expandedPath);
 
-                    if (line.Contains($"{Program.drive_letter}:/"))
-                    {
-                        line = line.Replace("/", "\\");
-                    }
+                        if (File.Exists(combinedPath))
+                            return combinedPath;
 
-                    if (line.Contains(":\\"))
-                    {
-                        int index = line.IndexOf(".exe", StringComparison.OrdinalIgnoreCase);
-                        if (index > 0)
+                        if (!Path.HasExtension(combinedPath))
                         {
-                            string executablePath = line.Substring(0, index + 4);
-                            return executablePath.Replace("\"", "");
+                            foreach (var ext in pathexts)
+                            {
+                                string pathWithExt = combinedPath + ext;
+                                if (File.Exists(pathWithExt))
+                                    return pathWithExt;
+                            }
                         }
                     }
-                    else if (!line.Contains(":\\") && line.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (File.Exists(Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32", line)))
-                        {
-                            return Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32", line);
-                        }
-                        else if (File.Exists(Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "SysWOW64", line)))
-                        {
-                            return Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "SysWOW64", line);
-                        }
-                    }
-                    return line;
+                    catch { }
                 }
-
-                return "";
-            }
-            catch (Exception)
-            {
-                return "";
             }
 
-
+            return null;
         }
 
         internal static string ExtractDllPath(string commandLine)
@@ -2077,60 +2239,38 @@ namespace MSearch
             if (fullpath.IndexOf("rundll32", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 int notFoundFailures = 0;
-                string rundll32Args = ResolveFilePathFromString(arguments).Split(',')[0];
 
-                if (rundll32Args.StartsWith("/"))
-                {
-                    rundll32Args = rundll32Args.Split(' ')[1];
-                }
+                string argsToParse = arguments.Trim();
 
-                if (rundll32Args.StartsWith("\""))
-                {
-                    rundll32Args = rundll32Args.Replace("\"", "");
-                }
+                string[] leadingFlags = { "/d ", "/c " };
 
-                string fullPathToFileFromArgs = "";
-                if (!rundll32Args.StartsWith($"{Program.drive_letter}:\\"))
+                foreach (var flag in leadingFlags)
                 {
-                    foreach (string checkDir in checkDirs)
+                    if (argsToParse.StartsWith(flag, StringComparison.OrdinalIgnoreCase))
                     {
-                        fullPathToFileFromArgs = Path.Combine(checkDir, rundll32Args);
-
-                        if (!fullPathToFileFromArgs.EndsWith(".dll"))
-                        {
-                            fullPathToFileFromArgs += ".dll";
-                        }
-
-                        if (!File.Exists(fullPathToFileFromArgs))
-                        {
-                            notFoundFailures++;
-                        }
-                        else
-                        {
-                            break;
-                        }
+                        argsToParse = argsToParse.Substring(flag.Length).TrimStart();
+                        break;
                     }
                 }
-                else
-                {
-                    fullPathToFileFromArgs = rundll32Args;
-                }
+
+                string dllPathCandidate = argsToParse.Split(',')[0];
+                string resolvedDllPath = ResolveExecutablePath(dllPathCandidate);
 
                 string filePathFromArgs_tmp = "";
                 try
                 {
-                    if (File.Exists(fullPathToFileFromArgs))
+                    if (File.Exists(resolvedDllPath))
                     {
-                        filePathFromArgs_tmp = fullPathToFileFromArgs;
-                        Program.LL.LogMessage("[.]", "_Just_File", fullPathToFileFromArgs, ConsoleColor.Gray);
-                        var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
+                        filePathFromArgs_tmp = resolvedDllPath;
+                        AppConfig.Instance.LL.LogMessage("[.]", "_Just_File", resolvedDllPath, ConsoleColor.Gray);
+                        var trustResult = winTrust.VerifyEmbeddedSignature(resolvedDllPath);
                         if (trustResult != WinVerifyTrustResult.Success)
                         {
-                            Program.LL.LogWarnMediumMessage("_InvalidCertificateSignature", rundll32Args);
-                            Utils.AddToQuarantine(fullPathToFileFromArgs);
-                            if (!File.Exists(fullPathToFileFromArgs))
+                            AppConfig.Instance.LL.LogWarnMediumMessage("_InvalidCertificateSignature", arguments);
+                            Utils.AddToQuarantine(resolvedDllPath);
+                            if (!File.Exists(resolvedDllPath))
                             {
-                                Program.totalFoundThreats++;
+                                AppConfig.Instance.totalFoundThreats++;
                             }
 
                             return;
@@ -2143,28 +2283,30 @@ namespace MSearch
                     }
                     else
                     {
-                        Program.LL.LogWarnMessage("_FileIsNotFound", fullPathToFileFromArgs);
+                        AppConfig.Instance.LL.LogWarnMessage("_FileIsNotFound", resolvedDllPath);
                     }
                 }
                 catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
                 {
-                    Program.LL.LogCautionMessage("_ErrorLockedByWD", filePathFromArgs_tmp);
+                    AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", filePathFromArgs_tmp);
+                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, filePathFromArgs_tmp, ScanActionType.LockedByAntivirus));
+
                 }
                 catch (Exception e)
                 {
-                    Program.LL.LogErrorMessage("_Error", e);
+                    AppConfig.Instance.LL.LogErrorMessage("_Error", e);
                 }
 
                 if (notFoundFailures == checkDirs.Length)
                 {
-                    Program.LL.LogWarnMessage("_FileIsNotFound", fullPathToFileFromArgs);
+                    AppConfig.Instance.LL.LogWarnMessage("_FileIsNotFound", resolvedDllPath);
                 }
 
             }
 
             if (fullpath.IndexOf("pcalua", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                string pcaluaArgs = ResolveFilePathFromString(arguments.Replace("-a ", ""));
+                string pcaluaArgs = ResolveExecutablePath(arguments.Replace("-a ", ""));
                 int checkCount = checkDirs.Length;
                 string fullPathToFileFromArgs = "";
 
@@ -2180,17 +2322,17 @@ namespace MSearch
                     {
                         if (File.Exists(fullPathToFileFromArgs))
                         {
-                            Program.LL.LogMessage("[.]", "_Just_File", fullPathToFileFromArgs, ConsoleColor.Gray);
+                            AppConfig.Instance.LL.LogMessage("[.]", "_Just_File", fullPathToFileFromArgs, ConsoleColor.Gray);
 
 
                             var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
                             if (trustResult != WinVerifyTrustResult.Success)
                             {
-                                Program.LL.LogWarnMediumMessage("_InvalidCertificateSignature", pcaluaArgs);
+                                AppConfig.Instance.LL.LogWarnMediumMessage("_InvalidCertificateSignature", pcaluaArgs);
                                 Utils.AddToQuarantine(fullPathToFileFromArgs);
                                 if (!File.Exists(fullPathToFileFromArgs))
                                 {
-                                    Program.totalFoundThreats++;
+                                    AppConfig.Instance.totalFoundThreats++;
                                 }
                                 return;
                             }
@@ -2207,13 +2349,13 @@ namespace MSearch
                     }
                     catch (Exception ex)
                     {
-                        Program.LL.LogErrorMessage("_Error", ex);
+                        AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
                     }
                 }
 
                 if (checkCount.Equals(0))
                 {
-                    Program.LL.LogWarnMessage("_FileIsNotFound", fullPathToFileFromArgs);
+                    AppConfig.Instance.LL.LogWarnMessage("_FileIsNotFound", fullPathToFileFromArgs);
                 }
 
             }
@@ -2423,7 +2565,7 @@ namespace MSearch
         static string GetSystemLanguage()
         {
 
-            string registryKeyPath = Bfs.Create("bKnf6GFc0gfZZvOGBYBR9qozb+SGVL5fr6qztlS0RtDwh7nUeKzulNFz6HvnRS3i", "0/yJ+tQOcZCHOvHfASeMuskMMYWBCumo5al/o2VgxXc=", "PWQxrIQJMaDkKDMdo9VG9g=="); //SYSTEM\CurrentControlSet\Control\Nls\Language
+            string registryKeyPath = Bfs.Create("AUrBULu43F4kUPGfSCDNmIWMNWZCRFxYftK6U7OHT4q7+IIDoMdj0L2QVmGMZiLf", "zhByStdA7bNgVXWsNH5xgRI6vkqGkHn/PRjdpwBLB54=", "DU6KMnjTbANMufY77YMC+g=="); //SYSTEM\CurrentControlSet\Control\Nls\Language
             string registryValueName = "Install~Language".Replace("~", "");
 
             string[] CodeLang = new string[]
@@ -2584,6 +2726,116 @@ namespace MSearch
             }
 
             return "00000000";
+        }
+    }
+
+    public static class ShortcutResolver
+    {
+        public static ShortcutInfo GetShortcutInfo(string lnkPath)
+        {
+            if (string.IsNullOrWhiteSpace(lnkPath))
+                throw new ArgumentException("Path to the shortcut file cannot be empty", nameof(lnkPath));
+
+            if (!System.IO.File.Exists(lnkPath))
+                throw new FileNotFoundException("File is not found", lnkPath);
+
+            var shellLink = (IShellLink)new ShellLink();
+            ((IPersistFile)shellLink).Load(lnkPath, 0);
+
+            var pathBuilder = new StringBuilder(260);
+            WIN32_FIND_DATAW data = new WIN32_FIND_DATAW();
+            int hr1 = shellLink.GetPath(pathBuilder, pathBuilder.Capacity, out data, 0);
+            if (hr1 != 0)
+                Marshal.ThrowExceptionForHR(hr1);
+
+            var argsBuilder = new StringBuilder(1024);
+            int hr2 = shellLink.GetArguments(argsBuilder, argsBuilder.Capacity);
+            if (hr2 != 0)
+                Marshal.ThrowExceptionForHR(hr2);
+
+            return new ShortcutInfo
+            {
+                TargetPath = pathBuilder.ToString(),
+                Arguments = argsBuilder.ToString()
+            };
+        }
+
+        public class ShortcutInfo
+        {
+            public string TargetPath { get; set; }
+            public string Arguments { get; set; }
+
+            public override string ToString()
+            {
+                return $"Target: {TargetPath}\nArgs: {Arguments}";
+            }
+        }
+
+        [ComImport]
+        [Guid("000214F9-0000-0000-C000-000000000046")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        private interface IShellLink
+        {
+            int GetPath([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszFile,
+                        int cchMaxPath,
+                        out WIN32_FIND_DATAW pfd,
+                        uint fFlags);
+
+            int GetIDList(out IntPtr ppidl);
+            int SetIDList(IntPtr pidl);
+            int GetDescription([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszName, int cchMaxName);
+            int SetDescription([MarshalAs(UnmanagedType.LPWStr)] string pszName);
+            int GetWorkingDirectory([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszDir, int cchMaxPath);
+            int SetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] string pszDir);
+            int GetArguments([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszArgs, int cchMaxPath);
+            int SetArguments([MarshalAs(UnmanagedType.LPWStr)] string pszArgs);
+            int GetHotkey(out short pwHotkey);
+            int SetHotkey(short wHotkey);
+            int GetShowCmd(out int piShowCmd);
+            int SetShowCmd(int iShowCmd);
+            int GetIconLocation([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszIconPath, int cchIconPath, out int piIcon);
+            int SetIconLocation([MarshalAs(UnmanagedType.LPWStr)] string pszIconPath, int iIcon);
+            int SetRelativePath([MarshalAs(UnmanagedType.LPWStr)] string pszPathRel, uint dwReserved);
+            int Resolve(IntPtr hwnd, uint fFlags);
+            int SetPath([MarshalAs(UnmanagedType.LPWStr)] string pszFile);
+        }
+
+        [ComImport]
+        [Guid("0000010b-0000-0000-C000-000000000046")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        private interface IPersistFile
+        {
+            int GetClassID(out Guid pClassID);
+            int IsDirty();
+            int Load([MarshalAs(UnmanagedType.LPWStr)] string pszFileName, uint dwMode);
+            int Save([MarshalAs(UnmanagedType.LPWStr)] string pszFileName, bool fRemember);
+            int SaveCompleted([MarshalAs(UnmanagedType.LPWStr)] string pszFileName);
+            int GetCurFile([MarshalAs(UnmanagedType.LPWStr)] out string ppszFileName);
+        }
+
+        [ComImport]
+        [Guid("00021401-0000-0000-C000-000000000046")]
+        private class ShellLink
+        {
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        private struct WIN32_FIND_DATAW
+        {
+            public uint dwFileAttributes;
+            public System.Runtime.InteropServices.ComTypes.FILETIME ftCreationTime;
+            public System.Runtime.InteropServices.ComTypes.FILETIME ftLastAccessTime;
+            public System.Runtime.InteropServices.ComTypes.FILETIME ftLastWriteTime;
+            public uint nFileSizeHigh;
+            public uint nFileSizeLow;
+            public uint dwReserved0;
+            public uint dwReserved1;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string cFileName;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 14)]
+            public string cAlternateFileName;
         }
     }
 }

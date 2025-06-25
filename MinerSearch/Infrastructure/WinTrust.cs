@@ -1,9 +1,11 @@
-//Thanx for https://www.pinvoke.net/default.aspx/wintrust.winverifytrust
+﻿//Thanx for https://www.pinvoke.net/default.aspx/wintrust.winverifytrust
 // credit to Alex Dragokas 
 
+using MSearch.Core;
 using System;
-using System.IO;
+using System.Collections.Generic; // Для List
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace MSearch
@@ -65,11 +67,12 @@ namespace MSearch
         Execute = 0,
         Install = 1
     }
+
     #endregion
 
     #region WinTrust structures
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    class WinTrustFileInfo
+    class WinTrustFileInfo : IDisposable
     {
         UInt32 StructSize = (UInt32)Marshal.SizeOf(typeof(WinTrustFileInfo));
         IntPtr pszFilePath;                     // required, file name to be verified
@@ -89,11 +92,16 @@ namespace MSearch
                 Marshal.FreeCoTaskMem(pszFilePath);
                 pszFilePath = IntPtr.Zero;
             }
+            GC.SuppressFinalize(this);
+        }
+        ~WinTrustFileInfo()
+        {
+            Dispose();
         }
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public class WINTRUST_CATALOG_INFO
+    public class WINTRUST_CATALOG_INFO : IDisposable
     {
         public UInt32 StructSize = (UInt32)Marshal.SizeOf(typeof(WINTRUST_CATALOG_INFO));
         public UInt32 CatalogVersion = 0;
@@ -101,18 +109,61 @@ namespace MSearch
         public string MemberTag;
         public string MemberFilePath;
         public IntPtr hMemberFile;
-        public IntPtr pbCalculatedFileHash;
-        public UInt32 cbCalculatedFileHash;
+        public IntPtr pbCalculatedFileHash; // Pointer to the hash bytes
+        public UInt32 cbCalculatedFileHash; // Size of the hash bytes
         public IntPtr CatalogContext;
         public IntPtr hCatAdmin;
 
+        private GCHandle? _hashHandle = null; // Store the GCHandle if hash was pinned
+
         public WINTRUST_CATALOG_INFO() { }
 
-        public void Dispose() { }
+        // Method to set hash and pin it
+        public void SetHash(byte[] hash)
+        {
+            if (_hashHandle != null)
+            {
+                _hashHandle.Value.Free(); // Free previous handle if any
+            }
+            if (hash != null)
+            {
+                _hashHandle = GCHandle.Alloc(hash, GCHandleType.Pinned);
+                pbCalculatedFileHash = _hashHandle.Value.AddrOfPinnedObject();
+                cbCalculatedFileHash = (uint)hash.Length;
+            }
+            else
+            {
+                _hashHandle = null;
+                pbCalculatedFileHash = IntPtr.Zero;
+                cbCalculatedFileHash = 0;
+            }
+        }
+
+        public void Dispose()
+        {
+            if (_hashHandle != null)
+            {
+                _hashHandle.Value.Free();
+                _hashHandle = null;
+                pbCalculatedFileHash = IntPtr.Zero;
+                cbCalculatedFileHash = 0;
+            }
+            // Note: hMemberFile, hCatAdmin, CatalogContext are handles managed by WinTrust/CryptCAT,
+            // and should typically be released via their respective functions (like CryptCATAdminReleaseContext/CryptCATAdminReleaseCatalogContext)
+            // after the WinTrustData structure is used with StateAction.Close.
+            // Disposing the struct itself doesn't release these OS handles.
+            // The WINTRUST_DATA Dispose handles the UnionInfoPtr memory but relies on WVT_Data.StateAction=Close
+            // to potentially clean up OS handles within the WinTrust system.
+            GC.SuppressFinalize(this);
+        }
+        ~WINTRUST_CATALOG_INFO()
+        {
+            Dispose();
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    class WinTrustData
+    class WinTrustData : IDisposable
     {
         public UInt32 StructSize = (UInt32)Marshal.SizeOf(typeof(WinTrustData));
         public IntPtr PolicyCallbackData = IntPtr.Zero;
@@ -120,12 +171,15 @@ namespace MSearch
         public WinTrustDataUIChoice UIChoice = WinTrustDataUIChoice.None;
         public WinTrustDataRevocationChecks RevocationChecks = WinTrustDataRevocationChecks.None;
         public WinTrustDataChoice UnionChoice = WinTrustDataChoice.File; // required: which structure is being passed in?
-        public IntPtr UnionInfoPtr;
-        public WinTrustDataStateAction StateAction = WinTrustDataStateAction.Ignore;
-        public IntPtr StateData = IntPtr.Zero;
+        public IntPtr UnionInfoPtr; // Pointer to the specific info structure (WinTrustFileInfo or WINTRUST_CATALOG_INFO)
+        public WinTrustDataStateAction StateAction = WinTrustDataStateAction.Ignore; // default to ignore
+        public IntPtr StateData = IntPtr.Zero; // state data specific to the chosen action
         public String URLReference = null;
         public WinTrustDataProvFlags ProvFlags = WinTrustDataProvFlags.RevocationCheckChainExcludeRoot;
         public WinTrustDataUIContext UIContext = WinTrustDataUIContext.Execute;
+
+        // Store the object that UnionInfoPtr points to, to call its Dispose
+        private object _unionInfo = null;
 
         private void InitFlags()
         {
@@ -134,42 +188,59 @@ namespace MSearch
             {
                 ProvFlags |= WinTrustDataProvFlags.DisableMD2andMD4;
             }
+            // Add more flags if needed, e.g., WTD_SAFER_FLAG, WTD_LIFETIME_SIGNING_FLAG etc.
+            // Depending on policy requirements. Default WTD_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT is common.
         }
 
-        public WinTrustData(WinTrustFileInfo _fileInfo)
+        public WinTrustData(WinTrustFileInfo fileInfo)
         {
             InitFlags();
-            WinTrustFileInfo wtfiData = _fileInfo;
+            if (fileInfo == null) throw new ArgumentNullException(nameof(fileInfo));
+            UnionChoice = WinTrustDataChoice.File;
+            _unionInfo = fileInfo;
             UnionInfoPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(WinTrustFileInfo)));
-            Marshal.StructureToPtr(wtfiData, UnionInfoPtr, false);
+            Marshal.StructureToPtr(fileInfo, UnionInfoPtr, false);
         }
 
-        public WinTrustData(WINTRUST_CATALOG_INFO _catalogInfo)
+        public WinTrustData(WINTRUST_CATALOG_INFO catalogInfo)
         {
             InitFlags();
+            if (catalogInfo == null) throw new ArgumentNullException(nameof(catalogInfo));
             UnionChoice = WinTrustDataChoice.Catalog;
+            _unionInfo = catalogInfo;
             UnionInfoPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(WINTRUST_CATALOG_INFO)));
-            Marshal.StructureToPtr(_catalogInfo, UnionInfoPtr, false);
+            Marshal.StructureToPtr(catalogInfo, UnionInfoPtr, false);
         }
 
         public void Dispose()
         {
+            // Dispose the specific union info object if it implements IDisposable
+            IDisposable disposableUnionInfo = _unionInfo as IDisposable;
+            if (disposableUnionInfo != null)
+            {
+                disposableUnionInfo.Dispose();
+            }
+            _unionInfo = null;
+
+            // Free the unmanaged memory for the union info structure
             if (UnionInfoPtr != IntPtr.Zero)
             {
-                if (UnionChoice == WinTrustDataChoice.File)
-                {
-                    WinTrustFileInfo fileInfo = (WinTrustFileInfo)Marshal.PtrToStructure(UnionInfoPtr, typeof(WinTrustFileInfo));
-                    fileInfo.Dispose();
-                }
-                else if (UnionChoice == WinTrustDataChoice.Catalog)
-                {
-                    WINTRUST_CATALOG_INFO catalog = (WINTRUST_CATALOG_INFO)Marshal.PtrToStructure(UnionInfoPtr, typeof(WINTRUST_CATALOG_INFO));
-                    catalog.Dispose();
-                }
-
                 Marshal.FreeHGlobal(UnionInfoPtr);
                 UnionInfoPtr = IntPtr.Zero;
             }
+
+            // StateData is allocated and managed by WinTrust itself when StateAction is Verify.
+            // It should be freed by setting StateAction to Close before calling WinVerifyTrust,
+            // or explicitly freed after the call if Close wasn't used (which is less common/recommended).
+            // The WinTrustData structure itself doesn't own the StateData pointer memory
+            // in the context it's usually used for verification followed by close.
+            StateData = IntPtr.Zero; // Just null out the reference within the struct
+
+            GC.SuppressFinalize(this);
+        }
+        ~WinTrustData()
+        {
+            Dispose();
         }
     }
     #endregion
@@ -182,8 +253,8 @@ namespace MSearch
         ActionUnknown = 0x800b0002,         // Trust provider does not support the specified action
         SubjectFormUnknown = 0x800b0003,        // Trust provider does not support the form specified for the subject
         SubjectNotTrusted = 0x800b0004,         // Subject failed the specified verification action
-        TrustProviderFailed = 0x800b0005,
-        ActionFailed = 0x800b0006,
+        DIGSIG_ENCODE = 0x800b0005,
+        DIGSIG_DECODE = 0x800b0006,
         FileNotSigned = 0x800B0100,         // TRUST_E_NOSIGNATURE - File was not signed
         SubjectExplicitlyDistrusted = 0x800B0111,   // Signer's certificate is in the Untrusted Publishers store
         SignatureOrFileCorrupt = 0x80096010,    // TRUST_E_BAD_DIGEST - file was probably corrupt
@@ -191,7 +262,8 @@ namespace MSearch
         SubjectCertificateRevoked = 0x800B010C,     // CERT_E_REVOKED Subject's certificate was revoked
         UntrustedRoot = 0x800B0109,          // CERT_E_UNTRUSTEDROOT - A certification chain processed correctly but terminated in a root certificate that is not trusted by the trust provider.
         Unknown = 0x8000000D,
-        CryptFileError = 0x80092003
+        CryptFileError = 0x80092003,
+        CertIsNotValidForUsage = 0x800b0107 // CERT_E_PURPOSE
     }
 
     public class WinTrust
@@ -221,6 +293,7 @@ namespace MSearch
         public const string BCRYPT_SHA256_ALGORITHM = "SHA256";
         public const int ERROR_INSUFFICIENT_BUFFER = 122;
 
+        const uint CERT_NAME_SIMPLE_DISPLAY_TYPE = 4;
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern IntPtr CreateFile(string lpFileName, int dwDesiredAccess, int dwShareMode, IntPtr lpSecurityAttributes, int dwCreationDisposition, int dwFlagsAndAttributes, IntPtr hTemplateFile);
@@ -278,174 +351,276 @@ namespace MSearch
             [In] WinTrustData pWVTData
         );
 
-        public WinVerifyTrustResult VerifyEmbeddedSignature(string filePath)
+        [DllImport("crypt32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        static extern uint CertGetNameString(IntPtr pCertContext, uint dwType, uint dwFlags, IntPtr pvTypePara, StringBuilder pszNameString, uint cchNameString);
+
+        public WinVerifyTrustResult VerifyEmbeddedSignature(string filePath, bool displayIfNotSigned = false)
         {
             try
             {
                 WinTrustFileInfo trustFileInfo = new WinTrustFileInfo(filePath);
-                WinTrustData wtd = new WinTrustData(trustFileInfo);
+                WinTrustData wtd = new WinTrustData(trustFileInfo); // Using block will handle dispose
                 Guid guidAction = new Guid(WINTRUST_ACTION_GENERIC_VERIFY_V2);
-                WinVerifyTrustResult result = WinVerifyTrust(INVALID_HANDLE_VALUE, guidAction, wtd);
-                wtd.StateAction = WinTrustDataStateAction.Close;
-                wtd.Dispose();
+
+                WinVerifyTrustResult result;
+                // Use a using block for WinTrustData for proper disposal of native resources
+                using (wtd)
+                {
+                    wtd.StateAction = WinTrustDataStateAction.Verify; // Explicitly verify
+                    result = WinVerifyTrust(INVALID_HANDLE_VALUE, guidAction, wtd);
+                    wtd.StateAction = WinTrustDataStateAction.Close; // Tell WinTrust to cleanup state associated with this data
+                } // `using` block ensures wtd.Dispose() is called here
 
                 switch (result)
                 {
+                    case WinVerifyTrustResult.Success:
+                        break; // Continue to return result
+
+                    case WinVerifyTrustResult.ProviderUnknown:
                     case WinVerifyTrustResult.SubjectNotTrusted:
-                        Program.LL.LogWarnMessage("_CertSubjectNotTrusted", filePath);
-                        break;
                     case WinVerifyTrustResult.SubjectExplicitlyDistrusted:
-                        Program.LL.LogWarnMessage("_CertSubjectExplicitlyDistrusted", filePath);
-                        break;
                     case WinVerifyTrustResult.SignatureOrFileCorrupt:
-                        Program.LL.LogWarnMessage("_CertSignatureOrFileCorrupt", filePath);
-                        break;
                     case WinVerifyTrustResult.SubjectCertExpired:
-                        Program.LL.LogWarnMessage("_CertSubjectCertExpired", filePath);
-                        break;
                     case WinVerifyTrustResult.SubjectCertificateRevoked:
-                        Program.LL.LogWarnMessage("_CertSubjectCertificateRevoked", filePath);
-                        break;
                     case WinVerifyTrustResult.UntrustedRoot:
-                        Program.LL.LogWarnMessage("_CertUntrustedRoot", filePath);
-                        break;
+                    case WinVerifyTrustResult.DIGSIG_ENCODE:
+                    case WinVerifyTrustResult.DIGSIG_DECODE:
+                        // Log specific warnings for signature issues, but keep the original result.
+                        LogWinTrustResult(result, filePath);
+                        break; // Continue to return result
+
+                    case WinVerifyTrustResult.ActionUnknown:
+                    case WinVerifyTrustResult.SubjectFormUnknown:
+                        // Log specific warnings if verbose
+                        if (AppConfig.Instance.verbose)
+                        {
+                            LogWinTrustResult(result, filePath);
+                        }
+                        break; // Continue to return result
+
                     case WinVerifyTrustResult.FileNotSigned:
                         result = VerifyByCatalog(filePath);
-                        break;
+                        break; // Continue to return result based on catalog check
+
                     default:
-                        break;
-                        
+                        if (AppConfig.Instance.verbose)
+                        {
+                            AppConfig.Instance.LL.LogWarnMessage("_CertUnknownResult", filePath);
+                        }
+                        break; // Continue to return result
                 }
+
+                if (result == WinVerifyTrustResult.FileNotSigned && (AppConfig.Instance.verbose || displayIfNotSigned))
+                {
+                    AppConfig.Instance.LL.LogWarnMessage("_CertFileNotSigned", filePath);
+                }
+
                 return result;
             }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_ErrorVerifySignature", ex);
+                AppConfig.Instance.LL.LogErrorMessage("_ErrorVerifySignature", ex);
                 return WinVerifyTrustResult.Error;
             }
         }
 
+        // Helper method to log specific WinTrust results
+        void LogWinTrustResult(WinVerifyTrustResult result, string filePath)
+        {
+            string logMessageKey;
+            switch (result)
+            {
+                case WinVerifyTrustResult.ProviderUnknown: logMessageKey = "_CertSubjectNotTrusted"; break; // Often used for provider issues too
+                case WinVerifyTrustResult.ActionUnknown: logMessageKey = "_CertActionUnknown"; break;
+                case WinVerifyTrustResult.SubjectFormUnknown: logMessageKey = "_CertSubjectFormUnknown"; break;
+                case WinVerifyTrustResult.DIGSIG_ENCODE: logMessageKey = "_CertDigsigEncode"; break;
+                case WinVerifyTrustResult.DIGSIG_DECODE: logMessageKey = "_CertDigsigDecode"; break;
+                case WinVerifyTrustResult.SubjectNotTrusted: logMessageKey = "_CertSubjectNotTrusted"; break;
+                case WinVerifyTrustResult.SubjectExplicitlyDistrusted: logMessageKey = "_CertSubjectExplicitlyDistrusted"; break;
+                case WinVerifyTrustResult.SignatureOrFileCorrupt: logMessageKey = "_CertSignatureOrFileCorrupt"; break;
+                case WinVerifyTrustResult.SubjectCertExpired: logMessageKey = "_CertSubjectCertExpired"; break;
+                case WinVerifyTrustResult.SubjectCertificateRevoked: logMessageKey = "_CertSubjectCertificateRevoked"; break;
+                case WinVerifyTrustResult.UntrustedRoot: logMessageKey = "_CertUntrustedRoot"; break;
+                case WinVerifyTrustResult.FileNotSigned: logMessageKey = "_CertFileNotSigned"; break; // Should be handled by the FileNotSigned branch
+                default: logMessageKey = "_CertUnknownResult"; break;
+            }
+            AppConfig.Instance.LL.LogWarnMessage(logMessageKey, filePath); // Log the result code too
+        }
+
+
         public static WinVerifyTrustResult VerifyByCatalog(string fileName)
         {
-            WinVerifyTrustResult result;
+            WinVerifyTrustResult result = WinVerifyTrustResult.FileNotSigned; // Default result if not found/verified by catalog
+            IntPtr hCatAdmin = IntPtr.Zero;
+            IntPtr hFile = IntPtr.Zero;
+            IntPtr catInfo = IntPtr.Zero; // HCERTSTORE for the catalog
+
             try
             {
                 Guid guidAction = new Guid(WINTRUST_ACTION_GENERIC_VERIFY_V2);
-                Guid driverAction = new Guid(DRIVER_ACTION_VERIFY);
-                IntPtr hCatAdmin = IntPtr.Zero;
+                Guid driverAction = new Guid(DRIVER_ACTION_VERIFY); // Often used for catalog verification context
 
-                IntPtr hFile = CreateFile(
+                // Open the file
+                hFile = CreateFile(
                     fileName,
                     FILE_READ_ATTRIBUTES | FILE_READ_DATA | STANDARD_RIGHTS_READ,
                     FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
                     IntPtr.Zero, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, IntPtr.Zero);
-                if (hFile == IntPtr.Zero)
+
+                if (hFile == INVALID_HANDLE_VALUE) // Check against INVALID_HANDLE_VALUE (-1), not IntPtr.Zero
                 {
-                    return WinVerifyTrustResult.Error;
+                    int lastError = Marshal.GetLastWin32Error();
+                    AppConfig.Instance.LL.LogErrorMessage("_ErrorOpenFileForCatalog", new System.ComponentModel.Win32Exception(lastError), fileName);
+                    return WinVerifyTrustResult.Error; // Cannot open file
                 }
 
+                // Acquire Catalog Admin context
                 if (IsWindows8OrGreater())
                 {
+                    // Try with specific hash algorithm first (SHA256 is common)
                     CryptCATAdminAcquireContext2(out hCatAdmin, driverAction, BCRYPT_SHA256_ALGORITHM, IntPtr.Zero, 0);
                 }
                 if (hCatAdmin == IntPtr.Zero)
                 {
                     if (!CryptCATAdminAcquireContext(out hCatAdmin, driverAction, 0))
                     {
-                        CloseHandle(hFile);
-                        return WinVerifyTrustResult.FileNotSigned;
+                        int lastError = Marshal.GetLastWin32Error();
+                        return WinVerifyTrustResult.FileNotSigned; // Cannot get catalog admin context
                     }
                 }
 
-                byte[] hash = new byte[1];
+                // Calculate file hash
+                byte[] hash = new byte[1]; // Start with small buffer
                 uint hashLength = 0;
                 bool bRet = false;
 
+                // First call to get hash size
+                if (IsWindows8OrGreater())
+                {
+                    bRet = CryptCATAdminCalcHashFromFileHandle2(hCatAdmin, hFile, ref hashLength, null, 0); // Pass null buffer to get size
+                }
+                if (!bRet || hashLength == 0) // If CryptCATAdminCalcHashFromFileHandle2 failed or older OS
+                {
+                    // Try CryptCATAdminCalcHashFromFileHandle (older API)
+                    hashLength = 0; // Reset hashLength
+                    bRet = CryptCATAdminCalcHashFromFileHandle(hFile, ref hashLength, null, 0); // Pass null buffer to get size
+                }
+
+                if (!bRet || hashLength == 0)
+                {
+                    // Failed to get hash size
+                    int lastError = Marshal.GetLastWin32Error();
+                    AppConfig.Instance.LL.LogWarnMessage("_CertCannotGetHashSize", fileName);
+                    return WinVerifyTrustResult.FileNotSigned; // Cannot get hash size
+                }
+
+                // Allocate buffer and get hash
+                hash = new byte[hashLength];
                 if (IsWindows8OrGreater())
                 {
                     bRet = CryptCATAdminCalcHashFromFileHandle2(hCatAdmin, hFile, ref hashLength, hash, 0);
-
-                    if (Marshal.GetLastWin32Error() == ERROR_INSUFFICIENT_BUFFER)
-                    {
-                        hash = new byte[hashLength];
-                        bRet = CryptCATAdminCalcHashFromFileHandle2(hCatAdmin, hFile, ref hashLength, hash, 0);
-                    }
                 }
-                if (!bRet || hashLength == 0)
+                if (!bRet) // If CryptCATAdminCalcHashFromFileHandle2 failed or older OS
                 {
-                    if (!CryptCATAdminCalcHashFromFileHandle(hFile, ref hashLength, hash, 0))
-                    {
-                        hash = new byte[hashLength];
-                        if (!CryptCATAdminCalcHashFromFileHandle(hFile, ref hashLength, hash, 0))
-                        {
-                            CloseHandle(hFile);
-                            return WinVerifyTrustResult.FileNotSigned;
-                        }
-                    }
+                    bRet = CryptCATAdminCalcHashFromFileHandle(hFile, ref hashLength, hash, 0);
                 }
 
-                StringBuilder memberTag = new StringBuilder((int)hashLength * 2);
+                if (!bRet)
+                {
+                    int lastError = Marshal.GetLastWin32Error();
+                    AppConfig.Instance.LL.LogWarnMessage("_CertCannotCalcHash", fileName);
+                    return WinVerifyTrustResult.FileNotSigned; // Cannot calculate hash
+                }
 
-                for (int i = 0; i < hashLength; i++)
-                    memberTag.Append(hash[i].ToString("X2"));
 
-                IntPtr catInfo = CryptCATAdminEnumCatalogFromHash(hCatAdmin, hash, hashLength, 0, IntPtr.Zero);
+                // Enumerate catalogs containing this hash
+                catInfo = CryptCATAdminEnumCatalogFromHash(hCatAdmin, hash, hashLength, 0, IntPtr.Zero);
 
                 if (catInfo == IntPtr.Zero)
                 {
-                    CryptCATAdminReleaseContext(hCatAdmin, 0);
-                    CloseHandle(hFile);
+                    // Hash not found in any trusted catalog
                     return WinVerifyTrustResult.FileNotSigned;
                 }
 
+                // Found a catalog. Get catalog info.
                 CATALOG_INFO ci = new CATALOG_INFO();
                 ci.cbStruct = (UInt32)Marshal.SizeOf(typeof(CATALOG_INFO));
 
                 if (!CryptCATCatalogInfoFromContext(catInfo, ref ci, 0))
                 {
-                    CryptCATAdminReleaseCatalogContext(hCatAdmin, catInfo, 0);
-                    CryptCATAdminReleaseContext(hCatAdmin, 0);
-                    CloseHandle(hFile);
-                    return WinVerifyTrustResult.FileNotSigned;
+                    int lastError = Marshal.GetLastWin32Error();
+                    AppConfig.Instance.LL.LogWarnMessage("_CertCannotGetCatalogInfo", fileName);
+                    return WinVerifyTrustResult.FileNotSigned; // Cannot get catalog info
                 }
 
+                // Now verify the file against the catalog entry using WinVerifyTrust
                 WINTRUST_CATALOG_INFO wci = new WINTRUST_CATALOG_INFO();
-                wci.CatalogFilePath = ci.wszCatalogFile;
-                wci.MemberFilePath = fileName;
-                wci.hMemberFile = hFile; // you can either pass the file path or already opened file handle
-                wci.hCatAdmin = hCatAdmin;
-                // see: https://www.appsloveworld.com/cplus/100/22/how-do-i-marshal-a-struct-that-contains-a-variable-sized-array-to-c
-                GCHandle pin = GCHandle.Alloc(hash, GCHandleType.Pinned);
-                IntPtr pHash = pin.AddrOfPinnedObject();
-                wci.pbCalculatedFileHash = pHash;
-                wci.cbCalculatedFileHash = hashLength;
-                wci.MemberTag = memberTag.ToString(); // you can either use pre-calculated file hash or MemberTag
+                wci.CatalogFilePath = ci.wszCatalogFile; // Path to the found catalog file
+                wci.MemberFilePath = fileName;          // Path to the file being verified
+                wci.hMemberFile = hFile;                // Handle to the file being verified
+                wci.hCatAdmin = hCatAdmin;              // Pass the admin context
+                // Pass the calculated hash bytes and size
+                wci.SetHash(hash); // Use the helper to pin the hash
 
                 WinTrustData trustData = new WinTrustData(wci);
 
-                try
+                using (trustData) // Use using for WinTrustData disposal
                 {
+                    // Verify action
+                    trustData.StateAction = WinTrustDataStateAction.Verify;
                     result = WinVerifyTrust(IntPtr.Zero, guidAction, trustData);
+
+                    // Set Close action after verify
                     trustData.StateAction = WinTrustDataStateAction.Close;
-                }
-                finally
+                } // trustData.Dispose() is called here, which unpins the hash
+
+                // Release Catalog Context handle
+                if (catInfo != IntPtr.Zero)
                 {
                     CryptCATAdminReleaseCatalogContext(hCatAdmin, catInfo, 0);
-
-                    trustData.StateAction = WinTrustDataStateAction.Close;
-
-                    CryptCATAdminReleaseContext(hCatAdmin, 0);
-                    CloseHandle(hFile);
-
-                    pin.Free();
+                    catInfo = IntPtr.Zero; // Nullify handle after releasing
                 }
-                return result;
+
+                // Release Catalog Admin handle
+                if (hCatAdmin != IntPtr.Zero)
+                {
+                    CryptCATAdminReleaseContext(hCatAdmin, 0);
+                    hCatAdmin = IntPtr.Zero; // Nullify handle after releasing
+                }
+
+                // Close file handle
+                if (hFile != INVALID_HANDLE_VALUE)
+                {
+                    CloseHandle(hFile);
+                    hFile = INVALID_HANDLE_VALUE; // Nullify handle after closing
+                }
+
             }
             catch (Exception ex)
             {
-                Program.LL.LogErrorMessage("_ErrorVerifySignature", ex);
+                AppConfig.Instance.LL.LogErrorMessage("_ErrorVerifyByCatalog", ex, fileName);
                 return WinVerifyTrustResult.Error;
             }
+            finally
+            {
+                // Ensure all handles are closed/released even if exceptions occur within try block
+                // (Although the structured handle release above is better, defensive cleanup here is good)
+                if (catInfo != IntPtr.Zero)
+                {
+                    CryptCATAdminReleaseCatalogContext(hCatAdmin, catInfo, 0);
+                }
+                if (hCatAdmin != IntPtr.Zero)
+                {
+                    CryptCATAdminReleaseContext(hCatAdmin, 0);
+                }
+                if (hFile != INVALID_HANDLE_VALUE)
+                {
+                    CloseHandle(hFile);
+                }
+                // The WINTRUST_CATALOG_INFO wci's hash GCHandle is freed by trustData.Dispose() inside the using block.
+            }
+
+            return result;
         }
 
         public static bool IsWindows8OrGreater()
