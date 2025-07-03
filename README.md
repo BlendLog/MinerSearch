@@ -2,6 +2,8 @@
 
 [Русский](README.ru.md) | English | [Chinese](README.cn.md)
 
+MinerSearch developer is talking to Gemini?
+
 This program is designed to find and destroy hidden miners.
 It is an auxiliary tool for searching suspicious files, directories, processes, etc. and is NOT an antivirus.
 
