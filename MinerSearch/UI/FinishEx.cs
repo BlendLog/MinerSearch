@@ -58,7 +58,7 @@ namespace MSearch
                 btnDetails.Text = AppConfig.Instance.LL.GetLocalizedString("_BtnDetails");
             }
 
-            LBL_ScanComplete.Text = AppConfig.Instance.LL.GetLocalizedString("_End");
+            LBL_ScanComplete.Text = AppConfig.Instance.LL.GetLocalizedString("_End") + $" №{AppConfig.Instance.RunCount}";
             LBL_totalThreats.Text = AppConfig.Instance.LL.GetLocalizedString("_TotalThreatsFound");
             LBL_neutralizedThreats.Text = AppConfig.Instance.LL.GetLocalizedString("_TotalNeutralizedThreats");
             LBL_susObjects.Text = AppConfig.Instance.LL.GetLocalizedString("_SuspiciousObjects");

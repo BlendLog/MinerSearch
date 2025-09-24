@@ -104,7 +104,7 @@ namespace MSearch
             if (string.IsNullOrWhiteSpace(debuggerPath))
                 return true;
 
-            if (debuggerPath.Contains(":\\"))
+            if (Path.IsPathRooted(debuggerPath))
             {
                 string debuggerPathNormal = debuggerPath.Replace("\"", "");
                 if (File.Exists(debuggerPathNormal))
@@ -119,7 +119,13 @@ namespace MSearch
 
             if (debuggerPath.Equals("/") || debuggerPath.Equals("*")) return false;
 
-            string resolvedPath = FileSystemManager.ResolveExecutablePath(debuggerPath).Trim();
+            string resolvedPath = FileSystemManager.ResolveExecutablePath(debuggerPath);
+            if (resolvedPath == null)
+            {
+                AppConfig.Instance.LL.LogWarnMessage("_Error", $"Unable to resolve path from Debugger: {debuggerPath}");
+                return false;
+            }
+            resolvedPath = resolvedPath.Trim();
 
             string[] allowedRedir = { "taskkill.exe", "dllhost.exe", "svchost.exe", "systray.exe" };
 
@@ -233,7 +239,7 @@ namespace MSearch
             return false;
         }
 
-        internal static void AddToQuarantine(string sourceFilePath)
+        internal static void AddToQuarantine(string sourceFilePath, string note = "")
         {
             if (!File.Exists(sourceFilePath))
                 return;
@@ -247,7 +253,7 @@ namespace MSearch
                     if (!File.Exists(sourceFilePath))
                     {
                         AppConfig.Instance.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_Deleted");
-                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Deleted));
+                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Deleted, note));
                         return;
                     }
                 }
@@ -255,14 +261,14 @@ namespace MSearch
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
                 AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", sourceFilePath);
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, sourceFilePath, ScanActionType.LockedByAntivirus));
+                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, sourceFilePath, ScanActionType.LockedByAntivirus, note));
 
             }
             catch (Exception ex1)
             {
                 AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotRemove", ex1, sourceFilePath, "_File");
                 AppConfig.Instance.totalNeutralizedThreats--;
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error));
+                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error, note));
                 return;
             }
 
@@ -326,25 +332,26 @@ namespace MSearch
                 if (!File.Exists(sourceFilePath))
                 {
                     AppConfig.Instance.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_MovedToQuarantine");
-                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Quarantine));
+                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Quarantine, note));
                 }
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
                 AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", sourceFilePath);
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, sourceFilePath, ScanActionType.LockedByAntivirus));
+                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, sourceFilePath, ScanActionType.LockedByAntivirus, note));
 
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80070020)))
             {
                 AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByAnotherProcess", sourceFilePath);
                 MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error, e.Message));
-
+                AppConfig.Instance.totalNeutralizedThreats--;
             }
             catch (Exception ex)
             {
                 AppConfig.Instance.LL.LogErrorMessage("_Error", ex, sourceFilePath, "_File");
                 MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error, ex.Message));
+                AppConfig.Instance.totalNeutralizedThreats--;
             }
         }
 
@@ -355,7 +362,7 @@ namespace MSearch
             {
                 if (Internet.IsOK())
                 {
-                    string latest = GithubAPI.GetLatestVersion("BlendLog/MinerSearch");
+                    string latest = GithubAPI.GetLatestVersion().Trim();
                     string current = AppConfig.Instance.CurrentVersion.Replace(".", "");
 
                     if (!IsLatestVersion(current, latest.StartsWith("v") ? latest.Substring(1).Replace(".", "") : latest.Replace(".", "")))
@@ -1875,6 +1882,72 @@ namespace MSearch
             double num = Math.Round(bytes / Math.Pow(1024, place), 1);
             return $"{Math.Sign(CountBytes) * num} {type[place]}";
         }
+
+        internal static bool IsFileSizeBloated(string filePath, long minFileSizeMb = 100, double threshold = 0.95)
+        {
+            try
+            {
+                if (!File.Exists(filePath))
+                {
+                    return false;
+                }
+
+                var fileInfo = new FileInfo(filePath);
+                long minFileSizeBytes = minFileSizeMb * 1024 * 1024;
+
+                if (fileInfo.Length < minFileSizeBytes)
+                {
+                    return false;
+                }
+
+                const int sampleSize = 8192; // chunk sample
+                byte[] buffer = new byte[sampleSize];
+
+                using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    long[] samplePositions =
+                    {
+                        0,
+                        fileInfo.Length / 2 - (sampleSize / 2),
+                        fileInfo.Length - sampleSize
+                    };
+
+                    foreach (long position in samplePositions)
+                    {
+                        if (position < 0) continue;
+
+                        fs.Position = position;
+                        int bytesRead = fs.Read(buffer, 0, sampleSize);
+                        if (bytesRead == 0) continue;
+
+                        byte repeatedByte = buffer[0];
+                        int count = 0;
+                        for (int i = 0; i < bytesRead; i++)
+                        {
+                            if (buffer[i] == repeatedByte)
+                            {
+                                count++;
+                            }
+                        }
+
+                        if ((double)count / bytesRead >= threshold)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (IOException ex)
+            {
+                AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotProceed", ex, filePath, "_File");
+            }
+            catch (Exception ex)
+            {
+                AppConfig.Instance.LL.LogErrorMessage("_GenericError", ex, $"IsFileSizeBloated check on {filePath}");
+            }
+
+            return false;
+        }
     }
 
     public class FileEnumerator
@@ -2008,6 +2081,8 @@ namespace MSearch
 
     public class FileSystemManager
     {
+        private static readonly Regex IfExistPathRegex = new Regex(@"if\s+exist\s+(?:""|\^"")(?<filepath>[A-Z]:\\.*?\.(?:dll|wsf))(?:""|\^"")", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         internal static bool IsDirectoryEmpty(string path)
         {
 
@@ -2038,6 +2113,11 @@ namespace MSearch
         internal static bool IsReparsePoint(string path)
         {
             return (Native.GetFileAttributes(path) & (uint)Native.FILE_ATTRIBUTE.REPARSE_POINT) == (uint)Native.FILE_ATTRIBUTE.REPARSE_POINT;
+        }
+
+        internal static bool IsOnlyInvisibleCharacters(string input)
+        {
+            return Regex.IsMatch(input, @"^[\u200B\u200C\u200E\u202F\u00A0]*$");
         }
 
         internal static bool HasHiddenAttribute(string path)
@@ -2165,6 +2245,18 @@ namespace MSearch
             return ResolveExecutablePath(tokens[0]);
         }
 
+        public static string ExtractFilePathFromIfExist(string arguments)
+        {
+            Match match = IfExistPathRegex.Match(arguments);
+
+            if (match.Success)
+            {
+                return match.Groups["filepath"].Value;
+            }
+
+            return null;
+        }
+
         internal static string ResolveExecutablePath(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -2177,8 +2269,10 @@ namespace MSearch
                 expandedPath = expandedPath.Replace('/', Path.DirectorySeparatorChar);
             }
 
-            if (Path.IsPathRooted(expandedPath) && File.Exists(expandedPath))
+            if (Path.IsPathRooted(expandedPath))
+            {
                 return Path.GetFullPath(expandedPath);
+            }
 
             var pathDirs = Environment.GetEnvironmentVariable("PATH")?.Split(';');
             if (pathDirs != null)
@@ -2189,24 +2283,22 @@ namespace MSearch
                 {
                     if (string.IsNullOrWhiteSpace(dir)) continue;
 
-                    try
+
+                    string combinedPath = Path.Combine(dir.Trim(), expandedPath);
+
+                    if (File.Exists(combinedPath))
+                        return combinedPath;
+
+                    if (!Path.HasExtension(combinedPath))
                     {
-                        string combinedPath = Path.Combine(dir.Trim(), expandedPath);
-
-                        if (File.Exists(combinedPath))
-                            return combinedPath;
-
-                        if (!Path.HasExtension(combinedPath))
+                        foreach (var ext in pathexts)
                         {
-                            foreach (var ext in pathexts)
-                            {
-                                string pathWithExt = combinedPath + ext;
-                                if (File.Exists(pathWithExt))
-                                    return pathWithExt;
-                            }
+                            string pathWithExt = combinedPath + ext;
+                            if (File.Exists(pathWithExt))
+                                return pathWithExt;
                         }
                     }
-                    catch { }
+
                 }
             }
 
@@ -2232,29 +2324,61 @@ namespace MSearch
             return string.Empty;
         }
 
-        internal static void ProcessFileFromArgs(string[] checkDirs, string fullpath, string arguments)
+        internal static List<string> SplitCommandLineArguments(string commandLine)
+        {
+            var args = new List<string>();
+            var matches = Regex.Matches(commandLine, @"""[^""]+""|\S+");
+            foreach (Match match in matches)
+            {
+                args.Add(match.Value.Trim('"'));
+            }
+            return args;
+        }
+
+        internal static string NormalizePath(string rawPath)
+        {
+            if (string.IsNullOrEmpty(rawPath))
+            {
+                return rawPath;
+            }
+
+            int driveLetterPos = rawPath.IndexOf(":\\");
+            if (driveLetterPos > 0)
+            {
+                return rawPath.Substring(driveLetterPos - 1);
+            }
+
+            return rawPath;
+        }
+
+        internal static bool ProcessFileFromArgs(string[] checkDirs, string fullpath, string arguments)
         {
             WinTrust winTrust = new WinTrust();
 
             if (fullpath.IndexOf("rundll32", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                int notFoundFailures = 0;
+                List<string> argsList = SplitCommandLineArguments(arguments);
+                string dllPathCandidate = null;
 
-                string argsToParse = arguments.Trim();
-
-                string[] leadingFlags = { "/d ", "/c " };
-
-                foreach (var flag in leadingFlags)
+                foreach (string arg in argsList)
                 {
-                    if (argsToParse.StartsWith(flag, StringComparison.OrdinalIgnoreCase))
+                    if (!arg.StartsWith("/"))
                     {
-                        argsToParse = argsToParse.Substring(flag.Length).TrimStart();
+                        dllPathCandidate = arg;
                         break;
                     }
                 }
 
-                string dllPathCandidate = argsToParse.Split(',')[0];
-                string resolvedDllPath = ResolveExecutablePath(dllPathCandidate);
+                if (string.IsNullOrEmpty(dllPathCandidate))
+                {
+                    return false;
+                }
+
+                string dllPath = dllPathCandidate.Split(',')[0];
+
+                string expandedDllPath = Environment.ExpandEnvironmentVariables(dllPath);
+
+                string resolvedDllPath = ResolveExecutablePath(expandedDllPath);
 
                 string filePathFromArgs_tmp = "";
                 try
@@ -2263,23 +2387,25 @@ namespace MSearch
                     {
                         filePathFromArgs_tmp = resolvedDllPath;
                         AppConfig.Instance.LL.LogMessage("[.]", "_Just_File", resolvedDllPath, ConsoleColor.Gray);
-                        var trustResult = winTrust.VerifyEmbeddedSignature(resolvedDllPath);
+                        var trustResult = winTrust.VerifyEmbeddedSignature(resolvedDllPath, true);
                         if (trustResult != WinVerifyTrustResult.Success)
                         {
                             AppConfig.Instance.LL.LogWarnMediumMessage("_InvalidCertificateSignature", arguments);
-                            Utils.AddToQuarantine(resolvedDllPath);
-                            if (!File.Exists(resolvedDllPath))
+                            AppConfig.Instance.totalFoundThreats++;
+                            if (!AppConfig.Instance.ScanOnly)
                             {
-                                AppConfig.Instance.totalFoundThreats++;
+                                Utils.AddToQuarantine(resolvedDllPath, AppConfig.Instance.LL.GetLocalizedString("_Rundll32Abuse"));
+                                if (!File.Exists(resolvedDllPath))
+                                {
+                                    return true;
+                                }
                             }
-
-                            return;
+                            else return true; //Found suspicious dll. Nothing to do
                         }
                         else if (trustResult == WinVerifyTrustResult.Success)
                         {
                             Logger.WriteLog($"\t[OK]", Logger.success, false);
                         }
-                        notFoundFailures = 0;
                     }
                     else
                     {
@@ -2297,68 +2423,123 @@ namespace MSearch
                     AppConfig.Instance.LL.LogErrorMessage("_Error", e);
                 }
 
-                if (notFoundFailures == checkDirs.Length)
-                {
-                    AppConfig.Instance.LL.LogWarnMessage("_FileIsNotFound", resolvedDllPath);
-                }
-
             }
 
             if (fullpath.IndexOf("pcalua", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                string pcaluaArgs = ResolveExecutablePath(arguments.Replace("-a ", ""));
-                int checkCount = checkDirs.Length;
-                string fullPathToFileFromArgs = "";
+                Match matchRegex = Regex.Match(arguments, @"-a\s+(?:""(?<filepath>[^""]+)""|(?<filepath>\S+))", RegexOptions.IgnoreCase);
+                string fileFromArgs = "";
 
-                foreach (string checkDir in checkDirs)
+
+                if (matchRegex.Success)
                 {
-                    fullPathToFileFromArgs = Path.Combine(checkDir, pcaluaArgs);
-                    if (!fullPathToFileFromArgs.EndsWith(".exe"))
-                    {
-                        fullPathToFileFromArgs += ".exe";
-                    }
+                    fileFromArgs = matchRegex.Groups["filepath"].Value;
+                }
 
+
+                if (string.IsNullOrEmpty(fileFromArgs))
+                {
+                    return false;
+                }
+
+                string finalPath = "";
+
+                if (Path.IsPathRooted(fileFromArgs))
+                {
+                    finalPath = fileFromArgs;
+                }
+                else
+                {
+                    foreach (string checkDir in checkDirs)
+                    {
+                        string combinedPath = Path.Combine(checkDir, fileFromArgs);
+                        if (File.Exists(combinedPath))
+                        {
+                            finalPath = combinedPath;
+                            break;
+                        }
+                    }
+                }
+
+
+                if (!string.IsNullOrEmpty(finalPath) && string.IsNullOrEmpty(Path.GetExtension(finalPath)))
+                {
+                    if (File.Exists(finalPath + ".exe"))
+                    {
+                        finalPath += ".exe";
+                    }
+                }
+
+                if (File.Exists(finalPath))
+                {
+                    AppConfig.Instance.LL.LogMessage("[.]", "_Just_File", finalPath, ConsoleColor.Gray);
                     try
                     {
-                        if (File.Exists(fullPathToFileFromArgs))
+                        var trustResult = winTrust.VerifyEmbeddedSignature(finalPath, true);
+                        if (trustResult != WinVerifyTrustResult.Success)
                         {
-                            AppConfig.Instance.LL.LogMessage("[.]", "_Just_File", fullPathToFileFromArgs, ConsoleColor.Gray);
-
-
-                            var trustResult = winTrust.VerifyEmbeddedSignature(fullPathToFileFromArgs);
-                            if (trustResult != WinVerifyTrustResult.Success)
-                            {
-                                AppConfig.Instance.LL.LogWarnMediumMessage("_InvalidCertificateSignature", pcaluaArgs);
-                                Utils.AddToQuarantine(fullPathToFileFromArgs);
-                                if (!File.Exists(fullPathToFileFromArgs))
-                                {
-                                    AppConfig.Instance.totalFoundThreats++;
-                                }
-                                return;
-                            }
-                            else if (trustResult == WinVerifyTrustResult.Success)
-                            {
-                                Logger.WriteLog($"\t[OK]", Logger.success, false);
-                            }
-                            return;
+                            AppConfig.Instance.LL.LogWarnMediumMessage("_InvalidCertificateSignature", finalPath);
+                            AppConfig.Instance.LL.LogWarnMediumMessage("_PcaluaAbuse", finalPath);
+                            AppConfig.Instance.totalFoundSuspiciousObjects++;
+                            MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Suspicious, finalPath, ScanActionType.Skipped, AppConfig.Instance.LL.GetLocalizedString("_PcaluaAbuse")));
                         }
                         else
                         {
-                            checkCount--;
+                            Logger.WriteLog($"\t[OK]", Logger.success, false);
                         }
                     }
                     catch (Exception ex)
                     {
-                        AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
+                        AppConfig.Instance.LL.LogErrorMessage("_Error", ex, $"pcalua processing: {finalPath}");
+                    }
+                }
+                else
+                {
+                    AppConfig.Instance.LL.LogWarnMessage("_FileIsNotFound", fileFromArgs);
+                }
+            }
+
+            if (fullpath.IndexOf("regsvr32", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                List<string> argsList = SplitCommandLineArguments(arguments);
+
+                if (argsList.Count > 0)
+                {
+                    string potentialPath = argsList.Last();
+
+                    string normalizedPath = NormalizePath(potentialPath).Replace("\\\\", "\\");
+
+                    if (normalizedPath.EndsWith(".pfx", StringComparison.OrdinalIgnoreCase) ||
+                        normalizedPath.EndsWith(".p12", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AppConfig.Instance.LL.LogWarnMediumMessage("_SuspiciousRegsvr32", normalizedPath);
+
+                        if (File.Exists(normalizedPath))
+                        {
+                            AppConfig.Instance.totalFoundThreats++;
+
+                            if (!AppConfig.Instance.ScanOnly)
+                            {
+                                Utils.AddToQuarantine(normalizedPath);
+                                if (!File.Exists(normalizedPath))
+                                {
+                                    return true;
+                                }
+                            }
+                            else return true; //found, but nothing to do while scan only
+
+                        }
+                        else
+                        {
+                            AppConfig.Instance.LL.LogWarnMessage("_FileIsNotFound", normalizedPath);
+                            return true;
+                        }
                     }
                 }
 
-                if (checkCount.Equals(0))
-                {
-                    AppConfig.Instance.LL.LogWarnMessage("_FileIsNotFound", fullPathToFileFromArgs);
-                }
-
             }
+
+            return false;
         }
 
         internal static List<string> GetOpenFilesInDirectory(string directoryPath)
@@ -2513,6 +2694,42 @@ namespace MSearch
             }
 #endif
             return GetUsers().Contains(username);
+        }
+
+        internal static bool IsUserHidden(string username)
+        {
+            const string userListPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList";
+
+            try
+            {
+
+                using (RegistryKey userListKey = Registry.LocalMachine.OpenSubKey(userListPath, false))
+                {
+                    if (userListKey == null)
+                    {
+                        return false;
+                    }
+
+                    object value = userListKey.GetValue(username);
+
+                    if (value == null)
+                    {
+                        return false;
+                    }
+
+                    if (value is int intValue && intValue == 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppConfig.Instance.LL.LogErrorMessage("_ErrorRegistryCheck", ex, username);
+                return false;
+            }
+
+            return false;
         }
 
         internal static List<string> GetUsers()

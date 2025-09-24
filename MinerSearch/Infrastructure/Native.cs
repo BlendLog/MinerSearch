@@ -725,6 +725,7 @@ namespace MSearch
             Windows_11_22H2 = 22621,
             Windows_11_23H2 = 22631,
             Windows_11_24H2 = 26100,
+            Windows_11_25H2 = 26200,
         };
 
 
@@ -1488,7 +1489,7 @@ namespace MSearch
             Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
             AppConfig.Instance.LL.LogHeadMessage("_WMIRegister");
 
-            foreach (var file in Directory.GetFiles(wbemPath, "*.dll", SearchOption.AllDirectories))
+            foreach (var file in Directory.EnumerateFiles(wbemPath, "*.dll", SearchOption.AllDirectories))
             {
                 if (File.Exists(file))
                 {

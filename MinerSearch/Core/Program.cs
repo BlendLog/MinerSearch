@@ -173,6 +173,7 @@ namespace MSearch
 
             const string registryKeyPath = @"Software\M1nerSearch";
             const string registryValueName = "acceptedEula";
+            const string registryValueOutdatedOS = "SupressOutdatedOSWarning";
 
 
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(registryKeyPath))
@@ -237,7 +238,28 @@ namespace MSearch
                     }
 
                 }
+
+                var SupressWarningValue = key.GetValue(registryValueOutdatedOS);
+
+                //Outdated OS Check
+                if ((Environment.OSVersion.Version.Major == 6) && (Environment.OSVersion.Version.Minor == 1) && (SupressWarningValue == null || (int)SupressWarningValue == 0))
+                {
+                    DialogResult dialogResult = MessageBoxCustom.Show(AppConfig.Instance.LL.GetLocalizedString("_WarnOutdatedOS"), AppConfig.Instance._title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        key.SetValue(registryValueOutdatedOS, 1);
+                        Utils.mutex.ReleaseMutex();
+                        Process.Start(Assembly.GetExecutingAssembly().Location, "-so");
+                        return;
+                    }
+                    else if (dialogResult == DialogResult.Cancel || dialogResult == DialogResult.None)
+                    {
+                        return;
+                    }
+                }
             }
+
+
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 

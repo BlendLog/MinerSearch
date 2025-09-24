@@ -4,6 +4,7 @@
 using MSearch.Core;
 using System;
 using System.Collections.Generic; // Для List
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -351,9 +352,6 @@ namespace MSearch
             [In] WinTrustData pWVTData
         );
 
-        [DllImport("crypt32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        static extern uint CertGetNameString(IntPtr pCertContext, uint dwType, uint dwFlags, IntPtr pvTypePara, StringBuilder pszNameString, uint cchNameString);
-
         public WinVerifyTrustResult VerifyEmbeddedSignature(string filePath, bool displayIfNotSigned = false)
         {
             try
@@ -447,7 +445,6 @@ namespace MSearch
             AppConfig.Instance.LL.LogWarnMessage(logMessageKey, filePath); // Log the result code too
         }
 
-
         public static WinVerifyTrustResult VerifyByCatalog(string fileName)
         {
             WinVerifyTrustResult result = WinVerifyTrustResult.FileNotSigned; // Default result if not found/verified by catalog
@@ -457,7 +454,6 @@ namespace MSearch
 
             try
             {
-                Guid guidAction = new Guid(WINTRUST_ACTION_GENERIC_VERIFY_V2);
                 Guid driverAction = new Guid(DRIVER_ACTION_VERIFY); // Often used for catalog verification context
 
                 // Open the file
@@ -484,7 +480,6 @@ namespace MSearch
                 {
                     if (!CryptCATAdminAcquireContext(out hCatAdmin, driverAction, 0))
                     {
-                        int lastError = Marshal.GetLastWin32Error();
                         return WinVerifyTrustResult.FileNotSigned; // Cannot get catalog admin context
                     }
                 }
@@ -510,7 +505,7 @@ namespace MSearch
                 {
                     // Failed to get hash size
                     int lastError = Marshal.GetLastWin32Error();
-                    AppConfig.Instance.LL.LogWarnMessage("_CertCannotGetHashSize", fileName);
+                    AppConfig.Instance.LL.LogWarnMessage("_CertCannotGetHashSize", fileName + $" | HRESULT {lastError:X8}");
                     return WinVerifyTrustResult.FileNotSigned; // Cannot get hash size
                 }
 
@@ -528,7 +523,15 @@ namespace MSearch
                 if (!bRet)
                 {
                     int lastError = Marshal.GetLastWin32Error();
-                    AppConfig.Instance.LL.LogWarnMessage("_CertCannotCalcHash", fileName);
+
+                    if ((uint)lastError == 0x800700c1) // ERROR_BAD_EXE_FORMAT
+                    {
+                        AppConfig.Instance.LL.LogWarnMessage("_ErrorBadFileFormat", fileName);
+                    }
+                    else
+                    {
+                        AppConfig.Instance.LL.LogWarnMessage("_CertCannotCalcHash", fileName + $" | HRESULT {lastError:X8}");
+                    }
                     return WinVerifyTrustResult.FileNotSigned; // Cannot calculate hash
                 }
 
@@ -549,7 +552,7 @@ namespace MSearch
                 if (!CryptCATCatalogInfoFromContext(catInfo, ref ci, 0))
                 {
                     int lastError = Marshal.GetLastWin32Error();
-                    AppConfig.Instance.LL.LogWarnMessage("_CertCannotGetCatalogInfo", fileName);
+                    AppConfig.Instance.LL.LogWarnMessage("_CertCannotGetCatalogInfo", fileName + $" | HRESULT {lastError:X8}");
                     return WinVerifyTrustResult.FileNotSigned; // Cannot get catalog info
                 }
 
@@ -568,7 +571,7 @@ namespace MSearch
                 {
                     // Verify action
                     trustData.StateAction = WinTrustDataStateAction.Verify;
-                    result = WinVerifyTrust(IntPtr.Zero, guidAction, trustData);
+                    result = WinVerifyTrust(IntPtr.Zero, driverAction, trustData);
 
                     // Set Close action after verify
                     trustData.StateAction = WinTrustDataStateAction.Close;

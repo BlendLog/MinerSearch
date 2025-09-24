@@ -239,9 +239,10 @@ namespace MSearch
             }
             catch (Exception) { }
 
+            uint processId = 0;
             try
             {
-                uint processId = ProcessManager.GetProcessIdByFilePath(filePath);
+                processId = ProcessManager.GetProcessIdByFilePath(filePath);
                 string tmpProcName = "";
                 if (processId != 0)
                 {
@@ -261,6 +262,10 @@ namespace MSearch
             {
                 AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
                 MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, filePath, ScanActionType.LockedByAntivirus));
+            }
+            catch (InvalidOperationException)
+            {
+                AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
             }
             catch (Exception ex)
             {

@@ -347,10 +347,10 @@ Thank you for your help!</value>
     <value>Select folder for scanning</value>
   </data>
   <data name="_Error_RU" xml:space="preserve">
-    <value>Ошибка:</value>
+    <value>Ошибка</value>
   </data>
   <data name="_AppInitNotEmpty_RU" xml:space="preserve">
-    <value>Параметр A?ppIn??it_DLL?s содержит путь к DLL</value>
+    <value>Параметр AppInit_DLLs содержит путь к DLL</value>
   </data>
   <data name="_ServiceDcomAbusing_RU" xml:space="preserve">
     <value>Модуль перехвата Svchost:</value>
@@ -891,7 +891,7 @@ Do you want to continue?</value>
     <value>Try to unlock directory...</value>
   </data>
   <data name="_AppInitNotEmpty_EN" xml:space="preserve">
-    <value>The value A?ppIn??it_DLL?s contains path to DLL</value>
+    <value>The value AppInit_DLLs contains path to DLL</value>
   </data>
   <data name="_ChekingR00tkit_RU" xml:space="preserve">
     <value>Проверка присутствия руткита...</value>
@@ -952,7 +952,7 @@ Do you want to continue?</value>
     <value>Файлы в карантине:</value>
   </data>
   <data name="_Error_EN" xml:space="preserve">
-    <value>Error:</value>
+    <value>Error</value>
   </data>
   <data name="_ScanDirectories_RU" xml:space="preserve">
     <value>Сканирование каталогов...</value>
@@ -1025,7 +1025,7 @@ Press any key to continue...</value>
     <value>New hosts file has been created</value>
   </data>
   <data name="_sfxArchive_RU" xml:space="preserve">
-    <value>???S??F?X?? А?р?хив:</value>
+    <value>SFX Архив</value>
   </data>
   <data name="_IncorrectDrive_EN" xml:space="preserve">
     <value>Incorrect drive letter</value>
@@ -1121,7 +1121,7 @@ Press any key to continue...</value>
     <value>Обнаружен вредоносный процесс! Уровень риска:</value>
   </data>
   <data name="_Userprofile_RU" xml:space="preserve">
-    <value>профиль пользователя</value>
+    <value>Профиль пользователя</value>
   </data>
   <data name="_LockedDir_EN" xml:space="preserve">
     <value>Locked directory</value>
@@ -1268,7 +1268,7 @@ Press any key to continue...</value>
     <value>Process has been suspended -</value>
   </data>
   <data name="_sfxArchive_EN" xml:space="preserve">
-    <value>S??F????X A????rch???i???ve??:</value>
+    <value>SFX Archive</value>
   </data>
   <data name="_UnlockSuccess_EN" xml:space="preserve">
     <value>Unlock success</value>
@@ -1577,7 +1577,7 @@ Press any key to continue...</value>
     <value>Подготовка сканирования, пожалуйста, подождите...</value>
   </data>
   <data name="_Userprofile_EN" xml:space="preserve">
-    <value>userprofile</value>
+    <value>User profile</value>
   </data>
   <data name="_ProcessRiskLevel_ExtremelyHigh_EN" xml:space="preserve">
     <value>extremely high</value>
@@ -1601,7 +1601,7 @@ Press any key to continue...</value>
     <value>Время сканирования:</value>
   </data>
   <data name="_SignedAppInitNotFound_EN" xml:space="preserve">
-    <value>Missing RequireSignedAp?pIn??it_DLLs value – unsigned DLLs may be loaded</value>
+    <value>Missing RequireSignedAppInit_DLLs value – unsigned DLLs may be loaded</value>
   </data>
   <data name="_HostsCleanupSkipBtn_EN" xml:space="preserve">
     <value>Skip</value>
@@ -1688,7 +1688,7 @@ Press any key to continue...</value>
     <value>Suspicious path</value>
   </data>
   <data name="_TermServiceInvalidPath_RU" xml:space="preserve">
-    <value>TermService: неккоректный путь к библиотеке</value>
+    <value>TermService: некорректный путь к библиотеке</value>
   </data>
   <data name="_RestartCleanup_RU" xml:space="preserve">
     <value>Перезапуск очистки...</value>
@@ -1709,7 +1709,7 @@ Press any key to continue...</value>
     <value>No internet connection</value>
   </data>
   <data name="_TermServiceFailedRestore_RU" xml:space="preserve">
-    <value>TermService: не удалось ввостановить</value>
+    <value>TermService: не удалось восстановить</value>
   </data>
   <data name="_MaliciousService_RU" xml:space="preserve">
     <value>Вредоносная служба - </value>
@@ -2072,5 +2072,76 @@ Before proceeding, you must read the license agreement (license.rtf or a copy of
   </data>
   <data name="_WarnSetAttributes_RU" xml:space="preserve">
     <value>Не удалось сбросить атрибуты</value>
+  </data>
+  <data name="_InvalidPathCharactersFound_EN" xml:space="preserve">
+    <value>Illegal characters in path to the file</value>
+  </data>
+  <data name="_InvalidPathCharactersFound_RU" xml:space="preserve">
+    <value>Путь к файлу содержит недопустимые знаки</value>
+  </data>
+  <data name="_SuspiciousRegsvr32_EN" xml:space="preserve">
+    <value>Regsvr32 execution with a suspicious file</value>
+  </data>
+  <data name="_SuspiciousRegsvr32_RU" xml:space="preserve">
+    <value>Запуск regsvr32 с подозрительным файлом</value>
+  </data>
+  <data name="_ErrorBadFileFormat_EN" xml:space="preserve">
+    <value>The signature cannot be verified due to the file format</value>
+  </data>
+  <data name="_ErrorBadFileFormat_RU" xml:space="preserve">
+    <value>Подпись не может быть проверена из-за формата файла</value>
+  </data>
+  <data name="_ScheduledTask_EN" xml:space="preserve">
+    <value>Scheduled task</value>
+  </data>
+  <data name="_ScheduledTask_RU" xml:space="preserve">
+    <value>Запланированная задача</value>
+  </data>
+  <data name="_PcaluaAbuse_EN" xml:space="preserve">
+    <value>Executed via pcalua.exe. Legitimate software may be abused.</value>
+  </data>
+  <data name="_PcaluaAbuse_RU" xml:space="preserve">
+    <value>Исполняется через pcalua.exe. Возможно злоупотребление легитимного ПО. </value>
+  </data>
+  <data name="_RegistryData_EN" xml:space="preserve">
+    <value>Registry data</value>
+  </data>
+  <data name="_RegistryData_RU" xml:space="preserve">
+    <value>Значение параметра реестра</value>
+  </data>
+  <data name="_RegistryKey_EN" xml:space="preserve">
+    <value>Registry Key</value>
+  </data>
+  <data name="_RegistryKey_RU" xml:space="preserve">
+    <value>Каталог реестра</value>
+  </data>
+  <data name="_RegistryValue_EN" xml:space="preserve">
+    <value>Registry Value</value>
+  </data>
+  <data name="_RegistryValue_RU" xml:space="preserve">
+    <value>Параметр реестра</value>
+  </data>
+  <data name="_Rundll32Abuse_EN" xml:space="preserve">
+    <value>Abuse of RunDll32.exe for malicious DLL execution</value>
+  </data>
+  <data name="_Rundll32Abuse_RU" xml:space="preserve">
+    <value>Злоупотребление RunDll32.exe для выполнения вредоносных DLL</value>
+  </data>
+  <data name="_WarnOutdatedOS_EN" xml:space="preserve">
+    <value>Support for this application on Windows 7 will be discontinued soon. To avoid the risk of system disruption, we recommend using the "Scan Only" mode. In this mode, the application will detect threats but will not remove them. 
+You will only receive a results report. Run the scan in this mode?
+
+
+
+Yes – Run with the --scan-only option (recommended)
+
+No – Run a standard scan with the option to remove.</value>
+  </data>
+  <data name="_WarnOutdatedOS_RU" xml:space="preserve">
+    <value>Поддержка данного приложения на Windows 7 будет прекращена в ближайшее время. Чтобы избежать риска нарушения работы системы, рекомендуется использовать режим «Только сканирование». В этом режиме приложение обнаружит угрозы, но не будет их удалять. 
+Вы получите только отчёт о результатах. Запустить проверку в этом режиме?
+
+Да – запустить с опцией --scan-only (рекомендуется)
+Нет – Запустить обычное сканирование с возможностью удаления.</value>
   </data>
 </root>

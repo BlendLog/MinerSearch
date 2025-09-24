@@ -8,7 +8,7 @@ namespace MSearch
     public static class Logger
     {
         internal static string logFileName = $"M?in?er?Sea?rch_{DateTime.Now}.log".Replace("/", "_").Replace("?", "").Replace(":", "-").Replace(" ", "_");
-        public static string LogsFolder = Path.Combine(AppConfig.Instance.drive_letter + ":\\", "_Mi?n?erSe?a??rchLogs".Replace("?", ""));
+        public static string LogsFolder = Path.Combine(AppConfig.Instance.drive_letter + ":\\", "_MinerSearchLogs");
 
         public static readonly ConsoleColor error = ConsoleColor.Red;
         public static readonly ConsoleColor success = ConsoleColor.Green;
@@ -32,7 +32,7 @@ namespace MSearch
                     Directory.CreateDirectory(Logger.LogsFolder);
                     File.SetAttributes(Logger.LogsFolder, FileAttributes.Normal);
                 }
-                catch (IOException) 
+                catch (Exception)
                 {
                     Logger.LogsFolder += Utils.GetRndString(16);
                     Directory.CreateDirectory(Logger.LogsFolder);
@@ -41,18 +41,23 @@ namespace MSearch
             }
             else
             {
-                if (UnlockObjectClass.ResetObjectACL(Logger.LogsFolder))
+                bool resetAclSuccessful = UnlockObjectClass.ResetObjectACL(Logger.LogsFolder);
+                bool attributesSetSuccessful = false;
+
+                if (resetAclSuccessful)
                 {
                     try
                     {
                         File.SetAttributes(Logger.LogsFolder, FileAttributes.Normal);
+                        attributesSetSuccessful = true;
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Warning: Failed to reset attributes for {Logger.LogsFolder}. {ex.Message}");
                     }
                 }
-                else
+
+                if (!resetAclSuccessful || !attributesSetSuccessful)
                 {
                     Logger.LogsFolder += Utils.GetRndString(16);
                     Directory.CreateDirectory(Logger.LogsFolder);
