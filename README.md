@@ -12,52 +12,16 @@ https://t.me/MinerSearch_blog
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 
-Version 1.4.8.0
+Version v1.4.8.1
 
-- Optimized heuristic analysis algorithms
-- Improved detection and removal of new miner malware
-- The `--verbose` option now includes all warnings for unsigned files
-- Fixed a bug with the threat counter when using the `--scan-only` option
-- Added scanning and validation of shortcuts in autostart directories
-- Common autostart registry keys now display detailed file information
-- Fixed an issue with deleting malicious files when they are in use/being accessed
-- Added the ability to batch delete and restore files from quarantine
-- Refactored the task scheduler handler. Added task verification in Safe Mode
-- Extended the `--select (-s)` option. You can now specify `--select= <path>` (or `-s= <path>`) to explicitly provide a path. P.S.: A space after the equals sign is required
-- Added `--console-mode (-cm)` option - launches the application in console mode (without dialog boxes)
-- Added `--no-firewall (-nfw)` option - skips firewall rule scanning
-- Added `--accept-eula (-a)` option - accepts the End User License Agreement (EULA)
-- Added `--force (-f)` option - confirms potentially dangerous operations
-- Added `--restore= <list>` (-res=) option - restores files from quarantine in console mode (e.g., 1,2,3). Enter `-q -cm` to view the list
-- Added `--delete= <list>` (-del=) option - deletes files from quarantine in console mode (e.g., 1,2,3). Enter `-q -cm` to view the list
-- Added a "Note" column to the summary report, detailing why a threat could not be remediated if an error occurred
-- Objects blocked by Windows Defender are now displayed in the summary report
-- Added a warning specifying which components failed to load if the application fails to start
-- The design of the form for handling suspicious hosts file entries has been unified with the overall application style
-- Corrected some technical phrasings and translation errors
-
-
-Version 1.4.7.92 \[patch\]
-
-- Improvement of process handling rules
-- Detection and removal of new miners
-- Fixed incorrect classification of the copilot address in the hosts file
-- Fixed a short-term hang when generating reports on the threat summary form
-- More information about scheduler tasks with the --verbose option
-- Other minor fixes
-
-Version v1.4.7.91
-
-- Fixed application crashes when reading files and directories.
-- Fixed a visual bug with an incorrect number of threats found
-- Improved algorithm for detecting suspicious files
-- Improved stability processing of third-party network services
-- Added language switching functionality. Create a language.cfg (the content should be EN or RU)
-- Removed restrictions of Windows Defender are no longer duplicated in the log
-- Added the --no-check-hosts argument - skips checking the hosts file
-- Added an identifier key (Devide ID) to the short report form for quick report processing (more details here)
-- Implemented a mechanism for unblocking the task manager and registry editor
-- The normal color of the Collapse button
+- New miners detection
+- Fixed a localization string in the Note column.
+- Fixed an error when creating the log file for the first time.
+- Checking for a new application version is now faster.
+- Fixed a false positive in RobloxPlayer.
+- Fixed a bug when deleting a malicious task due to returning a target object.
+- Fixed an error when parsing the protected insecure parameter AppInit_DLLs.
+- Minor translation and typo fixes.
 
 -----------------------------------------
 
