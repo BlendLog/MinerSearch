@@ -12,6 +12,9 @@
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 
+> [!CAUTION]
+> ### Windows 7 устарела. Поддержка и тестирование MinerSearch для этой ОС скоро будут прекращены.
+
 Версия v1.4.8.1
 
 - Удаление новых майнеров
