@@ -10,6 +10,9 @@ https://t.me/MinerSearch_blog
 ## ⬇ ![Download latest version](https://github.com/BlendLog/MinerSearch/releases/latest)
 ### NET Framework 4.7.2 is required
 
+> [!CAUTION]
+> ### Windows 7 is outdated. MinerSearch support and testing for this OS will be discontinued coming soon.
+
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 
 Version v1.4.8.1
