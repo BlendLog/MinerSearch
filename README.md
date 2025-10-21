@@ -14,6 +14,7 @@ https://t.me/MinerSearch_blog
 > ### Windows 7 is outdated. MinerSearch support and testing for this OS will be discontinued coming soon.
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/total?label=downloads%40All&color=ff6600)
 
 Version v1.4.8.1
 
