@@ -237,7 +237,7 @@ namespace MSearch
             this.textBox3.ReadOnly = true;
             this.textBox3.Size = new System.Drawing.Size(332, 16);
             this.textBox3.TabIndex = 12;
-            this.textBox3.Text = "TFNcvnWhcD5jAJH56CZdtk9kj1kn4AwbAm";
+            this.textBox3.Text = "TW2fA21QdywMUsYL3SXXzvAXXaKeSmbGDn";
             this.textBox3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.textBox3_MouseClick);
             this.textBox3.MouseLeave += new System.EventHandler(this.textBox3_MouseLeave);
             // 
@@ -341,7 +341,7 @@ namespace MSearch
             this.textBox4.ReadOnly = true;
             this.textBox4.Size = new System.Drawing.Size(332, 16);
             this.textBox4.TabIndex = 12;
-            this.textBox4.Text = "UQBw3htVV8uMW6lugGryttzR50GbBeSSMCsFoHCQjq75JiPl";
+            this.textBox4.Text = "UQDycad1nVoeE2lGVj-ONlQcR0rMTLUXOxTg6MW9jbfwzIWG";
             this.textBox4.MouseClick += new System.Windows.Forms.MouseEventHandler(this.textBox4_MouseClick);
             this.textBox4.MouseLeave += new System.EventHandler(this.textBox4_MouseLeave);
             // 

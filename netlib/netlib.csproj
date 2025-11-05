@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GithubAPI.cs" />
+    <Compile Include="UpdateChecker.cs" />
     <Compile Include="Internet.cs" />
     <Compile Include="LogSender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

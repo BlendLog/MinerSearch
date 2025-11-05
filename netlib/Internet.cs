@@ -1,19 +1,23 @@
-﻿using System.Net;
+﻿using System.Net.NetworkInformation;
 
 namespace netlib
 {
     public static class Internet
     {
-        public static bool IsOK()
+        public static bool IsOK(string host)
         {
+            Ping pingQuery = new Ping();
             try
             {
-                Dns.GetHostEntry("msch3295connect.ru");
-                return true;
+                return (pingQuery.Send(host, 2000).Status == IPStatus.Success) == true;
             }
             catch
             {
                 return false;
+            }
+            finally
+            {
+                pingQuery.Dispose();
             }
         }
     }

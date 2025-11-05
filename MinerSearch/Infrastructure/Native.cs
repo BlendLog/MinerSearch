@@ -1762,7 +1762,7 @@ namespace MSearch
                 throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceStartType(): Cannot open service");
             }
 
-            int bufferSize = 4096;
+            int bufferSize = 8192;
             IntPtr buffer = Marshal.AllocHGlobal(bufferSize);
 
             if (!QueryServiceConfig(serviceHandle, buffer, bufferSize, out int bytesNeeded))
@@ -1796,7 +1796,7 @@ namespace MSearch
                 throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceImagePath(): Cannot open service");
             }
 
-            int bufferSize = 4096;
+            int bufferSize = 8192;
             IntPtr buffer = Marshal.AllocHGlobal(bufferSize);
 
             if (!QueryServiceConfig(serviceHandle, buffer, bufferSize, out int bytesNeeded))

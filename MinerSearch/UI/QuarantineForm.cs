@@ -381,7 +381,6 @@ namespace MSearch
         {
             try
             {
-
                 using (var baseKey = Registry.CurrentUser.OpenSubKey(quarantineKeyPath, true))
                 {
                     if (baseKey != null)

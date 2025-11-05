@@ -24,6 +24,7 @@ namespace MSearch
     public enum ScanObjectType
     {
         Malware,
+        Unsafe,
         Suspicious,
         Infected,
         Unknown
@@ -55,6 +56,8 @@ namespace MSearch
             {
                 case ScanObjectType.Malware:
                     return AppConfig.Instance.LL.GetLocalizedString("_ThreatType_Malware");
+                case ScanObjectType.Unsafe:
+                    return AppConfig.Instance.LL.GetLocalizedString("_ThreatType_Unsafe");
                 case ScanObjectType.Suspicious:
                     return AppConfig.Instance.LL.GetLocalizedString("_ThreatType_Suspicious");
                 case ScanObjectType.Infected:

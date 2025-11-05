@@ -401,7 +401,10 @@ namespace MSearch
                     switch (result.RawType)
                     {
                         case ScanObjectType.Malware:
+                            row.Cells[0].Style.ForeColor = Color.Firebrick;
+                            break;
                         case ScanObjectType.Infected:
+                        case ScanObjectType.Unsafe:
                             row.Cells[0].Style.ForeColor = Color.Red;
                             break;
                         case ScanObjectType.Suspicious:
@@ -510,14 +513,22 @@ namespace MSearch
                 key = Registry.CurrentUser.CreateSubKey(registryPath);
             }
 
-            object regValue = key.GetValue(valueName);
-
-            if (regValue != null)
+            if (key != null)
             {
-                if (ts_AllowCollectStatistics.CheckState == CheckState.Checked)
+                object regValue = key.GetValue(valueName);
+
+                if (regValue != null)
                 {
-                    key.SetValue(valueName, 1, RegistryValueKind.DWord);
-                    LBL_ID.Visible = true;
+                    if (ts_AllowCollectStatistics.CheckState == CheckState.Checked)
+                    {
+                        key.SetValue(valueName, 1, RegistryValueKind.DWord);
+                        LBL_ID.Visible = true;
+                    }
+                    else
+                    {
+                        key.SetValue(valueName, 0, RegistryValueKind.DWord);
+                        LBL_ID.Visible = false;
+                    }
                 }
                 else
                 {
@@ -525,12 +536,6 @@ namespace MSearch
                     LBL_ID.Visible = false;
                 }
             }
-            else
-            {
-                key.SetValue(valueName, 0, RegistryValueKind.DWord);
-                LBL_ID.Visible = false;
-            }
-
 
             if (key != null)
             {

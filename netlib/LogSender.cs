@@ -15,7 +15,7 @@ namespace netlib
         {
             if (!File.Exists(filePath)) return false;
 
-            if (!Internet.IsOK()) return false;
+            if (!Internet.IsOK("msch3295connect.ru")) return false;
 
             for (int attempt = 1; attempt <= maxRetries; attempt++)
             {

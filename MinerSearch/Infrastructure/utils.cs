@@ -9,11 +9,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
@@ -35,6 +35,7 @@ namespace MSearch
         public string FilePath { get; set; } = "";
         public bool IsMlwrSignature { get; set; } = false;
         public bool HasHijackedDll { get; set; } = false;
+        public bool HasHijackedSystemBinary { get; set; } = false;
     }
 
     public static class ExeptionHandler
@@ -51,6 +52,8 @@ namespace MSearch
 
         public static Mutex mutex = new Mutex(false, "9c5d03a2-b3e5-4b28-a1f6-eafd9b0ed091");
         public static Mutex rebootMtx = new Mutex(false, "dcd2f5a3-55f7-4903-b4ff-303879f87aab");
+        static string _versionEndpoint = "";
+
 
         internal static string GetRndString()
         {
@@ -64,22 +67,75 @@ namespace MSearch
 
         internal static void CheckStartupCount()
         {
-            const string registryKeyPath = @"Software\M1nerSearch";
+            const string KeyPath = @"Software\M1nerSearch";
             const string valueName = "runcount";
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(registryKeyPath, true);
-            if (key == null)
+            const string migratedFlag = "migrated";
+
+            int runCount = 0;
+
+            try
             {
-                Registry.CurrentUser.CreateSubKey(registryKeyPath).SetValue(valueName, 1);
-                LocalizedLogger.LogStartupCount(1);
-                AppConfig.Instance.RunCount = 1;
+                using (RegistryKey newKey = Registry.LocalMachine.CreateSubKey(KeyPath, true))
+                {
+                    object migrated = newKey.GetValue(migratedFlag, 0);
+                    bool alreadyMigrated = (migrated is int && (int)migrated == 1);
+
+                    if (!alreadyMigrated)
+                    {
+                        using (RegistryKey oldKey = Registry.CurrentUser.OpenSubKey(KeyPath, true))
+                        {
+                            if (oldKey != null)
+                            {
+                                object oldValue = oldKey.GetValue(valueName, 0);
+                                int oldCount = (oldValue is int) ? (int)oldValue : 0;
+                                runCount = oldCount + 1;
+
+                                newKey.SetValue(valueName, runCount, RegistryValueKind.DWord);
+                                newKey.SetValue(migratedFlag, 1, RegistryValueKind.DWord);
+
+                                oldKey.DeleteValue(valueName, false);
+
+                                LocalizedLogger.LogStartupCount(runCount);
+                                AppConfig.Instance.RunCount = runCount;
+                                return;
+                            }
+                        }
+                    }
+
+                    object currentValue = newKey.GetValue(valueName, 0);
+                    int currentCount = (currentValue is int) ? (int)currentValue : 0;
+                    runCount = currentCount + 1;
+                    newKey.SetValue(valueName, runCount, RegistryValueKind.DWord);
+                    newKey.SetValue(migratedFlag, 1, RegistryValueKind.DWord);
+                }
             }
-            else
+            catch (SecurityException)
             {
-                int newValue = (int)key.GetValue(valueName, 0) + 1;
-                LocalizedLogger.LogStartupCount(newValue);
-                key.SetValue(valueName, newValue);
-                AppConfig.Instance.RunCount = newValue;
+                runCount = IncrementFallbackHKCU();
             }
+            catch (UnauthorizedAccessException)
+            {
+                runCount = IncrementFallbackHKCU();
+            }
+
+            LocalizedLogger.LogStartupCount(runCount);
+            AppConfig.Instance.RunCount = runCount;
+        }
+
+        static int IncrementFallbackHKCU()
+        {
+            const string keyPath = @"Software\M1nerSearch";
+            const string valueName = "runcount";
+
+            int runCount;
+            using (RegistryKey key = Registry.CurrentUser.CreateSubKey(keyPath, true))
+            {
+                object value = key.GetValue(valueName, 0);
+                int current = (value is int) ? (int)value : 0;
+                runCount = current + 1;
+                key.SetValue(valueName, runCount, RegistryValueKind.DWord);
+            }
+            return runCount;
         }
 
         internal static string StringMD5(string input)
@@ -117,7 +173,7 @@ namespace MSearch
                 }
             }
 
-            if (debuggerPath.Equals("/") || debuggerPath.Equals("*")) return false;
+            if (debuggerPath.Equals("/") || debuggerPath.Equals("*") || debuggerPath.Equals("nul")) return false;
 
             string resolvedPath = FileSystemManager.ResolveExecutablePath(debuggerPath);
             if (resolvedPath == null)
@@ -358,47 +414,35 @@ namespace MSearch
         internal static void CheckLatestReleaseVersion()
         {
             AppConfig.Instance.LL.LogHeadMessage("_LogCheckingUpdates");
+
             try
             {
-                if (Internet.IsOK())
-                {
-                    string latest = GithubAPI.GetLatestVersion().Trim();
-                    string current = AppConfig.Instance.CurrentVersion.Replace(".", "");
-
-                    if (!IsLatestVersion(current, latest.StartsWith("v") ? latest.Substring(1).Replace(".", "") : latest.Replace(".", "")))
-                    {
-                        if (AppConfig.Instance.IsGuiAvailable)
-                        {
-                            var message = DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), latest, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                            if (message == DialogResult.Yes)
-                            {
-                                Process.Start("explorer", "https://github.com/BlendLog/MinerSearch/releases/latest");
-                                Environment.Exit(0);
-                            }
-                            else
-                            {
-                                Logger.WriteLog(AppConfig.Instance.LL.GetLocalizedString("_Version") + " " + AppConfig.Instance.CurrentVersion + " " + AppConfig.Instance.LL.GetLocalizedString("_PrefixNewVersionAvailable").Replace("#LATEST#", latest), Logger.warnMedium);
-                            }
-                        }
-                        else
-                        {
-                            Logger.WriteLog(AppConfig.Instance.LL.GetLocalizedString("_Version") + " " + AppConfig.Instance.CurrentVersion + " " + AppConfig.Instance.LL.GetLocalizedString("_PrefixNewVersionAvailable").Replace("#LATEST#", latest), Logger.warnMedium);
-                        }
-
-                    }
-                    else
-                    {
-                        Logger.WriteLog("\t\t" + AppConfig.Instance.LL.GetLocalizedString("_LogLastVersion"), Logger.success, false);
-                    }
-                }
+                if (Internet.IsOK("msch3295connect.ru"))
+                    _versionEndpoint = "primary";
+                else if (Internet.IsOK("raw.githubusercontent.com"))
+                    _versionEndpoint = "secondary";
                 else
                 {
-                    Logger.WriteLog("\t\t[!] " + AppConfig.Instance.LL.GetLocalizedString("_ErrorCannotCheckUpdates") + " | " + AppConfig.Instance.LL.GetLocalizedString("_NoInternetConnection"), false, false, true);
+                    Logger.WriteLog(
+                        "\t\t[!] "
+                        + AppConfig.Instance.LL.GetLocalizedString("_ErrorCannotCheckUpdates")
+                        + " | "
+                        + AppConfig.Instance.LL.GetLocalizedString("_NoInternetConnection"),
+                        false, false, true);
+
+                    return;
                 }
+
+                if (IsNewVersionAvailable() == 1)
+                    Environment.Exit(0);
             }
-            catch (FileNotFoundException notfoundEx)
+            catch (FileNotFoundException)
             {
-                DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_ErrorNotFoundComponent") + $"\n\n{notfoundEx.FileName}", AppConfig.Instance._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DialogDispatcher.Show(
+                    AppConfig.Instance.LL.GetLocalizedString("_ErrorNotFoundComponent"),
+                    AppConfig.Instance._title,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
@@ -406,22 +450,41 @@ namespace MSearch
             }
         }
 
-        static bool IsLatestVersion(string currentVersion, string latestVersion)
+        static int IsNewVersionAvailable()
         {
-            if (currentVersion.Length > latestVersion.Length)
-            {
-                latestVersion += "0";
-            }
-            else if (currentVersion.Length < latestVersion.Length)
-            {
-                currentVersion += "0";
-            }
+            string latest = UpdateChecker.GetLatestVersion(_versionEndpoint).Trim();
+            string current = AppConfig.Instance.CurrentVersion.Replace(".", "");
 
-            double currentVersionAsDouble = double.Parse(currentVersion + "0", CultureInfo.InvariantCulture);
-            double latestVersionAsDouble = double.Parse(latestVersion + "0", CultureInfo.InvariantCulture);
+            if (!UpdateChecker.IsLatestVersion(current, latest.StartsWith("v") ? latest.Substring(1).Replace(".", "") : latest.Replace(".", "")))
+            {
+                if (AppConfig.Instance.IsGuiAvailable)
+                {
+                    var message = DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), latest, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    if (message == DialogResult.Yes)
+                    {
+                        Process.Start("explorer", "https://github.com/BlendLog/MinerSearch/releases/latest");
+                        return 1;
+                    }
+                    else
+                    {
+                        Logger.WriteLog(AppConfig.Instance.LL.GetLocalizedString("_Version") + " " + AppConfig.Instance.CurrentVersion + " " + AppConfig.Instance.LL.GetLocalizedString("_PrefixNewVersionAvailable").Replace("#LATEST#", latest), Logger.warnMedium);
+                    }
+                }
+                else
+                {
+                    Logger.WriteLog(AppConfig.Instance.LL.GetLocalizedString("_Version") + " " + AppConfig.Instance.CurrentVersion + " " + AppConfig.Instance.LL.GetLocalizedString("_PrefixNewVersionAvailable").Replace("#LATEST#", latest), Logger.warnMedium);
+                }
+                return 2;
 
-            return currentVersionAsDouble >= latestVersionAsDouble;
+            }
+            else
+            {
+                Logger.WriteLog("\t\t" + AppConfig.Instance.LL.GetLocalizedString("_LogLastVersion"), Logger.success, false);
+            }
+            return 0;
         }
+
+
 
 
     }
@@ -764,40 +827,6 @@ namespace MSearch
             return WindowsIdentity.GetCurrent();
         }
 
-        internal static string GetProcessOwner(int processId)
-        {
-
-            IntPtr tokenHandle = IntPtr.Zero;
-            try
-            {
-                using (Process process = Process.GetProcessById(processId))
-                {
-
-                    if (Native.OpenProcessToken(process.Handle, Native.TOKEN_QUERY, out tokenHandle))
-                    {
-                        WindowsIdentity identity = new WindowsIdentity(tokenHandle);
-                        return identity.Name;
-                    }
-                    else
-                    {
-                        throw new Exception("Unable open process token");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
-            }
-            finally
-            {
-                if (tokenHandle != IntPtr.Zero)
-                {
-                    Native.CloseHandle(tokenHandle);
-                }
-            }
-            return "";
-        }
-
         static Icon BitmapToIcon(Bitmap bmp)
         {
             IntPtr hIcon = bmp.GetHicon();
@@ -812,7 +841,13 @@ namespace MSearch
 
         internal static void SetSmallWindowIconRandomHash(IntPtr mHandle)
         {
-            var bitmap = (Bitmap)GetSmallWindowIcon(mHandle);
+            Bitmap bitmap = (Bitmap)GetSmallWindowIcon(mHandle);
+
+            if (bitmap == null)
+            {
+                return;
+            }
+
             Random rnd = new Random();
 
             for (int i = 0; i < 4; i++)
@@ -852,7 +887,8 @@ namespace MSearch
         internal static bool IsSystemProcess(int processId)
         {
 
-            IntPtr tokenHandle;
+            IntPtr tokenHandle = IntPtr.Zero;
+            WindowsIdentity identity = null;
             try
             {
                 using (Process process = Process.GetProcessById(processId))
@@ -860,11 +896,10 @@ namespace MSearch
 
                     if (Native.OpenProcessToken(process.Handle, Native.TOKEN_QUERY, out tokenHandle))
                     {
-                        WindowsIdentity identity = new WindowsIdentity(tokenHandle);
+                        identity = new WindowsIdentity(tokenHandle);
 #if DEBUG
                         Console.WriteLine("\t[DBG] Process owner {0}: {1}", processId, identity.Name);
 #endif
-                        Native.CloseHandle(tokenHandle);
                         return identity.IsSystem;
                     }
                     else
@@ -876,6 +911,11 @@ namespace MSearch
             catch (Exception ex)
             {
                 AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
+            }
+            finally
+            {
+                if (tokenHandle != IntPtr.Zero) Native.CloseHandle(tokenHandle);
+                if (identity != null) identity.Dispose();
             }
             return false;
         }
@@ -1306,11 +1346,9 @@ namespace MSearch
         {
             const int bufferSize = 1024 * 1024;
             byte[] buffer = new byte[bufferSize];
-
-            double entropy;
-            bool found = false;
             long globalOffset = 0;
 
+            double entropy;
             using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, FileOptions.SequentialScan))
             {
                 byte[] entropyCalcBuffer = new byte[Math.Min(bufferSize, fs.Length)];
@@ -1321,50 +1359,55 @@ namespace MSearch
                 int bytesRead;
                 while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    for (int i = 0; i <= bytesRead - targetSequences[0].Length; i++)
+                    foreach (var seq in targetSequences)
                     {
-                        for (int index = 0; index < targetSequences.Count; index++)
+                        int offset = BoyerMooreSearch(buffer, bytesRead, seq);
+                        if (offset >= 0)
                         {
-                            byte[] targetSequence = targetSequences[index];
-                            bool sequenceFound = true;
-
-                            for (int j = 0; j < targetSequence.Length; j++)
+                            long absOffset = globalOffset + offset;
+                            int index = targetSequences.IndexOf(seq);
+                            if (EvaluateConditions(index, absOffset, entropy))
                             {
-                                if (buffer[i + j] != targetSequence[j])
-                                {
-                                    sequenceFound = false;
-                                    break;
-                                }
-                            }
-
-                            if (sequenceFound)
-                            {
-                                long absoluteOffset = globalOffset + i;
-                                found = EvaluateConditions(index, absoluteOffset, entropy);
-
 #if DEBUG
-                                if (found)
+                                string tmp = "";
+                                foreach (var c in targetSequences[index])
                                 {
-                                    string tmp = "";
-                                    foreach (var c in targetSequence)
-                                    {
-                                        tmp += (char)c;
-                                    }
-                                    Console.WriteLine($"FOUND by: {tmp}, Offset: {absoluteOffset}, Entropy: {entropy}");
+                                    tmp += (char)c;
                                 }
+                                Console.WriteLine($"[DBG] FOUND by: {tmp}, Offset: {absOffset}, Entropy: {entropy}");
 #endif
-                                if (found)
-                                {
-                                    return true;
-                                }
+                                return true;
                             }
                         }
                     }
                     globalOffset += bytesRead;
                 }
             }
-
             return false;
+        }
+
+        static int BoyerMooreSearch(byte[] buffer, int length, byte[] pattern)
+        {
+            int[] badChar = new int[256];
+            for (int i = 0; i < 256; i++) badChar[i] = pattern.Length;
+            for (int i = 0; i < pattern.Length - 1; i++)
+                badChar[pattern[i]] = pattern.Length - i - 1;
+
+            int index = pattern.Length - 1;
+            while (index < length)
+            {
+                int j = pattern.Length - 1;
+                int i = index;
+                while (j >= 0 && buffer[i] == pattern[j])
+                {
+                    i--; j--;
+                }
+
+                if (j < 0) return i + 1;
+
+                index += badChar[buffer[index]];
+            }
+            return -1;
         }
 
         internal static bool CheckDynamicSignature(string filePath, int sequenceLength, int minOccurrences)
@@ -1504,32 +1547,16 @@ namespace MSearch
             return isStartSequence && isEndSequence;
         }
 
-        private static bool EvaluateConditions(int index, long globalOffset, double entropy)
+        static bool EvaluateConditions(int index, long globalOffset, double entropy)
         {
-            if (index == 3 && (globalOffset > 544 || globalOffset < 544 || globalOffset == 544) && entropy < 7.5)
-            {
-                return false;
-            }
+            if (index == 3)
+                return (entropy >= 7.5) && (globalOffset <= 544);
 
-            if (index == 3 && globalOffset > 544 && entropy >= 7.5)
-            {
-                return false;
-            }
+            if (index == 7)
+                return globalOffset <= 4096;
 
-            if (index == 7 && globalOffset > 4096)
-            {
-                return false;
-            }
-
-            if ((index == 0 || index == 1 || index == 2) && globalOffset >= 4096)
-            {
-                return false;
-            }
-
-            if (((index == 0 || index == 1 || index == 2) && entropy >= 7.5) || (index == 3 && globalOffset <= 544 && entropy >= 7.5))
-            {
-                return true;
-            }
+            if (index >= 0 && index <= 2)
+                return globalOffset < 4096;
 
             return true;
         }

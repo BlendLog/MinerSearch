@@ -1143,6 +1143,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Debugger.
+        /// </summary>
+        internal static string _DebuggerString_EN {
+            get {
+                return ResourceManager.GetString("_DebuggerString_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отладчик.
+        /// </summary>
+        internal static string _DebuggerString_RU {
+            get {
+                return ResourceManager.GetString("_DebuggerString_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Delete.
         /// </summary>
         internal static string _DeleteBtnText_EN {
@@ -1817,6 +1835,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Windows Defender is turned off or doesn&apos;t respond.
+        /// </summary>
+        internal static string _ErrorTurnedOffDefender_EN {
+            get {
+                return ResourceManager.GetString("_ErrorTurnedOffDefender_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Защитник Windows выключен или не отвечает на запросы.
+        /// </summary>
+        internal static string _ErrorTurnedOffDefender_RU {
+            get {
+                return ResourceManager.GetString("_ErrorTurnedOffDefender_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Error verify signature.
         /// </summary>
         internal static string _ErrorVerifySignature_EN {
@@ -1849,24 +1885,6 @@ namespace MSearch.Properties {
         internal static string _EventCopyText_RU {
             get {
                 return ResourceManager.GetString("_EventCopyText_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на exclusion.
-        /// </summary>
-        internal static string _Exclusion_EN {
-            get {
-                return ResourceManager.GetString("_Exclusion_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на исключение.
-        /// </summary>
-        internal static string _Exclusion_RU {
-            get {
-                return ResourceManager.GetString("_Exclusion_RU", resourceCulture);
             }
         }
         
@@ -3116,6 +3134,60 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Contains a set of unwanted rules that prevent certain applications from running.
+        /// </summary>
+        internal static string _Note_ApplockerHasBadSettings_EN {
+            get {
+                return ResourceManager.GetString("_Note_ApplockerHasBadSettings_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Содержит набор нежелательных правил, по которым блокируется запуск определенных приложений.
+        /// </summary>
+        internal static string _Note_ApplockerHasBadSettings_RU {
+            get {
+                return ResourceManager.GetString("_Note_ApplockerHasBadSettings_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The option prevents editing the Registry.
+        /// </summary>
+        internal static string _Note_DisableRegistryTools_EN {
+            get {
+                return ResourceManager.GetString("_Note_DisableRegistryTools_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Запрещает редактирование реестра.
+        /// </summary>
+        internal static string _Note_DisableRegistryTools_RU {
+            get {
+                return ResourceManager.GetString("_Note_DisableRegistryTools_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The option prevents opening the Task Manager.
+        /// </summary>
+        internal static string _Note_DisableTaskMgr_EN {
+            get {
+                return ResourceManager.GetString("_Note_DisableTaskMgr_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Запрещает открывать диспетчер задач.
+        /// </summary>
+        internal static string _Note_DisableTaskMgr_RU {
+            get {
+                return ResourceManager.GetString("_Note_DisableTaskMgr_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Invalid Registry Value.
         /// </summary>
         internal static string _NoteInvalidRegistryValue_EN {
@@ -3942,6 +4014,24 @@ namespace MSearch.Properties {
         internal static string _RegistryValueRemoved_RU {
             get {
                 return ResourceManager.GetString("_RegistryValueRemoved_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The value has been restored to default.
+        /// </summary>
+        internal static string _RegistryValueRestoredDefault_EN {
+            get {
+                return ResourceManager.GetString("_RegistryValueRestoredDefault_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Параметр восстановлен по умолчанию.
+        /// </summary>
+        internal static string _RegistryValueRestoredDefault_RU {
+            get {
+                return ResourceManager.GetString("_RegistryValueRestoredDefault_RU", resourceCulture);
             }
         }
         
@@ -4990,6 +5080,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Unsafe.
+        /// </summary>
+        internal static string _ThreatType_Unsafe_EN {
+            get {
+                return ResourceManager.GetString("_ThreatType_Unsafe_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Небезопасно.
+        /// </summary>
+        internal static string _ThreatType_Unsafe_RU {
+            get {
+                return ResourceManager.GetString("_ThreatType_Unsafe_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Total cured threats:.
         /// </summary>
         internal static string _TotalNeutralizedThreats_EN {
@@ -5112,6 +5220,24 @@ namespace MSearch.Properties {
         internal static string _UnlockSuccess_RU {
             get {
                 return ResourceManager.GetString("_UnlockSuccess_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Windows Defender exclusion.
+        /// </summary>
+        internal static string _UnwantedExclusion_EN {
+            get {
+                return ResourceManager.GetString("_UnwantedExclusion_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Исключение защитника Windows.
+        /// </summary>
+        internal static string _UnwantedExclusion_RU {
+            get {
+                return ResourceManager.GetString("_UnwantedExclusion_RU", resourceCulture);
             }
         }
         
@@ -5242,6 +5368,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на AppLocker have changes!.
+        /// </summary>
+        internal static string _WarnApplockerHaveChanges_EN {
+            get {
+                return ResourceManager.GetString("_WarnApplockerHaveChanges_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Есть изменения AppLocker!.
+        /// </summary>
+        internal static string _WarnApplockerHaveChanges_RU {
+            get {
+                return ResourceManager.GetString("_WarnApplockerHaveChanges_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Error on disable file execution.
         /// </summary>
         internal static string _WarnCannotDisableExecution_EN {
@@ -5303,6 +5447,42 @@ namespace MSearch.Properties {
         internal static string _WarnSetAttributes_RU {
             get {
                 return ResourceManager.GetString("_WarnSetAttributes_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Unauthorized Shell value change.
+        /// </summary>
+        internal static string _WarnShellValueHijacked_EN {
+            get {
+                return ResourceManager.GetString("_WarnShellValueHijacked_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Несанкционированое изменение параметра Shell.
+        /// </summary>
+        internal static string _WarnShellValueHijacked_RU {
+            get {
+                return ResourceManager.GetString("_WarnShellValueHijacked_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Unauthorized Userinit value change.
+        /// </summary>
+        internal static string _WarnUserinitHijacked_EN {
+            get {
+                return ResourceManager.GetString("_WarnUserinitHijacked_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Несанкционированое изменение параметра Userinit.
+        /// </summary>
+        internal static string _WarnUserinitHijacked_RU {
+            get {
+                return ResourceManager.GetString("_WarnUserinitHijacked_RU", resourceCulture);
             }
         }
         

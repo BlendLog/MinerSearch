@@ -347,7 +347,7 @@ namespace MSearch
                             riskLevel += 3;
                         }
 
-                        if (processName.Equals(MSData.Instance.SysFileName[31], StringComparison.OrdinalIgnoreCase) && !p.HasExited ? (DateTime.Now - p.StartTime).TotalSeconds >= 60 : false)
+                        if (processName.Equals(MSData.Instance.SysFileName[31], StringComparison.OrdinalIgnoreCase) && !p.HasExited && (DateTime.Now - p.StartTime).TotalSeconds >= 60)
                         {
                             AppConfig.Instance.LL.LogWarnMediumMessage("_ProbablyRAT", $"{p.MainModule.FileName} PID: {processId}");
                             riskLevel += 3;
@@ -1586,9 +1586,12 @@ namespace MSearch
 
             foreach (string wkFolder in wellKnownStartupFolders)
             {
+                if (string.IsNullOrEmpty(wkFolder)) continue;
+
                 foreach (string file in FileEnumerator.GetFiles(wkFolder, "*.*"))
                 {
                     string uncfile = FileSystemManager.GetUNCPath(file);
+                    bool hasInvisibleChars = FileSystemManager.IsOnlyInvisibleCharacters(Path.GetFileNameWithoutExtension(uncfile));
 
                     if (File.Exists(uncfile) && Path.GetExtension(uncfile) != ".ini")
                     {
@@ -1619,7 +1622,7 @@ namespace MSearch
                             }
 
 
-                            if (shortcutInfo.TargetPath.EndsWith("cmd.exe", StringComparison.OrdinalIgnoreCase) && shortcutInfo.Arguments.StartsWith("/c ", StringComparison.OrdinalIgnoreCase))
+                            if ((shortcutInfo.TargetPath.EndsWith("cmd.exe", StringComparison.OrdinalIgnoreCase) && shortcutInfo.Arguments.StartsWith("/c ", StringComparison.OrdinalIgnoreCase)) || hasInvisibleChars)
                             {
 
                                 AppConfig.Instance.LL.LogCautionMessage("_Malici0usFile", uncfile);
@@ -1665,7 +1668,7 @@ namespace MSearch
                         else
                         {
                             WinVerifyTrustResult trustResult = winTrust.VerifyEmbeddedSignature(uncfile, true);
-                            if (FileSystemManager.IsOnlyInvisibleCharacters(Path.GetFileNameWithoutExtension(uncfile)) || FileChecker.IsSfxArchive(uncfile) || FileSystemManager.HasHiddenAttribute(uncfile) || (trustResult != WinVerifyTrustResult.Success && trustResult != WinVerifyTrustResult.ActionUnknown && FileChecker.IsDotNetAssembly(uncfile) && FileChecker.CalculateShannonEntropy(File.ReadAllBytes(uncfile)) > 7.6))
+                            if (hasInvisibleChars || FileChecker.IsSfxArchive(uncfile) || FileSystemManager.HasHiddenAttribute(uncfile) || (trustResult != WinVerifyTrustResult.Success && trustResult != WinVerifyTrustResult.ActionUnknown && FileChecker.IsDotNetAssembly(uncfile) && FileChecker.CalculateShannonEntropy(File.ReadAllBytes(uncfile)) > 7.6))
                             {
                                 AppConfig.Instance.LL.LogCautionMessage("_Malici0usFile", uncfile);
                                 AppConfig.Instance.totalFoundThreats++;
@@ -1724,14 +1727,14 @@ namespace MSearch
                             if (!DisallowRunKey.GetValueNames().Contains("Dis?allo?wRun".Replace("?", "")))
                             {
                                 AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", "Dis?allo?wRun");
-                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{AppConfig.Instance.LL.GetLocalizedString("_RegistryValue")} Dis?allo?wRun".Replace("?", ""), ScanActionType.Deleted));
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, Path.Combine("HKEY_CURRENT_USER", MSData.Instance.queries["ExplorerPolicies"]) + "|DisallowRun", ScanActionType.Deleted));
 
                                 affected_items++;
                             }
                         }
                         else
                         {
-                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{AppConfig.Instance.LL.GetLocalizedString("_RegistryValue")} Dis?allo?wRun".Replace("?", ""), ScanActionType.Skipped));
+                            scanResults.Add(new ScanResult(ScanObjectType.Malware, Path.Combine("HKEY_CURRENT_USER", MSData.Instance.queries["ExplorerPolicies"]) + "|DisallowRun", ScanActionType.Skipped));
                         }
 
                     }
@@ -1759,7 +1762,7 @@ namespace MSearch
             {
 
                 AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotOpen", ex, "HKCU\\...\\Explorer");
-                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{AppConfig.Instance.LL.GetLocalizedString("_RegistryKey")} Dis?allo?wRun".Replace("?", ""), ScanActionType.Error, ex.Message));
+                scanResults.Add(new ScanResult(ScanObjectType.Malware, Path.Combine("HKEY_CURRENT_USER", MSData.Instance.queries["ExplorerPolicies"]) + "|DisallowRun", ScanActionType.Error, ex.Message));
 
             }
 
@@ -1778,6 +1781,7 @@ namespace MSearch
                         string appInitDllsValue = appInitDllsRawValue.ToString();
                         if (!string.IsNullOrEmpty(appInitDllsValue))
                         {
+                            string RequireSignedValueFullPath = Path.Combine("HKEY_LOCAL_MACHINE", MSData.Instance.queries["WindowsNT_CurrentVersion_Windows"]) + "|RequireSignedAppInit_DLLs";
                             if (appinit_key.GetValue("Loa?dAp?p??Init_DLLs".Replace("?", "")).ToString() == "1")
                             {
                                 if (!appinit_key.GetValueNames().Contains("RequireSignedApp?Ini?t_D?LLs".Replace("?", "")))
@@ -1793,13 +1797,13 @@ namespace MSearch
                                         if (appinit_key.GetValue("RequireSignedApp?Init?_DLLs".Replace("?", "")).ToString() == "1")
                                         {
                                             AppConfig.Instance.LL.LogSuccessMessage("_ValueWasCreated");
-                                            scanResults.Add(new ScanResult(ScanObjectType.Infected, $"{AppConfig.Instance.LL.GetLocalizedString("_RegistryValue")} AppInit_DLLs".Replace("?", ""), ScanActionType.Cured));
+                                            scanResults.Add(new ScanResult(ScanObjectType.Infected, RequireSignedValueFullPath, ScanActionType.Cured));
                                             affected_items++;
                                         }
                                     }
                                     else
                                     {
-                                        scanResults.Add(new ScanResult(ScanObjectType.Infected, $"{AppConfig.Instance.LL.GetLocalizedString("_RegistryValue")} AppInit_DLLs".Replace("?", ""), ScanActionType.Skipped));
+                                        scanResults.Add(new ScanResult(ScanObjectType.Infected, RequireSignedValueFullPath, ScanActionType.Skipped));
                                     }
                                 }
                                 else if (appinit_key.GetValue("RequireSignedApp?Init?_DLLs".Replace("?", "")).ToString() == "0")
@@ -1815,13 +1819,13 @@ namespace MSearch
                                         if (appinit_key.GetValue("Requi????reSignedApp?Init?_DLLs".Replace("?", "")).ToString() == "1")
                                         {
                                             AppConfig.Instance.LL.LogSuccessMessage("_ValueSetTo1");
-                                            scanResults.Add(new ScanResult(ScanObjectType.Infected, $"{AppConfig.Instance.LL.GetLocalizedString("_RegistryValue")} AppInit_DLLs".Replace("?", ""), ScanActionType.Cured));
+                                            scanResults.Add(new ScanResult(ScanObjectType.Infected, RequireSignedValueFullPath, ScanActionType.Cured));
                                             affected_items++;
                                         }
                                     }
                                     else
                                     {
-                                        scanResults.Add(new ScanResult(ScanObjectType.Infected, $"{AppConfig.Instance.LL.GetLocalizedString("_RegistryValue")} AppInit_DLLs".Replace("?", ""), ScanActionType.Skipped));
+                                        scanResults.Add(new ScanResult(ScanObjectType.Infected, RequireSignedValueFullPath, ScanActionType.Skipped));
                                     }
                                 }
                             }
@@ -1884,7 +1888,7 @@ namespace MSearch
                                     if (DebbuggerValue != null && DebbuggerValue is string @string)
                                     {
                                         string _dValue = @string;
-
+                                        AppConfig.Instance.LL.LogMessage("[.]", "_DebuggerString", $"{subKeyName}: {_dValue}", ConsoleColor.Gray);
                                         if (Utils.ShouldRemoveDebugger(_dValue))
                                         {
                                             AppConfig.Instance.totalFoundThreats++;
@@ -1997,6 +2001,7 @@ namespace MSearch
                                     if (DebbuggerValue != null && DebbuggerValue is string @string)
                                     {
                                         string _dValue = @string;
+                                        AppConfig.Instance.LL.LogMessage("[.]", "_DebuggerString", $"{subKeyName}: {_dValue}", ConsoleColor.Gray);
                                         if (Utils.ShouldRemoveDebugger(_dValue))
                                         {
                                             AppConfig.Instance.totalFoundThreats++;
@@ -2090,12 +2095,12 @@ namespace MSearch
                                         {
                                             baseKey.DeleteSubKey(subKeyName);
                                             AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", $"MonitorProcess: {subKeyName} -> {monitorProcessValue}");
-                                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"MonitorProcess: {subKeyName} -> {monitorProcessValue}", ScanActionType.Deleted));
+                                            scanResults.Add(new ScanResult(ScanObjectType.Unsafe, $"MonitorProcess: {subKeyName} -> {monitorProcessValue}", ScanActionType.Deleted));
                                         }
                                         else
                                         {
                                             AppConfig.Instance.LL.LogCautionMessage("_MaliciousEntry", $"MonitorProcess: {subKeyName} -> {monitorProcessValue}");
-                                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"MonitorProcess: {subKeyName} -> {monitorProcessValue}", ScanActionType.Skipped));
+                                            scanResults.Add(new ScanResult(ScanObjectType.Unsafe, $"MonitorProcess: {subKeyName} -> {monitorProcessValue}", ScanActionType.Skipped));
                                         }
                                     }
                                 }
@@ -2126,6 +2131,7 @@ namespace MSearch
                 {
                     Logger.WriteLog(@"[Reg] HKLM Autorun...", ConsoleColor.DarkCyan);
                     List<string> RunKeys = AutorunKeyHKLM.GetValueNames().ToList();
+                    string RunKeyFullPath = Path.Combine("HKEY_LOCAL_MACHINE", MSData.Instance.queries["StartupRun"]);
 
                     foreach (string value in RunKeys)
                     {
@@ -2145,7 +2151,7 @@ namespace MSearch
 
                         AppConfig.Instance.LL.LogMessage("\t[.]", "_Just_File", $"{value} {AutorunKeyHKLM.GetValue(value)}", ConsoleColor.Gray);
 
-                        WinVerifyTrustResult trustResult = WinVerifyTrustResult.Unknown;
+                        WinVerifyTrustResult trustResult = WinVerifyTrustResult.ActionUnknown;
                         if (File.Exists(path))
                         {
                             trustResult = winTrust.VerifyEmbeddedSignature(path, true);
@@ -2164,13 +2170,13 @@ namespace MSearch
                             {
                                 AutorunKeyHKLM.DeleteValue(value);
                                 AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", valuename);
-                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: Rea?ltek H?D A?udio".Replace("?", ""), ScanActionType.Deleted));
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RunKeyFullPath}|{valuename}", ScanActionType.Deleted));
                                 affected_items++;
                             }
                             else
                             {
                                 AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", valuename);
-                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: Rea?ltek H?D A?udio".Replace("?", ""), ScanActionType.Skipped));
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RunKeyFullPath}|{valuename}", ScanActionType.Skipped));
 
                             }
 
@@ -2184,13 +2190,13 @@ namespace MSearch
                             {
                                 AutorunKeyHKLM.DeleteValue(value);
                                 AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{RunKeyFullPath}|{AutorunKeyValue}", ScanActionType.Deleted));
                                 affected_items++;
                             }
                             else
                             {
                                 AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{RunKeyFullPath}|{AutorunKeyValue}", ScanActionType.Skipped));
 
                             }
                         }
@@ -2206,7 +2212,7 @@ namespace MSearch
                                     if (AutorunKeyHKLM.GetValue(value) == null)
                                     {
                                         AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RunKeyFullPath}|{AutorunKeyValue}", ScanActionType.Deleted));
                                         affected_items++;
                                     }
                                 }
@@ -2214,7 +2220,7 @@ namespace MSearch
                             else
                             {
                                 AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RunKeyFullPath}|{AutorunKeyValue}", ScanActionType.Skipped));
 
                             }
                         }
@@ -2222,7 +2228,14 @@ namespace MSearch
                         if (File.Exists(path))
                         {
                             long fileSize = new FileInfo(path).Length;
-                            if (fileSize >= maxFileSize || FileChecker.IsSfxArchive(path) || FileSystemManager.HasHiddenAttribute(path) || ((trustResult != WinVerifyTrustResult.Success && trustResult != WinVerifyTrustResult.ActionUnknown) && FileChecker.IsDotNetAssembly(path) && FileChecker.CalculateShannonEntropy(File.ReadAllBytes(path)) > 7.6))
+                            bool IsFileTooBig = fileSize >= maxFileSize;
+                            bool IsHidden = FileSystemManager.HasHiddenAttribute(path);
+                            bool IsUnsigned = (trustResult != WinVerifyTrustResult.Success && trustResult != WinVerifyTrustResult.ActionUnknown);
+                            bool IsDotnet = FileChecker.IsDotNetAssembly(path);
+                            bool IsHignEntropy = FileChecker.CalculateShannonEntropy(File.ReadAllBytes(path)) > 7.6;
+                            bool HasSuspicousPath = path.Contains("AppData") || path.Contains("ProgramData");
+
+                            if (IsFileTooBig || FileChecker.IsSfxArchive(path) || IsHidden || (IsUnsigned && IsDotnet && IsHignEntropy && HasSuspicousPath))
                             {
                                 AppConfig.Instance.LL.LogCautionMessage("_Malici0usFile", path);
                                 AppConfig.Instance.totalFoundThreats++;
@@ -2238,7 +2251,7 @@ namespace MSearch
                                         if (AutorunKeyHKLM.GetValue(value) == null)
                                         {
                                             AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RunKeyFullPath}|{AutorunKeyValue}", ScanActionType.Deleted));
                                             continue;
                                         }
                                     }
@@ -2247,7 +2260,7 @@ namespace MSearch
                                 else
                                 {
                                     AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RunKeyFullPath}|{AutorunKeyValue}", ScanActionType.Skipped));
                                 }
 
 
@@ -2266,7 +2279,7 @@ namespace MSearch
                                         if (AutorunKeyHKLM.GetValue(value) == null)
                                         {
                                             AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RunKeyFullPath}|{AutorunKeyValue}", ScanActionType.Deleted));
                                         }
                                     }
 
@@ -2275,7 +2288,7 @@ namespace MSearch
                                 else
                                 {
                                     AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RunKeyFullPath}|{AutorunKeyValue}", ScanActionType.Skipped));
                                 }
                             }
 
@@ -2309,7 +2322,7 @@ namespace MSearch
                                                         if (AutorunKeyHKLM.GetValue(value) == null)
                                                         {
                                                             AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RunKeyFullPath}|{AutorunKeyValue}", ScanActionType.Deleted));
                                                             affected_items++;
                                                         }
                                                     }
@@ -2318,7 +2331,7 @@ namespace MSearch
                                                 else
                                                 {
                                                     AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RunKeyFullPath}|{AutorunKeyValue}", ScanActionType.Skipped));
                                                 }
                                             }
                                         }
@@ -2332,6 +2345,94 @@ namespace MSearch
             catch (Exception ex)
             {
                 AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotOpen", ex, "HKLM\\...\\run");
+
+            }
+
+            Logger.WriteLog(@"[Reg] HKLM System settings...", ConsoleColor.DarkCyan);
+            try
+            {
+                string regPath = MSData.Instance.queries["WindowsNT_CurrentVersion_Winlogon"];
+
+                using (RegistryKey WinLogonKey = Registry.LocalMachine.OpenSubKey(regPath, true))
+                {
+                    if (WinLogonKey != null)
+                    {
+                        object UserinitValue = WinLogonKey.GetValue("Userinit");
+                        if (UserinitValue != null)
+                        {
+                            string UserinitData = UserinitValue.ToString();
+                            if (!string.IsNullOrEmpty(UserinitData))
+                            {
+                                string defaultData = $@"{AppConfig.Instance.drive_letter}:\windows\system32\userinit.exe,";
+                                if (!UserinitData.Equals(defaultData, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    AppConfig.Instance.totalFoundThreats++;
+                                    affected_items++;
+
+                                    AppConfig.Instance.LL.LogWarnMediumMessage("_WarnUserinitHijacked", UserinitData);
+                                    if (!AppConfig.Instance.ScanOnly)
+                                    {
+                                        try
+                                        {
+                                            WinLogonKey.SetValue("Userinit", defaultData);
+                                            AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRestoredDefault");
+                                            scanResults.Add(new ScanResult(ScanObjectType.Unsafe, Path.Combine("HKEY_LOCAL_MACHINE", regPath, "Userinit"), ScanActionType.Cured));
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            AppConfig.Instance.totalFoundThreats--;
+                                            AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotProceed", ex, "HKLM\\...\\Userinit");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        scanResults.Add(new ScanResult(ScanObjectType.Unsafe, Path.Combine("HKEY_LOCAL_MACHINE", regPath, "Userinit"), ScanActionType.Skipped));
+                                    }
+                                }
+                            }
+                        }
+
+                        object ShellValue = WinLogonKey.GetValue("Shell");
+                        if (ShellValue != null)
+                        {
+                            string ShellData = ShellValue.ToString();
+                            if (!string.IsNullOrEmpty(ShellData))
+                            {
+                                string defaultDataVariant1 = "explorer.exe";
+                                string defaultDataVariant2 = $"{AppConfig.Instance.drive_letter}:\\Windows\\explorer.exe";
+                                if (!ShellData.Equals(defaultDataVariant1, StringComparison.InvariantCultureIgnoreCase) && !ShellData.Equals(defaultDataVariant2, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    AppConfig.Instance.totalFoundThreats++;
+                                    affected_items++;
+
+                                    AppConfig.Instance.LL.LogWarnMediumMessage("_WarnShellValueHijacked", ShellData);
+                                    if (!AppConfig.Instance.ScanOnly)
+                                    {
+                                        try
+                                        {
+                                            WinLogonKey.SetValue("Shell", defaultDataVariant1);
+                                            AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRestoredDefault");
+                                            scanResults.Add(new ScanResult(ScanObjectType.Unsafe, Path.Combine("HKEY_LOCAL_MACHINE", regPath, "Shell"), ScanActionType.Cured));
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            AppConfig.Instance.totalFoundThreats--;
+                                            AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotProceed", ex, "HKLM\\...\\Shell");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        scanResults.Add(new ScanResult(ScanObjectType.Unsafe, Path.Combine("HKEY_LOCAL_MACHINE", regPath, "Shell"), ScanActionType.Skipped));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotOpen", ex, "HKLM\\...\\Winlogon");
             }
 
             #endregion
@@ -2341,6 +2442,8 @@ namespace MSearch
             try
             {
                 RegistryKey AutorunKey = Registry.CurrentUser.OpenSubKey(MSData.Instance.queries["StartupRun"], true);
+                string RunKeyFullPath = Path.Combine("HKEY_CURRENT_USER", MSData.Instance.queries["StartupRun"]); //<< поменять все HKCU:Run на полный путь
+
                 if (AutorunKey != null)
                 {
 
@@ -2363,7 +2466,7 @@ namespace MSearch
 
                         AppConfig.Instance.LL.LogMessage("\t[.]", "_Just_File", $"{value} {AutorunKeyValue}", ConsoleColor.Gray);
 
-                        WinVerifyTrustResult trustResult = WinVerifyTrustResult.Unknown;
+                        WinVerifyTrustResult trustResult = WinVerifyTrustResult.ActionUnknown;
                         if (File.Exists(path))
                         {
                             trustResult = winTrust.VerifyEmbeddedSignature(path, true);
@@ -2400,14 +2503,14 @@ namespace MSearch
                                 if (AutorunKey.GetValue(value) == null)
                                 {
                                     AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKCU:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, RunKeyFullPath + $"|{value}", ScanActionType.Deleted));
                                     affected_items++;
                                 }
                             }
                             else
                             {
                                 AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKCU:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, RunKeyFullPath + $"|{value}", ScanActionType.Skipped));
 
                             }
                         }
@@ -2415,7 +2518,14 @@ namespace MSearch
                         if (File.Exists(path))
                         {
                             long fileSize = new FileInfo(path).Length;
-                            if (fileSize >= maxFileSize || FileChecker.IsSfxArchive(path) || FileSystemManager.HasHiddenAttribute(path) || ((trustResult != WinVerifyTrustResult.Success && trustResult != WinVerifyTrustResult.ActionUnknown) && FileChecker.IsDotNetAssembly(path) && FileChecker.CalculateShannonEntropy(File.ReadAllBytes(path)) > 7.6))
+                            bool IsFileTooBig = fileSize >= maxFileSize;
+                            bool IsHidden = FileSystemManager.HasHiddenAttribute(path);
+                            bool IsUnsigned = (trustResult != WinVerifyTrustResult.Success && trustResult != WinVerifyTrustResult.ActionUnknown);
+                            bool IsDotnet = FileChecker.IsDotNetAssembly(path);
+                            bool IsHignEntropy = FileChecker.CalculateShannonEntropy(File.ReadAllBytes(path)) > 7.6;
+                            bool HasSuspicousPath = path.Contains("AppData") || path.Contains("ProgramData");
+
+                            if (IsFileTooBig || FileChecker.IsSfxArchive(path) || IsHidden || (IsUnsigned && IsDotnet && IsHignEntropy && HasSuspicousPath))
                             {
                                 AppConfig.Instance.LL.LogCautionMessage("_Malici0usFile", path);
                                 AppConfig.Instance.totalFoundThreats++;
@@ -2429,7 +2539,7 @@ namespace MSearch
                                     if (AutorunKey.GetValue(value) == null)
                                     {
                                         AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, RunKeyFullPath + $"|{value}", ScanActionType.Deleted));
                                     }
 
                                     continue;
@@ -2437,32 +2547,10 @@ namespace MSearch
                                 else
                                 {
                                     AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, RunKeyFullPath + $"|{value}", ScanActionType.Skipped));
                                 }
 
 
-                            }
-
-                            if (IsMalic1ousFile(FileSystemManager.GetUNCPath(path), false))
-                            {
-                                if (!AppConfig.Instance.ScanOnly)
-                                {
-                                    UnlockObjectClass.DisableExecute(FileSystemManager.GetUNCPath(path));
-
-                                    AutorunKey.DeleteValue(value);
-                                    if (AutorunKey.GetValue(value) == null)
-                                    {
-                                        AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
-                                    }
-
-                                    affected_items++;
-                                }
-                                else
-                                {
-                                    AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
-                                }
                             }
 
                             if (trustResult == WinVerifyTrustResult.Success)
@@ -2490,7 +2578,7 @@ namespace MSearch
                                             if (AutorunKey.GetValue(value) == null)
                                             {
                                                 AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, RunKeyFullPath + $"|{value}", ScanActionType.Deleted));
                                                 affected_items++;
                                             }
 
@@ -2498,8 +2586,32 @@ namespace MSearch
                                         else
                                         {
                                             AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                            scanResults.Add(new ScanResult(ScanObjectType.Malware, RunKeyFullPath + $"|{value}", ScanActionType.Skipped));
                                         }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (IsMalic1ousFile(FileSystemManager.GetUNCPath(path), false))
+                                {
+                                    if (!AppConfig.Instance.ScanOnly)
+                                    {
+                                        UnlockObjectClass.DisableExecute(FileSystemManager.GetUNCPath(path));
+
+                                        AutorunKey.DeleteValue(value);
+                                        if (AutorunKey.GetValue(value) == null)
+                                        {
+                                            AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
+                                            scanResults.Add(new ScanResult(ScanObjectType.Malware, RunKeyFullPath + $"|{value}", ScanActionType.Deleted));
+                                        }
+
+                                        affected_items++;
+                                    }
+                                    else
+                                    {
+                                        AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
+                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, RunKeyFullPath + $"|{value}", ScanActionType.Skipped));
                                     }
                                 }
                             }
@@ -2517,14 +2629,17 @@ namespace MSearch
             try
             {
                 string regPath = MSData.Instance.queries["SystemPolicies"];
+                string regPathFull = Path.Combine("HKEY_CURRENT_USER", regPath);
                 string[] valueNames = { "Di?sable?TaskM?gr".Replace("?", ""), "Di??sab?leRe?gistr??yToo?ls".Replace("?", "") };
+
 
                 using (RegistryKey systemKey = Registry.CurrentUser.OpenSubKey(regPath, true))
                 {
                     if (systemKey != null)
                     {
-                        foreach (string policiesVal in valueNames)
+                        for (int v = 0; v < valueNames.Length; v++)
                         {
+                            string policiesVal = valueNames[v];
                             if (systemKey.GetValue(policiesVal) != null)
                             {
                                 AppConfig.Instance.totalFoundThreats++;
@@ -2534,21 +2649,21 @@ namespace MSearch
                                     if (systemKey.GetValue(policiesVal) == null)
                                     {
                                         AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", policiesVal);
-                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKCU:SystemPolicies: {policiesVal}", ScanActionType.Deleted));
+                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{regPathFull}|{policiesVal}", ScanActionType.Deleted, v == 0 ? AppConfig.Instance.LL.GetLocalizedString("_Note_DisableTaskMgr") : AppConfig.Instance.LL.GetLocalizedString("_Note_DisableRegistryTools")));
                                         affected_items++;
                                     }
                                     else
                                     {
                                         AppConfig.Instance.totalNeutralizedThreats--;
                                         AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotRemove", null, policiesVal);
-                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKCU:SystemPolicies: {policiesVal}", ScanActionType.Inaccassible));
+                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{regPathFull}|{policiesVal}", ScanActionType.Inaccassible, v == 0 ? AppConfig.Instance.LL.GetLocalizedString("_Note_DisableTaskMgr") : AppConfig.Instance.LL.GetLocalizedString("_Note_DisableRegistryTools")));
                                     }
 
                                 }
                                 else
                                 {
                                     AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", policiesVal);
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKCU:SystemPolicies: {policiesVal}", ScanActionType.Skipped));
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{regPathFull}|{policiesVal}", ScanActionType.Skipped, v == 0 ? AppConfig.Instance.LL.GetLocalizedString("_Note_DisableTaskMgr") : AppConfig.Instance.LL.GetLocalizedString("_Note_DisableRegistryTools")));
                                 }
 
                             }
@@ -2647,18 +2762,21 @@ namespace MSearch
                         if (MSData.Instance.badSubkeys.Contains(subkeyName, StringComparer.OrdinalIgnoreCase))
                         {
                             isContainsBadPolicies = true;
-                            try
+                            if (!AppConfig.Instance.ScanOnly)
                             {
-                                parentKey.DeleteSubKeyTree(subkeyName);
-                                if (!Utils.RegistryKeyExists(registryPath))
+                                try
                                 {
-                                    AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", subkeyName);
-                                    affected_items++;
+                                    parentKey.DeleteSubKeyTree(subkeyName);
+                                    if (!Utils.RegistryKeyExists(registryPath))
+                                    {
+                                        AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", subkeyName);
+                                        affected_items++;
+                                    }
                                 }
-                            }
-                            catch (Exception ex)
-                            {
-                                AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotOpen", ex, subkeyName);
+                                catch (Exception ex)
+                                {
+                                    AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotOpen", ex, subkeyName);
+                                }
                             }
                         }
                     }
@@ -2666,7 +2784,15 @@ namespace MSearch
                     if (isContainsBadPolicies)
                     {
                         AppConfig.Instance.totalFoundThreats++;
-                        scanResults.Add(new ScanResult(ScanObjectType.Infected, $"Reg?istry:Appl?ocker".Replace("?", ""), ScanActionType.Cured));
+                        if (!AppConfig.Instance.ScanOnly)
+                        {
+                            scanResults.Add(new ScanResult(ScanObjectType.Infected, Path.Combine("HKEY_LOCAL_MACHINE", registryPath), ScanActionType.Cured, AppConfig.Instance.LL.GetLocalizedString("_Note_ApplockerHasBadSettings")));
+                        }
+                        else
+                        {
+                            AppConfig.Instance.LL.LogWarnMediumMessage("_WarnApplockerHaveChanges");
+                            scanResults.Add(new ScanResult(ScanObjectType.Infected, Path.Combine("HKEY_LOCAL_MACHINE", registryPath), ScanActionType.Skipped, AppConfig.Instance.LL.GetLocalizedString("_Note_ApplockerHasBadSettings")));
+                        }
                     }
                 }
             }
@@ -2674,7 +2800,6 @@ namespace MSearch
             #endregion
 
             #region WindowsDefender
-            StringBuilder sbWD = new StringBuilder("Re").Append("gi").Append("st").Append("ry").Append(":W").Append("in").Append("De").Append("fe").Append("nd").Append(" Ex").Append("cl").Append("us").Append("io").Append("ns");
             Logger.WriteLog($"[Reg] {new StringBuilder("Wi").Append("nd").Append("ow").Append("s ").Append("De").Append("fe").Append("nd").Append("er")}...".Replace("~", ""), ConsoleColor.DarkCyan);
 
             try
@@ -2689,14 +2814,33 @@ namespace MSearch
 
                 foreach (string baseKey in baseKeys)
                 {
-                    RegistryKey winDefenderKey = baseKey == baseKeys[0] ? Registry.LocalMachine.OpenSubKey(baseKey) : Registry.LocalMachine.OpenSubKey(baseKey, true);
-                    if (winDefenderKey == null) continue;
+                    RegistryKey winDefenderKey;
+                    try
+                    {
+                        winDefenderKey = baseKey == baseKeys[0] ? Registry.LocalMachine.OpenSubKey(baseKey) : Registry.LocalMachine.OpenSubKey(baseKey, true);
+                        if (winDefenderKey == null) continue;
+                    }
+                    catch (SecurityException uax)
+                    {
+                        AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotOpen", uax, baseKey);
+                        continue;
+                    }
 
                     foreach (string subKey in subKeys)
                     {
                         string fullKeyPath = baseKey + "\\" + subKey;
-                        RegistryKey key = baseKey == baseKeys[0] ? Registry.LocalMachine.OpenSubKey(fullKeyPath) : Registry.LocalMachine.OpenSubKey(fullKeyPath, true);
-                        if (key == null) continue;
+                        RegistryKey key;
+                        try
+                        {
+                            key = baseKey == baseKeys[0] ? Registry.LocalMachine.OpenSubKey(fullKeyPath) : Registry.LocalMachine.OpenSubKey(fullKeyPath, true);
+                            if (key == null) continue;
+                        }
+                        catch (SecurityException uax)
+                        {
+                            AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotOpen", uax, subKey);
+                            continue;
+                        }
+
 
                         string[] valueNames = key.GetValueNames();
                         List<string> checkList;
@@ -2713,8 +2857,6 @@ namespace MSearch
 
                             if (checkList.Contains(valueName, StringComparer.OrdinalIgnoreCase))
                             {
-                                AppConfig.Instance.totalFoundThreats++;
-
                                 try
                                 {
                                     if (!AppConfig.Instance.ScanOnly)
@@ -2725,15 +2867,16 @@ namespace MSearch
                                             Utils.RemoveDefenderExclusion(subKey, valueName);
                                             if (key.GetValue(valueName) == null)
                                             {
-                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " (Local) -> " + valueName, ScanActionType.Deleted));
+                                                scanResults.Add(new ScanResult(ScanObjectType.Unsafe, $"{AppConfig.Instance.LL.GetLocalizedString("_UnwantedExclusion")} (Local) -> " + valueName, ScanActionType.Deleted));
                                                 AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", $"{valueName} (local)");
                                                 affected_items++;
+                                                AppConfig.Instance.totalFoundThreats++;
                                             }
                                             else
                                             {
-                                                AppConfig.Instance.totalNeutralizedThreats--;
-                                                AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotRemove", new Exception($"{sbWD} is turned off possible"), $"{valueName} (local)");
-                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " (Local) -> " + valueName, ScanActionType.Inaccassible));
+                                                AppConfig.Instance.LL.LogWarnMediumMessage("_ErrorCannotRemove", $"{valueName} (local)");
+                                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{AppConfig.Instance.LL.GetLocalizedString("_UnwantedExclusion")} (Local) -> " + valueName, ScanActionType.Inaccassible, AppConfig.Instance.LL.GetLocalizedString("_ErrorTurnedOffDefender")));
+                                                AppConfig.Instance.totalFoundSuspiciousObjects++;
                                             }
                                         }
                                         else
@@ -2741,24 +2884,25 @@ namespace MSearch
                                             key.DeleteValue(valueName);
                                             if (key.GetValue(valueName) == null)
                                             {
-                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " (Policies) -> " + valueName, ScanActionType.Deleted));
+                                                scanResults.Add(new ScanResult(ScanObjectType.Unsafe, $"{AppConfig.Instance.LL.GetLocalizedString("_UnwantedExclusion")} (Policies) -> " + valueName, ScanActionType.Deleted));
                                                 AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", $"{valueName} (policy)");
                                                 affected_items++;
+                                                AppConfig.Instance.totalFoundThreats++;
                                             }
                                         }
                                     }
                                     else
                                     {
+                                        AppConfig.Instance.totalFoundThreats++;
                                         AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", valueName);
-                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " -> " + valueName, ScanActionType.Skipped));
+                                        scanResults.Add(new ScanResult(ScanObjectType.Unsafe, $"{AppConfig.Instance.LL.GetLocalizedString("_UnwantedExclusion")} -> " + valueName, ScanActionType.Skipped));
                                     }
 
                                 }
                                 catch (Exception ex)
                                 {
-                                    AppConfig.Instance.totalNeutralizedThreats--;
-                                    AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotRemove", ex, valueName);
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, sbWD + " -> " + valueName, ScanActionType.Error, ex.Message));
+                                    AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotRemove", ex, valueName, AppConfig.Instance.LL.GetLocalizedString("_UnwantedExclusion"));
+                                    scanResults.Add(new ScanResult(ScanObjectType.Unsafe, $"{AppConfig.Instance.LL.GetLocalizedString("_UnwantedExclusion")} -> " + valueName, ScanActionType.Error, ex.Message));
                                 }
                             }
 
@@ -2767,7 +2911,7 @@ namespace MSearch
                         key.Close();
                     }
 
-                    winDefenderKey.Close();
+                    if (winDefenderKey != null) winDefenderKey.Close();
                 }
             }
             catch (Exception ex)
@@ -2781,6 +2925,7 @@ namespace MSearch
             try
             {
                 RegistryKey AutorunKey = Registry.LocalMachine.OpenSubKey(MSData.Instance.queries["Wow6432Node_StartupRun"], true);
+                string RegRunKeyFullPath = Path.Combine("HKEY_LOCAL_MACHINE", MSData.Instance.queries["Wow6432Node_StartupRun"]);
                 if (AutorunKey != null)
                 {
                     Logger.WriteLog(@"[Reg] Wow64Node Autorun...", ConsoleColor.DarkCyan);
@@ -2804,7 +2949,7 @@ namespace MSearch
 
                         AppConfig.Instance.LL.LogMessage("\t[.]", "_Just_File", $"{value} {AutorunKeyValue}", ConsoleColor.Gray);
 
-                        WinVerifyTrustResult trustResult = WinVerifyTrustResult.Unknown;
+                        WinVerifyTrustResult trustResult = WinVerifyTrustResult.ActionUnknown;
                         if (File.Exists(path))
                         {
                             trustResult = winTrust.VerifyEmbeddedSignature(path, true);
@@ -2821,13 +2966,13 @@ namespace MSearch
                             {
                                 AutorunKey.DeleteValue(value);
                                 AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"HKCU:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{RegRunKeyFullPath}|{value}", ScanActionType.Deleted));
                                 affected_items++;
                             }
                             else
                             {
                                 AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"HKCU:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{RegRunKeyFullPath}|{value}", ScanActionType.Skipped));
 
                             }
                         }
@@ -2841,14 +2986,14 @@ namespace MSearch
                                 if (AutorunKey.GetValue(value) == null)
                                 {
                                     AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKCU:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RegRunKeyFullPath}|{value}", ScanActionType.Deleted));
                                     affected_items++;
                                 }
                             }
                             else
                             {
                                 AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKCU:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RegRunKeyFullPath}|{value}", ScanActionType.Skipped));
 
                             }
                         }
@@ -2870,7 +3015,7 @@ namespace MSearch
                                     if (AutorunKey.GetValue(value) == null)
                                     {
                                         AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RegRunKeyFullPath}|{value}", ScanActionType.Deleted));
                                     }
 
                                     continue;
@@ -2878,7 +3023,7 @@ namespace MSearch
                                 else
                                 {
                                     AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RegRunKeyFullPath}|{value}", ScanActionType.Skipped));
                                 }
 
 
@@ -2894,7 +3039,7 @@ namespace MSearch
                                     if (AutorunKey.GetValue(value) == null)
                                     {
                                         AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                        scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RegRunKeyFullPath}|{value}", ScanActionType.Deleted));
                                     }
 
                                     affected_items++;
@@ -2902,7 +3047,7 @@ namespace MSearch
                                 else
                                 {
                                     AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RegRunKeyFullPath}|{value}", ScanActionType.Skipped));
                                 }
                             }
 
@@ -2931,7 +3076,7 @@ namespace MSearch
                                             if (AutorunKey.GetValue(value) == null)
                                             {
                                                 AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
-                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Deleted));
+                                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RegRunKeyFullPath}|{value}", ScanActionType.Deleted));
                                                 affected_items++;
                                             }
 
@@ -2939,7 +3084,7 @@ namespace MSearch
                                         else
                                         {
                                             AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
-                                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"HKLM:Run: {value} -> {AutorunKeyValue}", ScanActionType.Skipped));
+                                            scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RegRunKeyFullPath}|{value}", ScanActionType.Skipped));
                                         }
                                     }
                                 }
@@ -3432,7 +3577,8 @@ namespace MSearch
                     }
                 }
 
-                if (!AppConfig.Instance.verbose && winTrust.VerifyEmbeddedSignature(filePath, true) == WinVerifyTrustResult.Success)
+
+                if (winTrust.VerifyEmbeddedSignature(filePath, true) == WinVerifyTrustResult.Success/* && !AppConfig.Instance.verbose*/)
                 {
                     Logger.WriteLog($"\t[OK]", Logger.success, false);
                     return;
@@ -3696,7 +3842,7 @@ namespace MSearch
                     string normalized = servicePathWithArgs.ToLowerInvariant();
                     normalized = normalized.Replace("^|", "|").Replace("\\\"", "\"").Replace("'", "");
 
-                    if (normalized.Contains("cmd.exe /c") &&
+                    if (normalized.Contains("cmd.exe /c") ||
                         normalized.Contains("powershell") ||
                         (normalized.Contains("| iex") || normalized.Contains("invoke-expression")) &&
                         (normalized.Contains("irm") || normalized.Contains("invoke-restmethod")) &&
@@ -3705,6 +3851,7 @@ namespace MSearch
                         AppConfig.Instance.LL.LogCautionMessage("_Found", $"{service.ServiceName} {servicePath}");
                         svcinfo.FilePath = servicePathWithArgs;
                         svcinfo.IsMlwrSignature = true;
+                        svcinfo.HasHijackedSystemBinary = true;
 
                         suspiciousServiceList.Add(service, svcinfo);
                     }
@@ -3884,6 +4031,7 @@ namespace MSearch
 
         void DisableService(ServiceController service, SuspiciousServiceInfo serviceInfo, HashSet<string> serviceDlls = null)
         {
+            if (service == null) return;
 
             string serviceName = service.ServiceName;
 
@@ -3974,35 +4122,36 @@ namespace MSearch
 
             if (serviceInfo.IsMlwrSignature)
             {
-
                 try
                 {
-                    try
+                    if (!serviceInfo.HasHijackedSystemBinary)
                     {
-                        if (File.Exists(serviceInfo.FilePath))
+                        try
                         {
-                            UnlockObjectClass.KillAndDelete(serviceInfo.FilePath);
-                            if (!File.Exists(serviceInfo.FilePath))
+                            if (File.Exists(serviceInfo.FilePath))
                             {
-                                scanResults.Add(new ScanResult(ScanObjectType.Malware, serviceInfo.FilePath, ScanActionType.Deleted));
+                                Utils.AddToQuarantine(serviceInfo.FilePath);
+                                if (!File.Exists(serviceInfo.FilePath))
+                                {
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, serviceInfo.FilePath, ScanActionType.Deleted));
+                                }
                             }
                         }
+                        catch (IOException ioe)
+                        {
+                            scanResults.Add(new ScanResult(ScanObjectType.Malware, serviceInfo.FilePath, ScanActionType.Error, ioe.Message));
+                        }
+                        catch (UnauthorizedAccessException uae)
+                        {
+                            scanResults.Add(new ScanResult(ScanObjectType.Malware, serviceInfo.FilePath, ScanActionType.Error, uae.Message));
+                        }
                     }
-                    catch (IOException ioe)
-                    {
-                        scanResults.Add(new ScanResult(ScanObjectType.Malware, serviceInfo.FilePath, ScanActionType.Error, ioe.Message));
-                    }
-                    catch (UnauthorizedAccessException uae)
-                    {
-                        scanResults.Add(new ScanResult(ScanObjectType.Malware, serviceInfo.FilePath, ScanActionType.Error, uae.Message));
-                    }
-
 
                     if (service != null)
                     {
                         ServiceHelper.Uninstall(serviceName);
                         AppConfig.Instance.LL.LogSuccessMessage("_MaliciousService", serviceName, "_Deleted");
-                        scanResults.Add(new ScanResult(ScanObjectType.Malware, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + $" {serviceName} -> " + serviceName, ScanActionType.Deleted));
+                        scanResults.Add(new ScanResult(ScanObjectType.Malware, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + $" {serviceName} -> " + serviceInfo.FilePath, ScanActionType.Deleted));
 
                     }
                 }

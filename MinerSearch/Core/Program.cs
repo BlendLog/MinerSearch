@@ -33,13 +33,14 @@ namespace MSearch
 
             foreach (string arg in args)
             {
-                arg.ToLower();
-                if (arg == "--no-logs" || arg == "-nl")
+                if (arg.Equals("--no-logs", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("-nl", StringComparison.OrdinalIgnoreCase))
                 {
                     AppConfig.Instance.no_logs = true;
                 }
 
-                if (arg == "--console-mode" || arg == "-cm")
+                if (arg.Equals("--console-mode", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("-cm", StringComparison.OrdinalIgnoreCase))
                 {
                     AppConfig.Instance.console_mode = true;
                 }
@@ -88,8 +89,7 @@ namespace MSearch
 
             foreach (string arg in args)
             {
-                arg.ToLower();
-                if (arg == "--silent" || arg == "-si")
+                if (arg.Equals("--silent", StringComparison.OrdinalIgnoreCase) || arg.Equals("-si", StringComparison.OrdinalIgnoreCase))
                 {
                     AppConfig.Instance.silent = true;
                     AppDomain.CurrentDomain.UnhandledException -= new UnhandledExceptionEventHandler(ExeptionHandler.HookExeption);
@@ -143,16 +143,24 @@ namespace MSearch
 
             if (!AppConfig.Instance.silent)
             {
-                if (Screen.PrimaryScreen.Bounds.Width > 1024 && Screen.PrimaryScreen.Bounds.Height > 634)
+                if (!ProcessManager.IsPwshAsParentProcess(Process.GetCurrentProcess().Id))
                 {
-                    if (Console.LargestWindowWidth >= 150)
-                    {
-                        if (!ProcessManager.IsPwshAsParentProcess(Process.GetCurrentProcess().Id))
-                        {
-                            Console.SetWindowSize(150, 40);
-                            WaterMark();
-                        }
-                    }
+                    int targetW = 150;
+                    int targetH = 40;
+
+                    int maxW = Console.LargestWindowWidth;
+                    int maxH = Console.LargestWindowHeight;
+
+                    int w = Math.Min(targetW, maxW);
+                    int h = Math.Min(targetH, maxH);
+
+                    if (Console.BufferWidth < w) Console.BufferWidth = w;
+                    if (Console.BufferHeight < h) Console.BufferHeight = h;
+
+                    Console.WindowWidth = w;
+                    Console.WindowHeight = h;
+
+                    WaterMark();
                 }
             }
 
@@ -164,8 +172,7 @@ namespace MSearch
 
             foreach (string arg in args)
             {
-                arg.ToLower();
-                if (arg == "--accept-eula" || arg == "-a")
+                if (arg.Equals("--accept-eula", StringComparison.OrdinalIgnoreCase) || arg.Equals("-a", StringComparison.OrdinalIgnoreCase))
                 {
                     AppConfig.Instance.accept_eula = true;
                 }
@@ -268,8 +275,7 @@ namespace MSearch
                 for (int i = 0; i < args.Length; i++)
                 {
                     string arg = args[i];
-                    arg.ToLowerInvariant();
-                    if (arg == "--help" || arg == "-h")
+                    if (arg.Equals("--help", StringComparison.OrdinalIgnoreCase) || arg.Equals("-h", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.help = true;
 
@@ -294,31 +300,31 @@ namespace MSearch
                         }
                         return;
                     }
-                    else if (arg == "--force" || arg == "-f")
+                    else if (arg.Equals("--force", StringComparison.OrdinalIgnoreCase) || arg.Equals("-f", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.Force = true;
                     }
-                    else if (arg == "--no-scantime" || arg == "-nstm")
+                    else if (arg.Equals("--no-scantime", StringComparison.OrdinalIgnoreCase) || arg.Equals("-nstm", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.no_scantime = true;
                     }
-                    else if (arg == "--no-signature-scan" || arg == "-nss")
+                    else if (arg.Equals("--no-signature-scan", StringComparison.OrdinalIgnoreCase) || arg.Equals("-nss", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.nosignaturescan = true;
                     }
-                    else if (arg == "--no-runtime" || arg == "-nr")
+                    else if (arg.Equals("--no-runtime", StringComparison.OrdinalIgnoreCase) || arg.Equals("-nr", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.no_runtime = true;
                     }
-                    else if (arg == "--no-scan-tasks" || arg == "-nst")
+                    else if (arg.Equals("--no-scan-tasks", StringComparison.OrdinalIgnoreCase) || arg.Equals("-nst", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.no_scan_tasks = true;
                     }
-                    else if (arg == "--pause" || arg == "-p")
+                    else if (arg.Equals("--pause", StringComparison.OrdinalIgnoreCase) || arg.Equals("-p", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.pause = true;
                     }
-                    else if (arg == "--remove-empty-tasks" || arg == "-ret")
+                    else if (arg.Equals("--remove-empty-tasks", StringComparison.OrdinalIgnoreCase) || arg.Equals("-ret", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.RemoveEmptyTasks = true;
                     }
@@ -334,22 +340,22 @@ namespace MSearch
 
                         AppConfig.Instance.maxSubfolders = depth;
                     }
-                    else if (arg == "--no-rootkit-check" || arg == "-nrc")
+                    else if (arg.Equals("--no-rootkit-check", StringComparison.OrdinalIgnoreCase) || arg.Equals("-nrc", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.NoRootkitCheck = true;
                     }
-                    else if (arg == "--no-services" || arg == "-nse")
+                    else if (arg.Equals("--no-services", StringComparison.OrdinalIgnoreCase) || arg.Equals("-nse", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.no_services = true;
                     }
-                    else if (arg == "--scan-only" || arg == "-so")
+                    else if (arg.Equals("--scan-only", StringComparison.OrdinalIgnoreCase) || arg.Equals("-so", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.ScanOnly = true;
                         AppConfig.Instance.NoRootkitCheck = true;
                         AppConfig.Instance.RemoveEmptyTasks = false;
 
                     }
-                    else if (arg == "--full-scan" || arg == "-fs")
+                    else if (arg.Equals("--full-scan", StringComparison.OrdinalIgnoreCase) || arg.Equals("-fs", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.fullScan = true;
                     }
@@ -357,7 +363,7 @@ namespace MSearch
                     {
                         AppConfig.Instance.QuarantineMode = true;
                     }
-                    else if (arg == "--winpemode" || arg == "-w")
+                    else if (arg.Equals("--winpemode", StringComparison.OrdinalIgnoreCase) || arg.Equals("-w", StringComparison.OrdinalIgnoreCase))
                     {
                     drive_letter_lbl:
 
@@ -389,11 +395,11 @@ namespace MSearch
                     {
                         AppConfig.Instance.RestoredWMI = true;
                     }
-                    else if (arg == "--verbose" || arg == "-v")
+                    else if (arg.Equals("--verbose", StringComparison.OrdinalIgnoreCase) || arg.Equals("-v", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.verbose = true;
                     }
-                    else if (arg == "--run-as-system" || arg == "-ras")
+                    else if (arg.Equals("--run-as-system", StringComparison.OrdinalIgnoreCase) || arg.Equals("-ras", StringComparison.OrdinalIgnoreCase))
                     {
                         if (!AppConfig.Instance.IsGuiAvailable)
                         {
@@ -415,11 +421,11 @@ namespace MSearch
                             argsBuilder.ToString().Replace("--run-as-system", "").Replace("-ras", ""));
                         return;
                     }
-                    else if (arg == "--select" || arg == "-s")
+                    else if (arg.Equals("--select", StringComparison.OrdinalIgnoreCase) || arg.Equals("-s", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.demandSelection = true;
                     }
-                    else if (arg == "--select=" || arg == "-s=")
+                    else if (arg.Equals("--select=", StringComparison.OrdinalIgnoreCase) || arg.Equals("-s=", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.demandSelection = true;
                         if (i + 1 >= args.Length)
@@ -439,7 +445,7 @@ namespace MSearch
                             return;
                         }
                     }
-                    else if (arg == "--restore=" || arg == "-res=")
+                    else if (arg.Equals("--restore=", StringComparison.OrdinalIgnoreCase) || arg.Equals("-res=", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.QuarantineRestoreOption = true;
                         if (i + 1 >= args.Length)
@@ -463,7 +469,7 @@ namespace MSearch
                             return;
                         }
                     }
-                    else if (arg == "--delete=" || arg == "-del=")
+                    else if (arg.Equals("--delete=", StringComparison.OrdinalIgnoreCase) || arg.Equals("-del=", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.QuarantineDeleteOption = true;
                         if (i + 1 >= args.Length)
@@ -487,11 +493,11 @@ namespace MSearch
                             return;
                         }
                     }
-                    else if (arg == "--no-check-hosts" || arg == "-nch")
+                    else if (arg.Equals("--no-check-hosts", StringComparison.OrdinalIgnoreCase) || arg.Equals("-nch", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.no_check_hosts = true;
                     }
-                    else if (arg == "--no-firewall" || arg == "-nfw")
+                    else if (arg.Equals("--no-firewall", StringComparison.OrdinalIgnoreCase) || arg.Equals("-nfw", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.no_firewall = true;
                     }
@@ -528,10 +534,7 @@ namespace MSearch
                 }
                 else
                 {
-                    if (AppConfig.Instance.silent)
-                    {
-                        Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_HIDE);
-                    }
+                    Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_HIDE);
                 }
             }
 
@@ -563,11 +566,11 @@ namespace MSearch
 
             AppConfig.Instance.LL.LogMessage("\t\t", "_Version", AppConfig.Instance.CurrentVersion, ConsoleColor.White, false);
 
-#if !DEBUG
             if (!AppConfig.Instance.WinPEMode && !AppConfig.Instance.QuarantineMode && !OSExtensions.GetWindowsVersion().Contains("Windows 7"))
             {
                 Utils.CheckLatestReleaseVersion();
             }
+#if !DEBUG
 
             if (AppConfig.Instance.no_runtime && AppConfig.Instance.no_scantime && !AppConfig.Instance.WinPEMode)
             {
