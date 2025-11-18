@@ -7,7 +7,7 @@ namespace MSearch
 {
     public static class Logger
     {
-        internal static string logFileName = $"M?in?er?Sea?rch_{DateTime.Now}.log".Replace("/", "_").Replace("?", "").Replace(":", "-").Replace(" ", "_");
+        internal static string logFileName = $"MinerSearch_{DateTime.Now:dd.MM.yyyy_HH-mm-ss}.log";
         public static string LogsFolder = Path.Combine(AppConfig.Instance.drive_letter + ":\\", "_MinerSearchLogs");
 
         public static readonly ConsoleColor error = ConsoleColor.Red;
