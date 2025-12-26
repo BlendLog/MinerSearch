@@ -357,7 +357,9 @@ namespace MSearch
                     if (result == WinVerifyTrustResult.FileNotSigned && (showUnsigned || AppConfig.Instance.verbose))
                     {
                         AppConfig.Instance.LL.LogWarnMessage("_CertFileNotSigned", filePath);
+                        Logger.WriteLog($"\t\t[SHA1: {FileChecker.CalculateSHA1(filePath)}]", ConsoleColor.White, false);
                     }
+
 
 
                     return result;

@@ -1,6 +1,4 @@
-﻿//#define BETA
-
-using DBase;
+﻿using DBase;
 using Microsoft.Win32;
 using MSearch.Core;
 using MSearch.Properties;
@@ -566,11 +564,11 @@ namespace MSearch
 
             AppConfig.Instance.LL.LogMessage("\t\t", "_Version", AppConfig.Instance.CurrentVersion, ConsoleColor.White, false);
 
+#if !DEBUG
             if (!AppConfig.Instance.WinPEMode && !AppConfig.Instance.QuarantineMode && !OSExtensions.GetWindowsVersion().Contains("Windows 7"))
             {
                 Utils.CheckLatestReleaseVersion();
             }
-#if !DEBUG
 
             if (AppConfig.Instance.no_runtime && AppConfig.Instance.no_scantime && !AppConfig.Instance.WinPEMode)
             {
@@ -644,7 +642,7 @@ namespace MSearch
 #if DEBUG
                             Console.WriteLine($"\t[DBG] Selected path: {dialog.SelectedPath}");
 #endif
-                            AppConfig.Instance.selectedPath = FileSystemManager.GetUNCPath(dialog.SelectedPath);
+                            AppConfig.Instance.selectedPath = FileSystemManager.NormalizeExtendedPath(dialog.SelectedPath);
                         }
                         else
                         {
@@ -752,14 +750,17 @@ namespace MSearch
                 mk.SignatureScan();
             }
             GC.Collect();
-
-            startTime.Stop();
+            startTime.Stop();            
+            
             TimeSpan resultTime = startTime.Elapsed;
+            int NeutralizedThreatsCount = AppConfig.Instance.totalNeutralizedThreats + AppConfig.Instance.totalFoundThreats;
+            if (NeutralizedThreatsCount < 0) NeutralizedThreatsCount = 0;
+
             string elapsedTime = $"{resultTime.Hours:00}:{resultTime.Minutes:00}:{resultTime.Seconds:00}.{resultTime.Milliseconds:000}";
             Logger.WriteLog("\n\t\t-----------------------------------", ConsoleColor.White, false);
             LocalizedLogger.LogElapsedTime(elapsedTime);
             Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
-            LocalizedLogger.LogTotalScanResult(AppConfig.Instance.totalFoundThreats, AppConfig.Instance.totalNeutralizedThreats + AppConfig.Instance.totalFoundThreats, AppConfig.Instance.totalFoundSuspiciousObjects);
+            LocalizedLogger.LogTotalScanResult(AppConfig.Instance.totalFoundThreats, NeutralizedThreatsCount, AppConfig.Instance.totalFoundSuspiciousObjects);
             Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
 
             Utils.SwitchMouseSelection(true);
@@ -778,7 +779,7 @@ namespace MSearch
                     }
                 }
 
-                FinishEx finish = new FinishEx(AppConfig.Instance.totalFoundThreats, AppConfig.Instance.totalNeutralizedThreats + AppConfig.Instance.totalFoundThreats, AppConfig.Instance.totalFoundSuspiciousObjects, elapsedTime) //+ sign because neutralized threats is negative
+                FinishEx finish = new FinishEx(AppConfig.Instance.totalFoundThreats, NeutralizedThreatsCount, AppConfig.Instance.totalFoundSuspiciousObjects, elapsedTime) //+ sign because neutralized threats is negative
                 {
                     TopMost = true
                 };

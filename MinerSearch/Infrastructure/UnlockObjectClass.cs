@@ -263,7 +263,11 @@ namespace MSearch
                 AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
                 MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, filePath, ScanActionType.LockedByAntivirus));
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
+            {
+                AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
+            }
+            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80131509)))
             {
                 AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
             }
@@ -286,6 +290,14 @@ namespace MSearch
             {
                 AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
                 MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, filePath, ScanActionType.LockedByAntivirus));
+            }
+            catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
+            {
+                AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
+            }
+            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80131509)))
+            {
+                AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
             }
             catch (Exception ex)
             {

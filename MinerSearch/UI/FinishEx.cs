@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -236,7 +237,8 @@ namespace MSearch
 
             if (AppConfig.Instance.totalFoundThreats == 0 &&
                 AppConfig.Instance.totalFoundSuspiciousObjects == 0 &&
-                !AppConfig.Instance.hasLockedObjectsByAV)
+                !AppConfig.Instance.hasLockedObjectsByAV &&
+                !AppConfig.Instance.hasEmptyTasks)
             {
                 dataGridThreats.Columns.Clear();
             }

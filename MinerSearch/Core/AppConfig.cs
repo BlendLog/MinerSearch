@@ -36,6 +36,7 @@ namespace MSearch.Core
         public bool no_check_hosts { get; set; } = false;
         public bool demandSelection { get; set; } = false;
         public bool hasLockedObjectsByAV { get; set; } = false;
+        public bool hasEmptyTasks { get; set; } = false;
         public int maxSubfolders { get; set; } = 8;
         public int totalFoundThreats { get; set; }
         public int totalFoundSuspiciousObjects { get; set; }

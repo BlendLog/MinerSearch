@@ -407,11 +407,11 @@ namespace MSearch
 #if !DEBUG
             if (targetType != "")
             {
-                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {GetLocalizedString(targetType)} {target} | {ex.Message}".Replace("?", ""), Logger.error);
+                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {GetLocalizedString(targetType)} {target} | {ex.Message} | HR=0x{ex.HResult:X8}".Replace("?", ""), Logger.error);
             }
             else
             {
-                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {target} | {ex.Message}".Replace("?", ""), Logger.error);
+                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {target} | {ex.Message} | HR=0x{ex.HResult:X8}".Replace("?", ""), Logger.error);
             }
 #else
             if (targetType != "")

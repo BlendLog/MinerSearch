@@ -1538,7 +1538,6 @@ namespace MSearch
 
             string registryPath = MSData.Instance.queries["TermServiceParameters"]; //SYSTEM\CurrentControlSet\Services\TermService\Parameters
             string desiredValue = MSData.Instance.queries["TermsrvDll"]; //%SystemRoot%\System32\termsrv.dll
-
             string paramName = "Ser/vice/Dll".Replace("/", "");
 
             using (var regkey = Registry.LocalMachine.OpenSubKey(registryPath, true))
@@ -1551,63 +1550,87 @@ namespace MSearch
                         if (currentValue != Environment.ExpandEnvironmentVariables(desiredValue))
                         {
                             AppConfig.Instance.LL.LogWarnMessage("_TermServiceInvalidPath", currentValue);
-                            AppConfig.Instance.totalFoundThreats++;
+                            AppConfig.Instance.totalFoundSuspiciousObjects++;
+                            MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Suspicious, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Skipped, AppConfig.Instance.LL.GetLocalizedString("_TermServiceInvalidPath") + " " + currentValue));
 
-
-                            if (!AppConfig.Instance.ScanOnly)
+                            
+                            bool isInfectedService = false;
+                            foreach (ScanResult res in MinerSearch.scanResults)
                             {
-                                try
+                                foreach (string pattern in MSData.Instance.JohnPatterns)
                                 {
-                                    string termsrv = "TermService";
-                                    string UmRdpSrv = "UmRdpService";
-
-                                    var UmRdpSrvInfo = GetServiceInfo(UmRdpSrv);
-                                    var termSrvInfo = GetServiceInfo(termsrv);
-
-                                    if (GetServiceState(UmRdpSrv) == ServiceState.Running)
+                                    if (res.Path.IndexOf(pattern) >= 0)
                                     {
-                                        StopService(UmRdpSrv);
-                                    }
-
-                                    if ((ServiceBootFlag)UmRdpSrvInfo.StartType != ServiceBootFlag.DemandStart)
-                                    {
-                                        ChangeStartMode(UmRdpSrv, ServiceBootFlag.DemandStart);
-                                    }
-
-                                    if (GetServiceState(termsrv) == ServiceState.Running)
-                                    {
-                                        StopService(termsrv);
-                                    }
-
-                                    if ((ServiceBootFlag)termSrvInfo.StartType != ServiceBootFlag.DemandStart)
-                                    {
-                                        ChangeStartMode(termsrv, ServiceBootFlag.DemandStart);
+                                        isInfectedService = true;
                                     }
                                 }
-                                catch (Exception ex)
-                                {
-                                    AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
-                                    return;
-                                }
+                            }
 
-                                regkey.SetValue(paramName, desiredValue, RegistryValueKind.ExpandString);
-                                currentValue = (string)regkey.GetValue(paramName);
-                                if (currentValue == Environment.ExpandEnvironmentVariables(desiredValue))
-                                {
-                                    AppConfig.Instance.LL.LogSuccessMessage("_TermServiceRestored");
-                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Cured));
+                            if (isInfectedService)
+                            {
 
+                                AppConfig.Instance.totalFoundThreats++;
+
+                                if (!AppConfig.Instance.ScanOnly)
+                                {
+                                    try
+                                    {
+                                        string termsrv = "TermService";
+                                        string UmRdpSrv = "UmRdpService";
+
+                                        var UmRdpSrvInfo = GetServiceInfo(UmRdpSrv);
+                                        var termSrvInfo = GetServiceInfo(termsrv);
+
+                                        if (GetServiceState(UmRdpSrv) == ServiceState.Running)
+                                        {
+                                            StopService(UmRdpSrv);
+                                        }
+
+                                        if ((ServiceBootFlag)UmRdpSrvInfo.StartType != ServiceBootFlag.DemandStart)
+                                        {
+                                            ChangeStartMode(UmRdpSrv, ServiceBootFlag.DemandStart);
+                                        }
+
+                                        if (GetServiceState(termsrv) == ServiceState.Running)
+                                        {
+                                            StopService(termsrv);
+                                        }
+
+                                        if ((ServiceBootFlag)termSrvInfo.StartType != ServiceBootFlag.DemandStart)
+                                        {
+                                            ChangeStartMode(termsrv, ServiceBootFlag.DemandStart);
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
+                                        return;
+                                    }
+
+                                    regkey.SetValue(paramName, desiredValue, RegistryValueKind.ExpandString);
+                                    currentValue = (string)regkey.GetValue(paramName);
+                                    if (currentValue == Environment.ExpandEnvironmentVariables(desiredValue))
+                                    {
+                                        AppConfig.Instance.LL.LogSuccessMessage("_TermServiceRestored");
+                                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Cured));
+
+                                    }
+                                    else
+                                    {
+                                        AppConfig.Instance.LL.LogErrorMessage("_TermServiceFailedRestore", new Exception(""));
+                                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Error));
+
+                                    }
                                 }
                                 else
                                 {
-                                    AppConfig.Instance.LL.LogErrorMessage("_TermServiceFailedRestore", new Exception(""));
-                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Error));
-
+                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Skipped));
+                                    LocalizedLogger.LogScanOnlyMode();
                                 }
                             }
                             else
                             {
-                                LocalizedLogger.LogScanOnlyMode();
+                                LocalizedLogger.LogNoThreatsFound();
                             }
                         }
                         else

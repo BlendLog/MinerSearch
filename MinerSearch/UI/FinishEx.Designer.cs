@@ -136,7 +136,7 @@ namespace MSearch
             this.Label_allowStatistics.BackColor = System.Drawing.Color.Transparent;
             this.Label_allowStatistics.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.Label_allowStatistics.ForeColor = System.Drawing.Color.Black;
-            this.Label_allowStatistics.Location = new System.Drawing.Point(169, 8);
+            this.Label_allowStatistics.Location = new System.Drawing.Point(170, 8);
             this.Label_allowStatistics.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_allowStatistics.Name = "Label_allowStatistics";
             this.Label_allowStatistics.Size = new System.Drawing.Size(881, 19);
@@ -150,7 +150,7 @@ namespace MSearch
             this.ts_AllowCollectStatistics.AutoSize = true;
             this.ts_AllowCollectStatistics.BackColor = System.Drawing.Color.Transparent;
             this.ts_AllowCollectStatistics.Enabled = false;
-            this.ts_AllowCollectStatistics.Location = new System.Drawing.Point(1055, 8);
+            this.ts_AllowCollectStatistics.Location = new System.Drawing.Point(1056, 8);
             this.ts_AllowCollectStatistics.Margin = new System.Windows.Forms.Padding(2);
             this.ts_AllowCollectStatistics.MinimumSize = new System.Drawing.Size(34, 18);
             this.ts_AllowCollectStatistics.Name = "ts_AllowCollectStatistics";
@@ -257,7 +257,7 @@ namespace MSearch
             this.LBL_threatsCount.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_threatsCount.ForeColor = System.Drawing.Color.White;
             this.LBL_threatsCount.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LBL_threatsCount.Location = new System.Drawing.Point(306, 15);
+            this.LBL_threatsCount.Location = new System.Drawing.Point(305, 15);
             this.LBL_threatsCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_threatsCount.Name = "LBL_threatsCount";
             this.LBL_threatsCount.Size = new System.Drawing.Size(18, 17);
@@ -286,7 +286,7 @@ namespace MSearch
             this.LBL_curedCount.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_curedCount.ForeColor = System.Drawing.Color.White;
             this.LBL_curedCount.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LBL_curedCount.Location = new System.Drawing.Point(306, 68);
+            this.LBL_curedCount.Location = new System.Drawing.Point(305, 68);
             this.LBL_curedCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_curedCount.Name = "LBL_curedCount";
             this.LBL_curedCount.Size = new System.Drawing.Size(18, 17);
@@ -315,7 +315,7 @@ namespace MSearch
             this.LBL_susCount.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.LBL_susCount.ForeColor = System.Drawing.Color.White;
             this.LBL_susCount.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LBL_susCount.Location = new System.Drawing.Point(306, 41);
+            this.LBL_susCount.Location = new System.Drawing.Point(305, 41);
             this.LBL_susCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LBL_susCount.Name = "LBL_susCount";
             this.LBL_susCount.Size = new System.Drawing.Size(18, 17);
@@ -403,17 +403,16 @@ namespace MSearch
             this.DonateBtn.AutoSize = true;
             this.DonateBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(120)))), ((int)(((byte)(255)))));
             this.DonateBtn.FlatAppearance.BorderColor = System.Drawing.Color.Yellow;
-            this.DonateBtn.FlatAppearance.BorderSize = 0;
             this.DonateBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Navy;
             this.DonateBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.MediumBlue;
             this.DonateBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.DonateBtn.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold);
             this.DonateBtn.ForeColor = System.Drawing.Color.Yellow;
             this.DonateBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.DonateBtn.Location = new System.Drawing.Point(733, 2);
+            this.DonateBtn.Location = new System.Drawing.Point(733, 0);
             this.DonateBtn.Margin = new System.Windows.Forms.Padding(2);
             this.DonateBtn.Name = "DonateBtn";
-            this.DonateBtn.Size = new System.Drawing.Size(211, 32);
+            this.DonateBtn.Size = new System.Drawing.Size(211, 35);
             this.DonateBtn.TabIndex = 101;
             this.DonateBtn.Text = "donateBtn";
             this.DonateBtn.UseVisualStyleBackColor = false;
@@ -538,7 +537,7 @@ namespace MSearch
             this.finishBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.finishBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.finishBtn.ForeColor = System.Drawing.Color.AliceBlue;
-            this.finishBtn.Location = new System.Drawing.Point(563, 20);
+            this.finishBtn.Location = new System.Drawing.Point(564, 20);
             this.finishBtn.Margin = new System.Windows.Forms.Padding(2);
             this.finishBtn.Name = "finishBtn";
             this.finishBtn.Size = new System.Drawing.Size(160, 35);
@@ -557,7 +556,7 @@ namespace MSearch
             this.btnDetails.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDetails.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnDetails.ForeColor = System.Drawing.Color.Black;
-            this.btnDetails.Location = new System.Drawing.Point(399, 20);
+            this.btnDetails.Location = new System.Drawing.Point(400, 20);
             this.btnDetails.Margin = new System.Windows.Forms.Padding(2);
             this.btnDetails.Name = "btnDetails";
             this.btnDetails.Size = new System.Drawing.Size(160, 35);
@@ -576,7 +575,7 @@ namespace MSearch
             this.OpenQuarantineBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OpenQuarantineBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.OpenQuarantineBtn.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.OpenQuarantineBtn.Location = new System.Drawing.Point(905, 19);
+            this.OpenQuarantineBtn.Location = new System.Drawing.Point(906, 19);
             this.OpenQuarantineBtn.Margin = new System.Windows.Forms.Padding(2);
             this.OpenQuarantineBtn.Name = "OpenQuarantineBtn";
             this.OpenQuarantineBtn.Size = new System.Drawing.Size(182, 35);
@@ -590,7 +589,7 @@ namespace MSearch
             this.Label_showAllLogs.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.Label_showAllLogs.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.Label_showAllLogs.ForeColor = System.Drawing.Color.Black;
-            this.Label_showAllLogs.Location = new System.Drawing.Point(9, 15);
+            this.Label_showAllLogs.Location = new System.Drawing.Point(9, 14);
             this.Label_showAllLogs.Margin = new System.Windows.Forms.Padding(0);
             this.Label_showAllLogs.Name = "Label_showAllLogs";
             this.Label_showAllLogs.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
@@ -608,7 +607,7 @@ namespace MSearch
             this.Label_OpenLogsFolder.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.Label_OpenLogsFolder.ForeColor = System.Drawing.Color.MediumSlateBlue;
             this.Label_OpenLogsFolder.LinkColor = System.Drawing.Color.RoyalBlue;
-            this.Label_OpenLogsFolder.Location = new System.Drawing.Point(9, 36);
+            this.Label_OpenLogsFolder.Location = new System.Drawing.Point(9, 35);
             this.Label_OpenLogsFolder.Margin = new System.Windows.Forms.Padding(0);
             this.Label_OpenLogsFolder.Name = "Label_OpenLogsFolder";
             this.Label_OpenLogsFolder.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);

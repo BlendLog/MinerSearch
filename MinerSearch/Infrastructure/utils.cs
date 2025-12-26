@@ -155,6 +155,18 @@ namespace MSearch
             }
         }
 
+        internal static bool ContainsNonAscii(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+                return false;
+
+            foreach (char c in s)
+                if (c > 0x7F)
+                    return true;
+
+            return false;
+        }
+
         internal static bool ShouldRemoveDebugger(string debuggerPath)
         {
             if (string.IsNullOrWhiteSpace(debuggerPath))
@@ -302,34 +314,6 @@ namespace MSearch
 
             try
             {
-                long fileSize = new FileInfo(sourceFilePath).Length;
-                if (fileSize >= 200 * 1024 * 1024)
-                {
-                    UnlockObjectClass.KillAndDelete(sourceFilePath);
-                    if (!File.Exists(sourceFilePath))
-                    {
-                        AppConfig.Instance.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_Deleted");
-                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Deleted, note));
-                        return;
-                    }
-                }
-            }
-            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
-            {
-                AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", sourceFilePath);
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, sourceFilePath, ScanActionType.LockedByAntivirus, note));
-
-            }
-            catch (Exception ex1)
-            {
-                AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotRemove", ex1, sourceFilePath, "_File");
-                AppConfig.Instance.totalNeutralizedThreats--;
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error, note));
-                return;
-            }
-
-            try
-            {
                 const string quarantineKeyPath = @"Software\M1nerSearch\Quarantine";
                 const string quarantineKeyPathMain = @"Software\M1nerSearch";
 
@@ -338,12 +322,7 @@ namespace MSearch
                     UnlockObjectClass.UnblockRegistry(quarantineKeyPathMain);
                 }
 
-                string fileHash;
-                using (var md5 = MD5.Create())
-                {
-                    byte[] hashBytes = md5.ComputeHash(File.ReadAllBytes(sourceFilePath));
-                    fileHash = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
-                }
+                string fileHash = FileChecker.CalculateMD5(sourceFilePath);
 
                 const int blockSize = 1024 * 512;
                 using (var baseKey = Registry.LocalMachine.CreateSubKey(quarantineKeyPath))
@@ -428,7 +407,7 @@ namespace MSearch
                         + AppConfig.Instance.LL.GetLocalizedString("_ErrorCannotCheckUpdates")
                         + " | "
                         + AppConfig.Instance.LL.GetLocalizedString("_NoInternetConnection"),
-                        false, false, true);
+                        false, false);
 
                     return;
                 }
@@ -754,7 +733,7 @@ namespace MSearch
                     Native.CloseHandle(handle);
                 }
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
             {
                 AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {_pid}");
             }
@@ -1269,9 +1248,12 @@ namespace MSearch
                 {
                     if (r77Processes[i].Signature == Native.R77_SERVICE_SIGNATURE && r77Processes[i].ProcessId != excludedProcessId)
                     {
-                        IntPtr process = Native.OpenProcess(0x0001, false, (int)r77Processes[i].ProcessId);
+                        int isCritical = 0;
+                        IntPtr process = Native.OpenProcess(0x001F0FFF, false, (int)r77Processes[i].ProcessId);
                         if (process != IntPtr.Zero)
                         {
+                            Native.NtSetInformationProcess(process, 0x1D, ref isCritical, sizeof(int));
+                            Thread.Sleep(100);
                             Native.NtTerminateProcess(process, 0);
                             Native.CloseHandle(process);
                         }
@@ -1461,7 +1443,7 @@ namespace MSearch
             if (mostCommonSequence == null)
                 return false;
 
-            double entropy = ShannonEntropy(mostCommonSequence);
+            double entropy = CalculateShannonEntropy(mostCommonSequence);
             int sum = SequenceSum(mostCommonSequence);
 
 
@@ -1606,7 +1588,7 @@ namespace MSearch
             return count >= threshold;
         }
 
-        static double ShannonEntropy(byte[] data)
+        internal static double CalculateShannonEntropy(byte[] data)
         {
             if (data.Length == 0) return 0;
             int[] freq = new int[256];
@@ -1626,46 +1608,18 @@ namespace MSearch
             return entropy;
         }
 
+        internal static double CalculateShannonEntropy(string s)
+        {
+            var freq = s.GroupBy(c => c).Select(g => (double)g.Count() / s.Length);
+            return -freq.Sum(p => p * Math.Log(p, 2));
+        }
+
         static int SequenceSum(byte[] data)
         {
             int sum = 0;
             foreach (byte b in data)
                 sum += b;
             return sum;
-        }
-
-        internal static double CalculateShannonEntropy(byte[] fileBytes)
-        {
-            if (fileBytes.Length == 0)
-            {
-                return 0;
-            }
-
-            int[] byteFrequencies = new int[256];
-
-            foreach (byte b in fileBytes)
-            {
-                byteFrequencies[b]++;
-            }
-
-            double entropy = 0.0;
-            int totalBytes = fileBytes.Length;
-
-            for (int i = 0; i < 256; i++)
-            {
-                if (byteFrequencies[i] > 0)
-                {
-                    double probability = (double)byteFrequencies[i] / totalBytes;
-                    entropy -= probability * Log2(probability);
-                }
-            }
-
-            return entropy;
-        }
-
-        static double Log2(double x)
-        {
-            return Math.Log(x) / Math.Log(2);
         }
 
         internal static string CalculateMD5(string filePath)
@@ -1695,6 +1649,33 @@ namespace MSearch
             }
         }
 
+        internal static string CalculateSHA1(string filePath)
+        {
+            using (var sha1 = SHA1.Create())
+            {
+                try
+                {
+                    using (var stream = File.OpenRead(filePath))
+                    {
+                        byte[] hashBytes = sha1.ComputeHash(stream);
+                        StringBuilder sb = new StringBuilder();
+
+                        foreach (byte b in hashBytes)
+                        {
+                            sb.Append(b.ToString("x2")); // Convert each byte to a hexadecimal string
+                        }
+
+                        return sb.ToString();
+                    }
+                }
+                catch (IOException)
+                {
+                    return "N/A";
+                }
+
+            }
+        }
+
         internal static bool IsDigit(string str)
         {
             foreach (char c in str)
@@ -1705,47 +1686,93 @@ namespace MSearch
             return true;
         }
 
+        #region SFX-Detector
         internal static bool IsSfxArchive(string path)
         {
-            byte[] archiveSignature = { 0x01, 0x01, 0x01, 0x53, 0x62, 0x73, 0x22, 0x1B, 0x08, 0x02, 0x01 };
-
-            for (int i = 0; i < archiveSignature.Length; i++)
-            {
-                archiveSignature[i] -= (byte)1;
-            }
-
             try
             {
-                if (IsExecutable(path))
+                using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                using (var br = new BinaryReader(fs))
                 {
-                    FileInfo fileInfo = new FileInfo(path);
-                    long fileLength = fileInfo.Length;
-                    byte[] fileBytes = File.ReadAllBytes(path);
+                    long off = GetPeTailOffset(br);
+                    if (off <= 0 || off >= fs.Length)
+                        return false;
 
-                    for (int i = 0; i <= fileLength - archiveSignature.Length; i++)
-                    {
-                        bool match = true;
-                        for (int j = 0; j < archiveSignature.Length; j++)
-                        {
-                            if (fileBytes[i + j] != archiveSignature[j])
-                            {
-                                match = false;
-                                break;
-                            }
-                        }
+                    fs.Seek(off, SeekOrigin.Begin);
+                    long avail = fs.Length - off;
 
-                        if (match)
-                            return true;
-                    }
+                    return IsRar(br) || Is7z(br, avail);
                 }
-                return false;
             }
-            catch (Exception ex)
+            catch
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, path);
                 return false;
             }
         }
+
+        static long GetPeTailOffset(BinaryReader br)
+        {
+            if (br.ReadUInt16() != 0x5A4D)
+                return -1;
+
+            br.BaseStream.Seek(0x3C, SeekOrigin.Begin);
+            int peOffset = br.ReadInt32();
+
+            br.BaseStream.Seek(peOffset + 6, SeekOrigin.Begin);
+            ushort sections = br.ReadUInt16();
+
+            br.BaseStream.Seek(peOffset + 20, SeekOrigin.Begin);
+            ushort optSize = br.ReadUInt16();
+
+            long secTable = peOffset + 24 + optSize;
+            br.BaseStream.Seek(secTable, SeekOrigin.Begin);
+
+            long end = 0;
+
+            for (int i = 0; i < sections; i++)
+            {
+                br.BaseStream.Seek(16, SeekOrigin.Current);
+                uint size = br.ReadUInt32();
+                uint ptr = br.ReadUInt32();
+                br.BaseStream.Seek(16, SeekOrigin.Current);
+
+                if (size > 0 && ptr + size > end)
+                    end = ptr + size;
+            }
+
+            return end;
+        }
+
+
+        static bool IsRar(BinaryReader br)
+        {
+            byte[] sig = br.ReadBytes(8);
+
+            return
+                sig.Length >= 7 &&
+                sig[0] == 0x52 && sig[1] == 0x61 && sig[2] == 0x72 &&
+                sig[3] == 0x21 && sig[4] == 0x1A && sig[5] == 0x07 &&
+                (sig[6] == 0x00 || sig[6] == 0x01);
+        }
+
+
+        static bool Is7z(BinaryReader br, long available)
+        {
+            if (available < 32)
+                return false;
+
+            byte[] sig = br.ReadBytes(6);
+            if (!(sig[0] == 0x37 && sig[1] == 0x7A && sig[2] == 0xBC &&
+                  sig[3] == 0xAF && sig[4] == 0x27 && sig[5] == 0x1C))
+                return false;
+
+            br.BaseStream.Seek(12, SeekOrigin.Current);
+            ulong off = br.ReadUInt64();
+            ulong size = br.ReadUInt64();
+
+            return off + size + 32 <= (ulong)available;
+        }
+        #endregion
 
         internal static bool IsJarFile(string path)
         {
@@ -1787,6 +1814,69 @@ namespace MSearch
             }
         }
 
+        internal static bool IsJsUnreadable(string path)
+        {
+            FileInfo fileInfo = new FileInfo(path);
+            if (fileInfo.Length < (1024 * 1024))
+            {
+
+                string text;
+                try
+                {
+                    text = File.ReadAllText(path);
+                }
+                catch
+                {
+                    return false;
+                }
+
+                if (text.Length < 1024)
+                    return false;
+
+                int longLines = text.Split('\n').Count(l => l.Length > 300);
+                int escapeCount = Regex.Matches(text, @"\\x[0-9A-Fa-f]{2}|\\u[0-9A-Fa-f]{4}").Count;
+                int evalCount = Regex.Matches(text, @"\beval\s*\(|\bFunction\s*\(").Count;
+
+                double entropy = CalculateShannonEntropy(text);
+
+                return
+                    entropy > 4.9 &&
+                    (longLines >= 3 || escapeCount >= 20 || evalCount > 0);
+            }
+            return false;
+        }
+
+
+        internal static bool IsUpxPacked(string filePath)
+        {
+            const int MaxCheckBytes = 1024;
+            byte[] buffer = new byte[MaxCheckBytes];
+
+            try
+            {
+                using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    int bytesRead = fs.Read(buffer, 0, MaxCheckBytes);
+                    for (int i = 0; i < bytesRead - 2; i++)
+                    {
+                        if (buffer[i] == (byte)'U' &&
+                            buffer[i + 1] == (byte)'P' &&
+                            buffer[i + 2] == (byte)'X' &&
+                            buffer[i + 3] == (byte)'!')
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // при любой ошибке читаем как не UPX
+                return false;
+            }
+
+            return false;
+        }
 
         internal static bool IsExecutable(string filepath)
         {
@@ -2015,7 +2105,7 @@ namespace MSearch
 
             try
             {
-                foreach (var file in Directory.EnumerateFiles(FileSystemManager.GetUNCPath(path), pattern, SearchOption.TopDirectoryOnly))
+                foreach (var file in Directory.EnumerateFiles(FileSystemManager.NormalizeExtendedPath(path), pattern, SearchOption.TopDirectoryOnly))
                 {
                     result.Add(file);
                 }
@@ -2052,7 +2142,7 @@ namespace MSearch
 
             try
             {
-                foreach (var dir in Directory.EnumerateDirectories(FileSystemManager.GetUNCPath(path)))
+                foreach (var dir in Directory.EnumerateDirectories(FileSystemManager.NormalizeExtendedPath(path)))
                 {
                     result.Add(dir);
                 }
@@ -2154,6 +2244,20 @@ namespace MSearch
             return (attributes & targetAttributes) == targetAttributes;
         }
 
+        internal static bool HasMultipleExeExtensions(string filePath)
+        {
+            string name = Path.GetFileName(filePath);
+
+            int count = 0;
+            while (name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+            {
+                count++;
+                name = name.Substring(0, name.Length - 4);
+            }
+
+            return count >= 2;
+        }
+
         internal static void ResetAttributes(string path)
         {
             try
@@ -2215,17 +2319,36 @@ namespace MSearch
             }
         }
 
-        public static string GetUNCPath(string path)
+        public static string NormalizeExtendedPath(string path)
         {
-            // Check if the path already contains the long path prefix
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentException();
+            }
+
+            if (path.StartsWith(@"\Device\", StringComparison.OrdinalIgnoreCase))
+            {
+                return path;
+            }
+
             if (path.StartsWith(@"\\?\"))
             {
                 return path;
             }
 
-            // Prepend the long path prefix
+            if (path.StartsWith(@"\\"))
+            {
+                return @"\\?\UNC\" + path.Substring(2);
+            }
+
+            if (!Path.IsPathRooted(path))
+            {
+                path = Path.GetFullPath(path);
+            }
+
             return @"\\?\" + path;
         }
+
 
         public static string ExtractExecutableFromCommand(string commandLine)
         {
@@ -2548,10 +2671,7 @@ namespace MSearch
                             if (!AppConfig.Instance.ScanOnly)
                             {
                                 Utils.AddToQuarantine(normalizedPath);
-                                if (!File.Exists(normalizedPath))
-                                {
-                                    return true;
-                                }
+                                return true;
                             }
                             else return true; //found, but nothing to do while scan only
 
@@ -2562,6 +2682,36 @@ namespace MSearch
                             return true;
                         }
                     }
+
+                    if (normalizedPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (File.Exists(normalizedPath) && (normalizedPath.IndexOf("programdata", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                    normalizedPath.IndexOf("appdata", StringComparison.OrdinalIgnoreCase) >= 0))
+                        {
+                            WinVerifyTrustResult signResult = winTrust.VerifyEmbeddedSignature(normalizedPath);
+                            if (signResult == WinVerifyTrustResult.FileNotSigned || signResult == WinVerifyTrustResult.SignatureOrFileCorrupt)
+                            {
+                                AppConfig.Instance.LL.LogWarnMediumMessage("_SuspiciousRegsvr32", normalizedPath);
+                                AppConfig.Instance.totalFoundThreats++;
+
+                                if (!AppConfig.Instance.ScanOnly)
+                                {
+                                    Utils.AddToQuarantine(normalizedPath);
+                                    if (!File.Exists(normalizedPath))
+                                    {
+                                        return true;
+                                    }
+                                }
+                                else return true; //found, but nothing to do while scan only
+                            }
+                        }
+                        else
+                        {
+                            AppConfig.Instance.LL.LogWarnMessage("_FileIsNotFound", normalizedPath);
+                            return true;
+                        }
+                    }
+
                 }
 
             }
