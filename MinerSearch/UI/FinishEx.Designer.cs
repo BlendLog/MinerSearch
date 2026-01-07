@@ -589,11 +589,11 @@ namespace MSearch
             this.Label_showAllLogs.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.Label_showAllLogs.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.Label_showAllLogs.ForeColor = System.Drawing.Color.Black;
-            this.Label_showAllLogs.Location = new System.Drawing.Point(9, 14);
+            this.Label_showAllLogs.Location = new System.Drawing.Point(8, 14);
             this.Label_showAllLogs.Margin = new System.Windows.Forms.Padding(0);
             this.Label_showAllLogs.Name = "Label_showAllLogs";
             this.Label_showAllLogs.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.Label_showAllLogs.Size = new System.Drawing.Size(270, 17);
+            this.Label_showAllLogs.Size = new System.Drawing.Size(357, 21);
             this.Label_showAllLogs.TabIndex = 13;
             this.Label_showAllLogs.Text = "label_showAllLogs";
             this.Label_showAllLogs.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -607,11 +607,11 @@ namespace MSearch
             this.Label_OpenLogsFolder.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.Label_OpenLogsFolder.ForeColor = System.Drawing.Color.MediumSlateBlue;
             this.Label_OpenLogsFolder.LinkColor = System.Drawing.Color.RoyalBlue;
-            this.Label_OpenLogsFolder.Location = new System.Drawing.Point(9, 35);
+            this.Label_OpenLogsFolder.Location = new System.Drawing.Point(8, 35);
             this.Label_OpenLogsFolder.Margin = new System.Windows.Forms.Padding(0);
             this.Label_OpenLogsFolder.Name = "Label_OpenLogsFolder";
             this.Label_OpenLogsFolder.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.Label_OpenLogsFolder.Size = new System.Drawing.Size(361, 19);
+            this.Label_OpenLogsFolder.Size = new System.Drawing.Size(357, 20);
             this.Label_OpenLogsFolder.TabIndex = 12;
             this.Label_OpenLogsFolder.TabStop = true;
             this.Label_OpenLogsFolder.Text = "label_OpenLogsFolder";

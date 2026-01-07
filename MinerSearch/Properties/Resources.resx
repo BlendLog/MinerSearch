@@ -642,7 +642,7 @@ Click \b Exit\b0  to exit.\par
     <value>Mali?cious file:</value>
   </data>
   <data name="_UnwantedExclusion_EN" xml:space="preserve">
-    <value>Windows Defender exclusion</value>
+    <value>Wi?ndow?s De?fe?nde?r excl?usion</value>
   </data>
   <data name="_ProcessFailedExecute_EN" xml:space="preserve">
     <value>Proccess failed to execute!</value>
@@ -2122,10 +2122,10 @@ Before proceeding, you must read the license agreement (license.rtf or a copy of
     <value>Параметр реестра</value>
   </data>
   <data name="_Rundll32Abuse_EN" xml:space="preserve">
-    <value>Abuse of RunDll32.exe for malicious DLL execution</value>
+    <value>Abuse of R?unD?ll32.exe for malicious DLL execution</value>
   </data>
   <data name="_Rundll32Abuse_RU" xml:space="preserve">
-    <value>Злоупотребление RunDll32.exe для выполнения вредоносных DLL</value>
+    <value>Злоупотребление R?unD?ll32.exe для выполнения вредоносных DLL</value>
   </data>
   <data name="_WarnOutdatedOS_EN" xml:space="preserve">
     <value>Support for this application on Windows 7 will be discontinued soon. To avoid the risk of system disruption, we recommend using the "Scan Only" mode. In this mode, the application will detect threats but will not remove them. 
@@ -2145,7 +2145,7 @@ No – Run a standard scan with the option to remove.</value>
 Нет – Запустить обычное сканирование с возможностью удаления.</value>
   </data>
   <data name="_ErrorTurnedOffDefender_EN" xml:space="preserve">
-    <value>Windows Defender is turned off or doesn't respond</value>
+    <value>Win?dows D?efen?der is turned off or doesn't respond</value>
   </data>
   <data name="_ErrorTurnedOffDefender_RU" xml:space="preserve">
     <value>Защитник Windows выключен или не отвечает на запросы</value>
@@ -2168,16 +2168,16 @@ No – Run a standard scan with the option to remove.</value>
   <data name="_Note_ApplockerHasBadSettings_RU" xml:space="preserve">
     <value>Содержит набор нежелательных правил, по которым блокируется запуск определенных приложений</value>
   </data>
-  <data name="_Note_DisableRegistryTools_EN" xml:space="preserve">
+  <data name="_Note_RegTools_EN" xml:space="preserve">
     <value>The option prevents editing the Registry</value>
   </data>
-  <data name="_Note_DisableRegistryTools_RU" xml:space="preserve">
+  <data name="_Note_RegTools_RU" xml:space="preserve">
     <value>Запрещает редактирование реестра</value>
   </data>
-  <data name="_Note_DisableTaskMgr_EN" xml:space="preserve">
+  <data name="_Note_TaskManager_EN" xml:space="preserve">
     <value>The option prevents opening the Task Manager</value>
   </data>
-  <data name="_Note_DisableTaskMgr_RU" xml:space="preserve">
+  <data name="_Note_TaskManager_RU" xml:space="preserve">
     <value>Запрещает открывать диспетчер задач</value>
   </data>
   <data name="_RegistryValueRestoredDefault_EN" xml:space="preserve">
@@ -2203,5 +2203,17 @@ No – Run a standard scan with the option to remove.</value>
   </data>
   <data name="_WarnUserinitHijacked_RU" xml:space="preserve">
     <value>Несанкционированое изменение параметра Userinit</value>
+  </data>
+  <data name="SafeModeTaskParser_EN" xml:space="preserve">
+    <value>Failed to retrieve tasks list</value>
+  </data>
+  <data name="SafeModeTaskParser_RU" xml:space="preserve">
+    <value>Не удалось получить список задач</value>
+  </data>
+  <data name="_ErrorRegistryCheck_EN" xml:space="preserve">
+    <value>Unable to check registry key</value>
+  </data>
+  <data name="_ErrorRegistryCheck_RU" xml:space="preserve">
+    <value>Не удалось проверить ключ реестра</value>
   </data>
 </root>

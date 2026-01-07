@@ -64,7 +64,7 @@
     </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>256.ico</ApplicationIcon>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -194,7 +194,7 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="256.ico" />
+    <Content Include="favicon.ico" />
     <None Include="packages.config" />
     <None Include="Resources\tether-usdt-logo.png" />
     <None Include="Resources\ton_png.png" />

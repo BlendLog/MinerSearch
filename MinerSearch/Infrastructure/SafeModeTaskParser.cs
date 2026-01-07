@@ -139,10 +139,12 @@ namespace MSearch.Infrastructure
             }
             catch (Exception ex)
             {
-#if DEBUG
-                Console.WriteLine(ex);
-#endif
-                return null; 
+                if (AppConfig.Instance.verbose)
+                {
+                    AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
+                }
+
+                return null;
             }
             finally
             {

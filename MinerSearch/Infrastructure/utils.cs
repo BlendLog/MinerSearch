@@ -167,54 +167,6 @@ namespace MSearch
             return false;
         }
 
-        internal static bool ShouldRemoveDebugger(string debuggerPath)
-        {
-            if (string.IsNullOrWhiteSpace(debuggerPath))
-                return true;
-
-            if (Path.IsPathRooted(debuggerPath))
-            {
-                string debuggerPathNormal = debuggerPath.Replace("\"", "");
-                if (File.Exists(debuggerPathNormal))
-                {
-                    if (new WinTrust().VerifyEmbeddedSignature(debuggerPathNormal) == WinVerifyTrustResult.Success)
-                    {
-                        return false;
-                    }
-                    return true;
-                }
-            }
-
-            if (debuggerPath.Equals("/") || debuggerPath.Equals("*") || debuggerPath.Equals("nul")) return false;
-
-            string resolvedPath = FileSystemManager.ResolveExecutablePath(debuggerPath);
-            if (resolvedPath == null)
-            {
-                AppConfig.Instance.LL.LogWarnMessage("_Error", $"Unable to resolve path from Debugger: {debuggerPath}");
-                return false;
-            }
-            resolvedPath = resolvedPath.Trim();
-
-            string[] allowedRedir = { "taskkill.exe", "dllhost.exe", "svchost.exe", "systray.exe" };
-
-            if (!File.Exists(resolvedPath)) return true;
-
-            string system32Path = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32");
-            string syswow64Path = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "SysWOW64");
-            bool isInSystemFolder = resolvedPath.StartsWith(system32Path, StringComparison.OrdinalIgnoreCase) || resolvedPath.StartsWith(syswow64Path, StringComparison.OrdinalIgnoreCase);
-
-            if (isInSystemFolder)
-            {
-                foreach (string allowed in allowedRedir)
-                {
-                    if (resolvedPath.EndsWith("\\" + allowed, StringComparison.OrdinalIgnoreCase))
-                        return false;
-                }
-            }
-
-            return true;
-        }
-
         internal static bool IsOneAppCopy() => mutex.WaitOne(0, true);
         internal static bool IsRebootMtx() => rebootMtx.WaitOne(0, true);
 
@@ -259,6 +211,31 @@ namespace MSearch
             }
 
         }
+
+        internal static string ExtractPwshStartProcessTarget(string arguments)
+        {
+            int idx = arguments.IndexOf("start-process", StringComparison.OrdinalIgnoreCase);
+            if (idx < 0)
+                return null;
+
+            string tail = arguments.Substring(idx + "start-process".Length);
+
+            int argListIdx = tail.IndexOf("-argumentlist", StringComparison.OrdinalIgnoreCase);
+            if (argListIdx > 0)
+                tail = tail.Substring(0, argListIdx);
+
+            tail = Regex.Replace(tail,
+                @"-(filepath|windowstyle|verb|workingdirectory)\s+",
+                "",
+                RegexOptions.IgnoreCase);
+
+            var m = Regex.Match(tail, @"(""[^""]+""|\S+)");
+            if (!m.Success)
+                return null;
+
+            return m.Value.Trim('"');
+        }
+
 
         internal List<string> GetSubkeys(string parentKeyPath)
         {
@@ -367,13 +344,13 @@ namespace MSearch
                 if (!File.Exists(sourceFilePath))
                 {
                     AppConfig.Instance.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_MovedToQuarantine");
-                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Quarantine, note));
+                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Quarantine, note.Replace("?","")));
                 }
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
                 AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", sourceFilePath);
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, sourceFilePath, ScanActionType.LockedByAntivirus, note));
+                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, sourceFilePath, ScanActionType.LockedByAntivirus, note.Replace("?", "")));
 
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80070020)))
@@ -465,6 +442,160 @@ namespace MSearch
 
 
 
+
+    }
+
+    public class IfeoDbgHelper
+    {
+        internal static bool ShouldRemoveDbg(string debugger)
+        {
+            if (string.IsNullOrWhiteSpace(debugger))
+                return true;
+
+            debugger = debugger.Trim();
+
+
+            if (debugger == "*" || debugger == "/" || debugger.Equals("nul", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            string exe;
+            string args;
+
+            ExtractExeAndArgs(debugger, out exe, out args);
+            if (exe == null)
+                return true;
+
+            exe = exe.ToLowerInvariant();
+
+            if (IsShell(exe))
+            {
+                return AnalyzeShellPayload(exe, args);
+            }
+
+            if (exe == "rundll32" || exe == "rundll32.exe")
+            {
+                string dllPath = ExtractRundllDll(args);
+                if (dllPath == null)
+                    return true;
+
+                string resolvedDll = FileSystemManager.ResolveExecutablePath(dllPath);
+                return !IsAllowedPayload(resolvedDll, allowSystemOnly: true);
+            }
+
+            string resolvedExe = FileSystemManager.ResolveExecutablePath(exe);
+            return !IsAllowedPayload(resolvedExe, allowSystemOnly: false);
+        }
+
+        static void ExtractExeAndArgs(string cmd, out string exe, out string args)
+        {
+            exe = null;
+            args = null;
+
+            if (cmd[0] == '"')
+            {
+                int end = cmd.IndexOf('"', 1);
+                if (end <= 1) return;
+
+                exe = cmd.Substring(1, end - 1);
+                args = cmd.Substring(end + 1).Trim();
+            }
+            else
+            {
+                int space = cmd.IndexOf(' ');
+                if (space < 0)
+                {
+                    exe = cmd;
+                    return;
+                }
+
+                exe = cmd.Substring(0, space);
+                args = cmd.Substring(space + 1).Trim();
+            }
+        }
+
+        static bool AnalyzeShellPayload(string shellExe, string args)
+        {
+            if (string.IsNullOrWhiteSpace(args))
+                return true;
+
+            if (shellExe == "cmd" || shellExe == "cmd.exe")
+            {
+                string payload = ExtractCmdStartPayload(args);
+                if (payload == null)
+                    return true;
+
+                string resolved = FileSystemManager.ResolveExecutablePath(payload);
+                return !IsAllowedPayload(resolved, allowSystemOnly: false);
+            }
+
+            return true;
+        }
+
+        static string ExtractCmdStartPayload(string args)
+        {
+            int idx = args.IndexOf("start ", StringComparison.OrdinalIgnoreCase);
+            if (idx < 0)
+                return null;
+
+            string rest = args.Substring(idx + 6).Trim();
+            ExtractExeAndArgs(rest, out string exe, out _);
+            return exe;
+        }
+
+        static string ExtractRundllDll(string args)
+        {
+            if (string.IsNullOrWhiteSpace(args))
+                return null;
+
+            args = args.Trim();
+
+            if (args[0] == '"')
+            {
+                int end = args.IndexOf('"', 1);
+                if (end <= 1) return null;
+                return args.Substring(1, end - 1);
+            }
+
+            int comma = args.IndexOf(',');
+            if (comma <= 0)
+                return null;
+
+            return args.Substring(0, comma).Trim();
+        }
+
+        static bool IsAllowedPayload(string path, bool allowSystemOnly)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                return false;
+
+            if (!File.Exists(path))
+                return false;
+
+            string windir = Environment.GetEnvironmentVariable("WINDIR");
+            string system32 = Path.Combine(windir, "System32");
+            string syswow64 = Path.Combine(windir, "SysWOW64");
+
+            bool isSystem =
+                path.StartsWith(system32, StringComparison.OrdinalIgnoreCase) ||
+                path.StartsWith(syswow64, StringComparison.OrdinalIgnoreCase);
+
+            if (allowSystemOnly && !isSystem)
+                return false;
+
+            return new WinTrust().VerifyEmbeddedSignature(path, true) == WinVerifyTrustResult.Success;
+        }
+
+        static bool IsShell(string exe)
+        {
+            foreach (string pattern in MSData.Instance.shellPatterns)
+            {
+                if (exe.Equals(pattern, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
     }
 
@@ -1044,16 +1175,16 @@ namespace MSearch
 
             string[] privilegeNames = new string[]
             {
-            "SeDebugPrivilege",
-            "SeBackupPrivilege",
-            "SeRestorePrivilege",
-            "SeTakeOwnershipPrivilege",
-            "SeSecurityPrivilege"
+            "Se?D?ebugPri?vilege".Replace("?", ""),
+            "SeBa?ckupPri?vilege".Replace("?", ""),
+            "SeRe?storePriv?ilege".Replace("?", ""),
+            "SeTak?eOwner?ship?Priv?ilege".Replace("?", ""),
+            "Se?Secu?rityPr?ivil?ege".Replace("?", "")
             };
 
             if (!Native.OpenProcessToken(Native.GetCurrentProcess(), Native.TOKEN_ADJUST_PRIVILEGES | Native.TOKEN_QUERY, out hToken))
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("OpenProcessToken: Current process"));
+                AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("OpenProcToken: Current process"));
                 return;
             }
 
@@ -1075,7 +1206,7 @@ namespace MSearch
             if (!Native.AdjustTokenPrivileges(hToken, false, ref tkpPrivileges, 0, IntPtr.Zero, IntPtr.Zero))
             {
                 int error = Marshal.GetLastWin32Error();
-                AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception($"AdjustTokenPrivileges failed with error code: {error}"));
+                AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception($"AdjustTokenPriv failed with error code: {error}"));
                 return;
             }
 
@@ -1190,19 +1321,19 @@ namespace MSearch
             return result;
         }
 
-        internal bool DetachInjectedProcess(ref Native.R77_PROCESS r77Process)
+        internal bool DetachProcess(ref Native.R77_PROCESS r77Process)
         {
             bool result = false;
             IntPtr process = IntPtr.Zero;
             if (r77Process.Signature == Native.R77_SIGNATURE)
             {
-                process = Native.OpenProcess(0x1F0FFF /* PROCESS_ALL_ACCESS */, false, (int)r77Process.ProcessId);
+                process = Native.OpenProcess(Native.PROCESS_CREATE_THREAD | Native.PROCESS_VM_OPERATION | Native.PROCESS_VM_WRITE | Native.PROCESS_QUERY_INFORMATION, false, (int)r77Process.ProcessId);
                 if (process != IntPtr.Zero)
                 {
                     IntPtr thread = IntPtr.Zero;
                     int status = Native.NtCreateThreadEx(
                         out thread,
-                        0x1FFFFF, /* Desired Access */
+                        Native.THREAD_QUERY_INFORMATION,
                         IntPtr.Zero, /* Object Attributes */
                         process, /* Process Handle */
                         new IntPtr((long)r77Process.DetachAddress), /* Start Address */
@@ -1230,11 +1361,11 @@ namespace MSearch
             return result;
         }
 
-        internal void DetachAllInjectedProcesses(Native.R77_PROCESS[] r77Processes, uint r77ProcessCount)
+        internal void DetachAllInjProcs(Native.R77_PROCESS[] r77Processes, uint r77ProcessCount)
         {
             for (uint i = 0; i < r77ProcessCount; i++)
             {
-                DetachInjectedProcess(ref r77Processes[i]);
+                DetachProcess(ref r77Processes[i]);
             }
         }
 
@@ -1249,12 +1380,28 @@ namespace MSearch
                     if (r77Processes[i].Signature == Native.R77_SERVICE_SIGNATURE && r77Processes[i].ProcessId != excludedProcessId)
                     {
                         int isCritical = 0;
-                        IntPtr process = Native.OpenProcess(0x001F0FFF, false, (int)r77Processes[i].ProcessId);
+                        IntPtr process = Native.OpenProcess(0x0001 | 0x0200 /*PROCESS_TERMINATE | PROCESS_SET_INFORMATION */, false, (int)r77Processes[i].ProcessId);
                         if (process != IntPtr.Zero)
                         {
                             Native.NtSetInformationProcess(process, 0x1D, ref isCritical, sizeof(int));
-                            Thread.Sleep(100);
-                            Native.NtTerminateProcess(process, 0);
+
+                            try
+                            {
+                                using (var p = Process.GetProcessById((int)r77Processes[i].ProcessId))
+                                {
+                                    if (!p.HasExited) p.Kill();
+                                }
+                            }
+                            catch (ArgumentException)
+                            {
+                            }
+                            catch (InvalidOperationException)
+                            {
+                            }
+                            catch (Win32Exception)
+                            {
+                            }
+
                             Native.CloseHandle(process);
                         }
                     }
@@ -2232,6 +2379,58 @@ namespace MSearch
             return (Native.GetFileAttributes(path) & (uint)Native.FILE_ATTRIBUTE.REPARSE_POINT) == (uint)Native.FILE_ATTRIBUTE.REPARSE_POINT;
         }
 
+        internal static uint GetReparseTag(string path)
+        {
+            IntPtr handle = Native.CreateFile(
+                path,
+                Native.GENERIC_READ,
+                Native.FILE_SHARE_READ |
+                Native.FILE_SHARE_WRITE |
+                Native.FILE_SHARE_DELETE,
+                IntPtr.Zero,
+                Native.OPEN_EXISTING,
+                Native.FILE_FLAG_OPEN_REPARSE_POINT |
+                Native.FILE_FLAG_BACKUP_SEMANTICS,
+                IntPtr.Zero);
+
+            if (handle == IntPtr.Zero || handle == new IntPtr(-1))
+                return 0;
+
+            try
+            {
+                byte[] buffer = new byte[Native.MAXIMUM_REPARSE_DATA_BUFFER_SIZE];
+                uint bytesReturned;
+
+                bool ok = Native.DeviceIoControl(
+                    handle,
+                    Native.FSCTL_GET_REPARSE_POINT,
+                    IntPtr.Zero,
+                    0,
+                    buffer,
+                    (uint)buffer.Length,
+                    out bytesReturned,
+                    IntPtr.Zero);
+
+                if (!ok || bytesReturned < 8)
+                    return 0;
+
+                return BitConverter.ToUInt32(buffer, 0);
+            }
+            finally
+            {
+                Native.CloseHandle(handle);
+            }
+        }
+
+        internal static bool IsAppExecutionAlias(string path)
+        {
+            if (!IsReparsePoint(path))
+                return false;
+
+            uint tag = GetReparseTag(path);
+            return tag == Native.IO_REPARSE_TAG_APPEXECLINK;
+        }
+
         internal static bool IsOnlyInvisibleCharacters(string input)
         {
             return Regex.IsMatch(input, @"^[\u200B\u200C\u200E\u202F\u00A0]*$");
@@ -2959,7 +3158,7 @@ namespace MSearch
         static string GetSystemLanguage()
         {
 
-            string registryKeyPath = Bfs.Create("AUrBULu43F4kUPGfSCDNmIWMNWZCRFxYftK6U7OHT4q7+IIDoMdj0L2QVmGMZiLf", "zhByStdA7bNgVXWsNH5xgRI6vkqGkHn/PRjdpwBLB54=", "DU6KMnjTbANMufY77YMC+g=="); //SYSTEM\CurrentControlSet\Control\Nls\Language
+            string registryKeyPath = @"SYSTEM\Current?Control?Set\Con?trol\N?ls\Lang?uage".Replace("?","");
             string registryValueName = "Install~Language".Replace("~", "");
 
             string[] CodeLang = new string[]

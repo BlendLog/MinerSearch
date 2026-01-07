@@ -12,7 +12,6 @@ using System.Linq;
 using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security.Principal;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
@@ -51,10 +50,6 @@ namespace MSearch
 
         [DllImport("ntdll.dll")]
         internal static extern int NtQueryInformationProcess(IntPtr processHandle, int processInformationClass, ref PROCESS_BASIC_INFORMATION processInformation, int processInformationLength, out int returnLength);
-
-
-        [DllImport("ntdll.dll", SetLastError = true)]
-        public static extern bool NtTerminateProcess(IntPtr hProcess, uint errorStatus);
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenProcess(int access, bool inheritHandle, int processId);
@@ -138,14 +133,13 @@ namespace MSearch
         internal static extern bool GetFileAttributesEx(string lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        internal static extern SafeFileHandle CreateFile(
-    string lpFileName,
-    [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
-    [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
-    IntPtr lpSecurityAttributes,
-    [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
-    [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
-    IntPtr hTemplateFile);
+        internal static extern SafeFileHandle CreateFile(string lpFileName, [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess, [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode, IntPtr lpSecurityAttributes, [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition, [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes, IntPtr hTemplateFile);
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        internal static extern IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        internal static extern bool DeviceIoControl(IntPtr hDevice, uint dwIoControlCode, IntPtr lpInBuffer, uint nInBufferSize, byte[] lpOutBuffer, uint nOutBufferSize, out uint lpBytesReturned, IntPtr lpOverlapped);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -169,6 +163,24 @@ namespace MSearch
         }
 
         internal const uint FILE_ATTRIBUTE_DIRECTORY = 0x00000010;
+
+        public const uint FSCTL_GET_REPARSE_POINT = 0x000900A8;
+        public const uint IO_REPARSE_TAG_SYMLINK = 0xA000000C;
+        public const uint IO_REPARSE_TAG_MOUNT_POINT = 0xA0000003;
+        public const uint IO_REPARSE_TAG_APPEXECLINK = 0x8000001B;
+
+        public const int MAXIMUM_REPARSE_DATA_BUFFER_SIZE = 16 * 1024;
+
+
+        internal const uint GENERIC_READ = 0x80000000;
+        internal const uint FILE_SHARE_READ = 0x00000001;
+        internal const uint FILE_SHARE_WRITE = 0x00000002;
+        internal const uint FILE_SHARE_DELETE = 0x00000004;
+
+        internal const uint OPEN_EXISTING = 3;
+
+        internal const uint FILE_FLAG_OPEN_REPARSE_POINT = 0x00200000;
+        internal const uint FILE_FLAG_BACKUP_SEMANTICS = 0x02000000;
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -261,7 +273,6 @@ namespace MSearch
 
         public const int SystemHandleInformation = 16;
         public const int ObjectNameInformation = 1;
-        public const uint PROCESS_DUP_HANDLE = 0x0040;
         public const uint DUPLICATE_SAME_ACCESS = 0x0002;
 
 
@@ -618,7 +629,15 @@ namespace MSearch
 
         public const int PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
         public const int PROCESS_QUERY_INFORMATION = 0x0400;
+        public const uint PROCESS_CREATE_THREAD = 0x0002;
+        public const uint PROCESS_VM_OPERATION = 0x0008;
         public const int PROCESS_VM_READ = 0x0010;
+        public const uint PROCESS_VM_WRITE = 0x0020;
+        public const uint PROCESS_DUP_HANDLE = 0x0040;
+
+        public const uint THREAD_QUERY_INFORMATION = 0x0040;
+
+
         public const int OffsetProcessParametersx32 = 0x10;
         public const int OffsetCommandLinex32 = 0x40;
         public const uint TH32CS_SNAPPROCESS = 0x00000002;
@@ -1553,7 +1572,7 @@ namespace MSearch
                             AppConfig.Instance.totalFoundSuspiciousObjects++;
                             MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Suspicious, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Skipped, AppConfig.Instance.LL.GetLocalizedString("_TermServiceInvalidPath") + " " + currentValue));
 
-                            
+
                             bool isInfectedService = false;
                             foreach (ScanResult res in MinerSearch.scanResults)
                             {

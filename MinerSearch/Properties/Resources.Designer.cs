@@ -1709,6 +1709,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Unable to check registry key.
+        /// </summary>
+        internal static string _ErrorRegistryCheck_EN {
+            get {
+                return ResourceManager.GetString("_ErrorRegistryCheck_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось проверить ключ реестра.
+        /// </summary>
+        internal static string _ErrorRegistryCheck_RU {
+            get {
+                return ResourceManager.GetString("_ErrorRegistryCheck_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Something is prevent the search for malicious processes. You should temporarily turn off your antivirus and try again..
         /// </summary>
         internal static string _ErrorScanProcesses_EN {
@@ -1835,7 +1853,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Windows Defender is turned off or doesn&apos;t respond.
+        ///   Ищет локализованную строку, похожую на Win?dows D?efen?der is turned off or doesn&apos;t respond.
         /// </summary>
         internal static string _ErrorTurnedOffDefender_EN {
             get {
@@ -3154,36 +3172,36 @@ namespace MSearch.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на The option prevents editing the Registry.
         /// </summary>
-        internal static string _Note_DisableRegistryTools_EN {
+        internal static string _Note_RegTools_EN {
             get {
-                return ResourceManager.GetString("_Note_DisableRegistryTools_EN", resourceCulture);
+                return ResourceManager.GetString("_Note_RegTools_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Запрещает редактирование реестра.
         /// </summary>
-        internal static string _Note_DisableRegistryTools_RU {
+        internal static string _Note_RegTools_RU {
             get {
-                return ResourceManager.GetString("_Note_DisableRegistryTools_RU", resourceCulture);
+                return ResourceManager.GetString("_Note_RegTools_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на The option prevents opening the Task Manager.
         /// </summary>
-        internal static string _Note_DisableTaskMgr_EN {
+        internal static string _Note_TaskManager_EN {
             get {
-                return ResourceManager.GetString("_Note_DisableTaskMgr_EN", resourceCulture);
+                return ResourceManager.GetString("_Note_TaskManager_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Запрещает открывать диспетчер задач.
         /// </summary>
-        internal static string _Note_DisableTaskMgr_RU {
+        internal static string _Note_TaskManager_RU {
             get {
-                return ResourceManager.GetString("_Note_DisableTaskMgr_RU", resourceCulture);
+                return ResourceManager.GetString("_Note_TaskManager_RU", resourceCulture);
             }
         }
         
@@ -4198,7 +4216,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Abuse of RunDll32.exe for malicious DLL execution.
+        ///   Ищет локализованную строку, похожую на Abuse of R?unD?ll32.exe for malicious DLL execution.
         /// </summary>
         internal static string _Rundll32Abuse_EN {
             get {
@@ -4207,7 +4225,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Злоупотребление RunDll32.exe для выполнения вредоносных DLL.
+        ///   Ищет локализованную строку, похожую на Злоупотребление R?unD?ll32.exe для выполнения вредоносных DLL.
         /// </summary>
         internal static string _Rundll32Abuse_RU {
             get {
@@ -5224,7 +5242,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Windows Defender exclusion.
+        ///   Ищет локализованную строку, похожую на Wi?ndow?s De?fe?nde?r excl?usion.
         /// </summary>
         internal static string _UnwantedExclusion_EN {
             get {
@@ -5701,6 +5719,24 @@ namespace MSearch.Properties {
             get {
                 object obj = ResourceManager.GetObject("quarantine_logo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to retrieve tasks list.
+        /// </summary>
+        internal static string SafeModeTaskParser_EN {
+            get {
+                return ResourceManager.GetString("SafeModeTaskParser_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось получить список задач.
+        /// </summary>
+        internal static string SafeModeTaskParser_RU {
+            get {
+                return ResourceManager.GetString("SafeModeTaskParser_RU", resourceCulture);
             }
         }
         

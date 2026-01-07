@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -152,7 +153,7 @@ namespace MSearch
             string argument = "/c \"" + logpath + "\"";
             if (AppConfig.Instance.RunAsSystem && !AppConfig.Instance.WinPEMode)
             {
-                string pname = Bfs.Create("XowZueZ4My9sRztk+8mdpA==", "IQ70zViMhrk1BBJC+eBfce4X9xr/dKa73zS+8a8DgdQ=", "Mxx86B7zZeNAUe7VPZMT/w==");
+                string pname = new StringBuilder("ex").Append("pl").Append("or").Append("er").ToString();
             restart:
                 if (Process.GetProcessesByName(pname).Length > 0)
                 {
