@@ -16,18 +16,13 @@ https://t.me/MinerSearch_blog
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/total?label=downloads%40All&color=ff6600)
 
-Version v1.4.8.2
+Version v1.4.8.4
 
-- Correct file digital signature verification on Windows 7
-- Utility launch counter no longer resets when run under a different user account
-- New detection type "Unsafe" introduced — not malicious, but potentially harmful indirectly (for example, Windows Defender exclusions)
-- Windows Defender exclusions are no longer treated as threats when Defender is disabled
-- Registry logging format unified to full registry key path in the report window (e.g., HKEY_LOCAL_MACHINE...\Run|Value instead of HKLM\Run:Value)
-- Fixed false removal of Shadowsocks / Signal Messenger
-- Support for low-resolution displays and percent scaling
-- Improved file processing speed due to analysis algorithm optimization
-- Added removal of new miners
-- Correct display of signature verification results in Task Scheduler when running the utility with highest privileges
+- Fixed an access error when processing files from WindowsApps
+- Fixed a file processing error when replacing system utilities with third-party ones (including SystemInformer, Notepad3)
+- Updated the database for new threats
+- Removed the redundant set of process access rights for analysis
+- Fixed the "jaggedness" of the application icon
 
 -----------------------------------------
 
