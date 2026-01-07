@@ -16,18 +16,13 @@ https://t.me/MinerSearch_blog
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/total?label=downloads%40All&color=ff6600)
 
-Version v1.4.8.3
+Version v1.4.8.4
 
-- Added removal of new miners
-- Improved malicious file quarantine strategy
-- Improved detection algorithm for SFX (Self-Extracting) archives
-- Fixed false positive removal of the legitimate Microsoft Malicious Software Removal Tool (MRT) from startup
-- Removed invalid Scheduled Tasks are now displayed on the final summary report
-- Fixed an issue where the threat count could display a negative value
-- Prevented the removal of Copilot entries from the hosts file
-- Microsoft telemetry entries will no longer be removed from the hosts file
-- Fixed false positive removal of the legitimate TektonIT application
-- RDPWrapper will no longer be removed unless associated miner traces are detected
+- Fixed an access error when processing files from WindowsApps
+- Fixed a file processing error when replacing system utilities with third-party ones (including SystemInformer, Notepad3)
+- Updated the database for new threats
+- Removed the redundant set of process access rights for analysis
+- Fixed the "jaggedness" of the application icon
 
 -----------------------------------------
 
