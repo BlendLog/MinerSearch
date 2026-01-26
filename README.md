@@ -5,6 +5,9 @@
 This program is designed to find and destroy hidden miners.
 It is an auxiliary tool for searching suspicious files, directories, processes, etc. and is NOT an antivirus.
 
+> [!CAUTION]
+> ### Antivirus may give a false positive reaction to this application. Please don't create an issue about this.
+
 ## News about updates now in the Telegram!
 https://t.me/MinerSearch_blog
 ## ⬇ ![Download latest version](https://github.com/BlendLog/MinerSearch/releases/latest)
