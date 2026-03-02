@@ -2201,10 +2201,9 @@ namespace MSearch.Properties {
         ///-a     --accept-eula          Accept the End-User License Agreement (EULA)
         ///-nl    --no-logs              Do not write logs to a file
         ///-nstm  --no-scantime          Scan only running processes
+        ///-nwmi  --no-scan-wmi          Do not check WMI and/or event subscription integrity
         ///-nr    --no-runtime           Do not scan running processes (only directories, files, registry keys, etc.)
-        ///-nse   --no-services          Skip scanning services
-        ///-nss   --no-signature-scan    Skip file signature scanning
-        ///-nrc   --no-rootkit- [остаток строки не уместился]&quot;;.
+        ///-nse   --no-services          Skip scanning servic [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _Help_EN {
             get {
@@ -2219,10 +2218,10 @@ namespace MSearch.Properties {
         ///-a     --accept-eula          Принять лицензионное соглашение
         ///-nl    --no-logs              Не записывать лог в файл
         ///-nstm  --no-scantime          Сканировать только процессы
+        ///-nwmi  --no-scan-wmi          Не проверять целостность WMI и/или подписок на события
         ///-nr    --no-runtime           Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)
         ///-nse   --no-services          Пропустить сканирование служб
-        ///-nss   --no-signature-scan    Пропустить сигнатурное сканирование файлов
-        ///-nrc   --no-rootkit-chec [остаток строки не уместился]&quot;;.
+        ///-nss   --no- [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _Help_RU {
             get {
@@ -2673,7 +2672,7 @@ namespace MSearch.Properties {
         ///{\colortbl ;\red118\green113\blue113;}
         ///{\*\generator Riched20 10.0.19041}{\*\mmathPr\mnaryLim0\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
         ///\pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\f0\fs28\par
-        ///This software provided &quot;as is&quot; and was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurren [остаток строки не уместился]&quot;;.
+        ///This software provided &quot;as is&quot; and was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurrency.  [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _License_EN {
             get {
@@ -2688,7 +2687,7 @@ namespace MSearch.Properties {
         ///{\list\listhybrid
         ///{\listlevel\levelnfc0\leveljc0\levelstartat1{\leveltext\&apos;02\&apos;00.;}{\levelnumbers\&apos;01;}\jclisttab\tx0}
         ///{\listlevel\levelnfc4\leveljc0\levelstartat1{\leveltext\&apos;02\&apos;01.;}{\levelnumbers\&apos;01;}\jclisttab\tx0}
-        ///{\listlevel\levelnfc3\leveljc0\levelstartat1{\leveltext\&apos;02\&apos;02.;}{\levelnumbe [остаток строки не уместился]&quot;;.
+        ///{\listlevel\levelnfc3\leveljc0\levelstartat1{\leveltext\&apos;02\&apos;02.;}{\levelnumbers\&apos;01 [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _License_RU {
             get {
@@ -2782,7 +2781,8 @@ namespace MSearch.Properties {
         ///[.]     Description
         ///[_]     Unblocking the directory and deleting if empty
         ///[i]     Information
-        ///[$]     Elapsed scan  [остаток строки не уместился]&quot;;.
+        ///[$]     Elapsed scan time
+        ///[&amp;]      [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _LogLegend_EN {
             get {
@@ -2804,7 +2804,7 @@ namespace MSearch.Properties {
         ///[.]     Описание
         ///[_]     Разблокировка каталога и удаление, если пуст
         ///[i]     Информация
-        ///[$]     Зат [остаток строки не уместился]&quot;;.
+        ///[$]     Затраченное врем [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _LogLegend_RU {
             get {
@@ -4950,6 +4950,24 @@ namespace MSearch.Properties {
         internal static string _SuspiciousRegsvr32_RU {
             get {
                 return ResourceManager.GetString("_SuspiciousRegsvr32_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Suspicious usage of #OBJ#.
+        /// </summary>
+        internal static string _SuspiciousUsage_EN {
+            get {
+                return ResourceManager.GetString("_SuspiciousUsage_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подозрительное использование #OBJ#.
+        /// </summary>
+        internal static string _SuspiciousUsage_RU {
+            get {
+                return ResourceManager.GetString("_SuspiciousUsage_RU", resourceCulture);
             }
         }
         

@@ -398,6 +398,7 @@ Thank you for your help!</value>
 -a     --accept-eula          Accept the End-User License Agreement (EULA)
 -nl    --no-logs              Do not write logs to a file
 -nstm  --no-scantime          Scan only running processes
+-nwmi  --no-scan-wmi          Do not check WMI and/or event subscription integrity
 -nr    --no-runtime           Do not scan running processes (only directories, files, registry keys, etc.)
 -nse   --no-services          Skip scanning services
 -nss   --no-signature-scan    Skip file signature scanning
@@ -409,7 +410,7 @@ Thank you for your help!</value>
 -ret   --remove-empty-tasks   Remove a task from Task Scheduler if its executable file does not exist
 -so    --scan-only            Report malicious or suspicious objects but do not remove or quarantine them
 -fs    --full-scan            Include all local drives in the signature scan
--ras   --run-as-system        Run the scan as the SYSTEM account (for advanced users only)
+-ras   --run-as-system        [Temporarly removed]
 -f     --force                Suppress confirmation prompts for potentially dangerous actions
 -s     --select               Scan only the selected directory and its subdirectories (recursively)
 -s=    --select= &lt;path&gt;       Same as --select (-s). Specifies the directory path to scan.
@@ -909,6 +910,7 @@ Do you want to continue?</value>
 -a     --accept-eula          Принять лицензионное соглашение
 -nl    --no-logs              Не записывать лог в файл
 -nstm  --no-scantime          Сканировать только процессы
+-nwmi  --no-scan-wmi          Не проверять целостность WMI и/или подписок на события
 -nr    --no-runtime           Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)
 -nse   --no-services          Пропустить сканирование служб
 -nss   --no-signature-scan    Пропустить сигнатурное сканирование файлов
@@ -920,7 +922,7 @@ Do you want to continue?</value>
 -ret   --remove-empty-tasks   Удалять задачу из Планировщика задач, если файл приложения в ней не существует
 -so    --scan-only            Отображать вредоносный или подозрительный объект, но не выполнять лечение
 -fs    --full-scan            Целиком добавляет другие локальные диски для сигнатурного сканирования
--ras   --run-as-system        Запустить проверку от имени SYSTEM (для опытных пользователей)
+-ras   --run-as-system        [Временно удалено]
 -f     --force                Служит для подавления запроса подтверждения потенциально опасных функций
 -s     --select               Сканировать только выбранный каталог, включая вложенные каталоги
 -s=    --select= &lt;путь&gt;       Аналогично --select (-s). Где &lt;путь&gt; укажите путь на каталог для проверки
@@ -2215,5 +2217,11 @@ No – Run a standard scan with the option to remove.</value>
   </data>
   <data name="_ErrorRegistryCheck_RU" xml:space="preserve">
     <value>Не удалось проверить ключ реестра</value>
+  </data>
+  <data name="_SuspiciousUsage_EN" xml:space="preserve">
+    <value>Suspicious usage of #OBJ#</value>
+  </data>
+  <data name="_SuspiciousUsage_RU" xml:space="preserve">
+    <value>Подозрительное использование #OBJ#</value>
   </data>
 </root>

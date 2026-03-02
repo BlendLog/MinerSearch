@@ -19,13 +19,13 @@ https://t.me/MinerSearch_blog
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/total?label=downloads%40All&color=ff6600)
 
-Version v1.4.8.4
+Version v1.4.8.41
 
-- Fixed an access error when processing files from WindowsApps
-- Fixed a file processing error when replacing system utilities with third-party ones (including SystemInformer, Notepad3)
-- Updated the database for new threats
-- Removed the redundant set of process access rights for analysis
-- Fixed the "jaggedness" of the application icon
+- Removal of new malicious services, files, tasks, and directories
+- Added the --no-scan-wmi (-nwmi) option
+- Removed the --run-as-system option
+- Fixed a bug when reading the service image path
+- Fixed a bug when opening a log file using the "Show log" button
 
 -----------------------------------------
 

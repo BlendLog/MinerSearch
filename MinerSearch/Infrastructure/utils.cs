@@ -11,15 +11,19 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Principal;
+using System.ServiceProcess;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using Win32Wrapper;
+using static Win32Wrapper.ServiceHelper;
 
 namespace MSearch
 {
@@ -33,16 +37,16 @@ namespace MSearch
     internal class SuspiciousServiceInfo
     {
         public string FilePath { get; set; } = "";
-        public bool IsMlwrSignature { get; set; } = false;
-        public bool HasHijackedDll { get; set; } = false;
-        public bool HasHijackedSystemBinary { get; set; } = false;
+        public bool IsMlwrSignature { get; set; }
+        public bool HasHijackedDll { get; set; }
+        public bool HasHijackedSystemBinary { get; set; }
     }
 
     public static class ExeptionHandler
     {
         public static void HookExeption(object sender, UnhandledExceptionEventArgs args)
         {
-            Exception e = (Exception)args.ExceptionObject;
+            Exception e = (Exception)args?.ExceptionObject;
             DialogDispatcher.Show(e.Message + "\n" + e.StackTrace, AppConfig.Instance.LL.GetLocalizedString("_ExeptionTitle"), Color.Salmon, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
@@ -67,10 +71,11 @@ namespace MSearch
 
         internal static void CheckStartupCount()
         {
-            const string KeyPath = @"Software\M1nerSearch";
-            const string valueName = "runcount";
-            const string migratedFlag = "migrated";
+            string KeyPath = AppConfig.Instance.RegistryPathMain;
+            string valueName = AppConfig.Instance.LaunchCountValueName;
 
+
+            const string migratedFlag = "migrated";
             int runCount = 0;
 
             try
@@ -124,8 +129,8 @@ namespace MSearch
 
         static int IncrementFallbackHKCU()
         {
-            const string keyPath = @"Software\M1nerSearch";
-            const string valueName = "runcount";
+            string keyPath = AppConfig.Instance.RegistryPathMain;
+            string valueName = AppConfig.Instance.LaunchCountValueName;
 
             int runCount;
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(keyPath, true))
@@ -291,18 +296,16 @@ namespace MSearch
 
             try
             {
-                const string quarantineKeyPath = @"Software\M1nerSearch\Quarantine";
-                const string quarantineKeyPathMain = @"Software\M1nerSearch";
 
-                if (UnlockObjectClass.IsRegistryKeyBlocked(quarantineKeyPathMain))
+                if (UnlockObjectClass.IsRegistryKeyBlocked(AppConfig.Instance.RegistryPathMain))
                 {
-                    UnlockObjectClass.UnblockRegistry(quarantineKeyPathMain);
+                    UnlockObjectClass.UnblockRegistry(AppConfig.Instance.RegistryPathMain);
                 }
 
                 string fileHash = FileChecker.CalculateMD5(sourceFilePath);
 
                 const int blockSize = 1024 * 512;
-                using (var baseKey = Registry.LocalMachine.CreateSubKey(quarantineKeyPath))
+                using (var baseKey = Registry.LocalMachine.CreateSubKey(AppConfig.Instance.QuarantineKeyPath))
                 {
                     if (baseKey == null)
                         return;
@@ -344,7 +347,7 @@ namespace MSearch
                 if (!File.Exists(sourceFilePath))
                 {
                     AppConfig.Instance.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_MovedToQuarantine");
-                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Quarantine, note.Replace("?","")));
+                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Quarantine, note.Replace("?", "")));
                 }
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
@@ -440,7 +443,260 @@ namespace MSearch
             return 0;
         }
 
+        public static void CheckWMI(bool restartCheck)
+        {
+            string serviceName = "wi~nm~gm~t".Replace("~", "");
+            try
+            {
+                if (ServiceIsInstalled(serviceName))
+                {
+                    var serviceinfo = GetServiceInfo(serviceName);
 
+                    if ((ServiceBootFlag)serviceinfo.StartType != ServiceBootFlag.AutoStart)
+                    {
+                        ChangeStartMode(serviceName, ServiceBootFlag.AutoStart);
+                        AppConfig.Instance.LL.LogSuccessMessage("_CriticalServiceStartup");
+                    }
+
+                    if (GetServiceState(serviceName) != ServiceState.Running)
+                    {
+                        StartService(serviceName);
+                        AppConfig.Instance.LL.LogSuccessMessage("_CriticalServiceRestart");
+                    }
+
+                    try
+                    {
+                        WmiTestQuery("Dhcp");
+                    }
+                    catch (ManagementException me)
+                    {
+                        if (me.ErrorCode == ManagementStatus.InvalidClass || me.ErrorCode == ManagementStatus.ProviderLoadFailure || me.ErrorCode == ManagementStatus.ProviderFailure)
+                        {
+                            RestoreWMICorruption();
+                            if (!restartCheck)
+                            {
+                                CheckWMI(true);
+                            }
+                        }
+                    }
+
+                }
+                else
+                {
+                    LocalizedLogger.LogError_СriticalServiceNotInstalled();
+                }
+
+            }
+            catch (MissingMethodException)
+            {
+                if (OSExtensions.IsDotNetInstalled())
+                {
+                    DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_ErrorNoDotNet"), AppConfig.Instance._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Environment.Exit(1);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog($"\t[xxx] {serviceName}: {ex.Message}", ConsoleColor.DarkRed, false);
+            }
+
+
+        }
+
+        static void RestoreWMICorruption()
+        {
+            if (AppConfig.Instance.RestoredWMI)
+            {
+                throw new Exception("WMI_Corruption");
+            }
+
+            AppConfig.Instance.LL.LogMessage("\t\t[xxx]", "_WMICorruption", "", ConsoleColor.Red, false);
+
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+
+            AppConfig.Instance.LL.LogHeadMessage("_WMIRecompilation");
+
+            string wbemPath = Path.Combine(Environment.SystemDirectory, "Wbem");
+
+            List<string> filteredMof = Directory
+                    .EnumerateFiles(wbemPath, "*.*", SearchOption.AllDirectories)
+                    .Where(file => new FileInfo(file).Extension.Equals(".mof") || new FileInfo(file).Extension.Equals(".mfl"))
+                    .ToList();
+
+            foreach (var file in filteredMof)
+            {
+                if (File.Exists(file))
+                {
+                    Process.Start(new ProcessStartInfo()
+                    {
+                        FileName = "mofcomp.exe",
+                        Arguments = $"\"{file}\"",
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }).WaitForExit();
+                }
+            }
+
+            Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
+            AppConfig.Instance.LL.LogHeadMessage("_WMIRegister");
+
+            foreach (var file in Directory.EnumerateFiles(wbemPath, "*.dll", SearchOption.AllDirectories))
+            {
+                if (File.Exists(file))
+                {
+                    Process.Start(new ProcessStartInfo()
+                    {
+                        FileName = "regsvr32.exe",
+                        Arguments = $"-s \"{file}\"",
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }).WaitForExit();
+                }
+            }
+
+
+            Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
+            AppConfig.Instance.LL.LogHeadMessage("_WMIRestartService");
+
+            ServiceController service = new ServiceController("winmgmt");
+            if (service.Status != ServiceControllerStatus.Stopped)
+            {
+                service.Stop();
+                service.WaitForStatus(ServiceControllerStatus.Stopped);
+            }
+            Thread.Sleep(3000);
+            service.Start();
+            service.WaitForStatus(ServiceControllerStatus.Running);
+
+
+            Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
+        }
+
+        public static string WmiTestQuery(string serviceName)
+        {
+
+            using (var service = new ManagementObject($"Win32_Service.Name='{serviceName}'"))
+            {
+                service.Get();
+                string sPath = service["PathName"]?.ToString();
+
+                return string.IsNullOrEmpty(sPath) ? "" : sPath;
+            }
+        }
+
+        public static void CheckTermService()
+        {
+
+            string registryPath = MSData.GetInstance.queries["TermServiceParameters"]; //SYSTEM\CurrentControlSet\Services\TermService\Parameters
+            string desiredValue = MSData.GetInstance.queries["TermsrvDll"]; //%SystemRoot%\System32\termsrv.dll
+            string paramName = "Ser/vice/Dll".Replace("/", "");
+
+            using (var regkey = Registry.LocalMachine.OpenSubKey(registryPath, true))
+            {
+                if (regkey != null)
+                {
+                    string currentValue = (string)regkey.GetValue(paramName);
+                    if (currentValue != null)
+                    {
+                        if (currentValue != Environment.ExpandEnvironmentVariables(desiredValue))
+                        {
+                            AppConfig.Instance.LL.LogWarnMessage("_TermServiceInvalidPath", currentValue);
+                            AppConfig.Instance.totalFoundSuspiciousObjects++;
+                            MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Suspicious, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Skipped, AppConfig.Instance.LL.GetLocalizedString("_TermServiceInvalidPath") + " " + currentValue));
+
+
+                            bool isInfectedService = false;
+                            foreach (ScanResult res in MinerSearch.scanResults)
+                            {
+                                foreach (string pattern in MSData.GetInstance.JohnPatterns)
+                                {
+                                    if (res.Path.IndexOf(pattern) >= 0)
+                                    {
+                                        isInfectedService = true;
+                                    }
+                                }
+                            }
+
+                            if (isInfectedService)
+                            {
+
+                                AppConfig.Instance.totalFoundThreats++;
+
+                                if (!AppConfig.Instance.ScanOnly)
+                                {
+                                    try
+                                    {
+                                        string termsrv = "TermService";
+                                        string UmRdpSrv = "UmRdpService";
+
+                                        var UmRdpSrvInfo = GetServiceInfo(UmRdpSrv);
+                                        var termSrvInfo = GetServiceInfo(termsrv);
+
+                                        if (GetServiceState(UmRdpSrv) == ServiceState.Running)
+                                        {
+                                            StopService(UmRdpSrv);
+                                        }
+
+                                        if ((ServiceBootFlag)UmRdpSrvInfo.StartType != ServiceBootFlag.DemandStart)
+                                        {
+                                            ChangeStartMode(UmRdpSrv, ServiceBootFlag.DemandStart);
+                                        }
+
+                                        if (GetServiceState(termsrv) == ServiceState.Running)
+                                        {
+                                            StopService(termsrv);
+                                        }
+
+                                        if ((ServiceBootFlag)termSrvInfo.StartType != ServiceBootFlag.DemandStart)
+                                        {
+                                            ChangeStartMode(termsrv, ServiceBootFlag.DemandStart);
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
+                                        return;
+                                    }
+
+                                    regkey.SetValue(paramName, desiredValue, RegistryValueKind.ExpandString);
+                                    currentValue = (string)regkey.GetValue(paramName);
+                                    if (currentValue == Environment.ExpandEnvironmentVariables(desiredValue))
+                                    {
+                                        AppConfig.Instance.LL.LogSuccessMessage("_TermServiceRestored");
+                                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Cured));
+
+                                    }
+                                    else
+                                    {
+                                        AppConfig.Instance.LL.LogErrorMessage("_TermServiceFailedRestore", new Exception(""));
+                                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Error));
+
+                                    }
+                                }
+                                else
+                                {
+                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Skipped));
+                                    LocalizedLogger.LogScanOnlyMode();
+                                }
+                            }
+                            else
+                            {
+                                LocalizedLogger.LogNoThreatsFound();
+                            }
+                        }
+                        else
+                        {
+                            LocalizedLogger.LogNoThreatsFound();
+                        }
+                    }
+                }
+                else
+                {
+                    AppConfig.Instance.LL.LogWarnMediumMessage("_ServiceNotInstalled", "T?ermS?ervi?ce".Replace("?", ""));
+                }
+            }
+
+        }
 
 
     }
@@ -587,7 +843,7 @@ namespace MSearch
 
         static bool IsShell(string exe)
         {
-            foreach (string pattern in MSData.Instance.shellPatterns)
+            foreach (string pattern in MSData.GetInstance.shellPatterns)
             {
                 if (exe.Equals(pattern, StringComparison.OrdinalIgnoreCase))
                 {
@@ -1175,11 +1431,11 @@ namespace MSearch
 
             string[] privilegeNames = new string[]
             {
-            "Se?D?ebugPri?vilege".Replace("?", ""),
-            "SeBa?ckupPri?vilege".Replace("?", ""),
-            "SeRe?storePriv?ilege".Replace("?", ""),
+            "SeD??ebugP?riv?ilege".Replace("?", ""),
+            "SeBa?cku?pPr?i?vile??ge".Replace("?", ""),
+            "SeRe?stor?eP?riv?ilege".Replace("?", ""),
             "SeTak?eOwner?ship?Priv?ilege".Replace("?", ""),
-            "Se?Secu?rityPr?ivil?ege".Replace("?", "")
+            "Se??Secu?rityPr??ivil?ege".Replace("?", "")
             };
 
             if (!Native.OpenProcessToken(Native.GetCurrentProcess(), Native.TOKEN_ADJUST_PRIVILEGES | Native.TOKEN_QUERY, out hToken))
@@ -1448,7 +1704,7 @@ namespace MSearch
 
     public class FileChecker
     {
-        static string batchSig = MSData.Instance.queries["Defender_AddExclusionPath"];
+        static string batchSig = MSData.GetInstance.queries["Defender_AddExclusionPath"];
 
         internal static List<byte[]> RestoreSignatures(List<byte[]> signatures)
         {
@@ -3147,6 +3403,25 @@ namespace MSearch
                 throw new InvalidOperationException($"HRESULT: 0x{result:X16}");
             }
         }
+
+        public static string ConvertWellKnowSIDToGroupName(string GroupSid)
+        {
+            IntPtr pSid;
+            if (!Native.ConvertStringSidToSid(GroupSid, out pSid))
+            {
+                return null;
+            }
+
+            string groupName = GetAccountNameFromSid(pSid);
+            if (groupName != null)
+            {
+                return groupName;
+            }
+
+            Native.LocalFree(pSid);
+            return null;
+
+        }
     }
 
     public static class LanguageManager
@@ -3158,7 +3433,7 @@ namespace MSearch
         static string GetSystemLanguage()
         {
 
-            string registryKeyPath = @"SYSTEM\Current?Control?Set\Con?trol\N?ls\Lang?uage".Replace("?","");
+            string registryKeyPath = @"SYSTEM\Current?Control?Set\Con?trol\N?ls\Lang?uage".Replace("?", "");
             string registryValueName = "Install~Language".Replace("~", "");
 
             string[] CodeLang = new string[]

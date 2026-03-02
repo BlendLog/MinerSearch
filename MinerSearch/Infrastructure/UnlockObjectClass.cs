@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.Threading;
+using Win32Wrapper;
 
 namespace MSearch
 {
@@ -213,7 +213,7 @@ namespace MSearch
                     IntPtr.Zero,
                     IntPtr.Zero,
                     IntPtr.Zero,
-                    IntPtr.Zero 
+                    IntPtr.Zero
                 );
 
                 if (result != 0)

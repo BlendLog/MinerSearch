@@ -7,8 +7,8 @@ namespace MSearch
     {
         public bool ShowTopBorder { get; set; } = true;
         public bool ShowBottomBorder { get; set; } = true;
-        public bool ShowLeftBorder { get; set; } = false;
-        public bool ShowRightBorder { get; set; } = false;
+        public bool ShowLeftBorder { get; set; }
+        public bool ShowRightBorder { get; set; }
 
         public Color BorderColor { get; set; } = Color.Black;
         public int BorderWidth { get; set; } = 1;

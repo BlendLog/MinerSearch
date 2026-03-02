@@ -13,7 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Net;
-using System.Reflection;
+//using System.Reflection;
 using System.Security;
 using System.ServiceProcess;
 using System.Text;
@@ -21,51 +21,19 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Win32Wrapper;
 
 namespace MSearch
 {
     public class MinerSearch
     {
 
-        int[] _PortList = new[]
-        {
-            1111,
-            1112,
-            2020,
-            3333,
-            4028,
-            4040,
-            4141,
-            4444,
-            5555,
-            6633,
-            6666,
-            7001,
-            7777,
-            9980,
-            9999,
-            10191,
-            10343,
-            14433,
-            20009,
-        };
-
-        readonly string[] _nvdlls = new[]
-        {
-            "nvcompiler.dll",
-            "nvopencl.dll",
-            "nvfatbinaryLoader.dll",
-            "nvapi64.dll",
-            "OpenCL.dll",
-        };
-
         HashSet<string> suspFls_path = new HashSet<string>();
+        readonly byte[] startBadSequence = { 0xFF, 0xC7, 0x05, 0xC5 };
+        readonly byte[] endBadSequence = { 0xE8, 0x54, 0xFF, 0xFF, 0xFF };
 
-        byte[] startSequence = { 0xFF, 0xC7, 0x05, 0xC5 };
-        byte[] endSequence = { 0xE8, 0x54, 0xFF, 0xFF, 0xFF };
-
-        long maxFileSize = 200 * 1024 * 1024;
-        long minFileSize = 2112;
+        readonly long maxFileSize = 200 * 1024 * 1024;
+        readonly long minFileSize = 2112;
 
 
         public List<int> mlwrPids = new List<int>();
@@ -127,7 +95,7 @@ namespace MSearch
         {
             AppConfig.Instance.LL.LogHeadMessage("_ScanProcesses");
 
-            string myExePath = FileSystemManager.NormalizeExtendedPath(Assembly.GetExecutingAssembly().Location);
+            string myExePath = FileSystemManager.NormalizeExtendedPath(AppConfig.Instance.ExecutablePath);
 
             string processName = "";
             int riskLevel = 0;
@@ -192,7 +160,7 @@ namespace MSearch
                             string fileDescription = p.MainModule.FileVersionInfo.FileDescription;
 
 
-                            if (ProcessManager.IsTrustedProcess(MSData.Instance, originalFileName, isValidProcess))
+                            if (ProcessManager.IsTrustedProcess(MSData.GetInstance, originalFileName, isValidProcess))
                             {
                                 continue;
                             }
@@ -240,7 +208,7 @@ namespace MSearch
                     {
                         foreach (ProcessModule pMod in p.Modules)
                         {
-                            modCount += _nvdlls.Count(name => pMod.ModuleName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0);
+                            modCount += MSData.GetInstance._nvdlls.Count(name => pMod.ModuleName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0);
                         }
                     }
                     catch (Exception ex)
@@ -263,7 +231,7 @@ namespace MSearch
                             int remoteport = ProcessManager.GetPortByProcessId(p.Id);
                             if (remoteport != -1 && remoteport != 0)
                             {
-                                if (_PortList.Contains(remoteport))
+                                if (MSData.GetInstance._PortList.Contains(remoteport))
                                 {
                                     AppConfig.Instance.LL.LogWarnMessage("_BlacklistedPort", $"{remoteport} - {processName}");
                                     riskLevel += 1;
@@ -278,7 +246,7 @@ namespace MSearch
 
                     if (!string.IsNullOrEmpty(args))
                     {
-                        foreach (int port in _PortList)
+                        foreach (int port in MSData.GetInstance._PortList)
                         {
                             if (args.IndexOf($":{port}", StringComparison.OrdinalIgnoreCase) >= 0)
                             {
@@ -287,7 +255,7 @@ namespace MSearch
                             }
                         }
 
-                        if (MSData.Instance.badArgStrings.Any(s => args.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0))
+                        if (MSData.GetInstance.badArgStrings.Any(s => args.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0))
                         {
                             riskLevel += 3;
                             isBadArgsPatternPresent = true;
@@ -317,7 +285,7 @@ namespace MSearch
 
                         }
 
-                        if ((processName.Equals(MSData.Instance.SysFileName[3], StringComparison.OrdinalIgnoreCase) && args.IndexOf($"\\??\\{AppConfig.Instance.drive_letter}:\\", StringComparison.OrdinalIgnoreCase) == -1))
+                        if ((processName.Equals(MSData.GetInstance.SysFileName[3], StringComparison.OrdinalIgnoreCase) && args.IndexOf($"\\??\\{AppConfig.Instance.drive_letter}:\\", StringComparison.OrdinalIgnoreCase) == -1))
                         {
                             riskLevel += 3;
                             if (args.IndexOf($"\\\\?\\{AppConfig.Instance.drive_letter}:\\", StringComparison.OrdinalIgnoreCase) >= 0)
@@ -329,7 +297,7 @@ namespace MSearch
                                 AppConfig.Instance.LL.LogWarnMediumMessage("_WatchdogProcess", $"PID: {processId}");
                             }
                         }
-                        if (processName.Equals(MSData.Instance.SysFileName[4], StringComparison.OrdinalIgnoreCase) && (args.IndexOf($"{MSData.Instance.SysFileName[4]}.exe -k dcomlaunch", StringComparison.OrdinalIgnoreCase) >= 0))
+                        if (processName.Equals(MSData.GetInstance.SysFileName[4], StringComparison.OrdinalIgnoreCase) && (args.IndexOf($"{MSData.GetInstance.SysFileName[4]}.exe -k dcomlaunch", StringComparison.OrdinalIgnoreCase) >= 0))
                         {
                             foreach (ProcessModule pMod in p.Modules)
                             {
@@ -341,13 +309,13 @@ namespace MSearch
                             }
                         }
 
-                        if (processName.Equals(MSData.Instance.SysFileName[32], StringComparison.OrdinalIgnoreCase) && args.IndexOf("#system32", StringComparison.OrdinalIgnoreCase) >= 0)
+                        if (processName.Equals(MSData.GetInstance.SysFileName[32], StringComparison.OrdinalIgnoreCase) && args.IndexOf("#system32", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
                             AppConfig.Instance.LL.LogWarnMediumMessage("_ProbablyRAT", $"{p.MainModule.FileName} PID: {processId}");
                             riskLevel += 3;
                         }
 
-                        if (processName.Equals(MSData.Instance.SysFileName[31], StringComparison.OrdinalIgnoreCase) && !p.HasExited && (DateTime.Now - p.StartTime).TotalSeconds >= 60)
+                        if (processName.Equals(MSData.GetInstance.SysFileName[31], StringComparison.OrdinalIgnoreCase) && !p.HasExited && (DateTime.Now - p.StartTime).TotalSeconds >= 60)
                         {
                             AppConfig.Instance.LL.LogWarnMediumMessage("_ProbablyRAT", $"{p.MainModule.FileName} PID: {processId}");
                             riskLevel += 3;
@@ -370,7 +338,7 @@ namespace MSearch
                         riskLevel += 2;
                     }
 
-                    if (processName.Equals(MSData.Instance.SysFileName[28], StringComparison.OrdinalIgnoreCase) && fullPath.IndexOf($"{AppConfig.Instance.drive_letter}:\\windows\\system32", StringComparison.OrdinalIgnoreCase) == -1)
+                    if (processName.Equals(MSData.GetInstance.SysFileName[28], StringComparison.OrdinalIgnoreCase) && fullPath.IndexOf($"{AppConfig.Instance.drive_letter}:\\windows\\system32", StringComparison.OrdinalIgnoreCase) == -1)
                     {
                         AppConfig.Instance.LL.LogWarnMessage("_SuspiciousPath", fullPath);
                         isSuspiciousPath = true;
@@ -386,10 +354,10 @@ namespace MSearch
                         AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
                     }
 
-                    for (int i = 0; i < MSData.Instance.SysFileName.Length; i++)
+                    for (int i = 0; i < MSData.GetInstance.SysFileName.Length; i++)
                     {
 
-                        if (processName.Equals(MSData.Instance.SysFileName[i], StringComparison.OrdinalIgnoreCase))
+                        if (processName.Equals(MSData.GetInstance.SysFileName[i], StringComparison.OrdinalIgnoreCase))
                         {
 
                             if (fullPath.IndexOf($"{AppConfig.Instance.drive_letter}:\\windows\\system32", StringComparison.OrdinalIgnoreCase) == -1
@@ -406,7 +374,7 @@ namespace MSearch
                                 riskLevel += 2;
                             }
 
-                            if (fileSize >= MSData.Instance.constantFileSize[i] * 3 && !isValidProcess)
+                            if (fileSize >= MSData.GetInstance.constantFileSize[i] * 3 && !isValidProcess)
                             {
                                 AppConfig.Instance.LL.LogWarnMessage("_SuspiciousFileSize", FileChecker.GetFileSize(fileSize));
                                 riskLevel += 1;
@@ -424,7 +392,7 @@ namespace MSearch
 
                     try
                     {
-                        if (processName.Equals(MSData.Instance.SysFileName[17], StringComparison.OrdinalIgnoreCase) && (ProcessManager.IsDotnetProcess(p) || p.TotalProcessorTime > new TimeSpan(0, 0, 30)))
+                        if (processName.Equals(MSData.GetInstance.SysFileName[17], StringComparison.OrdinalIgnoreCase) && (ProcessManager.IsDotnetProcess(p) || p.TotalProcessorTime > new TimeSpan(0, 0, 30)))
                         {
                             AppConfig.Instance.LL.LogWarnMediumMessage("_WatchdogProcess", $"PID: {processId}");
                             riskLevel += 3;
@@ -534,7 +502,7 @@ namespace MSearch
                                 Process parentProcess = Process.GetProcessById(processParentId);
                                 if (parentProcess != null)
                                 {
-                                    if (parentProcess.ProcessName.Equals(MSData.Instance.SysFileName[9], StringComparison.OrdinalIgnoreCase))
+                                    if (parentProcess.ProcessName.Equals(MSData.GetInstance.SysFileName[9], StringComparison.OrdinalIgnoreCase))
                                     {
                                         riskLevel -= 1;
                                     }
@@ -561,7 +529,7 @@ namespace MSearch
                         }
                     }
 
-                    if (MSData.Instance.obfStr2.Any(s => FileSystemManager.NormalizeExtendedPath(s).Equals(processPath, StringComparison.OrdinalIgnoreCase)))
+                    if (MSData.GetInstance.obfStr2.Any(s => FileSystemManager.NormalizeExtendedPath(s).Equals(processPath, StringComparison.OrdinalIgnoreCase)))
                     {
                         riskLevel += 3;
                         isMaliciousProcess = true;
@@ -660,8 +628,8 @@ namespace MSearch
 
             if (AppConfig.Instance.fullScan)
             {
-                MSData.Instance.obfStr6.Clear();
-                MSData.Instance.obfStr6.Add(AppConfig.Instance.drive_letter + ":\\");
+                MSData.GetInstance.obfStr6.Clear();
+                MSData.GetInstance.obfStr6.Add(AppConfig.Instance.drive_letter + ":\\");
             }
 
             if (!AppConfig.Instance.WinPEMode)
@@ -670,35 +638,35 @@ namespace MSearch
                 string DesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 if (DesktopPath != null && !AppConfig.Instance.RunAsSystem)
                 {
-                    MSData.Instance.obfStr5.Add(Path.Combine(DesktopPath, "aut~olo~~gger".Replace("~", "")));
-                    MSData.Instance.obfStr5.Add(Path.Combine(DesktopPath, "av~_bl~~ock~_rem~~over".Replace("~", "")));
+                    MSData.GetInstance.obfStr5.Add(Path.Combine(DesktopPath, "aut~olo~~gger".Replace("~", "")));
+                    MSData.GetInstance.obfStr5.Add(Path.Combine(DesktopPath, "av~_bl~~ock~_rem~~over".Replace("~", "")));
                     if (!Path.GetPathRoot(DesktopPath).Equals("C:\\", StringComparison.OrdinalIgnoreCase) && !AppConfig.Instance.WinPEMode && !AppConfig.Instance.fullScan)
                     {
-                        MSData.Instance.obfStr6.Add(DesktopPath);
+                        MSData.GetInstance.obfStr6.Add(DesktopPath);
                     }
                 }
 
                 string DownloadsPath = FileSystemManager.GetDownloadsPath();
                 if (DownloadsPath != null && !AppConfig.Instance.RunAsSystem)
                 {
-                    MSData.Instance.obfStr5.Add(Path.Combine(DownloadsPath, "auto~lo~gge~~r".Replace("~", "")));
-                    MSData.Instance.obfStr5.Add(Path.Combine(DownloadsPath, "av_~bl~o~ck~_re~m~over".Replace("~", "")));
+                    MSData.GetInstance.obfStr5.Add(Path.Combine(DownloadsPath, "auto~lo~gge~~r".Replace("~", "")));
+                    MSData.GetInstance.obfStr5.Add(Path.Combine(DownloadsPath, "av_~bl~o~ck~_re~m~over".Replace("~", "")));
                     if (!Path.GetPathRoot(DownloadsPath).Equals("C:\\", StringComparison.OrdinalIgnoreCase) && !AppConfig.Instance.WinPEMode && !AppConfig.Instance.fullScan)
                     {
-                        MSData.Instance.obfStr6.Add(DownloadsPath);
+                        MSData.GetInstance.obfStr6.Add(DownloadsPath);
                     }
                 }
             }
 
             if (!string.IsNullOrEmpty(AppConfig.Instance.selectedPath) && Directory.Exists(AppConfig.Instance.selectedPath) && !AppConfig.Instance.fullScan)
             {
-                MSData.Instance.obfStr6.Clear();
-                MSData.Instance.obfStr6.Add(AppConfig.Instance.selectedPath);
+                MSData.GetInstance.obfStr6.Clear();
+                MSData.GetInstance.obfStr6.Add(AppConfig.Instance.selectedPath);
             }
 
-            MSData.Instance.obfStr6 = MSData.Instance.obfStr6.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+            MSData.GetInstance.obfStr6 = MSData.GetInstance.obfStr6.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
 
-            ScanDirectories(MSData.Instance.obfStr5, founded_suspLockedPaths, true);
+            ScanDirectories(MSData.GetInstance.obfStr5, founded_suspLockedPaths, true);
 
             if (!AppConfig.Instance.ScanOnly)
             {
@@ -724,7 +692,7 @@ namespace MSearch
                     {
                         if (FileChecker.CalculateMD5(file).Equals("0c0195c48b6b8582fa6f6373032118da"))
                         {
-                            MSData.Instance.obfStr1.Add(directory);
+                            MSData.GetInstance.obfStr1.Add(directory);
                         }
                     }
                 }
@@ -735,11 +703,11 @@ namespace MSearch
             {
                 if (FileChecker.IsFileSizeBloated(file))
                 {
-                    MSData.Instance.obfStr2.Add(file);
+                    MSData.GetInstance.obfStr2.Add(file);
                 }
             }
 
-            ScanDirectories(MSData.Instance.obfStr1, founded_mlwrDirs);
+            ScanDirectories(MSData.GetInstance.obfStr1, founded_mlwrDirs);
             if (!AppConfig.Instance.ScanOnly)
             {
                 if (founded_mlwrDirs.Count == 0)
@@ -765,7 +733,11 @@ namespace MSearch
             {
                 ScanShellStartup();
                 ScanRegistry();
-                ScanWMI();
+                if (!AppConfig.Instance.noScanWmi)
+                {
+                    ScanWMI();
+                }
+
                 if (!AppConfig.Instance.no_services)
                 {
                     ScanServices();
@@ -901,7 +873,7 @@ namespace MSearch
 
 
 
-            foreach (string path in MSData.Instance.obfStr2)
+            foreach (string path in MSData.GetInstance.obfStr2)
             {
                 if (File.Exists(path))
                 {
@@ -1025,7 +997,7 @@ namespace MSearch
             if (!AppConfig.Instance.ScanOnly)
             {
                 AppConfig.Instance.LL.LogHeadMessage("_CheckingTermService");
-                ServiceHelper.CheckTermService();
+                Utils.CheckTermService();
             }
 
             if (founded_mlwrDirs.Count > 0)
@@ -1276,7 +1248,7 @@ namespace MSearch
                 dynamic fwPolicy2 = Activator.CreateInstance(typeFWPolicy2);
 
                 INetFwRules rules = fwPolicy2.Rules;
-                foreach (string programPath in MSData.Instance.obfStr2)
+                foreach (string programPath in MSData.GetInstance.obfStr2)
                 {
                     foreach (INetFwRule rule in rules)
                     {
@@ -1375,7 +1347,7 @@ namespace MSearch
             AppConfig.Instance.LL.LogHeadMessage("_ScanningHosts");
 
             List<string> linesToDelete = new List<string>();
-            string hostsPath_full = $"{AppConfig.Instance.drive_letter}{MSData.Instance.queries["h0sts"]}";
+            string hostsPath_full = $"{AppConfig.Instance.drive_letter}{MSData.GetInstance.queries["h0sts"]}";
             string hostsPath_tmp = Path.Combine(Path.GetTempPath(), $"hosts{Utils.GetRndString(16)}");
 
             if (!File.Exists(hostsPath_full))
@@ -1457,7 +1429,7 @@ namespace MSearch
                         string domain = parts[1].ToLower();
                         if (domain.StartsWith("www.")) domain = domain.Substring(4);
 
-                        foreach (HashedString hLine in MSData.Instance.hStrings)
+                        foreach (HashedString hLine in MSData.GetInstance.hStrings)
                         {
                             if (hLine.OriginalLength <= domain.Length)
                             {
@@ -1467,7 +1439,7 @@ namespace MSearch
                                 {
                                     if (!AppConfig.Instance.ScanOnly)
                                     {
-                                        if (!MSData.Instance.hStrings.Any(h => Utils.StringMD5(domain).Equals(h.Hash)))
+                                        if (!MSData.GetInstance.hStrings.Any(h => Utils.StringMD5(domain).Equals(h.Hash)))
                                         {
                                             linesToDelete.Add(line);
                                         }
@@ -1494,31 +1466,32 @@ namespace MSearch
                     {
                         if (!AppConfig.Instance.ScanOnly || !AppConfig.Instance.console_mode)
                         {
-                            HostsDeletionForm form = new HostsDeletionForm(linesToDelete)
+                            using (HostsDeletionForm form = new HostsDeletionForm(linesToDelete)
                             {
                                 TopMost = true
-                            };
-
-                            if (form.ShowDialog() == DialogResult.OK)
+                            })
                             {
-                                List<string> selectedLinesToDelete = form.GetSelectedLinesToDelete();
-
-                                if (selectedLinesToDelete.Count != 0)
+                                if (form.ShowDialog() == DialogResult.OK)
                                 {
-                                    foreach (string line in selectedLinesToDelete)
+                                    List<string> selectedLinesToDelete = form.GetSelectedLinesToDelete();
+
+                                    if (selectedLinesToDelete.Count != 0)
                                     {
-                                        deletedLineCount++;
-                                        AppConfig.Instance.LL.LogWarnMessage("_SuspiciousEntry", line);
-                                        lines.Remove(line);
+                                        foreach (string line in selectedLinesToDelete)
+                                        {
+                                            deletedLineCount++;
+                                            AppConfig.Instance.LL.LogWarnMessage("_SuspiciousEntry", line);
+                                            lines.Remove(line);
+                                        }
+
+                                        File.WriteAllLines(hostsPath_tmp, lines);
+
                                     }
-
-                                    File.WriteAllLines(hostsPath_tmp, lines);
-
                                 }
-                            }
-                            else
-                            {
-                                linesToDelete.Clear();
+                                else
+                                {
+                                    linesToDelete.Clear();
+                                }
                             }
                         }
                     }
@@ -1569,7 +1542,7 @@ namespace MSearch
                 {
                     File.Delete(tmpFile);
                 }
-                MSData.Instance.hStrings.Clear();
+                MSData.GetInstance.hStrings.Clear();
             }
         }
 
@@ -1641,7 +1614,7 @@ namespace MSearch
                                 }
                             }
 
-                            foreach (string arg in MSData.Instance.badArgStrings)
+                            foreach (string arg in MSData.GetInstance.badArgStrings)
                             {
                                 if (shortcutInfo.Arguments.IndexOf(arg, StringComparison.OrdinalIgnoreCase) >= 0)
                                 {
@@ -1722,7 +1695,7 @@ namespace MSearch
             Logger.WriteLog(@"[Reg] Dis?allo?wRun...".Replace("?", ""), ConsoleColor.DarkCyan);
             try
             {
-                RegistryKey DisallowRunKey = Registry.CurrentUser.OpenSubKey(MSData.Instance.queries["ExplorerPolicies"], true);
+                RegistryKey DisallowRunKey = Registry.CurrentUser.OpenSubKey(MSData.GetInstance.queries["ExplorerPolicies"], true);
                 if (DisallowRunKey != null)
                 {
                     if (DisallowRunKey.GetValueNames().Contains("Dis?allo?wRun".Replace("?", "")))
@@ -1736,26 +1709,26 @@ namespace MSearch
                             if (!DisallowRunKey.GetValueNames().Contains("Dis?allo?wRun".Replace("?", "")))
                             {
                                 AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", "Dis?allo?wRun");
-                                scanResults.Add(new ScanResult(ScanObjectType.Malware, Path.Combine("HKEY_CURRENT_USER", MSData.Instance.queries["ExplorerPolicies"]) + "|DisallowRun", ScanActionType.Deleted));
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, Path.Combine("HKEY_CURRENT_USER", MSData.GetInstance.queries["ExplorerPolicies"]) + "|DisallowRun", ScanActionType.Deleted));
 
                                 affected_items++;
                             }
                         }
                         else
                         {
-                            scanResults.Add(new ScanResult(ScanObjectType.Malware, Path.Combine("HKEY_CURRENT_USER", MSData.Instance.queries["ExplorerPolicies"]) + "|DisallowRun", ScanActionType.Skipped));
+                            scanResults.Add(new ScanResult(ScanObjectType.Malware, Path.Combine("HKEY_CURRENT_USER", MSData.GetInstance.queries["ExplorerPolicies"]) + "|DisallowRun", ScanActionType.Skipped));
                         }
 
                     }
 
                     if (!AppConfig.Instance.ScanOnly)
                     {
-                        RegistryKey DisallowRunSub = Registry.CurrentUser.OpenSubKey(MSData.Instance.queries["ExplorerDisallowRun"], true);
+                        RegistryKey DisallowRunSub = Registry.CurrentUser.OpenSubKey(MSData.GetInstance.queries["ExplorerDisallowRun"], true);
                         if (DisallowRunSub != null)
                         {
                             AppConfig.Instance.totalFoundThreats++;
                             DisallowRunKey.DeleteSubKeyTree("Di?sall?owR?un".Replace("?", ""));
-                            DisallowRunSub = Registry.CurrentUser.OpenSubKey(MSData.Instance.queries["ExplorerDisallowRun"], true);
+                            DisallowRunSub = Registry.CurrentUser.OpenSubKey(MSData.GetInstance.queries["ExplorerDisallowRun"], true);
                             if (DisallowRunSub == null)
                             {
                                 AppConfig.Instance.LL.LogSuccessMessage("_RegistryKeyRemoved", "Dis?allo?wRun");
@@ -1771,7 +1744,7 @@ namespace MSearch
             {
 
                 AppConfig.Instance.LL.LogErrorMessage("_Error", ex, "HKCU\\...\\Explorer");
-                scanResults.Add(new ScanResult(ScanObjectType.Malware, Path.Combine("HKEY_CURRENT_USER", MSData.Instance.queries["ExplorerPolicies"]) + "|DisallowRun", ScanActionType.Error, ex.Message));
+                scanResults.Add(new ScanResult(ScanObjectType.Malware, Path.Combine("HKEY_CURRENT_USER", MSData.GetInstance.queries["ExplorerPolicies"]) + "|DisallowRun", ScanActionType.Error, ex.Message));
 
             }
 
@@ -1781,7 +1754,7 @@ namespace MSearch
             Logger.WriteLog(@"[Reg] AppInitDLL...", ConsoleColor.DarkCyan);
             try
             {
-                RegistryKey appinit_key = Registry.LocalMachine.OpenSubKey(MSData.Instance.queries["WindowsNT_CurrentVersion_Windows"], true);
+                RegistryKey appinit_key = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["WindowsNT_CurrentVersion_Windows"], true);
                 if (appinit_key != null)
                 {
                     object appInitDllsRawValue = appinit_key.GetValue("AppI?nit?_DLLs".Replace("?", ""));
@@ -1790,7 +1763,7 @@ namespace MSearch
                         string appInitDllsValue = appInitDllsRawValue.ToString();
                         if (!string.IsNullOrEmpty(appInitDllsValue))
                         {
-                            string RequireSignedValueFullPath = Path.Combine("HKEY_LOCAL_MACHINE", MSData.Instance.queries["WindowsNT_CurrentVersion_Windows"]) + "|RequireSignedAppInit_DLLs";
+                            string RequireSignedValueFullPath = Path.Combine("HKEY_LOCAL_MACHINE", MSData.GetInstance.queries["WindowsNT_CurrentVersion_Windows"]) + "|RequireSignedAppInit_DLLs";
                             if (appinit_key.GetValue("Loa?dAp?p??Init_DLLs".Replace("?", "")).ToString() == "1")
                             {
                                 if (!appinit_key.GetValueNames().Contains("RequireSignedApp?Ini?t_D?LLs".Replace("?", "")))
@@ -1856,7 +1829,7 @@ namespace MSearch
 
             try
             {
-                IFEOKey = Registry.LocalMachine.OpenSubKey(MSData.Instance.queries["IFEO"], true);
+                IFEOKey = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["IFEO"], true);
 
                 if (IFEOKey != null)
                 {
@@ -1969,7 +1942,7 @@ namespace MSearch
 
             try
             {
-                IFEOKeyWow6432 = Registry.LocalMachine.OpenSubKey(MSData.Instance.queries["Wow6432Node_IFEO"], true);
+                IFEOKeyWow6432 = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["Wow6432Node_IFEO"], true);
 
                 if (IFEOKeyWow6432 != null)
                 {
@@ -2082,7 +2055,7 @@ namespace MSearch
 
             try
             {
-                RegistryKey baseKey = Registry.LocalMachine.OpenSubKey(MSData.Instance.queries["SilentProcessExit"], writable: true);
+                RegistryKey baseKey = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["SilentProcessExit"], writable: true);
 
                 if (baseKey != null)
                 {
@@ -2135,12 +2108,12 @@ namespace MSearch
             #region HKLM
             try
             {
-                RegistryKey AutorunKeyHKLM = Registry.LocalMachine.OpenSubKey(MSData.Instance.queries["StartupRun"], true);
+                RegistryKey AutorunKeyHKLM = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["StartupRun"], true);
                 if (AutorunKeyHKLM != null)
                 {
                     Logger.WriteLog(@"[Reg] HKLM Autorun...", ConsoleColor.DarkCyan);
                     List<string> RunKeys = AutorunKeyHKLM.GetValueNames().ToList();
-                    string HKLMRunKeyFullPath = Path.Combine("HKEY_LOCAL_MACHINE", MSData.Instance.queries["StartupRun"]);
+                    string HKLMRunKeyFullPath = Path.Combine("HKEY_LOCAL_MACHINE", MSData.GetInstance.queries["StartupRun"]);
 
                     foreach (string value in RunKeys)
                     {
@@ -2355,7 +2328,7 @@ namespace MSearch
                                     foreach (string dll in Directory.EnumerateFiles(autorunValueDir, "*.dll"))
                                     {
                                         string dllName = Path.GetFileName(dll);
-                                        if (Array.Exists(MSData.Instance.sideloadableDlls, s => dllName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0))
+                                        if (Array.Exists(MSData.GetInstance.sideloadableDlls, s => dllName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0))
                                         {
                                             WinVerifyTrustResult dllSignature = winTrust.VerifyEmbeddedSignature(dll);
 
@@ -2410,7 +2383,7 @@ namespace MSearch
             Logger.WriteLog(@"[Reg] HKLM System settings...", ConsoleColor.DarkCyan);
             try
             {
-                string regPath = MSData.Instance.queries["WindowsNT_CurrentVersion_Winlogon"];
+                string regPath = MSData.GetInstance.queries["WindowsNT_CurrentVersion_Winlogon"];
 
                 using (RegistryKey WinLogonKey = Registry.LocalMachine.OpenSubKey(regPath, true))
                 {
@@ -2500,8 +2473,8 @@ namespace MSearch
             Logger.WriteLog(@"[Reg] HKCU Autorun...", ConsoleColor.DarkCyan);
             try
             {
-                RegistryKey AutorunKey = Registry.CurrentUser.OpenSubKey(MSData.Instance.queries["StartupRun"], true);
-                string RunKeyFullPath = Path.Combine("HKEY_CURRENT_USER", MSData.Instance.queries["StartupRun"]);
+                RegistryKey AutorunKey = Registry.CurrentUser.OpenSubKey(MSData.GetInstance.queries["StartupRun"], true);
+                string RunKeyFullPath = Path.Combine("HKEY_CURRENT_USER", MSData.GetInstance.queries["StartupRun"]);
 
                 if (AutorunKey != null)
                 {
@@ -2566,6 +2539,26 @@ namespace MSearch
                             }
                         }
 
+                        if ((AutorunKeyValue.IndexOf("regsvr32", StringComparison.OrdinalIgnoreCase) >= 0 && (AutorunKeyValue.Contains("/u") || AutorunKeyValue.Contains("/s")) || AutorunKeyValue.Contains("/i:")))
+                        {
+                            AppConfig.Instance.totalFoundThreats++;
+                            if (!AppConfig.Instance.ScanOnly)
+                            {
+                                AutorunKey.DeleteValue(value);
+                                if (AutorunKey.GetValue(value) == null)
+                                {
+                                    AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, RunKeyFullPath + $"|{value}", ScanActionType.Deleted));
+                                    affected_items++;
+                                }
+                            }
+                            else
+                            {
+                                AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, RunKeyFullPath + $"|{value}", ScanActionType.Skipped));
+
+                            }
+                        }
 
                         if (File.Exists(path))
                         {
@@ -2671,7 +2664,7 @@ namespace MSearch
                                 {
                                     foreach (string dll in from string dll in Directory.EnumerateFiles(autorunValueDir, "*.dll")
                                                            let dllName = Path.GetFileName(dll)
-                                                           where Array.Exists(MSData.Instance.sideloadableDlls, s => dllName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0)
+                                                           where Array.Exists(MSData.GetInstance.sideloadableDlls, s => dllName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0)
                                                            let dllSignature = winTrust.VerifyEmbeddedSignature(dll)
                                                            where dllSignature != WinVerifyTrustResult.Success
                                                            select dll)
@@ -2743,7 +2736,7 @@ namespace MSearch
             Logger.WriteLog(@"[Reg] HKCU System policies...", ConsoleColor.DarkCyan);
             try
             {
-                string regPath = MSData.Instance.queries["SystemPolicies"];
+                string regPath = MSData.GetInstance.queries["SystemPolicies"];
                 string regPathFull = Path.Combine("HKEY_CURRENT_USER", regPath);
                 string[] valueNames = { "Di?sable?TaskM?gr".Replace("?", ""), "Di??sab?leRe?gistr??yToo?ls".Replace("?", "") };
 
@@ -2802,7 +2795,7 @@ namespace MSearch
 
                 Logger.WriteLog($"[Reg] {subkeyNameTektonit}...", ConsoleColor.DarkCyan);
 
-                using (RegistryKey tektonit = Registry.CurrentUser.OpenSubKey(MSData.Instance.queries["Tekt0nitParameters"], true))
+                using (RegistryKey tektonit = Registry.CurrentUser.OpenSubKey(MSData.GetInstance.queries["Tekt0nitParameters"], true))
                 {
                     if (tektonit != null)
                     {
@@ -2917,7 +2910,7 @@ namespace MSearch
             #region Applocker
 
             Logger.WriteLog(@"[Reg] Applocker...", ConsoleColor.DarkCyan);
-            string registryPath = MSData.Instance.queries["appl0cker"];
+            string registryPath = MSData.GetInstance.queries["appl0cker"];
 
             bool isContainsBadPolicies = false;
 
@@ -2929,7 +2922,7 @@ namespace MSearch
                 {
                     foreach (string subkeyName in allSubkeys)
                     {
-                        if (MSData.Instance.badSubkeys.Contains(subkeyName, StringComparer.OrdinalIgnoreCase))
+                        if (MSData.GetInstance.badSubkeys.Contains(subkeyName, StringComparer.OrdinalIgnoreCase))
                         {
                             isContainsBadPolicies = true;
                             if (!AppConfig.Instance.ScanOnly)
@@ -2976,8 +2969,8 @@ namespace MSearch
             {
                 string[] baseKeys =
                 {
-                    MSData.Instance.queries["WDExclusionsLocal"],
-                    MSData.Instance.queries["WDExclusionsPolicies"]
+                    MSData.GetInstance.queries["WDExclusionsLocal"],
+                    MSData.GetInstance.queries["WDExclusionsPolicies"]
                 };
 
                 string[] subKeys = { "Paths", "Processes", "Extensions" };
@@ -3016,11 +3009,11 @@ namespace MSearch
                         List<string> checkList;
 
                         if (subKey == "Processes")
-                            checkList = MSData.Instance.obfStr4;
+                            checkList = MSData.GetInstance.obfStr4;
                         else if (subKey == "Extensions")
                             checkList = new List<string> { ".exe", ".tmp" };
                         else
-                            checkList = MSData.Instance.obfStr3;
+                            checkList = MSData.GetInstance.obfStr3;
 
                         foreach (string valueName in valueNames)
                         {
@@ -3031,13 +3024,13 @@ namespace MSearch
                                 {
                                     if (!AppConfig.Instance.ScanOnly)
                                     {
-                                        if (baseKey == MSData.Instance.queries["WDExclusionsLocal"])
+                                        if (baseKey == MSData.GetInstance.queries["WDExclusionsLocal"])
                                         {
 
                                             Utils.RemoveDefenderExclusion(subKey, valueName);
                                             if (key.GetValue(valueName) == null)
                                             {
-                                                scanResults.Add(new ScanResult(ScanObjectType.Unsafe, $"{AppConfig.Instance.LL.GetLocalizedString("_UnwantedExclusion").Replace("?","")} (Local) -> " + valueName, ScanActionType.Deleted));
+                                                scanResults.Add(new ScanResult(ScanObjectType.Unsafe, $"{AppConfig.Instance.LL.GetLocalizedString("_UnwantedExclusion").Replace("?", "")} (Local) -> " + valueName, ScanActionType.Deleted));
                                                 AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", $"{valueName} (local)");
                                                 affected_items++;
                                                 AppConfig.Instance.totalFoundThreats++;
@@ -3045,7 +3038,7 @@ namespace MSearch
                                             else
                                             {
                                                 AppConfig.Instance.LL.LogWarnMediumMessage("_ErrorCannotRemove", $"{valueName} (local)");
-                                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{AppConfig.Instance.LL.GetLocalizedString("_UnwantedExclusion").Replace("?", "")} (Local) -> " + valueName, ScanActionType.Inaccassible, AppConfig.Instance.LL.GetLocalizedString("_ErrorTurnedOffDefender").Replace("?","")));
+                                                scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{AppConfig.Instance.LL.GetLocalizedString("_UnwantedExclusion").Replace("?", "")} (Local) -> " + valueName, ScanActionType.Inaccassible, AppConfig.Instance.LL.GetLocalizedString("_ErrorTurnedOffDefender").Replace("?", "")));
                                                 AppConfig.Instance.totalFoundSuspiciousObjects++;
                                             }
                                         }
@@ -3094,8 +3087,8 @@ namespace MSearch
             #region WOW6432Node
             try
             {
-                RegistryKey WOW64AutorunKey = Registry.LocalMachine.OpenSubKey(MSData.Instance.queries["Wow6432Node_StartupRun"], true);
-                string RegRunKeyFullPath = Path.Combine("HKEY_LOCAL_MACHINE", MSData.Instance.queries["Wow6432Node_StartupRun"]);
+                RegistryKey WOW64AutorunKey = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["Wow6432Node_StartupRun"], true);
+                string RegRunKeyFullPath = Path.Combine("HKEY_LOCAL_MACHINE", MSData.GetInstance.queries["Wow6432Node_StartupRun"]);
                 if (WOW64AutorunKey != null)
                 {
                     Logger.WriteLog(@"[Reg] Wow64Node Autorun...", ConsoleColor.DarkCyan);
@@ -3138,6 +3131,27 @@ namespace MSearch
                         }
 
                         if ((AutorunKeyValue.IndexOf(" /c cd ", StringComparison.OrdinalIgnoreCase) >= 0 && (AutorunKeyValue.IndexOf(" && ", StringComparison.OrdinalIgnoreCase) >= 0)))
+                        {
+                            AppConfig.Instance.totalFoundThreats++;
+                            if (!AppConfig.Instance.ScanOnly)
+                            {
+                                WOW64AutorunKey.DeleteValue(value);
+                                if (WOW64AutorunKey.GetValue(value) == null)
+                                {
+                                    AppConfig.Instance.LL.LogSuccessMessage("_RegistryValueRemoved", value);
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RegRunKeyFullPath}|{value}", ScanActionType.Deleted));
+                                    affected_items++;
+                                }
+                            }
+                            else
+                            {
+                                AppConfig.Instance.LL.LogWarnMediumMessage("_FoundMlwrKey", value);
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{RegRunKeyFullPath}|{value}", ScanActionType.Skipped));
+
+                            }
+                        }
+
+                        if ((AutorunKeyValue.IndexOf("regsvr32", StringComparison.OrdinalIgnoreCase) >= 0 && (AutorunKeyValue.Contains("/u") || AutorunKeyValue.Contains("/s")) || AutorunKeyValue.Contains("/i:")))
                         {
                             AppConfig.Instance.totalFoundThreats++;
                             if (!AppConfig.Instance.ScanOnly)
@@ -3316,7 +3330,7 @@ namespace MSearch
                                 {
                                     foreach (string dll in from string dll in Directory.EnumerateFiles(autorunValueDir, "*.dll")
                                                            let dllName = Path.GetFileName(dll)
-                                                           where Array.Exists(MSData.Instance.sideloadableDlls, s => dllName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0)
+                                                           where Array.Exists(MSData.GetInstance.sideloadableDlls, s => dllName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0)
                                                            let dllSignature = winTrust.VerifyEmbeddedSignature(dll)
                                                            where dllSignature != WinVerifyTrustResult.Success
                                                            select dll)
@@ -3381,8 +3395,8 @@ namespace MSearch
                     Environment.SystemDirectory,
                     new StringBuilder(AppConfig.Instance.drive_letter).Append(":\\W").Append("in").Append("do").Append("ws").Append("\\S").Append("ys").Append("WO").Append("W6").Append("4").ToString(),
                     new StringBuilder(AppConfig.Instance.drive_letter).Append(":\\W").Append("in").Append("do").Append("ws").Append("\\S").Append("ys").Append("te").Append("m3").Append("2\\").Append("wb").Append("em").ToString(),
-                    MSData.Instance.queries["PowerShellPath"],
-                };
+                    MSData.GetInstance.queries["PowerShellPath"],
+            };
 
             SafeModeTaskParser parser = new SafeModeTaskParser();
             List<ScheduledTaskInfo> allTasks = parser.GetAllTasks();
@@ -3415,7 +3429,7 @@ namespace MSearch
                         if (taskName.StartsWith("d?ia?le?r".Replace("?", ""))) suspiciousFound = true;
                         if (!suspiciousFound)
                         {
-                            foreach (string arg in MSData.Instance.badArgStrings)
+                            foreach (string arg in MSData.GetInstance.badArgStrings)
                             {
                                 if (arguments.IndexOf(arg, StringComparison.OrdinalIgnoreCase) >= 0) { suspiciousFound = true; break; }
                             }
@@ -3501,7 +3515,7 @@ namespace MSearch
         {
             AppConfig.Instance.LL.LogHeadMessage(@"_WMIHead");
 
-            ServiceHelper.CheckWMI(false);
+            Utils.CheckWMI(false);
 
             try
             {
@@ -3552,7 +3566,7 @@ namespace MSearch
 
                 if (filePath.IndexOf("powershell", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    if (arguments.IndexOf(MSData.Instance.queries["disableSmb1Script"], StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (arguments.IndexOf(MSData.GetInstance.queries["disableSmb1Script"], StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         int ps1Index = arguments.IndexOf(".ps1", StringComparison.OrdinalIgnoreCase);
                         if (ps1Index > 0)
@@ -3918,6 +3932,49 @@ namespace MSearch
                     }
                 }
 
+                if (filePath.IndexOf("conhost", StringComparison.OrdinalIgnoreCase) >= 0 && arguments.IndexOf("--headless", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    if (arguments.IndexOf(MSData.GetInstance.conhostPatterns["convert-from"], StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        arguments.IndexOf(MSData.GetInstance.conhostPatterns["invoke-pattern"], StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        arguments.IndexOf(MSData.GetInstance.conhostPatterns["policy-bp"], StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        arguments.IndexOf(" -ec ", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        arguments.IndexOf(" -encodedcommand ", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        arguments.IndexOf("appdata\\local", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        try
+                        {
+                            AppConfig.Instance.LL.LogCautionMessage("_Malic1ousTask", task.Name);
+                            AppConfig.Instance.totalFoundThreats++;
+
+                            if (!AppConfig.Instance.ScanOnly)
+                            {
+                                if (parser.DeleteTaskDirectly(task))
+                                {
+                                    AppConfig.Instance.LL.LogSuccessMessage("_Malic1ousTask", $"{task.Path}\\{task.Name}", "_Deleted");
+                                    scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{AppConfig.Instance.LL.GetLocalizedString("_ScheduledTask")} -> {task.Path}\\{task.Name}", ScanActionType.Deleted, AppConfig.Instance.LL.GetLocalizedString("_SuspiciousUsage").Replace("#OBJ#", "conhost.exe")));
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                scanResults.Add(new ScanResult(ScanObjectType.Malware, $"{AppConfig.Instance.LL.GetLocalizedString("_ScheduledTask")} -> {task.Path}\\{task.Name}", ScanActionType.Skipped, AppConfig.Instance.LL.GetLocalizedString("_SuspiciousUsage").Replace("#OBJ#", "conhost.exe")));
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            AppConfig.Instance.totalNeutralizedThreats--;
+                            AppConfig.Instance.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                        }
+                    }
+
+                    string suspiciousUsageMsg = AppConfig.Instance.LL.GetLocalizedString("_SuspiciousUsage").Replace("#OBJ#", "conhost.exe");
+                    Logger.WriteLog($"\t[!!] {suspiciousUsageMsg}", Logger.warnMedium, false);
+                    scanResults.Add(new ScanResult(ScanObjectType.Suspicious, $"{AppConfig.Instance.LL.GetLocalizedString("_ScheduledTask")} -> {task.Path}\\{task.Name}", ScanActionType.Skipped, AppConfig.Instance.LL.GetLocalizedString("_SuspiciousUsage").Replace("#OBJ#", "conhost.exe")));
+                    AppConfig.Instance.totalFoundSuspiciousObjects++;
+
+                }
+
                 if (filePath.EndsWith(@"\node.exe", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(arguments))
                 {
                     Match m = Regex.Match(arguments, @"(?i)""?(?<script>[a-z]:\\[^""]+)""?");
@@ -4115,11 +4172,11 @@ namespace MSearch
 
                     HashSet<string> sysFileNamesHashset = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-                    if (MSData.Instance.SysFileName != null)
+                    if (MSData.GetInstance.SysFileName != null)
                     {
                         sysFileNamesHashset.Clear();
 
-                        foreach (string _fileName in MSData.Instance.SysFileName)
+                        foreach (string _fileName in MSData.GetInstance.SysFileName)
                         {
                             if (!string.IsNullOrEmpty(_fileName))
                             {
@@ -4288,7 +4345,7 @@ namespace MSearch
                     return;
                 }
 
-                if (FileChecker.CheckSignature(filePath, MSData.Instance.signatures) || FileChecker.CheckDynamicSignature(filePath, 16, 100))
+                if (FileChecker.CheckSignature(filePath, MSData.GetInstance.signatures) || FileChecker.CheckDynamicSignature(filePath, 16, 100))
                 {
                     AppConfig.Instance.LL.LogCautionMessage("_Found", filePath);
                     if (founded_mlwrFiles.Add(filePath))
@@ -4392,7 +4449,10 @@ namespace MSearch
                     (normalized.Contains("irm") || normalized.Contains("invoke-restmethod")) &&
                     Regex.IsMatch(normalized, @"https?://[^\s""]+");
 
-                    if (hasDownloadExec)
+                    bool hasFilelessPersistence = normalized.Contains("[reflection.assembly]::") || normalized.Contains("[runtime.interopservices.marshal]::") || normalized.Contains("[reflection.emit") || normalized.Contains("[microsoft.win32.registry]::");
+                    bool hasMaliciousPattern = normalized.Contains("e=access&y=guest&h=");
+
+                    if (hasDownloadExec || hasFilelessPersistence)
                     {
                         AppConfig.Instance.LL.LogCautionMessage("_Found", $"{service.ServiceName} {servicePath}");
                         svcinfo.FilePath = servicePathWithArgs;
@@ -4400,6 +4460,15 @@ namespace MSearch
                         svcinfo.HasHijackedSystemBinary = true;
 
                         suspiciousServiceList.Add(service, svcinfo);
+                    }
+
+                    if (hasMaliciousPattern)
+                    {
+                        AppConfig.Instance.LL.LogCautionMessage("_Found", $"{service.ServiceName} {servicePath}");
+                        svcinfo.FilePath = servicePathWithArgs;
+                        svcinfo.IsMlwrSignature = true;
+                        suspiciousServiceList.Add(service, svcinfo);
+
                     }
 
 
@@ -4412,7 +4481,7 @@ namespace MSearch
                             WinVerifyTrustResult servicePathSignature = winTrust.VerifyEmbeddedSignature(Environment.ExpandEnvironmentVariables(servicePath));
                             if (servicePathSignature != WinVerifyTrustResult.Success && servicePathSignature != WinVerifyTrustResult.Error)
                             {
-                                if (fi.Length >= maxFileSize || (nameRegex.IsMatch(serviceName) && pathRegex.IsMatch(servicePath)) || FileChecker.CheckSignature(servicePath, MSData.Instance.signatures) || FileChecker.CheckDynamicSignature(servicePath, 2096, startSequence, endSequence) || FileChecker.CheckDynamicSignature(servicePath, 16, 100))
+                                if (fi.Length >= maxFileSize || (nameRegex.IsMatch(serviceName) && pathRegex.IsMatch(servicePath)) || FileChecker.CheckSignature(servicePath, MSData.GetInstance.signatures) || FileChecker.CheckDynamicSignature(servicePath, 2096, startBadSequence, endBadSequence) || FileChecker.CheckDynamicSignature(servicePath, 16, 100))
                                 {
                                     AppConfig.Instance.LL.LogCautionMessage("_Found", $"{service.ServiceName} {servicePath}");
 
@@ -4439,7 +4508,7 @@ namespace MSearch
                                 {
                                     foreach (string dll in from string dll in Directory.EnumerateFiles(serviceDir, "*.dll")
                                                            let dllName = Path.GetFileName(dll)
-                                                           where Array.Exists(MSData.Instance.sideloadableDlls, s => dllName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0)
+                                                           where Array.Exists(MSData.GetInstance.sideloadableDlls, s => dllName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0)
                                                            let dllSignature = winTrust.VerifyEmbeddedSignature(dll)
                                                            where dllSignature != WinVerifyTrustResult.Success
                                                            select dll)
@@ -4726,14 +4795,14 @@ namespace MSearch
 #if !DEBUG
             if (!AppConfig.Instance.WinPEMode)
             {
-                MSData.Instance.obfStr6.Add(Path.GetTempPath());
+                MSData.GetInstance.obfStr6.Add(Path.GetTempPath());
             }
 #endif
 
             if (!string.IsNullOrEmpty(AppConfig.Instance.selectedPath) && Directory.Exists(AppConfig.Instance.selectedPath) && !AppConfig.Instance.fullScan)
             {
-                MSData.Instance.obfStr6.Clear();
-                MSData.Instance.obfStr6.Add(AppConfig.Instance.selectedPath);
+                MSData.GetInstance.obfStr6.Clear();
+                MSData.GetInstance.obfStr6.Add(AppConfig.Instance.selectedPath);
             }
 
             if (AppConfig.Instance.fullScan)
@@ -4742,15 +4811,15 @@ namespace MSearch
                 IEnumerable<DriveInfo> localDrives = allDrives.Where(drive => drive.DriveType == DriveType.Fixed && !drive.Name.Contains(Environment.SystemDirectory.Substring(0, 2)));
                 foreach (DriveInfo drive in localDrives)
                 {
-                    MSData.Instance.obfStr6.Add(drive.Name);
+                    MSData.GetInstance.obfStr6.Add(drive.Name);
                 }
             }
 
 
 
-            MSData.Instance.obfStr6 = MSData.Instance.obfStr6.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+            MSData.GetInstance.obfStr6 = MSData.GetInstance.obfStr6.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
 
-            foreach (string path in MSData.Instance.obfStr6)
+            foreach (string path in MSData.GetInstance.obfStr6)
             {
                 if (!Directory.Exists(path))
                 {
@@ -4897,7 +4966,7 @@ namespace MSearch
                 }
 
 
-                bool sequenceFound = FileChecker.CheckSignature(file, MSData.Instance.signatures);
+                bool sequenceFound = FileChecker.CheckSignature(file, MSData.GetInstance.signatures);
 
                 if (sequenceFound)
                 {
@@ -4917,7 +4986,7 @@ namespace MSearch
                     return true;
                 }
 
-                bool computedSequence2 = FileChecker.CheckDynamicSignature(file, 2096, startSequence, endSequence);
+                bool computedSequence2 = FileChecker.CheckDynamicSignature(file, 2096, startBadSequence, endBadSequence);
                 if (computedSequence2)
                 {
                     founded_mlwrFiles.Add(file);

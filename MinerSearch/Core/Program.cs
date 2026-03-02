@@ -11,10 +11,11 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+//using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Win32Wrapper;
 
 namespace MSearch
 {
@@ -254,7 +255,7 @@ namespace MSearch
                     {
                         key.SetValue(registryValueOutdatedOS, 1);
                         Utils.mutex.ReleaseMutex();
-                        Process.Start(Assembly.GetExecutingAssembly().Location, "-so");
+                        Process.Start(AppConfig.Instance.ExecutablePath, "-so");
                         return;
                     }
                     else if (dialogResult == DialogResult.Cancel || dialogResult == DialogResult.None)
@@ -266,7 +267,7 @@ namespace MSearch
 
 
 
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(AppConfig.Instance.ExecutablePath));
 
             if (args.Length > 0)
             {
@@ -305,6 +306,10 @@ namespace MSearch
                     else if (arg.Equals("--no-scantime", StringComparison.OrdinalIgnoreCase) || arg.Equals("-nstm", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.no_scantime = true;
+                    }
+                    else if (arg.Equals("--no-scan-wmi", StringComparison.OrdinalIgnoreCase) || arg.Equals("-nwmi", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AppConfig.Instance.noScanWmi = true;
                     }
                     else if (arg.Equals("--no-signature-scan", StringComparison.OrdinalIgnoreCase) || arg.Equals("-nss", StringComparison.OrdinalIgnoreCase))
                     {
@@ -396,28 +401,6 @@ namespace MSearch
                     else if (arg.Equals("--verbose", StringComparison.OrdinalIgnoreCase) || arg.Equals("-v", StringComparison.OrdinalIgnoreCase))
                     {
                         AppConfig.Instance.verbose = true;
-                    }
-                    else if (arg.Equals("--run-as-system", StringComparison.OrdinalIgnoreCase) || arg.Equals("-ras", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (!AppConfig.Instance.IsGuiAvailable)
-                        {
-                            DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_MessageRemoteSystemSessionBlocked"), AppConfig.Instance._title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-
-                        Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_HIDE);
-                        Utils.mutex.ReleaseMutex();
-                        StringBuilder argsBuilder = new StringBuilder("");
-                        foreach (string _arg in args)
-                        {
-                            argsBuilder.Append(" " + _arg.ToLower());
-                        }
-                        Native.RunAs(Bfs.Create(
-                            new StringBuilder("xq").Append("vY").Append("ab").Append("pF").Append("Rk").Append("S3").Append("8f").Append("0U").Append("BX").Append("5m").Append("3g").Append("==").ToString(),
-                            new StringBuilder("KV").Append("/K").Append("6+").Append("Aq").Append("Y9").Append("P0").Append("Af").Append("Bo").Append("QQ").Append("dY").Append("M5").Append("qv").Append("iJ").Append("kq").Append("e2").Append("tY").Append("HX").Append("Rn").Append("cL").Append("hy").Append("/q").Append("8=").ToString(),
-                            new StringBuilder("WF").Append("EF").Append("OW").Append("Yz").Append("RK").Append("pU").Append("oG").Append("EN").Append("ce").Append("yO").Append("SQ").Append("==").ToString()),
-                            argsBuilder.ToString().Replace("--run-as-system", "").Replace("-ras", ""));
-                        return;
                     }
                     else if (arg.Equals("--select", StringComparison.OrdinalIgnoreCase) || arg.Equals("-s", StringComparison.OrdinalIgnoreCase))
                     {
@@ -657,7 +640,7 @@ namespace MSearch
                 }
             }
 
-            MSData.InitOnce(AppConfig.Instance.RunAsSystem);
+            //MSData.InitOnce(AppConfig.Instance.RunAsSystem);
 
             if (AppConfig.Instance.QuarantineMode)
             {
@@ -670,15 +653,17 @@ namespace MSearch
                 else
                 {
                     Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_MINIMIZE);
-                    QuarantineForm qForm = new QuarantineForm();
-                    qForm.ShowDialog();
+                    using (QuarantineForm qForm = new QuarantineForm())
+                    {
+                        qForm.ShowDialog();
+                    }
                 }
             }
 
             MinerSearch mk = new MinerSearch();
 
             AppConfig.Instance.LL.LogHeadMessage("_PreparingToScan");
-            FileChecker.RestoreSignatures(MSData.Instance.signatures);
+            FileChecker.RestoreSignatures(MSData.GetInstance.signatures);
 
             ProcessManager.InitPrivileges();
 
@@ -686,8 +671,8 @@ namespace MSearch
             {
                 if (!ProcessManager.HasDebugPrivilege())
                 {
-                    string privilegename = "SeDebugPrivilege";
-                    string groupName = Native.ConvertWellKnowSIDToGroupName("S-1-5-32-544"); //Admin group
+                    string privilegename = "S?eDe??bug?Pr?iv?il?ege".Replace("?","");
+                    string groupName = OSExtensions.ConvertWellKnowSIDToGroupName("S-1-5-32-544"); //Admin group
 
 
                     if (Native.GrantPrivilegeToGroup(groupName, privilegename))
@@ -779,12 +764,14 @@ namespace MSearch
                     }
                 }
 
-                FinishEx finish = new FinishEx(AppConfig.Instance.totalFoundThreats, NeutralizedThreatsCount, AppConfig.Instance.totalFoundSuspiciousObjects, elapsedTime) //+ sign because neutralized threats is negative
+                using (FinishEx finish = new FinishEx(AppConfig.Instance.totalFoundThreats, NeutralizedThreatsCount, AppConfig.Instance.totalFoundSuspiciousObjects, elapsedTime) //+ sign because neutralized threats is negative
                 {
                     TopMost = true
-                };
-                finish.LoadResults(MinerSearch.scanResults);
-                finish.ShowDialog();
+                })
+                {
+                    finish.LoadResults(MinerSearch.scanResults);
+                    finish.ShowDialog();
+                }
             }
 
 #if DEBUG

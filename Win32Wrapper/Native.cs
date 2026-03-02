@@ -1,28 +1,20 @@
-﻿using DBase;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
-using MSearch.Core;
-using MSearch.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Management;
-using System.Reflection;
 using System.Runtime.InteropServices;
-using System.ServiceProcess;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
+using static Win32Wrapper.NativeServiceController;
 
-namespace MSearch
+namespace Win32Wrapper
 {
-    internal class Native
+    public class Native
     {
-
-
         [DllImport("advapi32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
@@ -49,7 +41,7 @@ namespace MSearch
         public static extern int NtSetInformationProcess(IntPtr hProcess, int processInformationClass, ref int processInformation, int processInformationLength);
 
         [DllImport("ntdll.dll")]
-        internal static extern int NtQueryInformationProcess(IntPtr processHandle, int processInformationClass, ref PROCESS_BASIC_INFORMATION processInformation, int processInformationLength, out int returnLength);
+        public static extern int NtQueryInformationProcess(IntPtr processHandle, int processInformationClass, ref PROCESS_BASIC_INFORMATION processInformation, int processInformationLength, out int returnLength);
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenProcess(int access, bool inheritHandle, int processId);
@@ -76,77 +68,77 @@ namespace MSearch
         public static extern IntPtr GetStdHandle(int nStdHandle);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+        public static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
+        public static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 
         [DllImport("user32.dll")]
-        internal static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
-        internal static extern IntPtr LoadIcon(IntPtr hInstance, IntPtr lpIconName);
+        public static extern IntPtr LoadIcon(IntPtr hInstance, IntPtr lpIconName);
 
         [DllImport("user32.dll", EntryPoint = "GetClassLong")]
-        internal static extern uint GetClassLong32(IntPtr hWnd, int nIndex);
+        public static extern uint GetClassLong32(IntPtr hWnd, int nIndex);
 
         [DllImport("user32.dll", EntryPoint = "GetClassLongPtr")]
-        internal static extern IntPtr GetClassLong64(IntPtr hWnd, int nIndex);
+        public static extern IntPtr GetClassLong64(IntPtr hWnd, int nIndex);
 
         [DllImport("kernel32.dll")]
-        internal static extern void GetNativeSystemInfo(ref SYSTEM_INFO lpSystemInfo);
+        public static extern void GetNativeSystemInfo(ref SYSTEM_INFO lpSystemInfo);
 
         [DllImport("Netapi32.dll", CharSet = CharSet.Unicode)]
-        internal static extern int NetUserEnum(string servername, int level, int filter, out IntPtr bufptr, int prefmaxlen, out int entriesread, out int totalentries, ref int resume_handle);
+        public static extern int NetUserEnum(string servername, int level, int filter, out IntPtr bufptr, int prefmaxlen, out int entriesread, out int totalentries, ref int resume_handle);
 
         [DllImport("Netapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        internal static extern int NetUserDel(string serverName, string userName);
+        public static extern int NetUserDel(string serverName, string userName);
 
         [DllImport("Netapi32.dll", SetLastError = true)]
-        internal static extern int NetApiBufferFree(IntPtr Buffer);
+        public static extern int NetApiBufferFree(IntPtr Buffer);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern IntPtr GetCurrentProcess();
+        public static extern IntPtr GetCurrentProcess();
 
         [DllImport("kernel32.dll")]
-        internal static extern IntPtr GetConsoleWindow();
+        public static extern IntPtr GetConsoleWindow();
 
         [DllImport("user32.dll")]
-        internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        internal const int SW_HIDE = 0;
-        internal const int SW_SHOW = 5;
-        internal const int SW_MINIMIZE = 6;
+        public const int SW_HIDE = 0;
+        public const int SW_SHOW = 5;
+        public const int SW_MINIMIZE = 6;
 
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        internal struct USER_INFO_0
+        public struct USER_INFO_0
         {
             public string Username;
         }
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern uint GetFileAttributes(string lpFileName);
+        public static extern uint GetFileAttributes(string lpFileName);
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool GetFileAttributesEx(string lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
+        public static extern bool GetFileAttributesEx(string lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, out WIN32_FILE_ATTRIBUTE_DATA lpFileInformation);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        internal static extern SafeFileHandle CreateFile(string lpFileName, [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess, [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode, IntPtr lpSecurityAttributes, [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition, [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes, IntPtr hTemplateFile);
+        public static extern SafeFileHandle CreateFile(string lpFileName, [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess, [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode, IntPtr lpSecurityAttributes, [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition, [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes, IntPtr hTemplateFile);
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        internal static extern IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
+        public static extern IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern bool DeviceIoControl(IntPtr hDevice, uint dwIoControlCode, IntPtr lpInBuffer, uint nInBufferSize, byte[] lpOutBuffer, uint nOutBufferSize, out uint lpBytesReturned, IntPtr lpOverlapped);
+        public static extern bool DeviceIoControl(IntPtr hDevice, uint dwIoControlCode, IntPtr lpInBuffer, uint nInBufferSize, byte[] lpOutBuffer, uint nOutBufferSize, out uint lpBytesReturned, IntPtr lpOverlapped);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool SetFileAttributes(string lpFileName, [MarshalAs(UnmanagedType.U4)] FileAttributes dwFileAttributes);
+        public static extern bool SetFileAttributes(string lpFileName, [MarshalAs(UnmanagedType.U4)] FileAttributes dwFileAttributes);
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct WIN32_FILE_ATTRIBUTE_DATA
+        public struct WIN32_FILE_ATTRIBUTE_DATA
         {
             public uint dwFileAttributes;
             public System.Runtime.InteropServices.ComTypes.FILETIME ftCreationTime;
@@ -156,13 +148,13 @@ namespace MSearch
             public uint nFileSizeLow;
         }
 
-        internal enum GET_FILEEX_INFO_LEVELS
+        public enum GET_FILEEX_INFO_LEVELS
         {
             GetFileExInfoStandard,
             GetFileExMaxInfoLevel
         }
 
-        internal const uint FILE_ATTRIBUTE_DIRECTORY = 0x00000010;
+        public const uint FILE_ATTRIBUTE_DIRECTORY = 0x00000010;
 
         public const uint FSCTL_GET_REPARSE_POINT = 0x000900A8;
         public const uint IO_REPARSE_TAG_SYMLINK = 0xA000000C;
@@ -172,44 +164,44 @@ namespace MSearch
         public const int MAXIMUM_REPARSE_DATA_BUFFER_SIZE = 16 * 1024;
 
 
-        internal const uint GENERIC_READ = 0x80000000;
-        internal const uint FILE_SHARE_READ = 0x00000001;
-        internal const uint FILE_SHARE_WRITE = 0x00000002;
-        internal const uint FILE_SHARE_DELETE = 0x00000004;
+        public const uint GENERIC_READ = 0x80000000;
+        public const uint FILE_SHARE_READ = 0x00000001;
+        public const uint FILE_SHARE_WRITE = 0x00000002;
+        public const uint FILE_SHARE_DELETE = 0x00000004;
 
-        internal const uint OPEN_EXISTING = 3;
+        public const uint OPEN_EXISTING = 3;
 
-        internal const uint FILE_FLAG_OPEN_REPARSE_POINT = 0x00200000;
-        internal const uint FILE_FLAG_BACKUP_SEMANTICS = 0x02000000;
+        public const uint FILE_FLAG_OPEN_REPARSE_POINT = 0x00200000;
+        public const uint FILE_FLAG_BACKUP_SEMANTICS = 0x02000000;
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool DeleteFile(string lpFileName);
+        public static extern bool DeleteFile(string lpFileName);
 
         [DllImport("advapi32.dll", SetLastError = true)]
-        internal static extern int SetNamedSecurityInfo(string pObjectName, int objectType, int securityInfo, IntPtr psidOwner, IntPtr psidGroup, IntPtr pDacl, IntPtr pSacl);
+        public static extern int SetNamedSecurityInfo(string pObjectName, int objectType, int securityInfo, IntPtr psidOwner, IntPtr psidGroup, IntPtr pDacl, IntPtr pSacl);
 
         [DllImport("advapi32.dll", SetLastError = true)]
-        internal static extern bool InitializeAcl(IntPtr pAcl, int nAclLength, int dwAclRevision);
+        public static extern bool InitializeAcl(IntPtr pAcl, int nAclLength, int dwAclRevision);
 
-        internal const int SE_FILE_OBJECT = 1;
-        internal const int OWNER_SECURITY_INFORMATION = 0x00000001;
-        internal const int DACL_SECURITY_INFORMATION = 0x00000004;
-        internal const int UNPROTECTED_DACL_SECURITY_INFORMATION = 0x20000000;
-        internal const int ACL_REVISION = 2;
-        internal const int ACL_SIZE = 1024; // Достаточно для пустой ACL
+        public const int SE_FILE_OBJECT = 1;
+        public const int OWNER_SECURITY_INFORMATION = 0x00000001;
+        public const int DACL_SECURITY_INFORMATION = 0x00000004;
+        public const int UNPROTECTED_DACL_SECURITY_INFORMATION = 0x20000000;
+        public const int ACL_REVISION = 2;
+        public const int ACL_SIZE = 1024;
 
         [DllImport("psapi.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool EnumProcesses([Out] uint[] processIds, int size, [Out] out int bytesReturned);
+        public static extern bool EnumProcesses([Out] uint[] processIds, int size, [Out] out int bytesReturned);
 
         [DllImport("psapi.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool EnumProcessModulesEx(IntPtr hProcess, [Out] IntPtr[] lphModule, uint cb, [Out] out uint lpcbNeeded, uint dwFilterFlag);
+        public static extern bool EnumProcessModulesEx(IntPtr hProcess, [Out] IntPtr[] lphModule, uint cb, [Out] out uint lpcbNeeded, uint dwFilterFlag);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, IntPtr lpNumberOfBytesRead);
+        public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, IntPtr lpNumberOfBytesRead);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, out int lpNumberOfBytesRead);
@@ -224,13 +216,6 @@ namespace MSearch
             [Out] StringBuilder lpFilename,
             [In][MarshalAs(UnmanagedType.U4)] int nSize
         );
-
-        [DllImport("kernel32.dll")]
-        public static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, int ucchMax);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern uint GetLogicalDrives();
-
 
         [DllImport("ntdll.dll")]
         public static extern int NtQuerySystemInformation(
@@ -357,9 +342,6 @@ namespace MSearch
         public static extern uint SetSecurityInfo(IntPtr handle, SE_OBJECT_TYPE ObjectType, uint SecurityInfo,
             IntPtr psidOwner, IntPtr psidGroup, IntPtr pDacl, IntPtr pSacl);
 
-        [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern uint SetEntriesInAcl(uint cCountOfExplicitEntries, ref EXPLICIT_ACCESS pListOfExplicitEntries, IntPtr OldAcl, out IntPtr NewAcl);
-
         public enum SE_OBJECT_TYPE
         {
             SE_UNKNOWN_OBJECT_TYPE = 0,
@@ -378,65 +360,7 @@ namespace MSearch
             SE_REGISTRY_WOW64_64KEY,
         }
 
-        [StructLayout(LayoutKind.Sequential)]
-        public struct EXPLICIT_ACCESS
-        {
-            public uint grfAccessPermissions;
-            public ACCESS_MODE grfAccessMode;
-            public uint grfInheritance;
-            public TRUSTEE Trustee;
-        }
-
-        public enum ACCESS_MODE
-        {
-            NOT_USED_ACCESS = 0,
-            GRANT_ACCESS,
-            SET_ACCESS,
-            DENY_ACCESS,
-            REVOKE_ACCESS,
-            SET_AUDIT_SUCCESS,
-            SET_AUDIT_FAILURE
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct TRUSTEE
-        {
-            public IntPtr pMultipleTrustee;
-            public MULTIPLE_TRUSTEE_OPERATION MultipleTrusteeOperation;
-            public TRUSTEE_FORM TrusteeForm;
-            public TRUSTEE_TYPE TrusteeType;
-            public IntPtr ptstrName;
-        }
-
-        public enum TRUSTEE_FORM
-        {
-            TRUSTEE_IS_SID,
-            TRUSTEE_IS_NAME,
-            TRUSTEE_BAD_FORM,
-            TRUSTEE_IS_OBJECTS_AND_SID,
-            TRUSTEE_IS_OBJECTS_AND_NAME
-        }
-
-        public enum TRUSTEE_TYPE
-        {
-            TRUSTEE_IS_UNKNOWN,
-            TRUSTEE_IS_USER,
-            TRUSTEE_IS_GROUP,
-            TRUSTEE_IS_DOMAIN,
-            TRUSTEE_IS_ALIAS,
-            TRUSTEE_IS_WELL_KNOWN_GROUP,
-            TRUSTEE_IS_DELETED,
-            TRUSTEE_IS_INVALID,
-            TRUSTEE_IS_COMPUTER
-        }
-
-        public enum MULTIPLE_TRUSTEE_OPERATION
-        {
-            NO_MULTIPLE_TRUSTEE,
-            TRUSTEE_IS_IMPERSONATE
-        }
-
-        internal static bool GrantPrivilegeToGroup(string groupName, string privilege)
+        public static bool GrantPrivilegeToGroup(string groupName, string privilege)
         {
             IntPtr policyHandle = IntPtr.Zero;
             IntPtr sid = IntPtr.Zero;
@@ -445,10 +369,10 @@ namespace MSearch
                 LSA_OBJECT_ATTRIBUTES objectAttributes = new Native.LSA_OBJECT_ATTRIBUTES();
                 UNICODE_STRING systemName = new Native.UNICODE_STRING();
 
-                int result = LsaOpenPolicy(ref objectAttributes, ref systemName, Native.POLICY_ALL_ACCESS, out policyHandle);
+                int result = LsaOpenPolicy(ref objectAttributes, ref systemName, POLICY_ALL_ACCESS, out policyHandle);
                 if (result != 0)
                 {
-                    throw new Exception("Cannot open security descriptor: " + Native.LsaNtStatusToWinError(result));
+                    throw new Exception("Cannot open security descriptor: " + LsaNtStatusToWinError(result));
                 }
 
                 int sidSize = 0;
@@ -488,7 +412,7 @@ namespace MSearch
             {
                 if (policyHandle != IntPtr.Zero)
                 {
-                    LsaClose(policyHandle);
+                    _ = LsaClose(policyHandle);
                 }
 
                 if (sid != IntPtr.Zero)
@@ -498,30 +422,11 @@ namespace MSearch
             }
         }
 
-        internal static string ConvertWellKnowSIDToGroupName(string GroupSid)
-        {
-            IntPtr pSid;
-            if (!ConvertStringSidToSid(GroupSid, out pSid))
-            {
-                return null;
-            }
-
-            string groupName = OSExtensions.GetAccountNameFromSid(pSid);
-            if (groupName != null)
-            {
-                return groupName;
-            }
-
-            LocalFree(pSid);
-            return null;
-
-        }
-
         public const int POLICY_ALL_ACCESS = 0x000F0FFF;
         public const int ERROR_SUCCESS = 0;
 
         [Flags]
-        internal enum FILE_ATTRIBUTE
+        public enum FILE_ATTRIBUTE
         {
             READONLY = 0x00000001, // Файл только для чтения
             HIDDEN = 0x00000002, // Файл скрыт
@@ -547,7 +452,7 @@ namespace MSearch
         }
 
         [DllImport("ntdll.dll")]
-        internal static extern int NtCreateThreadEx(
+        public static extern int NtCreateThreadEx(
             out IntPtr threadHandle,
             uint desiredAccess,
             IntPtr objectAttributes,
@@ -647,8 +552,6 @@ namespace MSearch
         public const uint TOKEN_QUERY = 0x0008;
         public const uint TOKEN_ADJUST_PRIVILEGES = 0x0020;
         public const uint SE_PRIVILEGE_ENABLED = 0x00000002;
-        public static string SE_SECURITY_NAME = "SeSe~cur~ity~Pr~ivi~leg~e".Replace("~", "");
-        public static string SE_TAKE_OWNERSHIP_NAME = "S~eTa~keOw~ner~ship~Privi~leg~e".Replace("~", "");
         public const int SM_CLEANBOOT = 67;
 
 
@@ -705,22 +608,6 @@ namespace MSearch
             public LUID_AND_ATTRIBUTES[] Privilege;
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct OSVERSIONINFOEX
-        {
-            public uint dwOSVersionInfoSize;
-            public uint dwMajorVersion;
-            public uint dwMinorVersion;
-            public uint dwBuildNumber;
-            public uint dwPlatformId;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
-            public string szCSDVersion;
-            public ushort wServicePackMajor;
-            public ushort wServicePackMinor;
-            public ushort wSuiteMask;
-            public byte wProductType;
-            public byte wReserved;
-        }
         public enum BuildNumber : uint
         {
             Windows_7 = 7601,
@@ -747,9 +634,7 @@ namespace MSearch
             Windows_11_25H2 = 26200,
         };
 
-
-
-        internal static IntPtr GetClassLongPtr(IntPtr hWnd, int nIndex)
+        public static IntPtr GetClassLongPtr(IntPtr hWnd, int nIndex)
         {
             if (IntPtr.Size == 4)
                 return new IntPtr((long)GetClassLong32(hWnd, nIndex));
@@ -757,134 +642,8 @@ namespace MSearch
                 return GetClassLong64(hWnd, nIndex);
         }
 
-        internal struct STARTUPINFO
-        {
-            public int cb;
-            public string lpReserved;
-            public string lpDesktop;
-            public string lpTitle;
-            public int dwX;
-            public int dwY;
-            public int dwXSize;
-            public int dwYSize;
-            public int dwXCountChars;
-            public int dwYCountChars;
-            public int dwFillAttribute;
-            public int dwFlags;
-            public short wShowWindow;
-            public short cbReserved2;
-            public IntPtr lpReserved2;
-            public IntPtr hStdInput;
-            public IntPtr hStdOutput;
-            public IntPtr hStdError;
-        }
-
-        internal struct SECURITY_ATTRIBUTES
-        {
-            public int Length;
-            public IntPtr lpSecurityDescriptor;
-            public bool bInheritHandle;
-        }
-
-        internal enum LogonFlags
-        {
-            WithProfile = 1,
-            NetCredentialsOnly = 2,
-        }
-
-        internal enum CreationFlags
-        {
-            Suspended = 4,
-            NewConsole = 16, // 0x00000010
-            NewProcessGroup = 512, // 0x00000200
-            UnicodeEnvironment = 1024, // 0x00000400
-            SeparateWOWVDM = 2048, // 0x00000800
-            ExtendedStartupInfoPresent = 524288, // 0x00080000
-            DefaultErrorMode = 67108864, // 0x04000000
-        }
-
-        internal enum TOKEN_TYPE
-        {
-            TokenPrimary = 1,
-            TokenImpersonation = 2,
-        }
-
-        internal struct PROCESS_INFORMATION
-        {
-            public IntPtr hProcess;
-            public IntPtr hThread;
-            public int dwProcessId;
-            public int dwThreadId;
-        }
-
-        internal const uint MAXIMUM_ALLOWED = 33554432U;
-
-        [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern bool DuplicateTokenEx(IntPtr hExistingToken, uint dwDesiredAccess, ref SECURITY_ATTRIBUTES lpTokenAttributes, int SECURITY_IMPERSONATION_LEVEL, TOKEN_TYPE TokenType, out IntPtr phNewToken);
-        [DllImport("advapi32", CharSet = CharSet.Unicode, SetLastError = true)]
-        internal static extern bool CreateProcessWithTokenW(IntPtr hToken, LogonFlags dwLogonFlags, string lpApplicationName, string lpCommandLine, CreationFlags dwCreationFlags, IntPtr lpEnvironment, string lpCurrentDirectory, [In] ref STARTUPINFO lpStartupInfo, out PROCESS_INFORMATION lpProcessInformation);
-
-        internal static void RunAs(string filename, string cmdLine)
-        {
-            string location = Assembly.GetEntryAssembly().Location;
-            IntPtr handle = Process.GetProcessesByName(filename)[0].Handle;
-            IntPtr TokenHandle;
-            OpenProcessToken(handle, 2U, out TokenHandle);
-            STARTUPINFO lpStartupInfo = new STARTUPINFO
-            {
-                dwFlags = 1,
-                wShowWindow = 1
-            };
-            SECURITY_ATTRIBUTES lpTokenAttributes = new SECURITY_ATTRIBUTES();
-            IntPtr phNewToken;
-            DuplicateTokenEx(TokenHandle, MAXIMUM_ALLOWED, ref lpTokenAttributes, 2, TOKEN_TYPE.TokenPrimary, out phNewToken);
-            CreateProcessWithTokenW(phNewToken, LogonFlags.NetCredentialsOnly, location, cmdLine, CreationFlags.NewConsole, IntPtr.Zero, null, ref lpStartupInfo, out _);
-        }
-
-        internal static void RunAsUser(string filename, string cmdLine)
-        {
-            string location = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32", "cmd.exe");
-
-            IntPtr handle = IntPtr.Zero;
-            if (AppConfig.Instance.WinPEMode)
-            {
-                handle = Process.GetProcessesByName(filename)[0].Handle;
-            }
-            else
-            {
-                foreach (Process process in Process.GetProcessesByName(filename))
-                {
-                    try
-                    {
-                        if (!ProcessManager.IsSystemProcess(process.Id))
-                        {
-                            handle = process.Handle;
-                            break;
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        continue;
-                    }
-
-                }
-            }
-
-            IntPtr TokenHandle;
-            OpenProcessToken(handle, 2U, out TokenHandle);
-            STARTUPINFO lpStartupInfo = new STARTUPINFO
-            {
-                dwFlags = 1,
-                wShowWindow = 0
-            };
-            SECURITY_ATTRIBUTES lpTokenAttributes = new SECURITY_ATTRIBUTES();
-            IntPtr phNewToken;
-            DuplicateTokenEx(TokenHandle, MAXIMUM_ALLOWED, ref lpTokenAttributes, 2, TOKEN_TYPE.TokenPrimary, out phNewToken);
-            CreateProcessWithTokenW(phNewToken, LogonFlags.WithProfile, location, cmdLine, 0, IntPtr.Zero, null, ref lpStartupInfo, out _);
-        }
-
         [StructLayout(LayoutKind.Sequential)]
-        internal struct SYSTEM_INFO
+        public struct SYSTEM_INFO
         {
             public ushort wProcessorArchitecture;
             public ushort wReserved;
@@ -906,7 +665,7 @@ namespace MSearch
         public const int MaxModules = 10000;
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct R77_PROCESS
+        public struct R77_PROCESS
         {
             public int Signature;
             public uint ProcessId;
@@ -917,8 +676,6 @@ namespace MSearch
     // https://github.com/DavidXanatos/priv10/blob/master/MiscHelpers/API/ServiceHelper.cs
     public static class ServiceHelper
     {
-        private const int STANDARD_RIGHTS_REQUIRED = 0xF0000;
-        private const int SERVICE_WIN32_OWN_PROCESS = 0x00000010;
         private const int ERROR_INSUFFICIENT_BUFFER = 0x0000007a;
         private const uint SERVICE_NO_CHANGE = 0xFFFFFFFF;
         private const int SC_STATUS_PROCESS_INFO = 0;
@@ -964,7 +721,7 @@ namespace MSearch
         }
 
         [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern int QueryServiceConfig(IntPtr service, IntPtr queryServiceConfig, int bufferSize, ref int bytesNeeded);
+        static extern int QueryServiceConfig(IntPtr service, IntPtr queryServiceConfig, int bufferSize, ref int bytesNeeded);
         #endregion
 
 
@@ -1015,7 +772,7 @@ namespace MSearch
         }
 
         [DllImport("advapi32.dll", SetLastError = true)]
-        internal static extern bool QueryServiceStatusEx(IntPtr hService, int infoLevel, IntPtr lpBuffer, uint cbBufSize, out uint pcbBytesNeeded);
+        public static extern bool QueryServiceStatusEx(IntPtr hService, int infoLevel, IntPtr lpBuffer, uint cbBufSize, out uint pcbBytesNeeded);
         #endregion
 
         #region DeleteService
@@ -1120,15 +877,72 @@ namespace MSearch
             }
         }
 
-        public static ServiceConfigInfo GetServiceInfoSafe(string serviceName)
+        public static ServiceStartMode ConvertStartType(uint startType)
+        {
+            switch (startType)
+            {
+                case 2:
+                    return ServiceStartMode.Automatic;
+
+                case 3:
+                    return ServiceStartMode.Manual;
+
+                case 4:
+                    return ServiceStartMode.Disabled;
+
+                default:
+                    return ServiceStartMode.Manual;
+            }
+        }
+
+        public static ServiceStartMode GetStartTypeFromRegistry(string serviceName)
         {
             try
             {
-                return GetServiceInfo(serviceName);
+                string keyPath = $@"SYSTEM\CurrentControlSet\Services\{serviceName}";
+
+                using (var key = Registry.LocalMachine.OpenSubKey(keyPath))
+                {
+                    if (key == null)
+                        return ServiceStartMode.Manual;
+
+                    object value = key.GetValue("Start");
+                    if (value == null)
+                        return ServiceStartMode.Manual;
+
+                    int start = (int)value;
+                    return ConvertStartType((uint)start);
+                }
             }
-            catch (Exception)
+            catch
             {
-                return null;
+                return ServiceStartMode.Manual;
+            }
+        }
+
+        public static string GetImagePathFromRegistry(string serviceName)
+        {
+            try
+            {
+                string keyPath = $@"SYSTEM\CurrentControlSet\Services\{serviceName}";
+
+                using (var key = Registry.LocalMachine.OpenSubKey(keyPath))
+                {
+                    if (key == null)
+                        return string.Empty;
+
+                    object value = key.GetValue("ImagePath");
+                    if (value == null)
+                        return string.Empty;
+
+                    string raw = value.ToString();
+
+                    return Environment.ExpandEnvironmentVariables(raw);
+                }
+            }
+            catch
+            {
+                return string.Empty;
             }
         }
 
@@ -1292,9 +1106,6 @@ namespace MSearch
 
             while (status.dwCurrentState == waitStatus)
             {
-                // Do not wait longer than the wait hint. A good interval is
-                // one tenth the wait hint, but no less than 1 second and no
-                // more than 10 seconds.
 
                 int dwWaitTime = status.dwWaitHint / 10;
 
@@ -1402,273 +1213,11 @@ namespace MSearch
             NetBindEnable = 0x00000009,
             NetBindDisable = 0x0000000A
         }
-
-        public enum ServiceError
-        {
-            Ignore = 0x00000000,
-            Normal = 0x00000001,
-            Severe = 0x00000002,
-            Critical = 0x00000003
-        }
-
-        internal static void CheckWMI(bool restartCheck)
-        {
-            string serviceName = "wi~nm~gm~t".Replace("~", "");
-            try
-            {
-                if (ServiceIsInstalled(serviceName))
-                {
-                    var serviceinfo = GetServiceInfo(serviceName);
-
-                    if ((ServiceBootFlag)serviceinfo.StartType != ServiceBootFlag.AutoStart)
-                    {
-                        ChangeStartMode(serviceName, ServiceBootFlag.AutoStart);
-                        AppConfig.Instance.LL.LogSuccessMessage("_CriticalServiceStartup");
-                    }
-
-                    if (GetServiceState(serviceName) != ServiceState.Running)
-                    {
-                        StartService(serviceName);
-                        AppConfig.Instance.LL.LogSuccessMessage("_CriticalServiceRestart");
-                    }
-
-                    try
-                    {
-                        WmiTestQuery("Dhcp");
-                    }
-                    catch (ManagementException me)
-                    {
-                        if (me.ErrorCode == ManagementStatus.InvalidClass || me.ErrorCode == ManagementStatus.ProviderLoadFailure || me.ErrorCode == ManagementStatus.ProviderFailure)
-                        {
-                            RestoreWMICorruption();
-                            if (!restartCheck)
-                            {
-                                CheckWMI(true);
-                            }
-                        }
-                    }
-
-                }
-                else
-                {
-                    LocalizedLogger.LogError_СriticalServiceNotInstalled();
-                }
-
-            }
-            catch (MissingMethodException)
-            {
-                if (OSExtensions.IsDotNetInstalled())
-                {
-                    DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_ErrorNoDotNet"), AppConfig.Instance._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    Environment.Exit(1);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog($"\t[xxx] {serviceName}: {ex.Message}", ConsoleColor.DarkRed, false);
-            }
-
-
-        }
-
-        static void RestoreWMICorruption()
-        {
-            if (AppConfig.Instance.RestoredWMI)
-            {
-                throw new Exception("WMI_Corruption");
-            }
-
-            AppConfig.Instance.LL.LogMessage("\t\t[xxx]", "_WMICorruption", "", ConsoleColor.Red, false);
-
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-
-            AppConfig.Instance.LL.LogHeadMessage("_WMIRecompilation");
-
-            string wbemPath = Path.Combine(Environment.SystemDirectory, "Wbem");
-
-            List<string> filteredMof = Directory
-                    .EnumerateFiles(wbemPath, "*.*", SearchOption.AllDirectories)
-                    .Where(file => new FileInfo(file).Extension.Equals(".mof") || new FileInfo(file).Extension.Equals(".mfl"))
-                    .ToList();
-
-            foreach (var file in filteredMof)
-            {
-                if (File.Exists(file))
-                {
-                    Process.Start(new ProcessStartInfo()
-                    {
-                        FileName = "mofcomp.exe",
-                        Arguments = $"\"{file}\"",
-                        UseShellExecute = false,
-                        CreateNoWindow = true
-                    }).WaitForExit();
-                }
-            }
-
-            Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
-            AppConfig.Instance.LL.LogHeadMessage("_WMIRegister");
-
-            foreach (var file in Directory.EnumerateFiles(wbemPath, "*.dll", SearchOption.AllDirectories))
-            {
-                if (File.Exists(file))
-                {
-                    Process.Start(new ProcessStartInfo()
-                    {
-                        FileName = "regsvr32.exe",
-                        Arguments = $"-s \"{file}\"",
-                        UseShellExecute = false,
-                        CreateNoWindow = true
-                    }).WaitForExit();
-                }
-            }
-
-
-            Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
-            AppConfig.Instance.LL.LogHeadMessage("_WMIRestartService");
-
-            ServiceController service = new ServiceController("winmgmt");
-            if (service.Status != ServiceControllerStatus.Stopped)
-            {
-                service.Stop();
-                service.WaitForStatus(ServiceControllerStatus.Stopped);
-            }
-            Thread.Sleep(3000);
-            service.Start();
-            service.WaitForStatus(ServiceControllerStatus.Running);
-
-
-            Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
-        }
-
-        internal static string WmiTestQuery(string serviceName)
-        {
-
-            using (var service = new ManagementObject($"Win32_Service.Name='{serviceName}'"))
-            {
-                service.Get();
-                string sPath = service["PathName"]?.ToString();
-
-                return string.IsNullOrEmpty(sPath) ? "" : sPath;
-            }
-        }
-
-        internal static void CheckTermService()
-        {
-
-            string registryPath = MSData.Instance.queries["TermServiceParameters"]; //SYSTEM\CurrentControlSet\Services\TermService\Parameters
-            string desiredValue = MSData.Instance.queries["TermsrvDll"]; //%SystemRoot%\System32\termsrv.dll
-            string paramName = "Ser/vice/Dll".Replace("/", "");
-
-            using (var regkey = Registry.LocalMachine.OpenSubKey(registryPath, true))
-            {
-                if (regkey != null)
-                {
-                    string currentValue = (string)regkey.GetValue(paramName);
-                    if (currentValue != null)
-                    {
-                        if (currentValue != Environment.ExpandEnvironmentVariables(desiredValue))
-                        {
-                            AppConfig.Instance.LL.LogWarnMessage("_TermServiceInvalidPath", currentValue);
-                            AppConfig.Instance.totalFoundSuspiciousObjects++;
-                            MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Suspicious, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Skipped, AppConfig.Instance.LL.GetLocalizedString("_TermServiceInvalidPath") + " " + currentValue));
-
-
-                            bool isInfectedService = false;
-                            foreach (ScanResult res in MinerSearch.scanResults)
-                            {
-                                foreach (string pattern in MSData.Instance.JohnPatterns)
-                                {
-                                    if (res.Path.IndexOf(pattern) >= 0)
-                                    {
-                                        isInfectedService = true;
-                                    }
-                                }
-                            }
-
-                            if (isInfectedService)
-                            {
-
-                                AppConfig.Instance.totalFoundThreats++;
-
-                                if (!AppConfig.Instance.ScanOnly)
-                                {
-                                    try
-                                    {
-                                        string termsrv = "TermService";
-                                        string UmRdpSrv = "UmRdpService";
-
-                                        var UmRdpSrvInfo = GetServiceInfo(UmRdpSrv);
-                                        var termSrvInfo = GetServiceInfo(termsrv);
-
-                                        if (GetServiceState(UmRdpSrv) == ServiceState.Running)
-                                        {
-                                            StopService(UmRdpSrv);
-                                        }
-
-                                        if ((ServiceBootFlag)UmRdpSrvInfo.StartType != ServiceBootFlag.DemandStart)
-                                        {
-                                            ChangeStartMode(UmRdpSrv, ServiceBootFlag.DemandStart);
-                                        }
-
-                                        if (GetServiceState(termsrv) == ServiceState.Running)
-                                        {
-                                            StopService(termsrv);
-                                        }
-
-                                        if ((ServiceBootFlag)termSrvInfo.StartType != ServiceBootFlag.DemandStart)
-                                        {
-                                            ChangeStartMode(termsrv, ServiceBootFlag.DemandStart);
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
-                                        return;
-                                    }
-
-                                    regkey.SetValue(paramName, desiredValue, RegistryValueKind.ExpandString);
-                                    currentValue = (string)regkey.GetValue(paramName);
-                                    if (currentValue == Environment.ExpandEnvironmentVariables(desiredValue))
-                                    {
-                                        AppConfig.Instance.LL.LogSuccessMessage("_TermServiceRestored");
-                                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Cured));
-
-                                    }
-                                    else
-                                    {
-                                        AppConfig.Instance.LL.LogErrorMessage("_TermServiceFailedRestore", new Exception(""));
-                                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Error));
-
-                                    }
-                                }
-                                else
-                                {
-                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Skipped));
-                                    LocalizedLogger.LogScanOnlyMode();
-                                }
-                            }
-                            else
-                            {
-                                LocalizedLogger.LogNoThreatsFound();
-                            }
-                        }
-                        else
-                        {
-                            LocalizedLogger.LogNoThreatsFound();
-                        }
-                    }
-                }
-                else
-                {
-                    AppConfig.Instance.LL.LogWarnMediumMessage("_ServiceNotInstalled", "T?ermS?ervi?ce".Replace("?", ""));
-                }
-            }
-
-        }
     }
 
     public static class NativeServiceController
     {
+
         const int SERVICE_NO_CHANGE = -1;
         const int SERVICE_QUERY_CONFIG = 0x0001;
         const int SERVICE_CHANGE_CONFIG = 0x0002;
@@ -1685,22 +1234,22 @@ namespace MSearch
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        struct QUERY_SERVICE_CONFIG
+        public struct QUERY_SERVICE_CONFIG
         {
-            public int dwServiceType;
-            public int dwStartType;
-            public int dwErrorControl;
+            public uint dwServiceType;
+            public uint dwStartType;
+            public uint dwErrorControl;
             public IntPtr lpBinaryPathName;
             public IntPtr lpLoadOrderGroup;
-            public int dwTagId;
+            public uint dwTagId;
             public IntPtr lpDependencies;
             public IntPtr lpServiceStartName;
             public IntPtr lpDisplayName;
         }
 
-        private const int SC_MANAGER_CONNECT = 0x0001;
-        private const int SERVICE_QUERY_STATUS = 0x0004;
-        private const int SERVICE_STOPPED = 0x00000001;
+        const int SC_MANAGER_CONNECT = 0x0001;
+        const int SERVICE_QUERY_STATUS = 0x0004;
+        const int SERVICE_STOPPED = 0x00000001;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct SERVICE_STATUS_PROCESS
@@ -1791,73 +1340,118 @@ namespace MSearch
 
         public static ServiceStartMode GetServiceStartType(string serviceName)
         {
-            IntPtr scManager = OpenSCManager(null, null, SERVICE_QUERY_CONFIG);
-            if (scManager == IntPtr.Zero)
+            IntPtr scManager = IntPtr.Zero;
+            IntPtr serviceHandle = IntPtr.Zero;
+            IntPtr buffer = IntPtr.Zero;
+
+            try
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceStartType(): Cannot open SCManager");
-            }
+                scManager = OpenSCManager(null, null, SC_MANAGER_CONNECT);
+                if (scManager == IntPtr.Zero)
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
 
-            IntPtr serviceHandle = OpenService(scManager, serviceName, SERVICE_QUERY_CONFIG);
-            if (serviceHandle == IntPtr.Zero)
+                serviceHandle = OpenService(scManager, serviceName, SERVICE_QUERY_CONFIG);
+                if (serviceHandle == IntPtr.Zero)
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+
+                if (!QueryServiceConfig(serviceHandle, IntPtr.Zero, 0, out int bytesNeeded))
+                {
+                    int err = Marshal.GetLastWin32Error();
+                    if (err != 122) // ERROR_INSUFFICIENT_BUFFER
+                        throw new Win32Exception(err);
+                }
+
+                buffer = Marshal.AllocHGlobal(bytesNeeded);
+
+                if (!QueryServiceConfig(serviceHandle, buffer, bytesNeeded, out _))
+                {
+                    return (ServiceStartMode)ServiceHelper.GetStartTypeFromRegistry(serviceName);
+                }
+
+                QUERY_SERVICE_CONFIG config =
+                    Marshal.PtrToStructure<QUERY_SERVICE_CONFIG>(buffer);
+
+                return (ServiceStartMode)ServiceHelper.ConvertStartType(config.dwStartType);
+            }
+            catch
             {
-                CloseServiceHandle(scManager);
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceStartType(): Cannot open service");
+                return (ServiceStartMode)ServiceHelper.GetStartTypeFromRegistry(serviceName);
             }
-
-            int bufferSize = 8192;
-            IntPtr buffer = Marshal.AllocHGlobal(bufferSize);
-
-            if (!QueryServiceConfig(serviceHandle, buffer, bufferSize, out int bytesNeeded))
+            finally
             {
-                Marshal.FreeHGlobal(buffer);
-                CloseServiceHandle(serviceHandle);
-                CloseServiceHandle(scManager);
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceStartType(): Error on getting service config");
+                if (buffer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(buffer);
+
+                if (serviceHandle != IntPtr.Zero)
+                    CloseServiceHandle(serviceHandle);
+
+                if (scManager != IntPtr.Zero)
+                    CloseServiceHandle(scManager);
             }
-
-            QUERY_SERVICE_CONFIG config = Marshal.PtrToStructure<QUERY_SERVICE_CONFIG>(buffer);
-            Marshal.FreeHGlobal(buffer);
-            CloseServiceHandle(serviceHandle);
-            CloseServiceHandle(scManager);
-
-            return (ServiceStartMode)config.dwStartType;
         }
 
         public static string GetServiceImagePath(string serviceName)
         {
-            IntPtr scManager = OpenSCManager(null, null, SERVICE_QUERY_CONFIG);
-            if (scManager == IntPtr.Zero)
+            IntPtr scManager = IntPtr.Zero;
+            IntPtr serviceHandle = IntPtr.Zero;
+            IntPtr buffer = IntPtr.Zero;
+
+            try
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceImagePath(): Cannot open SCManager");
-            }
+                scManager = OpenSCManager(null, null, SC_MANAGER_CONNECT);
+                if (scManager == IntPtr.Zero)
+                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Cannot open SCManager");
 
-            IntPtr serviceHandle = OpenService(scManager, serviceName, SERVICE_QUERY_CONFIG);
-            if (serviceHandle == IntPtr.Zero)
+                serviceHandle = OpenService(scManager, serviceName, SERVICE_QUERY_CONFIG);
+                if (serviceHandle == IntPtr.Zero)
+                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Cannot open service");
+
+                if (!QueryServiceConfig(serviceHandle, IntPtr.Zero, 0, out int bytesNeeded))
+                {
+                    int err = Marshal.GetLastWin32Error();
+
+                    if (err != 122) // ERROR_INSUFFICIENT_BUFFER
+                        throw new Win32Exception(err, "QueryServiceConfig size query failed");
+
+                    if (bytesNeeded <= 0)
+                        throw new Win32Exception(err, "QueryServiceConfig returned invalid buffer size");
+                }
+
+                buffer = Marshal.AllocHGlobal(bytesNeeded);
+
+                if (!QueryServiceConfig(serviceHandle, buffer, bytesNeeded, out _))
+                {
+                    int err = Marshal.GetLastWin32Error();
+
+                    return ServiceHelper.GetImagePathFromRegistry(serviceName);
+                }
+
+                QUERY_SERVICE_CONFIG config =
+                    Marshal.PtrToStructure<QUERY_SERVICE_CONFIG>(buffer);
+
+                string imagePath =
+                    Marshal.PtrToStringUni(config.lpBinaryPathName) ?? string.Empty;
+
+                return imagePath;
+            }
+            catch
             {
-                CloseServiceHandle(scManager);
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceImagePath(): Cannot open service");
+                return ServiceHelper.GetImagePathFromRegistry(serviceName);
             }
-
-            int bufferSize = 8192;
-            IntPtr buffer = Marshal.AllocHGlobal(bufferSize);
-
-            if (!QueryServiceConfig(serviceHandle, buffer, bufferSize, out int bytesNeeded))
+            finally
             {
-                Marshal.FreeHGlobal(buffer);
-                CloseServiceHandle(serviceHandle);
-                CloseServiceHandle(scManager);
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "GetServiceImagePath(): Error on getting service config");
+                if (buffer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(buffer);
+
+                if (serviceHandle != IntPtr.Zero)
+                    CloseServiceHandle(serviceHandle);
+
+                if (scManager != IntPtr.Zero)
+                    CloseServiceHandle(scManager);
             }
-
-            QUERY_SERVICE_CONFIG config = Marshal.PtrToStructure<QUERY_SERVICE_CONFIG>(buffer);
-            string imagePath = Marshal.PtrToStringUni(config.lpBinaryPathName) ?? string.Empty;
-
-            Marshal.FreeHGlobal(buffer);
-            CloseServiceHandle(serviceHandle);
-            CloseServiceHandle(scManager);
-
-            return imagePath;
         }
+
+
 
         public static int GetServiceId(string serviceName)
         {

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
+using Win32Wrapper;
 
 namespace MSearch.Infrastructure
 {

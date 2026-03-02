@@ -1,13 +1,10 @@
-﻿using DBase;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using MSearch.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,8 +14,6 @@ namespace MSearch
     {
         int threatsCount = 0;
         int curedCount = 0;
-        string registryPath = @"Software\M1nerSearch";
-        string valueName = "allowstatistics";
         string LBL_id_text = "";
 
         public FinishEx(int _totalThreats, int _neutralizedThreats, int _suspObj, string _elapsedTime)
@@ -144,6 +139,8 @@ namespace MSearch
 
         private void btnDetails_Click(object sender, EventArgs e)
         {
+            TopMost = false;
+
             string logpath = Path.Combine(Logger.LogsFolder, Logger.logFileName);
             if (!File.Exists(logpath))
             {
@@ -151,30 +148,14 @@ namespace MSearch
             }
 
             string argument = "/c \"" + logpath + "\"";
-            if (AppConfig.Instance.RunAsSystem && !AppConfig.Instance.WinPEMode)
+
+            Process.Start(new ProcessStartInfo
             {
-                string pname = new StringBuilder("ex").Append("pl").Append("or").Append("er").ToString();
-            restart:
-                if (Process.GetProcessesByName(pname).Length > 0)
-                {
-                    Native.RunAsUser(pname, argument);
-                }
-                else
-                {
-                    Process.Start(pname);
-                    goto restart;
-                }
-            }
-            else
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32", "cmd.exe"),
-                    Arguments = argument,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                });
-            }
+                FileName = Path.Combine(Environment.GetEnvironmentVariable("WINDIR"), "System32", "cmd.exe"),
+                Arguments = argument,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            });
         }
 
 
@@ -280,8 +261,8 @@ namespace MSearch
         {
             dataGridThreats.ClearSelection();
             TranslateForm();
-            CollectStatistics(registryPath, valueName);
-            UpdateToggle(registryPath, valueName);
+            CollectStatistics(AppConfig.Instance.RegistryPathMain, AppConfig.Instance.StatisticsValueName);
+            UpdateToggle(AppConfig.Instance.RegistryPathMain, AppConfig.Instance.StatisticsValueName);
         }
 
         async void CollectStatistics(string registryPath, string valueName)
@@ -470,6 +451,8 @@ namespace MSearch
 
         private void Label_OpenLogsFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            TopMost = false;
+
             if (AppConfig.Instance.no_logs)
             {
                 Process.Start("explorer.exe", Logger.LogsFolder);
@@ -509,33 +492,33 @@ namespace MSearch
 
         private void ts_AllowCollectStatistics_CheckedChanged(object sender, EventArgs e)
         {
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath, true);
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(AppConfig.Instance.RegistryPathMain, true);
 
             if (key == null)
             {
-                key = Registry.CurrentUser.CreateSubKey(registryPath);
+                key = Registry.CurrentUser.CreateSubKey(AppConfig.Instance.RegistryPathMain);
             }
 
             if (key != null)
             {
-                object regValue = key.GetValue(valueName);
+                object regValue = key.GetValue(AppConfig.Instance.StatisticsValueName);
 
                 if (regValue != null)
                 {
                     if (ts_AllowCollectStatistics.CheckState == CheckState.Checked)
                     {
-                        key.SetValue(valueName, 1, RegistryValueKind.DWord);
+                        key.SetValue(AppConfig.Instance.StatisticsValueName, 1, RegistryValueKind.DWord);
                         LBL_ID.Visible = true;
                     }
                     else
                     {
-                        key.SetValue(valueName, 0, RegistryValueKind.DWord);
+                        key.SetValue(AppConfig.Instance.StatisticsValueName, 0, RegistryValueKind.DWord);
                         LBL_ID.Visible = false;
                     }
                 }
                 else
                 {
-                    key.SetValue(valueName, 0, RegistryValueKind.DWord);
+                    key.SetValue(AppConfig.Instance.StatisticsValueName, 0, RegistryValueKind.DWord);
                     LBL_ID.Visible = false;
                 }
             }
