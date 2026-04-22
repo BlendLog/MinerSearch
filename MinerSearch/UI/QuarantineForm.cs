@@ -54,12 +54,12 @@ namespace MSearch
 
         private void TranslateForm()
         {
-            LBL_Quarantine.Text = AppConfig.Instance.LL.GetLocalizedString("_Quarantine");
-            LBL_QuarantinedFiles.Text = AppConfig.Instance.LL.GetLocalizedString("_LabelQuarantinedFiles");
-            RestoreSelectedBtn.Text = AppConfig.Instance.LL.GetLocalizedString("_RestoreBtnText");
-            DeleteSelectedBtn.Text = AppConfig.Instance.LL.GetLocalizedString("_DeleteBtnText");
-            finishBtn.Text = AppConfig.Instance.LL.GetLocalizedString(AppConfig.Instance.QuarantineMode == true ? "_exit" : "_BtnBack");
-            top.Text = AppConfig.Instance._title;
+            LBL_Quarantine.Text = AppConfig.GetInstance.LL.GetLocalizedString("_Quarantine");
+            LBL_QuarantinedFiles.Text = AppConfig.GetInstance.LL.GetLocalizedString("_LabelQuarantinedFiles");
+            RestoreSelectedBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_RestoreBtnText");
+            DeleteSelectedBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_DeleteBtnText");
+            finishBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString(LaunchOptions.GetInstance.QuarantineMode == true ? "_exit" : "_BtnBack");
+            top.Text = AppConfig.GetInstance._title;
         }
 
         private void QuarantineForm_Load_1(object sender, EventArgs e)
@@ -123,7 +123,7 @@ namespace MSearch
 
             DataGridViewCheckBoxHeaderCell header = new DataGridViewCheckBoxHeaderCell();
             header.CheckBoxClicked += Header_CheckBoxClicked;
-            header.Value = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_Select");
+            header.Value = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Select");
 
             checkColumn.HeaderCell = header;
             dataGridQuarantineFiles.Columns.Add(checkColumn);
@@ -131,21 +131,21 @@ namespace MSearch
             dataGridQuarantineFiles.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "PathColumn",
-                HeaderText = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_Path"),
+                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_OriginalPath"),
                 DataPropertyName = "Path"
             });
 
             dataGridQuarantineFiles.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "FileSizeColumn",
-                HeaderText = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_FileSize"),
+                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_FileSize"),
                 DataPropertyName = "Size"
             });
 
             dataGridQuarantineFiles.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "HashColumn",
-                HeaderText = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_FileHash"),
+                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_FileHash"),
                 DataPropertyName = "Hash"
             });
 
@@ -372,7 +372,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, fileHash);
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, fileHash);
                 return false;
             }
         }
@@ -441,7 +441,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, fileHash);
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, fileHash);
                 return false;
             }
         }
@@ -504,13 +504,13 @@ namespace MSearch
         {
             if (SELECTED_ROWS_COUNT == 0)
             {
-                MessageBoxCustom.Show(AppConfig.Instance.LL.GetLocalizedString("_DataGrid_NoSelection"), AppConfig.Instance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBoxCustom.Show(AppConfig.GetInstance.LL.GetLocalizedString("_DataGrid_NoSelection"), AppConfig.GetInstance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (isDeleteFilesAction)
             {
-                if (MessageBoxCustom.Show(AppConfig.Instance.LL.GetLocalizedString("_QuarantineRemoveBtn").Replace("#FILESCOUNT#", SELECTED_ROWS_COUNT.ToString()), AppConfig.Instance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                if (MessageBoxCustom.Show(AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineRemoveBtn").Replace("#FILESCOUNT#", SELECTED_ROWS_COUNT.ToString()), AppConfig.GetInstance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 {
                     return;
                 }
@@ -557,14 +557,14 @@ namespace MSearch
 
             if (affectedFiles.Count > 0)
             {
-                StringBuilder pathList = new StringBuilder(AppConfig.Instance.LL.GetLocalizedString(message).Replace("#FILESCOUNT#", affectedFiles.Count.ToString()) + "\n");
+                StringBuilder pathList = new StringBuilder(AppConfig.GetInstance.LL.GetLocalizedString(message).Replace("#FILESCOUNT#", affectedFiles.Count.ToString()) + "\n");
                 foreach (string filePath in affectedFiles)
                 {
                     pathList.Append($"\n{filePath}");
                 }
 
                 UpdateHeaderCheckBoxState();
-                MessageBoxCustom.Show(pathList.ToString(), AppConfig.Instance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBoxCustom.Show(pathList.ToString(), AppConfig.GetInstance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             SELECTED_ROWS_COUNT = 0;

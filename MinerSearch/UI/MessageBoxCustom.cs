@@ -114,29 +114,29 @@ namespace MSearch
                     return new[] { "OK" };
                 case MessageBoxButtons.OKCancel:
                     buttonMapping["OK"] = DialogResult.OK;
-                    buttonMapping[AppConfig.Instance.LL.GetLocalizedString("_CancelBtn")] = DialogResult.Cancel;
+                    buttonMapping[AppConfig.GetInstance.LL.GetLocalizedString("_CancelBtn")] = DialogResult.Cancel;
                     return new[]
                     {
-                        AppConfig.Instance.LL.GetLocalizedString("OK"),
-                        AppConfig.Instance.LL.GetLocalizedString("_CancelBtn")
+                        AppConfig.GetInstance.LL.GetLocalizedString("OK"),
+                        AppConfig.GetInstance.LL.GetLocalizedString("_CancelBtn")
                     };
                 case MessageBoxButtons.YesNo:
-                    buttonMapping[AppConfig.Instance.LL.GetLocalizedString("_YesBtn")] = DialogResult.Yes;
-                    buttonMapping[AppConfig.Instance.LL.GetLocalizedString("_NoBtn")] = DialogResult.No;
+                    buttonMapping[AppConfig.GetInstance.LL.GetLocalizedString("_YesBtn")] = DialogResult.Yes;
+                    buttonMapping[AppConfig.GetInstance.LL.GetLocalizedString("_NoBtn")] = DialogResult.No;
                     return new[]
                     {
-                        AppConfig.Instance.LL.GetLocalizedString("_YesBtn"),
-                        AppConfig.Instance.LL.GetLocalizedString("_NoBtn")
+                        AppConfig.GetInstance.LL.GetLocalizedString("_YesBtn"),
+                        AppConfig.GetInstance.LL.GetLocalizedString("_NoBtn")
                     };
                 case MessageBoxButtons.YesNoCancel:
-                    buttonMapping[AppConfig.Instance.LL.GetLocalizedString("_YesBtn")] = DialogResult.Yes;
-                    buttonMapping[AppConfig.Instance.LL.GetLocalizedString("_NoBtn")] = DialogResult.No;
-                    buttonMapping[AppConfig.Instance.LL.GetLocalizedString("_CancelBtn")] = DialogResult.Cancel;
+                    buttonMapping[AppConfig.GetInstance.LL.GetLocalizedString("_YesBtn")] = DialogResult.Yes;
+                    buttonMapping[AppConfig.GetInstance.LL.GetLocalizedString("_NoBtn")] = DialogResult.No;
+                    buttonMapping[AppConfig.GetInstance.LL.GetLocalizedString("_CancelBtn")] = DialogResult.Cancel;
                     return new[]
                     {
-                        AppConfig.Instance.LL.GetLocalizedString("_YesBtn"),
-                        AppConfig.Instance.LL.GetLocalizedString("_NoBtn"),
-                        AppConfig.Instance.LL.GetLocalizedString("_CancelBtn")
+                        AppConfig.GetInstance.LL.GetLocalizedString("_YesBtn"),
+                        AppConfig.GetInstance.LL.GetLocalizedString("_NoBtn"),
+                        AppConfig.GetInstance.LL.GetLocalizedString("_CancelBtn")
                     };
                 default:
                     throw new ArgumentOutOfRangeException(nameof(buttons), buttons, null);

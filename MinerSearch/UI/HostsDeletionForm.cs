@@ -27,11 +27,11 @@ namespace MSearch
 
         private void TranslateForm()
         {
-            label_message.Text = AppConfig.Instance.LL.GetLocalizedString("_HostsCleanupWarning");
-            selectAllButton.Text = AppConfig.Instance.LL.GetLocalizedString("_SelectAllButton");
-            deselectAllButton.Text = AppConfig.Instance.LL.GetLocalizedString("_DeselectAllButton");
-            continueButton.Text = AppConfig.Instance.LL.GetLocalizedString("_ContinueButton");
-            skipBtn.Text = AppConfig.Instance.LL.GetLocalizedString("_HostsCleanupSkipBtn");
+            label_message.Text = AppConfig.GetInstance.LL.GetLocalizedString("_HostsCleanupWarning");
+            selectAllButton.Text = AppConfig.GetInstance.LL.GetLocalizedString("_SelectAllButton");
+            deselectAllButton.Text = AppConfig.GetInstance.LL.GetLocalizedString("_DeselectAllButton");
+            continueButton.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ContinueButton");
+            skipBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_HostsCleanupSkipBtn");
         }
 
         protected override void WndProc(ref Message m)
@@ -108,7 +108,7 @@ namespace MSearch
 
         private void HostsDeletionForm_Load(object sender, EventArgs e)
         {
-            if (AppConfig.Instance.silent)
+            if (LaunchOptions.GetInstance.silent)
             {
                 selectAllButton.PerformClick();
                 continueButton.PerformClick();

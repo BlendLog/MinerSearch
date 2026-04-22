@@ -482,7 +482,7 @@ namespace DBase
 		};
 
         public List<string> obfStr6 = new List<string>() {
-		Drive.Letter + Bfs.Create("+vkFkWsSU7qT6nGYXQJuWA==","WPFxylnf34RQ3kNU34t0lkulsPXjkFf2dZNWqH3LuVk=", "0AkCSbsThDJMaVUIauP78Q=="), //:\ProgramData
+        Drive.Letter + Bfs.Create("+vkFkWsSU7qT6nGYXQJuWA==","WPFxylnf34RQ3kNU34t0lkulsPXjkFf2dZNWqH3LuVk=", "0AkCSbsThDJMaVUIauP78Q=="), //:\ProgramData
 		Drive.Letter + Bfs.Create("XrwDhrVAtFjXryFUMU7TLw==","6+kyIk3ngh86A1IIJ9/SRc0YEZw7K7MBDQYYKcB1wy0=", "/32+Gdr0B891jxTZsNWYkA=="), //:\Program Files
 		Drive.Letter + Bfs.Create("0GpLsiuCg+a2B6xUz+2szoy7tOpJZqBgiF6maeX3EtY=","4cwQ2sAPMNCnVHJ0/YFJ2f2ESZL7xOX4dogw7APRA6w=", "/AbpDwy/W7XyGw0ypNRUkQ=="), //:\Program Files (x86)
 		Drive.Letter + Bfs.Create("wm/+ch9NDM5BQODLaU4W6A==","hELXowMcfILaEast3ONBRxp+o2Tm77X84OVbxBPWMjI=", "DGBjbraZbu7gZS1pvnKD+Q=="), //:\Windows

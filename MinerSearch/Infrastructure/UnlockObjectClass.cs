@@ -98,13 +98,13 @@ namespace MSearch
             }
             catch (Exception ex) when (ex.HResult.Equals(unchecked((int)0x800700E1)) || ex.HResult.Equals(0xE1))
             {
-                AppConfig.Instance.LL.LogWarnMediumMessage("_ErrorLockedByWD", path);
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, path, ScanActionType.LockedByAntivirus));
+                AppConfig.GetInstance.LL.LogWarnMediumMessage("_ErrorLockedByWD", path);
+                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, path, ScanActionType.LockedByAntivirus));
                 return true;
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_ErrorCheckingLock", ex, path);
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCheckingLock", ex, path);
                 return true;
             }
 
@@ -253,27 +253,27 @@ namespace MSearch
                         ProcessManager.UnProtect(new int[] { process.Id });
                         process.Kill();
                         process.WaitForExit(1000);
-                        AppConfig.Instance.LL.LogSuccessMessage("_BlockingProcessClosed", $"{tmpProcName} | PID: {processId}");
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_BlockingProcessClosed", $"{tmpProcName} | PID: {processId}");
                     }
-                    else AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning");
+                    else AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning");
                 }
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
-                AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, filePath, ScanActionType.LockedByAntivirus));
+                AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
+                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, filePath, ScanActionType.LockedByAntivirus));
             }
             catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
             {
-                AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
+                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80131509)))
             {
-                AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
+                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotRemove", ex, filePath, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, filePath, "_File");
             }
 
             try
@@ -288,20 +288,20 @@ namespace MSearch
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
-                AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, filePath, ScanActionType.LockedByAntivirus));
+                AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
+                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, filePath, ScanActionType.LockedByAntivirus));
             }
             catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
             {
-                AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
+                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80131509)))
             {
-                AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
+                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotRemove", ex, filePath, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, filePath, "_File");
             }
 
             return false;
@@ -326,12 +326,12 @@ namespace MSearch
             catch (FileNotFoundException) { }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
-                AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, filePath, ScanActionType.LockedByAntivirus));
+                AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
+                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, filePath, ScanActionType.LockedByAntivirus));
             }
             catch (Exception e)
             {
-                AppConfig.Instance.LL.LogWarnMessage("_WarnCannotDisableExecution", e.Message);
+                AppConfig.GetInstance.LL.LogWarnMessage("_WarnCannotDisableExecution", e.Message);
             }
 
         }

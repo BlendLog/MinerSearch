@@ -378,3 +378,5 @@ FodyWeavers.xsd
 *.txt
 *.ps1
 *.plog
+/QWEN.md
+/.qwen

@@ -47,7 +47,7 @@ namespace MSearch
         public static void HookExeption(object sender, UnhandledExceptionEventArgs args)
         {
             Exception e = (Exception)args?.ExceptionObject;
-            DialogDispatcher.Show(e.Message + "\n" + e.StackTrace, AppConfig.Instance.LL.GetLocalizedString("_ExeptionTitle"), Color.Salmon, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            DialogDispatcher.Show(e.Message + "\n" + e.StackTrace, AppConfig.GetInstance.LL.GetLocalizedString("_ExeptionTitle"), Color.Salmon, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -71,8 +71,8 @@ namespace MSearch
 
         internal static void CheckStartupCount()
         {
-            string KeyPath = AppConfig.Instance.RegistryPathMain;
-            string valueName = AppConfig.Instance.LaunchCountValueName;
+            string KeyPath = AppConfig.GetInstance.RegistryPathMain;
+            string valueName = AppConfig.GetInstance.LaunchCountValueName;
 
 
             const string migratedFlag = "migrated";
@@ -101,7 +101,7 @@ namespace MSearch
                                 oldKey.DeleteValue(valueName, false);
 
                                 LocalizedLogger.LogStartupCount(runCount);
-                                AppConfig.Instance.RunCount = runCount;
+                                AppConfig.GetInstance.RunCount = runCount;
                                 return;
                             }
                         }
@@ -124,13 +124,13 @@ namespace MSearch
             }
 
             LocalizedLogger.LogStartupCount(runCount);
-            AppConfig.Instance.RunCount = runCount;
+            AppConfig.GetInstance.RunCount = runCount;
         }
 
         static int IncrementFallbackHKCU()
         {
-            string keyPath = AppConfig.Instance.RegistryPathMain;
-            string valueName = AppConfig.Instance.LaunchCountValueName;
+            string keyPath = AppConfig.GetInstance.RegistryPathMain;
+            string valueName = AppConfig.GetInstance.LaunchCountValueName;
 
             int runCount;
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(keyPath, true))
@@ -261,7 +261,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, "GetSubkeys");
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, "GetSubkeys");
             }
 
             return subkeys;
@@ -289,7 +289,7 @@ namespace MSearch
             return false;
         }
 
-        internal static void AddToQuarantine(string sourceFilePath, string note = "")
+        internal static void AddToQuarantine(string sourceFilePath, string note = "", bool deleteFromSource = true)
         {
             if (!File.Exists(sourceFilePath))
                 return;
@@ -297,15 +297,15 @@ namespace MSearch
             try
             {
 
-                if (UnlockObjectClass.IsRegistryKeyBlocked(AppConfig.Instance.RegistryPathMain))
+                if (UnlockObjectClass.IsRegistryKeyBlocked(AppConfig.GetInstance.RegistryPathMain))
                 {
-                    UnlockObjectClass.UnblockRegistry(AppConfig.Instance.RegistryPathMain);
+                    UnlockObjectClass.UnblockRegistry(AppConfig.GetInstance.RegistryPathMain);
                 }
 
                 string fileHash = FileChecker.CalculateMD5(sourceFilePath);
 
                 const int blockSize = 1024 * 512;
-                using (var baseKey = Registry.LocalMachine.CreateSubKey(AppConfig.Instance.QuarantineKeyPath))
+                using (var baseKey = Registry.LocalMachine.CreateSubKey(AppConfig.GetInstance.QuarantineKeyPath))
                 {
                     if (baseKey == null)
                         return;
@@ -343,36 +343,40 @@ namespace MSearch
                     }
                 }
 
-                UnlockObjectClass.KillAndDelete(sourceFilePath);
+                if (deleteFromSource)
+                {
+                    UnlockObjectClass.KillAndDelete(sourceFilePath);
+                }
+
                 if (!File.Exists(sourceFilePath))
                 {
-                    AppConfig.Instance.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_MovedToQuarantine");
-                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Quarantine, note.Replace("?", "")));
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_MovedToQuarantine");
+                    //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Quarantine, note.Replace("?", "")));
                 }
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
-                AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", sourceFilePath);
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, sourceFilePath, ScanActionType.LockedByAntivirus, note.Replace("?", "")));
+                AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", sourceFilePath);
+                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, sourceFilePath, ScanActionType.LockedByAntivirus, note.Replace("?", "")));
 
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80070020)))
             {
-                AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByAnotherProcess", sourceFilePath);
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error, e.Message));
-                AppConfig.Instance.totalNeutralizedThreats--;
+                AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByAnotherProcess", sourceFilePath);
+                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error, e.Message));
+                //AppConfig.GetInstance.totalNeutralizedThreats--;
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, sourceFilePath, "_File");
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error, ex.Message));
-                AppConfig.Instance.totalNeutralizedThreats--;
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, sourceFilePath, "_File");
+                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error, ex.Message));
+                //AppConfig.GetInstance.totalNeutralizedThreats--;
             }
         }
 
         internal static void CheckLatestReleaseVersion()
         {
-            AppConfig.Instance.LL.LogHeadMessage("_LogCheckingUpdates");
+            AppConfig.GetInstance.LL.LogHeadMessage("_LogCheckingUpdates");
 
             try
             {
@@ -384,9 +388,9 @@ namespace MSearch
                 {
                     Logger.WriteLog(
                         "\t\t[!] "
-                        + AppConfig.Instance.LL.GetLocalizedString("_ErrorCannotCheckUpdates")
+                        + AppConfig.GetInstance.LL.GetLocalizedString("_ErrorCannotCheckUpdates")
                         + " | "
-                        + AppConfig.Instance.LL.GetLocalizedString("_NoInternetConnection"),
+                        + AppConfig.GetInstance.LL.GetLocalizedString("_NoInternetConnection"),
                         false, false);
 
                     return;
@@ -398,27 +402,27 @@ namespace MSearch
             catch (FileNotFoundException)
             {
                 DialogDispatcher.Show(
-                    AppConfig.Instance.LL.GetLocalizedString("_ErrorNotFoundComponent"),
-                    AppConfig.Instance._title,
+                    AppConfig.GetInstance.LL.GetLocalizedString("_ErrorNotFoundComponent"),
+                    AppConfig.GetInstance._title,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotCheckUpdates", ex);
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotCheckUpdates", ex);
             }
         }
 
         static int IsNewVersionAvailable()
         {
             string latest = UpdateChecker.GetLatestVersion(_versionEndpoint).Trim();
-            string current = AppConfig.Instance.CurrentVersion.Replace(".", "");
+            string current = AppConfig.GetInstance.CurrentVersion.Replace(".", "");
 
             if (!UpdateChecker.IsLatestVersion(current, latest.StartsWith("v") ? latest.Substring(1).Replace(".", "") : latest.Replace(".", "")))
             {
-                if (AppConfig.Instance.IsGuiAvailable)
+                if (AppConfig.GetInstance.IsGuiAvailable)
                 {
-                    var message = DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), latest, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    var message = DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), latest, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                     if (message == DialogResult.Yes)
                     {
                         Process.Start("explorer", "https://github.com/BlendLog/MinerSearch/releases/latest");
@@ -426,19 +430,19 @@ namespace MSearch
                     }
                     else
                     {
-                        Logger.WriteLog(AppConfig.Instance.LL.GetLocalizedString("_Version") + " " + AppConfig.Instance.CurrentVersion + " " + AppConfig.Instance.LL.GetLocalizedString("_PrefixNewVersionAvailable").Replace("#LATEST#", latest), Logger.warnMedium);
+                        Logger.WriteLog(AppConfig.GetInstance.LL.GetLocalizedString("_Version") + " " + AppConfig.GetInstance.CurrentVersion + " " + AppConfig.GetInstance.LL.GetLocalizedString("_PrefixNewVersionAvailable").Replace("#LATEST#", latest), Logger.warnMedium);
                     }
                 }
                 else
                 {
-                    Logger.WriteLog(AppConfig.Instance.LL.GetLocalizedString("_Version") + " " + AppConfig.Instance.CurrentVersion + " " + AppConfig.Instance.LL.GetLocalizedString("_PrefixNewVersionAvailable").Replace("#LATEST#", latest), Logger.warnMedium);
+                    Logger.WriteLog(AppConfig.GetInstance.LL.GetLocalizedString("_Version") + " " + AppConfig.GetInstance.CurrentVersion + " " + AppConfig.GetInstance.LL.GetLocalizedString("_PrefixNewVersionAvailable").Replace("#LATEST#", latest), Logger.warnMedium);
                 }
                 return 2;
 
             }
             else
             {
-                Logger.WriteLog("\t\t" + AppConfig.Instance.LL.GetLocalizedString("_LogLastVersion"), Logger.success, false);
+                Logger.WriteLog("\t\t" + AppConfig.GetInstance.LL.GetLocalizedString("_LogLastVersion"), Logger.success, false);
             }
             return 0;
         }
@@ -455,13 +459,13 @@ namespace MSearch
                     if ((ServiceBootFlag)serviceinfo.StartType != ServiceBootFlag.AutoStart)
                     {
                         ChangeStartMode(serviceName, ServiceBootFlag.AutoStart);
-                        AppConfig.Instance.LL.LogSuccessMessage("_CriticalServiceStartup");
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_CriticalServiceStartup");
                     }
 
                     if (GetServiceState(serviceName) != ServiceState.Running)
                     {
                         StartService(serviceName);
-                        AppConfig.Instance.LL.LogSuccessMessage("_CriticalServiceRestart");
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_CriticalServiceRestart");
                     }
 
                     try
@@ -491,7 +495,7 @@ namespace MSearch
             {
                 if (OSExtensions.IsDotNetInstalled())
                 {
-                    DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_ErrorNoDotNet"), AppConfig.Instance._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_ErrorNoDotNet"), AppConfig.GetInstance._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     Environment.Exit(1);
                 }
             }
@@ -505,16 +509,16 @@ namespace MSearch
 
         static void RestoreWMICorruption()
         {
-            if (AppConfig.Instance.RestoredWMI)
+            if (LaunchOptions.GetInstance.RestoredWMI)
             {
                 throw new Exception("WMI_Corruption");
             }
 
-            AppConfig.Instance.LL.LogMessage("\t\t[xxx]", "_WMICorruption", "", ConsoleColor.Red, false);
+            AppConfig.GetInstance.LL.LogMessage("\t\t[xxx]", "_WMICorruption", "", ConsoleColor.Red, false);
 
             Console.ForegroundColor = ConsoleColor.DarkCyan;
 
-            AppConfig.Instance.LL.LogHeadMessage("_WMIRecompilation");
+            AppConfig.GetInstance.LL.LogHeadMessage("_WMIRecompilation");
 
             string wbemPath = Path.Combine(Environment.SystemDirectory, "Wbem");
 
@@ -538,7 +542,7 @@ namespace MSearch
             }
 
             Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
-            AppConfig.Instance.LL.LogHeadMessage("_WMIRegister");
+            AppConfig.GetInstance.LL.LogHeadMessage("_WMIRegister");
 
             foreach (var file in Directory.EnumerateFiles(wbemPath, "*.dll", SearchOption.AllDirectories))
             {
@@ -556,7 +560,7 @@ namespace MSearch
 
 
             Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
-            AppConfig.Instance.LL.LogHeadMessage("_WMIRestartService");
+            AppConfig.GetInstance.LL.LogHeadMessage("_WMIRestartService");
 
             ServiceController service = new ServiceController("winmgmt");
             if (service.Status != ServiceControllerStatus.Stopped)
@@ -583,122 +587,6 @@ namespace MSearch
                 return string.IsNullOrEmpty(sPath) ? "" : sPath;
             }
         }
-
-        public static void CheckTermService()
-        {
-
-            string registryPath = MSData.GetInstance.queries["TermServiceParameters"]; //SYSTEM\CurrentControlSet\Services\TermService\Parameters
-            string desiredValue = MSData.GetInstance.queries["TermsrvDll"]; //%SystemRoot%\System32\termsrv.dll
-            string paramName = "Ser/vice/Dll".Replace("/", "");
-
-            using (var regkey = Registry.LocalMachine.OpenSubKey(registryPath, true))
-            {
-                if (regkey != null)
-                {
-                    string currentValue = (string)regkey.GetValue(paramName);
-                    if (currentValue != null)
-                    {
-                        if (currentValue != Environment.ExpandEnvironmentVariables(desiredValue))
-                        {
-                            AppConfig.Instance.LL.LogWarnMessage("_TermServiceInvalidPath", currentValue);
-                            AppConfig.Instance.totalFoundSuspiciousObjects++;
-                            MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Suspicious, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Skipped, AppConfig.Instance.LL.GetLocalizedString("_TermServiceInvalidPath") + " " + currentValue));
-
-
-                            bool isInfectedService = false;
-                            foreach (ScanResult res in MinerSearch.scanResults)
-                            {
-                                foreach (string pattern in MSData.GetInstance.JohnPatterns)
-                                {
-                                    if (res.Path.IndexOf(pattern) >= 0)
-                                    {
-                                        isInfectedService = true;
-                                    }
-                                }
-                            }
-
-                            if (isInfectedService)
-                            {
-
-                                AppConfig.Instance.totalFoundThreats++;
-
-                                if (!AppConfig.Instance.ScanOnly)
-                                {
-                                    try
-                                    {
-                                        string termsrv = "TermService";
-                                        string UmRdpSrv = "UmRdpService";
-
-                                        var UmRdpSrvInfo = GetServiceInfo(UmRdpSrv);
-                                        var termSrvInfo = GetServiceInfo(termsrv);
-
-                                        if (GetServiceState(UmRdpSrv) == ServiceState.Running)
-                                        {
-                                            StopService(UmRdpSrv);
-                                        }
-
-                                        if ((ServiceBootFlag)UmRdpSrvInfo.StartType != ServiceBootFlag.DemandStart)
-                                        {
-                                            ChangeStartMode(UmRdpSrv, ServiceBootFlag.DemandStart);
-                                        }
-
-                                        if (GetServiceState(termsrv) == ServiceState.Running)
-                                        {
-                                            StopService(termsrv);
-                                        }
-
-                                        if ((ServiceBootFlag)termSrvInfo.StartType != ServiceBootFlag.DemandStart)
-                                        {
-                                            ChangeStartMode(termsrv, ServiceBootFlag.DemandStart);
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
-                                        return;
-                                    }
-
-                                    regkey.SetValue(paramName, desiredValue, RegistryValueKind.ExpandString);
-                                    currentValue = (string)regkey.GetValue(paramName);
-                                    if (currentValue == Environment.ExpandEnvironmentVariables(desiredValue))
-                                    {
-                                        AppConfig.Instance.LL.LogSuccessMessage("_TermServiceRestored");
-                                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Cured));
-
-                                    }
-                                    else
-                                    {
-                                        AppConfig.Instance.LL.LogErrorMessage("_TermServiceFailedRestore", new Exception(""));
-                                        MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Error));
-
-                                    }
-                                }
-                                else
-                                {
-                                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Infected, AppConfig.Instance.LL.GetLocalizedString("_Just_Service") + " TermService", ScanActionType.Skipped));
-                                    LocalizedLogger.LogScanOnlyMode();
-                                }
-                            }
-                            else
-                            {
-                                LocalizedLogger.LogNoThreatsFound();
-                            }
-                        }
-                        else
-                        {
-                            LocalizedLogger.LogNoThreatsFound();
-                        }
-                    }
-                }
-                else
-                {
-                    AppConfig.Instance.LL.LogWarnMediumMessage("_ServiceNotInstalled", "T?ermS?ervi?ce".Replace("?", ""));
-                }
-            }
-
-        }
-
-
     }
 
     public class IfeoDbgHelper
@@ -838,7 +726,7 @@ namespace MSearch
             if (allowSystemOnly && !isSystem)
                 return false;
 
-            return new WinTrust().VerifyEmbeddedSignature(path, true) == WinVerifyTrustResult.Success;
+            return WinTrust.GetInstance.VerifyEmbeddedSignature(path, true) == WinVerifyTrustResult.Success;
         }
 
         static bool IsShell(string exe)
@@ -904,7 +792,7 @@ namespace MSearch
             return procs;
         }
 
-        //based on https://github.com/dotnet-campus/dotnetCampus.Win32ProcessCommandViewer/blob/master/src/dotnetCampus.Win32ProcessCommandViewer/AppConfig.Instance.cs
+        //based on https://github.com/dotnet-campus/dotnetCampus.Win32ProcessCommandViewer/blob/master/src/dotnetCampus.Win32ProcessCommandViewer/AppConfig.GetInstance.cs
         internal static string GetProcessCommandLine(Process process)
         {
             var pid = process.Id;
@@ -1090,11 +978,11 @@ namespace MSearch
         internal static string GetLocalizedRiskLevel(int riskLevel)
         {
 
-            if (riskLevel == 3) return $"{AppConfig.Instance.LL.GetLocalizedString("_ProcessRiskLevel_Medium")} ({riskLevel})";
-            if (riskLevel >= 4 && riskLevel <= 5) return $"{AppConfig.Instance.LL.GetLocalizedString("_ProcessRiskLevel_High")} ({riskLevel})";
-            if (riskLevel >= 6 && riskLevel < 10) return $"{AppConfig.Instance.LL.GetLocalizedString("_ProcessRiskLevel_VeryHigh")} ({riskLevel})";
+            if (riskLevel == 3) return $"{AppConfig.GetInstance.LL.GetLocalizedString("_ProcessRiskLevel_Medium")} ({riskLevel})";
+            if (riskLevel >= 4 && riskLevel <= 5) return $"{AppConfig.GetInstance.LL.GetLocalizedString("_ProcessRiskLevel_High")} ({riskLevel})";
+            if (riskLevel >= 6 && riskLevel < 10) return $"{AppConfig.GetInstance.LL.GetLocalizedString("_ProcessRiskLevel_VeryHigh")} ({riskLevel})";
 
-            return $"{AppConfig.Instance.LL.GetLocalizedString("_ProcessRiskLevel_ExtremelyHigh")} ({riskLevel})";
+            return $"{AppConfig.GetInstance.LL.GetLocalizedString("_ProcessRiskLevel_ExtremelyHigh")} ({riskLevel})";
         }
 
         internal static void UnProtect(int[] pids)
@@ -1122,24 +1010,26 @@ namespace MSearch
             }
             catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
             {
-                AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {_pid}");
+                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {_pid}");
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80131509)))
             {
-                AppConfig.Instance.LL.LogWarnMessage("_ProcessNotRunning", _pid.ToString());
+                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", _pid.ToString());
             }
             catch (System.ComponentModel.Win32Exception) { }
             catch (Exception e)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_ErrorTerminateProcess", e);
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorTerminateProcess", e);
             }
 
         }
 
-        internal static void SuspendProcess(Process process)
+        internal static void SuspendProcess(int PID)
         {
             try
             {
+                Process process = Process.GetProcessById(PID);
+
                 ProcessThreadCollection Threads = process.Threads;
                 int totalThreads = Threads.Count;
 
@@ -1172,11 +1062,11 @@ namespace MSearch
 
                 if (totalThreads == 0)
                 {
-                    AppConfig.Instance.LL.LogSuccessMessage("_ProcessSuspended", $"{process.ProcessName}, PID: {process.Id}");
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_ProcessSuspended", $"{process.ProcessName}, PID: {process.Id}");
                 }
                 else if (totalThreads > 0)
                 {
-                    AppConfig.Instance.LL.LogWarnMediumMessage("_ProcessSuspendedPartially", $"{process.ProcessName}.exe, PID: {process.Id}");
+                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_ProcessSuspendedPartially", $"{process.ProcessName}.exe, PID: {process.Id}");
                 }
 
                 process.Close();
@@ -1184,7 +1074,7 @@ namespace MSearch
             }
             catch (Exception)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("SuspendProcess()"));
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("SuspendProcess()"));
             }
         }
 
@@ -1264,7 +1154,7 @@ namespace MSearch
                     {
                         identity = new WindowsIdentity(tokenHandle);
 #if DEBUG
-                        Console.WriteLine("\t[DBG] Process owner {0}: {1}", processId, identity.Name);
+                        //Console.WriteLine("\t[DBG] Process owner {0}: {1}", processId, identity.Name);
 #endif
                         return identity.IsSystem;
                     }
@@ -1276,7 +1166,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
             }
             finally
             {
@@ -1352,9 +1242,9 @@ namespace MSearch
                     {
                         if (netAssemblyNames.Any(s => s.Equals(Path.GetFileName(moduleName), StringComparison.OrdinalIgnoreCase)))
                         {
-                            if (AppConfig.Instance.verbose)
+                            if (LaunchOptions.GetInstance.verbose)
                             {
-                                AppConfig.Instance.LL.LogMessage("\t[i]", "_IsDotnetAssembly", $"{proc.ProcessName} | {proc.Id}", ConsoleColor.DarkGreen, false);
+                                AppConfig.GetInstance.LL.LogMessage("\t[i]", "_IsDotnetAssembly", $"{proc.ProcessName} | {proc.Id}", ConsoleColor.DarkGreen, false);
                             }
                             return true;
                         }
@@ -1373,15 +1263,14 @@ namespace MSearch
             }
         }
 
-        public static bool IsProcessHollowed(Process proc)
+        public static bool IsProcessHollowed(int pid)
         {
-            if (proc == null || proc.Id == 0 || proc.Id == 4) return false;
-            try { if (proc.MainModule == null) return false; } catch { return false; }
+            if (pid == 0 || pid == 4) return false;
 
             IntPtr hProcess = IntPtr.Zero;
             try
             {
-                hProcess = Native.OpenProcess(Native.PROCESS_QUERY_INFORMATION | Native.PROCESS_VM_READ, false, proc.Id);
+                hProcess = Native.OpenProcess(Native.PROCESS_QUERY_INFORMATION | Native.PROCESS_VM_READ, false, pid);
                 if (hProcess == IntPtr.Zero) return false;
 
                 if (!Native.EnumProcessModulesEx(hProcess, null, 0, out uint cbNeeded, 3 /* LIST_MODULES_ALL */)) return false;
@@ -1440,7 +1329,7 @@ namespace MSearch
 
             if (!Native.OpenProcessToken(Native.GetCurrentProcess(), Native.TOKEN_ADJUST_PRIVILEGES | Native.TOKEN_QUERY, out hToken))
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("OpenProcToken: Current process"));
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("OpenProcToken: Current process"));
                 return;
             }
 
@@ -1448,7 +1337,7 @@ namespace MSearch
             {
                 if (!Native.LookupPrivilegeValue(null, privilegeNames[i], out Native.LUID luid))
                 {
-                    AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("LookupPrivilegeValue()"));
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("LookupPrivilegeValue()"));
                     Native.CloseHandle(hToken);
                     return;
                 }
@@ -1462,7 +1351,7 @@ namespace MSearch
             if (!Native.AdjustTokenPrivileges(hToken, false, ref tkpPrivileges, 0, IntPtr.Zero, IntPtr.Zero))
             {
                 int error = Marshal.GetLastWin32Error();
-                AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception($"AdjustTokenPriv failed with error code: {error}"));
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception($"AdjustTokenPriv failed with error code: {error}"));
                 return;
             }
 
@@ -1474,7 +1363,7 @@ namespace MSearch
             IntPtr hToken;
             if (!Native.OpenProcessToken(Native.GetCurrentProcess(), Native.TOKEN_QUERY, out hToken))
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("OpenProcessToken: Current process"));
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("OpenProcessToken: Current process"));
                 return false;
             }
 
@@ -1482,7 +1371,7 @@ namespace MSearch
             {
                 if (!Native.LookupPrivilegeValue(null, "SeDebugPrivilege", out Native.LUID luid))
                 {
-                    AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("LookupPrivilegeValue: SeDebugPrivilege"));
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("LookupPrivilegeValue: SeDebugPrivilege"));
                     return false;
                 }
 
@@ -1497,7 +1386,7 @@ namespace MSearch
 
                 if (!Native.PrivilegeCheck(hToken, ref privilegeSet, out bool hasPrivilege))
                 {
-                    AppConfig.Instance.LL.LogErrorMessage("_Error", new Exception("PrivilegeCheck"));
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("PrivilegeCheck"));
                     return false;
                 }
 
@@ -1679,7 +1568,7 @@ namespace MSearch
                         {
                             if (valueName.EndsWith(pattern, StringComparison.OrdinalIgnoreCase))
                             {
-                                AppConfig.Instance.LL.LogSuccessMessage("_RegistryKeyRemoved", valueName);
+                                AppConfig.GetInstance.LL.LogSuccessMessage("_RegistryKeyRemoved", valueName);
                                 baseKey.DeleteValue(valueName);
                             }
                         }
@@ -1695,7 +1584,7 @@ namespace MSearch
                 if (baseKey != null && baseKey.OpenSubKey(subKeyPath) != null)
                 {
                     baseKey.DeleteSubKeyTree(subKeyPath);
-                    AppConfig.Instance.LL.LogSuccessMessage("_RegistryKeyRemoved", subKeyPath);
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_RegistryKeyRemoved", subKeyPath);
                 }
             }
 
@@ -2179,8 +2068,6 @@ namespace MSearch
 
         internal static bool IsJarFile(string path)
         {
-
-            // JAR files are ZIP archives with a specific signature at the beginning
             byte[] jarSignature = { 0x51, 0x4C, 0x04, 0x05 }; // PK\003\004
 
             for (int i = 0; i < jarSignature.Length; i++)
@@ -2212,7 +2099,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, path);
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, path);
                 return false;
             }
         }
@@ -2274,7 +2161,6 @@ namespace MSearch
             }
             catch
             {
-                // при любой ошибке читаем как не UPX
                 return false;
             }
 
@@ -2327,7 +2213,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_ErrorAnalyzingFile", ex, filePath);
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorAnalyzingFile", ex, filePath);
             }
 
             return false;
@@ -2386,7 +2272,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", ex, filePath);
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, filePath);
                 return false;
             }
         }
@@ -2459,11 +2345,11 @@ namespace MSearch
             }
             catch (IOException ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotProceed", ex, filePath, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ex, filePath, "_File");
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_GenericError", ex, $"IsFileSizeBloated check on {filePath}");
+                AppConfig.GetInstance.LL.LogErrorMessage("_GenericError", ex, $"IsFileSizeBloated check on {filePath}");
             }
 
             return false;
@@ -2515,24 +2401,24 @@ namespace MSearch
             }
             catch (UnauthorizedAccessException uax)
             {
-                if (AppConfig.Instance.verbose)
+                if (LaunchOptions.GetInstance.verbose)
                 {
-                    AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_File");
+                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_File");
                 }
             }
-            catch (Win32Exception) { AppConfig.Instance.LL.LogWarnMessage("_Error", path); }
-            catch (IOException ioex) { AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_File"); }
+            catch (Win32Exception) { AppConfig.GetInstance.LL.LogWarnMessage("_Error", path); }
+            catch (IOException ioex) { AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_File"); }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
-                AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", path);
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, path, ScanActionType.LockedByAntivirus));
+                AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", path);
+                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, path, ScanActionType.LockedByAntivirus));
 
             }
             catch (Exception ex)
             {
-                if (AppConfig.Instance.verbose)
+                if (LaunchOptions.GetInstance.verbose)
                 {
-                    AppConfig.Instance.LL.LogErrorMessage("_Error", ex, path, "_File");
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, path, "_File");
                 }
             }
 
@@ -2552,24 +2438,24 @@ namespace MSearch
             }
             catch (UnauthorizedAccessException uax)
             {
-                if (AppConfig.Instance.verbose)
+                if (LaunchOptions.GetInstance.verbose)
                 {
-                    AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_Directory");
+                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_Directory");
                 }
             }
-            catch (Win32Exception) { AppConfig.Instance.LL.LogWarnMessage("_Error", path); }
-            catch (IOException ioex) { AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_Directory"); }
+            catch (Win32Exception) { AppConfig.GetInstance.LL.LogWarnMessage("_Error", path); }
+            catch (IOException ioex) { AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_Directory"); }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
-                AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", path);
-                MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, path, ScanActionType.LockedByAntivirus));
+                AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", path);
+                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, path, ScanActionType.LockedByAntivirus));
 
             }
             catch (Exception ex)
             {
-                if (AppConfig.Instance.verbose)
+                if (LaunchOptions.GetInstance.verbose)
                 {
-                    AppConfig.Instance.LL.LogErrorMessage("_Error", ex, path, "_Directory");
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, path, "_Directory");
                 }
             }
 
@@ -2583,7 +2469,7 @@ namespace MSearch
                 return true;
             }
 
-            if (!AppConfig.Instance.RunAsSystem)
+            if (!AppConfig.GetInstance.RunAsSystem)
             {
                 if (directory.IndexOf(":\\Windows\\WinSxS", StringComparison.OrdinalIgnoreCase) != -1 ||
                     directory.IndexOf(":\\$", StringComparison.OrdinalIgnoreCase) != -1 ||
@@ -2601,7 +2487,7 @@ namespace MSearch
 
     public class FileSystemManager
     {
-        private static readonly Regex IfExistPathRegex = new Regex(@"if\s+exist\s+(?:""|\^"")(?<filepath>[A-Z]:\\.*?\.(?:dll|wsf))(?:""|\^"")", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        static readonly Regex IfExistPathRegex = new Regex(@"if\s+exist\s+(?:""|\^"")(?<filepath>[A-Z]:\\.*?\.(?:dll|wsf))(?:""|\^"")", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         internal static bool IsDirectoryEmpty(string path)
         {
@@ -2689,7 +2575,8 @@ namespace MSearch
 
         internal static bool IsOnlyInvisibleCharacters(string input)
         {
-            return Regex.IsMatch(input, @"^[\u200B\u200C\u200E\u202F\u00A0]*$");
+            // Расширенный набор: zero-width chars, bidi controls, word joiners, narrow spaces, BOM
+            return Regex.IsMatch(input, @"^[\u200B\u200C\u200D\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u202F\u2060\u2061\u2062\u2063\u2064\uFEFF\u00A0\u2009\u200A\u205F\u2006\u2007\u2008\u0020\p{Cf}]*$");
         }
 
         internal static bool HasHiddenAttribute(string path)
@@ -2765,7 +2652,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
                 return "";
             }
             finally
@@ -2958,8 +2845,6 @@ namespace MSearch
 
         internal static bool ProcessFileFromArgs(string[] checkDirs, string fullpath, string arguments)
         {
-            WinTrust winTrust = new WinTrust();
-
             if (fullpath.IndexOf("rundll32", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 List<string> argsList = SplitCommandLineArguments(arguments);
@@ -2991,15 +2876,15 @@ namespace MSearch
                     if (File.Exists(resolvedDllPath))
                     {
                         filePathFromArgs_tmp = resolvedDllPath;
-                        AppConfig.Instance.LL.LogMessage("[.]", "_Just_File", resolvedDllPath, ConsoleColor.Gray);
-                        var trustResult = winTrust.VerifyEmbeddedSignature(resolvedDllPath, true);
+                        AppConfig.GetInstance.LL.LogMessage("[.]", "_Just_File", resolvedDllPath, ConsoleColor.Gray);
+                        var trustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(resolvedDllPath, true);
                         if (trustResult != WinVerifyTrustResult.Success)
                         {
-                            AppConfig.Instance.LL.LogWarnMediumMessage("_InvalidCertificateSignature", arguments);
-                            AppConfig.Instance.totalFoundThreats++;
-                            if (!AppConfig.Instance.ScanOnly)
+                            AppConfig.GetInstance.LL.LogWarnMediumMessage("_InvalidCertificateSignature", arguments);
+                            AppConfig.GetInstance.totalFoundThreats++;
+                            if (!LaunchOptions.GetInstance.ScanOnly)
                             {
-                                Utils.AddToQuarantine(resolvedDllPath, AppConfig.Instance.LL.GetLocalizedString("_Rundll32Abuse"));
+                                Utils.AddToQuarantine(resolvedDllPath, AppConfig.GetInstance.LL.GetLocalizedString("_Rundll32Abuse"));
                                 if (!File.Exists(resolvedDllPath))
                                 {
                                     return true;
@@ -3014,18 +2899,18 @@ namespace MSearch
                     }
                     else
                     {
-                        AppConfig.Instance.LL.LogWarnMessage("_FileIsNotFound", resolvedDllPath);
+                        AppConfig.GetInstance.LL.LogWarnMessage("_FileIsNotFound", resolvedDllPath);
                     }
                 }
                 catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
                 {
-                    AppConfig.Instance.LL.LogCautionMessage("_ErrorLockedByWD", filePathFromArgs_tmp);
-                    MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, filePathFromArgs_tmp, ScanActionType.LockedByAntivirus));
+                    AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", filePathFromArgs_tmp);
+                    //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, filePathFromArgs_tmp, ScanActionType.LockedByAntivirus));
 
                 }
                 catch (Exception e)
                 {
-                    AppConfig.Instance.LL.LogErrorMessage("_Error", e);
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", e);
                 }
 
             }
@@ -3077,16 +2962,16 @@ namespace MSearch
 
                 if (File.Exists(finalPath))
                 {
-                    AppConfig.Instance.LL.LogMessage("[.]", "_Just_File", finalPath, ConsoleColor.Gray);
+                    AppConfig.GetInstance.LL.LogMessage("[.]", "_Just_File", finalPath, ConsoleColor.Gray);
                     try
                     {
-                        var trustResult = winTrust.VerifyEmbeddedSignature(finalPath, true);
+                        var trustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(finalPath, true);
                         if (trustResult != WinVerifyTrustResult.Success)
                         {
-                            AppConfig.Instance.LL.LogWarnMediumMessage("_InvalidCertificateSignature", finalPath);
-                            AppConfig.Instance.LL.LogWarnMediumMessage("_PcaluaAbuse", finalPath);
-                            AppConfig.Instance.totalFoundSuspiciousObjects++;
-                            MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Suspicious, finalPath, ScanActionType.Skipped, AppConfig.Instance.LL.GetLocalizedString("_PcaluaAbuse")));
+                            AppConfig.GetInstance.LL.LogWarnMediumMessage("_InvalidCertificateSignature", finalPath);
+                            AppConfig.GetInstance.LL.LogWarnMediumMessage("_PcaluaAbuse", finalPath);
+                            //AppConfig.GetInstance.totalFoundSuspiciousObjects++;
+                            //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Suspicious, finalPath, ScanActionType.Skipped, AppConfig.GetInstance.LL.GetLocalizedString("_PcaluaAbuse")));
                         }
                         else
                         {
@@ -3095,12 +2980,12 @@ namespace MSearch
                     }
                     catch (Exception ex)
                     {
-                        AppConfig.Instance.LL.LogErrorMessage("_Error", ex, $"pcalua processing: {finalPath}");
+                        AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, $"pcalua processing: {finalPath}");
                     }
                 }
                 else
                 {
-                    AppConfig.Instance.LL.LogWarnMessage("_FileIsNotFound", fileFromArgs);
+                    AppConfig.GetInstance.LL.LogWarnMessage("_FileIsNotFound", fileFromArgs);
                 }
             }
 
@@ -3117,13 +3002,13 @@ namespace MSearch
                     if (normalizedPath.EndsWith(".pfx", StringComparison.OrdinalIgnoreCase) ||
                         normalizedPath.EndsWith(".p12", StringComparison.OrdinalIgnoreCase))
                     {
-                        AppConfig.Instance.LL.LogWarnMediumMessage("_SuspiciousRegsvr32", normalizedPath);
+                        AppConfig.GetInstance.LL.LogWarnMediumMessage("_SuspiciousRegsvr32", normalizedPath);
 
                         if (File.Exists(normalizedPath))
                         {
-                            AppConfig.Instance.totalFoundThreats++;
+                            AppConfig.GetInstance.totalFoundThreats++;
 
-                            if (!AppConfig.Instance.ScanOnly)
+                            if (!LaunchOptions.GetInstance.ScanOnly)
                             {
                                 Utils.AddToQuarantine(normalizedPath);
                                 return true;
@@ -3133,7 +3018,7 @@ namespace MSearch
                         }
                         else
                         {
-                            AppConfig.Instance.LL.LogWarnMessage("_FileIsNotFound", normalizedPath);
+                            AppConfig.GetInstance.LL.LogWarnMessage("_FileIsNotFound", normalizedPath);
                             return true;
                         }
                     }
@@ -3143,13 +3028,13 @@ namespace MSearch
                         if (File.Exists(normalizedPath) && (normalizedPath.IndexOf("programdata", StringComparison.OrdinalIgnoreCase) >= 0 ||
                                     normalizedPath.IndexOf("appdata", StringComparison.OrdinalIgnoreCase) >= 0))
                         {
-                            WinVerifyTrustResult signResult = winTrust.VerifyEmbeddedSignature(normalizedPath);
+                            WinVerifyTrustResult signResult = WinTrust.GetInstance.VerifyEmbeddedSignature(normalizedPath);
                             if (signResult == WinVerifyTrustResult.FileNotSigned || signResult == WinVerifyTrustResult.SignatureOrFileCorrupt)
                             {
-                                AppConfig.Instance.LL.LogWarnMediumMessage("_SuspiciousRegsvr32", normalizedPath);
-                                AppConfig.Instance.totalFoundThreats++;
+                                AppConfig.GetInstance.LL.LogWarnMediumMessage("_SuspiciousRegsvr32", normalizedPath);
+                                AppConfig.GetInstance.totalFoundThreats++;
 
-                                if (!AppConfig.Instance.ScanOnly)
+                                if (!LaunchOptions.GetInstance.ScanOnly)
                                 {
                                     Utils.AddToQuarantine(normalizedPath);
                                     if (!File.Exists(normalizedPath))
@@ -3162,7 +3047,7 @@ namespace MSearch
                         }
                         else
                         {
-                            AppConfig.Instance.LL.LogWarnMessage("_FileIsNotFound", normalizedPath);
+                            AppConfig.GetInstance.LL.LogWarnMessage("_FileIsNotFound", normalizedPath);
                             return true;
                         }
                     }
@@ -3357,7 +3242,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_ErrorRegistryCheck", ex, username);
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorRegistryCheck", ex, username);
                 return false;
             }
 

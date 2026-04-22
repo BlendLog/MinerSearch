@@ -15,8 +15,9 @@ namespace MSearch
         Skipped,
         Active,
         Terminated,
+        Suspended,
         Error,
-        Inaccassible,
+        Inaccessible,
         Disabled,
         LockedByAntivirus
     }
@@ -27,7 +28,8 @@ namespace MSearch
         Unsafe,
         Suspicious,
         Infected,
-        Unknown
+        Unknown,
+        Rootkit
     }
 
     public class ScanResult
@@ -55,15 +57,15 @@ namespace MSearch
             switch (rawType)
             {
                 case ScanObjectType.Malware:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ThreatType_Malware");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatType_Malware");
                 case ScanObjectType.Unsafe:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ThreatType_Unsafe");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatType_Unsafe");
                 case ScanObjectType.Suspicious:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ThreatType_Suspicious");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatType_Suspicious");
                 case ScanObjectType.Infected:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ThreatType_Infected");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatType_Infected");
                 default:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ThreatType_Unknown");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatType_Unknown");
 
             }
         }
@@ -73,25 +75,25 @@ namespace MSearch
             switch (action)
             {
                 case ScanActionType.Cured:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ActionType_Cured");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Cured");
                 case ScanActionType.Quarantine:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ActionType_Quarantine");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Quarantine");
                 case ScanActionType.Deleted:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ActionType_Deleted");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Deleted");
                 case ScanActionType.Error:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ActionType_Error");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Error");
                 case ScanActionType.Active:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ActionType_Active");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Active");
                 case ScanActionType.Terminated:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ActionType_Terminated");
-                case ScanActionType.Inaccassible:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ActionType_Inaccessible");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Terminated");
+                case ScanActionType.Inaccessible:
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Inaccessible");
                 case ScanActionType.Disabled:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ActionType_Disabled");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Disabled");
                 case ScanActionType.LockedByAntivirus:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ActionType_LockedByAV");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_LockedByAV");
                 default:
-                    return AppConfig.Instance.LL.GetLocalizedString("_ActionType_Skipped");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Skipped");
             }
         }
     }

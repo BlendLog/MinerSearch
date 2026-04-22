@@ -16,37 +16,37 @@ namespace MSearch.UI
         {
             string[] args = Environment.GetCommandLineArgs();
 
-            if ((AppConfig.Instance.QuarantineRestoreOption || AppConfig.Instance.QuarantineDeleteOption) && args.Length >= 3)
+            if ((LaunchOptions.GetInstance.QuarantineRestoreOption || LaunchOptions.GetInstance.QuarantineDeleteOption) && args.Length >= 3)
             {
 
-                if (AppConfig.Instance.QuarantineRestoreOption && AppConfig.Instance.QuarantineDeleteOption)
+                if (LaunchOptions.GetInstance.QuarantineRestoreOption && LaunchOptions.GetInstance.QuarantineDeleteOption)
                 {
-                    DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_Q_CLI_InvlaidOptionSelection"), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                    DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_InvlaidOptionSelection"), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
                     return;
                 }
 
-                string targets = AppConfig.Instance.quarantineListEnum;
+                string targets = AppConfig.GetInstance.quarantineListEnum;
 
-                if (!AppConfig.Instance.Force && AppConfig.Instance.QuarantineRestoreOption)
+                if (!LaunchOptions.GetInstance.Force && LaunchOptions.GetInstance.QuarantineRestoreOption)
                 {
-                    DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_Q_CLI_ForceRequired"), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                    DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_ForceRequired"), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
                     return;
                 }
 
                 var indexes = IndexParse(targets, int.MaxValue);
                 if (indexes.Count == 0)
                 {
-                    DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_Q_CLI_IndexListInvalid"), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                    DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_IndexListInvalid"), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                     return;
                 }
 
-                RunNonInteractive(indexes, AppConfig.Instance.QuarantineDeleteOption);
+                RunNonInteractive(indexes, LaunchOptions.GetInstance.QuarantineDeleteOption);
             }
             else
             {
                 ShowQuarantineList();
                 Console.WriteLine("");
-                DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_Q_CLI_RestoreCommandSyntax"), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_RestoreCommandSyntax"), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
             }
         }
 
@@ -56,15 +56,15 @@ namespace MSearch.UI
 
             if (entries.Count == 0)
             {
-                DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_Q_CLI_Empty"));
+                DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_Empty"));
                 return;
             }
 
-            DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_Q_CLI_Title"));
+            DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_Title"));
 
-            string path = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_Path");
-            string hash = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_FileHash");
-            string size = AppConfig.Instance.LL.GetLocalizedString("_DataGridHeader_FileSize");
+            string path = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Path");
+            string hash = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_FileHash");
+            string size = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_FileSize");
 
             Console.WriteLine($"Index | {path,-35} | {hash,-6} | {size}");
             Console.WriteLine(new string('-', 70));
@@ -81,7 +81,7 @@ namespace MSearch.UI
 
             if (entries.Count == 0)
             {
-                DialogDispatcher.Show(AppConfig.Instance.LL.GetLocalizedString("_Q_CLI_Empty"));
+                DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_Empty"));
                 return;
             }
 
@@ -109,7 +109,7 @@ namespace MSearch.UI
                 Console.WriteLine(" - " + path);
             }
 
-            DialogDispatcher.Show(isDelete ? AppConfig.Instance.LL.GetLocalizedString("_Q_CLI_FileDeleted").Replace("#COUNT#", affected.Count.ToString()) : AppConfig.Instance.LL.GetLocalizedString("_Q_CLI_FileRestored").Replace("#COUNT#", affected.Count.ToString()), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+            DialogDispatcher.Show(isDelete ? AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_FileDeleted").Replace("#COUNT#", affected.Count.ToString()) : AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_FileRestored").Replace("#COUNT#", affected.Count.ToString()), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
         }
 
         List<int> IndexParse(string input, int max)

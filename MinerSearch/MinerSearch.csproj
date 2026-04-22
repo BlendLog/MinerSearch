@@ -10,7 +10,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>MSearch</RootNamespace>
     <AssemblyName>MinerSearch</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -97,14 +97,6 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="dbase, Version=1.0.0.7, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Release\dbase.dll</HintPath>
-    </Reference>
-    <Reference Include="netlib, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Release\netlib.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -123,14 +115,62 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Win32Wrapper">
-      <HintPath>..\Win32Wrapper\bin\Release\Win32Wrapper.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\AppConfig.cs" />
-    <Compile Include="Infrastructure\SafeModeTaskParser.cs" />
-    <Compile Include="Infrastructure\ScheduledTaskInfo.cs" />
+    <Compile Include="Core\LaunchOptions.cs" />
+    <Compile Include="Core\Scanners\ProcessScanner.cs" />
+    <Compile Include="Core\Scanners\RegistryScanner.cs" />
+    <Compile Include="Core\Scanners\ServiceScanner.cs" />
+    <Compile Include="Core\Scanners\TaskScanner.cs" />
+    <Compile Include="Core\Scanners\ShellStartupScanner.cs" />
+    <Compile Include="Core\Scanners\FileSystemThreatScanner.cs" />
+    <Compile Include="Core\ThreatAnalyzers\ProcessThreatAnalyzer.cs" />
+    <Compile Include="Core\ThreatAnalyzers\RegistryThreatAnalyzer.cs" />
+    <Compile Include="Core\ThreatAnalyzers\ServiceThreatAnalyzer.cs" />
+    <Compile Include="Core\ThreatAnalyzers\SignatureFileAnalyzer.cs" />
+    <Compile Include="Core\ThreatAnalyzers\TaskThreatAnalyzer.cs" />
+    <Compile Include="Core\ThreatAnalyzers\ShellStartupThreatAnalyzer.cs" />
+    <Compile Include="Core\ThreatAnalyzers\FileSystemThreatAnalyzer.cs" />
+    <Compile Include="Core\ThreatAnalyzers\DirectoryThreatAnalyzer.cs" />
+    <Compile Include="Core\ThreatHandlers\FileThreatHandler.cs" />
+    <Compile Include="Core\ThreatHandlers\ProcessThreatHandler.cs" />
+    <Compile Include="Core\Managers\CleanManager.cs" />
+    <Compile Include="Core\Managers\ScanManager.cs" />
+    <Compile Include="Core\Managers\ThreatManager.cs" />
+    <Compile Include="Core\ThreatDecisions\ApplyResult.cs" />
+    <Compile Include="Core\ThreatDecisions\ThreatDecision.cs" />
+    <Compile Include="Core\ThreatHandlers\RegistryThreatHandler.cs" />
+    <Compile Include="Core\ThreatHandlers\ServiceThreatHandler.cs" />
+    <Compile Include="Core\ThreatHandlers\TaskThreatHandler.cs" />
+    <Compile Include="Core\ThreatHandlers\ShellStartupThreatHandler.cs" />
+    <Compile Include="Core\ThreatHandlers\DirectoryThreatHandler.cs" />
+    <Compile Include="Core\Scanners\FirewallScanner.cs" />
+    <Compile Include="Core\Scanners\SignatureScanner.cs" />
+    <Compile Include="Core\Scanners\WmiScanner.cs" />
+    <Compile Include="Core\Scanners\HostsThreatScanner.cs" />
+    <Compile Include="Core\Scanners\RootkitScanner.cs" />
+    <Compile Include="Core\ThreatAnalyzers\FirewallThreatAnalyzer.cs" />
+    <Compile Include="Core\ThreatAnalyzers\WmiThreatAnalyzer.cs" />
+    <Compile Include="Core\ThreatAnalyzers\HostsThreatAnalyzer.cs" />
+    <Compile Include="Core\ThreatAnalyzers\RootkitThreatAnalyzer.cs" />
+    <Compile Include="Core\ThreatHandlers\FirewallThreatHandler.cs" />
+    <Compile Include="Core\ThreatHandlers\WmiThreatHandler.cs" />
+    <Compile Include="Core\ThreatHandlers\HostsThreatHandler.cs" />
+    <Compile Include="Core\ThreatHandlers\RootkitThreatHandler.cs" />
+    <Compile Include="Core\ThreatObjects\FirewallRuleThreatObject.cs" />
+    <Compile Include="Core\ThreatObjects\FileThreatObject.cs" />
+    <Compile Include="Core\ThreatObjects\ProcessThreatObject.cs" />
+    <Compile Include="Core\ThreatObjects\RegistryThreatObject.cs" />
+    <Compile Include="Core\ThreatObjects\ServiceThreatObject.cs" />
+    <Compile Include="Core\ThreatObjects\TaskThreatObject.cs" />
+    <Compile Include="Core\ThreatObjects\ShellStartupFileThreatObject.cs" />
+    <Compile Include="Core\ThreatObjects\DirectoryThreatObject.cs" />
+    <Compile Include="Core\ThreatObjects\WmiSubscriptionThreatObject.cs" />
+    <Compile Include="Core\ThreatObjects\HostsThreatObject.cs" />
+    <Compile Include="Core\ThreatObjects\RootkitThreatObject.cs" />
+    <Compile Include="Core\ThreatObjects\ThreatObjects.cs" />
+    <Compile Include="Infrastructure\TaskParser.cs" />
     <Compile Include="UI\DataGridViewCheckBoxHeaderCell.cs" />
     <Compile Include="UI\DialogDispatcher.cs" />
     <Compile Include="UI\MessageBoxCustom.cs">
@@ -273,6 +313,20 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.3.2\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.3.3.2\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\base\dbase.csproj">
+      <Project>{b623bf11-5fdd-4d88-856f-233f94c8647d}</Project>
+      <Name>dbase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\netlib\netlib.csproj">
+      <Project>{9fde29c5-f490-4144-8fef-91555b0166a6}</Project>
+      <Name>netlib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Win32Wrapper\Win32Wrapper.csproj">
+      <Project>{82691cb5-8b20-4659-8657-31efd70f92a7}</Project>
+      <Name>Win32Wrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

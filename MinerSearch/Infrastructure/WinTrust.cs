@@ -1,4 +1,4 @@
-﻿//Thanx for https://www.pinvoke.net/default.aspx/wintrust.winverifytrust
+﻿//Thanx for https://www.pinvoke.net/default.aspx/WinTrust.GetInstance.winverifytrust
 // credit to Alex Dragokas https://github.com/dragokas/Verify-Signature-Cpp/blob/master/verify.cpp
 
 using MSearch.Core;
@@ -230,6 +230,27 @@ namespace MSearch
 
     public class WinTrust
     {
+        static volatile WinTrust _instance;
+        static readonly object _lock = new object();
+
+        public static WinTrust GetInstance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new WinTrust();
+                        }
+                    }
+                }
+                return _instance;
+            }
+        }
+
         public const int MAX_PATH = 260;
         private static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
         private static readonly Guid WINTRUST_ACTION_GENERIC_VERIFY_V2 = new Guid("00AAC56B-CD44-11d0-8CC2-00C04FC295EE");
@@ -250,31 +271,31 @@ namespace MSearch
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool CloseHandle(IntPtr hObject);
 
-        [DllImport("Wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("WinTrust", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool CryptCATAdminReleaseCatalogContext(IntPtr hCatAdmin, IntPtr hCatInfo, int dwFlags);
 
-        [DllImport("Wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("WinTrust", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool CryptCATAdminReleaseContext(IntPtr hCatAdmin, int dwFlags);
 
-        [DllImport("Wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("WinTrust", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool CryptCATAdminCalcHashFromFileHandle(IntPtr hFile, ref uint hashLength, [Out] byte[] pbHash, uint dwFlags);
 
-        [DllImport("Wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("WinTrust", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool CryptCATAdminCalcHashFromFileHandle2(IntPtr hCatAdmin, IntPtr hFile, ref uint hashLength, [Out] byte[] pbHash, uint dwFlags);
 
-        [DllImport("Wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("WinTrust", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern IntPtr CryptCATAdminEnumCatalogFromHash(IntPtr hCatAdmin, [In] byte[] pbHash, uint cbHash, uint dwFlags, IntPtr phPrevCatInfo);
 
-        [DllImport("wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("WinTrust", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool CryptCATAdminAcquireContext(out IntPtr phCatAdmin, [In][MarshalAs(UnmanagedType.LPStruct)] Guid pgActionID, int dwFlags);
 
-        [DllImport("wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("WinTrust", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool CryptCATAdminAcquireContext2(out IntPtr phCatAdmin, [In][MarshalAs(UnmanagedType.LPStruct)] Guid pgActionID, [In][MarshalAs(UnmanagedType.LPWStr)] string pwszHashAlgorithm, IntPtr pStrongHashPolicy, int dwFlags);
 
-        [DllImport("wintrust.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("WinTrust", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool CryptCATCatalogInfoFromContext(IntPtr hCatalog, ref CATALOG_INFO psCatInfo, int dwFlags);
 
-        [DllImport("wintrust.dll", ExactSpelling = true, SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("WinTrust", ExactSpelling = true, SetLastError = true, CharSet = CharSet.Unicode)]
         static extern WinVerifyTrustResult WinVerifyTrust(IntPtr hwnd, [In][MarshalAs(UnmanagedType.LPStruct)] Guid pgActionID, WinTrustData pWVTData);
         #endregion
 
@@ -297,7 +318,7 @@ namespace MSearch
                 case WinVerifyTrustResult.FileNotSigned: logMessageKey = "_CertFileNotSigned"; break; // Should be handled by the FileNotSigned branch
                 default: logMessageKey = "_CertUnknownResult"; break;
             }
-            AppConfig.Instance.LL.LogWarnMessage(logMessageKey, filePath); // Log the result code too
+            AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", logMessageKey, filePath, ConsoleColor.Yellow, false);
         }
 
         public WinVerifyTrustResult VerifyEmbeddedSignature(string filePath, bool showUnsigned = false)
@@ -336,7 +357,7 @@ namespace MSearch
                         case WinVerifyTrustResult.ActionUnknown:
                         case WinVerifyTrustResult.SubjectFormUnknown:
                             // Log specific warnings if verbose
-                            if (AppConfig.Instance.verbose)
+                            if (LaunchOptions.GetInstance.verbose)
                             {
                                 LogWinTrustResult(result, filePath);
                             }
@@ -347,16 +368,16 @@ namespace MSearch
                             break; // Continue to return result based on catalog check
 
                         default:
-                            if (AppConfig.Instance.verbose)
+                            if (LaunchOptions.GetInstance.verbose)
                             {
-                                AppConfig.Instance.LL.LogWarnMessage("_CertUnknownResult", filePath);
+                                AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", "_CertUnknownResult", filePath, ConsoleColor.Yellow, false);
                             }
                             break; // Continue to return result
                     }
 
-                    if (result == WinVerifyTrustResult.FileNotSigned && (showUnsigned || AppConfig.Instance.verbose))
+                    if (result == WinVerifyTrustResult.FileNotSigned && (showUnsigned || LaunchOptions.GetInstance.verbose))
                     {
-                        AppConfig.Instance.LL.LogWarnMessage("_CertFileNotSigned", filePath);
+                        AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", "_CertFileNotSigned", filePath, ConsoleColor.Yellow, false);
                         Logger.WriteLog($"\t\t[SHA1: {FileChecker.CalculateSHA1(filePath)}]", ConsoleColor.White, false);
                     }
 

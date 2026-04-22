@@ -39,7 +39,7 @@ namespace MSearch.UI
 
         public static DialogResult Show(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, Color? color)
         {
-            if (AppConfig.Instance.console_mode)
+            if (LaunchOptions.GetInstance.console_mode)
             {
                 return ShowConsoleFallback(message, title, buttons, icon);
             }
@@ -70,15 +70,15 @@ namespace MSearch.UI
                         return DialogResult.OK;
 
                     case MessageBoxButtons.OKCancel:
-                        if (!AppConfig.Instance.IsGuiAvailable) return DialogResult.None;
+                        if (!AppConfig.GetInstance.IsGuiAvailable) return DialogResult.None;
                         return Prompt(new[] { "OK", "Cancel" }, new[] { DialogResult.OK, DialogResult.Cancel });
 
                     case MessageBoxButtons.YesNo:
-                        if (!AppConfig.Instance.IsGuiAvailable) return DialogResult.None;
+                        if (!AppConfig.GetInstance.IsGuiAvailable) return DialogResult.None;
                         return Prompt(new[] { "Yes", "No" }, new[] { DialogResult.Yes, DialogResult.No });
 
                     case MessageBoxButtons.YesNoCancel:
-                        if (!AppConfig.Instance.IsGuiAvailable) return DialogResult.None;
+                        if (!AppConfig.GetInstance.IsGuiAvailable) return DialogResult.None;
                         return Prompt(new[] { "Yes", "No", "Cancel" }, new[] { DialogResult.Yes, DialogResult.No, DialogResult.Cancel });
 
                     default:

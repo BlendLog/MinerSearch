@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
 using MSearch.Core;
+using MSearch.Core.ThreatObjects;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,7 @@ using Win32Wrapper;
 
 namespace MSearch.Infrastructure
 {
-    public class SafeModeTaskParser
+    public class TaskParser
     {
         private const string TASK_CACHE_TREE_REG_PATH = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree";
         private const string TASK_CACHE_TASKS_REG_PATH = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks";
@@ -31,7 +32,7 @@ namespace MSearch.Infrastructure
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
             }
             return allTasks;
         }
@@ -140,9 +141,9 @@ namespace MSearch.Infrastructure
             }
             catch (Exception ex)
             {
-                if (AppConfig.Instance.verbose)
+                if (LaunchOptions.GetInstance.verbose)
                 {
-                    AppConfig.Instance.LL.LogErrorMessage("_Error", ex);
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
                 }
 
                 return null;
@@ -176,7 +177,7 @@ namespace MSearch.Infrastructure
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
                 return false;
             }
 
@@ -192,21 +193,21 @@ namespace MSearch.Infrastructure
 
                         if (errorCode != 0)
                         {
-                            AppConfig.Instance.LL.LogWarnMessage("_WarnResetAttributes", new System.ComponentModel.Win32Exception(errorCode).Message);
+                            AppConfig.GetInstance.LL.LogWarnMessage("_WarnResetAttributes", new System.ComponentModel.Win32Exception(errorCode).Message);
                         }
                     }
 
                     if (!Native.DeleteFile(longPath))
                     {
                         int errorCode = Marshal.GetLastWin32Error();
-                        AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotRemove", new System.ComponentModel.Win32Exception(errorCode), taskToDelete.XmlPath, "_File");
+                        AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", new System.ComponentModel.Win32Exception(errorCode), taskToDelete.XmlPath, "_File");
                         success = false;
                     }
                 }
             }
             catch (Exception ex)
             {
-                AppConfig.Instance.LL.LogErrorMessage("_ErrorCannotRemove", ex, taskToDelete.XmlPath, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, taskToDelete.XmlPath, "_File");
                 success = false;
             }
 

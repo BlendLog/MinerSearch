@@ -2,11 +2,11 @@
 using System.Runtime.InteropServices;
 
 [assembly: ComVisible(true)]
-[assembly: Guid("d277d98c-a41c-436f-877a-da14b5dc6d40")]
-[assembly: AssemblyVersion("1.4.8.41")]
-[assembly: AssemblyFileVersion("1.4.8.41")]
-[assembly: AssemblyTitle("MinеrSеarch")]
-[assembly: AssemblyDescription("MinеrSеarch")]
-[assembly: AssemblyCompany("BlеndLog")]
-[assembly: AssemblyProduct("Github project")]
+[assembly: Guid("50503532-b4b4-4b55-bc07-d4ffb808913c")]
+[assembly: AssemblyVersion("1.4.8.5")]
+[assembly: AssemblyFileVersion("1.4.8.5")]
+[assembly: AssemblyTitle("")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("")]

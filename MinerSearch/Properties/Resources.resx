@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -356,7 +356,7 @@ Thank you for your help!</value>
     <value>Модуль перехвата Svchost:</value>
   </data>
   <data name="_ScanFirewall_RU" xml:space="preserve">
-    <value>Сканирование настроек брандмауэра...</value>
+    <value>Сканирование правил брандмауэра...</value>
   </data>
   <data name="_ErrorTerminateProcess_EN" xml:space="preserve">
     <value>Failed to terminate ma?li?ci?ou?s process:</value>
@@ -658,7 +658,7 @@ Click \b Exit\b0  to exit.\par
     <value>The file is blocked: #file#. Write changes is not possible.</value>
   </data>
   <data name="_ScanServices_EN" xml:space="preserve">
-    <value>Scanning services...</value>
+    <value>Services scan...</value>
   </data>
   <data name="_AppAlreadyRunning_RU" xml:space="preserve">
     <value>Другая копия приложения уже запущена. Для вызова справки используйте параметр --help</value>
@@ -897,6 +897,9 @@ Do you want to continue?</value>
   <data name="_ChekingR00tkit_RU" xml:space="preserve">
     <value>Проверка присутствия руткита...</value>
   </data>
+  <data name="_R00TkitDetected_RU" xml:space="preserve">
+    <value>Обнаружен руткит! Выполняется нейтрализация...</value>
+  </data>
   <data name="_QuarantineRestoredFile_RU" xml:space="preserve">
     <value>Файлы восстановлены (#FILESCOUNT#)</value>
   </data>
@@ -1011,11 +1014,11 @@ Press any key to continue...</value>
   <data name="_LockedDir_RU" xml:space="preserve">
     <value>Заблокированный каталог</value>
   </data>
+  <data name="_LockedDirectory_RU" xml:space="preserve">
+    <value>Заблокированный каталог</value>
+  </data>
   <data name="_WMIRecompilation_RU" xml:space="preserve">
     <value>Рекомпиляция необходимых MOF фалов...</value>
-  </data>
-  <data name="_ScanningHosts_EN" xml:space="preserve">
-    <value>Scanning hosts file...</value>
   </data>
   <data name="_FileIsNotFound_EN" xml:space="preserve">
     <value>File is not found:</value>
@@ -1122,10 +1125,79 @@ Press any key to continue...</value>
   <data name="_ProcessFound_RU" xml:space="preserve">
     <value>Обнаружен вредоносный процесс! Уровень риска:</value>
   </data>
+  <data name="_ProcessingThreats_RU" xml:space="preserve">
+    <value>Обработка угроз</value>
+  </data>
+  <data name="_ProcessingProcesses_RU" xml:space="preserve">
+    <value>Обработка процессов...</value>
+  </data>
+  <data name="_ProcessingFiles_RU" xml:space="preserve">
+    <value>Обработка файлов...</value>
+  </data>
+  <data name="_ProcessingRegistry_RU" xml:space="preserve">
+    <value>Обработка реестра...</value>
+  </data>
+  <data name="_ProcessingTasks_RU" xml:space="preserve">
+    <value>Обработка задач планировщика...</value>
+  </data>
+  <data name="_ProcessingServices_RU" xml:space="preserve">
+    <value>Обработка служб...</value>
+  </data>
+  <data name="_ProcessingFirewall_RU" xml:space="preserve">
+    <value>Обработка правил брандмауэра...</value>
+  </data>
+  <data name="_ProcessingShellStartup_RU" xml:space="preserve">
+    <value>Обработка файлов автозагрузки...</value>
+  </data>
+  <data name="_ScanFirewall_EN" xml:space="preserve">
+    <value>Scanning firewall...</value>
+  </data>
+  <data name="_FirewallRule_Matched_EN" xml:space="preserve">
+    <value>Firewall rule for malicious file</value>
+  </data>
+  <data name="_FirewallRule_Matched_RU" xml:space="preserve">
+    <value>Правило брандмауэра для вредоносного файла</value>
+  </data>
+  <data name="_FirewallRule_Deleted_EN" xml:space="preserve">
+    <value>Firewall rule deleted:</value>
+  </data>
+  <data name="_FirewallRule_Deleted_RU" xml:space="preserve">
+    <value>Правило брандмауэра удалено:</value>
+  </data>
+  <data name="_ErrorCannotRemoveFWRule_EN" xml:space="preserve">
+    <value>Cannot remove firewall rule</value>
+  </data>
+  <data name="_ErrorCannotRemoveFWRule_RU" xml:space="preserve">
+    <value>Не удалось удалить правило брандмауэра</value>
+  </data>
+  <data name="_MarkedForRemoval_RU" xml:space="preserve">
+    <value>Помечен на удаление</value>
+  </data>
+  <data name="_MarkedAsSuspicious_RU" xml:space="preserve">
+    <value>Помечен как подозрительный</value>
+  </data>
+  <data name="_WillBeRestoredToDefault_RU" xml:space="preserve">
+    <value>Будет восстановлено значение по умолчанию</value>
+  </data>
+  <data name="_WillBeRemovedFromExclusions_RU" xml:space="preserve">
+    <value>Будет удалено из исключений</value>
+  </data>
+  <data name="_WarnResetAttributes_RU" xml:space="preserve">
+    <value>Не удалось сбросить атрибуты файла</value>
+  </data>
+  <data name="_ProcessFile_MarkedToDelete_RU" xml:space="preserve">
+    <value>Связанный файл помечен на удаление</value>
+  </data>
+  <data name="_ProcessFile_MarkedToMoveQuarantine_RU" xml:space="preserve">
+    <value>Связанный файл помечен на перемещение в карантин</value>
+  </data>
   <data name="_Userprofile_RU" xml:space="preserve">
     <value>Профиль пользователя</value>
   </data>
   <data name="_LockedDir_EN" xml:space="preserve">
+    <value>Locked directory</value>
+  </data>
+  <data name="_LockedDirectory_EN" xml:space="preserve">
     <value>Locked directory</value>
   </data>
   <data name="_MaliciousProfile_EN" xml:space="preserve">
@@ -1320,6 +1392,12 @@ Press any key to continue...</value>
   <data name="_StartSignatureScan_EN" xml:space="preserve">
     <value>Starting signature scan...</value>
   </data>
+  <data name="_PreparingFileAnalysis_EN" xml:space="preserve">
+    <value>Preparing file analysis...</value>
+  </data>
+  <data name="_SignatureScanComplete_EN" xml:space="preserve">
+    <value>Analysis complete</value>
+  </data>
   <data name="yoomoney" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\yoomoney.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -1349,6 +1427,36 @@ Press any key to continue...</value>
   </data>
   <data name="_MaliciousEntry_EN" xml:space="preserve">
     <value>Mali?cious entry -</value>
+  </data>
+  <data name="_InfectedHosts_EN" xml:space="preserve">
+    <value>Infected hosts file -</value>
+  </data>
+  <data name="_MaliciousHostsEntry_EN" xml:space="preserve">
+    <value>Malicious hosts entry -</value>
+  </data>
+  <data name="_InfectedHosts_RU" xml:space="preserve">
+    <value>Заражённый файл hosts -</value>
+  </data>
+  <data name="_MaliciousHostsEntry_RU" xml:space="preserve">
+    <value>Вредоносная запись hosts -</value>
+  </data>
+  <data name="_ScanHosts_EN" xml:space="preserve">
+    <value>Scan hosts file...</value>
+  </data>
+  <data name="_ScanHosts_RU" xml:space="preserve">
+    <value>Сканирование файла hosts...</value>
+  </data>
+  <data name="_ProcessingHosts_RU" xml:space="preserve">
+    <value>Обработка файла hosts...</value>
+  </data>
+  <data name="_ProcessingHosts_EN" xml:space="preserve">
+    <value>Processing hosts file...</value>
+  </data>
+  <data name="_HostsFile_RU" xml:space="preserve">
+    <value>Файл hosts</value>
+  </data>
+  <data name="_HostsFile_EN" xml:space="preserve">
+    <value>Hosts file</value>
   </data>
   <data name="_CertUntrustedRoot_RU" xml:space="preserve">
     <value>Нет доверия корневому сертификату</value>
@@ -1434,9 +1542,6 @@ Press any key to continue...</value>
   <data name="_HostsFileRecovered_EN" xml:space="preserve">
     <value>Ho??sts file has been recovered. Affected strings:</value>
   </data>
-  <data name="_ScanFirewall_EN" xml:space="preserve">
-    <value>Scanning firewall...</value>
-  </data>
   <data name="_Just_Service_RU" xml:space="preserve">
     <value>Служба:</value>
   </data>
@@ -1484,6 +1589,9 @@ Press any key to continue...</value>
   </data>
   <data name="_ChekingR00tkit_EN" xml:space="preserve">
     <value>Checking roo??tk??it present...</value>
+  </data>
+  <data name="_R00TkitDetected_EN" xml:space="preserve">
+    <value>Rootkit detected! Neutralizing...</value>
   </data>
   <data name="_ProcessRiskLevel_Medium_EN" xml:space="preserve">
     <value>middle</value>
@@ -1668,6 +1776,12 @@ Press any key to continue...</value>
   <data name="_StartSignatureScan_RU" xml:space="preserve">
     <value>Начато сигнатурное сканирование...</value>
   </data>
+  <data name="_PreparingFileAnalysis_RU" xml:space="preserve">
+    <value>Подготовка к анализу файлов...</value>
+  </data>
+  <data name="_SignatureScanComplete_RU" xml:space="preserve">
+    <value>Анализ завершен</value>
+  </data>
   <data name="_SuspiciousFileSize_EN" xml:space="preserve">
     <value>Suspicious file size</value>
   </data>
@@ -1682,9 +1796,6 @@ Press any key to continue...</value>
   </data>
   <data name="_SelectFolderDialog_RU" xml:space="preserve">
     <value>Выберите каталог для проверки</value>
-  </data>
-  <data name="_ScanningHosts_RU" xml:space="preserve">
-    <value>Сканирование файла hosts...</value>
   </data>
   <data name="_SuspiciousPath_EN" xml:space="preserve">
     <value>Suspicious path</value>
@@ -1821,6 +1932,51 @@ Press any key to continue...</value>
   <data name="_ProcessFound_EN" xml:space="preserve">
     <value>Ma??li??cio??us process detected! Risk level:</value>
   </data>
+  <data name="_ProcessFile_MarkedToDelete_EN" xml:space="preserve">
+    <value>Associated file marked for deletion</value>
+  </data>
+  <data name="_ProcessFile_MarkedToMoveQuarantine_EN" xml:space="preserve">
+    <value>Associated file marked for quarantine</value>
+  </data>
+  <data name="_ProcessingThreats_EN" xml:space="preserve">
+    <value>Threats processing</value>
+  </data>
+  <data name="_ProcessingProcesses_EN" xml:space="preserve">
+    <value>Processing processes...</value>
+  </data>
+  <data name="_ProcessingFiles_EN" xml:space="preserve">
+    <value>Processing files...</value>
+  </data>
+  <data name="_ProcessingRegistry_EN" xml:space="preserve">
+    <value>Processing registry...</value>
+  </data>
+  <data name="_ProcessingTasks_EN" xml:space="preserve">
+    <value>Processing scheduled tasks...</value>
+  </data>
+  <data name="_ProcessingServices_EN" xml:space="preserve">
+    <value>Processing services...</value>
+  </data>
+  <data name="_ProcessingFirewall_EN" xml:space="preserve">
+    <value>Processing firewall rules...</value>
+  </data>
+  <data name="_ProcessingShellStartup_EN" xml:space="preserve">
+    <value>Processing startup folder files...</value>
+  </data>
+  <data name="_MarkedForRemoval_EN" xml:space="preserve">
+    <value>Marked for removal</value>
+  </data>
+  <data name="_MarkedAsSuspicious_EN" xml:space="preserve">
+    <value>Marked as suspicious</value>
+  </data>
+  <data name="_WillBeRestoredToDefault_EN" xml:space="preserve">
+    <value>Will be restored to default value</value>
+  </data>
+  <data name="_WillBeRemovedFromExclusions_EN" xml:space="preserve">
+    <value>Will be removed from exclusions</value>
+  </data>
+  <data name="_WarnResetAttributes_EN" xml:space="preserve">
+    <value>Failed to reset file attributes</value>
+  </data>
   <data name="_Version_RU" xml:space="preserve">
     <value>Версия:</value>
   </data>
@@ -1838,6 +1994,24 @@ Press any key to continue...</value>
   </data>
   <data name="_ScanStarupFolder_RU" xml:space="preserve">
     <value>Сканирование каталога автозагрузки...</value>
+  </data>
+  <data name="_Just_Shortcut_EN" xml:space="preserve">
+    <value>Shortcut</value>
+  </data>
+  <data name="_Just_Shortcut_RU" xml:space="preserve">
+    <value>Ярлык</value>
+  </data>
+  <data name="_MaliciousFileQuarantined_EN" xml:space="preserve">
+    <value>Malicious file quarantined</value>
+  </data>
+  <data name="_MaliciousFileQuarantined_RU" xml:space="preserve">
+    <value>Вредоносный файл перемещён в карантин</value>
+  </data>
+  <data name="_MaliciousFileDeleted_EN" xml:space="preserve">
+    <value>Malicious file deleted</value>
+  </data>
+  <data name="_MaliciousFileDeleted_RU" xml:space="preserve">
+    <value>Вредоносный файл удалён</value>
   </data>
   <data name="_ActionType_LockedByAV_EN" xml:space="preserve">
     <value>Blocked by antivirus</value>
@@ -2223,5 +2397,17 @@ No – Run a standard scan with the option to remove.</value>
   </data>
   <data name="_SuspiciousUsage_RU" xml:space="preserve">
     <value>Подозрительное использование #OBJ#</value>
+  </data>
+  <data name="_DataGridHeader_OriginalPath_EN" xml:space="preserve">
+    <value>Original path</value>
+  </data>
+  <data name="_DataGridHeader_OriginalPath_RU" xml:space="preserve">
+    <value>Исходный путь</value>
+  </data>
+  <data name="_FileCopy_MarkedToMoveQuarantine_EN" xml:space="preserve">
+    <value>File copy marked to move quarantine</value>
+  </data>
+  <data name="_FileCopy_MarkedToMoveQuarantine_RU" xml:space="preserve">
+    <value>Копия файла отмечена на перемещение в карантин</value>
   </data>
 </root>
