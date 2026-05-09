@@ -52,38 +52,37 @@ The application also supports additional launch parameters (listed below). To us
 
 Additional launch parameters (usually not required):
 
--h     --help                 Show this help message
--a     --accept-eula          Accept the End-User License Agreement (EULA)
--nl    --no-logs              Do not write logs to a file
--nstm  --no-scantime          Scan only processes
--nwmi  --no-scan-wmi          Do not check WMI integrity and/or event subscriptions
--nr    --no-runtime           Do not scan processes (only directories, files, registry keys, etc.)
--nse   --no-services           Skip scanning services
--nst   --no-scan-tasks        Skip scanning scheduler tasks
--nsu   --no-scan-users        Skip scanning user profiles
--nss   --no-signature-scan    Skip signature scanning of files
--nsr   --no-scan-registry     Skip scanning system registry
--nrc   --no-rootkit-check     Do not check for rootkit presence
--nch   --no-check-hosts       Skip checking the hosts file
--nfw   --no-firewall          Skip scanning firewall rules
--cm    --console-mode         Activate console mode without dialog boxes
--p     --pause                Pause before cleanup
--ret   --remove-empty-tasks   Remove task from Task Scheduler if its application file does not exist
--so    --scan-only            Display malicious or suspicious objects, but do not perform treatment
--fs    --full-scan            Add all other local drives for signature scanning
--f     --force                Used to suppress confirmation prompts for potentially dangerous functions
--s     --select               Scan only the selected directory, including subdirectories
--s=    --select= <path>       Same as --select (-s). Where <path> specifies the directory path to scan
--si    --silent               Enables silent (background) mode without dialog boxes. The application switches to background mode, messages are not displayed, but are still written to the log. Incompatible with --select or --winpemode parameters.
--d=    --depth=<num>          Where <num> is the maximum search depth level. Example usage: -d=5 (default is 8)
--v     --verbose              Outputs detailed information about processes to the console, and also
-                              disables the filter for lines with files not recognized as malicious. May increase log file size.
--w     --winpemode            Starts scanning in WinPE mode
-                              (without scanning processes, registry, firewall rules, services, scheduler tasks)
--q     --open-quarantine      Open the quarantine manager
--res   --restore= <list>      Restore files from quarantine in console mode (e.g., 1,2,3). Enter -q -cm to view the list.
--del   --delete= <list>       Delete files from quarantine in console mode (e.g., 1,2,3). Enter -q -cm to view the list.
-
+| Short Option | Long Option | Description |
+|:---|:---|:---|
+| `-h` | `--help` | Show this help message |
+| `-a` | `--accept-eula` | Accept the End-User License Agreement (EULA) |
+| `-nl` | `--no-logs` | Do not write logs to a file |
+| `-nstm` | `--no-scantime` | Scan only processes |
+| `-nwmi` | `--no-scan-wmi` | Do not check WMI integrity and/or event subscriptions |
+| `-nr` | `--no-runtime` | Do not scan processes (only directories, files, registry keys, etc.) |
+| `-nse` | `--no-services` | Skip scanning services |
+| `-nst` | `--no-scan-tasks` | Skip scanning scheduler tasks |
+| `-nsu` | `--no-scan-users` | Skip scanning user profiles |
+| `-nss` | `--no-signature-scan` | Skip signature scanning of files |
+| `-nsr` | `--no-scan-registry` | Skip scanning system registry |
+| `-nrc` | `--no-rootkit-check` | Do not check for rootkit presence |
+| `-nch` | `--no-check-hosts` | Skip checking the hosts file |
+| `-nfw` | `--no-firewall` | Skip scanning firewall rules |
+| `-cm` | `--console-mode` | Activate console mode without dialog boxes |
+| `-p` | `--pause` | Pause before cleanup |
+| `-ret` | `--remove-empty-tasks` | Remove task from Task Scheduler if its application file does not exist |
+| `-so` | `--scan-only` | Display malicious or suspicious objects, but do not perform treatment |
+| `-fs` | `--full-scan` | Add all other local drives for signature scanning |
+| `-f` | `--force` | Used to suppress confirmation prompts for potentially dangerous functions |
+| `-s` | `--select` | Scan only the selected directory, including subdirectories |
+| `-s=` | `--select= <path>` | Same as `--select (-s)`. Where `<path>` specifies the directory path to scan |
+| `-si` | `--silent` | Enables silent (background) mode without dialog boxes. The application switches to background mode, messages are not displayed, but are still written to the log. Incompatible with `--select` or `--winpemode` parameters. |
+| `-d=` | `--depth=<num>` | Where `<num>` is the maximum search depth level. Example usage: `-d=5` (default is 8) |
+| `-v` | `--verbose` | Outputs detailed information about processes to the console, and also disables the filter for lines with files not recognized as malicious. May increase log file size. |
+| `-w` | `--winpemode` | Starts scanning in WinPE mode (without scanning processes, registry, firewall rules, services, scheduler tasks) |
+| `-q` | `--open-quarantine` | Open the quarantine manager |
+| `-res` | `--restore= <list>` | Restore files from quarantine in console mode (e.g., `1,2,3`). Enter `-q -cm` to view the list. |
+| `-del` | `--delete= <list>` | Delete files from quarantine in console mode (e.g., `1,2,3`). Enter `-q -cm` to view the list. |
 
 * Not necessarily in strict order
 ----------------------------

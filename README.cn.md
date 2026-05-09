@@ -52,38 +52,37 @@
 
 额外的启动参数（通常不需要）：
 
--h     --help                 显示此帮助信息
--a     --accept-eula          接受用户许可协议（EULA）
--nl    --no-logs              不将日志写入文件
--nstm  --no-scantime          仅扫描进程
--nwmi  --no-scan-wmi          不检查 WMI 完整性及/或事件订阅
--nr    --no-runtime           不扫描进程（仅目录、文件、注册表键等）
--nse   --no-services           跳过扫描服务
--nst   --no-scan-tasks        跳过扫描计划任务
--nsu   --no-scan-users        跳过扫描用户配置文件
--nss   --no-signature-scan    跳过文件签名扫描
--nsr   --no-scan-registry     跳过扫描系统注册表
--nrc   --no-rootkit-check     不检查 rootkit 存在
--nch   --no-check-hosts       跳过检查 hosts 文件
--nfw   --no-firewall          跳过扫描防火墙规则
--cm    --console-mode         启用无对话框的控制台模式
--p     --pause                清理前暂停
--ret   --remove-empty-tasks   如果应用程序文件不存在，则从任务计划程序中删除任务
--so    --scan-only            仅显示恶意或可疑对象，不执行处理
--fs    --full-scan            将所有其他本地驱动器加入签名扫描
--f     --force                用于抑制潜在危险功能的确认提示
--s     --select               仅扫描选定的目录，包括子目录
--s=    --select= <路径>       同 --select (-s)。其中 <路径> 指定要扫描的目录路径
--si    --silent               启用无声（后台）模式，无对话框。应用程序进入后台模式，不显示消息，但仍写入日志。与 --select 或 --winpemode 参数不兼容。
--d=    --depth=<num>          其中 <num> 为最大搜索深度级别。用法示例：-d=5（默认为 8）
--v     --verbose              向控制台输出进程的详细信息，并
-                              禁用对未被识别为恶意的文件的过滤。可能会增加日志文件大小。
--w     --winpemode            以 WinPE 模式启动扫描
-                              （不扫描进程、注册表、防火墙规则、服务、计划任务）
--q     --open-quarantine      打开隔离区管理器
--res   --restore= <列表>      在控制台模式下从隔离区恢复文件（例如 1,2,3）。输入 -q -cm 查看列表。
--del   --delete= <列表>       在控制台模式下从隔离区删除文件（例如 1,2,3）。输入 -q -cm 查看列表。
-
+| 短选项 | 长选项 | 描述 |
+|:---|:---|:---|
+| `-h` | `--help` | 显示此帮助信息 |
+| `-a` | `--accept-eula` | 接受用户许可协议（EULA） |
+| `-nl` | `--no-logs` | 不将日志写入文件 |
+| `-nstm` | `--no-scantime` | 仅扫描进程 |
+| `-nwmi` | `--no-scan-wmi` | 不检查 WMI 完整性及/或事件订阅 |
+| `-nr` | `--no-runtime` | 不扫描进程（仅目录、文件、注册表键等） |
+| `-nse` | `--no-services` | 跳过扫描服务 |
+| `-nst` | `--no-scan-tasks` | 跳过扫描计划任务 |
+| `-nsu` | `--no-scan-users` | 跳过扫描用户配置文件 |
+| `-nss` | `--no-signature-scan` | 跳过文件签名扫描 |
+| `-nsr` | `--no-scan-registry` | 跳过扫描系统注册表 |
+| `-nrc` | `--no-rootkit-check` | 不检查 rootkit 存在 |
+| `-nch` | `--no-check-hosts` | 跳过检查 hosts 文件 |
+| `-nfw` | `--no-firewall` | 跳过扫描防火墙规则 |
+| `-cm` | `--console-mode` | 启用无对话框的控制台模式 |
+| `-p` | `--pause` | 清理前暂停 |
+| `-ret` | `--remove-empty-tasks` | 如果应用程序文件不存在，则从任务计划程序中删除任务 |
+| `-so` | `--scan-only` | 仅显示恶意或可疑对象，不执行处理 |
+| `-fs` | `--full-scan` | 将所有其他本地驱动器加入签名扫描 |
+| `-f` | `--force` | 用于抑制潜在危险功能的确认提示 |
+| `-s` | `--select` | 仅扫描选定的目录，包括子目录 |
+| `-s=` | `--select= <路径>` | 同 `--select (-s)`。其中 `<路径>` 指定要扫描的目录路径 |
+| `-si` | `--silent` | 启用无声（后台）模式，无对话框。应用程序进入后台模式，不显示消息，但仍写入日志。与 `--select` 或 `--winpemode` 参数不兼容。 |
+| `-d=` | `--depth=<num>` | 其中 `<num>` 为最大搜索深度级别。用法示例：`-d=5`（默认为 8） |
+| `-v` | `--verbose` | 向控制台输出进程的详细信息，并禁用对未被识别为恶意的文件的过滤。可能会增加日志文件大小。 |
+| `-w` | `--winpemode` | 以 WinPE 模式启动扫描（不扫描进程、注册表、防火墙规则、服务、计划任务） |
+| `-q` | `--open-quarantine` | 打开隔离区管理器 |
+| `-res` | `--restore= <列表>` | 在控制台模式下从隔离区恢复文件（例如 `1,2,3`）。输入 `-q -cm` 查看列表。 |
+| `-del` | `--delete= <列表>` | 在控制台模式下从隔离区删除文件（例如 `1,2,3`）。输入 `-q -cm` 查看列表。 |
 
 * 不必严格按顺序
 ----------------------------
