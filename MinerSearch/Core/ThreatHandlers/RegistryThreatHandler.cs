@@ -91,7 +91,9 @@ namespace MSearch.Core.ThreatHandlers
                 {
                     using (RegistryKey key = baseKey.OpenSubKey(regThreat.KeyPath, writable: true))
                     {
-                        key?.SetValue(regThreat.ValueName, regThreat.TargetData, regThreat.TargetKind);
+                        object setValue = regThreat.TargetKind == RegistryValueKind.MultiString ?
+                            (object)regThreat.TargetDataArray : regThreat.TargetData;
+                        key?.SetValue(regThreat.ValueName, setValue, regThreat.TargetKind);
                     }
                 }
 
@@ -119,22 +121,31 @@ namespace MSearch.Core.ThreatHandlers
                     UnlockObjectClass.DisableExecute(regThreat.LinkedFile.FilePath);
                 }
 
+                // Определяем ActionType на основе выполненных действий
                 if (regThreat.ActionSetData || regThreat.ActionSetSibling)
+                {
+                    decision.ActionType = ScanActionType.Cured;
                     AppConfig.GetInstance.LL.LogSuccessMessage("_RegistryValueRestoredDefault", logPath);
+                }
                 else
+                {
+                    decision.ActionType = ScanActionType.Deleted;
                     AppConfig.GetInstance.LL.LogSuccessMessage("_RegistryValueRemoved", logPath);
+                }
 
                 return ApplyResult.Success;
             }
             catch (SecurityException ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, logPath);
                 return ApplyResult.Error;
             }
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, logPath);
                 return ApplyResult.Error;
             }

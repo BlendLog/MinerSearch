@@ -1,5 +1,4 @@
 using DBase;
-using Microsoft.Win32;
 using MSearch.Core;
 using MSearch.Core.Handlers;
 using MSearch.Core.Managers;
@@ -7,21 +6,14 @@ using MSearch.Core.Scanners;
 using MSearch.Core.ThreatAnalyzers;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatHandlers;
-using MSearch.Core.ThreatObjects;
-using MSearch.Infrastructure;
 using MSearch.Properties;
 using MSearch.UI;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Configuration;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Win32Wrapper;
 
@@ -56,10 +48,7 @@ namespace MSearch
                 Environment.Exit(1);
             }
 
-            if (_options.noLogs)
-                AppConfig.GetInstance.no_logs = true;
-
-            Logger.InitLogger(AppConfig.GetInstance.no_logs);
+            Logger.InitLogger(_options.no_logs);
 #if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(ExeptionHandler.HookExeption);
             AppConfig.GetInstance.ActiveLanguage = AppConfig.GetInstance.IsGuiAvailable ? LanguageManager.LoadLanguageSetting() : "EN";
@@ -93,46 +82,46 @@ namespace MSearch
         static void Init(string[] args)
         {
             LaunchOptions _options = LaunchOptions.GetInstance;
-            NameValueCollection section = ConfigurationManager.GetSection("System.Windows.Forms.ApplicationConfigurationSection") as NameValueCollection;
-            if (section != null)
-            {
-                section["DpiAwareness"] = "PerMonitorV2";
-            }
 
-            if (!OSExtensions.IsDotNetInstalled())
+            // Create DeviceId-based mutexes
+            Utils.mutex = new Mutex(false, Utils.GetDeviceIdLockName());
+            Utils.rebootMtx = new Mutex(false, Utils.GetDeviceIdRebootName());
+
+            // Check environment (moved to EnvironmentChecker)
+            var envResult = EnvironmentChecker.Check();
+
+            if (!envResult.DotNetInstalled)
             {
                 DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_ErrorNoDotNet"), AppConfig.GetInstance._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Environment.Exit(1);
             }
 
-            if (!Utils.IsOneAppCopy())
+            if (!envResult.CanRunSingleInstance)
             {
                 if (!_options.silent)
                 {
-                    var result = DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_AppAlreadyRunning"), AppConfig.GetInstance._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_AppAlreadyRunning"), AppConfig.GetInstance._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 return;
             }
 
-            if (!Utils.IsRebootMtx())
+            if (!envResult.IsRebootRequired)
             {
                 Utils.mutex.ReleaseMutex();
                 DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_RebootRequired"), AppConfig.GetInstance._title);
                 return;
             }
 
-            if (OSExtensions.IsWinPEEnv())
+            // WinPE: add --winpemode flag to arguments
+            if (envResult.IsWinPE)
             {
                 List<string> newargs = new List<string> { "--winpemode" };
                 if (args.Length > 0)
                 {
                     foreach (string arg in args)
-                    {
                         newargs.Add(arg);
-                    }
                 }
                 args = newargs.ToArray();
-
                 AppConfig.GetInstance.WinPEMode = true;
             }
 
@@ -161,114 +150,21 @@ namespace MSearch
                 }
             }
 
-            if (ProcessManager.IsStartedFromArchive())
+            if (envResult.IsStartedFromArchive)
             {
                 DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_ArchiveWarn"), AppConfig.GetInstance.LL.GetLocalizedString("_ArchiveWarn_caption"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Environment.Exit(1);
             }
 
-            const string registryKeyPath = @"Software\M1nerSearch";
-            const string registryValueName = "acceptedEula";
-            const string registryValueOutdatedOS = "SupressOutdatedOSWarning";
-
-
-            using (RegistryKey key = Registry.CurrentUser.CreateSubKey(registryKeyPath))
+            // EULA and outdated OS warning (moved to EnvironmentChecker)
+            if (!EnvironmentChecker.PromptEula(AppConfig.GetInstance))
             {
-                var value = key.GetValue(registryValueName);
-                if (value == null || value != null && (int)value != 1)
-                {
-                    if (!_options.accept_eula)
-                    {
-                        if (!_options.console_mode)
-                        {
-                            try
-                            {
-                                using (License licenseForm = new License())
-                                {
-                                    if (AppConfig.GetInstance.ActiveLanguage == "EN")
-                                    {
-                                        licenseForm.Label_LicenseCaption.Text = Resources._LicenseCaption_EN;
-                                        licenseForm.richTextBox1.Rtf = Resources._License_EN;
-                                        licenseForm.Accept_btn.Text = Resources._accept_en;
-                                        licenseForm.Exit_btn.Text = Resources._exit_EN;
-                                    }
-                                    if (AppConfig.GetInstance.ActiveLanguage == "RU")
-                                    {
-                                        licenseForm.Label_LicenseCaption.Text = Resources._LicenseCaption_RU;
-                                        licenseForm.richTextBox1.Rtf = Resources._License_RU;
-                                        licenseForm.Accept_btn.Text = Resources._accept_ru;
-                                        licenseForm.Exit_btn.Text = Resources._exit_RU;
-                                    }
-
-                                    licenseForm.ShowDialog();
-                                }
-                            }
-                            catch (InvalidOperationException ioe)
-                            {
-                                DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Error") + $"\n\n{ioe.Message}", AppConfig.GetInstance._title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                return;
-                            }
-                            catch (FileNotFoundException notfoundEx)
-                            {
-                                DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_ErrorNotFoundComponent") + $"\n\n{notfoundEx.FileName}", AppConfig.GetInstance._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                return;
-                            }
-                        }
-                        else
-                        {
-#if DEBUG
-                            Logger.WriteLog("[DBG] UserIneractive false, Console mode...", ConsoleColor.White);
-#endif
-
-                            DialogResult agreementResult = DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_License_console"), AppConfig.GetInstance._title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                            if (agreementResult == DialogResult.Yes)
-                            {
-                                key.SetValue(registryValueName, 1);
-                            }
-                            else return;
-                        }
-                    }
-                    else
-                    {
-                        key.SetValue(registryValueName, 1);
-                    }
-
-                }
-
-                var SupressWarningValue = key.GetValue(registryValueOutdatedOS);
-
-                //Outdated OS Check
-                if ((Environment.OSVersion.Version.Major == 6) && (Environment.OSVersion.Version.Minor == 1) && (SupressWarningValue == null || (int)SupressWarningValue == 0))
-                {
-                    DialogResult dialogResult = MessageBoxCustom.Show(AppConfig.GetInstance.LL.GetLocalizedString("_WarnOutdatedOS"), AppConfig.GetInstance._title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        key.SetValue(registryValueOutdatedOS, 1);
-                        Utils.mutex.ReleaseMutex();
-                        Process.Start(AppConfig.GetInstance.ExecutablePath, "-so");
-                        return;
-                    }
-                    else if (dialogResult == DialogResult.Cancel || dialogResult == DialogResult.None)
-                    {
-                        return;
-                    }
-                }
-            }
-
-
-
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(AppConfig.GetInstance.ExecutablePath));
-
-            if (_options.hasErrors)
-            {
-                foreach (var error in _options.errors)
-                {
-                    DialogDispatcher.Show(error, AppConfig.GetInstance._title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
                 return;
             }
 
-            // Применяем флаги из LaunchOptions
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(AppConfig.GetInstance.ExecutablePath));
+
+            // Apply flags from LaunchOptions
             if (_options.help)
             {
                 _options.help = true;
@@ -297,70 +193,29 @@ namespace MSearch
 
             if (_options.ScanOnly)
             {
-                _options.ScanOnly = true;
-                _options.NoRootkitCheck = true;
+                _options.no_rootkit_check = true;
                 _options.RemoveEmptyTasks = false;
             }
 
-            //if (_options.maxSubfolders.HasValue)
-            //{
-            //    _options.maxSubfolders = _options.maxSubfolders.Value;
-            //}
-
-            if (!string.IsNullOrEmpty(_options.selectedPath))
+            // WinPE: drive letter input (moved to EnvironmentChecker)
+            if (_options.winpemode && !_options.console_mode)
             {
-                _options.selectedPath = _options.selectedPath;
+                string driveLetter = EnvironmentChecker.PromptWinPEDriveLetter(AppConfig.GetInstance);
+                AppConfig.GetInstance.drive_letter = driveLetter;
+                Drive.Letter = driveLetter;
+                _options.no_runtime = true;
+                _options.no_rootkit_check = true;
+                _options.no_services = true;
+                _options.no_scan_tasks = true;
+                _options.no_scan_registry = true;
+                _options.no_check_hosts = true;
+                _options.no_firewall = true;
+                _options.no_scan_users = true;
+                _options.no_scan_wmi = true;
+
+                AppConfig.GetInstance.WinPEMode = true;
+                LocalizedLogger.LogWinPEMode(driveLetter);
             }
-
-            if (_options.QuarantineRestoreOption)
-            {
-                _options.QuarantineRestoreOption = true;
-                if (!string.IsNullOrEmpty(_options.quarantineListEnum))
-                {
-                    AppConfig.GetInstance.quarantineListEnum = _options.quarantineListEnum;
-                }
-            }
-
-            if (_options.QuarantineDeleteOption)
-            {
-                _options.QuarantineDeleteOption = true;
-                if (!string.IsNullOrEmpty(_options.quarantineListEnum))
-                {
-                    AppConfig.GetInstance.quarantineListEnum = _options.quarantineListEnum;
-                }
-            }
-
-            // Обработка --winpemode (требует интерактивного ввода)
-            if (_options.winpemode)
-            {
-                if (!_options.console_mode)
-                {
-                drive_letter_lbl:
-                    LocalizedLogger.LogSpecifyDrive();
-                    AppConfig.GetInstance.drive_letter = Console.ReadLine();
-                    if (AppConfig.GetInstance.drive_letter.Length > 1 || FileChecker.IsDigit(AppConfig.GetInstance.drive_letter))
-                    {
-                        LocalizedLogger.LogIncorrectDrive(AppConfig.GetInstance.drive_letter);
-                        goto drive_letter_lbl;
-                    }
-
-                    if (!System.IO.Directory.Exists(AppConfig.GetInstance.drive_letter + ":\\"))
-                    {
-                        LocalizedLogger.LogIncorrectDrive(AppConfig.GetInstance.drive_letter);
-                        goto drive_letter_lbl;
-                    }
-
-                    Drive.Letter = AppConfig.GetInstance.drive_letter;
-                    _options.NoRootkitCheck = true;
-                    _options.no_runtime = true;
-                    _options.no_services = true;
-                    AppConfig.GetInstance.WinPEMode = true;
-                    LocalizedLogger.LogWinPEMode(AppConfig.GetInstance.drive_letter);
-                }
-            }
-
-            // Обработка --select= (требует доступ к args для получения следующего элемента)
-            // Заменено: параметры обрабатываются в LaunchOptions.ParseArgs() выше
 
             if (!AppConfig.GetInstance.WinPEMode)
             {
@@ -368,28 +223,25 @@ namespace MSearch
                 Drive.Letter = AppConfig.GetInstance.drive_letter;
             }
 
-            if (ProcessManager.GetCurrentProcessOwner().IsSystem && !AppConfig.GetInstance.WinPEMode)
+            // RunAsSystem warning (moved to EnvironmentChecker)
+            if (envResult.IsSystemProcess && !AppConfig.GetInstance.WinPEMode)
             {
-                if (!_options.silent)
+                if (!_options.silent && !_options.Force)
                 {
-                    if (!_options.Force)
+                    if (AppConfig.GetInstance.IsGuiAvailable)
                     {
-                        if (AppConfig.GetInstance.IsGuiAvailable)
+                        var msg = EnvironmentChecker.PromptRunAsSystemWarning(AppConfig.GetInstance, true);
+                        if (msg != DialogResult.Yes)
                         {
-                            var msg = DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_MessageRunAsSystemWarn"), AppConfig.GetInstance._title, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                            if (msg != DialogResult.Yes)
-                            {
-                                Environment.Exit(0);
-                            }
+                            Environment.Exit(0);
                         }
                     }
                 }
-                else
+                else if (_options.silent)
                 {
                     Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_HIDE);
                 }
             }
-
 
 #if !DEBUG
             if (!_options.help)
@@ -397,10 +249,6 @@ namespace MSearch
                 Utils.SwitchMouseSelection();
             }
 
-#endif
-
-
-#if !DEBUG
             if (!_options.silent)
             {
                 AppConfig.GetInstance.LL.LogJustDisplayMessage("\t\t", $"_RelevantVer", "https://github.com/BlendLog/Mi?ne?rSea?rch/releases \n".Replace("?", ""), ConsoleColor.White);
@@ -408,8 +256,6 @@ namespace MSearch
 
 #endif
             Logger.WriteLog("  \t  \tID: " + DeviceIdProvider.GetDeviceId(), ConsoleColor.White, false, true);
-
-
 
             if (!_options.help && !_options.silent)
             {
@@ -445,7 +291,8 @@ namespace MSearch
                 _options.silent = false;
             }
 
-            LocalizedLogger.LogPCInfo(OSExtensions.GetWindowsVersion() + " " + OSExtensions.GetPlatform(), Environment.UserName, Environment.MachineName, AppConfig.GetInstance.bootMode);
+            LocalizedLogger.LogPCInfo(OSExtensions.GetWindowsVersion() + " " + OSExtensions.GetPlatform(), Environment.UserName, Environment.MachineName, AppConfig.GetInstance.bootMode, OSExtensions.GetUACState());
+
             if (_options.silent)
             {
                 Console.WriteLine("\t\t[SILENT MODE]");
@@ -461,39 +308,15 @@ namespace MSearch
 
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
 
-            if (!AppConfig.GetInstance.no_logs)
+            if (!_options.no_logs)
             {
                 AppConfig.GetInstance.LL.LogWriteWithoutDisplay(true, false);
             }
 
             if (_options.demandSelection && !_options.silent)
             {
-                if (!AppConfig.GetInstance.WinPEMode && string.IsNullOrEmpty(_options.selectedPath))
-                {
-                    using (var dialog = new FolderBrowserDialog())
-                    {
-                        dialog.Description = AppConfig.GetInstance.LL.GetLocalizedString("_SelectFolderDialog");
-                        dialog.ShowNewFolderButton = false;
-                        dialog.RootFolder = Environment.SpecialFolder.MyComputer;
-
-                        if (dialog.ShowDialog() == DialogResult.OK)
-                        {
-#if DEBUG
-                            Console.WriteLine($"\t[DBG] Selected path: {dialog.SelectedPath}");
-#endif
-                            _options.selectedPath = FileSystemManager.NormalizeExtendedPath(dialog.SelectedPath);
-                        }
-                        else
-                        {
-                            var noFolderDialog = MessageBox.Show(AppConfig.GetInstance.LL.GetLocalizedString("_MessageCancelFolderDialog"), AppConfig.GetInstance._title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                            if (noFolderDialog != DialogResult.Yes)
-                            {
-                                Environment.Exit(0);
-                            }
-
-                        }
-                    }
-                }
+                _options.selectedPath = PromptScanDirectory(_options, AppConfig.GetInstance);
+                if (_options.selectedPath == null) return;
             }
 
             if (_options.QuarantineMode)
@@ -515,166 +338,26 @@ namespace MSearch
             }
 
             FileChecker.RestoreSignatures(MSData.GetInstance.signatures);
-
-            ProcessManager.InitPrivileges();
-
-            if (!_options.NoRootkitCheck || !_options.no_runtime)
-            {
-                if (!ProcessManager.HasDebugPrivilege())
-                {
-                    string privilegename = "S?eDe??bug?Pr?iv?il?ege".Replace("?", "");
-                    string groupName = OSExtensions.ConvertWellKnowSIDToGroupName("S-1-5-32-544"); //Admin group
-
-
-                    if (Native.GrantPrivilegeToGroup(groupName, privilegename))
-                    {
-                        DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_SuccessGrantPrivilege"), AppConfig.GetInstance._title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        var result = DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_RebootPCNowDialog"), AppConfig.GetInstance._title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (result == DialogResult.Yes)
-                        {
-                            Process.Start(new ProcessStartInfo()
-                            {
-                                FileName = "shutdown",
-                                Arguments = "/r /t 0",
-                                UseShellExecute = false,
-                                CreateNoWindow = true
-                            });
-                        }
-                        Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_HIDE);
-                        Utils.mutex.ReleaseMutex();
-                        if (_options.console_mode)
-                        {
-                            return;
-                        }
-                        Console.ReadLine();
-                    }
-                    else
-                    {
-                        DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_ErrorGrantPrivilege"), AppConfig.GetInstance._title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        Environment.Exit(0);
-                    }
-                }
-            }
-
+            new PrivilegeManager(_options).Enable();
             Stopwatch startTime = Stopwatch.StartNew();
-            //---------------------------------
-            //MinerSearch minerSearch = new MinerSearch();
-            MinerSearchScanState state = new MinerSearchScanState();
-            SignatureFileAnalyzer singatureFileAnalyzer = new SignatureFileAnalyzer();
 
-            // RootkitThreatScanner идёт первым — до любого сканирования
-            ScanManager scanManager = new ScanManager(new RootkitScanner(), new ProcessScanner(),
-                new IThreatScanner[] {
-                    new FileSystemThreatScanner(),
-                    new ShellStartupScanner(),
-                    new RegistryScanner(),
-                    new ServiceScanner(),
-                    new TaskScanner(),
-                    new FirewallScanner(),
-                    new WmiScanner(),
-                    new HostsThreatScanner(),
-                });
-            ThreatManager threatManager = new ThreatManager(new IThreatAnalyzer[]
-            {
-                new RootkitThreatAnalyzer(),
-                new ProcessThreatAnalyzer(singatureFileAnalyzer),
-                new FileSystemThreatAnalyzer(singatureFileAnalyzer),
-                new ShellStartupThreatAnalyzer(singatureFileAnalyzer),
-                new RegistryThreatAnalyzer(singatureFileAnalyzer),
-                new ServiceThreatAnalyzer(singatureFileAnalyzer),
-                new TaskThreatAnalyzer(singatureFileAnalyzer),
-                new FirewallThreatAnalyzer(),
-                new DirectoryThreatAnalyzer(),
-                new WmiThreatAnalyzer(),
-                new HostsThreatAnalyzer(),
-            });
-            CleanManager cleanManager = new CleanManager(new IThreatHandler[]
-            {
-                new RootkitThreatHandler(),
-                new ProcessThreatHandler(),
-                new RegistryThreatHandler(),
-                new ServiceThreatHandler(),
-                new TaskThreatHandler(),
-                new ShellStartupThreatHandler(),
-                new FirewallThreatHandler(),
-                new DirectoryThreatHandler(),
-                new FileThreatHandler(),
-                new WmiThreatHandler(),
-                new HostsThreatHandler(),
-            }, state);
+            // Create scanning infrastructure (moved to separate method)
+            var infrastructure = CreateScanInfrastructure();
+            MinerSearchScanState state = infrastructure.State;
+            SignatureFileAnalyzer signatureFileAnalyzer = infrastructure.SignatureAnalyzer;
+            ScanManager scanManager = infrastructure.ScanManager;
+            ThreatManager threatManager = infrastructure.ThreatManager;
+            CleanManager cleanManager = infrastructure.CleanManager;
 
-            List<ThreatDecision> allDecisions = new List<ThreatDecision>();
 
-            // 1. Сначала сканируем руткиты (мгновенная обработка, до любого другого сканирования)
-            IEnumerable<IThreatObject> rootkitThreats = scanManager.ScanRootkitFirst();
-            IEnumerable<ThreatDecision> rootkitDecisions = threatManager.Analyze(rootkitThreats).Where(d => d != null).ToList();
-            cleanManager.ApplyDecisions(rootkitDecisions, CleanupPhase.Finalize);
-            allDecisions.AddRange(rootkitDecisions);
-
-            // 2. Сканируем процессы
-            IEnumerable<IThreatObject> processThreats = scanManager.ScanProcessesOnly();
-            IEnumerable<ThreatDecision> processDecisions = threatManager.Analyze(processThreats).Where(d => d != null).ToList();
-            cleanManager.ApplyDecisions(processDecisions, CleanupPhase.SuspendOnly);
-            allDecisions.AddRange(processDecisions);
-
-            // 3. Всё остальное
-            IEnumerable<IThreatObject> commonThreats = scanManager.ScanEverythingElse();
-            IEnumerable<ThreatDecision> commonDecisions = threatManager.Analyze(commonThreats).Where(d => d != null).ToList();
-            allDecisions.AddRange(commonDecisions);
-            cleanManager.ApplyDecisions(commonDecisions, CleanupPhase.DisableExecuteOnly);
-
-            if (_options.pause) //pause before first cleanup
-            {
-                LocalizedLogger.LogPAUSE();
-                if (AppConfig.GetInstance.IsGuiAvailable)
-                {
-                    Console.ReadKey(true);
-                }
-            }
-
-            if (!LaunchOptions.GetInstance.nosignaturescan)
-            {
-                var signatureScanner = new SignatureScanner();
-                signatureScanner.CollectFilesAsync().Wait();
-
-                var allSignatureFiles = signatureScanner.GetFiles().ToList();
-                singatureFileAnalyzer.AnalyzeFiles(allSignatureFiles);
-                var signatureDecisions = threatManager.Analyze(allSignatureFiles).Where(d => d != null).ToList();
-                allDecisions.AddRange(signatureDecisions);
-
-                cleanManager.BeginFinalCleanup();
-                cleanManager.ApplyDecisions(processDecisions, CleanupPhase.Finalize);
-                cleanManager.ApplyDecisions(commonDecisions, CleanupPhase.Finalize);
-            }
-
-            cleanManager.ApplyDecisions(allDecisions, CleanupPhase.Finalize);
+            // Execute scanning (moved to separate method)
+            ExecuteScanWorkflow(_options, scanManager, threatManager, cleanManager, signatureFileAnalyzer);
             startTime.Stop();
 
             TimeSpan resultTime = startTime.Elapsed;
 
-            // Подсчёт статистики из реальных результатов (без отрицательных значений)
-            var scanResults = state.GetScanResults();
-            int foundCount = scanResults.Count(r =>
-                r.RawType == ScanObjectType.Malware ||
-                r.RawType == ScanObjectType.Unsafe ||
-                r.RawType == ScanObjectType.Infected);
-
-            int neutralizedCount = scanResults.Count(r =>
-                r.RawAction == ScanActionType.Deleted ||
-                r.RawAction == ScanActionType.Terminated ||
-                r.RawAction == ScanActionType.Quarantine ||
-                r.RawAction == ScanActionType.Cured ||
-                r.RawAction == ScanActionType.Disabled ||
-                r.RawAction == ScanActionType.Suspended);
-
-            int suspiciousCount = AppConfig.GetInstance.totalFoundSuspiciousObjects;
-
-            string elapsedTime = $"{resultTime.Hours:00}:{resultTime.Minutes:00}:{resultTime.Seconds:00}.{resultTime.Milliseconds:000}";
-            Logger.WriteLog("\n\t\t-----------------------------------", ConsoleColor.White, false);
-            LocalizedLogger.LogElapsedTime(elapsedTime);
-            Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
-            LocalizedLogger.LogTotalScanResult(foundCount, neutralizedCount, suspiciousCount);
-            Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
+            // Compute and log statistics (moved to separate method)
+            var scanStats = ComputeAndLogStatistics(state, resultTime);
 
             Utils.SwitchMouseSelection(true);
             Logger.DisposeLogger();
@@ -690,9 +373,14 @@ namespace MSearch
                     {
                         AppConfig.GetInstance.hasLockedObjectsByAV = true;
                     }
+
+                    if (result.RawType == ScanObjectType.Unknown && result.RawAction == ScanActionType.Deleted)
+                    {
+                        AppConfig.GetInstance.hasEmptyTasks = true;
+                    }
                 }
 
-                using (FinishEx finish = new FinishEx(foundCount, neutralizedCount, suspiciousCount, elapsedTime, state.GetScanResults())
+                using (FinishEx finish = new FinishEx(scanStats.Found, scanStats.Neutralized, scanStats.Suspicious, scanStats.ElapsedTime, state.GetScanResults())
                 {
                     TopMost = true
                 })
@@ -704,6 +392,16 @@ namespace MSearch
 #if DEBUG
             Console.ReadLine();
 #endif
+
+            // Cleanup: release mutexes
+            if (Utils.mutex != null)
+            {
+                Utils.mutex.ReleaseMutex();
+            }
+            if (Utils.rebootMtx != null)
+            {
+                Utils.rebootMtx.ReleaseMutex();
+            }
 
             return;
         }
@@ -734,7 +432,228 @@ namespace MSearch
             Console.WriteLine(@"                                                             | |_) | |  __/ | |_  | (_| |");
             Console.WriteLine(@"                                                             |____/   \___|  \__|  \__,_|");
 #endif
-            Console.WriteLine("\t\t?by: Ble?nd??Log?".Replace("?", ""));
+            Console.WriteLine("\t\tby: BlendLog");
         }
+
+        #region Extracted methods
+
+        /// <summary>
+        /// Creates all scanners, analyzers and managers for scanning.
+        /// </summary>
+        private static ScanInfrastructure CreateScanInfrastructure()
+        {
+            var state = new MinerSearchScanState();
+            var signatureFileAnalyzer = new SignatureFileAnalyzer();
+
+            // RootkitThreatScanner runs first — before any scanning
+            var scanManager = new ScanManager(
+                new RootkitScanner(),
+                new ProcessScanner(),
+                new IThreatScanner[] {
+                    new FileSystemThreatScanner(),
+                    new ShellStartupScanner(),
+                    new RegistryScanner(),
+                    new ServiceScanner(),
+                    new TaskScanner(),
+                    new FirewallScanner(),
+                    new WmiScanner(),
+                    new HostsThreatScanner(),
+                    new UserProfileScanner(),
+                });
+
+            var threatManager = new ThreatManager(new IThreatAnalyzer[] {
+                new RootkitThreatAnalyzer(),
+                new ProcessThreatAnalyzer(signatureFileAnalyzer),
+                new FileSystemThreatAnalyzer(signatureFileAnalyzer),
+                new ShellStartupThreatAnalyzer(signatureFileAnalyzer),
+                new RegistryThreatAnalyzer(signatureFileAnalyzer),
+                new ServiceThreatAnalyzer(signatureFileAnalyzer),
+                new TaskThreatAnalyzer(signatureFileAnalyzer),
+                new FirewallThreatAnalyzer(),
+                new DirectoryThreatAnalyzer(),
+                new WmiThreatAnalyzer(),
+                new HostsThreatAnalyzer(),
+                new UserProfileThreatAnalyzer(),
+            });
+
+            var cleanManager = new CleanManager(new IThreatHandler[] {
+                new RootkitThreatHandler(),
+                new ProcessThreatHandler(),
+                new RegistryThreatHandler(),
+                new ServiceThreatHandler(),
+                new TaskThreatHandler(),
+                new ShellStartupThreatHandler(),
+                new FirewallThreatHandler(),
+                new DirectoryThreatHandler(),
+                new FileThreatHandler(),
+                new WmiThreatHandler(),
+                new HostsThreatHandler(),
+                new UserProfileThreatHandler(),
+            }, state);
+
+            return new ScanInfrastructure
+            {
+                State = state,
+                SignatureAnalyzer = signatureFileAnalyzer,
+                ScanManager = scanManager,
+                ThreatManager = threatManager,
+                CleanManager = cleanManager
+            };
+        }
+
+        /// <summary>
+        /// Executes main scanning loop: rootkits → processes → everything else → signatures.
+        /// </summary>
+        private static void ExecuteScanWorkflow(LaunchOptions options, ScanManager scanManager, ThreatManager threatManager, CleanManager cleanManager, SignatureFileAnalyzer signatureFileAnalyzer)
+        {
+            IEnumerable<IThreatObject> rootkitThreats = scanManager.ScanRootkitFirst();
+            IEnumerable<ThreatDecision> rootkitDecisions = threatManager.Analyze(rootkitThreats).Where(d => d != null).ToList();
+            cleanManager.ApplyDecisions(rootkitDecisions, CleanupPhase.Finalize);
+
+            IEnumerable<IThreatObject> processThreats = scanManager.ScanProcessesOnly();
+            IEnumerable<ThreatDecision> processDecisions = threatManager.Analyze(processThreats).Where(d => d != null).ToList();
+            cleanManager.ApplyDecisions(processDecisions, CleanupPhase.SuspendOnly);
+
+            IEnumerable<IThreatObject> commonThreats = scanManager.ScanEverythingElse();
+            IEnumerable<ThreatDecision> commonDecisions = threatManager.Analyze(commonThreats).Where(d => d != null).ToList();
+            cleanManager.ApplyDecisions(commonDecisions, CleanupPhase.DisableExecuteOnly);
+
+            if (options.pause)
+            {
+                LocalizedLogger.LogPAUSE();
+                if (AppConfig.GetInstance.IsGuiAvailable)
+                {
+                    Console.ReadKey(true);
+                }
+            }
+            cleanManager.BeginFinalCleanup();
+            cleanManager.ApplyDecisions(processDecisions, CleanupPhase.Finalize);
+            cleanManager.ApplyDecisions(commonDecisions, CleanupPhase.Finalize);
+
+            if (!options.nosignaturescan)
+            {
+                var signatureScanner = new SignatureScanner();
+                signatureScanner.CollectFilesAsync().Wait();
+
+                var allSignatureFiles = signatureScanner.GetFiles().ToList();
+                var signatureDecisions = signatureFileAnalyzer.AnalyzeFiles(allSignatureFiles).Where(d => d != null).ToList();
+
+                cleanManager.ApplyDecisions(signatureDecisions, CleanupPhase.Finalize);
+            }
+
+        }
+
+        /// <summary>
+        /// Computes and logs scanning results.
+        /// </summary>
+        private static ScanStatistics ComputeAndLogStatistics(MinerSearchScanState state, TimeSpan elapsed)
+        {
+            var scanResults = state.GetScanResults();
+
+            // Группируем по уникальным Id ThreatObject для корректного подсчёта
+            int foundCount = scanResults
+                .Where(r => r.RawType == ScanObjectType.Malware ||
+                            r.RawType == ScanObjectType.Unsafe ||
+                            r.RawType == ScanObjectType.Infected ||
+                            r.RawType == ScanObjectType.Rootkit ||
+                            r.RawType == ScanObjectType.Suspicious)
+                .Select(r => r.ThreatObjectId)
+                .Distinct()
+                .Count();
+
+            int neutralizedCount = scanResults
+                .Where(r => r.RawAction == ScanActionType.Deleted ||
+                            r.RawAction == ScanActionType.Terminated ||
+                            r.RawAction == ScanActionType.Quarantine ||
+                            r.RawAction == ScanActionType.Cured ||
+                            r.RawAction == ScanActionType.Disabled ||
+                            r.RawAction == ScanActionType.Suspended)
+                .Select(r => r.ThreatObjectId)
+                .Distinct()
+                .Count();
+
+            int suspiciousCount = AppConfig.GetInstance.totalFoundSuspiciousObjects;
+            string elapsedTime = $"{elapsed.Hours:00}:{elapsed.Minutes:00}:{elapsed.Seconds:00}.{elapsed.Milliseconds:000}";
+
+            Logger.WriteLog("\n\t\t-----------------------------------", ConsoleColor.White, false);
+            LocalizedLogger.LogElapsedTime(elapsedTime);
+            Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
+            LocalizedLogger.LogTotalScanResult(foundCount, neutralizedCount, suspiciousCount);
+            Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
+
+            return new ScanStatistics
+            {
+                Found = foundCount,
+                Neutralized = neutralizedCount,
+                Suspicious = suspiciousCount,
+                ElapsedTime = elapsedTime
+            };
+        }
+
+        /// <summary>
+        /// Prompts user for scan directory via FolderBrowserDialog.
+        /// Returns normalized path or null if cancelled.
+        /// </summary>
+        private static string PromptScanDirectory(LaunchOptions options, AppConfig config)
+        {
+            if (!string.IsNullOrEmpty(options.selectedPath))
+                return options.selectedPath;
+
+            using (var dialog = new FolderBrowserDialog())
+            {
+                dialog.Description = config.LL.GetLocalizedString("_SelectFolderDialog");
+                dialog.ShowNewFolderButton = false;
+                dialog.RootFolder = Environment.SpecialFolder.MyComputer;
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+#if DEBUG
+                    Console.WriteLine($"\t[DBG] Selected path: {dialog.SelectedPath}");
+#endif
+                    return FileSystemManager.NormalizeExtendedPath(dialog.SelectedPath);
+                }
+                else
+                {
+                    var noFolderDialog = MessageBox.Show(
+                        config.LL.GetLocalizedString("_MessageCancelFolderDialog"),
+                        config._title,
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question);
+
+                    if (noFolderDialog != DialogResult.Yes)
+                    {
+                        return null; // cancel — Init() returns
+                    }
+                }
+            }
+
+            return options.selectedPath;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Scanning infrastructure results.
+        /// </summary>
+        private class ScanInfrastructure
+        {
+            public MinerSearchScanState State { get; set; }
+            public SignatureFileAnalyzer SignatureAnalyzer { get; set; }
+            public ScanManager ScanManager { get; set; }
+            public ThreatManager ThreatManager { get; set; }
+            public CleanManager CleanManager { get; set; }
+        }
+
+        /// <summary>
+        /// Scanning statistics results.
+        /// </summary>
+        private class ScanStatistics
+        {
+            public int Found { get; set; }
+            public int Neutralized { get; set; }
+            public int Suspicious { get; set; }
+            public string ElapsedTime { get; set; }
+        }
+
     }
 }

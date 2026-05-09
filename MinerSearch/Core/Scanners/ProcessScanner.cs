@@ -19,7 +19,7 @@ namespace MSearch.Core.Scanners
 
             var results = new List<IThreatObject>();
 
-
+            AppConfig.GetInstance.LL.LogHeadMessage("_PreparingToScan");
             List<Process> procs = ProcessManager.SafeGetProcesses();
 
             foreach (Process p in procs.OrderBy(p => p.ProcessName).ToList())

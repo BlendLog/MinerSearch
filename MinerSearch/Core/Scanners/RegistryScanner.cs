@@ -48,10 +48,13 @@ namespace MSearch.Core.Scanners
             // --- 8. Tekt0nit (RMS) (HKCU) ---
             CollectKeyAndValues(results, HKCU, msData.queries["Tekt0nitParameters"], sectionName: "TektonIT");
 
-            // --- 9. Applocker (HKLM) ---
+            // --- 9. Lsa Authentication Packages (HKLM) ---
+            CollectKeyAndValues(results, HKLM, msData.queries["LsaAuthenticationPackages"], sectionName: "LSA Authentication Packages");
+
+            // --- 10. Applocker (HKLM) ---
             CollectSubkeysOnly(results, HKLM, msData.queries["appl0cker"], "Applocker");
 
-            // --- 10. Windows Defender Exclusions (HKLM - Local и Policies) ---
+            // --- 11. Windows Defender Exclusions (HKLM - Local и Policies) ---
             string[] wdBaseKeys = { msData.queries["WDExclusionsLocal"], msData.queries["WDExclusionsPolicies"] };
             string[] wdSubKeys = { "Paths", "Processes", "Extensions" };
 
@@ -62,6 +65,9 @@ namespace MSearch.Core.Scanners
                     CollectKeyAndValues(results, HKLM, $@"{wdBaseKey}\{subKey}", sectionName: $"WindowsDefender ({subKey})");
                 }
             }
+
+            // --- 12. App Paths (HKLM) ---
+            CollectSubkeysAndSpecifiedValue(results, HKLM, msData.queries["AppPaths"], "App Paths");
 
             return results;
         }
@@ -130,6 +136,13 @@ namespace MSearch.Core.Scanners
                                 {
                                     SectionName = sectionName
                                 };
+                                
+                                // Для MULTI_SZ заполняем массив элементов
+                                if (kind == RegistryValueKind.MultiString && rawValue is string[] arr)
+                                {
+                                    valRegObj.ValueDataArray = arr;
+                                }
+                                
                                 results.Add(valRegObj);
                             }
                         }
@@ -203,6 +216,63 @@ namespace MSearch.Core.Scanners
                                 SectionName = sectionName
                             };
                             results.Add(regObj);
+                        }
+                    }
+                }
+            }
+            catch (SecurityException)
+            {
+                AppConfig.GetInstance.LL.LogCautionMessage("_AccessDenied", $"{hive}\\{parentPath}");
+                var regObj = new RegistryThreatObject(hive, parentPath, RegistryNodeType.Key, null, null, RegistryValueKind.Unknown, true, null)
+                {
+                    SectionName = sectionName
+                };
+                results.Add(regObj);
+            }
+            catch (Exception) { }
+        }
+
+        void CollectSubkeysAndSpecifiedValue(List<IThreatObject> results, string hive, string parentPath, string sectionName)
+        {
+            RegistryKey baseReg = GetBaseHive(hive);
+            try
+            {
+                using (RegistryKey parentKey = baseReg.OpenSubKey(parentPath))
+                {
+                    if (parentKey != null)
+                    {
+                        foreach (string subKeyName in parentKey.GetSubKeyNames())
+                        {
+                            string subKeyPath = $@"{parentPath}\{subKeyName}";
+                            try
+                            {
+                                using (RegistryKey subKey = baseReg.OpenSubKey(subKeyPath))
+                                {
+                                    if (subKey != null)
+                                    {
+                                        // Читаем значение по умолчанию (null имя)
+                                        object defaultValue = subKey.GetValue(null);
+                                        string valueData = defaultValue?.ToString() ?? string.Empty;
+
+                                        // Добавляем Key-объект со значением для дальнейшего анализа
+                                        var regObj = new RegistryThreatObject(hive, subKeyPath, RegistryNodeType.Key, "(default)", valueData, RegistryValueKind.Unknown, false, null)
+                                        {
+                                            SectionName = sectionName
+                                        };
+                                        results.Add(regObj);
+                                    }
+                                }
+                            }
+                            catch (SecurityException)
+                            {
+                                AppConfig.GetInstance.LL.LogCautionMessage("_AccessDenied", $@"{hive}\{subKeyPath}");
+                                var regObj = new RegistryThreatObject(hive, subKeyPath, RegistryNodeType.Key, null, null, RegistryValueKind.Unknown, true, null)
+                                {
+                                    SectionName = sectionName
+                                };
+                                results.Add(regObj);
+                            }
+                            catch (Exception) { /* Игнорируем недоступные/сломанные пути */ }
                         }
                     }
                 }

@@ -1,3 +1,4 @@
+using Microsoft.Win32;
 using MSearch.Core.Managers;
 using MSearch.Core.ThreatObjects;
 using MSearch.Infrastructure;
@@ -15,26 +16,49 @@ namespace MSearch.Core.Scanners
     {
         public IEnumerable<IThreatObject> Scan()
         {
-
             var results = new List<IThreatObject>();
-            ServiceController[] services = ServiceController.GetServices();
 
-            foreach (ServiceController service in services.OrderBy(_svc => _svc.DisplayName))
+            // Единый проход: собираем все службы из реестра + опрашиваем статус точечно
+            var allRegistryServices = ServiceHelper.GetAllServiceNamesFromRegistry();
+
+            foreach (string serviceName in allRegistryServices.OrderBy(name => name))
             {
-                string serviceName = service.ServiceName;
-
                 try
                 {
-                    if (NativeServiceController.IsServiceMarkedToDelete(serviceName))
+                    // Читаем статические данные из реестра
+                    string servicePathWithArgs = ServiceHelper.GetImagePathFromRegistryDirect(serviceName);
+
+                    if (string.IsNullOrEmpty(servicePathWithArgs)) continue;
+                    if (servicePathWithArgs.EndsWith(".sys"))
                     {
-                        service.Dispose();
+#if DEBUG
+                        Console.WriteLine($"\t[DBG] {serviceName} is kernel driver. Skipping.");
+#endif
                         continue;
                     }
 
-                    ServiceControllerStatus status = service.Status;
-                    string servicePathWithArgs = NativeServiceController.GetServiceImagePath(serviceName);
+
                     string servicePath = FileSystemManager.ExtractExecutableFromCommand(servicePathWithArgs);
-                    NativeServiceController.ServiceStartMode startMode = NativeServiceController.GetServiceStartType(serviceName);
+                    NativeServiceController.ServiceStartMode startMode = ServiceHelper.GetStartTypeFromRegistryDirect(serviceName);
+
+
+                    // Пробуем получить статус через SCManager (живой опрос)
+                    ServiceControllerStatus status = ServiceControllerStatus.Stopped;
+                    bool scmUnavailable = false;
+                    try
+                    {
+                        var sc = new ServiceController(serviceName);
+                        status = sc.Status;
+                        sc.Dispose();
+                    }
+                    catch
+                    {
+                        // SCManager недоступен — помечаем флаг
+#if DEBUG
+                        Console.WriteLine($"\t[DBG] \"{serviceName}\"SCM Unavailable");
+#endif
+                        scmUnavailable = true;
+                    }
 
                     // Создаём FileThreatObject для основного exe сервиса
                     FileThreatObject linkedFile = null;
@@ -52,21 +76,52 @@ namespace MSearch.Core.Scanners
                             var fvi = FileVersionInfo.GetVersionInfo(servicePath);
                             originalName = fvi.OriginalFilename ?? "";
                             description = fvi.FileDescription ?? "";
-                        } catch { }
+                        }
+                        catch { }
                         try { hash = FileChecker.CalculateSHA1(servicePath); } catch { }
 
                         linkedFile = new FileThreatObject(servicePath, Path.GetFileName(servicePath), fileSize, originalName, description, hash, trustResult);
                     }
 
+                    // Проверяем SafeBoot\Minimal и SafeBoot\Network
+                    bool hasInMinimal = false;
+                    bool hasInNetwork = false;
+                    try
+                    {
+                        using (var minimalKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal"))
+                        {
+                            if (minimalKey != null)
+                            {
+                                hasInMinimal = minimalKey.GetSubKeyNames().Any(name => string.Equals(name, serviceName, StringComparison.OrdinalIgnoreCase));
+                            }
+                        }
+                    }
+                    catch { }
+
+                    try
+                    {
+                        using (var networkKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\SafeBoot\Network"))
+                        {
+                            if (networkKey != null)
+                            {
+                                hasInNetwork = networkKey.GetSubKeyNames().Any(name => string.Equals(name, serviceName, StringComparison.OrdinalIgnoreCase));
+                            }
+                        }
+                    }
+                    catch { }
+
+                    bool inSafeMode = hasInMinimal || hasInNetwork;
+
                     var serviceThreat = new ServiceThreatObject(
                         serviceName,
-                        service.DisplayName,
                         servicePath,
                         servicePathWithArgs,
                         status,
+                        inSafeMode,
                         startMode)
                     {
-                        LinkedServiceFile = linkedFile
+                        LinkedServiceFile = linkedFile,
+                        SCMUnavailable = scmUnavailable
                     };
 
                     results.Add(serviceThreat);
@@ -77,17 +132,9 @@ namespace MSearch.Core.Scanners
                         results.Add(linkedFile);
                     }
                 }
-                catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
-                {
-                    AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", serviceName);
-                }
                 catch (Exception ex)
                 {
                     AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ex, serviceName, "_Service");
-                }
-                finally
-                {
-                    service.Dispose();
                 }
             }
 

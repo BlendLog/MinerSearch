@@ -191,7 +191,7 @@
     <value>The program was launched from the archive! Extract the entire archive and restart again.</value>
   </data>
   <data name="_ProcessInj3cti0n_EN" xml:space="preserve">
-    <value>Process inj?ect?ion</value>
+    <value>Process injection</value>
   </data>
   <data name="_HostsFileCreated_RU" xml:space="preserve">
     <value>Новый файл hosts создан</value>
@@ -299,7 +299,7 @@ Thank you for your help!</value>
     <value>Выйти</value>
   </data>
   <data name="_RemovingKnownMlwrFiles_EN" xml:space="preserve">
-    <value>Removing known mal?ware files...</value>
+    <value>Removing known malware files...</value>
   </data>
   <data name="_ErrorLockedFile_RU" xml:space="preserve">
     <value>Файл заблокирован: #file#. Внесение изменений невозможно.</value>
@@ -341,7 +341,7 @@ Thank you for your help!</value>
     <value>Back</value>
   </data>
   <data name="_MlwrProcessesCount_EN" xml:space="preserve">
-    <value>Ma??li??cio??us processes:</value>
+    <value>Malicious processes:</value>
   </data>
   <data name="_SelectFolderDialog_EN" xml:space="preserve">
     <value>Select folder for scanning</value>
@@ -359,13 +359,13 @@ Thank you for your help!</value>
     <value>Сканирование правил брандмауэра...</value>
   </data>
   <data name="_ErrorTerminateProcess_EN" xml:space="preserve">
-    <value>Failed to terminate ma?li?ci?ou?s process:</value>
+    <value>Failed to terminate malicious process:</value>
   </data>
   <data name="_WMIRegister_EN" xml:space="preserve">
     <value>Register necessary DLLs...</value>
   </data>
   <data name="_Malic1ousTask_EN" xml:space="preserve">
-    <value>Mali?cio?us? task</value>
+    <value>Malicious task</value>
   </data>
   <data name="_FileNotExistsSpec_RU" xml:space="preserve">
     <value>Файл не существует в указанных каталогах:</value>
@@ -401,7 +401,10 @@ Thank you for your help!</value>
 -nwmi  --no-scan-wmi          Do not check WMI and/or event subscription integrity
 -nr    --no-runtime           Do not scan running processes (only directories, files, registry keys, etc.)
 -nse   --no-services          Skip scanning services
+-nst   --no-scan-tasks        Skip scanning Scheduled Tasks
+-nsu   --no-scan-users        Skip scanning users profiles
 -nss   --no-signature-scan    Skip file signature scanning
+-nsr   --no-scan-registry     Skip system registry scan
 -nrc   --no-rootkit-check     Disable the rootkit check
 -nch   --no-check-hosts       Skip checking the hosts file
 -nfw   --no-firewall          Skip scanning firewall rules
@@ -471,7 +474,7 @@ Thank you for your help!</value>
     <value>Action</value>
   </data>
   <data name="_Malici0usProcess_EN" xml:space="preserve">
-    <value>Mali?cio?us process:</value>
+    <value>Malicious process:</value>
   </data>
   <data name="_MessageRunAsSystemWarn_EN" xml:space="preserve">
     <value>Attention! This application is running with SYSTEM privileges. It's recommended to use this option with caution and understanding of the possible consequences.
@@ -640,10 +643,10 @@ Click \b Exit\b0  to exit.\par
     <value>Invalid signature file</value>
   </data>
   <data name="_Malici0usFile_EN" xml:space="preserve">
-    <value>Mali?cious file:</value>
+    <value>Malicious file:</value>
   </data>
   <data name="_UnwantedExclusion_EN" xml:space="preserve">
-    <value>Wi?ndow?s De?fe?nde?r excl?usion</value>
+    <value>Windows Defender exclusion</value>
   </data>
   <data name="_ProcessFailedExecute_EN" xml:space="preserve">
     <value>Proccess failed to execute!</value>
@@ -916,7 +919,10 @@ Do you want to continue?</value>
 -nwmi  --no-scan-wmi          Не проверять целостность WMI и/или подписок на события
 -nr    --no-runtime           Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)
 -nse   --no-services          Пропустить сканирование служб
+-nst   --no-scan-tasks        Пропустить сканирование задач планировщика
+-nsu   --no-scan-users        Пропустить сканирование профили пользователей
 -nss   --no-signature-scan    Пропустить сигнатурное сканирование файлов
+-nsr   --no-scan-registry     Пропустить сканирование системного реестра
 -nrc   --no-rootkit-check     Не проверять присутствие руткита
 -nch   --no-check-hosts       Пропустить проверку файла hosts
 -nfw   --no-firewall          Пропустить сканирование правил брандмауера
@@ -1201,7 +1207,7 @@ Press any key to continue...</value>
     <value>Locked directory</value>
   </data>
   <data name="_MaliciousProfile_EN" xml:space="preserve">
-    <value>Mali?cious profile</value>
+    <value>Malicious profile</value>
   </data>
   <data name="_File_EN" xml:space="preserve">
     <value>file</value>
@@ -1285,7 +1291,7 @@ Press any key to continue...</value>
     <value>Подозрительный</value>
   </data>
   <data name="_R00tkitPresent_EN" xml:space="preserve">
-    <value>Mi?ner's r?o??o?tk??it detected! Try to remove...</value>
+    <value>Miner's rootkit detected! Try to remove...</value>
   </data>
   <data name="_exit_EN" xml:space="preserve">
     <value>Exit</value>
@@ -1318,7 +1324,7 @@ Press any key to continue...</value>
     <value>Попытка завершить процессы...</value>
   </data>
   <data name="_HostsFileRecovered_RU" xml:space="preserve">
-    <value>Файл ho??s?ts был восстановлен. Удалено строк:</value>
+    <value>Файл hosts был восстановлен. Удалено строк:</value>
   </data>
   <data name="_YesBtn_EN" xml:space="preserve">
     <value>Yes</value>
@@ -1426,7 +1432,7 @@ Press any key to continue...</value>
     <value>Donate $$$</value>
   </data>
   <data name="_MaliciousEntry_EN" xml:space="preserve">
-    <value>Mali?cious entry -</value>
+    <value>Malicious entry -</value>
   </data>
   <data name="_InfectedHosts_EN" xml:space="preserve">
     <value>Infected hosts file -</value>
@@ -1513,7 +1519,7 @@ Press any key to continue...</value>
     <value>Hash</value>
   </data>
   <data name="_RemovingFoundMlwrFiles_EN" xml:space="preserve">
-    <value>Removing found mal?ici?ous files...</value>
+    <value>Removing found malicious files...</value>
   </data>
   <data name="_TryUnlockDirectory_RU" xml:space="preserve">
     <value>Попытка разблокировать каталог...</value>
@@ -1534,13 +1540,13 @@ Press any key to continue...</value>
     <value>All threats has been neutralized!</value>
   </data>
   <data name="_Malici0usProcesses_EN" xml:space="preserve">
-    <value>Mali?cious processes...</value>
+    <value>Malicious processes...</value>
   </data>
   <data name="_ActionType_Terminated_EN" xml:space="preserve">
     <value>Terminated</value>
   </data>
   <data name="_HostsFileRecovered_EN" xml:space="preserve">
-    <value>Ho??sts file has been recovered. Affected strings:</value>
+    <value>Hosts file has been recovered. Affected strings:</value>
   </data>
   <data name="_Just_Service_RU" xml:space="preserve">
     <value>Служба:</value>
@@ -1582,13 +1588,13 @@ Press any key to continue...</value>
     <value>Подозрений:</value>
   </data>
   <data name="_SuspiciousRegKey_EN" xml:space="preserve">
-    <value>Sus?pic?ious registry key:</value>
+    <value>Suspicious registry key:</value>
   </data>
   <data name="_LicenseCaption_EN" xml:space="preserve">
     <value>Denial of Responsibility</value>
   </data>
   <data name="_ChekingR00tkit_EN" xml:space="preserve">
-    <value>Checking roo??tk??it present...</value>
+    <value>Checking rootkit present...</value>
   </data>
   <data name="_R00TkitDetected_EN" xml:space="preserve">
     <value>Rootkit detected! Neutralizing...</value>
@@ -1807,7 +1813,7 @@ Press any key to continue...</value>
     <value>Перезапуск очистки...</value>
   </data>
   <data name="_MaliciousDir_EN" xml:space="preserve">
-    <value>Mali?cious directory</value>
+    <value>Malicious directory</value>
   </data>
   <data name="sber" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\sber.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -1858,7 +1864,7 @@ Press any key to continue...</value>
     <value>Удаление найденных вредоносных файлов...</value>
   </data>
   <data name="_RemovingMLWRPaths_EN" xml:space="preserve">
-    <value>Removing mal?ware dirs...</value>
+    <value>Removing malware dirs...</value>
   </data>
   <data name="_FileAttributes_RU" xml:space="preserve">
     <value>Атрибуты:</value>
@@ -1930,7 +1936,7 @@ Press any key to continue...</value>
     <value>Путь</value>
   </data>
   <data name="_ProcessFound_EN" xml:space="preserve">
-    <value>Ma??li??cio??us process detected! Risk level:</value>
+    <value>Malicious process detected! Risk level:</value>
   </data>
   <data name="_ProcessFile_MarkedToDelete_EN" xml:space="preserve">
     <value>Associated file marked for deletion</value>
@@ -2298,30 +2304,19 @@ Before proceeding, you must read the license agreement (license.rtf or a copy of
     <value>Параметр реестра</value>
   </data>
   <data name="_Rundll32Abuse_EN" xml:space="preserve">
-    <value>Abuse of R?unD?ll32.exe for malicious DLL execution</value>
+    <value>Abuse of RunDll32.exe for malicious DLL execution</value>
   </data>
   <data name="_Rundll32Abuse_RU" xml:space="preserve">
-    <value>Злоупотребление R?unD?ll32.exe для выполнения вредоносных DLL</value>
+    <value>Злоупотребление RunDll32.exe для выполнения вредоносных DLL</value>
   </data>
   <data name="_WarnOutdatedOS_EN" xml:space="preserve">
-    <value>Support for this application on Windows 7 will be discontinued soon. To avoid the risk of system disruption, we recommend using the "Scan Only" mode. In this mode, the application will detect threats but will not remove them. 
-You will only receive a results report. Run the scan in this mode?
-
-
-
-Yes – Run with the --scan-only option (recommended)
-
-No – Run a standard scan with the option to remove.</value>
+    <value>Support for this application on Windows 7 has been discontinued. </value>
   </data>
   <data name="_WarnOutdatedOS_RU" xml:space="preserve">
-    <value>Поддержка данного приложения на Windows 7 будет прекращена в ближайшее время. Чтобы избежать риска нарушения работы системы, рекомендуется использовать режим «Только сканирование». В этом режиме приложение обнаружит угрозы, но не будет их удалять. 
-Вы получите только отчёт о результатах. Запустить проверку в этом режиме?
-
-Да – запустить с опцией --scan-only (рекомендуется)
-Нет – Запустить обычное сканирование с возможностью удаления.</value>
+    <value>Поддержка данного приложения на Windows 7 прекращена. </value>
   </data>
   <data name="_ErrorTurnedOffDefender_EN" xml:space="preserve">
-    <value>Win?dows D?efen?der is turned off or doesn't respond</value>
+    <value>Windows Defender is turned off or doesn't respond</value>
   </data>
   <data name="_ErrorTurnedOffDefender_RU" xml:space="preserve">
     <value>Защитник Windows выключен или не отвечает на запросы</value>
@@ -2380,12 +2375,6 @@ No – Run a standard scan with the option to remove.</value>
   <data name="_WarnUserinitHijacked_RU" xml:space="preserve">
     <value>Несанкционированое изменение параметра Userinit</value>
   </data>
-  <data name="SafeModeTaskParser_EN" xml:space="preserve">
-    <value>Failed to retrieve tasks list</value>
-  </data>
-  <data name="SafeModeTaskParser_RU" xml:space="preserve">
-    <value>Не удалось получить список задач</value>
-  </data>
   <data name="_ErrorRegistryCheck_EN" xml:space="preserve">
     <value>Unable to check registry key</value>
   </data>
@@ -2408,6 +2397,324 @@ No – Run a standard scan with the option to remove.</value>
     <value>File copy marked to move quarantine</value>
   </data>
   <data name="_FileCopy_MarkedToMoveQuarantine_RU" xml:space="preserve">
-    <value>Копия файла отмечена на перемещение в карантин</value>
+    <value>Копия файла помечена на перемещение в карантин</value>
+  </data>
+  <data name="_ScanUserProfiles_EN" xml:space="preserve">
+    <value>Scanning user profiles</value>
+  </data>
+  <data name="_ScanUserProfiles_RU" xml:space="preserve">
+    <value>Сканирование пользовательских профилей</value>
+  </data>
+  <data name="_Just_Username_EN" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="_Just_Username_RU" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
+  <data name="_HiddenUserFound_EN" xml:space="preserve">
+    <value>Hidden user found: {0}</value>
+  </data>
+  <data name="_HiddenUserFound_RU" xml:space="preserve">
+    <value>Найден скрытый профиль пользователя: {0}</value>
+  </data>
+  <data name="_JohnUserDetected_EN" xml:space="preserve">
+    <value>Suspicious username detected</value>
+  </data>
+  <data name="_JohnUserDetected_RU" xml:space="preserve">
+    <value>Обнаружено подозрительный профиль пользователя</value>
+  </data>
+  <data name="_UserProfileDeleted_EN" xml:space="preserve">
+    <value>User profile deleted: {0}</value>
+  </data>
+  <data name="_UserProfileDeleted_RU" xml:space="preserve">
+    <value>Профиль пользователя удалён: {0}</value>
+  </data>
+  <data name="_ErrorCannotDeleteUser_EN" xml:space="preserve">
+    <value>Unable to delete user profile</value>
+  </data>
+  <data name="_ErrorCannotDeleteUser_RU" xml:space="preserve">
+    <value>Не удалось удалить профиль пользователя</value>
+  </data>
+  <data name="_ServiceMarkedForRestore_EN" xml:space="preserve">
+    <value>Service marked for restoration</value>
+  </data>
+  <data name="_ServiceMarkedForRestore_RU" xml:space="preserve">
+    <value>Служба была отмечена на восстановление</value>
+  </data>
+  <data name="_PrivilegeNotFound_EN" xml:space="preserve">
+    <value>Failed to acquire privilege: {0}. Continuing without it.</value>
+  </data>
+  <data name="_PrivilegeNotFound_RU" xml:space="preserve">
+    <value>Не удалось получить привилегию: {0}. Продолжение работы без неё.</value>
+  </data>
+  <data name="_PrivilegeRequiresReboot_EN" xml:space="preserve">
+    <value>Privilege '{0}' requires reboot to apply. Reboot now?</value>
+  </data>
+  <data name="_PrivilegeRequiresReboot_RU" xml:space="preserve">
+    <value>Привилегия '{0}' требует перезагрузки для применения. Перезагрузить сейчас?</value>
+  </data>
+  <data name="_PrivilegeGranted_EN" xml:space="preserve">
+    <value>Privilege '{0}' successfully granted.</value>
+  </data>
+  <data name="_PrivilegeGranted_RU" xml:space="preserve">
+    <value>Привилегия '{0}' успешно назначена.</value>
+  </data>
+  <data name="_MissingPrivileges_EN" xml:space="preserve">
+    <value>Missing privileges: {0}. Some features may be unavailable.</value>
+  </data>
+  <data name="_MissingPrivileges_RU" xml:space="preserve">
+    <value>Отсутствуют привилегии: {0}. Некоторые функции могут быть недоступны.</value>
+  </data>
+  <data name="_ErrorRestoreServiceDll_EN" xml:space="preserve">
+    <value>Error restoring ServiceDll for '{0}': {1}</value>
+  </data>
+  <data name="_ErrorRestoreServiceDll_RU" xml:space="preserve">
+    <value>Ошибка восстановления ServiceDll для '{0}': {1}</value>
+  </data>
+  <data name="_ErrorRestoreTermServiceDll_EN" xml:space="preserve">
+    <value>Cannot open TermService\\Parameters registry key</value>
+  </data>
+  <data name="_ErrorRestoreTermServiceDll_RU" xml:space="preserve">
+    <value>Не удалось открыть раздел реестра TermService\Parameters</value>
+  </data>
+  <data name="_ServiceRestartFailed_EN" xml:space="preserve">
+    <value>Service restored, but restart failed</value>
+  </data>
+  <data name="_ServiceRestartFailed_RU" xml:space="preserve">
+    <value>Служба восстановлена, но перезапуск не удался</value>
+  </data>
+  <data name="_ErrorNeutralizeRootkit_EN" xml:space="preserve">
+    <value>Cannot neutralize rootkit</value>
+  </data>
+  <data name="_ErrorNeutralizeRootkit_RU" xml:space="preserve">
+    <value>Не удалось нейтрализовать руткит</value>
+  </data>
+  <data name="_TaskMarkedToDelete_EN" xml:space="preserve">
+    <value>Scheduled task has beed marked to delete</value>
+  </data>
+  <data name="_TaskMarkedToDelete_RU" xml:space="preserve">
+    <value>Запланированная задача отмечена на удаление</value>
+  </data>
+  <data name="_FilesCount_PreparingAnalysis_EN" xml:space="preserve">
+    <value>files found. Starting file analysis...</value>
+  </data>
+  <data name="_FilesCount_PreparingAnalysis_RU" xml:space="preserve">
+    <value>файлов найдено. Запуск анализа...</value>
+  </data>
+  <data name="_EndpointTimeout_RU" xml:space="preserve">
+    <value>Таймаут эндпоинта</value>
+  </data>
+  <data name="_EndpointTimeout_EN" xml:space="preserve">
+    <value>Endpoint timeout</value>
+  </data>
+  <data name="_EndpointError_RU" xml:space="preserve">
+    <value>Ошибка эндпоинта</value>
+  </data>
+  <data name="_EndpointError_EN" xml:space="preserve">
+    <value>Endpoint error</value>
+  </data>
+  <data name="_OverallTimeout_RU" xml:space="preserve">
+    <value>Общий таймаут</value>
+  </data>
+  <data name="_OverallTimeout_EN" xml:space="preserve">
+    <value>Overall timeout</value>
+  </data>
+  <data name="_NoInternetForUpdates_RU" xml:space="preserve">
+    <value>Нет подключения к интернету — не удалось проверить обновления</value>
+  </data>
+  <data name="_NoInternetForUpdates_EN" xml:space="preserve">
+    <value>No internet connection — unable to check updates</value>
+  </data>
+  <data name="_UpdateCheckError_RU" xml:space="preserve">
+    <value>Ошибка проверки обновлений</value>
+  </data>
+  <data name="_UpdateCheckError_EN" xml:space="preserve">
+    <value>Update check error</value>
+  </data>
+  <data name="_UACEnabled_RU" xml:space="preserve">
+    <value>UAC: Включён</value>
+  </data>
+  <data name="_UACEnabled_EN" xml:space="preserve">
+    <value>UAC: Enabled</value>
+  </data>
+  <data name="_UACDisabled_RU" xml:space="preserve">
+    <value>UAC: Выключен</value>
+  </data>
+  <data name="_UACDisabled_EN" xml:space="preserve">
+    <value>UAC: Disabled</value>
+  </data>
+  <data name="_UACUnknown_RU" xml:space="preserve">
+    <value>UAC: Неизвестно</value>
+  </data>
+  <data name="_UACUnknown_EN" xml:space="preserve">
+    <value>UAC: unknown</value>
+  </data>
+  <data name="_ServiceSCMUnavailable_RU" xml:space="preserve">
+    <value>SCM недоступен</value>
+  </data>
+  <data name="_ServiceSCMUnavailable_EN" xml:space="preserve">
+    <value>SCM unavailable</value>
+  </data>
+  <data name="_Service_Registry_RU" xml:space="preserve">
+    <value>Ошибка реестра службы</value>
+  </data>
+  <data name="_Service_Registry_EN" xml:space="preserve">
+    <value>Registry service error</value>
+  </data>
+  <data name="_ServiceDisplayName_EN" xml:space="preserve">
+    <value>Display name:</value>
+  </data>
+  <data name="_ServiceDisplayName_RU" xml:space="preserve">
+    <value>Отображаемое имя:</value>
+  </data>
+  <data name="_ErrorGetSddl_EN" xml:space="preserve">
+    <value>Failed to get SDDL for service</value>
+  </data>
+  <data name="_ErrorGetSddl_RU" xml:space="preserve">
+    <value>Не удалось получить SDDL для службы</value>
+  </data>
+  <data name="_ServiceResetSddl_EN" xml:space="preserve">
+    <value>SDDL reset successfully for service</value>
+  </data>
+  <data name="_ServiceResetSddl_RU" xml:space="preserve">
+    <value>SDDL успешно сброшен для службы</value>
+  </data>
+  <data name="_ResettingSddl_EN" xml:space="preserve">
+    <value>Resetting SDDL for service</value>
+  </data>
+  <data name="_ResettingSddl_RU" xml:space="preserve">
+    <value>Сброс SDDL для службы</value>
+  </data>
+  <data name="_ServiceResetSddlFailed_EN" xml:space="preserve">
+    <value>Failed to reset SDDL for service</value>
+  </data>
+  <data name="_ServiceResetSddlFailed_RU" xml:space="preserve">
+    <value>Не удалось сбросить SDDL для службы</value>
+  </data>
+  <data name="_ServiceOpenFailed_EN" xml:space="preserve">
+    <value>Failed to open service</value>
+  </data>
+  <data name="_ServiceOpenFailed_RU" xml:space="preserve">
+    <value>Не удалось открыть службу</value>
+  </data>
+  <data name="_ServiceDisableFailed_EN" xml:space="preserve">
+    <value>Failed to disable service</value>
+  </data>
+  <data name="_ServiceDisableFailed_RU" xml:space="preserve">
+    <value>Не удалось отключить службу</value>
+  </data>
+  <data name="_ErrorResetSddl_EN" xml:space="preserve">
+    <value>Failed to reset SDDL for service</value>
+  </data>
+  <data name="_ErrorResetSddl_RU" xml:space="preserve">
+    <value>Не удалось сбросить SDDL для службы</value>
+  </data>
+  <data name="_DebuggerAliasAppPath_EN" xml:space="preserve">
+    <value>Debugger has cross-reference from "App Paths"</value>
+  </data>
+  <data name="_DebuggerAliasAppPath_RU" xml:space="preserve">
+    <value>Отладчик имеет перекрестную ссылку из App Paths</value>
+  </data>
+  <data name="_ServiceRemovedFromSafeMode_EN" xml:space="preserve">
+    <value>Service removed from SafeBoot mode</value>
+  </data>
+  <data name="_ServiceRemovedFromSafeMode_RU" xml:space="preserve">
+    <value>Служба удалена из безопасного режима</value>
+  </data>
+  <data name="_ErrorDeleteRegistryKey_EN" xml:space="preserve">
+    <value>Error deleting registry key: #1# (#2#)</value>
+  </data>
+  <data name="_ErrorDeleteRegistryKey_RU" xml:space="preserve">
+    <value>Ошибка удаления ключа реестра: #1# (#2#)</value>
+  </data>
+  <data name="_AppPathsMapped_EN" xml:space="preserve">
+    <value>Hijacked application path from</value>
+  </data>
+  <data name="_AppPathsMapped_RU" xml:space="preserve">
+    <value>Подмена путей приложений из</value>
+  </data>
+	<data name="_DataGridHeader_Class_EN" xml:space="preserve">
+    <value>Class</value>
+  </data>
+	<data name="_DataGridHeader_Class_RU" xml:space="preserve">
+    <value>Класс</value>
+  </data>
+	<data name="_ThreatClass_Process_EN" xml:space="preserve">
+    <value>Process</value>
+  </data>
+	<data name="_ThreatClass_Process_RU" xml:space="preserve">
+    <value>Процесс</value>
+  </data>
+	<data name="_ThreatClass_RegistryObject_EN" xml:space="preserve">
+    <value>Registry Key / Value</value>
+  </data>
+	<data name="_ThreatClass_RegistryObject_RU" xml:space="preserve">
+    <value>Ключ / Значение реестра</value>
+  </data>
+	<data name="_ThreatClass_File_EN" xml:space="preserve">
+    <value>File</value>
+  </data>
+	<data name="_ThreatClass_File_RU" xml:space="preserve">
+    <value>Файл</value>
+  </data>
+	<data name="_ThreatClass_Directory_EN" xml:space="preserve">
+    <value>Directory</value>
+  </data>
+	<data name="_ThreatClass_Directory_RU" xml:space="preserve">
+    <value>Каталог</value>
+  </data>
+	<data name="_ThreatClass_FirewallRule_EN" xml:space="preserve">
+    <value>Firewall Rule</value>
+  </data>
+	<data name="_ThreatClass_FirewallRule_RU" xml:space="preserve">
+    <value>Правило фаервола</value>
+  </data>
+	<data name="_ThreatClass_UserProfile_EN" xml:space="preserve">
+    <value>User Profile</value>
+  </data>
+	<data name="_ThreatClass_UserProfile_RU" xml:space="preserve">
+    <value>Профиль пользователя</value>
+  </data>
+	<data name="_ThreatClass_WmiSubscription_EN" xml:space="preserve">
+    <value>WMI Subscription</value>
+  </data>
+	<data name="_ThreatClass_WmiSubscription_RU" xml:space="preserve">
+    <value>WMI Подписка</value>
+  </data>
+	<data name="_ThreatClass_ScheduledTask_EN" xml:space="preserve">
+    <value>Scheduled Task</value>
+  </data>
+	<data name="_ThreatClass_ScheduledTask_RU" xml:space="preserve">
+    <value>Планируемая задача</value>
+  </data>
+	<data name="_ThreatClass_Service_EN" xml:space="preserve">
+    <value>Service</value>
+  </data>
+	<data name="_ThreatClass_Service_RU" xml:space="preserve">
+    <value>Служа</value>
+  </data>
+	<data name="_ThreatClass_ShellStartupFile_EN" xml:space="preserve">
+    <value>Shell Startup File</value>
+  </data>
+	<data name="_ThreatClass_ShellStartupFile_RU" xml:space="preserve">
+    <value>Файл автозагрузки</value>
+  </data>
+	<data name="_ThreatClass_Hosts_EN" xml:space="preserve">
+    <value>Hosts File</value>
+  </data>
+	<data name="_ThreatClass_Hosts_RU" xml:space="preserve">
+    <value>Файл Hosts</value>
+  </data>
+	<data name="_ThreatClass_Other_EN" xml:space="preserve">
+    <value>Other</value>
+  </data>
+	<data name="_ThreatClass_Other_RU" xml:space="preserve">
+    <value>Другое</value>
+  </data>
+	<data name="_ThreatClass_Unknown_EN" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+	<data name="_ThreatClass_Unknown_RU" xml:space="preserve">
+    <value>Неизвестный</value>
   </data>
 </root>

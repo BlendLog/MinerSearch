@@ -63,7 +63,6 @@ namespace MSearch.Infrastructure
 
         ScheduledTaskInfo ParseSingleTask(string taskName, Guid taskId, string taskPath)
         {
-
             FileStream fileStream = null;
             SafeFileHandle fileHandle = null;
 

@@ -299,7 +299,7 @@ namespace MSearch
         static extern WinVerifyTrustResult WinVerifyTrust(IntPtr hwnd, [In][MarshalAs(UnmanagedType.LPStruct)] Guid pgActionID, WinTrustData pWVTData);
         #endregion
 
-        void LogWinTrustResult(WinVerifyTrustResult result, string filePath)
+        void LogWinTrustResult(WinVerifyTrustResult result, string filePath, bool showTimestamp = true)
         {
             string logMessageKey;
             switch (result)
@@ -318,10 +318,14 @@ namespace MSearch
                 case WinVerifyTrustResult.FileNotSigned: logMessageKey = "_CertFileNotSigned"; break; // Should be handled by the FileNotSigned branch
                 default: logMessageKey = "_CertUnknownResult"; break;
             }
-            AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", logMessageKey, filePath, ConsoleColor.Yellow, false);
+
+            if (showTimestamp)
+                AppConfig.GetInstance.LL.LogWarnMessage(logMessageKey, filePath);
+            else
+                AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", logMessageKey, filePath, ConsoleColor.Yellow, false);
         }
 
-        public WinVerifyTrustResult VerifyEmbeddedSignature(string filePath, bool showUnsigned = false)
+        public WinVerifyTrustResult VerifyEmbeddedSignature(string filePath, bool showUnsigned = false, bool showTimestamp = true)
         {
             try
             {
@@ -351,7 +355,7 @@ namespace MSearch
                         case WinVerifyTrustResult.DIGSIG_ENCODE:
                         case WinVerifyTrustResult.DIGSIG_DECODE:
                             // Log specific warnings for signature issues, but keep the original result.
-                            LogWinTrustResult(result, filePath);
+                            LogWinTrustResult(result, filePath, showTimestamp);
                             break; // Continue to return result
 
                         case WinVerifyTrustResult.ActionUnknown:
@@ -359,7 +363,7 @@ namespace MSearch
                             // Log specific warnings if verbose
                             if (LaunchOptions.GetInstance.verbose)
                             {
-                                LogWinTrustResult(result, filePath);
+                                LogWinTrustResult(result, filePath, showTimestamp);
                             }
                             break; // Continue to return result
 
@@ -370,14 +374,21 @@ namespace MSearch
                         default:
                             if (LaunchOptions.GetInstance.verbose)
                             {
-                                AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", "_CertUnknownResult", filePath, ConsoleColor.Yellow, false);
+                                if (showTimestamp)
+                                    AppConfig.GetInstance.LL.LogWarnMessage("_CertUnknownResult", filePath);
+                                else
+                                    AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", "_CertUnknownResult", filePath, ConsoleColor.Yellow, false);
                             }
                             break; // Continue to return result
                     }
 
                     if (result == WinVerifyTrustResult.FileNotSigned && (showUnsigned || LaunchOptions.GetInstance.verbose))
                     {
-                        AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", "_CertFileNotSigned", filePath, ConsoleColor.Yellow, false);
+                        if (showTimestamp)
+                            AppConfig.GetInstance.LL.LogWarnMessage("_CertFileNotSigned", filePath);
+                        else
+                            AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", "_CertFileNotSigned", filePath, ConsoleColor.Yellow, false);
+
                         Logger.WriteLog($"\t\t[SHA1: {FileChecker.CalculateSHA1(filePath)}]", ConsoleColor.White, false);
                     }
 

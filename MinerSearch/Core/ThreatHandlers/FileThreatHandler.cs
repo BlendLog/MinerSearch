@@ -60,6 +60,7 @@ namespace MSearch.Core.ThreatHandlers
                 Utils.AddToQuarantine(path);
                 if (!File.Exists(path))
                 {
+                    decision.ActionType = ScanActionType.Quarantine;
                     return ApplyResult.Success;
                 }
 
@@ -68,11 +69,21 @@ namespace MSearch.Core.ThreatHandlers
 
                 Utils.AddToQuarantine(path);
 
-                return File.Exists(path) ? ApplyResult.Failed : ApplyResult.Success;
+                if (File.Exists(path))
+                {
+                    decision.ActionType = ScanActionType.Error;
+                    return ApplyResult.Failed;
+                }
+                else
+                {
+                    decision.ActionType = ScanActionType.Quarantine;
+                    return ApplyResult.Success;
+                }
             }
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, path, "_File");
                 return ApplyResult.Error;
             }
@@ -93,12 +104,22 @@ namespace MSearch.Core.ThreatHandlers
                 
                 if (NativeFileOperations.DeleteFileWithRetry(path))
                 {
-                    return !File.Exists(path) ? ApplyResult.Success : ApplyResult.Failed;
+                    if (!File.Exists(path))
+                    {
+                        decision.ActionType = ScanActionType.Deleted;
+                        return ApplyResult.Success;
+                    }
+                    else
+                    {
+                        decision.ActionType = ScanActionType.Error;
+                        return ApplyResult.Failed;
+                    }
                 }
                 else
                 {
                     int lastError = Marshal.GetLastWin32Error();
                     decision.ApplyErrorMessage = new Win32Exception(lastError).Message;
+                    decision.ActionType = ScanActionType.Error;
                     AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, path, "_File");
                     return ApplyResult.Failed;
                 }
@@ -106,6 +127,7 @@ namespace MSearch.Core.ThreatHandlers
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, path, "_File");
                 return ApplyResult.Error;
             }
@@ -116,11 +138,14 @@ namespace MSearch.Core.ThreatHandlers
             try
             {
                 UnlockObjectClass.DisableExecute(path);
+                // Промежуточная фаза - не устанавливаем финальное действие
+                decision.ActionType = ScanActionType.Skipped;
                 return ApplyResult.Success;
             }
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotDisableExecute", ex, path, "_File");
                 return ApplyResult.Error;
             }

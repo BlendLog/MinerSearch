@@ -1,3 +1,4 @@
+using DBase;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
@@ -15,19 +16,12 @@ namespace MSearch.Core.Managers
 
     public sealed class CleanManager
     {
-        private readonly Dictionary<ThreatObjectKind, IThreatHandler> _handlers;
-        private readonly IScanState _state;
+        readonly Dictionary<ThreatObjectKind, IThreatHandler> _handlers;
+        readonly IScanState _state;
 
-        private static bool _processingHeaderLogged = false;
-        private static readonly object _headerLock = new object();
+        static bool _processingHeaderLogged = false;
+        static readonly object _headerLock = new object();
 
-        // Дедупликация файлов — чтобы один файл не обрабатывался несколько раз
-        // (один и тот же файл может быть обнаружен ProcessScanner, RegistryScanner, TaskScanner)
-        private readonly HashSet<string> _processedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        // Дедупликация задач — чтобы одна задача не записывалась в results дважды
-        private readonly HashSet<string> _processedTasks = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        private readonly object _fileLock = new object();
-        private readonly object _taskLock = new object();
         private readonly LaunchOptions _options;
 
         public CleanManager(IEnumerable<IThreatHandler> handlers, IScanState state)
@@ -55,20 +49,24 @@ namespace MSearch.Core.Managers
         }
 
         public void ApplyDecisions(IEnumerable<ThreatDecision> decisions, CleanupPhase phase)
-        {
-            // ScanOnly режим — только записываем угрозы, без выполнения действий
+        {            
             if (_options.ScanOnly)
             {
                 foreach (ThreatDecision decision in decisions)
                 {
                     if (decision == null || decision.Target == null) continue;
+                    if (phase != CleanupPhase.Finalize) continue;
 
-                    _state.AddScanResult(new ScanResult(decision.ObjectType, GetDescription(decision), ScanActionType.Skipped));
-
-                    if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected)
+                    if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected || decision.ObjectType == ScanObjectType.Rootkit)
+                    {
+                        _state.AddScanResult(new ScanResult(decision.ObjectType, GetDescription(decision), ScanActionType.Skipped, threatObjectId: decision.Target.Id));
                         _state.IncrementFoundThreats();
+                    }
                     else if (decision.ObjectType == ScanObjectType.Suspicious)
+                    {
+                        _state.AddScanResult(new ScanResult(decision.ObjectType, GetDescription(decision), ScanActionType.Skipped, threatObjectId: decision.Target.Id));
                         _state.IncrementFoundSuspicious();
+                    }
                 }
                 return;
             }
@@ -80,12 +78,10 @@ namespace MSearch.Core.Managers
                 .OrderBy(g => (int)g.Key)
                 .ToList();
 
-            // Логируем заголовок этапа, если это Finalize и есть несколько типов
             bool logPhaseHeaders = phase == CleanupPhase.Finalize && groupedByKind.Count > 1;
 
             foreach (var group in groupedByKind)
             {
-                // Логируем заголовок этапа (например "Обработка процессов...", "Обработка файлов...")
                 if (logPhaseHeaders)
                 {
                     string phaseHeaderResource = GetPhaseHeaderResource(group.Key);
@@ -97,23 +93,6 @@ namespace MSearch.Core.Managers
 
                 foreach (ThreatDecision decision in group)
                 {
-                    // Дедупликация задач: проверяем ДО вызова handler
-                    if (decision.Target.Kind == ThreatObjectKind.ScheduledTask)
-                    {
-                        var taskTarget = decision.Target as TaskThreatObject;
-                        if (taskTarget != null)
-                        {
-                            lock (_taskLock)
-                            {
-                                if (!_processedTasks.Add(taskTarget.Info.Path))
-                                {
-                                    // Задача уже обработана — пропускаем
-                                    continue;
-                                }
-                            }
-                        }
-                    }
-
                     IThreatHandler handler;
                     if (!_handlers.TryGetValue(decision.Target.Kind, out handler))
                         continue;
@@ -129,26 +108,7 @@ namespace MSearch.Core.Managers
                         result = ApplyResult.Error;
                     }
 
-                    // Дедупликация файлов: помечаем файл как обработанный только если он был реально обработан
-                    // (успешно или с ошибкой), а не пропущен из-за неподходящей фазы
-                    if (result != ApplyResult.NotApplicable && result != ApplyResult.Skipped)
-                    {
-                        if (decision.Target.Kind == ThreatObjectKind.File)
-                        {
-                            var fileTarget = decision.Target as FileThreatObject;
-                            if (fileTarget != null)
-                            {
-                                lock (_fileLock)
-                                {
-                                    _processedFiles.Add(fileTarget.FilePath);
-                                }
-                            }
-                        }
-                    }
-
-                    // SuspendOnly — промежуточная фаза (заморозка процессов перед уничтожением).
-                    // Не записываем ScanResult — финальный результат будет записан в Finalize.
-                    if (phase == CleanupPhase.SuspendOnly) continue;
+                    if (phase == CleanupPhase.SuspendOnly || phase == CleanupPhase.DisableExecuteOnly) continue;
                     if (decision.Target.Kind == ThreatObjectKind.Directory)
                     {
                         DirectoryThreatObject lockedDirTarget = decision.Target as DirectoryThreatObject;
@@ -157,7 +117,7 @@ namespace MSearch.Core.Managers
                         if (dirTag.Equals("locked") || dirTag.Equals("empty")) continue;
                     }
 
-                    RecordResult(decision, result, phase);
+                    RecordResult(decision, result);
                 }
             }
         }
@@ -178,14 +138,14 @@ namespace MSearch.Core.Managers
             }
         }
 
-        private void RecordResult(ThreatDecision decision, ApplyResult result, CleanupPhase phase)
+        private void RecordResult(ThreatDecision decision, ApplyResult result)
         {
             // Записываем в state только значимые результаты
             if (result == ApplyResult.NotApplicable || result == ApplyResult.Skipped)
                 return;
 
             // Определяем ScanActionType на основе ApplyResult и фазы
-            ScanActionType actionType = MapResultToActionType(result, decision, phase);
+            ScanActionType actionType = MapResultToActionType(result, decision);
 
             // Формируем описание для лога
             string description = GetDescription(decision);
@@ -194,24 +154,23 @@ namespace MSearch.Core.Managers
             string note = (result == ApplyResult.Error) ? decision.ApplyErrorMessage : null;
 
             // Записываем в ScanResult
-            _state.AddScanResult(new ScanResult(decision.ObjectType, description, actionType, note));
+            _state.AddScanResult(new ScanResult(decision.ObjectType, description, actionType, note, decision.Target.Id, decision.Target.Kind));
 
             // Счётчики
             if (result == ApplyResult.Success)
             {
-                if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected)
+                if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected || decision.ObjectType == ScanObjectType.Rootkit)
                     _state.IncrementFoundThreats();
                 else if (decision.ObjectType == ScanObjectType.Suspicious)
                     _state.IncrementFoundSuspicious();
             }
         }
 
-        private ScanActionType MapResultToActionType(ApplyResult result, ThreatDecision decision, CleanupPhase phase)
+        private ScanActionType MapResultToActionType(ApplyResult result, ThreatDecision decision)
         {
             switch (result)
             {
                 case ApplyResult.Success:
-                    // Finalize — определяем по типу угрозы и флагам
                     return GetActionTypeForSuccess(decision);
 
                 case ApplyResult.Failed:
@@ -239,10 +198,8 @@ namespace MSearch.Core.Managers
                         if (file.ShouldMoveFileToQuarantine) return ScanActionType.Quarantine;
                         if (file.ShouldDeleteFile) return ScanActionType.Deleted;
                     }
-                    // Фоллбэк — если флаги не установлены, используем decision.ActionType
-                    return decision.ActionType != ScanActionType.Cured
-                        ? decision.ActionType
-                        : ScanActionType.Deleted;
+                    // Для файлов никогда не используем Disabled - только для служб
+                    return ScanActionType.Deleted;
 
                 case ThreatObjectKind.Directory:
                     return ScanActionType.Deleted;
@@ -272,6 +229,7 @@ namespace MSearch.Core.Managers
                     var svc = decision.Target as ServiceThreatObject;
                     if (svc != null)
                     {
+                        if (decision.ActionType == ScanActionType.Cured) return ScanActionType.Cured;
                         if (svc.ShouldDeleteService) return ScanActionType.Deleted;
                         if (svc.ShouldDisableService) return ScanActionType.Disabled;
                     }
@@ -327,11 +285,11 @@ namespace MSearch.Core.Managers
             {
                 case ThreatObjectKind.Process:
                     var proc = target as ProcessThreatObject;
-                    return $"{AppConfig.GetInstance.LL.GetLocalizedString("_Just_Process")} {proc?.ProcessName} - PID: {proc?.ProcessId}";
+                    return $"{proc?.ProcessName} - PID: {proc?.ProcessId}";
 
                 case ThreatObjectKind.ScheduledTask:
                     var task = target as TaskThreatObject;
-                    return $"{AppConfig.GetInstance.LL.GetLocalizedString("_ScheduledTask")} -> {task?.Info.Path}\\{task?.Info.Name}";
+                    return $"{task?.Info.Path}\\{task?.Info.Name}";
 
                 case ThreatObjectKind.RegistryObject:
                     var reg = target as RegistryThreatObject;
@@ -346,7 +304,7 @@ namespace MSearch.Core.Managers
                     var shellFile = target as ShellStartupFileThreatObject;
                     if (shellFile != null && shellFile.IsShortcut)
                     {
-                        return $"{AppConfig.GetInstance.LL.GetLocalizedString("_Just_Shortcut")} {shellFile.FileName} --> {shellFile.ShortcutTargetPath}";
+                        return $"{shellFile.FileName} --> {shellFile.ShortcutTargetPath}";
                     }
                     return shellFile?.FilePath;
 
@@ -356,11 +314,11 @@ namespace MSearch.Core.Managers
 
                 case ThreatObjectKind.WmiSubscription:
                     var wmi = target as WmiSubscriptionThreatObject;
-                    return wmi != null ? $"WMI: {wmi.Name} -> {wmi.CommandLineTemplate}" : target.Id;
+                    return wmi != null ? $"{wmi.Name} -> {wmi.CommandLineTemplate}" : target.Id;
 
                 case ThreatObjectKind.Hosts:
                     var hosts = target as HostsThreatObject;
-                    return hosts != null ? $"{AppConfig.GetInstance.LL.GetLocalizedString("_HostsFile")}: {hosts.HostsFilePath}" : target.Id;
+                    return hosts != null ? hosts.HostsFilePath : target.Id;
 
                 default:
                     return target.Id;

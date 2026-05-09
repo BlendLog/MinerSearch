@@ -33,7 +33,6 @@ namespace MSearch.Core
         public string QuarantineKeyPath { get; }
 
 
-        public bool no_logs { get; set; }
         public bool WinPEMode { get; set; }
         public bool RunAsSystem { get; set; }
         public bool IsGuiAvailable { get; set; }
@@ -53,7 +52,6 @@ namespace MSearch.Core
         public BootMode bootMode { get; } = OSExtensions.GetBootMode();
 
         public LocalizedLogger LL { get; } = new LocalizedLogger();
-        public Utils _utils { get; } = new Utils();
         public string ExecutablePath { get; }
         public string CurrentVersion { get; }
 

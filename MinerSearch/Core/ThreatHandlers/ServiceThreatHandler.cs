@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Threading;
 using Win32Wrapper;
@@ -26,18 +27,47 @@ namespace MSearch.Core.Handlers
             // ScanOnly — не выполняем действия
             if (LaunchOptions.GetInstance.ScanOnly) return ApplyResult.Skipped;
 
-            if (!svc.ShouldDisableService && !svc.ShouldDeleteService)
+            if (!svc.ShouldDisableService && !svc.ShouldDeleteService && !svc.ShouldRestoreServiceDll && !svc.ShouldResetSddl && !svc.ShouldRemoveFromSafeMode)
                 return ApplyResult.Skipped;
 
             ServiceController service = null;
+
             try
             {
-                service = new ServiceController(svc.ServiceName);
+                // Сначала сбрасываем SDDL если требуется
+                if (svc.ShouldResetSddl)
+                {
+                    HandleResetSddl(svc);
+                }
+
+                if (svc.ShouldRemoveFromSafeMode)
+                {
+                    HandleRemoveFromSafeBoot(svc);
+                }
+
+                try
+                {
+                    service = new ServiceController(svc.ServiceName);
+                }
+                catch (Exception svcEx)
+                {
+                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_ServiceOpenFailed", $"{svc.ServiceName}: {svcEx.Message}");
+
+                    if (svc.ShouldDeleteService)
+                    {
+                        return HandleDeleteWithoutController(svc, decision);
+                    }
+
+                    decision.ApplyErrorMessage = svcEx.Message;
+                    decision.ActionType = ScanActionType.Error;
+                    return ApplyResult.Failed;
+                }
 
                 if (svc.ShouldDeleteService) return HandleDelete(service, svc, decision);
-                if (svc.ShouldRestoreService) return HandleRestore(service, svc, decision);
+                if (svc.ShouldRestoreService || svc.ShouldRestoreServiceDll) return HandleRestore(service, svc, decision);
+                if (svc.ShouldDisableService) return HandleDisableOnly(service, svc, decision);
 
-                return HandleDisableOnly(service, svc, decision);
+                return ApplyResult.NotApplicable;
             }
             catch (Exception ex)
             {
@@ -51,6 +81,121 @@ namespace MSearch.Core.Handlers
             }
         }
 
+        bool HandleResetSddl(ServiceThreatObject svc)
+        {
+            try
+            {
+                bool sddlWasReset = ServiceHelper.ResetSDDL(svc.ServiceName);
+
+                if (sddlWasReset)
+                {
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceResetSddl", svc.ServiceName);
+                }
+                else
+                {
+                    AppConfig.GetInstance.LL.LogWarnMessage("_ServiceResetSddlFailed", svc.ServiceName);
+                }
+                return sddlWasReset;
+
+            }
+            catch (Exception ex)
+            {
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorResetSddl", ex, svc.ServiceName, "_Service");
+                return false;
+            }
+        }
+
+        bool HandleRemoveFromSafeBoot(ServiceThreatObject svc)
+        {
+            bool success = true;
+            string serviceName = svc.ServiceName;
+            string basePath = @"SYSTEM\CurrentControlSet\Control\SafeBoot";
+
+            try
+            {
+                using (var minimalKey = Registry.LocalMachine.OpenSubKey($"{basePath}\\Minimal", true))
+                {
+                    if (minimalKey != null)
+                    {
+                        minimalKey.DeleteSubKeyTree(serviceName, false);
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceRemovedFromSafeMode", serviceName);
+                    }
+                    else
+                    {
+                        success = false;
+                        AppConfig.GetInstance.LL.LogWarnMessage("_RegistryKeyNotFound", $"{basePath}\\Minimal");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorDeleteRegistryKey", ex, $"{basePath}\\Minimal\\{serviceName}", "_Service");
+            }
+
+            try
+            {
+                using (var networkKey = Registry.LocalMachine.OpenSubKey($"{basePath}\\Network", true))
+                {
+                    if (networkKey != null)
+                    {
+                        networkKey.DeleteSubKeyTree(serviceName, false);
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceRemovedFromSafeMode", serviceName);
+                    }
+                    else
+                    {
+                        success = false;
+                        AppConfig.GetInstance.LL.LogWarnMessage("_RegistryKeyNotFound", $"{basePath}\\Network");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorDeleteRegistryKey", ex, $"{basePath}\\Network\\{serviceName}", "_Service");
+            }
+
+            if (success)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        ApplyResult HandleDeleteWithoutController(ServiceThreatObject svc, ThreatDecision decision)
+        {
+            try
+            {
+                NativeServiceController.SetServiceStartType(svc.ServiceName, NativeServiceController.ServiceStartMode.Disabled);
+            }
+            catch (Win32Exception w32e)
+            {
+                AppConfig.GetInstance.LL.LogWarnMessage("_ServiceDisableFailed", $"{svc.ServiceName}: {w32e.Message}");
+            }
+
+            try
+            {
+                ServiceHelper.Uninstall(svc.ServiceName);
+                AppConfig.GetInstance.LL.LogSuccessMessage("_MaliciousService", svc.ServiceName, "_Deleted");
+                decision.ActionType = ScanActionType.Deleted;
+                return ApplyResult.Success;
+            }
+            catch (Win32Exception win32Ex) when (win32Ex.NativeErrorCode == 1072 || win32Ex.NativeErrorCode == 1060)
+            {
+                AppConfig.GetInstance.LL.LogSuccessMessage("_MaliciousService", svc.ServiceName, "_Deleted");
+                decision.ActionType = ScanActionType.Deleted;
+                return ApplyResult.Success;
+            }
+            catch (Exception ex)
+            {
+                decision.ActionType = ScanActionType.Error;
+                decision.ApplyErrorMessage = ex.Message;
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, svc.ServiceName, "_Service");
+                return ApplyResult.Failed;
+            }
+        }
+
         ApplyResult HandleRestore(ServiceController service, ServiceThreatObject svc, ThreatDecision decision)
         {
             // Специальная обработка для TermService - восстановление вместо удаления
@@ -61,7 +206,7 @@ namespace MSearch.Core.Handlers
             return ApplyResult.NotApplicable;
         }
 
-        private ApplyResult HandleDelete(ServiceController service, ServiceThreatObject svc, ThreatDecision decision)
+        ApplyResult HandleDelete(ServiceController service, ServiceThreatObject svc, ThreatDecision decision)
         {
             string serviceName = svc.ServiceName;
 
@@ -75,6 +220,8 @@ namespace MSearch.Core.Handlers
                 catch (Win32Exception w32e)
                 {
                     AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", w32e, serviceName, "_Service");
+                    decision.ApplyErrorMessage = w32e.Message;
+                    decision.ActionType = ScanActionType.Error;
                     return ApplyResult.Failed;
                 }
             }
@@ -123,6 +270,7 @@ namespace MSearch.Core.Handlers
             if (newStartMode != NativeServiceController.ServiceStartMode.Disabled)
             {
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", null, serviceName, "_Service");
+                decision.ActionType = ScanActionType.Error;
                 return ApplyResult.Failed;
             }
 
@@ -134,6 +282,7 @@ namespace MSearch.Core.Handlers
             }
             catch (Win32Exception win32Ex) when (win32Ex.NativeErrorCode == 1072 || win32Ex.NativeErrorCode == 1060)
             {
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", win32Ex, serviceName, "_Service");
                 // ERROR_SERVICE_MARKED_FOR_DELETE или ERROR_SERVICE_DOES_NOT_EXIST — это ОК
             }
             catch (Win32Exception win32Ex)
@@ -149,10 +298,11 @@ namespace MSearch.Core.Handlers
                 return ApplyResult.Error;
             }
 
+            decision.ActionType = ScanActionType.Deleted;
             return ApplyResult.Success;
         }
 
-        private ApplyResult HandleRestoreTermService(ServiceController service, ServiceThreatObject svc, ThreatDecision decision)
+        ApplyResult HandleRestoreTermService(ServiceController service, ServiceThreatObject svc, ThreatDecision decision)
         {
             string serviceName = svc.ServiceName;
             string registryPath = @"SYSTEM\CurrentControlSet\Services\TermService\Parameters";
@@ -212,7 +362,7 @@ namespace MSearch.Core.Handlers
             }
         }
 
-        private ApplyResult HandleDisableOnly(ServiceController service, ServiceThreatObject svc, ThreatDecision decision)
+        ApplyResult HandleDisableOnly(ServiceController service, ServiceThreatObject svc, ThreatDecision decision)
         {
             string serviceName = svc.ServiceName;
 
@@ -225,12 +375,15 @@ namespace MSearch.Core.Handlers
                     if (NativeServiceController.GetServiceStartType(serviceName) == NativeServiceController.ServiceStartMode.Disabled)
                     {
                         AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceDisabled", serviceName);
+                        decision.ActionType = ScanActionType.Disabled;
+
                         return ApplyResult.Success;
                     }
                 }
                 catch (Win32Exception w32e)
                 {
                     AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", w32e, serviceName, "_Service");
+                    decision.ApplyErrorMessage = w32e.Message;
                     return ApplyResult.Failed;
                 }
             }
@@ -250,7 +403,10 @@ namespace MSearch.Core.Handlers
                 }
             }
 
+            decision.ActionType = ScanActionType.Disabled;
             return ApplyResult.Success;
         }
+
+
     }
 }

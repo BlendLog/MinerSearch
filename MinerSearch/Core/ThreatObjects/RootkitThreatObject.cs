@@ -3,49 +3,46 @@ using MSearch.Core;
 namespace MSearch.Core.ThreatObjects
 {
     /// <summary>
-    /// Объект-данных о обнаруженном рутките R77.
-    /// Содержит информацию о процессах с руткит-подписями и статусе нейтрализации.
+    /// Объект данных о обнаруженном рутките R77.
+    /// IsRootkitPresent устанавливается сканером при обнаружении заражения текущего процесса.
+    /// R77Processes и DialerPids заполняются анализатором.
+    /// WasNeutralized и ConfigRemoved заполняются обработчиком.
     /// </summary>
     public sealed class RootkitThreatObject : ThreatObject
     {
         /// <summary>
-        /// Список процессов с руткит-подписями (R77/R77_SERVICE/R77_HELPER).
+        /// true, если текущий процесс заражён R77 (установлено сканером).
         /// </summary>
-        public int[] ProcessIds { get; }
+        public bool IsRootkitPresent { get; }
 
         /// <summary>
-        /// Сигнатуры найденных руткитов (R77_SIGNATURE, R77_SERVICE_SIGNATURE, R77_HELPER_SIGNATURE).
+        /// Список процессов с руткит-подписями (R77/R77_SERVICE/R77_HELPER).
+        /// Заполняется анализатором.
         /// </summary>
-        public uint[] Signatures { get; }
+        public Win32Wrapper.Native.R77_PROCESS[] R77Processes { get; internal set; }
 
         /// <summary>
         /// PID процессов dialer, которые были приостановлены.
+        /// Заполняется анализатором.
         /// </summary>
-        public int[] DialerPids { get; }
+        public int[] DialerPids { get; internal set; }
 
         /// <summary>
         /// true, если все процессы R77 были успешно нейтрализованы.
+        /// Заполняется обработчиком.
         /// </summary>
-        public bool WasNeutralized { get; }
+        public bool WasNeutralized { get; internal set; }
 
         /// <summary>
         /// true, если конфигурация руткита была удалена из реестра.
+        /// Заполняется обработчиком.
         /// </summary>
-        public bool ConfigRemoved { get; }
+        public bool ConfigRemoved { get; internal set; }
 
-        public RootkitThreatObject(
-            int[] processIds,
-            uint[] signatures,
-            int[] dialerPids,
-            bool wasNeutralized,
-            bool configRemoved)
+        public RootkitThreatObject(bool isRootkitPresent)
             : base(ThreatObjectKind.Other, "Rootkit")
         {
-            ProcessIds = processIds;
-            Signatures = signatures;
-            DialerPids = dialerPids;
-            WasNeutralized = wasNeutralized;
-            ConfigRemoved = configRemoved;
+            IsRootkitPresent = isRootkitPresent;
         }
     }
 }

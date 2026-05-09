@@ -34,14 +34,6 @@ namespace MSearch
         SafeNetworking = 2
     }
 
-    internal class SuspiciousServiceInfo
-    {
-        public string FilePath { get; set; } = "";
-        public bool IsMlwrSignature { get; set; }
-        public bool HasHijackedDll { get; set; }
-        public bool HasHijackedSystemBinary { get; set; }
-    }
-
     public static class ExeptionHandler
     {
         public static void HookExeption(object sender, UnhandledExceptionEventArgs args)
@@ -54,9 +46,21 @@ namespace MSearch
     public class Utils
     {
 
-        public static Mutex mutex = new Mutex(false, "9c5d03a2-b3e5-4b28-a1f6-eafd9b0ed091");
-        public static Mutex rebootMtx = new Mutex(false, "dcd2f5a3-55f7-4903-b4ff-303879f87aab");
+        public static Mutex mutex;
+        public static Mutex rebootMtx;
         static string _versionEndpoint = "";
+
+        internal static string GetDeviceIdLockName()
+        {
+            string deviceId = DeviceIdProvider.GetDeviceId();
+            return $"{deviceId}-instance-lock";
+        }
+
+        internal static string GetDeviceIdRebootName()
+        {
+            string deviceId = DeviceIdProvider.GetDeviceId();
+            return $"{deviceId}-reboot-lock";
+        }
 
 
         internal static string GetRndString()
@@ -173,22 +177,32 @@ namespace MSearch
         }
 
         internal static bool IsOneAppCopy() => mutex.WaitOne(0, true);
-        internal static bool IsRebootMtx() => rebootMtx.WaitOne(0, true);
-
-        internal static bool RegistryKeyExists(string path)
+        internal static bool IsRebootMtx()
         {
-            return Registry.LocalMachine.OpenSubKey(path) == null;
+            try
+            {
+                bool acquired = rebootMtx.WaitOne(0, true);
+                if (acquired)
+                {
+                    rebootMtx.ReleaseMutex();
+                }
+                return acquired;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        internal static void DebugLog(string message)
-        {
-            var stackTrace = new StackTrace(true);
-            var frame = stackTrace.GetFrame(1);
-            var lineNumber = frame.GetFileLineNumber();
-            var fileName = frame.GetFileName();
+        //internal static void DebugLog(string message)
+        //{
+        //    var stackTrace = new StackTrace(true);
+        //    var frame = stackTrace.GetFrame(1);
+        //    var lineNumber = frame.GetFileLineNumber();
+        //    var fileName = frame.GetFileName();
 
-            Console.WriteLine($"[DBG] FileName:{Path.GetFileName(fileName)} | Line:{lineNumber} | {message}");
-        }
+        //    Console.WriteLine($"[DBG] FileName:{Path.GetFileName(fileName)} | Line:{lineNumber} | {message}");
+        //}
 
         internal static void RemoveDefenderExclusion(string type, string value)
         {
@@ -215,56 +229,6 @@ namespace MSearch
                 process.WaitForExit();
             }
 
-        }
-
-        internal static string ExtractPwshStartProcessTarget(string arguments)
-        {
-            int idx = arguments.IndexOf("start-process", StringComparison.OrdinalIgnoreCase);
-            if (idx < 0)
-                return null;
-
-            string tail = arguments.Substring(idx + "start-process".Length);
-
-            int argListIdx = tail.IndexOf("-argumentlist", StringComparison.OrdinalIgnoreCase);
-            if (argListIdx > 0)
-                tail = tail.Substring(0, argListIdx);
-
-            tail = Regex.Replace(tail,
-                @"-(filepath|windowstyle|verb|workingdirectory)\s+",
-                "",
-                RegexOptions.IgnoreCase);
-
-            var m = Regex.Match(tail, @"(""[^""]+""|\S+)");
-            if (!m.Success)
-                return null;
-
-            return m.Value.Trim('"');
-        }
-
-
-        internal List<string> GetSubkeys(string parentKeyPath)
-        {
-            List<string> subkeys = new List<string>();
-
-            try
-            {
-                using (RegistryKey parentKey = Registry.LocalMachine.OpenSubKey(parentKeyPath))
-                {
-                    if (parentKey != null)
-                    {
-                        foreach (var subkeyName in parentKey.GetSubKeyNames())
-                        {
-                            subkeys.Add(subkeyName);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, "GetSubkeys");
-            }
-
-            return subkeys;
         }
 
         internal static bool SwitchMouseSelection(bool enable = false)
@@ -378,26 +342,36 @@ namespace MSearch
         {
             AppConfig.GetInstance.LL.LogHeadMessage("_LogCheckingUpdates");
 
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
             try
             {
-                if (Internet.IsOK("msch3295connect.ru"))
-                    _versionEndpoint = "primary";
-                else if (Internet.IsOK("raw.githubusercontent.com"))
-                    _versionEndpoint = "secondary";
-                else
+                // Fallback: если primary timeout — сразу secondary без ping
+                try
                 {
-                    Logger.WriteLog(
-                        "\t\t[!] "
-                        + AppConfig.GetInstance.LL.GetLocalizedString("_ErrorCannotCheckUpdates")
-                        + " | "
-                        + AppConfig.GetInstance.LL.GetLocalizedString("_NoInternetConnection"),
-                        false, false);
-
-                    return;
+                    _versionEndpoint = "primary";
+                    IsNewVersionAvailable();
+                }
+                catch (OperationCanceledException)
+                {
+                    AppConfig.GetInstance.LL.LogWarnMessage("_EndpointTimeout", "primary");
+                    _versionEndpoint = "secondary";
+                    IsNewVersionAvailable();
+                }
+                catch (Exception ex)
+                {
+                    // Primary failed — try secondary directly
+                    AppConfig.GetInstance.LL.LogWarnMessage("_EndpointError", ex.Message);
+                    _versionEndpoint = "secondary";
+                    IsNewVersionAvailable();
                 }
 
                 if (IsNewVersionAvailable() == 1)
                     Environment.Exit(0);
+            }
+            catch (Exception ex) when (stopwatch.Elapsed > TimeSpan.FromSeconds(10))
+            {
+                AppConfig.GetInstance.LL.LogWarnMessage("_OverallTimeout", "10s");
             }
             catch (FileNotFoundException)
             {
@@ -409,7 +383,20 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotCheckUpdates", ex);
+                if (ex is AggregateException agg)
+                {
+                    var flattened = agg.Flatten();
+                    bool isNetError = flattened.InnerException is System.Net.Sockets.SocketException
+                        || flattened.InnerException is System.Net.Http.HttpRequestException;
+                    if (isNetError)
+                        AppConfig.GetInstance.LL.LogWarnMessage("_NoInternetForUpdates");
+                    else
+                        AppConfig.GetInstance.LL.LogWarnMessage("_UpdateCheckError", flattened.InnerException.Message);
+                }
+                else
+                {
+                    AppConfig.GetInstance.LL.LogWarnMessage("_UpdateCheckError", ex.Message);
+                }
             }
         }
 
@@ -1309,95 +1296,6 @@ namespace MSearch
             }
         }
 
-        internal static void InitPrivileges()
-        {
-            IntPtr hToken;
-            Native.TOKEN_PRIVILEGES tkpPrivileges = new Native.TOKEN_PRIVILEGES
-            {
-                PrivilegeCount = 5,
-                Privileges = new Native.LUID_AND_ATTRIBUTES[5]
-            };
-
-            string[] privilegeNames = new string[]
-            {
-            "SeD??ebugP?riv?ilege".Replace("?", ""),
-            "SeBa?cku?pPr?i?vile??ge".Replace("?", ""),
-            "SeRe?stor?eP?riv?ilege".Replace("?", ""),
-            "SeTak?eOwner?ship?Priv?ilege".Replace("?", ""),
-            "Se??Secu?rityPr??ivil?ege".Replace("?", "")
-            };
-
-            if (!Native.OpenProcessToken(Native.GetCurrentProcess(), Native.TOKEN_ADJUST_PRIVILEGES | Native.TOKEN_QUERY, out hToken))
-            {
-                AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("OpenProcToken: Current process"));
-                return;
-            }
-
-            for (int i = 0; i < privilegeNames.Length; i++)
-            {
-                if (!Native.LookupPrivilegeValue(null, privilegeNames[i], out Native.LUID luid))
-                {
-                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("LookupPrivilegeValue()"));
-                    Native.CloseHandle(hToken);
-                    return;
-                }
-                else
-                {
-                    tkpPrivileges.Privileges[i].Luid = luid;
-                    tkpPrivileges.Privileges[i].Attributes = Native.SE_PRIVILEGE_ENABLED;
-                }
-            }
-
-            if (!Native.AdjustTokenPrivileges(hToken, false, ref tkpPrivileges, 0, IntPtr.Zero, IntPtr.Zero))
-            {
-                int error = Marshal.GetLastWin32Error();
-                AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception($"AdjustTokenPriv failed with error code: {error}"));
-                return;
-            }
-
-            Native.CloseHandle(hToken);
-        }
-
-        internal static bool HasDebugPrivilege()
-        {
-            IntPtr hToken;
-            if (!Native.OpenProcessToken(Native.GetCurrentProcess(), Native.TOKEN_QUERY, out hToken))
-            {
-                AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("OpenProcessToken: Current process"));
-                return false;
-            }
-
-            try
-            {
-                if (!Native.LookupPrivilegeValue(null, "SeDebugPrivilege", out Native.LUID luid))
-                {
-                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("LookupPrivilegeValue: SeDebugPrivilege"));
-                    return false;
-                }
-
-                Native.PRIVILEGE_SET privilegeSet = new Native.PRIVILEGE_SET
-                {
-                    PrivilegeCount = 1,
-                    Control = 1,
-                    Privilege = new Native.LUID_AND_ATTRIBUTES[1]
-                };
-                privilegeSet.Privilege[0].Luid = luid;
-                privilegeSet.Privilege[0].Attributes = Native.SE_PRIVILEGE_ENABLED;
-
-                if (!Native.PrivilegeCheck(hToken, ref privilegeSet, out bool hasPrivilege))
-                {
-                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("PrivilegeCheck"));
-                    return false;
-                }
-
-                return hasPrivilege;
-            }
-            finally
-            {
-                Native.CloseHandle(hToken);
-            }
-        }
-
         internal static bool IsStartedFromArchive()
         {
             string currentPath = Process.GetCurrentProcess().MainModule.FileName;
@@ -1405,190 +1303,6 @@ namespace MSearch
         }
 
 
-    }
-
-    public class RkRemover
-    {
-        internal bool GetR77Processes(ref Native.R77_PROCESS[] r77Processes, ref uint count)
-        {
-            bool result = true;
-            uint actualCount = 0;
-
-            uint[] processes = new uint[Native.MaxProcesses];
-            int processCount = 0;
-            IntPtr[] modules = new IntPtr[Native.MaxModules];
-            uint moduleCount = 0;
-            byte[] moduleBytes = new byte[512];
-
-            if (Native.EnumProcesses(processes, processes.Length * sizeof(uint), out processCount))
-            {
-                processCount /= sizeof(uint);
-
-                for (int i = 0; i < processCount; i++)
-                {
-                    IntPtr process = Native.OpenProcess(0x0410 /* PROCESS_QUERY_INFORMATION | PROCESS_VM_READ */, false, (int)processes[i]);
-                    if (process != IntPtr.Zero)
-                    {
-                        if (Native.EnumProcessModulesEx(process, modules, (uint)modules.Length * (uint)IntPtr.Size, out moduleCount, 0x03 /* LIST_MODULES_ALL */))
-                        {
-                            moduleCount /= (uint)IntPtr.Size;
-
-                            for (uint j = 0; j < moduleCount; j++)
-                            {
-                                if (Native.ReadProcessMemory(process, modules[j], moduleBytes, moduleBytes.Length, IntPtr.Zero))
-                                {
-                                    ushort signature = BitConverter.ToUInt16(moduleBytes, 0x40);
-                                    if (signature == Native.R77_SIGNATURE || signature == Native.R77_SERVICE_SIGNATURE || signature == Native.R77_HELPER_SIGNATURE)
-                                    {
-                                        if (actualCount < count)
-                                        {
-                                            r77Processes[actualCount].ProcessId = processes[i];
-                                            r77Processes[actualCount].Signature = signature;
-                                            r77Processes[actualCount++].DetachAddress = (signature == Native.R77_SIGNATURE) ? BitConverter.ToUInt64(moduleBytes, 0x40 + 2) : 0;
-                                        }
-                                        else
-                                        {
-                                            result = false;
-                                        }
-
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        Native.CloseHandle(process);
-                    }
-                }
-            }
-
-            count = actualCount;
-            return result;
-        }
-
-        internal bool DetachProcess(ref Native.R77_PROCESS r77Process)
-        {
-            bool result = false;
-            IntPtr process = IntPtr.Zero;
-            if (r77Process.Signature == Native.R77_SIGNATURE)
-            {
-                process = Native.OpenProcess(Native.PROCESS_CREATE_THREAD | Native.PROCESS_VM_OPERATION | Native.PROCESS_VM_WRITE | Native.PROCESS_QUERY_INFORMATION, false, (int)r77Process.ProcessId);
-                if (process != IntPtr.Zero)
-                {
-                    IntPtr thread = IntPtr.Zero;
-                    int status = Native.NtCreateThreadEx(
-                        out thread,
-                        Native.THREAD_QUERY_INFORMATION,
-                        IntPtr.Zero, /* Object Attributes */
-                        process, /* Process Handle */
-                        new IntPtr((long)r77Process.DetachAddress), /* Start Address */
-                        IntPtr.Zero, /* Parameter */
-                        false, /* Create Suspended */
-                        0, /* Stack Zero Bits */
-                        0, /* Size Of Stack */
-                        0, /* Maximum Stack Size */
-                        IntPtr.Zero /* Attribute List */
-                    );
-
-                    if (status >= 0 && thread != IntPtr.Zero)
-                    {
-#if DEBUG
-                        Console.WriteLine($"\tDetach process pid: {r77Process.ProcessId}");
-#endif
-                        result = true;
-                        Native.CloseHandle(thread);
-                    }
-
-                    Native.CloseHandle(process);
-                }
-            }
-
-            return result;
-        }
-
-        internal void DetachAllInjProcs(Native.R77_PROCESS[] r77Processes, uint r77ProcessCount)
-        {
-            for (uint i = 0; i < r77ProcessCount; i++)
-            {
-                DetachProcess(ref r77Processes[i]);
-            }
-        }
-
-        internal void TerminateR77Service(int excludedProcessId)
-        {
-            Native.R77_PROCESS[] r77Processes = new Native.R77_PROCESS[Native.MaxProcesses];
-            uint r77ProcessCount = Native.MaxProcesses;
-            if (GetR77Processes(ref r77Processes, ref r77ProcessCount))
-            {
-                for (int i = 0; i < r77ProcessCount; i++)
-                {
-                    if (r77Processes[i].Signature == Native.R77_SERVICE_SIGNATURE && r77Processes[i].ProcessId != excludedProcessId)
-                    {
-                        int isCritical = 0;
-                        IntPtr process = Native.OpenProcess(0x0001 | 0x0200 /*PROCESS_TERMINATE | PROCESS_SET_INFORMATION */, false, (int)r77Processes[i].ProcessId);
-                        if (process != IntPtr.Zero)
-                        {
-                            Native.NtSetInformationProcess(process, 0x1D, ref isCritical, sizeof(int));
-
-                            try
-                            {
-                                using (var p = Process.GetProcessById((int)r77Processes[i].ProcessId))
-                                {
-                                    if (!p.HasExited) p.Kill();
-                                }
-                            }
-                            catch (ArgumentException)
-                            {
-                            }
-                            catch (InvalidOperationException)
-                            {
-                            }
-                            catch (Win32Exception)
-                            {
-                            }
-
-                            Native.CloseHandle(process);
-                        }
-                    }
-                }
-            }
-        }
-
-        internal void RemoveR77Config()
-        {
-            string[] patterns = { "dll32", "dll64", "sta&ger&".Replace("&", "") };
-
-            using (RegistryKey baseKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true))
-            {
-                if (baseKey != null)
-                {
-                    foreach (string valueName in baseKey.GetValueNames())
-                    {
-                        foreach (string pattern in patterns)
-                        {
-                            if (valueName.EndsWith(pattern, StringComparison.OrdinalIgnoreCase))
-                            {
-                                AppConfig.GetInstance.LL.LogSuccessMessage("_RegistryKeyRemoved", valueName);
-                                baseKey.DeleteValue(valueName);
-                            }
-                        }
-                    }
-                }
-            }
-
-
-            string subKeyPath = @"dia?ler?con?fig".Replace("?", "");
-
-            using (RegistryKey baseKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true))
-            {
-                if (baseKey != null && baseKey.OpenSubKey(subKeyPath) != null)
-                {
-                    baseKey.DeleteSubKeyTree(subKeyPath);
-                    AppConfig.GetInstance.LL.LogSuccessMessage("_RegistryKeyRemoved", subKeyPath);
-                }
-            }
-
-        }
     }
 
     public class FileChecker
@@ -2737,18 +2451,6 @@ namespace MSearch
             return ResolveExecutablePath(tokens[0]);
         }
 
-        public static string ExtractFilePathFromIfExist(string arguments)
-        {
-            Match match = IfExistPathRegex.Match(arguments);
-
-            if (match.Success)
-            {
-                return match.Groups["filepath"].Value;
-            }
-
-            return null;
-        }
-
         internal static string ResolveExecutablePath(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -2814,310 +2516,6 @@ namespace MSearch
                     return part;
             }
             return string.Empty;
-        }
-
-        internal static List<string> SplitCommandLineArguments(string commandLine)
-        {
-            var args = new List<string>();
-            var matches = Regex.Matches(commandLine, @"""[^""]+""|\S+");
-            foreach (Match match in matches)
-            {
-                args.Add(match.Value.Trim('"'));
-            }
-            return args;
-        }
-
-        internal static string NormalizePath(string rawPath)
-        {
-            if (string.IsNullOrEmpty(rawPath))
-            {
-                return rawPath;
-            }
-
-            int driveLetterPos = rawPath.IndexOf(":\\");
-            if (driveLetterPos > 0)
-            {
-                return rawPath.Substring(driveLetterPos - 1);
-            }
-
-            return rawPath;
-        }
-
-        internal static bool ProcessFileFromArgs(string[] checkDirs, string fullpath, string arguments)
-        {
-            if (fullpath.IndexOf("rundll32", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                List<string> argsList = SplitCommandLineArguments(arguments);
-                string dllPathCandidate = null;
-
-                foreach (string arg in argsList)
-                {
-                    if (!arg.StartsWith("/"))
-                    {
-                        dllPathCandidate = arg;
-                        break;
-                    }
-                }
-
-                if (string.IsNullOrEmpty(dllPathCandidate))
-                {
-                    return false;
-                }
-
-                string dllPath = dllPathCandidate.Split(',')[0];
-
-                string expandedDllPath = Environment.ExpandEnvironmentVariables(dllPath);
-
-                string resolvedDllPath = ResolveExecutablePath(expandedDllPath);
-
-                string filePathFromArgs_tmp = "";
-                try
-                {
-                    if (File.Exists(resolvedDllPath))
-                    {
-                        filePathFromArgs_tmp = resolvedDllPath;
-                        AppConfig.GetInstance.LL.LogMessage("[.]", "_Just_File", resolvedDllPath, ConsoleColor.Gray);
-                        var trustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(resolvedDllPath, true);
-                        if (trustResult != WinVerifyTrustResult.Success)
-                        {
-                            AppConfig.GetInstance.LL.LogWarnMediumMessage("_InvalidCertificateSignature", arguments);
-                            AppConfig.GetInstance.totalFoundThreats++;
-                            if (!LaunchOptions.GetInstance.ScanOnly)
-                            {
-                                Utils.AddToQuarantine(resolvedDllPath, AppConfig.GetInstance.LL.GetLocalizedString("_Rundll32Abuse"));
-                                if (!File.Exists(resolvedDllPath))
-                                {
-                                    return true;
-                                }
-                            }
-                            else return true; //Found suspicious dll. Nothing to do
-                        }
-                        else if (trustResult == WinVerifyTrustResult.Success)
-                        {
-                            Logger.WriteLog($"\t[OK]", Logger.success, false);
-                        }
-                    }
-                    else
-                    {
-                        AppConfig.GetInstance.LL.LogWarnMessage("_FileIsNotFound", resolvedDllPath);
-                    }
-                }
-                catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
-                {
-                    AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", filePathFromArgs_tmp);
-                    //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, filePathFromArgs_tmp, ScanActionType.LockedByAntivirus));
-
-                }
-                catch (Exception e)
-                {
-                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", e);
-                }
-
-            }
-
-            if (fullpath.IndexOf("pcalua", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                Match matchRegex = Regex.Match(arguments, @"-a\s+(?:""(?<filepath>[^""]+)""|(?<filepath>\S+))", RegexOptions.IgnoreCase);
-                string fileFromArgs = "";
-
-
-                if (matchRegex.Success)
-                {
-                    fileFromArgs = matchRegex.Groups["filepath"].Value;
-                }
-
-
-                if (string.IsNullOrEmpty(fileFromArgs))
-                {
-                    return false;
-                }
-
-                string finalPath = "";
-
-                if (Path.IsPathRooted(fileFromArgs))
-                {
-                    finalPath = fileFromArgs;
-                }
-                else
-                {
-                    foreach (string checkDir in checkDirs)
-                    {
-                        string combinedPath = Path.Combine(checkDir, fileFromArgs);
-                        if (File.Exists(combinedPath))
-                        {
-                            finalPath = combinedPath;
-                            break;
-                        }
-                    }
-                }
-
-
-                if (!string.IsNullOrEmpty(finalPath) && string.IsNullOrEmpty(Path.GetExtension(finalPath)))
-                {
-                    if (File.Exists(finalPath + ".exe"))
-                    {
-                        finalPath += ".exe";
-                    }
-                }
-
-                if (File.Exists(finalPath))
-                {
-                    AppConfig.GetInstance.LL.LogMessage("[.]", "_Just_File", finalPath, ConsoleColor.Gray);
-                    try
-                    {
-                        var trustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(finalPath, true);
-                        if (trustResult != WinVerifyTrustResult.Success)
-                        {
-                            AppConfig.GetInstance.LL.LogWarnMediumMessage("_InvalidCertificateSignature", finalPath);
-                            AppConfig.GetInstance.LL.LogWarnMediumMessage("_PcaluaAbuse", finalPath);
-                            //AppConfig.GetInstance.totalFoundSuspiciousObjects++;
-                            //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Suspicious, finalPath, ScanActionType.Skipped, AppConfig.GetInstance.LL.GetLocalizedString("_PcaluaAbuse")));
-                        }
-                        else
-                        {
-                            Logger.WriteLog($"\t[OK]", Logger.success, false);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, $"pcalua processing: {finalPath}");
-                    }
-                }
-                else
-                {
-                    AppConfig.GetInstance.LL.LogWarnMessage("_FileIsNotFound", fileFromArgs);
-                }
-            }
-
-            if (fullpath.IndexOf("regsvr32", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                List<string> argsList = SplitCommandLineArguments(arguments);
-
-                if (argsList.Count > 0)
-                {
-                    string potentialPath = argsList.Last();
-
-                    string normalizedPath = NormalizePath(potentialPath).Replace("\\\\", "\\");
-
-                    if (normalizedPath.EndsWith(".pfx", StringComparison.OrdinalIgnoreCase) ||
-                        normalizedPath.EndsWith(".p12", StringComparison.OrdinalIgnoreCase))
-                    {
-                        AppConfig.GetInstance.LL.LogWarnMediumMessage("_SuspiciousRegsvr32", normalizedPath);
-
-                        if (File.Exists(normalizedPath))
-                        {
-                            AppConfig.GetInstance.totalFoundThreats++;
-
-                            if (!LaunchOptions.GetInstance.ScanOnly)
-                            {
-                                Utils.AddToQuarantine(normalizedPath);
-                                return true;
-                            }
-                            else return true; //found, but nothing to do while scan only
-
-                        }
-                        else
-                        {
-                            AppConfig.GetInstance.LL.LogWarnMessage("_FileIsNotFound", normalizedPath);
-                            return true;
-                        }
-                    }
-
-                    if (normalizedPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (File.Exists(normalizedPath) && (normalizedPath.IndexOf("programdata", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                    normalizedPath.IndexOf("appdata", StringComparison.OrdinalIgnoreCase) >= 0))
-                        {
-                            WinVerifyTrustResult signResult = WinTrust.GetInstance.VerifyEmbeddedSignature(normalizedPath);
-                            if (signResult == WinVerifyTrustResult.FileNotSigned || signResult == WinVerifyTrustResult.SignatureOrFileCorrupt)
-                            {
-                                AppConfig.GetInstance.LL.LogWarnMediumMessage("_SuspiciousRegsvr32", normalizedPath);
-                                AppConfig.GetInstance.totalFoundThreats++;
-
-                                if (!LaunchOptions.GetInstance.ScanOnly)
-                                {
-                                    Utils.AddToQuarantine(normalizedPath);
-                                    if (!File.Exists(normalizedPath))
-                                    {
-                                        return true;
-                                    }
-                                }
-                                else return true; //found, but nothing to do while scan only
-                            }
-                        }
-                        else
-                        {
-                            AppConfig.GetInstance.LL.LogWarnMessage("_FileIsNotFound", normalizedPath);
-                            return true;
-                        }
-                    }
-
-                }
-
-            }
-
-            return false;
-        }
-
-        internal static List<string> GetOpenFilesInDirectory(string directoryPath)
-        {
-            var openFiles = new List<string>();
-            int handleInfoSize = 0x10000;
-            IntPtr handleInfoPtr = Marshal.AllocHGlobal(handleInfoSize);
-            int returnLength = 0;
-
-            while (Native.NtQuerySystemInformation(Native.SystemHandleInformation, handleInfoPtr, handleInfoSize, ref returnLength) == unchecked((int)0xc0000004))
-            {
-                handleInfoSize = returnLength;
-                Marshal.FreeHGlobal(handleInfoPtr);
-                handleInfoPtr = Marshal.AllocHGlobal(handleInfoSize);
-            }
-
-            int handleCount = Marshal.ReadInt32(handleInfoPtr);
-            IntPtr handlePtr = IntPtr.Add(handleInfoPtr, 4);
-
-            for (int i = 0; i < handleCount; i++)
-            {
-                Native.SYSTEM_HANDLE_INFORMATION handleInfo = Marshal.PtrToStructure<Native.SYSTEM_HANDLE_INFORMATION>(handlePtr);
-                handlePtr = IntPtr.Add(handlePtr, Marshal.SizeOf<Native.SYSTEM_HANDLE_INFORMATION>());
-
-                IntPtr processHandle = Native.OpenProcess(Native.PROCESS_DUP_HANDLE, false, handleInfo.ProcessId);
-                if (processHandle == IntPtr.Zero)
-                    continue;
-
-                if (Native.DuplicateHandle(processHandle, new IntPtr(handleInfo.Handle), Process.GetCurrentProcess().Handle, out IntPtr targetHandle, 0, false, Native.DUPLICATE_SAME_ACCESS))
-                {
-                    IntPtr objectNamePtr = Marshal.AllocHGlobal(0x1000);
-                    returnLength = 0;
-
-                    if (Native.NtQueryObject(targetHandle, Native.ObjectNameInformation, objectNamePtr, 0x1000, ref returnLength) == 0)
-                    {
-                        string objectName = Marshal.PtrToStringUni(IntPtr.Add(objectNamePtr, 2));
-                        if (objectName != null && objectName.StartsWith(@"\"))
-                        {
-                            try
-                            {
-                                string filePath = Path.GetFullPath(objectName);
-                                if (filePath.StartsWith(directoryPath, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    openFiles.Add(filePath);
-                                }
-                            }
-                            catch (Exception)
-                            {
-                            }
-                        }
-                    }
-
-                    Marshal.FreeHGlobal(objectNamePtr);
-                    Native.CloseHandle(targetHandle);
-                }
-
-                Native.CloseHandle(processHandle);
-            }
-
-            Marshal.FreeHGlobal(handleInfoPtr);
-            return openFiles;
         }
 
     }
@@ -3201,53 +2599,6 @@ namespace MSearch
         }
 
 
-        internal static bool CheckUserExists(string username)
-        {
-#if DEBUG
-            var users = GetUsers();
-            foreach (var user in users)
-            {
-                Logger.WriteLog(user, ConsoleColor.DarkGray, false);
-            }
-#endif
-            return GetUsers().Contains(username);
-        }
-
-        internal static bool IsUserHidden(string username)
-        {
-            const string userListPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList";
-
-            try
-            {
-
-                using (RegistryKey userListKey = Registry.LocalMachine.OpenSubKey(userListPath, false))
-                {
-                    if (userListKey == null)
-                    {
-                        return false;
-                    }
-
-                    object value = userListKey.GetValue(username);
-
-                    if (value == null)
-                    {
-                        return false;
-                    }
-
-                    if (value is int intValue && intValue == 0)
-                    {
-                        return true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorRegistryCheck", ex, username);
-                return false;
-            }
-
-            return false;
-        }
 
         internal static List<string> GetUsers()
         {
@@ -3306,6 +2657,16 @@ namespace MSearch
             Native.LocalFree(pSid);
             return null;
 
+        }
+
+        internal static string GetUACState()
+        {
+            var enableLua = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["SystemPolicies"])?.GetValue("EnableLUA");
+            if (enableLua == null)
+                return AppConfig.GetInstance.LL.GetLocalizedString("_UACUnknown");
+            return (int)enableLua == 0 ? 
+                AppConfig.GetInstance.LL.GetLocalizedString("_UACDisabled") : 
+                AppConfig.GetInstance.LL.GetLocalizedString("_UACEnabled");
         }
     }
 

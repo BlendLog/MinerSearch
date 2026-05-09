@@ -79,7 +79,7 @@ namespace MSearch.Core.ThreatHandlers
                     
                     // Создать временную копию в %Temp% со случайным именем
                     string tempPath = Path.Combine(Path.GetTempPath(), 
-                        "hosts_" + Guid.NewGuid().ToString("N").Substring(0, 8) + ".tmp");
+                        "hosts_" + Utils.GetRndString() + ".tmp");
                     
                     try
                     {
@@ -111,7 +111,10 @@ namespace MSearch.Core.ThreatHandlers
                         // Заменить оригинал на обработанный
                         File.Copy(tempPath, hostsPath, true);
                         NativeFileOperations.DeleteFileWithRetry(tempPath);
-                        
+
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_HostsFileRecovered", hostsThreat.InfectedLinesCount.ToString());
+
+                        decision.ActionType = ScanActionType.Cured;
                         return ApplyResult.Success;
                     }
                     catch
@@ -121,10 +124,10 @@ namespace MSearch.Core.ThreatHandlers
                         {
                             try { NativeFileOperations.DeleteFileWithRetry(tempPath); } catch { }
                         }
-                        throw;
                     }
                 }
 
+                decision.ActionType = ScanActionType.Skipped;
                 return ApplyResult.Success;
             }
             catch (UnauthorizedAccessException ex)
@@ -139,6 +142,7 @@ namespace MSearch.Core.ThreatHandlers
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, hostsPath, "_ErrorCleanHosts");
                 return ApplyResult.Error;
             }

@@ -16,6 +16,7 @@ namespace MSearch.Core.ThreatObjects
         public RegistryNodeType NodeType { get; }
         public string ValueName { get; }
         public string ValueData { get; }
+        public string[] ValueDataArray { get; internal set; }
         public RegistryValueKind ValueKind { get; }
         public bool IsAccessDenied { get; }
         public FileThreatObject LinkedFile { get; }
@@ -25,6 +26,7 @@ namespace MSearch.Core.ThreatObjects
         public bool ActionDelete { get; internal set; }
         public bool ActionSetData { get; internal set; }
         public string TargetData { get; internal set; }
+        public string[] TargetDataArray { get; internal set; }
         public RegistryValueKind TargetKind { get; internal set; }
         public bool ActionSetSibling { get; internal set; }
         public string SiblingName { get; internal set; }

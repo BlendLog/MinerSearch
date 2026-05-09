@@ -64,6 +64,7 @@ namespace MSearch.Core.ThreatHandlers
                 Utils.AddToQuarantine(path);
                 if (!File.Exists(path))
                 {
+                    decision.ActionType = ScanActionType.Quarantine;
                     return ApplyResult.Success;
                 }
 
@@ -72,11 +73,21 @@ namespace MSearch.Core.ThreatHandlers
 
                 Utils.AddToQuarantine(path);
 
-                return File.Exists(path) ? ApplyResult.Failed : ApplyResult.Success;
+                if (File.Exists(path))
+                {
+                    decision.ActionType = ScanActionType.Error;
+                    return ApplyResult.Failed;
+                }
+                else
+                {
+                    decision.ActionType = ScanActionType.Quarantine;
+                    return ApplyResult.Success;
+                }
             }
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, path, "_File");
                 return ApplyResult.Error;
             }
@@ -98,14 +109,17 @@ namespace MSearch.Core.ThreatHandlers
                 if (!File.Exists(path))
                 {
                     AppConfig.GetInstance.LL.LogSuccessMessage("_MaliciousFileDeleted", path);
+                    decision.ActionType = ScanActionType.Deleted;
                     return ApplyResult.Success;
                 }
 
+                decision.ActionType = ScanActionType.Error;
                 return ApplyResult.Failed;
             }
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, path, "_File");
                 return ApplyResult.Error;
             }
@@ -116,11 +130,13 @@ namespace MSearch.Core.ThreatHandlers
             try
             {
                 UnlockObjectClass.DisableExecute(path);
+                decision.ActionType = ScanActionType.Skipped;
                 return ApplyResult.Success;
             }
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotDisableExecute", ex, path, "_File");
                 return ApplyResult.Error;
             }

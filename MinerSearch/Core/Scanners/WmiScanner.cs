@@ -6,10 +6,6 @@ using System.Management;
 
 namespace MSearch.Core.Scanners
 {
-    /// <summary>
-    /// SRP: Сканирует WMI Event Consumers (механизм персистентности вредоносного ПО).
-    /// Ищет CommandLineEventConsumer в root\subscription.
-    /// </summary>
     public class WmiScanner : IThreatScanner
     {
         public IEnumerable<IThreatObject> Scan()

@@ -15,6 +15,7 @@ namespace MSearch
         int threatsCount = 0;
         int curedCount = 0;
         string LBL_id_text = "";
+        bool _no_logs = LaunchOptions.GetInstance.no_logs;
 
         public FinishEx(int _totalThreats, int _neutralizedThreats, int _suspObj, string _elapsedTime, List<ScanResult> results)
         {
@@ -44,7 +45,7 @@ namespace MSearch
                 LBL_curedCount.Visible = false;
             }
 
-            if (AppConfig.GetInstance.no_logs)
+            if (_no_logs)
             {
                 btnDetails.Enabled = false;
                 btnDetails.BackColor = Color.FromArgb(10, 255, 255, 255);
@@ -100,6 +101,9 @@ namespace MSearch
 
         void Finish()
         {
+
+            if (LaunchOptions.GetInstance.ScanOnly) Environment.Exit(0);
+
 #if !DEBUG
             if (curedCount < threatsCount)
             {
@@ -118,8 +122,7 @@ namespace MSearch
             }
             else if (curedCount == threatsCount && threatsCount > 0)
             {
-
-                if (!LaunchOptions.GetInstance.ScanOnly && !LaunchOptions.GetInstance.console_mode)
+                if (!LaunchOptions.GetInstance.console_mode)
                 {
                     Hide();
                     SplashForm splashForm = new SplashForm();
@@ -204,6 +207,14 @@ namespace MSearch
 
             dataGridThreats.Columns.Add(new DataGridViewTextBoxColumn
             {
+                Name = "ClassColumn",
+                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Class"),
+                DataPropertyName = "Class",
+                MinimumWidth = 150
+            });
+
+            dataGridThreats.Columns.Add(new DataGridViewTextBoxColumn
+            {
                 Name = "ActionColumn",
                 HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Action"),
                 DataPropertyName = "Action",
@@ -269,7 +280,7 @@ namespace MSearch
 
         async void CollectStatistics(string registryPath, string valueName)
         {
-            if (AppConfig.GetInstance.no_logs)
+            if (_no_logs)
             {
                 UpdateUIToDefaultState();
                 return;
@@ -455,7 +466,7 @@ namespace MSearch
         {
             TopMost = false;
 
-            if (AppConfig.GetInstance.no_logs)
+            if (_no_logs)
             {
                 Process.Start("explorer.exe", Logger.LogsFolder);
                 return;

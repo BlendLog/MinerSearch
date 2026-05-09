@@ -5,10 +5,7 @@ using System.Collections.Generic;
 
 namespace MSearch.Core.ThreatAnalyzers
 {
-    /// <summary>
-    /// SRP: Анализирует WMI Event Consumers.
-    /// Все CommandLineEventConsumer в root\subscription считаются вредоносными.
-    /// </summary>
+
     public sealed class WmiThreatAnalyzer : IThreatAnalyzer
     {
         public ThreatObjectKind Kind => ThreatObjectKind.WmiSubscription;
@@ -34,12 +31,23 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
+            // Пропускаем легитимные WMI события — проверяем на наличие `..\` в CommandLine
+            if (!IsCommandLineSuspicious(wmi.CommandLineTemplate))
+            {
+                yield break;
+            }
+
             AppConfig.GetInstance.LL.LogWarnMediumMessage("_WMIEvent", $"{wmi.Name} -> {wmi.CommandLineTemplate}");
 
-            // Все WMI Event Consumers в root\subscription считаются вредоносными
+            // WMI Event Consumers с `..\` в CommandLine считаются вредоносными
             var decision = new ThreatDecision(wmi, riskLevel: 3, ScanObjectType.Malware);
-            decision.ActionType = ScanActionType.Deleted;
             yield return decision;
+        }
+
+
+        private static bool IsCommandLineSuspicious(string commandLine)
+        {
+            return !string.IsNullOrEmpty(commandLine) && (commandLine.Contains("..\\") || commandLine.Contains("cmd.exe /c "));
         }
     }
 }

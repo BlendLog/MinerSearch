@@ -1,4 +1,4 @@
-﻿using MSearch.Core.Managers;
+using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using MSearch.Infrastructure;
@@ -17,7 +17,6 @@ namespace MSearch.Core.ThreatHandlers
         {
             var taskThreat = decision.Target as TaskThreatObject;
             if (taskThreat == null) return ApplyResult.NotApplicable;
-            if (decision.RiskLevel < 3) return ApplyResult.Skipped;
 
             if (phase == CleanupPhase.DisableExecuteOnly)
             {
@@ -31,11 +30,12 @@ namespace MSearch.Core.ThreatHandlers
                     UnlockObjectClass.DisableExecute(taskThreat.LinkedFileFromArgs.FilePath);
                 }
 
-                return ApplyResult.Success;
+                decision.ActionType = ScanActionType.Skipped;
             }
 
             if (phase == CleanupPhase.Finalize)
             {
+
                 if (taskThreat.ActionDeleteTask)
                 {
                     if (DeleteTaskDirectly(taskThreat.Info, decision))
@@ -44,15 +44,15 @@ namespace MSearch.Core.ThreatHandlers
                             ? taskThreat.DetectionReasonRes
                             : "_Malic1ousTask";
                         AppConfig.GetInstance.LL.LogSuccessMessage(reason, $"{taskThreat.Info.Path}\\{taskThreat.Info.Name}", "_Deleted");
+                        decision.ActionType = ScanActionType.Deleted;
                         return ApplyResult.Success;
                     }
                     else
                     {
+                        decision.ActionType = ScanActionType.Error;
                         return ApplyResult.Failed;
                     }
                 }
-
-                return ApplyResult.Skipped;
             }
 
             return ApplyResult.NotApplicable;
@@ -60,6 +60,7 @@ namespace MSearch.Core.ThreatHandlers
 
         bool DeleteTaskDirectly(ScheduledTaskInfo taskToDelete, ThreatDecision decision)
         {
+
             bool success = true;
 
             try
@@ -81,6 +82,7 @@ namespace MSearch.Core.ThreatHandlers
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorTaskDeletion", ex);
                 return false;
             }

@@ -56,11 +56,21 @@ namespace MSearch.Core.ThreatHandlers
                 FileSystemManager.ResetAttributes(dirPath);
                 Directory.Delete(dirPath, true);
 
-                return Directory.Exists(dirPath) ? ApplyResult.Failed : ApplyResult.Success;
+                if (Directory.Exists(dirPath))
+                {
+                    decision.ActionType = ScanActionType.Error;
+                    return ApplyResult.Failed;
+                }
+                else
+                {
+                    decision.ActionType = ScanActionType.Deleted;
+                    return ApplyResult.Success;
+                }
             }
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, dirPath, "_Directory");
                 return ApplyResult.Error;
             }
@@ -88,11 +98,21 @@ namespace MSearch.Core.ThreatHandlers
                 FileSystemManager.ResetAttributes(dirPath);
                 Directory.Delete(dirPath, true);
 
-                return Directory.Exists(dirPath) ? ApplyResult.Failed : ApplyResult.Success;
+                if (Directory.Exists(dirPath))
+                {
+                    decision.ActionType = ScanActionType.Error;
+                    return ApplyResult.Failed;
+                }
+                else
+                {
+                    decision.ActionType = ScanActionType.Deleted;
+                    return ApplyResult.Success;
+                }
             }
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, dirPath, "_Directory");
                 return ApplyResult.Error;
             }

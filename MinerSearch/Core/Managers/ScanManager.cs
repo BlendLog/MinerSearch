@@ -35,7 +35,7 @@ namespace MSearch.Core.Managers
         /// </summary>
         public IEnumerable<IThreatObject> ScanRootkitFirst()
         {
-            if (_options.NoRootkitCheck) return new List<IThreatObject>();
+            if (_options.no_rootkit_check) return new List<IThreatObject>();
             return _rootkitScanner.Scan();
         }
 
@@ -55,7 +55,9 @@ namespace MSearch.Core.Managers
 
                 if (scanner is HostsThreatScanner && _options.no_check_hosts) continue;
 
-                if (scanner is WmiScanner && _options.noScanWmi) continue;
+                if (scanner is WmiScanner && _options.no_scan_wmi) continue;
+
+                if (scanner is UserProfileScanner && _options.no_scan_users) continue;
 
                 allThreats.AddRange(scanner.Scan());
             }

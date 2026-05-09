@@ -6,9 +6,6 @@ using System.Management;
 
 namespace MSearch.Core.ThreatHandlers
 {
-    /// <summary>
-    /// SRP: Удаляет WMI Event Consumers.
-    /// </summary>
     internal sealed class WmiThreatHandler : IThreatHandler
     {
         public ThreatObjectKind Kind => ThreatObjectKind.WmiSubscription;
@@ -42,11 +39,13 @@ namespace MSearch.Core.ThreatHandlers
                 }
 
                 AppConfig.GetInstance.LL.LogSuccessMessage("_WMIEvent", wmi.Name, "_Deleted");
+                decision.ActionType = ScanActionType.Deleted;
                 return ApplyResult.Success;
             }
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemoveWmi", ex, wmi.Name);
                 return ApplyResult.Error;
             }

@@ -1,4 +1,5 @@
 using DBase;
+using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace MSearch.Core.ThreatAnalyzers
     public interface IFileContentAnalyzer
     {
         FileContentAnalysisResult Analyze(FileThreatObject fileThreat, bool displayProgress);
-        void AnalyzeFiles(IEnumerable<FileThreatObject> fileThreats);
+        IEnumerable<ThreatDecision> AnalyzeFiles(IEnumerable<FileThreatObject> fileThreats);
         FileContentAnalysisResult AnalyzeAndDisable(FileThreatObject fileThreat, bool displayProgress);
     }
 
@@ -193,21 +194,24 @@ namespace MSearch.Core.ThreatAnalyzers
             return result;
         }
 
-        public void AnalyzeFiles(IEnumerable<FileThreatObject> fileThreats)
+        public IEnumerable<ThreatDecision> AnalyzeFiles(IEnumerable<FileThreatObject> fileThreats)
         {
             var fileList = fileThreats.ToList();
             int total = fileList.Count;
             int current = 0;
             int analyzedCount = 0;
 
-            Console.WriteLine($"  [{total}] файлов найдено. Начинаю анализ...");
-            
+            //Console.WriteLine($"  [{total}] файлов найдено. Начинаю анализ...");
+            AppConfig.GetInstance.LL.LogMessage($"\t[{total}]", "_FilesCount_PreparingAnalysis", "", ConsoleColor.White, false);
+
             AppConfig.GetInstance.LL.LogHeadMessage("_StartSignatureScan");
+
+            List<ThreatDecision> decisions = new List<ThreatDecision>();
 
             foreach (var fileThreat in fileList)
             {
                 current++;
-                
+
                 if (fileThreat.IsAlreadyAnalyzed)
                 {
                     if (LaunchOptions.GetInstance.verbose)
@@ -216,13 +220,13 @@ namespace MSearch.Core.ThreatAnalyzers
                     }
                     continue;
                 }
-                
+
                 analyzedCount++;
                 LocalizedLogger.LogSignatureScanProgress(analyzedCount, total, fileThreat.FilePath);
 
                 try
                 {
-                    fileThreat.TrustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(fileThreat.FilePath);
+                    fileThreat.TrustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(fileThreat.FilePath, LaunchOptions.GetInstance.verbose, false);
                 }
                 catch
                 {
@@ -231,11 +235,39 @@ namespace MSearch.Core.ThreatAnalyzers
 
                 var result = AnalyzeAndDisable(fileThreat, displayProgress: false);
                 fileThreat.AnalysisResult = result;
+
+                // Генерируем ThreatDecision на основе результата анализа
+                if (result.IsMalicious)
+                {
+                    fileThreat.ShouldMoveFileToQuarantine = true;
+                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_SuspiciousFile", fileThreat.FilePath);
+
+                    var decision = new ThreatDecision(fileThreat, riskLevel: 2, ScanObjectType.Malware);
+                    decision.ActionType = ScanActionType.Quarantine;
+                    decisions.Add(decision);
+                }
+                else if (result.IsSuspicious)
+                {
+                    fileThreat.ShouldMoveFileToQuarantine = true;
+                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_SuspiciousFile", fileThreat.FilePath);
+
+                    var decision = new ThreatDecision(fileThreat, riskLevel: 2, ScanObjectType.Malware);
+                    decision.ActionType = ScanActionType.Quarantine;
+                    decisions.Add(decision);
+                }
+                else if (result.IsLockedByAntivirus)
+                {
+                    var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Malware);
+                    decision.ActionType = ScanActionType.LockedByAntivirus;
+                    decisions.Add(decision);
+                }
             }
 
             Console.WriteLine();
             string completeMessage = AppConfig.GetInstance.LL.GetLocalizedString("_SignatureScanComplete");
             Logger.WriteLog($"[#] {completeMessage}", ConsoleColor.White, true);
+
+            return decisions;
         }
     }
 }

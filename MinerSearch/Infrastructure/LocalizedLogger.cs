@@ -11,10 +11,10 @@ namespace MSearch
     public class LocalizedLogger
     {
         
-        ResourceManager resourceManager = new ResourceManager("M$Sear$ch.Properties.Resources".Replace("$", ""), Assembly.GetExecutingAssembly());
+        ResourceManager resourceManager = new ResourceManager("MSearch.Properties.Resources", Assembly.GetExecutingAssembly());
 
         #region TopRegion
-        internal static void LogPCInfo(string winver, string username, string pcname, BootMode bootmode)
+        internal static void LogPCInfo(string winver, string username, string pcname, BootMode bootmode, string uacState)
         {
             string _winver = Resources._Winver_EN;
             string _username = Resources._Username_EN;
@@ -39,7 +39,8 @@ namespace MSearch
             Logger.WriteLog($"\t\t{_winver} {winver}".Replace("?", ""), ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_username} {username}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_pcname} {pcname}", ConsoleColor.DarkGray, false);
-            Logger.WriteLog($"\t\t{_bootmode} {bootmode}\n", ConsoleColor.DarkGray, false);
+            Logger.WriteLog($"\t\t{_bootmode} {bootmode}", ConsoleColor.DarkGray, false);
+            Logger.WriteLog($"\t\t{uacState}\n", ConsoleColor.DarkGray, false);
         }
 
         internal static void LogStartupCount(int count)
@@ -110,7 +111,7 @@ namespace MSearch
             }
 
             Console.BackgroundColor = ConsoleColor.DarkMagenta;
-            Logger.WriteLog($"\t[!!!!] {message}".Replace("?", ""), ConsoleColor.White, false);
+            Logger.WriteLog($"\t\t[!!!!] {message}".Replace("?", ""), ConsoleColor.White, false);
             Console.BackgroundColor = ConsoleColor.Black;
 
         }
@@ -164,7 +165,7 @@ namespace MSearch
                     message = Resources._SpecDrive_EN;
                     break;
             }
-            Console.Write($"\n\t\t{message}");
+            Console.Write($"\n\t\t{message} ");
 
         }
 

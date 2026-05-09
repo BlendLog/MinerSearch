@@ -1,20 +1,13 @@
+using Microsoft.Win32;
 using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
-using Win32Wrapper;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.AccessControl;
-using System.Security.Principal;
-using System.Text;
-using System.Windows.Forms;
-using Microsoft.Win32;
+using Win32Wrapper;
+using Native = Win32Wrapper.Native;
 
 namespace MSearch.Core.Handlers
 {
@@ -32,7 +25,6 @@ namespace MSearch.Core.Handlers
             var rootkit = decision.Target as RootkitThreatObject;
             if (rootkit == null) return ApplyResult.NotApplicable;
 
-            // Если руткит уже был нейтрализован — выходим
             if (rootkit.WasNeutralized)
             {
                 return ApplyResult.NotApplicable;
@@ -40,48 +32,211 @@ namespace MSearch.Core.Handlers
 
             if (phase == CleanupPhase.SuspendOnly)
             {
-                // На этой фазе ничего не делаем — руткит обрабатывается мгновенно в сканере
                 return ApplyResult.Skipped;
             }
 
-            // Finalize — финальная проверка и очистка
             if (rootkit.ConfigRemoved)
             {
+                decision.ActionType = ScanActionType.Deleted;
                 return ApplyResult.Success;
             }
 
             if (LaunchOptions.GetInstance.ScanOnly)
             {
-                AppConfig.GetInstance.LL.LogCautionMessage("_Malici0usRootkit", "R77 configuration detected");
+                decision.ActionType = ScanActionType.Skipped;
                 return ApplyResult.Skipped;
             }
 
-            // Финальная нейтрализация
             bool success = false;
+            bool dialerTerminated = false;
 
             try
             {
-                // 1. Терминация оставшихся R77-процессов
-                TerminateRemainingR77Services(rootkit.ProcessIds, rootkit.Signatures);
+                // 1. Детачим инжектированные процессы (R77_SIGNATURE)
+                DetachR77Processes(rootkit.R77Processes);
 
-                // 2. Удаление конфигурации из реестра
+                // 2. Терминируем dialer процессы
+                dialerTerminated = TerminateDialerProcesses(rootkit.DialerPids);
+
+                // 3. Терминируем R77-сервисы и хелперы
+                TerminateRemainingR77Services(rootkit.R77Processes);
+
+                // 4. Удаляем конфигурацию
                 success = RemoveR77Config();
             }
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorNeutralizeRootkit", ex);
                 return ApplyResult.Error;
             }
 
-            return success ? ApplyResult.Success : ApplyResult.Failed;
+            if (dialerTerminated || success)
+            {
+                decision.ActionType = dialerTerminated ? ScanActionType.Terminated : ScanActionType.Deleted;
+                return ApplyResult.Success;
+            }
+            else
+            {
+                decision.ActionType = ScanActionType.Error;
+                return ApplyResult.Failed;
+            }
         }
 
         /// <summary>
-        /// Завершает оставшиеся процессы R77-сервиса.
+        /// Детачит инжектированные процессы R77 (R77_SIGNATURE).
         /// </summary>
-        private void TerminateRemainingR77Services(int[] processIds, uint[] signatures)
+        private void DetachR77Processes(Native.R77_PROCESS[] r77Processes)
         {
+            if (r77Processes == null)
+                return;
+
+            foreach (Native.R77_PROCESS r77 in r77Processes)
+            {
+                if (r77.Signature == (int)Native.R77_SIGNATURE && r77.DetachAddress != 0)
+                {
+                    IntPtr process = IntPtr.Zero;
+                    try
+                    {
+                        process = Native.OpenProcess(
+                            Native.PROCESS_CREATE_THREAD |
+                            Native.PROCESS_VM_OPERATION |
+                            Native.PROCESS_VM_WRITE |
+                            Native.PROCESS_QUERY_INFORMATION,
+                            false,
+                            (int)r77.ProcessId);
+
+                        if (process != IntPtr.Zero)
+                        {
+                            IntPtr thread = IntPtr.Zero;
+                            int status = Native.NtCreateThreadEx(
+                                out thread,
+                                Native.THREAD_QUERY_INFORMATION,
+                                IntPtr.Zero,
+                                process,
+                                new IntPtr((long)r77.DetachAddress),
+                                IntPtr.Zero,
+                                false,
+                                0,
+                                0,
+                                0,
+                                IntPtr.Zero);
+
+                            if (status >= 0 && thread != IntPtr.Zero)
+                            {
+                                Native.CloseHandle(thread);
+                            }
+                        }
+                    }
+                    catch (Exception) { }
+                    finally
+                    {
+                        if (process != IntPtr.Zero)
+                        {
+                            Native.CloseHandle(process);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Завершает dialer процессы, которые были приостановлены в RootkitScanner.
+        /// </summary>
+        /// <returns>true если хотя бы один dialer процесс был завершён успешно.</returns>
+        private bool TerminateDialerProcesses(int[] dialerPids)
+        {
+            if (dialerPids == null || dialerPids.Length == 0)
+                return false;
+
+            bool anyTerminated = false;
+
+            foreach (int pid in dialerPids.Distinct())
+            {
+                try
+                {
+                    // Снимаем защиту от завершения
+                    UnProtect(pid);
+
+                    // Завершаем процесс
+                    using (var p = Process.GetProcessById(pid))
+                    {
+                        string pname = p.ProcessName;
+
+                        if (!p.HasExited)
+                        {
+                            p.Kill();
+                            p.WaitForExit();
+
+                            if (p.HasExited)
+                            {
+                                AppConfig.GetInstance.LL.LogSuccessMessage("_ProcessTerminated", $"{pname} - PID: {pid}");
+                                anyTerminated = true;
+                            }
+                        }
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Процесс уже завершился
+                }
+                catch (Win32Exception)
+                {
+                    // Нет доступа или процесс завершился
+                }
+                catch (Exception ex)
+                {
+                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorTerminateProcess", ex);
+                }
+            }
+
+            return anyTerminated;
+        }
+
+        /// <summary>
+        /// Снимает защиту процесса от завершения (аналогично ProcessThreatHandler.UnProtect).
+        /// </summary>
+        private void UnProtect(int pid)
+        {
+            int _pid = 0;
+            int isCritical = 0;
+            int BreakOnTermination = 0x1D;
+
+            if (pid == 0 || pid == -1)
+                return;
+
+            try
+            {
+                _pid = pid;
+                IntPtr handle = Native.OpenProcess(0x001F0FFF, false, pid);
+                Native.NtSetInformationProcess(handle, BreakOnTermination, ref isCritical, sizeof(int));
+                Native.CloseHandle(handle);
+            }
+            catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
+            {
+                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {_pid}");
+            }
+            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80131509)))
+            {
+                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", _pid.ToString());
+            }
+            catch (System.ComponentModel.Win32Exception) { }
+            catch (Exception e)
+            {
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorTerminateProcess", e);
+            }
+        }
+
+        /// <summary>
+        /// Завершает оставшиеся процессы R77-сервиса и хелперов.
+        /// R77_SIGNATURE (0x7277) — НЕ терминирует (только детачинг).
+        /// </summary>
+        private void TerminateRemainingR77Services(Native.R77_PROCESS[] r77Processes)
+        {
+            if (r77Processes == null)
+                return;
+
             // Получаем текущий список процессов с R77-подписью
             uint[] processes = new uint[Native.MaxProcesses];
             int processCount = 0;
@@ -112,7 +267,7 @@ namespace MSearch.Core.Handlers
                                 if (Native.ReadProcessMemory(process, modules[j], moduleBytes, moduleBytes.Length, IntPtr.Zero))
                                 {
                                     ushort signature = BitConverter.ToUInt16(moduleBytes, 0x40);
-                                    if (signature == Native.R77_SERVICE_SIGNATURE)
+                                    if (signature == Native.R77_SERVICE_SIGNATURE || signature == Native.R77_HELPER_SIGNATURE)
                                     {
                                         int pid = (int)processes[i];
                                         int isCritical = 0;

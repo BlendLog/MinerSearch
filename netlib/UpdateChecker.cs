@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Net.Http;
 
 namespace netlib
@@ -16,6 +17,7 @@ namespace netlib
 
             using (var client = new HttpClient())
             {
+                client.Timeout = TimeSpan.FromSeconds(5);
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("request");
                 return client.GetStringAsync(url).Result;
             }

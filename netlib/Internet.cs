@@ -9,7 +9,13 @@ namespace netlib
             Ping pingQuery = new Ping();
             try
             {
-                return (pingQuery.Send(host, 2000).Status == IPStatus.Success) == true;
+                // Retry 2 attempts with 5000ms timeout for unstable networks
+                var result = pingQuery.Send(host, 5000);
+                if (result.Status == IPStatus.Success)
+                    return true;
+                
+                result = pingQuery.Send(host, 5000);
+                return result.Status == IPStatus.Success;
             }
             catch
             {

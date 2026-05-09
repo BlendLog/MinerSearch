@@ -64,7 +64,7 @@ namespace MSearch.Core
         public bool no_scantime { get; internal set; }
 
         /// <summary>--no-scan-wmi / -nwmi — skip WMI scanning</summary>
-        public bool noScanWmi { get; internal set; }
+        public bool no_scan_wmi { get; internal set; }
 
         /// <summary>--no-signature-scan / -nss — skip signature check</summary>
         public bool nosignaturescan { get; internal set; }
@@ -78,6 +78,9 @@ namespace MSearch.Core
         /// <summary>--no-scan-tasks / -nst — skip task scanning</summary>
         public bool no_scan_tasks { get; internal set; }
 
+        /// <summary>--no-scan-users / -nsu — skip users profiles scanning</summary>
+        public bool no_scan_users { get; internal set; }
+
         /// <summary>--pause / -p — pause before cleanup</summary>
         public bool pause { get; internal set; }
 
@@ -85,7 +88,7 @@ namespace MSearch.Core
         public bool RemoveEmptyTasks { get; internal set; }
 
         /// <summary>--no-rootkit-check / -nrc — disable rootkit check</summary>
-        public bool NoRootkitCheck { get; internal set; }
+        public bool no_rootkit_check { get; internal set; }
 
         /// <summary>--no-services / -nse — skip service scanning</summary>
         public bool no_services { get; internal set; }
@@ -118,7 +121,7 @@ namespace MSearch.Core
         public bool no_firewall { get; internal set; }
 
         /// <summary>--no-logs / -nl — do not write logs to file</summary>
-        public bool noLogs { get; internal set; }
+        public bool no_logs { get; internal set; }
 
         /// <summary>--accept-eula / -a — accept license agreement</summary>
         public bool accept_eula { get; internal set; }
@@ -160,12 +163,12 @@ namespace MSearch.Core
             errors.Clear();
             parsed = false;
 
-            help = force = silent = no_scantime = noScanWmi = nosignaturescan = false;
+            help = force = silent = no_scantime = no_scan_wmi = nosignaturescan = false;
             no_runtime = no_scan_registry = no_scan_tasks = pause = false;
-            RemoveEmptyTasks = NoRootkitCheck = no_services = false;
+            RemoveEmptyTasks = no_rootkit_check = no_services = false;
             ScanOnly = fullScan = QuarantineMode = winpemode = false;
             RestoredWMI = verbose = demandSelection = false;
-            no_check_hosts = no_firewall = noLogs = accept_eula = false;
+            no_check_hosts = no_firewall = no_logs = accept_eula = false;
             console_mode = false;
 
             maxSubfolders = 8;
@@ -201,6 +204,13 @@ namespace MSearch.Core
                     continue;
                 }
 
+                if (arg.Equals("--no-logs", StringComparison.OrdinalIgnoreCase) ||
+                     arg.Equals("-nl", StringComparison.OrdinalIgnoreCase))
+                {
+                    inst.no_logs = true;
+                    continue;
+                }
+
                 // --force / -f
                 if (arg.Equals("--force", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-f", StringComparison.OrdinalIgnoreCase))
@@ -229,7 +239,7 @@ namespace MSearch.Core
                 if (arg.Equals("--no-scan-wmi", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nwmi", StringComparison.OrdinalIgnoreCase))
                 {
-                    inst.noScanWmi = true;
+                    inst.no_scan_wmi = true;
                     continue;
                 }
 
@@ -262,6 +272,14 @@ namespace MSearch.Core
                     arg.Equals("-nst", StringComparison.OrdinalIgnoreCase))
                 {
                     inst.no_scan_tasks = true;
+                    continue;
+                }
+
+                // --no-scan-users / -nsu
+                if (arg.Equals("--no-scan-users", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("-nsu", StringComparison.OrdinalIgnoreCase))
+                {
+                    inst.no_scan_users = true;
                     continue;
                 }
 
@@ -302,7 +320,7 @@ namespace MSearch.Core
                 if (arg.Equals("--no-rootkit-check", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nrc", StringComparison.OrdinalIgnoreCase))
                 {
-                    inst.NoRootkitCheck = true;
+                    inst.no_rootkit_check = true;
                     continue;
                 }
 
@@ -319,7 +337,7 @@ namespace MSearch.Core
                     arg.Equals("-so", StringComparison.OrdinalIgnoreCase))
                 {
                     inst.ScanOnly = true;
-                    inst.NoRootkitCheck = true;
+                    inst.no_rootkit_check = true;
                     inst.RemoveEmptyTasks = false;
                     continue;
                 }

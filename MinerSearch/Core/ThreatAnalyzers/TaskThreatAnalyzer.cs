@@ -60,10 +60,10 @@ namespace MSearch.Core.ThreatAnalyzers
             string args = action.Arguments ?? string.Empty;
             string filePathFromTask = taskObj.LinkedFile?.FilePath ?? ""; // Путь к исполняемому файлу
 
-            AppConfig.GetInstance.LL.LogMessage("[#]", "_Scanning", $"{taskObj.Info.Name} | {taskObj.Info.Name}", ConsoleColor.White);
+            AppConfig.GetInstance.LL.LogMessage("[#]", "_Scanning", $"{taskObj.Info.Name} | {taskObj.Info.Path}", ConsoleColor.White);
             // 1 Этап -----------------------------------------------------
 
-            if (taskObj.Info.Name.StartsWith("d?ia?le?r".Replace("?", "")))
+            if (taskObj.Info.Name.StartsWith("dialer"))
             {
                 risk += 3;
                 taskObj.ActionDeleteTask = true;
@@ -88,6 +88,13 @@ namespace MSearch.Core.ThreatAnalyzers
                 taskObj.DetectionReasonRes = "_Malic1ousTask";
             }
 
+            if (args.IndexOf("/c echo function ", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                risk += 3;
+                taskObj.ActionDeleteTask = true;
+                taskObj.DetectionReasonRes = "_Malic1ousTask";
+            }
+
             if (args.IndexOf("-jar ", StringComparison.OrdinalIgnoreCase) >= 0 && args.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
             {
                 risk += 3;
@@ -97,6 +104,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             if (taskObj.ActionDeleteTask) //Задача вредоносна независимо от файла
             {
+                AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
                 yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
             }
 
@@ -107,6 +115,10 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 AppConfig.GetInstance.LL.LogMessage("\t[.]", "_Just_File", $"{filePathFromTask} {args}", ConsoleColor.Gray);
 
+                if (taskObj.LinkedFile.IsValidSignature)
+                {
+                    Logger.WriteLog($"\t[OK]", Logger.success, false);
+                }
 
                 if (!string.IsNullOrEmpty(args))
                 {
@@ -334,14 +346,21 @@ namespace MSearch.Core.ThreatAnalyzers
 
                     yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
                 }
-            }
-            else AppConfig.GetInstance.LL.LogWarnMessage("_FileIsNotFound", $"{action.Path} {action.Arguments}");
 
-            if (LaunchOptions.GetInstance.RemoveEmptyTasks)
-            {
-                taskObj.ActionDeleteTask = true;
-                taskObj.DetectionReasonRes = "_EmptyTask";
+
             }
+            else
+            {
+                AppConfig.GetInstance.LL.LogWarnMessage("_FileIsNotFound", $"{action.Path} {action.Arguments}");
+                if (LaunchOptions.GetInstance.RemoveEmptyTasks)
+                {
+                    taskObj.ActionDeleteTask = true;
+                    taskObj.DetectionReasonRes = "_EmptyTask";
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+                    yield return new ThreatDecision(taskObj, risk, ScanObjectType.Unknown);
+                }
+            }
+
 
             // 3 Этап -------------------------------------------
 
@@ -627,6 +646,8 @@ namespace MSearch.Core.ThreatAnalyzers
                             if (LaunchOptions.GetInstance.RemoveEmptyTasks)
                             {
                                 taskObj.ActionDeleteTask = true;
+                                taskObj.DetectionReasonRes = "_EmptyTask";
+                                yield return new ThreatDecision(taskObj, risk, ScanObjectType.Unknown);
                             }
                         }
 

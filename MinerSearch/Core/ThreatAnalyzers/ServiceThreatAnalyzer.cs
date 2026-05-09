@@ -1,5 +1,6 @@
 using DBase;
 using Microsoft.Win32;
+using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
@@ -44,17 +45,21 @@ namespace MSearch.Core.ThreatAnalyzers
             var svc = threat as ServiceThreatObject;
             if (svc == null) yield break;
 
+            Logger.WriteLog("------------", ConsoleColor.White, true, true);
             AppConfig.GetInstance.LL.LogMessage("[.]", "_ServiceName", svc.ServiceName, ConsoleColor.White);
             AppConfig.GetInstance.LL.LogMessage("[.]", "_Just_Service", svc.ServicePathWithArgs, ConsoleColor.White);
             AppConfig.GetInstance.LL.LogMessage("[.]", "_State", svc.Status.ToString(), ConsoleColor.White);
 
-            // Размер файла
+            if (svc.SCMUnavailable)
+            {
+                AppConfig.GetInstance.LL.LogWarnMessage("_ServiceSCMUnavailable", svc.ServiceName);
+            }
+
             if (svc.LinkedServiceFile != null && svc.LinkedServiceFile.FileSize > 0)
             {
                 AppConfig.GetInstance.LL.LogMessage("[.]", "_FileSize", FileChecker.GetFileSize(svc.LinkedServiceFile.FileSize), ConsoleColor.White);
             }
 
-            // Whitelist по имени
             string[] specialScan = { "TermService" };
             foreach (string name in specialScan)
             {
@@ -72,7 +77,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 svc.LinkedServiceFile != null && svc.LinkedServiceFile.IsValidSignature)
             {
                 Logger.WriteLog($"\t[OK]", Logger.success, true, true);
-                Logger.WriteLog("------------", ConsoleColor.White, true, true);
                 yield break;
             }
 
@@ -98,6 +102,11 @@ namespace MSearch.Core.ThreatAnalyzers
             // 3. Malicious pattern
             bool hasMaliciousPattern = normalized.Contains("e=access&y=guest&h=");
 
+            // 4. SDDL blocking pattern — майнеры устанавливают запрещающий SDDL
+            bool hasSddlBlocking = svc.SCMUnavailable &&
+                                   (normalized.Contains("cmd.exe /c start") ||
+                                    normalized.StartsWith("\\\\.\\c:\\programdata", StringComparison.OrdinalIgnoreCase));
+
             if (hasDownloadExec || hasFilelessPersistence)
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_Found", $"{svc.ServiceName} {svc.ServicePath}");
@@ -112,10 +121,21 @@ namespace MSearch.Core.ThreatAnalyzers
                 isMalicious = true;
             }
 
+            if (hasSddlBlocking)
+            {
+                AppConfig.GetInstance.LL.LogCautionMessage("_Found", $"{svc.ServiceName} {svc.ServicePath}");
+                risk += 3;
+                isMalicious = true;
+            }
+
+            if (hasSddlBlocking && svc.HasInSafeMode)
+            {
+                svc.ShouldRemoveFromSafeMode = true;
+            }
+
             // 4. Анализ файла сервиса (подпись, имя, путь, сигнатуры)
             if (svc.LinkedServiceFile != null)
             {
-                // displayProgress = false — чтобы не спамить "Анализ: svchost.exe" для каждой службы
                 var fileResult = _fileAnalyzer.Analyze(svc.LinkedServiceFile, false);
 
                 if (fileResult.IsMalicious)
@@ -128,7 +148,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 else if (!svc.LinkedServiceFile.IsValidSignature &&
                          svc.LinkedServiceFile.TrustResult != WinVerifyTrustResult.Error)
                 {
-                    // Неподписанный файл — дополнительная эвристика
                     Regex nameRegex = new Regex(@"^[a-zA-Z]{8}$");
                     Regex pathRegex = new Regex(@"^(\\\\\?\\)?[a-fA-F]:\\ProgramData\\[a-zA-Z]{12}\\[a-zA-Z]{12}\.exe$");
 
@@ -186,7 +205,6 @@ namespace MSearch.Core.ThreatAnalyzers
             if (risk == 0)
             {
                 Logger.WriteLog($"\t[OK]", Logger.success, true, true);
-                Logger.WriteLog("------------", ConsoleColor.White, true, true);
                 yield break;
             }
 
@@ -194,10 +212,12 @@ namespace MSearch.Core.ThreatAnalyzers
 
             // Устанавливаем флаги действий
             svc.ShouldDisableService = true;
+
             if (isMalicious)
             {
                 svc.ShouldStopService = true;
                 svc.ShouldDeleteService = true;
+                svc.ShouldResetSddl = true;  // Сбросить SDDL при удалении сервиса
             }
 
             // Решение для сервиса
@@ -291,23 +311,12 @@ namespace MSearch.Core.ThreatAnalyzers
                             {
                                 AppConfig.GetInstance.LL.LogWarnMessage("_TermServiceInvalidPath", currentValue);
 
-                                bool isInfectedService = false;
-                                if (!string.IsNullOrEmpty(svc.ServicePathWithArgs))
-                                {
-                                    foreach (string pattern in MSData.GetInstance.JohnPatterns)
-                                    {
-                                        if (svc.ServicePathWithArgs.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0)
-                                        {
-                                            isInfectedService = true;
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                if (isInfectedService)
+                                if (ThreatManager.IsJohnPatternsFound())
                                 {
                                     svc.ShouldStopService = true;
-                                    svc.ShouldRestoreService = true;
+                                    svc.ShouldRestoreServiceDll = true;
+                                    AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceMarkedForRestore");
+
                                     return new ThreatDecision(svc, 3, ScanObjectType.Infected);
                                 }
                                 else

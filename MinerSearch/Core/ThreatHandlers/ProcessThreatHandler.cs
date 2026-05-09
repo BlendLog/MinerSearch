@@ -1,4 +1,4 @@
-п»їusing MSearch.Core.Managers;
+using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
@@ -8,7 +8,7 @@ using Win32Wrapper;
 namespace MSearch.Core.Handlers
 {
     /// <summary>
-    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё РїСЂРѕС†РµСЃСЃРѕРІ РЅР° СЌС‚Р°РїРµ РѕС‡РёСЃС‚РєРё
+    /// Используется для обработки процессов на этапе очистки
     /// </summary>
     internal sealed class ProcessThreatHandler : IThreatHandler
     {
@@ -33,6 +33,7 @@ namespace MSearch.Core.Handlers
 
                 proc.WasSuspended = true;
                 proc.ShouldTerminate = true;
+                decision.ActionType = ScanActionType.Suspended;
                 return ApplyResult.Success;
             }
 
@@ -56,10 +57,12 @@ namespace MSearch.Core.Handlers
                             AppConfig.GetInstance.LL.LogSuccessMessage("_ProcessTerminated", $"{pname}, PID: {proc.ProcessId}");
                             proc.ShouldTerminate = false;
                             proc.WasSuspended = false;
+                            decision.ActionType = ScanActionType.Terminated;
                             return ApplyResult.Success;
                         }
                         else
                         {
+                            decision.ActionType = ScanActionType.Error;
                             return ApplyResult.Failed;
                         }
                     }
@@ -74,11 +77,13 @@ namespace MSearch.Core.Handlers
             {
                 proc.WasSuspended = false;
                 proc.ShouldTerminate = false;
+                decision.ActionType = ScanActionType.Skipped;
                 return ApplyResult.NotApplicable;
             }
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorTerminateProcess", ex);
                 return ApplyResult.Error;
             }

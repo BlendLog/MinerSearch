@@ -44,16 +44,19 @@ namespace MSearch.Core.ThreatHandlers
                     {
                         rules.Remove(rule.RuleName);
                         AppConfig.GetInstance.LL.LogSuccessMessage("_FirewallRule_Deleted", rule.RuleName);
+                        decision.ActionType = ScanActionType.Deleted;
                         return ApplyResult.Success;
                     }
                 }
 
                 // Правило уже не существует
+                decision.ActionType = ScanActionType.Skipped;
                 return ApplyResult.NotApplicable;
             }
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
+                decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemoveFWRule", ex, rule.RuleName);
                 return ApplyResult.Error;
             }

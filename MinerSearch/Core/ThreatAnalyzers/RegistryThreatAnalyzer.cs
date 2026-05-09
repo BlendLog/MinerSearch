@@ -27,6 +27,9 @@ namespace MSearch.Core.ThreatAnalyzers
         private static readonly HashSet<string> _loggedSections = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private static readonly object _sectionLock = new object();
 
+        // Mapping: подраздел_имня (из KeyPath) → default_value для App Paths, помеченных на удаление
+        private static readonly Dictionary<string, string> _appPathsMarked = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
         private void LogSectionHeader(string sectionName)
         {
             if (string.IsNullOrEmpty(sectionName)) return;
@@ -85,29 +88,35 @@ namespace MSearch.Core.ThreatAnalyzers
             // 2. Appinit_DLLs
             AnalyzeAppInit(reg, ref risk);
 
-            // 3. IFEO и WOW6432 IFEO
+            // 3. App Paths (ДО IFEO, чтобы данные были готовы)
+            AnalyzeAppPaths(reg, ref risk, ref isMalicious);
+
+            // 4. IFEO и WOW6432 IFEO
             AnalyzeIfeo(reg, ref risk, ref isMalicious);
 
-            // 4. Silent Process Exit
+            // 5. Silent Process Exit
             AnalyzeSilentExit(reg, ref risk);
 
-            // 5. System Policies
+            // 6. System Policies
             AnalyzeSystemPolicies(reg, ref risk);
 
-            // 6. Winlogon (Userinit, Shell)
+            // 7. Winlogon (Userinit, Shell)
             AnalyzeWinlogon(reg, ref risk);
 
-            // 7. Tekt0nit (RMS)
+            // 8. Tekt0nit (RMS)
             AnalyzeTektonit(reg, ref risk, ref isMalicious);
 
-            // 8. Applocker
+            // 9. Applocker
             AnalyzeAppLocker(reg, ref risk);
 
-            // 9. Windows Defender
+            // 10. Windows Defender
             AnalyzeDefenderExclusions(reg, ref risk);
 
-            // 10. Autorun (Run ключи)
+            // 11. Autorun (Run ключи)
             AnalyzeAutorun(reg, ref risk, ref isMalicious);
+
+            // 12. Lsa Authentication Packages
+            AnalyzeLsaAuthenticationPackages(reg, ref risk, ref isMalicious);
 
             if (risk == 0) yield break; // Угрозы нет
 
@@ -181,6 +190,12 @@ namespace MSearch.Core.ThreatAnalyzers
 
                 if (reg.NodeType == RegistryNodeType.Value)
                 {
+                    // Выводим все отладчики в лог
+                    if (reg.ValueName.Equals("debugger", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(reg.ValueData))
+                    {
+                        AppConfig.GetInstance.LL.LogMessage("[.]", "_DebuggerString", $"{reg.KeyPath.Split('\\').Last()} {reg.ValueData}", ConsoleColor.Gray);
+                    }
+
                     if (reg.ValueName.Equals("GlobalFlag", StringComparison.OrdinalIgnoreCase) && reg.ValueData == "512") // 0x200
                     {
                         risk += 2;
@@ -193,6 +208,21 @@ namespace MSearch.Core.ThreatAnalyzers
                         isMalicious = true;
                         reg.ActionDelete = true;
                         AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
+                    }
+                    // Cross-reference: если Debugger содержит путь, чей .exe совпадает с именем подраздела App Paths, помеченного на удаление
+                    else if (reg.ValueName.Equals("debugger", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(reg.ValueData))
+                    {
+                        // Извлекаем последний компонент пути (имя .exe)
+                        string exeName = ExtractLastComponent(reg.ValueData);
+                        if (!string.IsNullOrEmpty(exeName) && _appPathsMarked.ContainsKey(exeName))
+                        {
+                            risk += 3;
+                            isMalicious = true;
+                            reg.ActionDelete = true;
+                            AppConfig.GetInstance.LL.LogWarnMediumMessage("_DebuggerAliasAppPath", exeName);
+                            AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
+
+                        }
                     }
                     else if (reg.ValueName.Equals("MinimumStackCommitInBytes", StringComparison.OrdinalIgnoreCase))
                     {
@@ -274,6 +304,7 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 if (reg.IsAccessDenied)
                 {
+                    // Легитимный TektonIT не блокирует доступ - удаляем всегда
                     risk += 3;
                     isMalicious = true;
                     reg.ActionDelete = true;       // Если ветка, то удалит всю ветку
@@ -284,6 +315,13 @@ namespace MSearch.Core.ThreatAnalyzers
 
                 if (reg.NodeType == RegistryNodeType.Value)
                 {
+                    // Проверяем наличие JohnPatterns в ValueData
+                    bool hasJohnPattern = MSData.GetInstance.JohnPatterns.Any(jp =>
+                        reg.ValueData.IndexOf(jp, StringComparison.OrdinalIgnoreCase) >= 0);
+
+                    if (!hasJohnPattern)
+                        return; // Не считаем угрозой без совпадения с JohnPatterns
+
                     if (Utils.ContainsNonAscii(reg.ValueName))
                     {
                         risk += 3;
@@ -426,6 +464,67 @@ namespace MSearch.Core.ThreatAnalyzers
             }
         }
 
+        private void AnalyzeLsaAuthenticationPackages(RegistryThreatObject reg, ref int risk, ref bool isMalicious)
+        {
+            if (reg.KeyPath.Equals(MSData.GetInstance.queries["LsaAuthenticationPackages"], StringComparison.OrdinalIgnoreCase))
+            {
+                if (reg.NodeType == RegistryNodeType.Value && reg.ValueName.Equals("Authentication Packages", StringComparison.OrdinalIgnoreCase))
+                {
+                    // REG_MULTI_SZ — стандартное значение содержит только "msv1_0"
+                    if (reg.ValueKind == RegistryValueKind.MultiString)
+                    {
+                        // Проверяем массив элементов: должен быть ровно ["msv1_0"]
+                        if (reg.ValueDataArray == null || reg.ValueDataArray.Length != 1 || !reg.ValueDataArray[0].Equals("msv1_0", StringComparison.OrdinalIgnoreCase))
+                        {
+                            risk += 3;
+                            isMalicious = true;
+                            reg.ActionSetData = true;
+                            reg.TargetDataArray = new string[] { "msv1_0" };
+                            reg.TargetKind = RegistryValueKind.MultiString;
+                            AppConfig.GetInstance.LL.LogSuccessMessage("_WillBeRestoredToDefault", reg.ValueName);
+
+                            // Устанавливаем RunAsPPL = 1
+                            reg.ActionSetSibling = true;
+                            reg.SiblingName = "RunAsPPL";
+                            reg.SiblingData = "1";
+                            reg.SiblingKind = RegistryValueKind.DWord;
+                            AppConfig.GetInstance.LL.LogSuccessMessage("_WillBeRestoredToDefault", "RunAsPPL");
+                        }
+                    }
+                }
+            }
+        }
+
+        private void AnalyzeAppPaths(RegistryThreatObject reg, ref int risk, ref bool isMalicious)
+        {
+            // Проверяем что путь содержит App Paths
+            if (!reg.KeyPath.Contains(MSData.GetInstance.queries["AppPaths"]))
+                return;
+
+            // Только для Key NodeType с (default) значением
+            if (reg.NodeType == RegistryNodeType.Key && reg.ValueName.Equals("(default)", StringComparison.OrdinalIgnoreCase))
+            {
+                // Проверяем расширение ValueData
+                if (!string.IsNullOrEmpty(reg.ValueData) &&
+                    (reg.ValueData.EndsWith(".bat", StringComparison.OrdinalIgnoreCase) ||
+                     reg.ValueData.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase)))
+                {
+                    risk += 3;
+                    isMalicious = true;
+                    reg.ActionDelete = true;
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.KeyPath);
+
+                    // Сохраняем mapping: имя_подразела → default_value для cross-reference с IFEO
+                    string subKeyName = Path.GetFileName(Path.GetDirectoryName(reg.KeyPath));
+                    if (!string.IsNullOrEmpty(subKeyName))
+                    {
+                        _appPathsMarked[subKeyName] = reg.ValueData;
+                        AppConfig.GetInstance.LL.LogMessage("[.]", "_AppPathsMapped", $"{subKeyName} → {reg.ValueData}", ConsoleColor.DarkYellow);
+                    }
+                }
+            }
+        }
+
         bool IsKnownMaliciousFile(string filePath)
         {
             return MSData.GetInstance.obfStr2.Any(s =>
@@ -435,6 +534,34 @@ namespace MSearch.Core.ThreatAnalyzers
         private static string GetKeyName(string keyPath)
         {
             return Path.GetFileName(keyPath) ?? keyPath;
+        }
+
+        /// <summary>
+        /// Извлекает последний компонент пути (имя .exe) из строки Debugger.
+        /// Обрабатывает пути с пробелами и без.
+        /// </summary>
+        private static string ExtractLastComponent(string valueData)
+        {
+            if (string.IsNullOrEmpty(valueData))
+                return null;
+
+            // Убираем лидирующие/концевые пробелы и кавычки
+            string trimmed = valueData.Trim().Trim('"');
+
+            // Если есть пробелы — берём последний токен
+            if (trimmed.IndexOf(' ') >= 0)
+            {
+                string[] parts = trimmed.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string lastPart = parts.Last();
+                // Убираем кавычки если остались
+                lastPart = lastPart.Trim('"');
+                return lastPart;
+            }
+            else
+            {
+                // Нет пробелов — весь trimmed это один компонент
+                return trimmed;
+            }
         }
     }
 }

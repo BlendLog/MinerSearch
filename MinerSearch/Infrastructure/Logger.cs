@@ -20,6 +20,8 @@ namespace MSearch
         public static string previousNonWhiteText = "";
         public static ConsoleColor previousColor;
 
+        static bool _no_logs = LaunchOptions.GetInstance.no_logs;
+
         internal static readonly object _logLock = new object();
         static StreamWriter _writer;
 
@@ -118,7 +120,7 @@ namespace MSearch
                     }
 
 
-                    if (!AppConfig.GetInstance.no_logs)
+                    if (!_no_logs)
                     {
                         _writer.WriteLine(logMessage);
                     }
@@ -184,7 +186,7 @@ namespace MSearch
                         }
                     }
 
-                    if (!AppConfig.GetInstance.no_logs)
+                    if (!_no_logs)
                     {
                         _writer.WriteLine(logMessage);
                     }
@@ -249,7 +251,7 @@ namespace MSearch
                     }
 
 
-                    if (!AppConfig.GetInstance.no_logs)
+                    if (!_no_logs)
                     {
                         _writer.WriteLine(logMessage);
                     }
@@ -289,7 +291,7 @@ namespace MSearch
                         Console.ResetColor();
                     }
 
-                    if (!AppConfig.GetInstance.no_logs)
+                    if (!_no_logs)
                     {
                         _writer.WriteLine(logMessage);
                     }
@@ -327,7 +329,7 @@ namespace MSearch
                         Console.ResetColor();
                     }
 
-                    if (!AppConfig.GetInstance.no_logs || force)
+                    if (!_no_logs || force)
                     {
                         _writer.WriteLine(logMessage);
                     }

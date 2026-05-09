@@ -22,9 +22,9 @@ namespace MSearch.Core.Scanners
         public async Task CollectFilesAsync()
         {
             AppConfig.GetInstance.LL.LogHeadMessage("_PreparingFileAnalysis");
-            
+
             _collectedFiles = new ConcurrentBag<FileThreatObject>();
-            
+
             List<string> scanPaths = PrepareScanPaths();
             if (scanPaths.Count == 0)
                 return;
@@ -119,7 +119,7 @@ namespace MSearch.Core.Scanners
             if (normalizedPath.Length > MAX_PATH_LENGTH)
                 return null;
 
-            long fileSize = 0;
+            long fileSize;
             try { fileSize = new FileInfo(normalizedPath).Length; }
             catch { return null; }
 

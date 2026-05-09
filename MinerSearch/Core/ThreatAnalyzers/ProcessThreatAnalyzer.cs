@@ -407,7 +407,7 @@ namespace MSearch.Core.ThreatAnalyzers
             }
 
             proc.IsProcessHollowed = ProcessManager.IsProcessHollowed(proc.ProcessId);
-            if (isValidProcess && proc.IsProcessHollowed)
+            if (proc.IsProcessHollowed)
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ProcessInj3cti0n", $"PID: {proc.ProcessId}");
                 riskLevel += 3;

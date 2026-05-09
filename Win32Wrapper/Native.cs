@@ -595,8 +595,7 @@ namespace Win32Wrapper
         public struct TOKEN_PRIVILEGES
         {
             public uint PrivilegeCount;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
-            public LUID_AND_ATTRIBUTES[] Privileges;
+            public LUID_AND_ATTRIBUTES Privilege;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -604,8 +603,7 @@ namespace Win32Wrapper
         {
             public uint PrivilegeCount;
             public uint Control;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
-            public LUID_AND_ATTRIBUTES[] Privilege;
+            public LUID_AND_ATTRIBUTES Privilege;
         }
 
         public enum BuildNumber : uint
@@ -946,6 +944,78 @@ namespace Win32Wrapper
             }
         }
 
+        public static List<string> GetAllServiceNamesFromRegistry()
+        {
+            var serviceNames = new List<string>();
+
+            try
+            {
+                using (var servicesKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services"))
+                {
+                    if (servicesKey != null)
+                    {
+                        foreach (string subKeyName in servicesKey.GetSubKeyNames())
+                        {
+                            serviceNames.Add(subKeyName);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return serviceNames;
+        }
+
+        public static string GetImagePathFromRegistryDirect(string serviceName)
+        {
+            try
+            {
+                string keyPath = $@"SYSTEM\CurrentControlSet\Services\{serviceName}";
+
+                using (var key = Registry.LocalMachine.OpenSubKey(keyPath))
+                {
+                    if (key == null)
+                        return string.Empty;
+
+                    object value = key.GetValue("ImagePath");
+                    if (value == null)
+                        return string.Empty;
+
+                    return value.ToString();
+                }
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        public static ServiceStartMode GetStartTypeFromRegistryDirect(string serviceName)
+        {
+            try
+            {
+                string keyPath = $@"SYSTEM\CurrentControlSet\Services\{serviceName}";
+
+                using (var key = Registry.LocalMachine.OpenSubKey(keyPath))
+                {
+                    if (key == null)
+                        return ServiceStartMode.Manual;
+
+                    object value = key.GetValue("Start");
+                    if (value == null)
+                        return ServiceStartMode.Manual;
+
+                    return (ServiceStartMode)(int)value;
+                }
+            }
+            catch
+            {
+                return ServiceStartMode.Manual;
+            }
+        }
+
         public static bool StartService(string serviceName)
         {
             IntPtr scm = OpenSCManager(ScmAccessRights.Connect);
@@ -960,34 +1030,6 @@ namespace Win32Wrapper
                 try
                 {
                     StartService(service);
-                    ret = true;
-                }
-                finally
-                {
-                    CloseServiceHandle(service);
-                }
-            }
-            finally
-            {
-                CloseServiceHandle(scm);
-            }
-            return ret;
-        }
-
-        public static bool StopService(string serviceName)
-        {
-            IntPtr scm = OpenSCManager(ScmAccessRights.Connect);
-
-            bool ret = false;
-            try
-            {
-                IntPtr service = OpenService(scm, serviceName, ServiceAccessRights.QueryStatus | ServiceAccessRights.Stop);
-                if (service == IntPtr.Zero)
-                    throw new ApplicationException("Could not open service.");
-
-                try
-                {
-                    StopService(service);
                     ret = true;
                 }
                 finally
@@ -1186,9 +1228,20 @@ namespace Win32Wrapper
             UserDefinedControl = 0x100,
             Delete = 0x00010000,
             StandardRightsRequired = 0xF0000,
+            ReadControl = 0x00020000,
+            WriteDac = 0x00040000,
             AllAccess = (StandardRightsRequired | QueryConfig | ChangeConfig |
                          QueryStatus | EnumerateDependants | Start | Stop | PauseContinue |
-                         Interrogate | UserDefinedControl)
+                         Interrogate | UserDefinedControl | ReadControl | WriteDac)
+        }
+
+        [Flags]
+        public enum SecurityInfos : uint
+        {
+            Owner = 0x00000001,
+            Group = 0x00000002,
+            DiscretionaryAcl = 0x00000004,
+            SystemAcl = 0x00000008
         }
 
         public enum ServiceBootFlag
@@ -1212,6 +1265,83 @@ namespace Win32Wrapper
             NetBindRemove = 0x00000008,
             NetBindEnable = 0x00000009,
             NetBindDisable = 0x0000000A
+        }
+
+        [DllImport("advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ConvertStringSecurityDescriptorToSecurityDescriptor(
+            string StringSecurityDescriptor,
+            uint StringSDRevision,
+            out IntPtr SecurityDescriptor,
+            out uint SecurityDescriptorSize);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern IntPtr LocalFree(IntPtr hMem);
+
+        [DllImport("advapi32.dll", SetLastError = true)]
+        static extern bool SetServiceObjectSecurity(
+            IntPtr hService,
+            SecurityInfos dwSecurityInformation,
+            IntPtr lpSecurityDescriptor);
+
+        public static bool ResetSDDL(string serviceName)
+        {
+            const string SDDL_DEFAULT_STRING = "D:(A;;CCLCSWRPWPDTLOCRRC;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCDCLCSWRPWPDTLOCRSDRCWD;;;WD)(A;;CCLCSWLOCRRC;;;IU)(A;;CCLCSWLOCRRC;;;SU)S:(AU;FA;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;WD)";
+            return SetSddl(serviceName, SDDL_DEFAULT_STRING);
+        }
+
+        public static bool SetSddl(string serviceName, string sddl)
+        {
+            if (string.IsNullOrWhiteSpace(serviceName))
+                return false;
+
+            if (string.IsNullOrWhiteSpace(sddl))
+                return false;
+
+            IntPtr scmHandle = IntPtr.Zero;
+            IntPtr serviceHandle = IntPtr.Zero;
+            IntPtr securityDescriptor = IntPtr.Zero;
+
+            try
+            {
+                if (!ConvertStringSecurityDescriptorToSecurityDescriptor(sddl, 1, out securityDescriptor, out _))
+                {
+                    return false;
+                }
+
+                scmHandle = OpenSCManager(
+                    null,
+                    null,
+                    ScmAccessRights.Connect);
+
+                if (scmHandle == IntPtr.Zero)
+                    return false;
+
+                serviceHandle = OpenService(
+                    scmHandle,
+                    serviceName,
+                    ServiceAccessRights.WriteDac |
+                    ServiceAccessRights.ReadControl);
+
+                if (serviceHandle == IntPtr.Zero)
+                    return false;
+
+                return SetServiceObjectSecurity(
+                    serviceHandle,
+                    SecurityInfos.DiscretionaryAcl,
+                    securityDescriptor);
+            }
+            finally
+            {
+                if (securityDescriptor != IntPtr.Zero)
+                    LocalFree(securityDescriptor);
+
+                if (serviceHandle != IntPtr.Zero)
+                    CloseServiceHandle(serviceHandle);
+
+                if (scmHandle != IntPtr.Zero)
+                    CloseServiceHandle(scmHandle);
+            }
         }
     }
 
@@ -1390,69 +1520,6 @@ namespace Win32Wrapper
             }
         }
 
-        public static string GetServiceImagePath(string serviceName)
-        {
-            IntPtr scManager = IntPtr.Zero;
-            IntPtr serviceHandle = IntPtr.Zero;
-            IntPtr buffer = IntPtr.Zero;
-
-            try
-            {
-                scManager = OpenSCManager(null, null, SC_MANAGER_CONNECT);
-                if (scManager == IntPtr.Zero)
-                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Cannot open SCManager");
-
-                serviceHandle = OpenService(scManager, serviceName, SERVICE_QUERY_CONFIG);
-                if (serviceHandle == IntPtr.Zero)
-                    throw new Win32Exception(Marshal.GetLastWin32Error(), "Cannot open service");
-
-                if (!QueryServiceConfig(serviceHandle, IntPtr.Zero, 0, out int bytesNeeded))
-                {
-                    int err = Marshal.GetLastWin32Error();
-
-                    if (err != 122) // ERROR_INSUFFICIENT_BUFFER
-                        throw new Win32Exception(err, "QueryServiceConfig size query failed");
-
-                    if (bytesNeeded <= 0)
-                        throw new Win32Exception(err, "QueryServiceConfig returned invalid buffer size");
-                }
-
-                buffer = Marshal.AllocHGlobal(bytesNeeded);
-
-                if (!QueryServiceConfig(serviceHandle, buffer, bytesNeeded, out _))
-                {
-                    int err = Marshal.GetLastWin32Error();
-
-                    return ServiceHelper.GetImagePathFromRegistry(serviceName);
-                }
-
-                QUERY_SERVICE_CONFIG config =
-                    Marshal.PtrToStructure<QUERY_SERVICE_CONFIG>(buffer);
-
-                string imagePath =
-                    Marshal.PtrToStringUni(config.lpBinaryPathName) ?? string.Empty;
-
-                return imagePath;
-            }
-            catch
-            {
-                return ServiceHelper.GetImagePathFromRegistry(serviceName);
-            }
-            finally
-            {
-                if (buffer != IntPtr.Zero)
-                    Marshal.FreeHGlobal(buffer);
-
-                if (serviceHandle != IntPtr.Zero)
-                    CloseServiceHandle(serviceHandle);
-
-                if (scManager != IntPtr.Zero)
-                    CloseServiceHandle(scManager);
-            }
-        }
-
-
-
         public static int GetServiceId(string serviceName)
         {
             IntPtr scManager = OpenSCManager(null, null, SERVICE_QUERY_STATUS);
@@ -1487,42 +1554,6 @@ namespace Win32Wrapper
             CloseServiceHandle(scManager);
 
             return processId;
-        }
-
-        public static bool IsServiceMarkedToDelete(string serviceName)
-        {
-            IntPtr scmHandle = IntPtr.Zero;
-            IntPtr serviceHandle = IntPtr.Zero;
-            IntPtr buffer = IntPtr.Zero;
-
-            try
-            {
-                scmHandle = OpenSCManager(null, null, SC_MANAGER_CONNECT);
-                if (scmHandle == IntPtr.Zero)
-                    throw new Win32Exception(Marshal.GetLastWin32Error(), "IsServiceMarkedToDelete(): can't open scmanager");
-
-                serviceHandle = OpenService(scmHandle, serviceName, SERVICE_QUERY_STATUS);
-                if (serviceHandle == IntPtr.Zero)
-                    throw new Win32Exception(Marshal.GetLastWin32Error(), "IsServiceMarkedToDelete() can't open svc");
-
-                int bytesNeeded;
-                buffer = LocalAlloc(0x0040, (UIntPtr)Marshal.SizeOf(typeof(SERVICE_STATUS_PROCESS)));
-                if (!QueryServiceStatusEx(serviceHandle, 0, buffer, Marshal.SizeOf(typeof(SERVICE_STATUS_PROCESS)), out bytesNeeded))
-                    throw new Win32Exception(Marshal.GetLastWin32Error(), "IsServiceMarkedToDelete() can't query svc status");
-
-                SERVICE_STATUS_PROCESS status = Marshal.PtrToStructure<SERVICE_STATUS_PROCESS>(buffer);
-
-                return (status.dwCurrentState == SERVICE_STOPPED) && ((status.dwServiceFlags & 0x00000001) != 0);
-            }
-            finally
-            {
-                if (buffer != IntPtr.Zero)
-                    LocalFree(buffer);
-                if (serviceHandle != IntPtr.Zero)
-                    CloseServiceHandle(serviceHandle);
-                if (scmHandle != IntPtr.Zero)
-                    CloseServiceHandle(scmHandle);
-            }
         }
     }
 }
