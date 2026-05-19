@@ -1,4 +1,5 @@
 using DBase;
+using MSearch;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using MSearch.Infrastructure;
@@ -159,13 +160,47 @@ namespace MSearch.Core.ThreatAnalyzers
         /// </summary>
         private void AnalyzeRegularFile(ShellStartupFileThreatObject file, ref int risk, ref bool isMalicious)
         {
-            // Подозрительные признаки сами по себе — повод для тревоги
-            if (file.HasInvisibleChars || file.IsSfx || file.HasHiddenAttr)
+            // Подозрительные символы и скрытый атрибут — повод для тревоги независимо от подписи
+            if (file.HasInvisibleChars || file.HasHiddenAttr)
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_Malici0usFile", file.FilePath);
                 risk += 3;
                 isMalicious = true;
                 file.ShouldMoveToQuarantine = true;
+            }
+
+            // SFX — проверяем подпись для принятия решения
+            if (file.IsSfx)
+            {
+                var sfxLevel = FileChecker.GetSfxTrustLevel(file.FilePath);
+                
+                switch (sfxLevel)
+                {
+                    case SfxTrustLevel.Unsigned:
+                        // Не подписан — явно подозрительно в автозагрузке
+                        AppConfig.GetInstance.LL.LogCautionMessage("_Malici0usFile", file.FilePath);
+                        risk += 3;
+                        isMalicious = true;
+                        file.ShouldMoveToQuarantine = true;
+                        break;
+
+                    case SfxTrustLevel.BadCert:
+                        // Подписан, но сертификат проблемный — пониженный риск
+                        AppConfig.GetInstance.LL.LogWarnMediumMessage("_sfxArchive", file.FilePath);
+                        risk += 1;
+                        if (!file.ShouldMoveToQuarantine)
+                            file.ShouldMoveToQuarantine = true;
+                        break;
+
+                    case SfxTrustLevel.SignedValid:
+                        // Валидная подпись — просто лог, не карантиним автоматически
+                        AppConfig.GetInstance.LL.LogWarnMediumMessage("_sfxArchive", file.FilePath);
+                        break;
+
+                    default:
+                        // Unknown или NotSfx — игнорируем
+                        break;
+                }
             }
 
             // .NET с высокой энтропией — дополнительный маркер

@@ -1,7 +1,5 @@
-using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
-using Win32Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

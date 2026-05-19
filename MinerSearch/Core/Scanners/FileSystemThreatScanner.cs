@@ -283,35 +283,48 @@ namespace MSearch.Core.Scanners
             {
                 foreach (string exeFile in FileEnumerator.GetFiles(_baseDirectory, "*.exe", 0, LaunchOptions.GetInstance.maxSubfolders))
                 {
-                    if (FileChecker.IsSfxArchive(exeFile))
+                    if (!FileChecker.IsSfxArchive(exeFile))
+                        continue;
+
+                    WinVerifyTrustResult trustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(exeFile);
+
+                    // Пропускаем файлы с валидной подписью или ошибкой проверки
+                    if (trustResult == WinVerifyTrustResult.Success || trustResult == WinVerifyTrustResult.Error)
+                        continue;
+
+                    long fileSize = 0;
+                    string originalName = "";
+                    string description = "";
+                    string hash = "";
+
+                    try { fileSize = new FileInfo(exeFile).Length; } catch { }
+                    try
                     {
-                        WinVerifyTrustResult trustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(exeFile);
-                        
-                        if (trustResult != WinVerifyTrustResult.Success && trustResult != WinVerifyTrustResult.Error)
-                        {
-                            long fileSize = 0;
-                            string originalName = "";
-                            string description = "";
-                            string hash = "";
+                        var fvi = FileVersionInfo.GetVersionInfo(exeFile);
+                        originalName = fvi.OriginalFilename ?? "";
+                        description = fvi.FileDescription ?? "";
+                    } catch { }
+                    try { hash = FileChecker.CalculateSHA1(exeFile); } catch { }
 
-                            try { fileSize = new FileInfo(exeFile).Length; } catch { }
-                            try
-                            {
-                                var fvi = FileVersionInfo.GetVersionInfo(exeFile);
-                                originalName = fvi.OriginalFilename ?? "";
-                                description = fvi.FileDescription ?? "";
-                            } catch { }
-                            try { hash = FileChecker.CalculateSHA1(exeFile); } catch { }
-
-                            // SourceTag = "unsigned_sfx" — неподписанный SFX архив
-                            var fileThreat = new FileThreatObject(exeFile, Path.GetFileName(exeFile), fileSize, originalName, description, hash, trustResult)
-                            {
-                                SourceTag = "unsigned_sfx"
-                            };
-
-                            results.Add(fileThreat);
-                        }
+                    // Определяем тег по уровню доверия подписи
+                    string sourceTag;
+                    if (trustResult == WinVerifyTrustResult.FileNotSigned)
+                    {
+                        sourceTag = "sfx_unsigned";     // Не подписан — явно подозрительно
                     }
+                    else
+                    {
+                        // SubjectCertExpired, UntrustedRoot, SignatureOrFileCorrupt и т.д.
+                        // Подписан, но сертификат проблемный — тоже подозрительно
+                        sourceTag = "sfx_bad_cert";
+                    }
+
+                    var fileThreat = new FileThreatObject(exeFile, Path.GetFileName(exeFile), fileSize, originalName, description, hash, trustResult)
+                    {
+                        SourceTag = sourceTag
+                    };
+
+                    results.Add(fileThreat);
                 }
             }
             catch (Exception ex)

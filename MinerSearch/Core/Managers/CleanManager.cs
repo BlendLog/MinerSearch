@@ -156,13 +156,24 @@ namespace MSearch.Core.Managers
             // Записываем в ScanResult
             _state.AddScanResult(new ScanResult(decision.ObjectType, description, actionType, note, decision.Target.Id, decision.Target.Kind));
 
-            // Счётчики
+            // Подсчёт обнаруженных угроз — увеличивается при ЛЮБОМ результате
+            if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected || decision.ObjectType == ScanObjectType.Rootkit)
+                _state.IncrementFoundThreats();
+            else if (decision.ObjectType == ScanObjectType.Suspicious)
+                _state.IncrementFoundSuspicious();
+
+            // Neutralized threats: только при успешной обработке
             if (result == ApplyResult.Success)
             {
-                if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected || decision.ObjectType == ScanObjectType.Rootkit)
-                    _state.IncrementFoundThreats();
-                else if (decision.ObjectType == ScanObjectType.Suspicious)
-                    _state.IncrementFoundSuspicious();
+                if (actionType == ScanActionType.Cured ||
+                    actionType == ScanActionType.Deleted ||
+                    actionType == ScanActionType.Terminated ||
+                    actionType == ScanActionType.Quarantine ||
+                    actionType == ScanActionType.Disabled ||
+                    actionType == ScanActionType.Suspended)
+                {
+                    _state.IncrementNeutralizedThreats();
+                }
             }
         }
 

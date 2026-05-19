@@ -2633,88 +2633,154 @@ Before proceeding, you must read the license agreement (license.rtf or a copy of
   <data name="_AppPathsMapped_RU" xml:space="preserve">
     <value>Подмена путей приложений из</value>
   </data>
-	<data name="_DataGridHeader_Class_EN" xml:space="preserve">
+  <data name="_DataGridHeader_Class_EN" xml:space="preserve">
     <value>Class</value>
   </data>
-	<data name="_DataGridHeader_Class_RU" xml:space="preserve">
+  <data name="_DataGridHeader_Class_RU" xml:space="preserve">
     <value>Класс</value>
   </data>
-	<data name="_ThreatClass_Process_EN" xml:space="preserve">
+  <data name="_ThreatClass_Process_EN" xml:space="preserve">
     <value>Process</value>
   </data>
-	<data name="_ThreatClass_Process_RU" xml:space="preserve">
+  <data name="_ThreatClass_Process_RU" xml:space="preserve">
     <value>Процесс</value>
   </data>
-	<data name="_ThreatClass_RegistryObject_EN" xml:space="preserve">
+  <data name="_ThreatClass_RegistryObject_EN" xml:space="preserve">
     <value>Registry Key / Value</value>
   </data>
-	<data name="_ThreatClass_RegistryObject_RU" xml:space="preserve">
+  <data name="_ThreatClass_RegistryObject_RU" xml:space="preserve">
     <value>Ключ / Значение реестра</value>
   </data>
-	<data name="_ThreatClass_File_EN" xml:space="preserve">
+  <data name="_ThreatClass_File_EN" xml:space="preserve">
     <value>File</value>
   </data>
-	<data name="_ThreatClass_File_RU" xml:space="preserve">
+  <data name="_ThreatClass_File_RU" xml:space="preserve">
     <value>Файл</value>
   </data>
-	<data name="_ThreatClass_Directory_EN" xml:space="preserve">
+  <data name="_ThreatClass_Directory_EN" xml:space="preserve">
     <value>Directory</value>
   </data>
-	<data name="_ThreatClass_Directory_RU" xml:space="preserve">
+  <data name="_ThreatClass_Directory_RU" xml:space="preserve">
     <value>Каталог</value>
   </data>
-	<data name="_ThreatClass_FirewallRule_EN" xml:space="preserve">
+  <data name="_ThreatClass_FirewallRule_EN" xml:space="preserve">
     <value>Firewall Rule</value>
   </data>
-	<data name="_ThreatClass_FirewallRule_RU" xml:space="preserve">
+  <data name="_ThreatClass_FirewallRule_RU" xml:space="preserve">
     <value>Правило фаервола</value>
   </data>
-	<data name="_ThreatClass_UserProfile_EN" xml:space="preserve">
+  <data name="_ThreatClass_UserProfile_EN" xml:space="preserve">
     <value>User Profile</value>
   </data>
-	<data name="_ThreatClass_UserProfile_RU" xml:space="preserve">
+  <data name="_ThreatClass_UserProfile_RU" xml:space="preserve">
     <value>Профиль пользователя</value>
   </data>
-	<data name="_ThreatClass_WmiSubscription_EN" xml:space="preserve">
+  <data name="_ThreatClass_WmiSubscription_EN" xml:space="preserve">
     <value>WMI Subscription</value>
   </data>
-	<data name="_ThreatClass_WmiSubscription_RU" xml:space="preserve">
+  <data name="_ThreatClass_WmiSubscription_RU" xml:space="preserve">
     <value>WMI Подписка</value>
   </data>
-	<data name="_ThreatClass_ScheduledTask_EN" xml:space="preserve">
+  <data name="_ThreatClass_ScheduledTask_EN" xml:space="preserve">
     <value>Scheduled Task</value>
   </data>
-	<data name="_ThreatClass_ScheduledTask_RU" xml:space="preserve">
+  <data name="_ThreatClass_ScheduledTask_RU" xml:space="preserve">
     <value>Планируемая задача</value>
   </data>
-	<data name="_ThreatClass_Service_EN" xml:space="preserve">
+  <data name="_ThreatClass_Service_EN" xml:space="preserve">
     <value>Service</value>
   </data>
-	<data name="_ThreatClass_Service_RU" xml:space="preserve">
+  <data name="_ThreatClass_Service_RU" xml:space="preserve">
     <value>Служа</value>
   </data>
-	<data name="_ThreatClass_ShellStartupFile_EN" xml:space="preserve">
+  <data name="_ThreatClass_ShellStartupFile_EN" xml:space="preserve">
     <value>Shell Startup File</value>
   </data>
-	<data name="_ThreatClass_ShellStartupFile_RU" xml:space="preserve">
+  <data name="_ThreatClass_ShellStartupFile_RU" xml:space="preserve">
     <value>Файл автозагрузки</value>
   </data>
-	<data name="_ThreatClass_Hosts_EN" xml:space="preserve">
+  <data name="_ThreatClass_Hosts_EN" xml:space="preserve">
     <value>Hosts File</value>
   </data>
-	<data name="_ThreatClass_Hosts_RU" xml:space="preserve">
+  <data name="_ThreatClass_Hosts_RU" xml:space="preserve">
     <value>Файл Hosts</value>
   </data>
-	<data name="_ThreatClass_Other_EN" xml:space="preserve">
+  <data name="_ThreatClass_Other_EN" xml:space="preserve">
     <value>Other</value>
   </data>
-	<data name="_ThreatClass_Other_RU" xml:space="preserve">
+  <data name="_ThreatClass_Other_RU" xml:space="preserve">
     <value>Другое</value>
   </data>
-	<data name="_ThreatClass_Unknown_EN" xml:space="preserve">
+  <data name="_ThreatClass_Unknown_EN" xml:space="preserve">
     <value>Unknown</value>
   </data>
-	<data name="_ThreatClass_Unknown_RU" xml:space="preserve">
+  <data name="_ThreatClass_Unknown_RU" xml:space="preserve">
     <value>Неизвестный</value>
+  </data>
+  <data name="_AccessDenied_EN" xml:space="preserve">
+    <value>Access denied</value>
+  </data>
+  <data name="_AccessDenied_RU" xml:space="preserve">
+    <value>Отказано в доступе</value>
+  </data>
+  <data name="_RestoreFormTitle_EN" xml:space="preserve">
+    <value>Restore from Quarantine</value>
+  </data>
+  <data name="_RestoreFormTitle_RU" xml:space="preserve">
+    <value>Восстановление из карантина</value>
+  </data>
+  <data name="_RestoreOptionOriginalPath_EN" xml:space="preserve">
+    <value>Restore to original location</value>
+  </data>
+  <data name="_RestoreOptionOriginalPath_RU" xml:space="preserve">
+    <value>Восстановить в исходное</value>
+  </data>
+  <data name="_RestoreOptionOriginalDesc_EN" xml:space="preserve">
+    <value>Each selected file will be restored to its original location</value>
+  </data>
+  <data name="_RestoreOptionOriginalDesc_RU" xml:space="preserve">
+    <value>Каждый выбранный файл будет восстановлен в его исходное расположение</value>
+  </data>
+  <data name="_RestoreOptionCustomPath_EN" xml:space="preserve">
+    <value>Specify directory</value>
+  </data>
+  <data name="_RestoreOptionCustomPath_RU" xml:space="preserve">
+    <value>Указанный каталог</value>
+  </data>
+  <data name="_RestoreOptionCustomDesc_EN" xml:space="preserve">
+    <value>Each selected file will be restored to this directory</value>
+  </data>
+  <data name="_RestoreOptionCustomDesc_RU" xml:space="preserve">
+    <value>Каждый выбранный файл будет восстановлен в этот каталог</value>
+  </data>
+  <data name="_BrowseButton_EN" xml:space="preserve">
+    <value>Select...</value>
+  </data>
+  <data name="_BrowseButton_RU" xml:space="preserve">
+    <value>Выбрать...</value>
+  </data>
+  <data name="_RestoreBtn_EN" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="_RestoreBtn_RU" xml:space="preserve">
+    <value>Восстановить</value>
+  </data>
+  <data name="_RestoreFormPathRequired_EN" xml:space="preserve">
+    <value>Please select a directory</value>
+  </data>
+  <data name="_RestoreFormPathRequired_RU" xml:space="preserve">
+    <value>Укажите каталог</value>
+  </data>
+  <data name="_RestoreFormPathInvalid_EN" xml:space="preserve">
+    <value>Invalid directory path</value>
+  </data>
+  <data name="_RestoreFormPathInvalid_RU" xml:space="preserve">
+    <value>Некорректный путь к каталогу</value>
+  </data>
+  <data name="_RestoreFolderDialog_EN" xml:space="preserve">
+    <value>Select the folder where you want to restore files</value>
+  </data>
+  <data name="_RestoreFolderDialog_RU" xml:space="preserve">
+    <value>Выберите каталог, в который следует восстановить файлы</value>
   </data>
 </root>

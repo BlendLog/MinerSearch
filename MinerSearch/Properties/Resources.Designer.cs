@@ -99,6 +99,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Access denied.
+        /// </summary>
+        internal static string _AccessDenied_EN {
+            get {
+                return ResourceManager.GetString("_AccessDenied_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отказано в доступе.
+        /// </summary>
+        internal static string _AccessDenied_RU {
+            get {
+                return ResourceManager.GetString("_AccessDenied_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Active.
         /// </summary>
         internal static string _ActionType_Active_EN {
@@ -509,6 +527,24 @@ namespace MSearch.Properties {
         internal static string _BootMode_RU {
             get {
                 return ResourceManager.GetString("_BootMode_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Select....
+        /// </summary>
+        internal static string _BrowseButton_EN {
+            get {
+                return ResourceManager.GetString("_BrowseButton_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выбрать....
+        /// </summary>
+        internal static string _BrowseButton_RU {
+            get {
+                return ResourceManager.GetString("_BrowseButton_RU", resourceCulture);
             }
         }
         
@@ -5081,6 +5117,24 @@ namespace MSearch.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Restore.
         /// </summary>
+        internal static string _RestoreBtn_EN {
+            get {
+                return ResourceManager.GetString("_RestoreBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Восстановить.
+        /// </summary>
+        internal static string _RestoreBtn_RU {
+            get {
+                return ResourceManager.GetString("_RestoreBtn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Restore.
+        /// </summary>
         internal static string _RestoreBtnText_EN {
             get {
                 return ResourceManager.GetString("_RestoreBtnText_EN", resourceCulture);
@@ -5093,6 +5147,150 @@ namespace MSearch.Properties {
         internal static string _RestoreBtnText_RU {
             get {
                 return ResourceManager.GetString("_RestoreBtnText_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Select the folder where you want to restore files.
+        /// </summary>
+        internal static string _RestoreFolderDialog_EN {
+            get {
+                return ResourceManager.GetString("_RestoreFolderDialog_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выберите каталог, в который следует восстановить файлы.
+        /// </summary>
+        internal static string _RestoreFolderDialog_RU {
+            get {
+                return ResourceManager.GetString("_RestoreFolderDialog_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Invalid directory path.
+        /// </summary>
+        internal static string _RestoreFormPathInvalid_EN {
+            get {
+                return ResourceManager.GetString("_RestoreFormPathInvalid_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Некорректный путь к каталогу.
+        /// </summary>
+        internal static string _RestoreFormPathInvalid_RU {
+            get {
+                return ResourceManager.GetString("_RestoreFormPathInvalid_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Please select a directory.
+        /// </summary>
+        internal static string _RestoreFormPathRequired_EN {
+            get {
+                return ResourceManager.GetString("_RestoreFormPathRequired_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Укажите каталог.
+        /// </summary>
+        internal static string _RestoreFormPathRequired_RU {
+            get {
+                return ResourceManager.GetString("_RestoreFormPathRequired_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Restore from Quarantine.
+        /// </summary>
+        internal static string _RestoreFormTitle_EN {
+            get {
+                return ResourceManager.GetString("_RestoreFormTitle_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Восстановление из карантина.
+        /// </summary>
+        internal static string _RestoreFormTitle_RU {
+            get {
+                return ResourceManager.GetString("_RestoreFormTitle_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Each selected file will be restored to this directory.
+        /// </summary>
+        internal static string _RestoreOptionCustomDesc_EN {
+            get {
+                return ResourceManager.GetString("_RestoreOptionCustomDesc_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Каждый выбранный файл будет восстановлен в этот каталог.
+        /// </summary>
+        internal static string _RestoreOptionCustomDesc_RU {
+            get {
+                return ResourceManager.GetString("_RestoreOptionCustomDesc_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Specify directory.
+        /// </summary>
+        internal static string _RestoreOptionCustomPath_EN {
+            get {
+                return ResourceManager.GetString("_RestoreOptionCustomPath_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Указанный каталог.
+        /// </summary>
+        internal static string _RestoreOptionCustomPath_RU {
+            get {
+                return ResourceManager.GetString("_RestoreOptionCustomPath_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Each selected file will be restored to its original location.
+        /// </summary>
+        internal static string _RestoreOptionOriginalDesc_EN {
+            get {
+                return ResourceManager.GetString("_RestoreOptionOriginalDesc_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Каждый выбранный файл будет восстановлен в его исходное расположение.
+        /// </summary>
+        internal static string _RestoreOptionOriginalDesc_RU {
+            get {
+                return ResourceManager.GetString("_RestoreOptionOriginalDesc_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Restore to original location.
+        /// </summary>
+        internal static string _RestoreOptionOriginalPath_EN {
+            get {
+                return ResourceManager.GetString("_RestoreOptionOriginalPath_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Восстановить в исходное.
+        /// </summary>
+        internal static string _RestoreOptionOriginalPath_RU {
+            get {
+                return ResourceManager.GetString("_RestoreOptionOriginalPath_RU", resourceCulture);
             }
         }
         

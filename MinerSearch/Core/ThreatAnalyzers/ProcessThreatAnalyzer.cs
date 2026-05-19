@@ -52,14 +52,13 @@ namespace MSearch.Core.ThreatAnalyzers
             }
 
             int riskLevel = 0;
-            bool isValidProcess = false;
 
             if (!proc.FileProcess.IsValidSignature)
             {
                 riskLevel += 1;
             }
 
-            if (ProcessManager.IsTrustedProcess(MSData.GetInstance, proc.FileProcess.FileNameOriginal, isValidProcess))
+            if (ProcessManager.IsTrustedProcess(MSData.GetInstance, proc.FileProcess.FileNameOriginal, proc.FileProcess.IsValidSignature))
             {
                 yield break;
             }
@@ -90,7 +89,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 riskLevel += 1;
             }
 
-            if (proc.ProcessName.IndexOf("helper", StringComparison.OrdinalIgnoreCase) >= 0 && !isValidProcess)
+            if (proc.ProcessName.IndexOf("helper", StringComparison.OrdinalIgnoreCase) >= 0 && !proc.FileProcess.IsValidSignature)
             {
                 riskLevel += 1;
             }
@@ -204,7 +203,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             string fullPath = proc.FileProcess.FilePath;
             string appData = FileSystemManager.NormalizeExtendedPath(Environment.GetEnvironmentVariable("AppData")) ?? "";
-            if (!isValidProcess && fullPath.StartsWith(appData, StringComparison.OrdinalIgnoreCase) && string.IsNullOrEmpty(Path.GetExtension(fullPath)))
+            if (!proc.FileProcess.IsValidSignature && fullPath.StartsWith(appData, StringComparison.OrdinalIgnoreCase) && string.IsNullOrEmpty(Path.GetExtension(fullPath)))
             {
                 AppConfig.GetInstance.LL.LogWarnMessage("_SuspiciousPath", fullPath);
                 proc.FileProcess.IsSuspiciousPath = true;
@@ -238,7 +237,7 @@ namespace MSearch.Core.ThreatAnalyzers
                         riskLevel += 2;
                     }
 
-                    if (proc.FileProcess.FileSize >= MSData.GetInstance.constantFileSize[i] * 3 && !isValidProcess)
+                    if (proc.FileProcess.FileSize >= MSData.GetInstance.constantFileSize[i] * 3 && !proc.FileProcess.IsValidSignature)
                     {
                         AppConfig.GetInstance.LL.LogWarnMessage("_SuspiciousFileSize", FileChecker.GetFileSize(proc.FileProcess.FileSize));
                         riskLevel += 1;

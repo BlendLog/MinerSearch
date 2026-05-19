@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 
@@ -461,6 +462,40 @@ namespace MSearch
             return decryptedData;
         }
 
+        string ResolveFileNameCollision(string targetPath, string quarantineHash)
+        {
+            if (!File.Exists(targetPath))
+                return targetPath;
+
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(targetPath))
+                {
+                    byte[] hash = md5.ComputeHash(stream);
+                    string existingHash = BitConverter.ToString(hash).Replace("-", "").ToLower();
+
+                    if (existingHash == quarantineHash)
+                        return targetPath;
+                }
+            }
+
+            string directory = Path.GetDirectoryName(targetPath);
+            string fileName = Path.GetFileNameWithoutExtension(targetPath);
+            string extension = Path.GetExtension(targetPath);
+            string collisionName = $"{fileName}_{quarantineHash}{extension}";
+            string collisionPath = Path.Combine(directory, collisionName);
+
+            int counter = 1;
+            while (File.Exists(collisionPath))
+            {
+                collisionName = $"{fileName}_{quarantineHash}_{counter}{extension}";
+                collisionPath = Path.Combine(directory, collisionName);
+                counter++;
+            }
+
+            return collisionPath;
+        }
+
         void dataGridQuarantineFiles_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
             LBL_QFilesCount.Text = dataGridQuarantineFiles.Columns.GetColumnsWidth(DataGridViewElementStates.Visible).ToString();
@@ -572,7 +607,66 @@ namespace MSearch
 
         void RestoreSelectedBtn_Click(object sender, EventArgs e)
         {
-            DeleteOrRestoreAction(false, "_QuarantineRestoredFile");
+            if (SELECTED_ROWS_COUNT == 0)
+            {
+                MessageBoxCustom.Show(AppConfig.GetInstance.LL.GetLocalizedString("_DataGrid_NoSelection"), AppConfig.GetInstance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (UnlockObjectClass.IsRegistryKeyBlocked(REGISTRY_PATH_MAIN))
+            {
+                UnlockObjectClass.UnblockRegistry(REGISTRY_PATH_MAIN);
+            }
+
+            using (var restoreForm = new QuarantineRestoreForm())
+            {
+                if (restoreForm.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                bool useCustomPath = restoreForm.rbCustomPath.Checked;
+                string customPath = restoreForm.SelectedCustomPath;
+
+                List<string> affectedFiles = new List<string>();
+
+                for (int i = dataGridQuarantineFiles.Rows.Count - 1; i >= 0; i--)
+                {
+                    DataGridViewRow row = dataGridQuarantineFiles.Rows[i];
+                    var cell = row.Cells["Selected"] as DataGridViewCheckBoxCell;
+
+                    if (GetCheckState(cell) == CheckState.Checked)
+                    {
+                        string originalPath = row.Cells["PathColumn"].Value?.ToString();
+                        string hash = row.Cells["HashColumn"].Value?.ToString();
+
+                        string targetPath = useCustomPath
+                            ? Path.Combine(customPath, Path.GetFileName(originalPath))
+                            : originalPath;
+
+                        targetPath = ResolveFileNameCollision(targetPath, hash);
+
+                        if (RestoreFileFromQuarantine(REGISTRY_PATH_QUARANTINE, hash, targetPath))
+                        {
+                            dataGridQuarantineFiles.Rows.RemoveAt(i);
+                            UpdateQuarantineCount(REGISTRY_PATH_QUARANTINE);
+                            affectedFiles.Add(targetPath);
+                        }
+                    }
+                }
+
+                if (affectedFiles.Count > 0)
+                {
+                    StringBuilder pathList = new StringBuilder(AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineRestoredFile").Replace("#FILESCOUNT#", affectedFiles.Count.ToString()) + "\n");
+                    foreach (string filePath in affectedFiles)
+                    {
+                        pathList.Append($"\n{filePath}");
+                    }
+
+                    UpdateHeaderCheckBoxState();
+                    MessageBoxCustom.Show(pathList.ToString(), AppConfig.GetInstance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                SELECTED_ROWS_COUNT = 0;
+            }
         }
 
         void DeleteSelectedBtn_Click(object sender, EventArgs e)

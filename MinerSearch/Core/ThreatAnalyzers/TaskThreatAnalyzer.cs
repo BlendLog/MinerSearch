@@ -1,4 +1,5 @@
 ﻿using DBase;
+using MSearch;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
@@ -25,7 +26,7 @@ namespace MSearch.Core.ThreatAnalyzers
             MSData.GetInstance.queries["PowerShellPath"],
         };
 
-        readonly Regex IfExistPathRegex = new Regex(@"if\s+exist\s+(?:""|\^"")(?<filepath>[A-Z]:\\.*?\.(?:dll|wsf))(?:""|\^"")", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        readonly Regex IfExistPathRegex = new Regex(@"if\s+exist\s+(?:""|\^"")(?<filepath>[A-Z]:\\.*?\.(?:dll|wsf|ps1|bat|cmd|psm1|psd1|psxml))(?:""|\^"")", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 
         public TaskThreatAnalyzer(IFileContentAnalyzer fileAnalyzer)
@@ -155,6 +156,7 @@ namespace MSearch.Core.ThreatAnalyzers
                                     {
                                         taskObj.ActionDeleteTask = true;
                                         taskObj.ActionDeleteAdditionalFile = true;
+                                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
                                     }
 
                                     taskObj.LinkedFileFromArgs = dll;
@@ -228,6 +230,8 @@ namespace MSearch.Core.ThreatAnalyzers
                                     {
                                         taskObj.ActionDeleteTask = true;
                                         taskObj.ActionDeleteAdditionalFile = true;
+                                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                                     }
                                 }
 
@@ -268,6 +272,8 @@ namespace MSearch.Core.ThreatAnalyzers
                                         {
                                             taskObj.ActionDeleteTask = true;
                                             taskObj.ActionDeleteAdditionalFile = true;
+                                            AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                                         }
                                     }
 
@@ -295,6 +301,8 @@ namespace MSearch.Core.ThreatAnalyzers
                                         {
                                             taskObj.ActionDeleteTask = true;
                                             taskObj.ActionDeleteAdditionalFile = true;
+                                            AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                                         }
                                     }
 
@@ -315,14 +323,16 @@ namespace MSearch.Core.ThreatAnalyzers
 
                         if (File.Exists(expectedSuspiciousPath))
                         {
-                            if (!LaunchOptions.GetInstance.ScanOnly)
+                            taskObj.LinkedFileFromArgs = CreateFileObject(expectedSuspiciousPath);
+                            if (!LaunchOptions.GetInstance.ScanOnly && taskObj.LinkedFileFromArgs != null)
                             {
                                 taskObj.ActionDeleteTask = true;
                                 taskObj.ActionDeleteAdditionalFile = true;
                                 taskObj.LinkedFileFromArgs.ShouldDisableExecute = true;
+                                AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                             }
 
-                            taskObj.LinkedFileFromArgs = CreateFileObject(expectedSuspiciousPath);
                             MarkFileForAction(taskObj.LinkedFileFromArgs);
                             taskObj.DetectionReasonRes = "_Malic1ousTask";
                             yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
@@ -344,6 +354,7 @@ namespace MSearch.Core.ThreatAnalyzers
                     taskObj.DetectionReasonRes = "_Malic1ousTask";
                     MarkFileForAction(taskObj.LinkedFile);
 
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
                     yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
                 }
 
@@ -387,6 +398,8 @@ namespace MSearch.Core.ThreatAnalyzers
                                     {
                                         taskObj.ActionDeleteTask = true;
                                         taskObj.ActionDeleteAdditionalFile = true;
+                                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                                     }
 
                                     taskObj.LinkedFileFromArgs = CreateFileObject(ps1Path);
@@ -402,6 +415,8 @@ namespace MSearch.Core.ThreatAnalyzers
                                 {
                                     taskObj.ActionDeleteTask = true;
                                     taskObj.DetectionReasonRes = "_EmptyTask";
+                                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                                     yield return new ThreatDecision(taskObj, risk, ScanObjectType.Unknown);
                                 }
                             }
@@ -423,14 +438,16 @@ namespace MSearch.Core.ThreatAnalyzers
                             !additionalFile.TrustResult.Equals(WinVerifyTrustResult.Success))
                         {
 
+                            taskObj.LinkedFileFromArgs = additionalFile;
                             if (!LaunchOptions.GetInstance.ScanOnly)
                             {
                                 taskObj.ActionDeleteTask = true;
                                 taskObj.ActionDeleteAdditionalFile = true;
                                 taskObj.LinkedFileFromArgs.ShouldDisableExecute = true;
+                                AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                             }
 
-                            taskObj.LinkedFileFromArgs = additionalFile;
                             MarkFileForAction(taskObj.LinkedFileFromArgs);
                             taskObj.DetectionReasonRes = "_Malic1ousTask";
                             yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
@@ -442,6 +459,8 @@ namespace MSearch.Core.ThreatAnalyzers
                         {
                             taskObj.ActionDeleteTask = true;
                             taskObj.DetectionReasonRes = "_EmptyTask";
+                            AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                             yield return new ThreatDecision(taskObj, risk, ScanObjectType.Unknown);
                         }
                     }
@@ -454,6 +473,8 @@ namespace MSearch.Core.ThreatAnalyzers
                     {
                         taskObj.ActionDeleteTask = true;
                         MarkFileForAction(taskObj.LinkedFile);
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                     }
 
                     taskObj.DetectionReasonRes = "_Malic1ousTask";
@@ -464,12 +485,14 @@ namespace MSearch.Core.ThreatAnalyzers
 
             if ((filePathFromTask.EndsWith(".bat", StringComparison.OrdinalIgnoreCase) || filePathFromTask.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase)))
             {
-                if (taskObj.LinkedFile.FileSize >= 1024 * 1024)
+                if (taskObj.LinkedFile != null && taskObj.LinkedFile.FileSize >= 1024 * 1024)
                 {
                     if (!LaunchOptions.GetInstance.ScanOnly)
                     {
                         taskObj.ActionDeleteTask = true;
                         taskObj.ActionDeleteFile = true;
+
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
                     }
 
                     taskObj.LinkedFile.ShouldDisableExecute = true;
@@ -494,14 +517,20 @@ namespace MSearch.Core.ThreatAnalyzers
                     {
                         if (!LaunchOptions.GetInstance.ScanOnly)
                         {
+                            taskObj.LinkedFileFromArgs = CreateFileObject(msiFile);
+
+                            if (taskObj.LinkedFileFromArgs != null)
+                            {
+                                MarkFileForAction(taskObj.LinkedFileFromArgs);
+                                taskObj.LinkedFileFromArgs.ShouldDisableExecute = true;
+                            }
+
                             taskObj.ActionDeleteTask = true;
                             taskObj.ActionDeleteAdditionalFile = true;
-                            taskObj.LinkedFileFromArgs.ShouldDisableExecute = true;
+                            AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
 
                         }
 
-                        taskObj.LinkedFileFromArgs = CreateFileObject(msiFile);
-                        MarkFileForAction(taskObj.LinkedFileFromArgs);
                         taskObj.DetectionReasonRes = "_Malic1ousTask";
                         yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
                     }
@@ -523,6 +552,8 @@ namespace MSearch.Core.ThreatAnalyzers
                             {
                                 taskObj.ActionDeleteTask = true;
                                 taskObj.ActionDeleteAdditionalFile = true;
+                                AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                             }
 
                             taskObj.LinkedFileFromArgs = CreateFileObject(wsfFile);
@@ -545,6 +576,8 @@ namespace MSearch.Core.ThreatAnalyzers
                 {
                     taskObj.ActionDeleteTask = true;
                     MarkFileForAction(taskObj.LinkedFile);
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                 }
 
                 taskObj.DetectionReasonRes = "_Malic1ousTask";
@@ -556,14 +589,16 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 string dllPath = FileSystemManager.ExtractDllPath(args);
 
-                if (!LaunchOptions.GetInstance.ScanOnly)
+                taskObj.LinkedFileFromArgs = CreateFileObject(dllPath);
+                if (!LaunchOptions.GetInstance.ScanOnly && taskObj.LinkedFileFromArgs != null)
                 {
                     taskObj.ActionDeleteTask = true;
                     taskObj.ActionDeleteAdditionalFile = true;
                     taskObj.LinkedFileFromArgs.ShouldDisableExecute = true;
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                 }
 
-                taskObj.LinkedFileFromArgs = CreateFileObject(dllPath);
                 MarkFileForAction(taskObj.LinkedFileFromArgs);
                 taskObj.DetectionReasonRes = "_Malic1ousTask";
                 yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
@@ -584,6 +619,8 @@ namespace MSearch.Core.ThreatAnalyzers
                     {
                         taskObj.ActionDeleteTask = true;
                         MarkFileForAction(taskObj.LinkedFile);
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                     }
 
                     taskObj.DetectionReasonRes = "_Malic1ousTask";
@@ -647,21 +684,25 @@ namespace MSearch.Core.ThreatAnalyzers
                             {
                                 taskObj.ActionDeleteTask = true;
                                 taskObj.DetectionReasonRes = "_EmptyTask";
+                                AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
                                 yield return new ThreatDecision(taskObj, risk, ScanObjectType.Unknown);
+
                             }
                         }
 
                         if (score >= 5)
                         {
-                            if (!LaunchOptions.GetInstance.ScanOnly)
+                            taskObj.LinkedFileFromArgs = CreateFileObject(fullPathToJs);
+                            if (!LaunchOptions.GetInstance.ScanOnly && taskObj.LinkedFile != null)
                             {
                                 taskObj.ActionDeleteTask = true;
                                 taskObj.ActionDeleteFile = true;
                                 taskObj.LinkedFile.ShouldDisableExecute = true;
                                 MarkFileForAction(taskObj.LinkedFile);
+                                AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                             }
 
-                            taskObj.LinkedFileFromArgs = CreateFileObject(fullPathToJs);
                             MarkFileForAction(taskObj.LinkedFileFromArgs);
                             taskObj.DetectionReasonRes = "_Malic1ousTask";
                             yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
@@ -675,12 +716,14 @@ namespace MSearch.Core.ThreatAnalyzers
                 args.Equals("/LHS", StringComparison.OrdinalIgnoreCase) ||
                 args.Equals("/T", StringComparison.OrdinalIgnoreCase)))
             {
-                if (!LaunchOptions.GetInstance.ScanOnly)
+                if (!LaunchOptions.GetInstance.ScanOnly && taskObj.LinkedFile != null)
                 {
                     taskObj.ActionDeleteTask = true;
                     taskObj.ActionDeleteFile = true;
                     taskObj.LinkedFile.ShouldDisableExecute = true;
                     MarkFileForAction(taskObj.LinkedFile);
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                 }
 
                 taskObj.DetectionReasonRes = "_Malic1ousTask";
@@ -693,6 +736,8 @@ namespace MSearch.Core.ThreatAnalyzers
                 {
                     taskObj.ActionDeleteTask = true;
                     MarkFileForAction(taskObj.LinkedFile);
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                 }
 
                 taskObj.DetectionReasonRes = "_Malic1ousTask";
@@ -703,12 +748,14 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 if (args.Equals(new StringBuilder("/v").Append("er").Append("ys").Append("il").Append("en").Append("t").ToString(), StringComparison.OrdinalIgnoreCase) || (FileChecker.IsExecutable(filePathFromTask) && string.IsNullOrEmpty(Path.GetExtension(filePathFromTask))))
                 {
-                    if (!LaunchOptions.GetInstance.ScanOnly)
+                    if (!LaunchOptions.GetInstance.ScanOnly && taskObj.LinkedFile != null)
                     {
                         taskObj.ActionDeleteTask = true;
                         taskObj.ActionDeleteFile = true;
                         taskObj.LinkedFile.ShouldDisableExecute = true;
                         MarkFileForAction(taskObj.LinkedFile);
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                     }
 
                     taskObj.DetectionReasonRes = "_Malic1ousTask";
@@ -720,19 +767,21 @@ namespace MSearch.Core.ThreatAnalyzers
 
             if (IsInSuspiciousLocation(filePathFromTask) && (IsSuspiciousDirectoryNameWithClsid(filePathFromTask) || IsSystemFileName(filePathFromTask)))
             {
-                if (!LaunchOptions.GetInstance.ScanOnly)
+                if (!LaunchOptions.GetInstance.ScanOnly && taskObj.LinkedFile != null)
                 {
                     taskObj.ActionDeleteTask = true;
                     taskObj.ActionDeleteFile = true;
                     taskObj.LinkedFile.ShouldDisableExecute = true;
                     MarkFileForAction(taskObj.LinkedFile);
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                 }
 
                 taskObj.DetectionReasonRes = "_Malic1ousTask";
                 yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
             }
 
-            if (!string.IsNullOrEmpty(filePathFromTask) && (taskObj.LinkedFile.FileSize >= taskObj.LinkedFile.MAX_FILE_SIZE || FileChecker.IsJarFile(filePathFromTask) || (FileChecker.IsDotNetAssembly(filePathFromTask) && FileSystemManager.HasHiddenAttribute(filePathFromTask))))
+            if (!string.IsNullOrEmpty(filePathFromTask) && taskObj.LinkedFile != null && (taskObj.LinkedFile.FileSize >= taskObj.LinkedFile.MAX_FILE_SIZE || FileChecker.IsJarFile(filePathFromTask) || (FileChecker.IsDotNetAssembly(filePathFromTask) && FileSystemManager.HasHiddenAttribute(filePathFromTask))))
             {
                 if (!LaunchOptions.GetInstance.ScanOnly)
                 {
@@ -740,6 +789,8 @@ namespace MSearch.Core.ThreatAnalyzers
                     taskObj.ActionDeleteFile = true;
                     taskObj.LinkedFile.ShouldDisableExecute = true;
                     MarkFileForAction(taskObj.LinkedFile);
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                 }
 
                 taskObj.DetectionReasonRes = "_Malic1ousTask";
@@ -751,12 +802,14 @@ namespace MSearch.Core.ThreatAnalyzers
 
             if (isUpx && (FileSystemManager.HasHiddenAttribute(filePathFromTask) || HasGuidIdentifier(filePathFromTask) || hasMultiExe))
             {
-                if (!LaunchOptions.GetInstance.ScanOnly)
+                if (!LaunchOptions.GetInstance.ScanOnly && taskObj.LinkedFile != null)
                 {
                     taskObj.ActionDeleteTask = true;
                     taskObj.ActionDeleteFile = true;
                     taskObj.LinkedFile.ShouldDisableExecute = true;
                     MarkFileForAction(taskObj.LinkedFile);
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                 }
 
                 taskObj.DetectionReasonRes = "_Malic1ousTask";
@@ -765,16 +818,49 @@ namespace MSearch.Core.ThreatAnalyzers
 
             if (!string.IsNullOrEmpty(filePathFromTask) && _analysisResult.IsSuspicious) /* is sfx archive*/
             {
-                if (!LaunchOptions.GetInstance.ScanOnly)
+                // Проверяем подпись и путь SFX-файла
+                var sfxLevel = FileChecker.GetSfxTrustLevel(filePathFromTask);
+                bool inSuspiciousPath = FileChecker.IsInSuspiciousTaskPath(filePathFromTask);
+
+                bool shouldQuarantine = false;
+
+                switch (sfxLevel)
                 {
-                    taskObj.ActionDeleteTask = true;
-                    taskObj.ActionDeleteFile = true;
-                    taskObj.LinkedFile.ShouldDisableExecute = true;
-                    MarkFileForAction(taskObj.LinkedFile);
+                    case SfxTrustLevel.Unsigned:
+                        // Не подписан — карантиним в любом случае
+                        shouldQuarantine = true;
+                        break;
+
+                    case SfxTrustLevel.BadCert:
+                        // Проблемная подпись — только если в подозрительном пути
+                        if (inSuspiciousPath)
+                            shouldQuarantine = true;
+                        break;
+
+                    case SfxTrustLevel.SignedValid:
+                        // Валидная подпись — не удаляем автоматически
+                        AppConfig.GetInstance.LL.LogWarnMediumMessage("_sfxArchive", filePathFromTask);
+                        yield break;
+
+                    default:
+                        yield break;
                 }
 
-                taskObj.DetectionReasonRes = "_sfxArchive";
-                yield return new ThreatDecision(taskObj, risk, ScanObjectType.Unsafe);
+                if (shouldQuarantine)
+                {
+                    if (!LaunchOptions.GetInstance.ScanOnly && taskObj.LinkedFile != null)
+                    {
+                        taskObj.ActionDeleteTask = true;
+                        taskObj.ActionDeleteFile = true;
+                        taskObj.LinkedFile.ShouldDisableExecute = true;
+                        MarkFileForAction(taskObj.LinkedFile);
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
+                    }
+
+                    taskObj.DetectionReasonRes = "_sfxArchive";
+                    yield return new ThreatDecision(taskObj, risk, ScanObjectType.Unsafe);
+                }
             }
 
             int filesCount = 0;
@@ -786,7 +872,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            if (filesCount.Equals(1) && FileSystemManager.HasHiddenAttribute(filePathFromTask) && taskObj.LinkedFile.FileSize > 1024 * 1024)
+            if (filesCount.Equals(1) && FileSystemManager.HasHiddenAttribute(filePathFromTask) && taskObj.LinkedFile != null && taskObj.LinkedFile.FileSize > 1024 * 1024)
             {
                 if (!LaunchOptions.GetInstance.ScanOnly)
                 {
@@ -794,6 +880,8 @@ namespace MSearch.Core.ThreatAnalyzers
                     taskObj.ActionDeleteFile = true;
                     taskObj.LinkedFile.ShouldDisableExecute = true;
                     MarkFileForAction(taskObj.LinkedFile);
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+
                 }
 
                 taskObj.DetectionReasonRes = "_FileSize";

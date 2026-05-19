@@ -159,9 +159,9 @@ namespace MSearch.Core.Scanners
                     }
                 }
             }
-            catch (SecurityException)
+            catch (SecurityException se)
             {
-                AppConfig.GetInstance.LL.LogCautionMessage("_AccessDenied", $"{hive}\\{keyPath}");
+                AppConfig.GetInstance.LL.LogErrorMessage("_AccessDenied", se, $"{hive}\\{keyPath}");
                 var regObj = new RegistryThreatObject(hive, keyPath, RegistryNodeType.Key, null, null, RegistryValueKind.Unknown, true, null)
                 {
                     SectionName = sectionName
@@ -188,9 +188,9 @@ namespace MSearch.Core.Scanners
                     }
                 }
             }
-            catch (SecurityException)
+            catch (SecurityException se)
             {
-                AppConfig.GetInstance.LL.LogCautionMessage("_AccessDenied", $"{hive}\\{parentPath}");
+                AppConfig.GetInstance.LL.LogErrorMessage("_AccessDenied", se, $"{hive}\\{parentPath}");
                 var regObj = new RegistryThreatObject(hive, parentPath, RegistryNodeType.Key, null, null, RegistryValueKind.Unknown, true, null)
                 {
                     SectionName = sectionName
@@ -220,9 +220,9 @@ namespace MSearch.Core.Scanners
                     }
                 }
             }
-            catch (SecurityException)
+            catch (SecurityException se)
             {
-                AppConfig.GetInstance.LL.LogCautionMessage("_AccessDenied", $"{hive}\\{parentPath}");
+                AppConfig.GetInstance.LL.LogErrorMessage("_AccessDenied", se, $"{hive}\\{parentPath}");
                 var regObj = new RegistryThreatObject(hive, parentPath, RegistryNodeType.Key, null, null, RegistryValueKind.Unknown, true, null)
                 {
                     SectionName = sectionName
@@ -263,9 +263,9 @@ namespace MSearch.Core.Scanners
                                     }
                                 }
                             }
-                            catch (SecurityException)
+                            catch (SecurityException se)
                             {
-                                AppConfig.GetInstance.LL.LogCautionMessage("_AccessDenied", $@"{hive}\{subKeyPath}");
+                                AppConfig.GetInstance.LL.LogErrorMessage("_AccessDenied", se, $@"{hive}\{subKeyPath}");
                                 var regObj = new RegistryThreatObject(hive, subKeyPath, RegistryNodeType.Key, null, null, RegistryValueKind.Unknown, true, null)
                                 {
                                     SectionName = sectionName
@@ -277,9 +277,9 @@ namespace MSearch.Core.Scanners
                     }
                 }
             }
-            catch (SecurityException)
+            catch (SecurityException se)
             {
-                AppConfig.GetInstance.LL.LogCautionMessage("_AccessDenied", $"{hive}\\{parentPath}");
+                AppConfig.GetInstance.LL.LogErrorMessage("_AccessDenied", se, $"{hive}\\{parentPath}");
                 var regObj = new RegistryThreatObject(hive, parentPath, RegistryNodeType.Key, null, null, RegistryValueKind.Unknown, true, null)
                 {
                     SectionName = sectionName

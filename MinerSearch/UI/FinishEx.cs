@@ -334,7 +334,7 @@ namespace MSearch
         void UpdateUIToDefaultState()
         {
             top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            top.Text = AppConfig.GetInstance._title;
+            top.Text = $"{AppConfig.GetInstance._title} {AppConfig.GetInstance.CurrentVersion}";
             CloseBtn.Visible = true;
             MinimizeBtn.Visible = true;
             DonateBtn.Visible = true;

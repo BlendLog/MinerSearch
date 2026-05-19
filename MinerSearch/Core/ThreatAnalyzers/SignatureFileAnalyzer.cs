@@ -110,8 +110,29 @@ namespace MSearch.Core.ThreatAnalyzers
 
                 if (FileChecker.IsSfxArchive(fileThreat.FilePath))
                 {
-                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_sfxArchive", fileThreat.FilePath);
-                    return FileContentAnalysisResult.Suspicious();
+                    AppConfig.GetInstance.LL.LogWarnMessage("_sfxArchive", fileThreat.FilePath);
+                    // SFX — проверяем тип подписи для принятия решения
+                    var sfxLevel = FileChecker.GetSfxTrustLevel(fileThreat.FilePath);
+                    
+                    switch (sfxLevel)
+                    {
+                        case SfxTrustLevel.Unsigned:
+                        case SfxTrustLevel.BadCert:
+                            // Не подписан — подозрительно
+                            return FileContentAnalysisResult.Suspicious();
+
+                        case SfxTrustLevel.SignedValid:
+                            // Валидная подпись — не помечать как подозрительный
+                            if (displayProgress)
+                            {
+                                LocalizedLogger.LogOK();
+                            }
+                            return FileContentAnalysisResult.Clean();
+
+                        default:
+                            // Unknown или NotSfx — игнорируем
+                            break;
+                    }
                 }
 
 
@@ -240,19 +261,18 @@ namespace MSearch.Core.ThreatAnalyzers
                 if (result.IsMalicious)
                 {
                     fileThreat.ShouldMoveFileToQuarantine = true;
-                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_SuspiciousFile", fileThreat.FilePath);
+                    AppConfig.GetInstance.LL.LogCautionMessage("_Malici0usFile", fileThreat.FilePath);
 
-                    var decision = new ThreatDecision(fileThreat, riskLevel: 2, ScanObjectType.Malware);
+                    var decision = new ThreatDecision(fileThreat, riskLevel: 3, ScanObjectType.Malware);
                     decision.ActionType = ScanActionType.Quarantine;
                     decisions.Add(decision);
                 }
                 else if (result.IsSuspicious)
                 {
-                    fileThreat.ShouldMoveFileToQuarantine = true;
-                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_SuspiciousFile", fileThreat.FilePath);
+                    AppConfig.GetInstance.LL.LogWarnMessage("_SuspiciousFile", fileThreat.FilePath);
 
-                    var decision = new ThreatDecision(fileThreat, riskLevel: 2, ScanObjectType.Malware);
-                    decision.ActionType = ScanActionType.Quarantine;
+                    var decision = new ThreatDecision(fileThreat, riskLevel: 2, ScanObjectType.Suspicious);
+                    decision.ActionType = ScanActionType.Skipped;
                     decisions.Add(decision);
                 }
                 else if (result.IsLockedByAntivirus)

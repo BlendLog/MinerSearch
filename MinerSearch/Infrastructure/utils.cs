@@ -1305,6 +1305,18 @@ namespace MSearch
 
     }
 
+    /// <summary>
+    /// Уровень доверия SFX-архива на основе цифровой подписи.
+    /// </summary>
+    internal enum SfxTrustLevel
+    {
+        Unknown,      // Не удалось определить
+        NotSfx,       // Не является SFX-архивом
+        Unsigned,     // Не подписан (FileNotSigned)
+        BadCert,      // Подписан, но сертификат проблемный (истёк, не доверен и т.д.)
+        SignedValid   // Валидная подпись (Success)
+    }
+
     public class FileChecker
     {
         static string batchSig = MSData.GetInstance.queries["Defender_AddExclusionPath"];
@@ -2067,6 +2079,45 @@ namespace MSearch
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Определяет уровень доверия SFX-архива на основе цифровой подписи.
+        /// </summary>
+        internal static SfxTrustLevel GetSfxTrustLevel(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return SfxTrustLevel.Unknown;
+            if (!IsSfxArchive(path)) return SfxTrustLevel.NotSfx;
+
+            var trust = WinTrust.GetInstance.VerifyEmbeddedSignature(path);
+            
+            if (trust == WinVerifyTrustResult.Success)
+                return SfxTrustLevel.SignedValid;
+            
+            if (trust == WinVerifyTrustResult.FileNotSigned)
+                return SfxTrustLevel.Unsigned;
+            
+            // SubjectCertExpired, UntrustedRoot, SignatureOrFileCorrupt и др. — подписан, но сертификат проблемный
+            return SfxTrustLevel.BadCert;
+        }
+
+        /// <summary>
+        /// Проверяет, находится ли файл в подозрительной директории (для планировщика задач).
+        /// </summary>
+        internal static bool IsInSuspiciousTaskPath(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath)) return false;
+
+            var suspiciousPaths = new[]
+            {
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), // %ProgramData%
+                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),           // %userprofile%
+                $@"{Environment.GetEnvironmentVariable("SystemRoot")}\System32\config\systemprofile"
+            };
+
+            return suspiciousPaths.Any(p => 
+                !string.IsNullOrEmpty(p) && 
+                filePath.IndexOf(p, StringComparison.OrdinalIgnoreCase) >= 0);
         }
     }
 

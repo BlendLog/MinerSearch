@@ -8,7 +8,6 @@ namespace MSearch.Core.ThreatAnalyzers
 {
     /// <summary>
     /// SRP: Анализирует каталоги, принимает решения об удалении.
-    /// НЕ увеличивает счётчики — это делает CleanManager.
     /// </summary>
     public sealed class DirectoryThreatAnalyzer : IThreatAnalyzer
     {

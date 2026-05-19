@@ -4,6 +4,7 @@ using MSearch.Core.ThreatObjects;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace MSearch.Core.ThreatAnalyzers
 {
@@ -77,14 +78,42 @@ namespace MSearch.Core.ThreatAnalyzers
                 yield break;
             }
 
-            if (fileThreat.SourceTag == "unsigned_sfx")
+            if (fileThreat.SourceTag == "sfx_unsigned")
             {
+                // SFX без подписи — явно подозрительно, карантиним
                 AppConfig.GetInstance.LL.LogWarnMediumMessage("_SuspiciousFile", filePath);
                 fileThreat.ShouldMoveFileToQuarantine = true;
 
                 var decision = new ThreatDecision(fileThreat, riskLevel: 2, ScanObjectType.Malware);
                 decision.ActionType = ScanActionType.Quarantine;
                 yield return decision;
+                yield break;
+            }
+
+            if (fileThreat.SourceTag == "sfx_bad_cert")
+            {
+                // SFX с проблемным сертификатом — проверяем расположение
+                bool isInSuspiciousLocation = IsInSuspiciousFileSystemPath(filePath);
+                
+                if (isInSuspiciousLocation)
+                {
+                    // В подозрительной папке — карантин
+                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_SuspiciousFile", filePath);
+                    fileThreat.ShouldMoveFileToQuarantine = true;
+
+                    var decision = new ThreatDecision(fileThreat, riskLevel: 2, ScanObjectType.Malware);
+                    decision.ActionType = ScanActionType.Quarantine;
+                    yield return decision;
+                }
+                else
+                {
+                    // В нормальной папке — просто помечаем как подозрительный для логов
+                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_sfxArchive", filePath);
+
+                    var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Unsafe);
+                    decision.ActionType = ScanActionType.Quarantine;
+                    yield return decision;
+                }
                 yield break;
             }
 
@@ -177,6 +206,25 @@ namespace MSearch.Core.ThreatAnalyzers
                 decision.ActionType = ScanActionType.LockedByAntivirus;
                 yield return decision;
             }
+        }
+
+        /// <summary>
+        /// Проверяет, находится ли файл в подозрительной директории.
+        /// </summary>
+        private static bool IsInSuspiciousFileSystemPath(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath)) return false;
+
+            var suspiciousDirs = new[]
+            {
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),   // %ProgramData%
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),    // %LocalAppData%
+                $@"{Environment.GetEnvironmentVariable("SystemRoot")}\System32\config\systemprofile"
+            };
+
+            return suspiciousDirs.Any(dir => 
+                !string.IsNullOrEmpty(dir) && 
+                filePath.IndexOf(dir, StringComparison.OrdinalIgnoreCase) >= 0);
         }
     }
 }

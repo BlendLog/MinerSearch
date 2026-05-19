@@ -1,5 +1,6 @@
 ﻿using DBase;
 using Microsoft.Win32;
+using MSearch;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
@@ -88,7 +89,7 @@ namespace MSearch.Core.ThreatAnalyzers
             // 2. Appinit_DLLs
             AnalyzeAppInit(reg, ref risk);
 
-            // 3. App Paths (ДО IFEO, чтобы данные были готовы)
+            // 3. App Paths
             AnalyzeAppPaths(reg, ref risk, ref isMalicious);
 
             // 4. IFEO и WOW6432 IFEO
@@ -427,6 +428,48 @@ namespace MSearch.Core.ThreatAnalyzers
                 // 2. Анализ привязанного файла, если он был найден сканером
                 if (reg.LinkedFile != null)
                 {
+                    if (reg.LinkedFile.IsValidSignature) return;
+                    // Проверяем SFX-статус файла
+                    bool isSfx = FileChecker.IsSfxArchive(reg.LinkedFile.FilePath);
+                    
+                    if (isSfx)
+                    {
+                        var sfxLevel = FileChecker.GetSfxTrustLevel(reg.LinkedFile.FilePath);
+                        
+                        switch (sfxLevel)
+                        {
+                            case SfxTrustLevel.Unsigned:
+                                // Не подписан SFX в Autorun — подозрительно
+                                if (!reg.ActionDelete)
+                                {
+                                    risk += 3;
+                                    isMalicious = true;
+                                    reg.ActionDelete = true;
+                                    AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
+                                    reg.LinkedFile.ShouldMoveFileToQuarantine = true;
+                                }
+                                break;
+
+                            case SfxTrustLevel.BadCert:
+                                // Проблемная подпись — пониженный риск
+                                if (!reg.ActionDelete)
+                                {
+                                    risk += 1;
+                                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_sfxArchive", reg.LinkedFile.FilePath);
+                                    reg.LinkedFile.ShouldMoveFileToQuarantine = true;
+                                }
+                                break;
+
+                            case SfxTrustLevel.SignedValid:
+                                // Валидная подпись — просто лог
+                                AppConfig.GetInstance.LL.LogWarnMediumMessage("_sfxArchive", reg.LinkedFile.FilePath);
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+
                     // Статический анализ самого файла (SignatureFileAnalyzer)
                     var fileResult = _fileAnalyzer.Analyze(reg.LinkedFile, false);
                     if (fileResult.IsMalicious && !reg.ActionDelete)
@@ -446,18 +489,10 @@ namespace MSearch.Core.ThreatAnalyzers
                     else
                     {
                         // Простые проверки фактов размера/подписи
-                        if (!reg.LinkedFile.IsValidSignature && reg.LinkedFile.FileSize >= reg.LinkedFile.MAX_FILE_SIZE && !reg.ActionDelete)
+                        if (reg.LinkedFile.FileSize >= reg.LinkedFile.MAX_FILE_SIZE)
                         {
-                            risk += 3;
-                            isMalicious = true;
-                            reg.ActionDelete = true;
-                            AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
-                            reg.LinkedFile.AnalysisResult = FileContentAnalysisResult.Malicious();
-
-                            if (IsKnownMaliciousFile(reg.LinkedFile.FilePath))
-                                reg.LinkedFile.ShouldDeleteFile = true;
-                            else
-                                reg.LinkedFile.ShouldMoveFileToQuarantine = true;
+                            AppConfig.GetInstance.LL.LogWarnMessage("_SuspiciousFileSize", FileChecker.GetFileSize(reg.LinkedFile.FileSize));
+                            reg.LinkedFile.AnalysisResult = FileContentAnalysisResult.Suspicious();
                         }
                     }
                 }
