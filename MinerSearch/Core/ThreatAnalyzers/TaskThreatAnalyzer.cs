@@ -910,14 +910,21 @@ namespace MSearch.Core.ThreatAnalyzers
 
         FileThreatObject CreateFileObject(string path)
         {
-            if (!File.Exists(path)) return null;
-            var trust = WinTrust.GetInstance.VerifyEmbeddedSignature(path, true);
-            var fileInfo = new FileInfo(path);
-            var versionInfo = FileVersionInfo.GetVersionInfo(path);
-            string originalName = versionInfo.OriginalFilename ?? string.Empty;
-            string description = versionInfo.FileDescription ?? string.Empty;
+            try
+            {
+                if (!File.Exists(path)) return null;
+                var trust = WinTrust.GetInstance.VerifyEmbeddedSignature(path, true);
+                var fileInfo = new FileInfo(path);
+                var versionInfo = FileVersionInfo.GetVersionInfo(path);
+                string originalName = versionInfo.OriginalFilename ?? string.Empty;
+                string description = versionInfo.FileDescription ?? string.Empty;
 
-            return new FileThreatObject(path, Path.GetFileName(path), fileInfo.Length, originalName, description, FileChecker.CalculateSHA1(path), trust);
+                return new FileThreatObject(path, Path.GetFileName(path), fileInfo.Length, originalName, description, FileChecker.CalculateSHA1(path), trust);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         string ExtractFilePathFromIfExist(string arguments)

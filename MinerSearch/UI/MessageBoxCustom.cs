@@ -1,4 +1,5 @@
 ﻿using MSearch.Core;
+using MSearch.UI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -79,7 +80,7 @@ namespace MSearch
 
             for (int i = 0; i < buttonTexts.Length; i++)
             {
-                Button btn = new Button
+                Button btn = new RoundButton
                 {
                     Text = buttonTexts[i],
                     Size = new Size(buttonWidth, buttonHeight),

@@ -12,6 +12,8 @@ namespace MSearch.UI
     {
         const string REGISTRY_PATH_QUARANTINE = @"Software\\M1nerSearch\\Quarantine";
 
+        public string SelectedCustomPath { get; private set; } = string.Empty;
+
         public void Execute()
         {
             string[] args = Environment.GetCommandLineArgs();
@@ -21,22 +23,22 @@ namespace MSearch.UI
 
                 if (LaunchOptions.GetInstance.QuarantineRestoreOption && LaunchOptions.GetInstance.QuarantineDeleteOption)
                 {
-                    DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_InvlaidOptionSelection"), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                    PrintError(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_InvlaidOptionSelection"));
                     return;
                 }
 
-                string targets = AppConfig.GetInstance.quarantineListEnum;
+                string targets = LaunchOptions.GetInstance.quarantineListEnum;
 
                 if (!LaunchOptions.GetInstance.Force && LaunchOptions.GetInstance.QuarantineRestoreOption)
                 {
-                    DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_ForceRequired"), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                    PrintError(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_ForceRequired"));
                     return;
                 }
 
                 var indexes = IndexParse(targets, int.MaxValue);
                 if (indexes.Count == 0)
                 {
-                    DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_IndexListInvalid"), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                    PrintError(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_IndexListInvalid"));
                     return;
                 }
 
@@ -45,8 +47,7 @@ namespace MSearch.UI
             else
             {
                 ShowQuarantineList();
-                Console.WriteLine("");
-                DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_RestoreCommandSyntax"), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                InteractiveQuarantineMenu();
             }
         }
 
@@ -56,11 +57,12 @@ namespace MSearch.UI
 
             if (entries.Count == 0)
             {
-                DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_Empty"));
+                PrintInfo(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_Empty"));
                 return;
             }
 
-            DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_Title"));
+            Console.WriteLine(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_Title"));
+            Console.WriteLine();
 
             string path = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Path");
             string hash = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_FileHash");
@@ -81,11 +83,12 @@ namespace MSearch.UI
 
             if (entries.Count == 0)
             {
-                DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_Empty"));
+                PrintInfo(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_Empty"));
                 return;
             }
 
             var affected = new List<string>();
+            var failed = new List<string>();
 
             indexes.Sort();
             indexes.Reverse();
@@ -102,14 +105,28 @@ namespace MSearch.UI
 
                 if (ok)
                     affected.Add(item.OriginalPath);
+                else
+                    failed.Add(item.OriginalPath);
             }
 
-            foreach (string path in affected)
+            if (affected.Count > 0)
             {
-                Console.WriteLine(" - " + path);
+                Console.WriteLine((isDelete ? AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_FileDeleted") : AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_FileRestored")).Replace("#COUNT#", affected.Count.ToString()));
+                foreach (string p in affected)
+                {
+                    Console.WriteLine("  - " + p);
+                }
             }
 
-            DialogDispatcher.Show(isDelete ? AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_FileDeleted").Replace("#COUNT#", affected.Count.ToString()) : AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_FileRestored").Replace("#COUNT#", affected.Count.ToString()), "Quarantine", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+            if (failed.Count > 0)
+            {
+                Console.WriteLine();
+                Console.WriteLine(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_FileFailed").Replace("#COUNT#", failed.Count.ToString()));
+                foreach (string p in failed)
+                {
+                    Console.WriteLine("  - " + p);
+                }
+            }
         }
 
         List<int> IndexParse(string input, int max)
@@ -283,6 +300,184 @@ namespace MSearch.UI
             for (int i = 0; i < encrypted.Length; i++)
                 output[i] = (byte)(encrypted[i] ^ key[i % key.Length]);
             return output;
+        }
+
+        void InteractiveQuarantineMenu()
+        {
+            var entries = LoadQuarantineItems(REGISTRY_PATH_QUARANTINE);
+            if (entries.Count == 0)
+            {
+                PrintInfo(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_Empty"));
+                return;
+            }
+
+            Console.WriteLine();
+            Console.Write(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_EnterIndexes") + " > ");
+            string indexesInput = Console.ReadLine()?.Trim();
+            if (string.IsNullOrWhiteSpace(indexesInput))
+                return;
+
+            var indexes = IndexParse(indexesInput, entries.Count);
+            if (indexes.Count == 0)
+            {
+                PrintError(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_IndexListInvalid"));
+                return;
+            }
+
+            Console.WriteLine();
+            Console.WriteLine(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_ActionHint"));
+            Console.Write("  > ");
+
+            string input = Console.ReadLine()?.Trim().ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(input))
+                return;
+
+            bool isDelete = input == "d" || input == "del" || input == "delete";
+            bool isRestore = input == "r" || input == "res" || input == "restore";
+
+            if (!isDelete && !isRestore)
+            {
+                PrintWarning(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_NoAction"));
+                return;
+            }
+
+            // Спрашиваем место восстановления только для restore
+            if (isRestore)
+            {
+                PromptRestoreDestination();
+            }
+
+            RunInteractive(indexes, isDelete);
+        }
+
+        void PromptRestoreDestination()
+        {
+            Console.WriteLine();
+            Console.WriteLine("1)" + AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_RestoreOptionOriginalPath"));
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+
+            Console.WriteLine("  " + AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_RestoreOptionOriginalDesc"));
+            Console.WriteLine();
+            Console.ResetColor();
+            Console.WriteLine("2)" + AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_RestoreOptionCustomPath"));
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("  " + AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_RestoreOptionCustomDesc"));
+            Console.WriteLine();
+            Console.ResetColor();
+            Console.Write(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_DestinationChoice") + " [1/2]: ");
+
+            string input = Console.ReadLine()?.Trim();
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                SelectedCustomPath = string.Empty;
+                return;
+            }
+            if (input == "1")
+            {
+                SelectedCustomPath = string.Empty;
+            }
+            if (input == "2")
+            {
+                Console.Write(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_EnterPath") + " > ");
+                SelectedCustomPath = Console.ReadLine()?.Trim();
+                if (string.IsNullOrWhiteSpace(SelectedCustomPath) || !Directory.Exists(SelectedCustomPath))
+                {
+                    PrintWarning(AppConfig.GetInstance.LL.GetLocalizedString("_RestoreFormPathInvalid"));
+                    SelectedCustomPath = string.Empty;
+                }
+            }
+            else
+            {
+                SelectedCustomPath = string.Empty;
+            }
+        }
+
+        void RunInteractive(List<int> indexes, bool isDelete)
+        {
+            var entries = LoadQuarantineItems(REGISTRY_PATH_QUARANTINE);
+
+            if (entries.Count == 0)
+            {
+                PrintInfo(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_Empty"));
+                return;
+            }
+
+            var affected = new List<string>();
+            var failed = new List<string>();
+
+            indexes.Sort();
+            indexes.Reverse();
+
+            foreach (int i in indexes)
+            {
+                if (i < 0 || i >= entries.Count)
+                    continue;
+
+                var item = entries[i];
+                string restorePath = item.OriginalPath;
+
+                if (!isDelete && !string.IsNullOrEmpty(SelectedCustomPath))
+                {
+                    restorePath = Path.Combine(SelectedCustomPath, Path.GetFileName(item.OriginalPath));
+                }
+
+                bool ok = isDelete
+                    ? DeleteFileFromQuarantine(REGISTRY_PATH_QUARANTINE, item.FileHash)
+                    : RestoreFileFromQuarantine(REGISTRY_PATH_QUARANTINE, item.FileHash, restorePath);
+
+                if (ok)
+                    affected.Add(restorePath);
+                else
+                    failed.Add(restorePath);
+            }
+
+            if (affected.Count > 0)
+            {
+                Console.WriteLine((isDelete ? AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_FileDeleted") : AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_FileRestored")).Replace("#COUNT#", affected.Count.ToString()));
+                foreach (string p in affected)
+                {
+                    Console.WriteLine("  - " + p);
+                }
+            }
+
+            if (failed.Count > 0)
+            {
+                Console.WriteLine();
+                Console.WriteLine(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_FileFailed").Replace("#COUNT#", failed.Count.ToString()));
+                foreach (string p in failed)
+                {
+                    Console.WriteLine("  - " + p);
+                }
+            }
+
+            if (Environment.UserInteractive)
+            {
+                Console.ReadLine();
+            }
+        }
+
+        void PrintInfo(string msg)
+        {
+            var original = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("[INFO] " + msg);
+            Console.ForegroundColor = original;
+        }
+
+        void PrintError(string msg)
+        {
+            var original = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("[ERROR] " + msg);
+            Console.ForegroundColor = original;
+        }
+
+        void PrintWarning(string msg)
+        {
+            var original = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("[WARN] " + msg);
+            Console.ForegroundColor = original;
         }
     }
 }

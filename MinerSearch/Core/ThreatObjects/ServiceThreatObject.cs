@@ -25,7 +25,7 @@ namespace MSearch.Core.ThreatObjects
         public bool ShouldRestoreServiceDll { get; internal set; } // restore ServiceDll to original termsrv.dll
         public bool ShouldResetSddl { get; internal set; } // Сбросить SDDL службы к стандартному значению при очистке
         public bool ShouldRemoveFromSafeMode { get; internal set; } // Требуется удалить запись из SafeBoot
-        public bool SCMUnavailable { get; internal set; }  // SCM недоступен (SDDL) — статус не удалось получить
+        public bool SCMUnavailable { get; internal set; }  // UnauthorizedAccessException / Win32Exception(5)
 
         public ServiceThreatObject(string serviceName, string servicePath, string servicePathWithArgs, ServiceControllerStatus status, bool hasInSafeMode, NativeServiceController.ServiceStartMode startMode) : base(ThreatObjectKind.Service, serviceName)
         {

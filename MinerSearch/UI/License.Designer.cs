@@ -30,14 +30,14 @@ namespace MSearch
         private void InitializeComponent()
         {
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.Accept_btn = new System.Windows.Forms.Button();
-            this.Exit_btn = new System.Windows.Forms.Button();
+            this.Accept_btn = new MSearch.UI.RoundButton();
+            this.Exit_btn = new MSearch.UI.RoundButton();
             this.Label_LicenseCaption = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.button1 = new MSearch.UI.RoundButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -204,12 +204,12 @@ namespace MSearch
         #endregion
 
         public System.Windows.Forms.RichTextBox richTextBox1;
-        public System.Windows.Forms.Button Accept_btn;
-        public System.Windows.Forms.Button Exit_btn;
+        public MSearch.UI.RoundButton Accept_btn;
+        public MSearch.UI.RoundButton Exit_btn;
         internal System.Windows.Forms.Label Label_LicenseCaption;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button1;
+        private MSearch.UI.RoundButton button1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
     }

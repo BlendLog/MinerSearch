@@ -13,7 +13,7 @@ namespace MSearch
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.CloseBtn = new System.Windows.Forms.Button();
+            this.CloseBtn = new MSearch.UI.RoundButton();
             this.top = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -23,10 +23,10 @@ namespace MSearch
             this.lblCustomDesc = new System.Windows.Forms.Label();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.txtCustomPath = new System.Windows.Forms.TextBox();
-            this.btnBrowse = new System.Windows.Forms.Button();
+            this.btnBrowse = new MSearch.UI.RoundButton();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnRestore = new System.Windows.Forms.Button();
+            this.btnCancel = new MSearch.UI.RoundButton();
+            this.btnRestore = new MSearch.UI.RoundButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -269,7 +269,6 @@ namespace MSearch
             this.ClientSize = new System.Drawing.Size(595, 269);
             this.Controls.Add(this.tableLayoutPanel1);
             this.DoubleBuffered = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "QuarantineRestoreForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -294,7 +293,7 @@ namespace MSearch
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label top;
-        private System.Windows.Forms.Button CloseBtn;
+        private MSearch.UI.RoundButton CloseBtn;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
@@ -303,9 +302,9 @@ namespace MSearch
         public System.Windows.Forms.RadioButton rbCustomPath;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.TextBox txtCustomPath;
-        private System.Windows.Forms.Button btnBrowse;
+        private MSearch.UI.RoundButton btnBrowse;
         private System.Windows.Forms.Label lblCustomDesc;
-        private System.Windows.Forms.Button btnRestore;
-        private System.Windows.Forms.Button btnCancel;
+        private MSearch.UI.RoundButton btnRestore;
+        private MSearch.UI.RoundButton btnCancel;
     }
 }

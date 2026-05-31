@@ -32,7 +32,7 @@ namespace MSearch
             this.top = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.CloseBtn = new System.Windows.Forms.Button();
+            this.CloseBtn = new MSearch.UI.RoundButton();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.labelMessage = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -195,7 +195,7 @@ namespace MSearch
         private System.Windows.Forms.Label top;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button CloseBtn;
+        private MSearch.UI.RoundButton CloseBtn;
         private System.Windows.Forms.Label labelMessage;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panelButtons;

@@ -96,6 +96,9 @@ namespace MSearch.Core.ThreatHandlers
                 }
 
                 FileSystemManager.ResetAttributes(dirPath);
+
+                if (!FileSystemManager.IsDirectoryEmpty(dirPath)) return ApplyResult.NotApplicable;
+
                 Directory.Delete(dirPath, true);
 
                 if (Directory.Exists(dirPath))

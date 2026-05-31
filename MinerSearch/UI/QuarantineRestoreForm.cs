@@ -1,11 +1,9 @@
+using MSearch.Core;
+using MSearch.UI;
 using System;
 using System.Drawing;
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 using System.Windows.Forms;
-
-using MSearch.Core;
 
 namespace MSearch
 {
@@ -27,10 +25,10 @@ namespace MSearch
         private void TranslateForm()
         {
             top.Text = AppConfig.GetInstance.LL.GetLocalizedString("_RestoreFormTitle");
-            rbOriginalPath.Text = AppConfig.GetInstance.LL.GetLocalizedString("_RestoreOptionOriginalPath");
-            lblOriginalDesc.Text = AppConfig.GetInstance.LL.GetLocalizedString("_RestoreOptionOriginalDesc");
-            rbCustomPath.Text = AppConfig.GetInstance.LL.GetLocalizedString("_RestoreOptionCustomPath");
-            lblCustomDesc.Text = AppConfig.GetInstance.LL.GetLocalizedString("_RestoreOptionCustomDesc");
+            rbOriginalPath.Text = AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_RestoreOptionOriginalPath");
+            lblOriginalDesc.Text = AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_RestoreOptionOriginalDesc");
+            rbCustomPath.Text = AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_RestoreOptionCustomPath");
+            lblCustomDesc.Text = AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_RestoreOptionCustomDesc");
             btnBrowse.Text = AppConfig.GetInstance.LL.GetLocalizedString("_BrowseButton");
             btnRestore.Text = AppConfig.GetInstance.LL.GetLocalizedString("_RestoreBtn");
             btnCancel.Text = AppConfig.GetInstance.LL.GetLocalizedString("_CancelBtn");
@@ -105,7 +103,7 @@ namespace MSearch
             {
                 if (string.IsNullOrWhiteSpace(txtCustomPath.Text))
                 {
-                    MessageBoxCustom.Show(
+                    DialogDispatcher.Show(
                         AppConfig.GetInstance.LL.GetLocalizedString("_RestoreFormPathRequired"),
                         AppConfig.GetInstance.LL.GetLocalizedString("_RestoreFormTitle"),
                         MessageBoxButtons.OK,
@@ -115,7 +113,7 @@ namespace MSearch
 
                 if (!Directory.Exists(txtCustomPath.Text))
                 {
-                    MessageBoxCustom.Show(
+                    DialogDispatcher.Show(
                         AppConfig.GetInstance.LL.GetLocalizedString("_RestoreFormPathInvalid"),
                         AppConfig.GetInstance.LL.GetLocalizedString("_RestoreFormTitle"),
                         MessageBoxButtons.OK,

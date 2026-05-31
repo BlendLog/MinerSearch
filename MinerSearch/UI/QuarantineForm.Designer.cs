@@ -29,15 +29,15 @@ namespace MSearch
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.dataGridQuarantineFiles = new System.Windows.Forms.DataGridView();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.RestoreSelectedBtn = new System.Windows.Forms.Button();
-            this.DeleteSelectedBtn = new System.Windows.Forms.Button();
-            this.finishBtn = new System.Windows.Forms.Button();
+            this.RestoreSelectedBtn = new MSearch.UI.RoundButton();
+            this.DeleteSelectedBtn = new MSearch.UI.RoundButton();
+            this.finishBtn = new MSearch.UI.RoundButton();
             this.panel2 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.LBL_Quarantine = new System.Windows.Forms.Label();
@@ -46,7 +46,7 @@ namespace MSearch
             this.LBL_QFilesCount = new System.Windows.Forms.Label();
             this.LBL_QuarantinedFiles = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.CloseBtn = new System.Windows.Forms.Button();
+            this.CloseBtn = new MSearch.UI.RoundButton();
             this.top = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridQuarantineFiles)).BeginInit();
@@ -87,23 +87,23 @@ namespace MSearch
             this.dataGridQuarantineFiles.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dataGridQuarantineFiles.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridQuarantineFiles.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridQuarantineFiles.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridQuarantineFiles.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridQuarantineFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Verdana", 10F);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridQuarantineFiles.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Verdana", 10F);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridQuarantineFiles.DefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridQuarantineFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridQuarantineFiles.GridColor = System.Drawing.Color.LightGray;
             this.dataGridQuarantineFiles.Location = new System.Drawing.Point(1, 129);
@@ -112,14 +112,14 @@ namespace MSearch
             this.dataGridQuarantineFiles.Name = "dataGridQuarantineFiles";
             this.dataGridQuarantineFiles.ReadOnly = true;
             this.dataGridQuarantineFiles.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridQuarantineFiles.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridQuarantineFiles.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridQuarantineFiles.RowHeadersWidth = 51;
             this.dataGridQuarantineFiles.RowTemplate.Height = 24;
             this.dataGridQuarantineFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
@@ -148,6 +148,7 @@ namespace MSearch
             this.RestoreSelectedBtn.AutoSize = true;
             this.RestoreSelectedBtn.BackColor = System.Drawing.Color.White;
             this.RestoreSelectedBtn.FlatAppearance.BorderColor = System.Drawing.Color.RoyalBlue;
+            this.RestoreSelectedBtn.FlatAppearance.BorderSize = 0;
             this.RestoreSelectedBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Navy;
             this.RestoreSelectedBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
             this.RestoreSelectedBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -168,6 +169,7 @@ namespace MSearch
             this.DeleteSelectedBtn.AutoSize = true;
             this.DeleteSelectedBtn.BackColor = System.Drawing.Color.White;
             this.DeleteSelectedBtn.FlatAppearance.BorderColor = System.Drawing.Color.Crimson;
+            this.DeleteSelectedBtn.FlatAppearance.BorderSize = 0;
             this.DeleteSelectedBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Salmon;
             this.DeleteSelectedBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Pink;
             this.DeleteSelectedBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -186,6 +188,7 @@ namespace MSearch
             // 
             this.finishBtn.BackColor = System.Drawing.Color.White;
             this.finishBtn.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.finishBtn.FlatAppearance.BorderSize = 0;
             this.finishBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
             this.finishBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
             this.finishBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -356,7 +359,6 @@ namespace MSearch
             this.ClientSize = new System.Drawing.Size(1100, 435);
             this.Controls.Add(this.tableLayoutPanel1);
             this.DoubleBuffered = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "QuarantineForm";
             this.ShowIcon = false;
@@ -383,10 +385,10 @@ namespace MSearch
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label top;
-        private System.Windows.Forms.Button CloseBtn;
+        private MSearch.UI.RoundButton CloseBtn;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Button finishBtn;
+        private MSearch.UI.RoundButton finishBtn;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Panel panel6;
         public System.Windows.Forms.DataGridView dataGridQuarantineFiles;
@@ -394,7 +396,7 @@ namespace MSearch
         private System.Windows.Forms.Label LBL_QFilesCount;
         private System.Windows.Forms.PictureBox pb_quarantine;
         private System.Windows.Forms.Label LBL_Quarantine;
-        private System.Windows.Forms.Button DeleteSelectedBtn;
-        private System.Windows.Forms.Button RestoreSelectedBtn;
+        private MSearch.UI.RoundButton DeleteSelectedBtn;
+        private MSearch.UI.RoundButton RestoreSelectedBtn;
     }
 }

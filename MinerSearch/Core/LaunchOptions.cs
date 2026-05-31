@@ -55,7 +55,7 @@ namespace MSearch.Core
         public bool help { get; internal set; }
 
         /// <summary>--force / -f — suppress confirmations</summary>
-        public bool force { get; internal set; }
+        public bool Force { get; internal set; }
 
         /// <summary>--silent / -si — silent mode</summary>
         public bool silent { get; internal set; }
@@ -129,8 +129,6 @@ namespace MSearch.Core
         /// <summary>--console-mode / -cm — console mode</summary>
         public bool console_mode { get; internal set; }
 
-        /// <summary>--force / -f</summary>
-        public bool Force { get; internal set; }
         #endregion
 
         #region Values with arguments
@@ -163,7 +161,7 @@ namespace MSearch.Core
             errors.Clear();
             parsed = false;
 
-            help = force = silent = no_scantime = no_scan_wmi = nosignaturescan = false;
+            help = Force = silent = no_scantime = no_scan_wmi = nosignaturescan = false;
             no_runtime = no_scan_registry = no_scan_tasks = pause = false;
             RemoveEmptyTasks = no_rootkit_check = no_services = false;
             ScanOnly = fullScan = QuarantineMode = winpemode = false;
@@ -215,7 +213,7 @@ namespace MSearch.Core
                 if (arg.Equals("--force", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-f", StringComparison.OrdinalIgnoreCase))
                 {
-                    inst.force = true;
+                    inst.Force = true;
                     continue;
                 }
 
@@ -224,6 +222,14 @@ namespace MSearch.Core
                     arg.Equals("-si", StringComparison.OrdinalIgnoreCase))
                 {
                     inst.silent = true;
+                    continue;
+                }
+
+                // --console-mode / -cm
+                if (arg.Equals("--console-mode", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("-cm", StringComparison.OrdinalIgnoreCase))
+                {
+                    inst.console_mode = true;
                     continue;
                 }
 

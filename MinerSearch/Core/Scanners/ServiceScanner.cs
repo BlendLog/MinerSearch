@@ -4,6 +4,7 @@ using MSearch.Core.ThreatObjects;
 using MSearch.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -25,11 +26,12 @@ namespace MSearch.Core.Scanners
             {
                 try
                 {
-                    // Читаем статические данные из реестра
+
+
                     string servicePathWithArgs = ServiceHelper.GetImagePathFromRegistryDirect(serviceName);
 
                     if (string.IsNullOrEmpty(servicePathWithArgs)) continue;
-                    if (servicePathWithArgs.EndsWith(".sys"))
+                    if (servicePathWithArgs.EndsWith(".sys", StringComparison.OrdinalIgnoreCase))
                     {
 #if DEBUG
                         Console.WriteLine($"\t[DBG] {serviceName} is kernel driver. Skipping.");
@@ -41,8 +43,6 @@ namespace MSearch.Core.Scanners
                     string servicePath = FileSystemManager.ExtractExecutableFromCommand(servicePathWithArgs);
                     NativeServiceController.ServiceStartMode startMode = ServiceHelper.GetStartTypeFromRegistryDirect(serviceName);
 
-
-                    // Пробуем получить статус через SCManager (живой опрос)
                     ServiceControllerStatus status = ServiceControllerStatus.Stopped;
                     bool scmUnavailable = false;
                     try
@@ -51,16 +51,28 @@ namespace MSearch.Core.Scanners
                         status = sc.Status;
                         sc.Dispose();
                     }
-                    catch
+                    catch (InvalidOperationException)
                     {
-                        // SCManager недоступен — помечаем флаг
 #if DEBUG
-                        Console.WriteLine($"\t[DBG] \"{serviceName}\"SCM Unavailable");
+                        Console.WriteLine($"\t[DBG] \"{serviceName}\" SCM Unavailable (Invalid operation)");
+#endif
+                        scmUnavailable = true;
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+#if DEBUG
+                        Console.WriteLine($"\t[DBG] \"{serviceName}\" SCM Unavailable (SACL)");
+#endif
+                        scmUnavailable = true;
+                    }
+                    catch (Win32Exception ex) when (ex.NativeErrorCode == 5)
+                    {
+#if DEBUG
+                        Console.WriteLine($"\t[DBG] \"{serviceName}\" SCM Unavailable (Access Denied)");
 #endif
                         scmUnavailable = true;
                     }
 
-                    // Создаём FileThreatObject для основного exe сервиса
                     FileThreatObject linkedFile = null;
                     if (File.Exists(servicePath))
                     {

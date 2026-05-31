@@ -17,28 +17,22 @@ namespace MSearch.Core.ThreatAnalyzers
     {
         public ThreatObjectKind Kind => ThreatObjectKind.Other;
 
-        private static bool _headerLogged = false;
-        private static readonly object _headerLock = new object();
-
         public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
         {
             var rootkit = threat as RootkitThreatObject;
             if (rootkit == null) yield break;
 
-            // Если текущий процесс не заражён — сканировать нечего
             if (!rootkit.IsRootkitPresent)
             {
                 LocalizedLogger.LogNoThreatsFound();
                 yield break;
             }
 
-            // Руткит — всегда критическая угроза (riskLevel = 10)
             int riskLevel = 10;
             ScanObjectType scanType = ScanObjectType.Rootkit;
 
             yield return new ThreatDecision(threat, riskLevel, scanType);
 
-            // Сканируем все процессы на R77-подписи
             ScanProcesses(rootkit);
         }
 
@@ -107,7 +101,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            // Находим и приостанавливаем dialer-процессы
             string dialerPattern = "di" + "al" + "er";
             foreach (Process process in ProcessManager.SafeGetProcesses())
             {
@@ -121,7 +114,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 catch (Exception) { }
             }
 
-            // Заполняем RootkitThreatObject
             rootkit.R77Processes = r77Processes.Distinct().ToArray();
             rootkit.DialerPids = dialerPids.Distinct().ToArray();
         }

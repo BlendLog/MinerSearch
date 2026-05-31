@@ -104,13 +104,12 @@ namespace MSearch.Core.Scanners
                     try
                     {
                         bool isLocked = UnlockObjectClass.IsLockedObject(dir);
-                        bool isEmpty = FileSystemManager.IsDirectoryEmpty(dir);
 
                         // Удаляем каталог если он заблокирован ИЛИ пуст
-                        if (isLocked || isEmpty)
+                        if (isLocked)
                         {
                             // SourceTag = "locked" для заблокированных, "empty" для пустых
-                            string tag = isLocked ? "locked" : "empty";
+                            string tag = "locked";
                             var dirThreat = new DirectoryThreatObject(dir, Path.GetFileName(dir), sourceTag: tag);
                             results.Add(dirThreat);
                         }

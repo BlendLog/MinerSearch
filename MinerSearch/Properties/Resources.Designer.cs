@@ -4539,7 +4539,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Enter row numbers (e.g. 1,2,3):.
+        ///   Ищет локализованную строку, похожую на Enter action (e.g. restore/delete/res/del):.
         /// </summary>
         internal static string _Q_CLI_ActionHint_EN {
             get {
@@ -4548,11 +4548,29 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Введите номера строк (например, 1,2,3):.
+        ///   Ищет локализованную строку, похожую на Введите действие (например, restore/delete/res/del):.
         /// </summary>
         internal static string _Q_CLI_ActionHint_RU {
             get {
                 return ResourceManager.GetString("_Q_CLI_ActionHint_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Restore destination.
+        /// </summary>
+        internal static string _Q_CLI_DestinationChoice_EN {
+            get {
+                return ResourceManager.GetString("_Q_CLI_DestinationChoice_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Куда восстановить файл.
+        /// </summary>
+        internal static string _Q_CLI_DestinationChoice_RU {
+            get {
+                return ResourceManager.GetString("_Q_CLI_DestinationChoice_RU", resourceCulture);
             }
         }
         
@@ -4571,6 +4589,42 @@ namespace MSearch.Properties {
         internal static string _Q_CLI_Empty_RU {
             get {
                 return ResourceManager.GetString("_Q_CLI_Empty_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Enter file indexes (comma-separated, e.g. 1,2,3).
+        /// </summary>
+        internal static string _Q_CLI_EnterIndexes_EN {
+            get {
+                return ResourceManager.GetString("_Q_CLI_EnterIndexes_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите индексы файлов (через запятую, напр. 1,2,3).
+        /// </summary>
+        internal static string _Q_CLI_EnterIndexes_RU {
+            get {
+                return ResourceManager.GetString("_Q_CLI_EnterIndexes_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Enter path to restore to.
+        /// </summary>
+        internal static string _Q_CLI_EnterPath_EN {
+            get {
+                return ResourceManager.GetString("_Q_CLI_EnterPath_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите путь для восстановления.
+        /// </summary>
+        internal static string _Q_CLI_EnterPath_RU {
+            get {
+                return ResourceManager.GetString("_Q_CLI_EnterPath_RU", resourceCulture);
             }
         }
         
@@ -4683,6 +4737,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на No action selected. Use &apos;r&apos; to restore or &apos;d&apos; to delete..
+        /// </summary>
+        internal static string _Q_CLI_NoAction_EN {
+            get {
+                return ResourceManager.GetString("_Q_CLI_NoAction_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Действие не выбрано. Введите &apos;r&apos; для восстановления или &apos;d&apos; для удаления..
+        /// </summary>
+        internal static string _Q_CLI_NoAction_RU {
+            get {
+                return ResourceManager.GetString("_Q_CLI_NoAction_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Usage: --restore 1,2  OR  --delete 1.
         /// </summary>
         internal static string _Q_CLI_RestoreCommandSyntax_EN {
@@ -4697,6 +4769,78 @@ namespace MSearch.Properties {
         internal static string _Q_CLI_RestoreCommandSyntax_RU {
             get {
                 return ResourceManager.GetString("_Q_CLI_RestoreCommandSyntax_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Each selected file will be restored to this directory.
+        /// </summary>
+        internal static string _Q_CLI_RestoreOptionCustomDesc_EN {
+            get {
+                return ResourceManager.GetString("_Q_CLI_RestoreOptionCustomDesc_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Каждый выбранный файл будет восстановлен в этот каталог.
+        /// </summary>
+        internal static string _Q_CLI_RestoreOptionCustomDesc_RU {
+            get {
+                return ResourceManager.GetString("_Q_CLI_RestoreOptionCustomDesc_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Specify directory.
+        /// </summary>
+        internal static string _Q_CLI_RestoreOptionCustomPath_EN {
+            get {
+                return ResourceManager.GetString("_Q_CLI_RestoreOptionCustomPath_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Указанный каталог.
+        /// </summary>
+        internal static string _Q_CLI_RestoreOptionCustomPath_RU {
+            get {
+                return ResourceManager.GetString("_Q_CLI_RestoreOptionCustomPath_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Each selected file will be restored to its original location.
+        /// </summary>
+        internal static string _Q_CLI_RestoreOptionOriginalDesc_EN {
+            get {
+                return ResourceManager.GetString("_Q_CLI_RestoreOptionOriginalDesc_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Каждый выбранный файл будет восстановлен в его исходное расположение.
+        /// </summary>
+        internal static string _Q_CLI_RestoreOptionOriginalDesc_RU {
+            get {
+                return ResourceManager.GetString("_Q_CLI_RestoreOptionOriginalDesc_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Restore to original location.
+        /// </summary>
+        internal static string _Q_CLI_RestoreOptionOriginalPath_EN {
+            get {
+                return ResourceManager.GetString("_Q_CLI_RestoreOptionOriginalPath_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Восстановить в исходное.
+        /// </summary>
+        internal static string _Q_CLI_RestoreOptionOriginalPath_RU {
+            get {
+                return ResourceManager.GetString("_Q_CLI_RestoreOptionOriginalPath_RU", resourceCulture);
             }
         }
         
@@ -5219,78 +5363,6 @@ namespace MSearch.Properties {
         internal static string _RestoreFormTitle_RU {
             get {
                 return ResourceManager.GetString("_RestoreFormTitle_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Each selected file will be restored to this directory.
-        /// </summary>
-        internal static string _RestoreOptionCustomDesc_EN {
-            get {
-                return ResourceManager.GetString("_RestoreOptionCustomDesc_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Каждый выбранный файл будет восстановлен в этот каталог.
-        /// </summary>
-        internal static string _RestoreOptionCustomDesc_RU {
-            get {
-                return ResourceManager.GetString("_RestoreOptionCustomDesc_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Specify directory.
-        /// </summary>
-        internal static string _RestoreOptionCustomPath_EN {
-            get {
-                return ResourceManager.GetString("_RestoreOptionCustomPath_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Указанный каталог.
-        /// </summary>
-        internal static string _RestoreOptionCustomPath_RU {
-            get {
-                return ResourceManager.GetString("_RestoreOptionCustomPath_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Each selected file will be restored to its original location.
-        /// </summary>
-        internal static string _RestoreOptionOriginalDesc_EN {
-            get {
-                return ResourceManager.GetString("_RestoreOptionOriginalDesc_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Каждый выбранный файл будет восстановлен в его исходное расположение.
-        /// </summary>
-        internal static string _RestoreOptionOriginalDesc_RU {
-            get {
-                return ResourceManager.GetString("_RestoreOptionOriginalDesc_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Restore to original location.
-        /// </summary>
-        internal static string _RestoreOptionOriginalPath_EN {
-            get {
-                return ResourceManager.GetString("_RestoreOptionOriginalPath_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Восстановить в исходное.
-        /// </summary>
-        internal static string _RestoreOptionOriginalPath_RU {
-            get {
-                return ResourceManager.GetString("_RestoreOptionOriginalPath_RU", resourceCulture);
             }
         }
         
@@ -5867,6 +5939,24 @@ namespace MSearch.Properties {
         internal static string _ServiceResetSddlFailed_RU {
             get {
                 return ResourceManager.GetString("_ServiceResetSddlFailed_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Service has been restarted.
+        /// </summary>
+        internal static string _ServiceRestarted_EN {
+            get {
+                return ResourceManager.GetString("_ServiceRestarted_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Служба перезапущена.
+        /// </summary>
+        internal static string _ServiceRestarted_RU {
+            get {
+                return ResourceManager.GetString("_ServiceRestarted_RU", resourceCulture);
             }
         }
         
@@ -7421,16 +7511,6 @@ namespace MSearch.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap blendlog_donate {
-            get {
-                object obj = ResourceManager.GetObject("blendlog-donate", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap quarantine_logo {
             get {
                 object obj = ResourceManager.GetObject("quarantine_logo", resourceCulture);
@@ -7441,9 +7521,19 @@ namespace MSearch.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap sber {
+        internal static System.Drawing.Bitmap sber_logo {
             get {
-                object obj = ResourceManager.GetObject("sber", resourceCulture);
+                object obj = ResourceManager.GetObject("sber_logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap sbp_sber {
+            get {
+                object obj = ResourceManager.GetObject("sbp_sber", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -7474,16 +7564,6 @@ namespace MSearch.Properties {
         internal static System.Drawing.Bitmap ton_png {
             get {
                 object obj = ResourceManager.GetObject("ton_png", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap yoomoney {
-            get {
-                object obj = ResourceManager.GetObject("yoomoney", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

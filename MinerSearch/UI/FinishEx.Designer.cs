@@ -53,15 +53,15 @@ namespace MSearch
             this.panel6 = new System.Windows.Forms.Panel();
             this.FinalStatus_label = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.MinimizeBtn = new System.Windows.Forms.Button();
-            this.DonateBtn = new System.Windows.Forms.Button();
-            this.CloseBtn = new System.Windows.Forms.Button();
+            this.MinimizeBtn = new MSearch.UI.RoundButton();
+            this.DonateBtn = new MSearch.UI.RoundButton();
+            this.CloseBtn = new MSearch.UI.RoundButton();
             this.top = new System.Windows.Forms.Label();
             this.dataGridThreats = new System.Windows.Forms.DataGridView();
             this.panelCustom1 = new MSearch.PanelCustom();
-            this.finishBtn = new System.Windows.Forms.Button();
-            this.btnDetails = new System.Windows.Forms.Button();
-            this.OpenQuarantineBtn = new System.Windows.Forms.Button();
+            this.finishBtn = new MSearch.UI.RoundButton();
+            this.btnDetails = new MSearch.UI.RoundButton();
+            this.OpenQuarantineBtn = new MSearch.UI.RoundButton();
             this.Label_showAllLogs = new System.Windows.Forms.Label();
             this.Label_OpenLogsFolder = new System.Windows.Forms.LinkLabel();
             this.tableLayoutPanel1.SuspendLayout();
@@ -379,6 +379,7 @@ namespace MSearch
             // 
             this.MinimizeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MinimizeBtn.BackColor = System.Drawing.Color.RoyalBlue;
+            this.MinimizeBtn.CornerRadius = 4;
             this.MinimizeBtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.MinimizeBtn.FlatAppearance.BorderSize = 0;
             this.MinimizeBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(120)))), ((int)(((byte)(255)))));
@@ -402,7 +403,9 @@ namespace MSearch
             this.DonateBtn.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.DonateBtn.AutoSize = true;
             this.DonateBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(120)))), ((int)(((byte)(255)))));
+            this.DonateBtn.CornerRadius = 4;
             this.DonateBtn.FlatAppearance.BorderColor = System.Drawing.Color.Yellow;
+            this.DonateBtn.FlatAppearance.BorderSize = 0;
             this.DonateBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Navy;
             this.DonateBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.MediumBlue;
             this.DonateBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -423,6 +426,7 @@ namespace MSearch
             // 
             this.CloseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseBtn.BackColor = System.Drawing.Color.RoyalBlue;
+            this.CloseBtn.CornerRadius = 4;
             this.CloseBtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.CloseBtn.FlatAppearance.BorderSize = 0;
             this.CloseBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
@@ -530,14 +534,16 @@ namespace MSearch
             // 
             this.finishBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.finishBtn.BackColor = System.Drawing.Color.RoyalBlue;
+            this.finishBtn.CornerRadius = 4;
             this.finishBtn.Enabled = false;
             this.finishBtn.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.finishBtn.FlatAppearance.BorderSize = 0;
             this.finishBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Navy;
             this.finishBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.RoyalBlue;
             this.finishBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.finishBtn.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.finishBtn.ForeColor = System.Drawing.Color.AliceBlue;
-            this.finishBtn.Location = new System.Drawing.Point(564, 20);
+            this.finishBtn.Location = new System.Drawing.Point(572, 19);
             this.finishBtn.Margin = new System.Windows.Forms.Padding(2);
             this.finishBtn.Name = "finishBtn";
             this.finishBtn.Size = new System.Drawing.Size(160, 35);
@@ -550,13 +556,15 @@ namespace MSearch
             // 
             this.btnDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDetails.BackColor = System.Drawing.Color.Gainsboro;
+            this.btnDetails.CornerRadius = 4;
             this.btnDetails.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.btnDetails.FlatAppearance.BorderSize = 0;
             this.btnDetails.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Navy;
             this.btnDetails.FlatAppearance.MouseOverBackColor = System.Drawing.Color.RoyalBlue;
             this.btnDetails.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDetails.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnDetails.ForeColor = System.Drawing.Color.Black;
-            this.btnDetails.Location = new System.Drawing.Point(400, 20);
+            this.btnDetails.Location = new System.Drawing.Point(408, 20);
             this.btnDetails.Margin = new System.Windows.Forms.Padding(2);
             this.btnDetails.Name = "btnDetails";
             this.btnDetails.Size = new System.Drawing.Size(160, 35);
@@ -569,7 +577,9 @@ namespace MSearch
             // 
             this.OpenQuarantineBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OpenQuarantineBtn.BackColor = System.Drawing.Color.White;
+            this.OpenQuarantineBtn.CornerRadius = 4;
             this.OpenQuarantineBtn.FlatAppearance.BorderColor = System.Drawing.Color.RoyalBlue;
+            this.OpenQuarantineBtn.FlatAppearance.BorderSize = 0;
             this.OpenQuarantineBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Navy;
             this.OpenQuarantineBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
             this.OpenQuarantineBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -625,8 +635,6 @@ namespace MSearch
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1100, 475);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.DoubleBuffered = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FinishEx";
@@ -655,7 +663,7 @@ namespace MSearch
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label top;
-        private System.Windows.Forms.Button CloseBtn;
+        private MSearch.UI.RoundButton CloseBtn;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label LBL_ScanComplete;
         private System.Windows.Forms.Label LBL_totalThreats;
@@ -663,9 +671,9 @@ namespace MSearch
         private System.Windows.Forms.Label LBL_susObjects;
         private System.Windows.Forms.Label LBL_susCount;
         private System.Windows.Forms.Label LBL_neutralizedThreats;
-        private System.Windows.Forms.Label LBL_curedCount;
-        private System.Windows.Forms.Button finishBtn;
-        private System.Windows.Forms.Button btnDetails;
+         private System.Windows.Forms.Label LBL_curedCount;
+        private MSearch.UI.RoundButton finishBtn;
+        private MSearch.UI.RoundButton btnDetails;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel7;
@@ -675,13 +683,13 @@ namespace MSearch
         public System.Windows.Forms.DataGridView dataGridThreats;
         private System.Windows.Forms.LinkLabel Label_OpenLogsFolder;
         private System.Windows.Forms.Label Label_showAllLogs;
-        private System.Windows.Forms.Button OpenQuarantineBtn;
-        private System.Windows.Forms.Button DonateBtn;
         private System.Windows.Forms.Panel panel3;
         private ToggleSwitch ts_AllowCollectStatistics;
         private System.Windows.Forms.Label Label_allowStatistics;
         private PanelCustom panelCustom1;
-        private System.Windows.Forms.Button MinimizeBtn;
         private System.Windows.Forms.Label LBL_ID;
+        private UI.RoundButton OpenQuarantineBtn;
+        private UI.RoundButton DonateBtn;
+        private UI.RoundButton MinimizeBtn;
     }
 }

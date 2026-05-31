@@ -50,10 +50,7 @@ namespace MSearch.Core.ThreatAnalyzers
             AppConfig.GetInstance.LL.LogMessage("[.]", "_Just_Service", svc.ServicePathWithArgs, ConsoleColor.White);
             AppConfig.GetInstance.LL.LogMessage("[.]", "_State", svc.Status.ToString(), ConsoleColor.White);
 
-            if (svc.SCMUnavailable)
-            {
-                AppConfig.GetInstance.LL.LogWarnMessage("_ServiceSCMUnavailable", svc.ServiceName);
-            }
+
 
             if (svc.LinkedServiceFile != null && svc.LinkedServiceFile.FileSize > 0)
             {
@@ -102,10 +99,15 @@ namespace MSearch.Core.ThreatAnalyzers
             // 3. Malicious pattern
             bool hasMaliciousPattern = normalized.Contains("e=access&y=guest&h=");
 
-            // 4. SDDL blocking pattern — майнеры устанавливают запрещающий SDDL
+            // 4. SDDL blocking pattern — реальный SACL-блок + подозрительный путь
             bool hasSddlBlocking = svc.SCMUnavailable &&
                                    (normalized.Contains("cmd.exe /c start") ||
                                     normalized.StartsWith("\\\\.\\c:\\programdata", StringComparison.OrdinalIgnoreCase));
+
+            if (hasSddlBlocking)
+            {
+                AppConfig.GetInstance.LL.LogWarnMediumMessage("_ServiceSCMUnavailable", svc.ServiceName);
+            }
 
             if (hasDownloadExec || hasFilelessPersistence)
             {
@@ -342,13 +344,20 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private FileThreatObject CreateFileObject(string path)
         {
-            if (!File.Exists(path)) return null;
-            var trust = WinTrust.GetInstance.VerifyEmbeddedSignature(path, true);
-            var fileInfo = new FileInfo(path);
-            var versionInfo = FileVersionInfo.GetVersionInfo(path);
-            string originalName = versionInfo.OriginalFilename ?? string.Empty;
-            string description = versionInfo.FileDescription ?? string.Empty;
-            return new FileThreatObject(path, Path.GetFileName(path), fileInfo.Length, originalName, description, FileChecker.CalculateSHA1(path), trust);
+            try
+            {
+                if (!File.Exists(path)) return null;
+                var trust = WinTrust.GetInstance.VerifyEmbeddedSignature(path, true);
+                var fileInfo = new FileInfo(path);
+                var versionInfo = FileVersionInfo.GetVersionInfo(path);
+                string originalName = versionInfo.OriginalFilename ?? string.Empty;
+                string description = versionInfo.FileDescription ?? string.Empty;
+                return new FileThreatObject(path, Path.GetFileName(path), fileInfo.Length, originalName, description, FileChecker.CalculateSHA1(path), trust);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private void MarkFileForAction(FileThreatObject file)

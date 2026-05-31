@@ -1663,6 +1663,14 @@ namespace MSearch
                 {
                     return "N/A";
                 }
+                catch (UnauthorizedAccessException)
+                {
+                    return "N/A";
+                }
+                catch (Win32Exception)
+                {
+                    return "N/A";
+                }
 
             }
         }
@@ -1687,6 +1695,14 @@ namespace MSearch
                     }
                 }
                 catch (IOException)
+                {
+                    return "N/A";
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    return "N/A";
+                }
+                catch (Win32Exception)
                 {
                     return "N/A";
                 }

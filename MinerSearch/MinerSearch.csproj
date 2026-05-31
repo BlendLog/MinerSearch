@@ -198,6 +198,9 @@
     <Compile Include="UI\QuarantineRestoreForm.Designer.cs">
       <DependentUpon>QuarantineRestoreForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\RoundButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\FinishEx.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -245,6 +248,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
+    <None Include="Resources\sbp_sber.png" />
+    <None Include="Resources\sber_logo.png" />
     <None Include="Resources\tether-usdt-logo.png" />
     <None Include="Resources\ton_png.png" />
     <None Include="Resources\32.png" />
