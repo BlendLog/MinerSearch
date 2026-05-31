@@ -11,25 +11,22 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 ## Update news is now on Telegram!
 ## https://t.me/MinerSearch_blog
 ## ⬇ ![Download latest version](https://github.com/BlendLog/MinerSearch/releases/latest)
-### NET Framework 4.7.2 is required
+### NET Framework 4.8 is required
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 
 > [!CAUTION]
 > ### Windows 7 is outdated. MinerSearch development for this OS has been discontinued.
 
-Version v1.4.9.0
+Version v1.4.9.1
 
-- New architecture: Scanner -> Analyzer -> Handler
-- Updated codebase with full revision
-- Added removal of new miners
-- Fixed erroneous deletion of all WMI subscriptions
-- Fixed erroneous threat type detection
-- Added "Class" column to the report form
-- Added option --no-scan-wmi (-nwmi)
-- Added option --no-scan-users (-nsu)
-- Added option --no-scan-registry (-nsr)
-- Redesigned signature analyzer
+- Fixed incorrect parsing of scheduler tasks
+- Fixed erroneous removal of Electron-based applications
+- Fixed erroneous removal of all SFX archives
+- Fixed the strategy for checking non-standard hidden services
+- Fixed erroneous removal of the Bluetooth driver
+- Added missing translation string resources
+- Added the ability to choose the location to restore a file from quarantine (original or specified)
 --------------------------------------------
 
 ## How to use
