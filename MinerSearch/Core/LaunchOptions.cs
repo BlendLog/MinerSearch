@@ -120,6 +120,9 @@ namespace MSearch.Core
         /// <summary>--no-firewall / -nfw — skip firewall scanning</summary>
         public bool no_firewall { get; internal set; }
 
+        /// <summary>--no-review-interact / -norev — skip review UI, apply actions automatically</summary>
+        public bool no_review_interact { get; internal set; }
+
         /// <summary>--no-logs / -nl — do not write logs to file</summary>
         public bool no_logs { get; internal set; }
 

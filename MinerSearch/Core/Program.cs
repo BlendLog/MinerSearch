@@ -298,7 +298,9 @@ namespace MSearch
                 Console.WriteLine("\t\t[SILENT MODE]");
                 Logger.WriteLog("\t\t[SILENT MODE]", ConsoleColor.White, false, true); //for write log
                 Thread.Sleep(1000);
+#if !DEBUG
                 Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_HIDE);
+#endif
             }
 
             if (!_options.QuarantineMode)
@@ -393,15 +395,8 @@ namespace MSearch
             Console.ReadLine();
 #endif
 
-            // Cleanup: release mutexes
-            if (Utils.mutex != null)
-            {
-                Utils.mutex.ReleaseMutex();
-            }
-            if (Utils.rebootMtx != null)
-            {
-                Utils.rebootMtx.ReleaseMutex();
-            }
+            // Cleanup: OS automatically releases handles on process exit.
+            // Explicit ReleaseMutex calls are removed to avoid SynchronizationLockException (ownership was lost during checks).
 
             return;
         }

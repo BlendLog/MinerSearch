@@ -380,3 +380,5 @@ FodyWeavers.xsd
 *.plog
 /QWEN.md
 /.qwen
+/AGENTS.md
+*.cfg

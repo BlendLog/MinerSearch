@@ -2106,13 +2106,13 @@ namespace MSearch
             if (!IsSfxArchive(path)) return SfxTrustLevel.NotSfx;
 
             var trust = WinTrust.GetInstance.VerifyEmbeddedSignature(path);
-            
+
             if (trust == WinVerifyTrustResult.Success)
                 return SfxTrustLevel.SignedValid;
-            
+
             if (trust == WinVerifyTrustResult.FileNotSigned)
                 return SfxTrustLevel.Unsigned;
-            
+
             // SubjectCertExpired, UntrustedRoot, SignatureOrFileCorrupt и др. — подписан, но сертификат проблемный
             return SfxTrustLevel.BadCert;
         }
@@ -2131,8 +2131,8 @@ namespace MSearch
                 $@"{Environment.GetEnvironmentVariable("SystemRoot")}\System32\config\systemprofile"
             };
 
-            return suspiciousPaths.Any(p => 
-                !string.IsNullOrEmpty(p) && 
+            return suspiciousPaths.Any(p =>
+                !string.IsNullOrEmpty(p) &&
                 filePath.IndexOf(p, StringComparison.OrdinalIgnoreCase) >= 0);
         }
     }
@@ -2520,50 +2520,63 @@ namespace MSearch
 
         internal static string ResolveExecutablePath(string path)
         {
-            if (string.IsNullOrWhiteSpace(path))
-                return null;
-
-            string expandedPath = Environment.ExpandEnvironmentVariables(path.Trim('\"'));
-
-            if (expandedPath.Contains('/'))
+            try
             {
-                expandedPath = expandedPath.Replace('/', Path.DirectorySeparatorChar);
-            }
+                if (string.IsNullOrWhiteSpace(path))
+                    return null;
 
-            if (Path.IsPathRooted(expandedPath))
-            {
-                return Path.GetFullPath(expandedPath);
-            }
+                string expandedPath = Environment.ExpandEnvironmentVariables(path.Trim('"'));
 
-            var pathDirs = Environment.GetEnvironmentVariable("PATH")?.Split(';');
-            if (pathDirs != null)
-            {
-                var pathexts = Environment.GetEnvironmentVariable("PATHEXT")?.Split(';') ?? new[] { ".COM", ".EXE", ".BAT", ".CMD", ".MSI", ".VBS" };
-
-                foreach (var dir in pathDirs)
+                if (expandedPath.Contains('/'))
                 {
-                    if (string.IsNullOrWhiteSpace(dir)) continue;
-
-
-                    string combinedPath = Path.Combine(dir.Trim(), expandedPath);
-
-                    if (File.Exists(combinedPath))
-                        return combinedPath;
-
-                    if (!Path.HasExtension(combinedPath))
-                    {
-                        foreach (var ext in pathexts)
-                        {
-                            string pathWithExt = combinedPath + ext;
-                            if (File.Exists(pathWithExt))
-                                return pathWithExt;
-                        }
-                    }
-
+                    expandedPath = expandedPath.Replace('/', Path.DirectorySeparatorChar);
                 }
+
+                if (Path.IsPathRooted(expandedPath))
+                {
+                    return Path.GetFullPath(expandedPath);
+                }
+
+                var pathDirs = Environment.GetEnvironmentVariable("PATH")?.Split(';');
+                if (pathDirs != null)
+                {
+                    var pathexts = Environment.GetEnvironmentVariable("PATHEXT")?.Split(';') ?? new[] { ".COM", ".EXE", ".BAT", ".CMD", ".MSI", ".VBS" };
+
+                    foreach (var dir in pathDirs)
+                    {
+                        var invalidChars = Path.GetInvalidPathChars();
+                        if (dir.Any(c => invalidChars.Contains(c)) ||
+                            expandedPath.Any(c => invalidChars.Contains(c)))
+                            continue;
+                        if (string.IsNullOrWhiteSpace(dir)) continue;
+
+                        string combinedPath = Path.Combine(dir.Trim(), expandedPath);
+
+                        if (File.Exists(combinedPath))
+                            return combinedPath;
+
+                        if (!Path.HasExtension(combinedPath))
+                        {
+                            foreach (var ext in pathexts)
+                            {
+                                string pathWithExt = combinedPath + ext;
+                                if (File.Exists(pathWithExt))
+                                    return pathWithExt;
+                            }
+                        }
+
+                    }
+                }
+
+                return null;
+            }
+            catch (ArgumentException ae)
+            {
+                AppConfig.GetInstance.LL.LogWarnMessage(
+                    "_Error", $"ResolveExecutablePath failed for path '{path}': {ae.Message}");
+                return null;
             }
 
-            return null;
         }
 
         internal static string ExtractDllPath(string commandLine)
@@ -2731,8 +2744,8 @@ namespace MSearch
             var enableLua = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["SystemPolicies"])?.GetValue("EnableLUA");
             if (enableLua == null)
                 return AppConfig.GetInstance.LL.GetLocalizedString("_UACUnknown");
-            return (int)enableLua == 0 ? 
-                AppConfig.GetInstance.LL.GetLocalizedString("_UACDisabled") : 
+            return Convert.ToInt32(enableLua) == 0 ?
+                AppConfig.GetInstance.LL.GetLocalizedString("_UACDisabled") :
                 AppConfig.GetInstance.LL.GetLocalizedString("_UACEnabled");
         }
     }

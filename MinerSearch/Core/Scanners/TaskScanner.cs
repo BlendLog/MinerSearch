@@ -31,6 +31,7 @@ namespace MSearch.Core.Scanners
                 if (!string.IsNullOrEmpty(action.Path))
                 {
                     // Простая попытка резолва (без сложной логики парсинга аргументов)
+
                     string rawPath = Environment.ExpandEnvironmentVariables(action.Path.Replace("\"", ""));
                     string resolved = FileSystemManager.ResolveExecutablePath(rawPath);
 
