@@ -377,3 +377,10 @@ FodyWeavers.xsd
 /MinerSearch/Resources/sber.jpg
 *.txt
 *.ps1
+*.plog
+/QWEN.md
+/.qwen
+/AGENTS.md
+*.cfg
+/TESTPLAN_FormThreatReview.md
+/.qwenignore
