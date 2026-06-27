@@ -1,4 +1,6 @@
-﻿namespace MSearch.Core.ThreatDecisions
+﻿using MSearch.UI;
+
+namespace MSearch.Core.ThreatDecisions
 {
     public class ThreatDecision
     {
@@ -7,7 +9,13 @@
 
         public ScanObjectType ObjectType { get; internal set; }
         public ScanActionType ActionType { get; internal set; }
-        
+
+        /// <summary>
+        /// Действие, выбранное пользователем в review-UI.
+        /// null = использовать автоматическое решение (ActionType).
+        /// </summary>
+        public ScanActionTypeUserSelected? UserOverrideAction { get; set; }
+
         /// <summary>
         /// Сообщение об ошибке, возникшей при выполнении действия (Handler.Apply).
         /// Заполняется обработчиком при ApplyResult.Error.

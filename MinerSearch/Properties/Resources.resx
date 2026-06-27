@@ -2807,7 +2807,61 @@ Do you want to continue?
   <data name="_WatchdogProcess_EN" xml:space="preserve">
     <value>Watchdog process</value>
   </data>
+  <data name="_ReviewTitle_EN" xml:space="preserve">
+    <value>Threat Review</value>
+  </data>
+  <data name="_ReviewTitle_RU" xml:space="preserve">
+    <value>Обзор угроз</value>
+  </data>
+  <data name="_ReviewInstructions_EN" xml:space="preserve">
+    <value>Select action for each threat. Leave unchanged for auto-apply.</value>
+  </data>
+  <data name="_ReviewInstructions_RU" xml:space="preserve">
+    <value>Выберите действие для каждой угрозы. Оставьте без изменений для авто-применения.</value>
+  </data>
+  <data name="_ReviewApplyBtn_EN" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="_ReviewApplyBtn_RU" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="_ReviewCancelBtn_EN" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="_ReviewCancelBtn_RU" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="_ReviewAction_Cure_EN" xml:space="preserve">
+    <value>Cure</value>
+  </data>
+  <data name="_ReviewAction_Cure_RU" xml:space="preserve">
+    <value>Лечить</value>
+  </data>
+  <data name="_ReviewAction_Quarantine_EN" xml:space="preserve">
+    <value>Quarantine</value>
+  </data>
+  <data name="_ReviewAction_Quarantine_RU" xml:space="preserve">
+    <value>Карантин</value>
+  </data>
+  <data name="_ReviewAction_Delete_EN" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="_ReviewAction_Delete_RU" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="_ReviewAction_Skip_EN" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="_ReviewAction_Skip_RU" xml:space="preserve">
+    <value>Пропустить</value>
+  </data>
   <data name="sbp_sber" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\sbp_sber.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_Review_SelectAction_EN" xml:space="preserve">
+    <value>Select action</value>
+  </data>
+  <data name="_Review_SelectAction_RU" xml:space="preserve">
+    <value>Выбрать действие</value>
   </data>
 </root>

@@ -171,6 +171,7 @@ namespace MSearch.Core
             RestoredWMI = verbose = demandSelection = false;
             no_check_hosts = no_firewall = no_logs = accept_eula = false;
             console_mode = false;
+            no_review_interact = false;
 
             maxSubfolders = 8;
             selectedPath = null;
@@ -490,6 +491,14 @@ namespace MSearch.Core
                     continue;
                 }
 
+                // --no-review-interact / -norev — skip review UI, apply actions automatically
+                if (arg.Equals("--no-review-interact", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("-norev", StringComparison.OrdinalIgnoreCase))
+                {
+                    inst.no_review_interact = true;
+                    continue;
+                }
+
                 // Пассивные аргументы
                 if (PassiveArgs.Contains(arg))
                     continue;
@@ -497,6 +506,7 @@ namespace MSearch.Core
                 // Неизвестный аргумент
                 LocalizedLogger.LogUnknownCommand(arg);
                 inst.hasErrors = true;
+                Console.ReadKey();
                 return;
             }
 

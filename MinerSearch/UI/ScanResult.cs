@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace MSearch
 {
+    /// <summary>
+    /// Действия, которые анализатор автоматически определяет как результат сканирования/обработки.
+    /// Могут быть финальными (Cured, Deleted, Quarantine) или промежуточными/статусными (Active, Terminated, Inaccessible и т.д.).
+    /// </summary>
     public enum ScanActionType
     {
         Cured,
@@ -21,6 +25,18 @@ namespace MSearch
         Inaccessible,
         Disabled,
         LockedByAntivirus
+    }
+
+    /// <summary>
+    /// Действия, которые пользователь может выбрать вручную в review-UI.
+    /// Включает только осмысленные операции: удалить, поместить в карантин, пропустить, вылечить.
+    /// </summary>
+    public enum ScanActionTypeUserSelected
+    {
+        Cure,       // Исцелить (исправить)
+        Quarantine, // Поместить в карантин
+        Delete,     // Удалить
+        Skip        // Пропустить (оставить как есть)
     }
 
     public enum ScanObjectType

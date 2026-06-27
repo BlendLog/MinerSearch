@@ -176,6 +176,12 @@
     <Compile Include="Infrastructure\TaskParser.cs" />
     <Compile Include="UI\DataGridViewCheckBoxHeaderCell.cs" />
     <Compile Include="UI\DialogDispatcher.cs" />
+    <Compile Include="UI\FormThreatReview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormThreatReview.Designer.cs">
+      <DependentUpon>FormThreatReview.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\MessageBoxCustom.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -262,6 +268,9 @@
     <None Include="bin\Release\Microsoft.Win32.TaskScheduler.dll" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\FormThreatReview.resx">
+      <DependentUpon>FormThreatReview.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\MessageBoxCustom.resx">
       <DependentUpon>MessageBoxCustom.cs</DependentUpon>
     </EmbeddedResource>

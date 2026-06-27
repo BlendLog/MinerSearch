@@ -342,32 +342,31 @@ namespace MSearch
         {
             AppConfig.GetInstance.LL.LogHeadMessage("_LogCheckingUpdates");
 
-            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-
+            var stopwatch = Stopwatch.StartNew();
             try
             {
+                int checkVersionResult = -1;
                 // Fallback: если primary timeout — сразу secondary без ping
                 try
                 {
                     _versionEndpoint = "primary";
-                    IsNewVersionAvailable();
+                    checkVersionResult = IsNewVersionAvailable();
                 }
                 catch (OperationCanceledException)
                 {
                     AppConfig.GetInstance.LL.LogWarnMessage("_EndpointTimeout", "primary");
                     _versionEndpoint = "secondary";
-                    IsNewVersionAvailable();
+                    checkVersionResult = IsNewVersionAvailable();
                 }
                 catch (Exception ex)
                 {
                     // Primary failed — try secondary directly
                     AppConfig.GetInstance.LL.LogWarnMessage("_EndpointError", ex.Message);
                     _versionEndpoint = "secondary";
-                    IsNewVersionAvailable();
+                    checkVersionResult = IsNewVersionAvailable();
                 }
 
-                if (IsNewVersionAvailable() == 1)
-                    Environment.Exit(0);
+                if (checkVersionResult == 1) Environment.Exit(0);
             }
             catch (Exception ex) when (stopwatch.Elapsed > TimeSpan.FromSeconds(10))
             {
@@ -2268,8 +2267,6 @@ namespace MSearch
 
     public class FileSystemManager
     {
-        static readonly Regex IfExistPathRegex = new Regex(@"if\s+exist\s+(?:""|\^"")(?<filepath>[A-Z]:\\.*?\.(?:dll|wsf))(?:""|\^"")", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
         internal static bool IsDirectoryEmpty(string path)
         {
 

@@ -1,6 +1,7 @@
 using DBase;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
+using MSearch.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -122,6 +123,26 @@ namespace MSearch.Core.Managers
             }
         }
 
+        /// <summary>
+        /// Записывает решения со Skip в результаты сканирования без вызова Handler.
+        /// Вызывается из Program.cs для unknownDecisions, где пользователь выбрал "Пропустить".
+        /// </summary>
+        public void ApplySkippedDecisions(IEnumerable<ThreatDecision> decisions)
+        {
+            foreach (var decision in decisions)
+            {
+                if (decision == null || decision.Target == null) continue;
+
+                string description = GetDescription(decision);
+                _state.AddScanResult(new ScanResult(decision.ObjectType, description, ScanActionType.Skipped, threatObjectId: decision.Target.Id));
+
+                if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected || decision.ObjectType == ScanObjectType.Rootkit)
+                    _state.IncrementFoundThreats();
+                else if (decision.ObjectType == ScanObjectType.Suspicious)
+                    _state.IncrementFoundSuspicious();
+            }
+        }
+
         private string GetPhaseHeaderResource(ThreatObjectKind kind)
         {
             switch (kind)
@@ -177,11 +198,14 @@ namespace MSearch.Core.Managers
             }
         }
 
-        private ScanActionType MapResultToActionType(ApplyResult result, ThreatDecision decision)
+       private ScanActionType MapResultToActionType(ApplyResult result, ThreatDecision decision)
         {
             switch (result)
             {
                 case ApplyResult.Success:
+                    // Если пользователь выбрал действие в review-UI — маппим на ScanActionType
+                    if (decision.UserOverrideAction.HasValue)
+                        return MapUserActionToScanAction(decision.UserOverrideAction.Value);
                     return GetActionTypeForSuccess(decision);
 
                 case ApplyResult.Failed:
@@ -190,6 +214,26 @@ namespace MSearch.Core.Managers
                 case ApplyResult.Error:
                     return ScanActionType.Error;
 
+                default:
+                    return ScanActionType.Skipped;
+            }
+        }
+
+        /// <summary>
+        /// Маппит выбор пользователя (ScanActionTypeUserSelected) на финальный ScanActionType.
+        /// </summary>
+        private ScanActionType MapUserActionToScanAction(ScanActionTypeUserSelected userAction)
+        {
+            switch (userAction)
+            {
+                case ScanActionTypeUserSelected.Cure:
+                    return ScanActionType.Cured;
+                case ScanActionTypeUserSelected.Quarantine:
+                    return ScanActionType.Quarantine;
+                case ScanActionTypeUserSelected.Delete:
+                    return ScanActionType.Deleted;
+                case ScanActionTypeUserSelected.Skip:
+                    return ScanActionType.Skipped;
                 default:
                     return ScanActionType.Skipped;
             }

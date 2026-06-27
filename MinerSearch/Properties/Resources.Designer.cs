@@ -5367,6 +5367,168 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Select action.
+        /// </summary>
+        internal static string _Review_SelectAction_EN {
+            get {
+                return ResourceManager.GetString("_Review_SelectAction_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выбрать действие.
+        /// </summary>
+        internal static string _Review_SelectAction_RU {
+            get {
+                return ResourceManager.GetString("_Review_SelectAction_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Cure.
+        /// </summary>
+        internal static string _ReviewAction_Cure_EN {
+            get {
+                return ResourceManager.GetString("_ReviewAction_Cure_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Лечить.
+        /// </summary>
+        internal static string _ReviewAction_Cure_RU {
+            get {
+                return ResourceManager.GetString("_ReviewAction_Cure_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Delete.
+        /// </summary>
+        internal static string _ReviewAction_Delete_EN {
+            get {
+                return ResourceManager.GetString("_ReviewAction_Delete_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удалить.
+        /// </summary>
+        internal static string _ReviewAction_Delete_RU {
+            get {
+                return ResourceManager.GetString("_ReviewAction_Delete_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Quarantine.
+        /// </summary>
+        internal static string _ReviewAction_Quarantine_EN {
+            get {
+                return ResourceManager.GetString("_ReviewAction_Quarantine_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Карантин.
+        /// </summary>
+        internal static string _ReviewAction_Quarantine_RU {
+            get {
+                return ResourceManager.GetString("_ReviewAction_Quarantine_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Skip.
+        /// </summary>
+        internal static string _ReviewAction_Skip_EN {
+            get {
+                return ResourceManager.GetString("_ReviewAction_Skip_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пропустить.
+        /// </summary>
+        internal static string _ReviewAction_Skip_RU {
+            get {
+                return ResourceManager.GetString("_ReviewAction_Skip_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Apply.
+        /// </summary>
+        internal static string _ReviewApplyBtn_EN {
+            get {
+                return ResourceManager.GetString("_ReviewApplyBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Применить.
+        /// </summary>
+        internal static string _ReviewApplyBtn_RU {
+            get {
+                return ResourceManager.GetString("_ReviewApplyBtn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Cancel.
+        /// </summary>
+        internal static string _ReviewCancelBtn_EN {
+            get {
+                return ResourceManager.GetString("_ReviewCancelBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отмена.
+        /// </summary>
+        internal static string _ReviewCancelBtn_RU {
+            get {
+                return ResourceManager.GetString("_ReviewCancelBtn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Select action for each threat. Leave unchanged for auto-apply..
+        /// </summary>
+        internal static string _ReviewInstructions_EN {
+            get {
+                return ResourceManager.GetString("_ReviewInstructions_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выберите действие для каждой угрозы. Оставьте без изменений для авто-применения..
+        /// </summary>
+        internal static string _ReviewInstructions_RU {
+            get {
+                return ResourceManager.GetString("_ReviewInstructions_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Threat Review.
+        /// </summary>
+        internal static string _ReviewTitle_EN {
+            get {
+                return ResourceManager.GetString("_ReviewTitle_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обзор угроз.
+        /// </summary>
+        internal static string _ReviewTitle_RU {
+            get {
+                return ResourceManager.GetString("_ReviewTitle_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Rule.
         /// </summary>
         internal static string _Rule_EN {

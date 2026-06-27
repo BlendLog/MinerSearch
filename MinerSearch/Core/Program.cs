@@ -6,6 +6,7 @@ using MSearch.Core.Scanners;
 using MSearch.Core.ThreatAnalyzers;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatHandlers;
+using MSearch.Core.ThreatObjects;
 using MSearch.Properties;
 using MSearch.UI;
 using System;
@@ -382,7 +383,7 @@ namespace MSearch
                     }
                 }
 
-                using (FinishEx finish = new FinishEx(scanStats.Found, scanStats.Neutralized, scanStats.Suspicious, scanStats.ElapsedTime, state.GetScanResults())
+                using (FinishEx finish = new FinishEx(scanStats.Found, scanStats.Neutralized, scanStats.Suspicious, scanStats.ElapsedTime, state.GetScanResults(), scanStats.Skipped)
                 {
                     TopMost = true
                 })
@@ -521,9 +522,13 @@ namespace MSearch
                     Console.ReadKey(true);
                 }
             }
-            cleanManager.BeginFinalCleanup();
-            cleanManager.ApplyDecisions(processDecisions, CleanupPhase.Finalize);
-            cleanManager.ApplyDecisions(commonDecisions, CleanupPhase.Finalize);
+
+            // Собираем все решения для Finalize-фазы
+            var allFinalizeDecisions = new List<ThreatDecision>();
+            allFinalizeDecisions.AddRange(processDecisions);
+            allFinalizeDecisions.AddRange(commonDecisions);
+
+            var signatureDecisions = new List<ThreatDecision>();
 
             if (!options.nosignaturescan)
             {
@@ -531,11 +536,238 @@ namespace MSearch
                 signatureScanner.CollectFilesAsync().Wait();
 
                 var allSignatureFiles = signatureScanner.GetFiles().ToList();
-                var signatureDecisions = signatureFileAnalyzer.AnalyzeFiles(allSignatureFiles).Where(d => d != null).ToList();
-
-                cleanManager.ApplyDecisions(signatureDecisions, CleanupPhase.Finalize);
+                signatureDecisions = signatureFileAnalyzer.AnalyzeFiles(allSignatureFiles).Where(d => d != null).ToList();
+                allFinalizeDecisions.AddRange(signatureDecisions);
             }
 
+            // Удаляем дубликаты по нормализованному пути — MSData хранит пути без UNC (C:\...),
+            // а SignatureScanner формирует UNC (\\?\C:\...). Один и тот же файл не должен
+            // обрабатываться дважды.
+            allFinalizeDecisions = DeduplicateDecisions(allFinalizeDecisions);
+
+            // Разделяем известные (obfStr*) и неизвестные угрозы
+            var knownDecisions = allFinalizeDecisions.Where(d => IsKnownThreat(d)).ToList();
+            var unknownDecisions = allFinalizeDecisions.Where(d => !IsKnownThreat(d)).ToList();
+
+            // На review показываем только неизвестные угрозы из signatureDecisions
+            // (чистая Finalize-фаза, без предварительной обработки).
+            // Неизвестные из processDecisions/commonDecisions уже прошли SuspendOnly/DisableExecuteOnly —
+            // применяем их автоматически, как известные.
+            var unknownFromSignatures = signatureDecisions
+                .Where(d => d != null && !IsKnownThreat(d))
+                .ToList();
+            var unknownFromEarlier = unknownDecisions
+                .Except(unknownFromSignatures)
+                .ToList();
+
+            cleanManager.BeginFinalCleanup();
+
+            // Применяем известные угрозы автоматически (без review).
+            // Сортируем по ThreatObjectKind: процессы (0) раньше файлов (2) и каталогов (3),
+            // чтобы не пытаться удалить файл до завершения процесса.
+            var sortedKnownDecisions = knownDecisions.OrderBy(d => (int)d.Target.Kind).ToList();
+            foreach (var decision in sortedKnownDecisions)
+            {
+                cleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize);
+            }
+
+            // Применяем неизвестные угрозы из ранних фаз автоматически (без review)
+            if (unknownFromEarlier.Count > 0)
+                cleanManager.ApplyDecisions(unknownFromEarlier, CleanupPhase.Finalize);
+
+            // Показываем review-UI только для неизвестных угроз из сигнатур
+            if (!options.no_review_interact && unknownFromSignatures.Count > 0)
+            {
+                var reviewForm = new FormThreatReview(unknownFromSignatures);
+                reviewForm.ShowDialog();
+
+                // Применяем выбор пользователя к флагам в ThreatObject перед выполнением очистки
+                if (reviewForm.IsApplied())
+                    reviewForm.ApplyUserOverrides();
+            }
+
+            // Применяем неизвестные угрозы из сигнатур (с учётом UserOverrideAction)
+            // Решения со Skip не применяем через Handler — записываем как пропущенные напрямую
+            var decisionsToApply = new List<ThreatDecision>();
+            var decisionsToSkip = new List<ThreatDecision>();
+
+            foreach (var decision in unknownFromSignatures)
+            {
+                if (decision.UserOverrideAction == ScanActionTypeUserSelected.Skip)
+                    decisionsToSkip.Add(decision);
+                else
+                    decisionsToApply.Add(decision);
+            }
+
+            if (decisionsToApply.Count > 0)
+                cleanManager.ApplyDecisions(decisionsToApply, CleanupPhase.Finalize);
+
+            // Записываем пропущенные решения напрямую в результаты сканирования
+            if (decisionsToSkip.Count > 0)
+                cleanManager.ApplySkippedDecisions(decisionsToSkip);
+
+            // Исключаем из финального применения все уже обработанные решения:
+            // - processDecisions/commonDecisions: уже применены на этапах SuspendOnly/DisableExecuteOnly
+            // - knownDecisions: автоматически применены в Finalize выше
+            // - unknownFromEarlier: автоматически применены в Finalize выше
+            // - decisionsToApply: применены пользовательским выбором (не Skip)
+            // - decisionsToSkip: обработаны через ApplySkippedDecisions (повторное применение выполнит действие анализатора вопреки выбору пользователя)
+            var alreadyAppliedIds = new HashSet<string>(
+                processDecisions.Select(d => d.Target.Id)
+                    .Concat(commonDecisions.Select(d => d.Target.Id))
+                    .Concat(knownDecisions.Select(d => d.Target.Id))
+                    .Concat(unknownFromEarlier.Select(d => d.Target.Id))
+                    .Concat(decisionsToApply.Select(d => d.Target.Id))
+                    .Concat(decisionsToSkip.Select(d => d.Target.Id)));
+            
+            // Применяем только оставшиеся Finalize-решения (например signatureDecisions,
+            // которые не попали ни в knownDecisions, ни в unknownDecisions)
+            var finalizeOnlyDecisions = allFinalizeDecisions
+                .Where(d => d != null && !alreadyAppliedIds.Contains(d.Target.Id))
+                .ToList();
+            
+            if (finalizeOnlyDecisions.Count > 0)
+            {
+                cleanManager.ApplyDecisions(finalizeOnlyDecisions, CleanupPhase.Finalize);
+            }
+        }
+
+      /// <summary>
+        /// Проверяет, является ли угроза «известной» по MSData (obfStr1-obfStr4).
+        /// Известные угрозы применяются автоматически без review.
+        /// </summary>
+        private static bool IsKnownThreat(ThreatDecision decision)
+        {
+            if (decision?.Target == null) return false;
+            var target = decision.Target;
+
+            // Файлы и каталоги — проверяем SourceTag
+            var file = target as FileThreatObject;
+            if (file != null && !string.IsNullOrEmpty(file.SourceTag))
+            {
+                if (file.SourceTag.StartsWith("obfStr", StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            var dir = target as DirectoryThreatObject;
+            if (dir != null && !string.IsNullOrEmpty(dir.SourceTag))
+            {
+                if (dir.SourceTag.StartsWith("obfStr", StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            // Файл может быть найден SignatureScanner с UNC-путём (\\?\C:\...),
+            // а в MSData.obfStr2 тот же путь без UNC. Нормализуем и сверяем.
+            if (file != null && !string.IsNullOrEmpty(file.FilePath))
+            {
+                string normalizedFilePath = file.FilePath.StartsWith(@"\\?\") ? file.FilePath.Substring(4) : file.FilePath;
+                if (MSData.GetInstance.obfStr2.Any(s =>
+                {
+                    string normalized = s.StartsWith(@"\\?\") ? s.Substring(4) : s;
+                    return normalized.Equals(normalizedFilePath, StringComparison.OrdinalIgnoreCase);
+                }))
+                {
+                    return true;
+                }
+            }
+
+            // Каталог может быть найден с UNC-путём — аналогичная нормализация
+            if (dir != null && !string.IsNullOrEmpty(dir.DirectoryPath))
+            {
+                string normalizedDirPath = dir.DirectoryPath.StartsWith(@"\\?\") ? dir.DirectoryPath.Substring(4) : dir.DirectoryPath;
+                if (MSData.GetInstance.obfStr1.Any(s =>
+                {
+                    string normalized = s.StartsWith(@"\\?\") ? s.Substring(4) : s;
+                    return normalized.Equals(normalizedDirPath, StringComparison.OrdinalIgnoreCase);
+                }))
+                {
+                    return true;
+                }
+            }
+
+            // Процессы — проверяем путь связанного файла по obfStr2
+            var proc = target as ProcessThreatObject;
+            if (proc?.FileProcess != null)
+            {
+                var filePath = proc.FileProcess.FilePath;
+                if (!string.IsNullOrEmpty(filePath) &&
+                    IsPathInObfStr2(filePath))
+                {
+                    return true;
+                }
+            }
+
+            // Службы — проверяем путь бинарника по obfStr2
+            var svc = target as ServiceThreatObject;
+            if (svc != null)
+            {
+                if (!string.IsNullOrEmpty(svc.ServicePath) &&
+                    IsPathInObfStr2(svc.ServicePath))
+                {
+                    return true;
+                }
+            }
+
+            // Задачи — проверяем XML путь по obfStr2
+            var task = target as TaskThreatObject;
+            if (task?.Info != null)
+            {
+                if (!string.IsNullOrEmpty(task.Info.XmlPath) &&
+                    IsPathInObfStr2(task.Info.XmlPath))
+                {
+                    return true;
+                }
+            }
+
+            // Для остальных типов — не считаем известными по умолчанию
+            return false;
+        }
+
+        /// <summary>
+        /// Проверяет, есть ли путь в MSData.obfStr2 с учётом UNC-префикса (\\?\).
+        /// SignatureScanner формирует пути как \\?\C:\..., а MSData хранит C:\...
+        /// </summary>
+        private static bool IsPathInObfStr2(string testPath)
+        {
+            string normalizedTest = testPath.StartsWith(@"\\?\") ? testPath.Substring(4) : testPath;
+            return MSData.GetInstance.obfStr2.Any(s =>
+            {
+                string normalized = s.StartsWith(@"\\?\") ? s.Substring(4) : s;
+                return normalized.Equals(normalizedTest, StringComparison.OrdinalIgnoreCase);
+            });
+        }
+
+        /// <summary>
+        /// Удаляет дубликаты решений: SignatureScanner может найти тот же файл, что уже есть
+        /// в processDecisions/commonDecisions, но с UNC-префиксом (\\?\).
+        /// Группируем по Target.Id, а для файлов/каталогов — по нормализованному пути.
+        /// </summary>
+        private static List<ThreatDecision> DeduplicateDecisions(List<ThreatDecision> decisions)
+        {
+            return decisions
+                .Where(d => d != null && d.Target != null)
+                .GroupBy(d => GetDedupKey(d))
+                .Select(g => g.First())
+                .ToList();
+        }
+
+        private static string GetDedupKey(ThreatDecision d)
+        {
+            // Для файлов: всегда нормализованный путь (без \\?\).
+            // Хеш не используется — разные сканеры могут вычислять хеш по-разному или не вычислять вовсе.
+            if (d.Target is FileThreatObject file && !string.IsNullOrEmpty(file.FilePath))
+            {
+                string normalizedPath = file.FilePath.StartsWith(@"\\?\") ? file.FilePath.Substring(4) : file.FilePath;
+                return "File:" + normalizedPath;
+            }
+            // Для каталогов: нормализованный путь
+            if (d.Target is DirectoryThreatObject dir && !string.IsNullOrEmpty(dir.DirectoryPath))
+            {
+                string normalizedPath = dir.DirectoryPath.StartsWith(@"\\?\") ? dir.DirectoryPath.Substring(4) : dir.DirectoryPath;
+                return "Dir:" + normalizedPath;
+            }
+            // Для всех остальных: Target.Id
+            return d.Target.Kind + ":" + (d.Target.Id ?? "");
         }
 
         /// <summary>
@@ -545,14 +777,17 @@ namespace MSearch
         {
             var scanResults = state.GetScanResults();
 
-            // Группируем по уникальным Id ThreatObject для корректного подсчёта
+            // Группируем по уникальным Id ThreatObject для корректного подсчёта.
+            // Если ThreatObjectId пустой (напр. для файлов с валидной подписью hash="",
+            // или bad_bat где hash="") — используем составной ключ RawClass + Path,
+            // чтобы Distinct не схлопывал все пустые строки в 1.
             int foundCount = scanResults
                 .Where(r => r.RawType == ScanObjectType.Malware ||
                             r.RawType == ScanObjectType.Unsafe ||
                             r.RawType == ScanObjectType.Infected ||
                             r.RawType == ScanObjectType.Rootkit ||
                             r.RawType == ScanObjectType.Suspicious)
-                .Select(r => r.ThreatObjectId)
+                .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
                 .Distinct()
                 .Count();
 
@@ -563,12 +798,25 @@ namespace MSearch
                             r.RawAction == ScanActionType.Cured ||
                             r.RawAction == ScanActionType.Disabled ||
                             r.RawAction == ScanActionType.Suspended)
-                .Select(r => r.ThreatObjectId)
+                .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
                 .Distinct()
                 .Count();
 
             int suspiciousCount = AppConfig.GetInstance.totalFoundSuspiciousObjects;
-            string elapsedTime = $"{elapsed.Hours:00}:{elapsed.Minutes:00}:{elapsed.Seconds:00}.{elapsed.Milliseconds:000}";
+
+            // Считаем намеренно пропущенные — чтобы отличать их от неудавшихся нейтрализаций
+            int skippedCount = scanResults
+                .Where(r => r.RawAction == ScanActionType.Skipped &&
+                            (r.RawType == ScanObjectType.Malware ||
+                             r.RawType == ScanObjectType.Unsafe ||
+                             r.RawType == ScanObjectType.Infected ||
+                             r.RawType == ScanObjectType.Rootkit ||
+                             r.RawType == ScanObjectType.Suspicious))
+                .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
+                .Distinct()
+                .Count();
+
+            string elapsedTime = elapsed.Hours.ToString("00") + ":" + elapsed.Minutes.ToString("00") + ":" + elapsed.Seconds.ToString("00") + "." + elapsed.Milliseconds.ToString("000");
 
             Logger.WriteLog("\n\t\t-----------------------------------", ConsoleColor.White, false);
             LocalizedLogger.LogElapsedTime(elapsedTime);
@@ -581,6 +829,7 @@ namespace MSearch
                 Found = foundCount,
                 Neutralized = neutralizedCount,
                 Suspicious = suspiciousCount,
+                Skipped = skippedCount,
                 ElapsedTime = elapsedTime
             };
         }
@@ -647,6 +896,7 @@ namespace MSearch
             public int Found { get; set; }
             public int Neutralized { get; set; }
             public int Suspicious { get; set; }
+            public int Skipped { get; set; }
             public string ElapsedTime { get; set; }
         }
 

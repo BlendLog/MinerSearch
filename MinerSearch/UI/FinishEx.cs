@@ -14,10 +14,11 @@ namespace MSearch
     {
         int threatsCount = 0;
         int curedCount = 0;
+        int skippedCount = 0;
         string LBL_id_text = "";
         bool _no_logs = LaunchOptions.GetInstance.no_logs;
 
-        public FinishEx(int _totalThreats, int _neutralizedThreats, int _suspObj, string _elapsedTime, List<ScanResult> results)
+        public FinishEx(int _totalThreats, int _neutralizedThreats, int _suspObj, string _elapsedTime, List<ScanResult> results, int _skipped = 0)
         {
             InitializeComponent();
             ProcessManager.SetSmallWindowIconRandomHash(Handle);
@@ -27,6 +28,7 @@ namespace MSearch
 
             threatsCount = _totalThreats;
             curedCount = _neutralizedThreats;
+            skippedCount = _skipped;
             LBL_threatsCount.Text = _totalThreats.ToString();
             LBL_curedCount.Text = _neutralizedThreats.ToString();
             LBL_susCount.Text = _suspObj.ToString();
@@ -76,16 +78,33 @@ namespace MSearch
             {
                 if (threatsCount > 0)
                 {
-                    if (curedCount < threatsCount)
+                    // threatsCount = найдено, curedCount = обезврежено, skippedCount = пропущено намеренно
+                    int notNeutralized = threatsCount - curedCount - skippedCount;
+                    if (curedCount == threatsCount)
                     {
+                        // Все угрозы обезврежены
+                        FinalStatus_label.Text = AppConfig.GetInstance.LL.GetLocalizedString("_FinishAllThreatsNeutralized");
+                        FinalStatus_label.ForeColor = System.Drawing.Color.LightGreen;
+                    }
+                    else if (skippedCount > 0 && notNeutralized <= 0)
+                    {
+                        // Часть угроз пропущена намеренно, остальные обезврежены
+                        FinalStatus_label.Text = string.Format(
+                            AppConfig.GetInstance.LL.GetLocalizedString("_FinishSomeThreatsSkipped") ?? "{0} threats were skipped intentionally, the rest are neutralized.",
+                            skippedCount);
+                        FinalStatus_label.ForeColor = System.Drawing.Color.Gold;
+                    }
+                    else if (skippedCount > 0)
+                    {
+                        // Часть пропущена, часть не обезврежена
                         FinalStatus_label.Text = AppConfig.GetInstance.LL.GetLocalizedString("_FinishNotAllThreatsNeutralized");
                         FinalStatus_label.ForeColor = System.Drawing.Color.LightSalmon;
                     }
-                    else if (curedCount == threatsCount)
+                    else
                     {
-                        FinalStatus_label.Text = AppConfig.GetInstance.LL.GetLocalizedString("_FinishAllThreatsNeutralized");
-                        FinalStatus_label.ForeColor = System.Drawing.Color.LightGreen;
-
+                        // Не все обезврежены (неудача, а не намеренный пропуск)
+                        FinalStatus_label.Text = AppConfig.GetInstance.LL.GetLocalizedString("_FinishNotAllThreatsNeutralized");
+                        FinalStatus_label.ForeColor = System.Drawing.Color.LightSalmon;
                     }
                 }
                 else

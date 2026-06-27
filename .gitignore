@@ -382,3 +382,5 @@ FodyWeavers.xsd
 /.qwen
 /AGENTS.md
 *.cfg
+/TESTPLAN_FormThreatReview.md
+/.qwenignore
