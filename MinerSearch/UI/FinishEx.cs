@@ -291,10 +291,17 @@ namespace MSearch
 
         private void FinishEx_Load(object sender, EventArgs e)
         {
+            BringFormToFront();
             dataGridThreats.ClearSelection();
             TranslateForm();
             CollectStatistics(AppConfig.GetInstance.RegistryPathMain, AppConfig.GetInstance.StatisticsValueName);
             UpdateToggle(AppConfig.GetInstance.RegistryPathMain, AppConfig.GetInstance.StatisticsValueName);
+        }
+
+        void BringFormToFront()
+        {
+            TopMost = true;
+            TopMost = false;
         }
 
         async void CollectStatistics(string registryPath, string valueName)

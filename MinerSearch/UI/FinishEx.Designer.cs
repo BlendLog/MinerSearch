@@ -380,7 +380,7 @@ namespace MSearch
             this.MinimizeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MinimizeBtn.BackColor = System.Drawing.Color.RoyalBlue;
             this.MinimizeBtn.CornerRadius = 4;
-            this.MinimizeBtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.MinimizeBtn.FlatAppearance.BorderColor = System.Drawing.Color.RoyalBlue;
             this.MinimizeBtn.FlatAppearance.BorderSize = 0;
             this.MinimizeBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(120)))), ((int)(((byte)(255)))));
             this.MinimizeBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -404,7 +404,7 @@ namespace MSearch
             this.DonateBtn.AutoSize = true;
             this.DonateBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(120)))), ((int)(((byte)(255)))));
             this.DonateBtn.CornerRadius = 4;
-            this.DonateBtn.FlatAppearance.BorderColor = System.Drawing.Color.Yellow;
+            this.DonateBtn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(120)))), ((int)(((byte)(255)))));
             this.DonateBtn.FlatAppearance.BorderSize = 0;
             this.DonateBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Navy;
             this.DonateBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.MediumBlue;
@@ -427,7 +427,7 @@ namespace MSearch
             this.CloseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseBtn.BackColor = System.Drawing.Color.RoyalBlue;
             this.CloseBtn.CornerRadius = 4;
-            this.CloseBtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.CloseBtn.FlatAppearance.BorderColor = System.Drawing.Color.RoyalBlue;
             this.CloseBtn.FlatAppearance.BorderSize = 0;
             this.CloseBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.CloseBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -536,7 +536,7 @@ namespace MSearch
             this.finishBtn.BackColor = System.Drawing.Color.RoyalBlue;
             this.finishBtn.CornerRadius = 4;
             this.finishBtn.Enabled = false;
-            this.finishBtn.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.finishBtn.FlatAppearance.BorderColor = System.Drawing.Color.RoyalBlue;
             this.finishBtn.FlatAppearance.BorderSize = 0;
             this.finishBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Navy;
             this.finishBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.RoyalBlue;
@@ -557,7 +557,7 @@ namespace MSearch
             this.btnDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDetails.BackColor = System.Drawing.Color.Gainsboro;
             this.btnDetails.CornerRadius = 4;
-            this.btnDetails.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.btnDetails.FlatAppearance.BorderColor = System.Drawing.Color.Gainsboro;
             this.btnDetails.FlatAppearance.BorderSize = 0;
             this.btnDetails.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Navy;
             this.btnDetails.FlatAppearance.MouseOverBackColor = System.Drawing.Color.RoyalBlue;
@@ -578,7 +578,7 @@ namespace MSearch
             this.OpenQuarantineBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OpenQuarantineBtn.BackColor = System.Drawing.Color.White;
             this.OpenQuarantineBtn.CornerRadius = 4;
-            this.OpenQuarantineBtn.FlatAppearance.BorderColor = System.Drawing.Color.RoyalBlue;
+            this.OpenQuarantineBtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.OpenQuarantineBtn.FlatAppearance.BorderSize = 0;
             this.OpenQuarantineBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Navy;
             this.OpenQuarantineBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
@@ -639,7 +639,6 @@ namespace MSearch
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FinishEx";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.TopMost = true;
             this.Load += new System.EventHandler(this.FinishEx_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);

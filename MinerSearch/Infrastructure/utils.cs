@@ -2090,7 +2090,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_GenericError", ex, $"IsFileSizeBloated check on {filePath}");
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, $"IsFileSizeBloated check on {filePath}");
             }
 
             return false;
