@@ -4,6 +4,7 @@ using MSearch.Core.ThreatObjects;
 using NetFwTypeLib;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace MSearch.Core.Scanners
 {
@@ -27,8 +28,7 @@ namespace MSearch.Core.Scanners
 
                 foreach (INetFwRule rule in rules)
                 {
-                    // Пропускаем правила без ApplicationName — они не несут угрозы
-                    if (string.IsNullOrEmpty(rule.ApplicationName)) continue;
+                    if (string.IsNullOrEmpty(rule.ApplicationName) || rule.ApplicationName.Equals("system", StringComparison.OrdinalIgnoreCase)) continue;                    
 
                     var direction = rule.Direction;
                     var action = rule.Action;

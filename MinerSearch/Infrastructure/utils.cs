@@ -2441,10 +2441,6 @@ namespace MSearch
 
         public static string NormalizeExtendedPath(string path)
         {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                throw new ArgumentException();
-            }
 
             if (path.StartsWith(@"\Device\", StringComparison.OrdinalIgnoreCase))
             {
@@ -2461,9 +2457,17 @@ namespace MSearch
                 return @"\\?\UNC\" + path.Substring(2);
             }
 
-            if (!Path.IsPathRooted(path))
+            try
             {
-                path = Path.GetFullPath(path);
+                if (!Path.IsPathRooted(path))
+                {
+                    path = Path.GetFullPath(path);
+                }
+            }
+            catch (ArgumentException)
+            {
+                AppConfig.GetInstance?.LL.LogWarnMessage("_InvalidCharInPath", path);
+                return path;
             }
 
             return @"\\?\" + path;

@@ -2864,4 +2864,10 @@ Do you want to continue?
   <data name="_Review_SelectAction_RU" xml:space="preserve">
     <value>Выбрать действие</value>
   </data>
+  <data name="_InvalidCharInPath_EN" xml:space="preserve">
+    <value>Invalid characters in path (IsPathRooted failed):</value>
+  </data>
+  <data name="_InvalidCharInPath_RU" xml:space="preserve">
+    <value>Недопустимые символы в пути (сбой IsPathRooted):</value>
+  </data>
 </root>
