@@ -176,14 +176,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 
                 switch (sfxLevel)
                 {
-                    case SfxTrustLevel.Unsigned:
-                        // Не подписан — явно подозрительно в автозагрузке
-                        AppConfig.GetInstance.LL.LogCautionMessage("_Malici0usFile", file.FilePath);
-                        risk += 3;
-                        isMalicious = true;
-                        file.ShouldMoveToQuarantine = true;
-                        break;
-
                     case SfxTrustLevel.BadCert:
                         // Подписан, но сертификат проблемный — пониженный риск
                         AppConfig.GetInstance.LL.LogWarnMediumMessage("_sfxArchive", file.FilePath);
@@ -198,7 +190,7 @@ namespace MSearch.Core.ThreatAnalyzers
                         break;
 
                     default:
-                        // Unknown или NotSfx — игнорируем
+                        // Unsigned, Unknown или NotSfx — игнорируем
                         break;
                 }
             }

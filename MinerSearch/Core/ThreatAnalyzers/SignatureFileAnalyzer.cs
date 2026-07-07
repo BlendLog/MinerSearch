@@ -116,9 +116,8 @@ namespace MSearch.Core.ThreatAnalyzers
                     
                     switch (sfxLevel)
                     {
-                        case SfxTrustLevel.Unsigned:
                         case SfxTrustLevel.BadCert:
-                            // Не подписан — подозрительно
+                            // Проблемная подпись — всегда немного подозрительно
                             return FileContentAnalysisResult.Suspicious();
 
                         case SfxTrustLevel.SignedValid:
@@ -130,7 +129,7 @@ namespace MSearch.Core.ThreatAnalyzers
                             return FileContentAnalysisResult.Clean();
 
                         default:
-                            // Unknown или NotSfx — игнорируем
+                            // Unsigned, Unknown или NotSfx — игнорируем
                             break;
                     }
                 }

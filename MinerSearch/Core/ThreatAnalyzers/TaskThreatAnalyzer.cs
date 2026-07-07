@@ -818,23 +818,16 @@ namespace MSearch.Core.ThreatAnalyzers
 
             if (!string.IsNullOrEmpty(filePathFromTask) && _analysisResult.IsSuspicious) /* is sfx archive*/
             {
-                // Проверяем подпись и путь SFX-файла
+                // Любой SFX из планировщика задач — подозрителен
                 var sfxLevel = FileChecker.GetSfxTrustLevel(filePathFromTask);
-                bool inSuspiciousPath = FileChecker.IsInSuspiciousTaskPath(filePathFromTask);
 
                 bool shouldQuarantine = false;
 
                 switch (sfxLevel)
                 {
                     case SfxTrustLevel.Unsigned:
-                        // Не подписан — карантиним в любом случае
-                        shouldQuarantine = true;
-                        break;
-
                     case SfxTrustLevel.BadCert:
-                        // Проблемная подпись — только если в подозрительном пути
-                        if (inSuspiciousPath)
-                            shouldQuarantine = true;
+                        shouldQuarantine = true;
                         break;
 
                     case SfxTrustLevel.SignedValid:

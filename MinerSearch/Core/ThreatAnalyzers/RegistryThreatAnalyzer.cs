@@ -438,18 +438,6 @@ namespace MSearch.Core.ThreatAnalyzers
                         
                         switch (sfxLevel)
                         {
-                            case SfxTrustLevel.Unsigned:
-                                // Не подписан SFX в Autorun — подозрительно
-                                if (!reg.ActionDelete)
-                                {
-                                    risk += 3;
-                                    isMalicious = true;
-                                    reg.ActionDelete = true;
-                                    AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
-                                    reg.LinkedFile.ShouldMoveFileToQuarantine = true;
-                                }
-                                break;
-
                             case SfxTrustLevel.BadCert:
                                 // Проблемная подпись — пониженный риск
                                 if (!reg.ActionDelete)
@@ -466,6 +454,7 @@ namespace MSearch.Core.ThreatAnalyzers
                                 break;
 
                             default:
+                                // Unsigned, Unknown или NotSfx — игнорируем
                                 break;
                         }
                     }

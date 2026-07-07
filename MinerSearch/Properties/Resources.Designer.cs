@@ -2788,6 +2788,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Invalid characters in path (IsPathRooted failed):.
+        /// </summary>
+        internal static string _InvalidCharInPath_EN {
+            get {
+                return ResourceManager.GetString("_InvalidCharInPath_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Недопустимые символы в пути (сбой IsPathRooted):.
+        /// </summary>
+        internal static string _InvalidCharInPath_RU {
+            get {
+                return ResourceManager.GetString("_InvalidCharInPath_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Invalid file.
         /// </summary>
         internal static string _InvalidFile_EN {
@@ -7676,16 +7694,6 @@ namespace MSearch.Properties {
         internal static System.Drawing.Bitmap quarantine_logo {
             get {
                 object obj = ResourceManager.GetObject("quarantine_logo", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap sber_logo {
-            get {
-                object obj = ResourceManager.GetObject("sber_logo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -255,12 +255,10 @@
   <ItemGroup>
     <Content Include="favicon.ico" />
     <None Include="Resources\sbp_sber.png" />
-    <None Include="Resources\sber_logo.png" />
     <None Include="Resources\tether-usdt-logo.png" />
     <None Include="Resources\ton_png.png" />
     <None Include="Resources\32.png" />
     <None Include="Resources\quarantine_logo.png" />
-    <None Include="Resources\sber.jpg" />
     <None Include="Resources\128.png" />
     <None Include="Resources\yoomoney.png" />
     <None Include="Resources\blendlog-donate.png" />

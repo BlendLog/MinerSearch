@@ -101,7 +101,7 @@ namespace MSearch.Core.ThreatAnalyzers
                     AppConfig.GetInstance.LL.LogWarnMediumMessage("_SuspiciousFile", filePath);
                     fileThreat.ShouldMoveFileToQuarantine = true;
 
-                    var decision = new ThreatDecision(fileThreat, riskLevel: 2, ScanObjectType.Malware);
+                    var decision = new ThreatDecision(fileThreat, riskLevel: 2, ScanObjectType.Suspicious);
                     decision.ActionType = ScanActionType.Quarantine;
                     yield return decision;
                 }
@@ -219,6 +219,7 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),   // %ProgramData%
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),    // %LocalAppData%
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),    // %AppData%
                 $@"{Environment.GetEnvironmentVariable("SystemRoot")}\System32\config\systemprofile"
             };
 
