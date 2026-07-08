@@ -2867,4 +2867,52 @@ Do you want to continue?
   <data name="_InvalidCharInPath_RU" xml:space="preserve">
     <value>Недопустимые символы в пути (сбой IsPathRooted):</value>
   </data>
+  <data name="_ReviewBulkApplyBtn_EN" xml:space="preserve">
+    <value>Apply to All</value>
+  </data>
+  <data name="_ReviewBulkApplyBtn_RU" xml:space="preserve">
+    <value>Задать для всех</value>
+  </data>
+  <data name="_ReviewBulkAction_Apply_EN" xml:space="preserve">
+    <value>Apply same action</value>
+  </data>
+  <data name="_ReviewBulkAction_Apply_RU" xml:space="preserve">
+    <value>Применить то же действие</value>
+  </data>
+  <data name="_ReviewBulkAction_Skip_EN" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="_ReviewBulkAction_Skip_RU" xml:space="preserve">
+    <value>Пропустить</value>
+  </data>
+  <data name="_ReviewBulkAction_Delete_EN" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="_ReviewBulkAction_Delete_RU" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="_ReviewBulkAction_Cancel_EN" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="_ReviewBulkAction_Cancel_RU" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="_ReviewBulkIncompatible_EN" xml:space="preserve">
+    <value>Bulk action not applicable to some threats. What to do with the remaining threats?</value>
+  </data>
+  <data name="_ReviewBulkIncompatible_RU" xml:space="preserve">
+    <value>Общее действие к некоторым угрозам неприменимо. Что сделать с оставшимися угрозами?</value>
+  </data>
+  <data name="_ReviewBulkLabel_EN" xml:space="preserve">
+    <value>Set action:</value>
+  </data>
+  <data name="_ReviewBulkLabel_RU" xml:space="preserve">
+    <value>Задать действие:</value>
+  </data>
+  <data name="_FinishSomeThreatsSkipped_EN" xml:space="preserve">
+    <value>Some threats has been skipped by user</value>
+  </data>
+  <data name="_FinishSomeThreatsSkipped_RU" xml:space="preserve">
+    <value>Некоторые угрозы были пропущены пользователем</value>
+  </data>
 </root>

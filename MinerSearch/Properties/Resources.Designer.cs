@@ -2447,6 +2447,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Some threats has been skipped by user.
+        /// </summary>
+        internal static string _FinishSomeThreatsSkipped_EN {
+            get {
+                return ResourceManager.GetString("_FinishSomeThreatsSkipped_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Некоторые угрозы были пропущены пользователем.
+        /// </summary>
+        internal static string _FinishSomeThreatsSkipped_RU {
+            get {
+                return ResourceManager.GetString("_FinishSomeThreatsSkipped_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Firewall rule deleted:.
         /// </summary>
         internal static string _FirewallRule_Deleted_EN {
@@ -5489,6 +5507,132 @@ namespace MSearch.Properties {
         internal static string _ReviewApplyBtn_RU {
             get {
                 return ResourceManager.GetString("_ReviewApplyBtn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Apply same action.
+        /// </summary>
+        internal static string _ReviewBulkAction_Apply_EN {
+            get {
+                return ResourceManager.GetString("_ReviewBulkAction_Apply_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Применить то же действие.
+        /// </summary>
+        internal static string _ReviewBulkAction_Apply_RU {
+            get {
+                return ResourceManager.GetString("_ReviewBulkAction_Apply_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Cancel.
+        /// </summary>
+        internal static string _ReviewBulkAction_Cancel_EN {
+            get {
+                return ResourceManager.GetString("_ReviewBulkAction_Cancel_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отмена.
+        /// </summary>
+        internal static string _ReviewBulkAction_Cancel_RU {
+            get {
+                return ResourceManager.GetString("_ReviewBulkAction_Cancel_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Delete.
+        /// </summary>
+        internal static string _ReviewBulkAction_Delete_EN {
+            get {
+                return ResourceManager.GetString("_ReviewBulkAction_Delete_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удалить.
+        /// </summary>
+        internal static string _ReviewBulkAction_Delete_RU {
+            get {
+                return ResourceManager.GetString("_ReviewBulkAction_Delete_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Skip.
+        /// </summary>
+        internal static string _ReviewBulkAction_Skip_EN {
+            get {
+                return ResourceManager.GetString("_ReviewBulkAction_Skip_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пропустить.
+        /// </summary>
+        internal static string _ReviewBulkAction_Skip_RU {
+            get {
+                return ResourceManager.GetString("_ReviewBulkAction_Skip_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Apply to All.
+        /// </summary>
+        internal static string _ReviewBulkApplyBtn_EN {
+            get {
+                return ResourceManager.GetString("_ReviewBulkApplyBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Задать для всех.
+        /// </summary>
+        internal static string _ReviewBulkApplyBtn_RU {
+            get {
+                return ResourceManager.GetString("_ReviewBulkApplyBtn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Bulk action not applicable to some threats. What to do with the remaining threats?.
+        /// </summary>
+        internal static string _ReviewBulkIncompatible_EN {
+            get {
+                return ResourceManager.GetString("_ReviewBulkIncompatible_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Общее действие к некоторым угрозам неприменимо. Что сделать с оставшимися угрозами?.
+        /// </summary>
+        internal static string _ReviewBulkIncompatible_RU {
+            get {
+                return ResourceManager.GetString("_ReviewBulkIncompatible_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Set action:.
+        /// </summary>
+        internal static string _ReviewBulkLabel_EN {
+            get {
+                return ResourceManager.GetString("_ReviewBulkLabel_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Задать действие:.
+        /// </summary>
+        internal static string _ReviewBulkLabel_RU {
+            get {
+                return ResourceManager.GetString("_ReviewBulkLabel_RU", resourceCulture);
             }
         }
         

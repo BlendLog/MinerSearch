@@ -3,6 +3,7 @@ using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace MSearch.UI
@@ -11,6 +12,9 @@ namespace MSearch.UI
     {
         private readonly List<ThreatDecision> _decisions;
         private bool _applied = false;
+
+        // Поля bulk-действия
+        private List<int> _highlightedRows = new List<int>();
 
         // Имена колонок DataGridView
         private const string ColType = "colType";
@@ -25,13 +29,16 @@ namespace MSearch.UI
             InitializeComponent();
             SetupColumns();
             PopulateDataGridView();
+            PopulateBulkComboBox();
             ApplyLocalization();
+            ApplyBulkLocalization();
 
             // Подключение событий
             dataGridReviewThreats.CellValueChanged += DataGrid_CellValueChanged;
             dataGridReviewThreats.CurrentCellDirtyStateChanged += DataGrid_CurrentCellDirtyStateChanged;
             btnApply.Click += BtnApply_Click;
             btnCancel.Click += BtnCancel_Click;
+            bulkApplyBtn.Click += BulkApplyBtn_Click;
             top.MouseDown += Top_MouseDown;
             this.FormClosing += ReviewForm_Closing;
         }
@@ -830,6 +837,318 @@ namespace MSearch.UI
             // Для firewall все действия кроме Skip — удаление правила
             if (action != ScanActionTypeUserSelected.Skip)
                 fw.ShouldDelete = true;
+        }
+
+        #region Bulk Action
+
+        /// <summary>
+        /// Заполняет ComboBox bulk-действия действиями из ScanActionTypeUserSelected.
+        /// По умолчанию выбрано Quarantine.
+        /// </summary>
+        private void PopulateBulkComboBox()
+        {
+            bulkActionComboBox.Items.Clear();
+            foreach (ScanActionTypeUserSelected action in Enum.GetValues(typeof(ScanActionTypeUserSelected)))
+            {
+                bulkActionComboBox.Items.Add(GetLocalizedUserActionName(action));
+            }
+            // Устанавливаем Quarantine как значение по умолчанию
+            bulkActionComboBox.SelectedIndex = (int)ScanActionTypeUserSelected.Quarantine;
+        }
+
+        /// <summary>
+        /// Применяет локализацию к bulk-элементам.
+        /// </summary>
+        private void ApplyBulkLocalization()
+        {
+            bulkLabel.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewBulkLabel");
+            bulkApplyBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewBulkApplyBtn");
+        }
+
+        /// <summary>
+        /// Обработчик кнопки "Задать для всех".
+        /// Устанавливает выбранное действие в per-row ComboBox для применимых строк,
+        /// подсвечивает неприменимые строки жёлтым.
+        /// </summary>
+        private void BulkApplyBtn_Click(object sender, EventArgs e)
+        {
+            // Сбросить подсветку предыдущих строк
+            ClearHighlights();
+            _highlightedRows.Clear();
+
+            if (bulkActionComboBox.SelectedItem == null) return;
+
+            var userAction = ParseUserActionFromString(bulkActionComboBox.SelectedItem.ToString());
+            bool hasHighlighted = false;
+
+            for (int i = 0; i < dataGridReviewThreats.Rows.Count; i++)
+            {
+                var row = dataGridReviewThreats.Rows[i];
+                if (!(row.Tag is ThreatDecision decision) || decision.Target == null)
+                    continue;
+
+                var applicableActions = GetApplicableActions(decision.Target.Kind);
+                bool isApplicable = ArrayContains(applicableActions, userAction);
+
+                var cell = (DataGridViewComboBoxCell)row.Cells[ColNewAction];
+
+                if (isApplicable)
+                {
+                    // Устанавливаем выбранное действие
+                    cell.Value = GetLocalizedUserActionName(userAction);
+                    decision.UserOverrideAction = userAction;
+                }
+                else
+                {
+                    // Подсвечиваем неприменимую строку
+                    cell.Style.BackColor = Color.Yellow;
+                    _highlightedRows.Add(i);
+                    hasHighlighted = true;
+                }
+            }
+
+            // Если есть неприменимые строки — показать диалог
+            if (hasHighlighted)
+            {
+                ShowBulkActionDialog();
+            }
+        }
+
+        /// <summary>
+        /// Показывает диалог с вариантами действий для неприменимых строк.
+        /// Варианты — пересечение применимых действий для всех неприменимых строк.
+        /// </summary>
+        private void ShowBulkActionDialog()
+        {
+            // Вычислить пересечение применимых действий для всех подсвеченных строк
+            var commonActions = ComputeCommonActions(_highlightedRows);
+
+            // Если пересечение пусто — показать только Delete и Skip
+            if (commonActions.Count == 0)
+            {
+                commonActions.Add(ScanActionTypeUserSelected.Delete);
+                commonActions.Add(ScanActionTypeUserSelected.Skip);
+            }
+
+            // Показать диалог
+            var result = DialogDispatcher.Show(
+                AppConfig.GetInstance.LL.GetLocalizedString("_ReviewBulkIncompatible"),
+                AppConfig.GetInstance.LL.GetLocalizedString("_ReviewTitle"),
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Question,
+                Color.RoyalBlue);
+
+            if (result == DialogResult.Cancel)
+            {
+                // Отмена — сбросить подсветку и значения
+                ClearHighlights();
+                return;
+            }
+
+            // Показать поддиалог с выбором действия
+            ApplyActionToHighlightedRows(commonActions);
+        }
+
+        /// <summary>
+        /// Вычисляет пересечение применимых действий для списка строк.
+        /// </summary>
+        private List<ScanActionTypeUserSelected> ComputeCommonActions(List<int> rowIndices)
+        {
+            if (rowIndices.Count == 0) return new List<ScanActionTypeUserSelected>();
+
+            List<ScanActionTypeUserSelected> common = null;
+
+            foreach (int index in rowIndices)
+            {
+                var row = dataGridReviewThreats.Rows[index];
+                if (!(row.Tag is ThreatDecision decision) || decision.Target == null)
+                    continue;
+
+                var applicable = GetApplicableActions(decision.Target.Kind);
+                var applicableList = new List<ScanActionTypeUserSelected>(applicable);
+
+                if (common == null)
+                {
+                    common = applicableList;
+                }
+                else
+                {
+                    IntersectLists(common, applicableList);
+                }
+            }
+
+            return common ?? new List<ScanActionTypeUserSelected>();
+        }
+
+        /// <summary>
+        /// Применяет выбранное действие к подсвеченным строкам через поддиалог.
+        /// </summary>
+        private static void IntersectLists<T>(List<T> target, IEnumerable<T> other)
+        {
+            var otherSet = new HashSet<T>(other);
+            target.RemoveAll(item => !otherSet.Contains(item));
+        }
+
+        private void ApplyActionToHighlightedRows(List<ScanActionTypeUserSelected> commonActions)
+        {
+            // Создаём временную форму-диалог с кнопками
+            using (var dialog = new BulkActionDialog(commonActions))
+            {
+                var result = dialog.ShowDialog(this);
+                if (result == DialogResult.OK && dialog.SelectedAction.HasValue)
+                {
+                    var action = dialog.SelectedAction.Value;
+                    foreach (int index in _highlightedRows)
+                    {
+                        var row = dataGridReviewThreats.Rows[index];
+                        if (!(row.Tag is ThreatDecision decision) || decision.Target == null)
+                            continue;
+
+                        var cell = (DataGridViewComboBoxCell)row.Cells[ColNewAction];
+                        cell.Value = GetLocalizedUserActionName(action);
+                        cell.Style.BackColor = Color.White;
+                        decision.UserOverrideAction = action;
+                    }
+                }
+                else
+                {
+                    // Отмена — сбросить подсветку
+                    ClearHighlights();
+                }
+            }
+        }
+
+        private void ClearHighlights()
+        {
+            foreach (int index in _highlightedRows)
+            {
+                var row = dataGridReviewThreats.Rows[index];
+                if (row.Cells[ColNewAction] is DataGridViewComboBoxCell cell)
+                {
+                    cell.Style.BackColor = Color.White;
+                }
+            }
+            _highlightedRows.Clear();
+        }
+
+        private static bool ArrayContains<T>(T[] array, T value)
+        {
+            foreach (var item in array)
+            {
+                if (item.Equals(value)) return true;
+            }
+            return false;
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Вспомогательная форма-диалог для выбора действия из пересечения применимых действий.
+    /// </summary>
+    internal class BulkActionDialog : Form
+    {
+        public ScanActionTypeUserSelected? SelectedAction { get; private set; }
+
+        public BulkActionDialog(List<ScanActionTypeUserSelected> actions)
+        {
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            StartPosition = FormStartPosition.CenterParent;
+            Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewTitle");
+            ShowInTaskbar = false;
+            MaximizeBox = false;
+            MinimizeBox = false;
+
+            var flowPanel = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.TopDown,
+                WrapContents = false,
+                Padding = new Padding(10),
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink
+            };
+
+            var messageLabel = new Label
+            {
+                Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewBulkIncompatible"),
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                Font = new Font("Verdana", 9F, FontStyle.Bold),
+                Padding = new Padding(0, 10, 0, 10)
+            };
+            flowPanel.Controls.Add(messageLabel);
+
+            foreach (var action in actions)
+            {
+                var btn = new RoundButton
+                {
+                    Text = GetLocalizedUserActionName(action),
+                    Dock = DockStyle.Top,
+                    FlatStyle = FlatStyle.Flat,
+                    BackColor = Color.White,
+                    ForeColor = Color.RoyalBlue,
+                    Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Height = 36,
+                    Margin = new Padding(0, 2, 0, 2)
+                };
+                btn.FlatAppearance.BorderSize = 0;
+
+                btn.FlatAppearance.MouseOverBackColor = Color.AliceBlue;
+                btn.FlatAppearance.MouseDownBackColor = Color.Navy;
+                btn.Click += (s, e) =>
+                {
+                    SelectedAction = action;
+                    DialogResult = DialogResult.OK;
+                    Close();
+                };
+
+                flowPanel.Controls.Add(btn);
+            }
+
+            // Кнопка "Отмена"
+            var cancelBtn = new RoundButton
+            {
+                Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewBulkAction_Cancel"),
+                Dock = DockStyle.Bottom,
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.White,
+                ForeColor = Color.Black,
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Height = 36,
+                Margin = new Padding(0, 2, 0, 5)
+            };
+            cancelBtn.FlatAppearance.BorderSize = 0;
+            cancelBtn.FlatAppearance.MouseOverBackColor = Color.Gainsboro;
+            cancelBtn.Click += (s, e) =>
+            {
+                SelectedAction = null;
+                DialogResult = DialogResult.Cancel;
+                Close();
+            };
+            flowPanel.Controls.Add(cancelBtn);
+
+            Controls.Add(flowPanel);
+            Size = new Size(400, Math.Max(200, flowPanel.PreferredSize.Height + 20));
+        }
+
+        private static string GetLocalizedUserActionName(ScanActionTypeUserSelected action)
+        {
+            switch (action)
+            {
+                case ScanActionTypeUserSelected.Cure:
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAction_Cure");
+                case ScanActionTypeUserSelected.Quarantine:
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAction_Quarantine");
+                case ScanActionTypeUserSelected.Delete:
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAction_Delete");
+                case ScanActionTypeUserSelected.Skip:
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAction_Skip");
+                default:
+                    return action.ToString();
+            }
         }
     }
 }

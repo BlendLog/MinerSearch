@@ -60,12 +60,12 @@ namespace MSearch.Core.Managers
 
                     if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected || decision.ObjectType == ScanObjectType.Rootkit)
                     {
-                        _state.AddScanResult(new ScanResult(decision.ObjectType, GetDescription(decision), ScanActionType.Skipped, threatObjectId: decision.Target.Id));
+                        _state.AddScanResult(new ScanResult(decision.ObjectType, GetDescription(decision), ScanActionType.Skipped, threatObjectId: decision.Target.Id, @class: decision.Target.Kind));
                         _state.IncrementFoundThreats();
                     }
                     else if (decision.ObjectType == ScanObjectType.Suspicious)
                     {
-                        _state.AddScanResult(new ScanResult(decision.ObjectType, GetDescription(decision), ScanActionType.Skipped, threatObjectId: decision.Target.Id));
+                        _state.AddScanResult(new ScanResult(decision.ObjectType, GetDescription(decision), ScanActionType.Skipped, threatObjectId: decision.Target.Id, @class: decision.Target.Kind));
                         _state.IncrementFoundSuspicious();
                     }
                 }
@@ -134,7 +134,7 @@ namespace MSearch.Core.Managers
                 if (decision == null || decision.Target == null) continue;
 
                 string description = GetDescription(decision);
-                _state.AddScanResult(new ScanResult(decision.ObjectType, description, ScanActionType.Skipped, threatObjectId: decision.Target.Id));
+                _state.AddScanResult(new ScanResult(decision.ObjectType, description, ScanActionType.Skipped, threatObjectId: decision.Target.Id, @class: decision.Target.Kind));
 
                 if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected || decision.ObjectType == ScanObjectType.Rootkit)
                     _state.IncrementFoundThreats();

@@ -90,7 +90,7 @@ namespace MSearch
                     {
                         // Часть угроз пропущена намеренно, остальные обезврежены
                         FinalStatus_label.Text = string.Format(
-                            AppConfig.GetInstance.LL.GetLocalizedString("_FinishSomeThreatsSkipped") ?? "{0} threats were skipped intentionally, the rest are neutralized.",
+                            AppConfig.GetInstance.LL.GetLocalizedString("_FinishSomeThreatsSkipped"),
                             skippedCount);
                         FinalStatus_label.ForeColor = System.Drawing.Color.Gold;
                     }
@@ -124,7 +124,9 @@ namespace MSearch
             if (LaunchOptions.GetInstance.ScanOnly) Environment.Exit(0);
 
 #if !DEBUG
-            if (curedCount < threatsCount)
+            // Не спрашиваем reboot, если все угрозы либо обезврежены, либо пропущены намеренно
+            int notNeutralized = threatsCount - curedCount - skippedCount;
+            if (notNeutralized > 0)
             {
                 var result = MessageBoxCustom.Show(AppConfig.GetInstance.LL.GetLocalizedString("_RebootPCNowDialog"), AppConfig.GetInstance._title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
