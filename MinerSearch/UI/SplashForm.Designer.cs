@@ -249,7 +249,7 @@ namespace MSearch
             this.Label_supportCaption.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold);
             this.Label_supportCaption.ForeColor = System.Drawing.Color.Black;
             this.Label_supportCaption.Location = new System.Drawing.Point(0, 0);
-            this.Label_supportCaption.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Label_supportCaption.Margin = new System.Windows.Forms.Padding(4);
             this.Label_supportCaption.Name = "Label_supportCaption";
             this.Label_supportCaption.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.Label_supportCaption.Size = new System.Drawing.Size(462, 32);
@@ -264,7 +264,7 @@ namespace MSearch
             this.Label_supportClickHint.Font = new System.Drawing.Font("Trebuchet MS", 10F);
             this.Label_supportClickHint.ForeColor = System.Drawing.Color.DarkGray;
             this.Label_supportClickHint.Location = new System.Drawing.Point(4, 375);
-            this.Label_supportClickHint.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Label_supportClickHint.Margin = new System.Windows.Forms.Padding(4);
             this.Label_supportClickHint.Name = "Label_supportClickHint";
             this.Label_supportClickHint.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.Label_supportClickHint.Size = new System.Drawing.Size(454, 24);
@@ -449,7 +449,7 @@ namespace MSearch
             // pictureBox2
             // 
             this.pictureBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Image = global::MSearch.Properties.Resources.sber_logo;
             this.pictureBox2.Location = new System.Drawing.Point(19, 9);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox2.Name = "pictureBox2";
@@ -473,7 +473,7 @@ namespace MSearch
             this.panel4.Controls.Add(this.Label_supportGroupCaption);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(4, 442);
-            this.panel4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel4.Margin = new System.Windows.Forms.Padding(4);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(464, 206);
             this.panel4.TabIndex = 2;
@@ -510,7 +510,7 @@ namespace MSearch
             this.Label_chatHelp.AutoSize = true;
             this.Label_chatHelp.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Label_chatHelp.Location = new System.Drawing.Point(63, 119);
-            this.Label_chatHelp.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Label_chatHelp.Margin = new System.Windows.Forms.Padding(4);
             this.Label_chatHelp.Name = "Label_chatHelp";
             this.Label_chatHelp.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.Label_chatHelp.Size = new System.Drawing.Size(277, 19);
@@ -522,7 +522,7 @@ namespace MSearch
             this.Label_BlogNews.AutoSize = true;
             this.Label_BlogNews.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Label_BlogNews.Location = new System.Drawing.Point(62, 61);
-            this.Label_BlogNews.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Label_BlogNews.Margin = new System.Windows.Forms.Padding(4);
             this.Label_BlogNews.Name = "Label_BlogNews";
             this.Label_BlogNews.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.Label_BlogNews.Size = new System.Drawing.Size(160, 19);

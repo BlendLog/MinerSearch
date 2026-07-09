@@ -638,6 +638,7 @@ namespace MSearch
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FinishEx";
+            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.FinishEx_Load);
             this.tableLayoutPanel1.ResumeLayout(false);

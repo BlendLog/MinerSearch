@@ -61,26 +61,6 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _128 {
-            get {
-                object obj = ResourceManager.GetObject("128", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _32 {
-            get {
-                object obj = ResourceManager.GetObject("32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Yes.
         /// </summary>
         internal static string _accept_en {
@@ -7838,6 +7818,16 @@ namespace MSearch.Properties {
         internal static System.Drawing.Bitmap quarantine_logo {
             get {
                 object obj = ResourceManager.GetObject("quarantine_logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap sber_logo {
+            get {
+                object obj = ResourceManager.GetObject("sber_logo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

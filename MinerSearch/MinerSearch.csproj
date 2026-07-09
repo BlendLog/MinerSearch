@@ -254,16 +254,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
+    <None Include="Resources\sber_logo.png" />
     <None Include="Resources\sbp_sber.png" />
     <None Include="Resources\tether-usdt-logo.png" />
     <None Include="Resources\ton_png.png" />
-    <None Include="Resources\32.png" />
     <None Include="Resources\quarantine_logo.png" />
-    <None Include="Resources\128.png" />
-    <None Include="Resources\yoomoney.png" />
-    <None Include="Resources\blendlog-donate.png" />
     <None Include="Resources\telegram_logo.png" />
-    <None Include="bin\Release\Microsoft.Win32.TaskScheduler.dll" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\FormThreatReview.resx">
@@ -335,6 +331,9 @@
       <Project>{82691cb5-8b20-4659-8657-31efd70f92a7}</Project>
       <Name>Win32Wrapper</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Release\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
