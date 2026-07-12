@@ -31,21 +31,12 @@ namespace MSearch.UI
             PopulateDataGridView();
             PopulateBulkComboBox();
             ApplyLocalization();
-            ApplyBulkLocalization();
 
-            // Подключение событий
-            dataGridReviewThreats.CellValueChanged += DataGrid_CellValueChanged;
-            dataGridReviewThreats.CurrentCellDirtyStateChanged += DataGrid_CurrentCellDirtyStateChanged;
-            btnApply.Click += BtnApply_Click;
-            btnCancel.Click += BtnCancel_Click;
-            bulkApplyBtn.Click += BulkApplyBtn_Click;
-            top.MouseDown += Top_MouseDown;
-            this.FormClosing += ReviewForm_Closing;
         }
 
         #region Перетаскивание формы
 
-        private void Top_MouseDown(object sender, MouseEventArgs e)
+        private void top_MouseDown(object sender, MouseEventArgs e)
         {
             top.Capture = false;
             Message m = Message.Create(Handle, 0xA1, new IntPtr(2), IntPtr.Zero);
@@ -56,13 +47,9 @@ namespace MSearch.UI
 
         void SetupColumns()
         {
-            // Разрешаем редактирование только ComboBox-колонки
             dataGridReviewThreats.ReadOnly = false;
             dataGridReviewThreats.EditMode = DataGridViewEditMode.EditOnEnter;
-
-            // Отключаем столбец выбора строки — убираем лишнюю колонку
             dataGridReviewThreats.RowHeadersVisible = false;
-            // CellSelect вместо RowHeaderSelect
             dataGridReviewThreats.SelectionMode = DataGridViewSelectionMode.CellSelect;
 
             // 2. Тип угрозы (Malware, Unsafe и т.д.)
@@ -99,7 +86,7 @@ namespace MSearch.UI
             var colCurrentAction = new DataGridViewTextBoxColumn
             {
                 Name = ColCurrentAction,
-                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Action"),
+                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_Review_RecommendedAction"),
                 ReadOnly = true,
                 FillWeight = 13
             };
@@ -140,6 +127,7 @@ namespace MSearch.UI
             top.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewInstructions");
             btnApply.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewApplyBtn");
             btnCancel.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewCancelBtn");
+            bulkApplyBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewBulkApplyBtn");
         }
 
         void PopulateDataGridView()
@@ -168,6 +156,21 @@ namespace MSearch.UI
                 var row = dataGridReviewThreats.Rows[rowIndex];
                 row.Tag = decision;
 
+                // Окрашиваем ячейку типа угрозы сразу после установки Tag
+                switch (decision.ObjectType)
+                {
+                    case ScanObjectType.Malware:
+                        row.Cells[0].Style.ForeColor = Color.Firebrick;
+                        break;
+                    case ScanObjectType.Infected:
+                    case ScanObjectType.Unsafe:
+                        row.Cells[0].Style.ForeColor = Color.Red;
+                        break;
+                    case ScanObjectType.Suspicious:
+                        row.Cells[0].Style.ForeColor = Color.Orange;
+                        break;
+                }
+
                 // Настраиваем ComboBox: только применимые к данному классу действия
                 var cell = (DataGridViewComboBoxCell)row.Cells[ColNewAction];
                 var applicableActions = GetApplicableActions(decision.Target.Kind);
@@ -182,28 +185,7 @@ namespace MSearch.UI
         }
 
         /// <summary>
-        /// Маппит ScanActionType (результат анализа) на ScanActionTypeUserSelected (действие пользователя).
-        /// Если автоматическое действие — "исцелить", то пользовательское тоже Cure.
-        /// </summary>
-        private ScanActionTypeUserSelected? MapScanActionToUserAction(ScanActionType action)
-        {
-            switch (action)
-            {
-                case ScanActionType.Cured:
-                    return ScanActionTypeUserSelected.Cure;
-                case ScanActionType.Quarantine:
-                    return ScanActionTypeUserSelected.Quarantine;
-                case ScanActionType.Deleted:
-                    return ScanActionTypeUserSelected.Delete;
-                default:
-                    // Active, Terminated, Inaccessible, Error, Skipped и т.д. → Skip (оставить как есть)
-                    return ScanActionTypeUserSelected.Skip;
-            }
-        }
-
-        /// <summary>
-        /// Возвращает действие по умолчанию на основе флагов threat-объекта,
-        /// а не ActionType (который анализаторы не выставляют, и он всегда == Cured).
+        /// Возвращает действие по умолчанию на основе флагов threat-объекта
         /// </summary>
         private ScanActionTypeUserSelected GetDefaultUserActionFromFlags(ThreatDecision decision)
         {
@@ -318,30 +300,6 @@ namespace MSearch.UI
             }
         }
 
-        private void DataGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            // Обновляем UserOverrideAction при изменении ComboBox
-            if (e.ColumnIndex < 0 || e.RowIndex < 0) return;
-            if (dataGridReviewThreats.Columns[e.ColumnIndex].Name != ColNewAction) return;
-            if (e.RowIndex >= dataGridReviewThreats.Rows.Count) return;
-
-            var row = dataGridReviewThreats.Rows[e.RowIndex];
-            if (row.Tag is ThreatDecision decision && row.Cells[ColNewAction].Value != null)
-            {
-                string selectedText = row.Cells[ColNewAction].Value.ToString();
-                decision.UserOverrideAction = ParseUserActionFromString(selectedText);
-            }
-        }
-
-        private void DataGrid_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-        {
-            if (dataGridReviewThreats.IsCurrentCellDirty &&
-                dataGridReviewThreats.CurrentCell?.OwningColumn?.Name == ColNewAction)
-            {
-                dataGridReviewThreats.CommitEdit(DataGridViewDataErrorContexts.Commit);
-            }
-        }
-
         private ScanActionTypeUserSelected ParseUserActionFromString(string text)
         {
             foreach (ScanActionTypeUserSelected action in Enum.GetValues(typeof(ScanActionTypeUserSelected)))
@@ -373,40 +331,6 @@ namespace MSearch.UI
             catch
             {
                 return type.ToString();
-            }
-        }
-
-        private string GetLocalizedAction(ScanActionType action)
-        {
-            try
-            {
-                switch (action)
-                {
-                    case ScanActionType.Cured:
-                        return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Cured");
-                    case ScanActionType.Quarantine:
-                        return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Quarantine");
-                    case ScanActionType.Deleted:
-                        return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Deleted");
-                    case ScanActionType.Error:
-                        return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Error");
-                    case ScanActionType.Active:
-                        return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Active");
-                    case ScanActionType.Terminated:
-                        return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Terminated");
-                    case ScanActionType.Inaccessible:
-                        return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Inaccessible");
-                    case ScanActionType.Disabled:
-                        return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Disabled");
-                    case ScanActionType.LockedByAntivirus:
-                        return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_LockedByAV");
-                    default:
-                        return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Skipped");
-                }
-            }
-            catch
-            {
-                return action.ToString();
             }
         }
 
@@ -500,14 +424,14 @@ namespace MSearch.UI
             Close();
         }
 
-        private void BtnApply_Click(object sender, EventArgs e)
+        private void btnApply_Click(object sender, EventArgs e)
         {
             dataGridReviewThreats.EndEdit();
             _applied = true;
             Close();
         }
 
-        private void BtnCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             dataGridReviewThreats.CancelEdit();
             _applied = false;
@@ -519,7 +443,7 @@ namespace MSearch.UI
         /// </summary>
         public bool IsApplied() => _applied;
 
-        private void ReviewForm_Closing(object sender, FormClosingEventArgs e)
+        private void FormThreatReview_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!_applied && e.CloseReason == CloseReason.UserClosing)
             {
@@ -857,20 +781,11 @@ namespace MSearch.UI
         }
 
         /// <summary>
-        /// Применяет локализацию к bulk-элементам.
-        /// </summary>
-        private void ApplyBulkLocalization()
-        {
-            bulkLabel.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewBulkLabel");
-            bulkApplyBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewBulkApplyBtn");
-        }
-
-        /// <summary>
         /// Обработчик кнопки "Задать для всех".
         /// Устанавливает выбранное действие в per-row ComboBox для применимых строк,
         /// подсвечивает неприменимые строки жёлтым.
         /// </summary>
-        private void BulkApplyBtn_Click(object sender, EventArgs e)
+        private void bulkApplyBtn_Click(object sender, EventArgs e)
         {
             // Сбросить подсветку предыдущих строк
             ClearHighlights();
@@ -1041,6 +956,34 @@ namespace MSearch.UI
         }
 
         #endregion
+
+        private void FormThreatReview_Load(object sender, EventArgs e)
+        {
+            dataGridReviewThreats.AutoResizeColumns();
+        }
+
+        private void dataGridReviewThreats_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            // Обновляем UserOverrideAction при изменении ComboBox
+            if (e.ColumnIndex < 0 || e.RowIndex < 0) return;
+            if (dataGridReviewThreats.Columns[e.ColumnIndex].Name != ColNewAction) return;
+            if (e.RowIndex >= dataGridReviewThreats.Rows.Count) return;
+
+            var row = dataGridReviewThreats.Rows[e.RowIndex];
+            if (row.Tag is ThreatDecision decision && row.Cells[ColNewAction].Value != null)
+            {
+                string selectedText = row.Cells[ColNewAction].Value.ToString();
+                decision.UserOverrideAction = ParseUserActionFromString(selectedText);
+            }
+        }
+
+        private void dataGridReviewThreats_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dataGridReviewThreats.IsCurrentCellDirty && dataGridReviewThreats.CurrentCell?.OwningColumn?.Name == ColNewAction)
+            {
+                dataGridReviewThreats.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
     }
 
     /// <summary>

@@ -43,6 +43,9 @@ namespace MSearch.Core.Scanners
             // 6. Файлы в CommonApplicationData (bat + SFX)
             ScanCommonAppDataFiles(results);
 
+            // 7. Исполняемые файлы в корнях AppData/LocalAppData/Public
+            ScanSpecificLocations(results);
+
             return results;
         }
 
@@ -329,6 +332,71 @@ namespace MSearch.Core.Scanners
             catch (Exception ex)
             {
                 AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
+            }
+        }
+
+        internal void ScanSpecificLocations(List<IThreatObject> results)
+        {
+            var specificDirs = new[]
+            {
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),           // %AppData%
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),      // %LocalAppData%
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles)         // %Public% / %ProgramFiles%
+            };
+
+            foreach (var baseDir in specificDirs)
+            {
+                if (string.IsNullOrEmpty(baseDir))
+                    continue;
+
+                try
+                {
+                    foreach (string filePath in Directory.EnumerateFiles(baseDir, "*.*", SearchOption.TopDirectoryOnly))
+                    {
+                        // Пропускаем репосты и недоступные файлы
+                        if (FileSystemManager.IsReparsePoint(filePath) || !FileSystemManager.IsAccessibleFile(filePath))
+                            continue;
+
+                        // Проверяем, является ли файл исполняемым (MZ-подпись)
+                        if (!FileChecker.IsExecutable(filePath))
+                            continue;
+
+                        // Проверяем подпись
+                        WinVerifyTrustResult trustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(filePath);
+
+                        // Пропускаем файлы с валидной подписью
+                        if (trustResult == WinVerifyTrustResult.Success)
+                            continue;
+
+                        long fileSize = 0;
+                        string originalName = "";
+                        string description = "";
+                        string hash = "";
+
+                        try { fileSize = new FileInfo(filePath).Length; } catch { }
+                        try
+                        {
+                            var fvi = FileVersionInfo.GetVersionInfo(filePath);
+                            originalName = fvi.OriginalFilename ?? "";
+                            description = fvi.FileDescription ?? "";
+                        }
+                        catch { }
+                        try { hash = FileChecker.CalculateSHA1(filePath); }
+                        catch { }
+
+                        // SourceTag = "specific_location_unsigned_exe" — анализатор решит что с этим делать
+                        var fileThreat = new FileThreatObject(filePath, Path.GetFileName(filePath), fileSize, originalName, description, hash, trustResult)
+                        {
+                            SourceTag = "specific_location_unsigned_exe"
+                        };
+
+                        results.Add(fileThreat);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
+                }
             }
         }
     }

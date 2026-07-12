@@ -302,9 +302,6 @@ Before proceeding, you must read the license agreement (license.rtf or a copy of
   <data name="_ErrorTaskDeletion_EN" xml:space="preserve">
     <value>Error on task deletion</value>
   </data>
-  <data name="_Review_SelectAction_EN" xml:space="preserve">
-    <value>Select action</value>
-  </data>
   <data name="_CertCannotCalcHash_RU" xml:space="preserve">
     <value>Не удалось вычислить хеш</value>
   </data>
@@ -641,12 +638,6 @@ Before proceeding, you must read the license agreement (license.rtf or a copy of
   </data>
   <data name="_FinishSomeThreatsSkipped_EN" xml:space="preserve">
     <value>Some threats has been skipped by user</value>
-  </data>
-  <data name="_LabelBlogNews_RU" xml:space="preserve">
-    <value>Новости и обновления</value>
-  </data>
-  <data name="_LabelChatHelp_EN" xml:space="preserve">
-    <value>Discussion and help in removement threats</value>
   </data>
   <data name="_Name_RU" xml:space="preserve">
     <value>Название:</value>
@@ -2102,9 +2093,6 @@ Click \b Exit\b0  to exit.\par
   <data name="_DonateBtn_EN" xml:space="preserve">
     <value>Donate $$$</value>
   </data>
-  <data name="_Review_SelectAction_RU" xml:space="preserve">
-    <value>Выбрать действие</value>
-  </data>
   <data name="_CriticalServiceNotInstalled_EN" xml:space="preserve">
     <value>service is not installed!</value>
   </data>
@@ -2567,9 +2555,6 @@ Click \b Exit\b0  to exit.\par
   <data name="_EventCopyText_RU" xml:space="preserve">
     <value>Скопировано</value>
   </data>
-  <data name="_LabelChatHelp_RU" xml:space="preserve">
-    <value>Обсуждение и помощь в устранении угроз</value>
-  </data>
   <data name="_PcaluaAbuse_EN" xml:space="preserve">
     <value>Executed via pcalua.exe. Legitimate software may be abused.</value>
   </data>
@@ -2885,9 +2870,6 @@ Do you want to continue?
   <data name="_ReviewBulkAction_Delete_EN" xml:space="preserve">
     <value>Delete</value>
   </data>
-  <data name="_LabelBlogNews_EN" xml:space="preserve">
-    <value>News and updates</value>
-  </data>
   <data name="_ReviewBulkAction_Skip_EN" xml:space="preserve">
     <value>Skip</value>
   </data>
@@ -2911,5 +2893,29 @@ Do you want to continue?
   </data>
   <data name="sber_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\sber_logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_LabelNewsDescription_EN" xml:space="preserve">
+    <value>News and updates</value>
+  </data>
+  <data name="_LabelNewsDescription_RU" xml:space="preserve">
+    <value>Новости и обновления</value>
+  </data>
+  <data name="_LabelWebDescription_EN" xml:space="preserve">
+    <value>Official web page</value>
+  </data>
+  <data name="_LabelWebDescription_RU" xml:space="preserve">
+    <value>Официальная веб-страница</value>
+  </data>
+  <data name="_Review_RecommendedAction_EN" xml:space="preserve">
+    <value>Recommended action</value>
+  </data>
+  <data name="_Review_RecommendedAction_RU" xml:space="preserve">
+    <value>Рекомендуемое действие</value>
+  </data>
+  <data name="_Review_SelectAction_EN" xml:space="preserve">
+    <value>Select action</value>
+  </data>
+  <data name="_Review_SelectAction_RU" xml:space="preserve">
+    <value>Выбрать действие</value>
   </data>
 </root>

@@ -772,6 +772,8 @@ namespace DBase
             AddObfPath(obfStr1, "AppData", false, "sysf?il?es".Replace("?", ""));
             AddObfPath(obfStr1, "AppData", false, "Dri?vers?Update".Replace("?", ""));
             AddObfPath(obfStr1, "AppData", false, "Microsoft", "Libs");
+            AddObfPath(obfStr1, "AppData", false, "Wi?ndo?wsHe?lpe?r".Replace("?", ""));
+
 
             AddObfPath(obfStr2, new StringBuilder("Lo").Append("ca").Append("lA").Append("pp").Append("Da").Append("ta").ToString(), false, "cl?ient?hel?per-up?da?ter".Replace("?", ""), "in?stalle?r.exe".Replace("?", ""));
             AddObfPath(obfStr2, new StringBuilder("Lo").Append("ca").Append("lA").Append("pp").Append("Da").Append("ta").ToString(), false, "to?rre??ntpro-up?dater".Replace("?", ""), "insta?ll??er.exe".Replace("?", ""));

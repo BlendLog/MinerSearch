@@ -55,11 +55,11 @@ namespace MSearch
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.labelWebDescription = new System.Windows.Forms.Label();
+            this.labelNewsDescription = new System.Windows.Forms.Label();
+            this.linkOfficial = new System.Windows.Forms.LinkLabel();
             this.Exit_btn = new MSearch.UI.RoundButton();
             this.label7 = new System.Windows.Forms.Label();
-            this.Label_chatHelp = new System.Windows.Forms.Label();
-            this.Label_BlogNews = new System.Windows.Forms.Label();
-            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
@@ -254,7 +254,7 @@ namespace MSearch
             this.Label_supportCaption.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.Label_supportCaption.Size = new System.Drawing.Size(462, 32);
             this.Label_supportCaption.TabIndex = 3;
-            this.Label_supportCaption.Text = "Поддержать разработчика проекта!      ";
+            this.Label_supportCaption.Text = "Label_supportCaption";
             this.Label_supportCaption.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Label_supportClickHint
@@ -269,7 +269,7 @@ namespace MSearch
             this.Label_supportClickHint.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.Label_supportClickHint.Size = new System.Drawing.Size(454, 24);
             this.Label_supportClickHint.TabIndex = 4;
-            this.Label_supportClickHint.Text = "Нажмите, чтобы скопировать";
+            this.Label_supportClickHint.Text = "Label_supportClickHint";
             this.Label_supportClickHint.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Label_supportText
@@ -282,8 +282,7 @@ namespace MSearch
             this.Label_supportText.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.Label_supportText.Size = new System.Drawing.Size(455, 105);
             this.Label_supportText.TabIndex = 8;
-            this.Label_supportText.Text = "Поддержите разработчика любым удобным способом – это поможет и дальше эффективно " +
-    "бороться с майнерами.\r\n\r\nСпасибо за вашу помощь!";
+            this.Label_supportText.Text = "Label_supportText";
             this.Label_supportText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // pictureBox1
@@ -462,11 +461,11 @@ namespace MSearch
             // 
             this.panel4.BackColor = System.Drawing.Color.White;
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.Controls.Add(this.labelWebDescription);
+            this.panel4.Controls.Add(this.labelNewsDescription);
+            this.panel4.Controls.Add(this.linkOfficial);
             this.panel4.Controls.Add(this.Exit_btn);
             this.panel4.Controls.Add(this.label7);
-            this.panel4.Controls.Add(this.Label_chatHelp);
-            this.panel4.Controls.Add(this.Label_BlogNews);
-            this.panel4.Controls.Add(this.linkLabel3);
             this.panel4.Controls.Add(this.linkLabel2);
             this.panel4.Controls.Add(this.pictureBox7);
             this.panel4.Controls.Add(this.pictureBox6);
@@ -477,6 +476,55 @@ namespace MSearch
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(464, 206);
             this.panel4.TabIndex = 2;
+            // 
+            // labelWebDescription
+            // 
+            this.labelWebDescription.BackColor = System.Drawing.Color.White;
+            this.labelWebDescription.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.labelWebDescription.Font = new System.Drawing.Font("Trebuchet MS", 10F);
+            this.labelWebDescription.ForeColor = System.Drawing.Color.DarkGray;
+            this.labelWebDescription.Location = new System.Drawing.Point(63, 117);
+            this.labelWebDescription.Margin = new System.Windows.Forms.Padding(4);
+            this.labelWebDescription.Name = "labelWebDescription";
+            this.labelWebDescription.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+            this.labelWebDescription.Size = new System.Drawing.Size(220, 25);
+            this.labelWebDescription.TabIndex = 25;
+            this.labelWebDescription.Text = "Official web page";
+            this.labelWebDescription.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // labelNewsDescription
+            // 
+            this.labelNewsDescription.BackColor = System.Drawing.Color.White;
+            this.labelNewsDescription.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.labelNewsDescription.Font = new System.Drawing.Font("Trebuchet MS", 10F);
+            this.labelNewsDescription.ForeColor = System.Drawing.Color.DarkGray;
+            this.labelNewsDescription.Location = new System.Drawing.Point(63, 59);
+            this.labelNewsDescription.Margin = new System.Windows.Forms.Padding(4);
+            this.labelNewsDescription.Name = "labelNewsDescription";
+            this.labelNewsDescription.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+            this.labelNewsDescription.Size = new System.Drawing.Size(220, 25);
+            this.labelNewsDescription.TabIndex = 10;
+            this.labelNewsDescription.Text = "New and updates";
+            this.labelNewsDescription.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // linkOfficial
+            // 
+            this.linkOfficial.ActiveLinkColor = System.Drawing.Color.MediumSlateBlue;
+            this.linkOfficial.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.linkOfficial.AutoSize = true;
+            this.linkOfficial.BackColor = System.Drawing.Color.Transparent;
+            this.linkOfficial.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.linkOfficial.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.linkOfficial.LinkColor = System.Drawing.Color.Black;
+            this.linkOfficial.Location = new System.Drawing.Point(62, 92);
+            this.linkOfficial.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.linkOfficial.Name = "linkOfficial";
+            this.linkOfficial.Size = new System.Drawing.Size(185, 21);
+            this.linkOfficial.TabIndex = 24;
+            this.linkOfficial.TabStop = true;
+            this.linkOfficial.Text = "https://blendlog.github.io";
+            this.linkOfficial.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.linkOfficial.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOfficial_LinkClicked);
             // 
             // Exit_btn
             // 
@@ -490,7 +538,7 @@ namespace MSearch
             this.Exit_btn.Name = "Exit_btn";
             this.Exit_btn.Size = new System.Drawing.Size(98, 28);
             this.Exit_btn.TabIndex = 23;
-            this.Exit_btn.Text = "Выйти";
+            this.Exit_btn.Text = "Exit_btn";
             this.Exit_btn.UseVisualStyleBackColor = false;
             this.Exit_btn.Click += new System.EventHandler(this.Exit_btn_Click);
             // 
@@ -504,48 +552,6 @@ namespace MSearch
             this.label7.TabIndex = 22;
             this.label7.Text = "_________________________________________________________________________________" +
     "___";
-            // 
-            // Label_chatHelp
-            // 
-            this.Label_chatHelp.AutoSize = true;
-            this.Label_chatHelp.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.Label_chatHelp.Location = new System.Drawing.Point(63, 119);
-            this.Label_chatHelp.Margin = new System.Windows.Forms.Padding(4);
-            this.Label_chatHelp.Name = "Label_chatHelp";
-            this.Label_chatHelp.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.Label_chatHelp.Size = new System.Drawing.Size(277, 19);
-            this.Label_chatHelp.TabIndex = 21;
-            this.Label_chatHelp.Text = "Обсуждение и помощь в удалении угроз";
-            // 
-            // Label_BlogNews
-            // 
-            this.Label_BlogNews.AutoSize = true;
-            this.Label_BlogNews.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.Label_BlogNews.Location = new System.Drawing.Point(62, 61);
-            this.Label_BlogNews.Margin = new System.Windows.Forms.Padding(4);
-            this.Label_BlogNews.Name = "Label_BlogNews";
-            this.Label_BlogNews.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-            this.Label_BlogNews.Size = new System.Drawing.Size(160, 19);
-            this.Label_BlogNews.TabIndex = 20;
-            this.Label_BlogNews.Text = "Новости и обновления";
-            // 
-            // linkLabel3
-            // 
-            this.linkLabel3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.linkLabel3.AutoSize = true;
-            this.linkLabel3.BackColor = System.Drawing.Color.Transparent;
-            this.linkLabel3.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.linkLabel3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.linkLabel3.LinkColor = System.Drawing.Color.Black;
-            this.linkLabel3.Location = new System.Drawing.Point(61, 92);
-            this.linkLabel3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.linkLabel3.Name = "linkLabel3";
-            this.linkLabel3.Size = new System.Drawing.Size(220, 21);
-            this.linkLabel3.TabIndex = 19;
-            this.linkLabel3.TabStop = true;
-            this.linkLabel3.Text = "https://t.me/MinerSearch_chat";
-            this.linkLabel3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
             // 
             // linkLabel2
             // 
@@ -568,11 +574,12 @@ namespace MSearch
             // pictureBox7
             // 
             this.pictureBox7.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox7.Image = global::MSearch.Properties.Resources.telegram_logo;
+            this.pictureBox7.ErrorImage = ((System.Drawing.Image)(resources.GetObject("pictureBox7.ErrorImage")));
+            this.pictureBox7.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox7.Image")));
             this.pictureBox7.Location = new System.Drawing.Point(7, 92);
             this.pictureBox7.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(51, 50);
+            this.pictureBox7.Size = new System.Drawing.Size(50, 50);
             this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox7.TabIndex = 6;
             this.pictureBox7.TabStop = false;
@@ -584,7 +591,7 @@ namespace MSearch
             this.pictureBox6.Location = new System.Drawing.Point(7, 34);
             this.pictureBox6.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(51, 50);
+            this.pictureBox6.Size = new System.Drawing.Size(50, 50);
             this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox6.TabIndex = 5;
             this.pictureBox6.TabStop = false;
@@ -602,7 +609,7 @@ namespace MSearch
             this.Label_supportGroupCaption.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.Label_supportGroupCaption.Size = new System.Drawing.Size(462, 32);
             this.Label_supportGroupCaption.TabIndex = 4;
-            this.Label_supportGroupCaption.Text = "Поддержать проект лайком!";
+            this.Label_supportGroupCaption.Text = "Label_supportText";
             this.Label_supportGroupCaption.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // SplashForm
@@ -618,7 +625,6 @@ namespace MSearch
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SplashForm";
-            this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Blue;
             this.Load += new System.EventHandler(this.SplashForm_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -673,14 +679,14 @@ namespace MSearch
         private System.Windows.Forms.PictureBox pictureBox6;
         private System.Windows.Forms.Label Label_supportGroupCaption;
         private System.Windows.Forms.PictureBox pictureBox7;
-        private System.Windows.Forms.LinkLabel linkLabel3;
         private System.Windows.Forms.LinkLabel linkLabel2;
-        private System.Windows.Forms.Label Label_BlogNews;
-        private System.Windows.Forms.Label Label_chatHelp;
         private System.Windows.Forms.Label label7;
         private MSearch.UI.RoundButton Exit_btn;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.PictureBox pictureBox8;
         private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.LinkLabel linkOfficial;
+        private System.Windows.Forms.Label labelWebDescription;
+        private System.Windows.Forms.Label labelNewsDescription;
     }
 }

@@ -352,7 +352,6 @@ namespace MSearch
             ThreatManager threatManager = infrastructure.ThreatManager;
             CleanManager cleanManager = infrastructure.CleanManager;
 
-
             // Execute scanning (moved to separate method)
             ExecuteScanWorkflow(_options, scanManager, threatManager, cleanManager, signatureFileAnalyzer);
             startTime.Stop();
@@ -400,35 +399,6 @@ namespace MSearch
             // Explicit ReleaseMutex calls are removed to avoid SynchronizationLockException (ownership was lost during checks).
 
             return;
-        }
-        private static void WaterMark()
-        {
-            if (AppConfig.GetInstance.RunAsSystem)
-            {
-                Console.ForegroundColor = ConsoleColor.Magenta;
-            }
-            else Console.ForegroundColor = ConsoleColor.DarkCyan;
-
-            Console.WriteLine("\t╔════════════════════════════════════════════════════════════════════════════════════════╗");
-            Console.WriteLine("\t║███╗   ███╗██╗███╗   ██╗███████╗██████╗ ███████╗███████╗ █████╗ ██████╗  ██████╗██╗  ██╗║");
-            Console.WriteLine("\t║████╗ ████║██║████╗  ██║██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗██╔══██╗██╔════╝██║  ██║║");
-            Console.WriteLine("\t║██╔████╔██║██║██╔██╗ ██║█████╗  ██████╔╝███████╗█████╗  ███████║██████╔╝██║     ███████║║");
-            Console.WriteLine("\t║██║╚██╔╝██║██║██║╚██╗██║██╔══╝  ██╔══██╗╚════██║██╔══╝  ██╔══██║██╔══██╗██║     ██╔══██║║");
-            Console.WriteLine("\t║██║ ╚═╝ ██║██║██║ ╚████║███████╗██║  ██║███████║███████╗██║  ██║██║  ██║╚██████╗██║  ██║║");
-            Console.WriteLine("\t║╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝║");
-            Console.WriteLine("\t╚════════════════════════════════════════════════════════════════════════════════════════╝");
-            Console.BackgroundColor = ConsoleColor.Black;
-
-#if !BETA
-            Console.WriteLine(@"                                                                                          ");
-#else
-            Console.WriteLine(@"                                                              ____           _           ");
-            Console.WriteLine(@"                                                             | __ )    ___  | |_    __ _ ");
-            Console.WriteLine(@"                                                             |  _ \   / _ \ | __|  / _` |");
-            Console.WriteLine(@"                                                             | |_) | |  __/ | |_  | (_| |");
-            Console.WriteLine(@"                                                             |____/   \___|  \__|  \__,_|");
-#endif
-            Console.WriteLine("\t\tby: BlendLog");
         }
 
         #region Extracted methods
@@ -549,7 +519,7 @@ namespace MSearch
             var knownDecisions = allFinalizeDecisions.Where(d => IsKnownThreat(d)).ToList();
             var unknownDecisions = allFinalizeDecisions.Where(d => !IsKnownThreat(d)).ToList();
 
-            // На review показываем только неизвестные угрозы из signatureDecisions
+            // На review показываем неизвестные угрозы из signatureDecisions
             // (чистая Finalize-фаза, без предварительной обработки).
             // Неизвестные из processDecisions/commonDecisions уже прошли SuspendOnly/DisableExecuteOnly —
             // применяем их автоматически, как известные.
@@ -575,7 +545,7 @@ namespace MSearch
             if (unknownFromEarlier.Count > 0)
                 cleanManager.ApplyDecisions(unknownFromEarlier, CleanupPhase.Finalize);
 
-            // Показываем review-UI только для неизвестных угроз из сигнатур
+            // Показываем review-UI для неизвестных угроз из сигнатур
             if (!options.no_review_interact && unknownFromSignatures.Count > 0)
             {
                 var reviewForm = new FormThreatReview(unknownFromSignatures);
@@ -606,12 +576,6 @@ namespace MSearch
             if (decisionsToSkip.Count > 0)
                 cleanManager.ApplySkippedDecisions(decisionsToSkip);
 
-            // Исключаем из финального применения все уже обработанные решения:
-            // - processDecisions/commonDecisions: уже применены на этапах SuspendOnly/DisableExecuteOnly
-            // - knownDecisions: автоматически применены в Finalize выше
-            // - unknownFromEarlier: автоматически применены в Finalize выше
-            // - decisionsToApply: применены пользовательским выбором (не Skip)
-            // - decisionsToSkip: обработаны через ApplySkippedDecisions (повторное применение выполнит действие анализатора вопреки выбору пользователя)
             var alreadyAppliedIds = new HashSet<string>(
                 processDecisions.Select(d => d.Target.Id)
                     .Concat(commonDecisions.Select(d => d.Target.Id))
@@ -900,5 +864,34 @@ namespace MSearch
             public string ElapsedTime { get; set; }
         }
 
+        private static void WaterMark()
+        {
+            if (AppConfig.GetInstance.RunAsSystem)
+            {
+                Console.ForegroundColor = ConsoleColor.Magenta;
+            }
+            else Console.ForegroundColor = ConsoleColor.DarkCyan;
+
+            Console.WriteLine("\t╔════════════════════════════════════════════════════════════════════════════════════════╗");
+            Console.WriteLine("\t║███╗   ███╗██╗███╗   ██╗███████╗██████╗ ███████╗███████╗ █████╗ ██████╗  ██████╗██╗  ██╗║");
+            Console.WriteLine("\t║████╗ ████║██║████╗  ██║██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗██╔══██╗██╔════╝██║  ██║║");
+            Console.WriteLine("\t║██╔████╔██║██║██╔██╗ ██║█████╗  ██████╔╝███████╗█████╗  ███████║██████╔╝██║     ███████║║");
+            Console.WriteLine("\t║██║╚██╔╝██║██║██║╚██╗██║██╔══╝  ██╔══██╗╚════██║██╔══╝  ██╔══██║██╔══██╗██║     ██╔══██║║");
+            Console.WriteLine("\t║██║ ╚═╝ ██║██║██║ ╚████║███████╗██║  ██║███████║███████╗██║  ██║██║  ██║╚██████╗██║  ██║║");
+            Console.WriteLine("\t║╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝║");
+            Console.WriteLine("\t╚════════════════════════════════════════════════════════════════════════════════════════╝");
+            Console.BackgroundColor = ConsoleColor.Black;
+
+#if !BETA
+            Console.WriteLine(@"                                                                                          ");
+#else
+            Console.WriteLine(@"                                                              ____           _           ");
+            Console.WriteLine(@"                                                             | __ )    ___  | |_    __ _ ");
+            Console.WriteLine(@"                                                             |  _ \   / _ \ | __|  / _` |");
+            Console.WriteLine(@"                                                             | |_) | |  __/ | |_  | (_| |");
+            Console.WriteLine(@"                                                             |____/   \___|  \__|  \__,_|");
+#endif
+            Console.WriteLine("\t\tby: BlendLog");
+        }
     }
 }

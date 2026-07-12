@@ -30,8 +30,8 @@ namespace MSearch
             Label_supportText.Text = AppConfig.GetInstance.LL.GetLocalizedString("_LabelSupportText");
             Label_supportClickHint.Text = AppConfig.GetInstance.LL.GetLocalizedString("_LabelSupportClickHint");
             Label_supportGroupCaption.Text = AppConfig.GetInstance.LL.GetLocalizedString("_LabelSupportGroupCaption");
-            Label_BlogNews.Text = AppConfig.GetInstance.LL.GetLocalizedString("_LabelBlogNews");
-            Label_chatHelp.Text = AppConfig.GetInstance.LL.GetLocalizedString("_LabelChatHelp");
+            labelNewsDescription.Text = AppConfig.GetInstance.LL.GetLocalizedString("_LabelNewsDescription");
+            labelWebDescription.Text = AppConfig.GetInstance.LL.GetLocalizedString("_LabelWebDescription");
             Exit_btn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_exit");
         }
 
@@ -137,11 +137,6 @@ namespace MSearch
             OpenExternalLink(linkLabel2.Text);
         }
 
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            OpenExternalLink(linkLabel3.Text);
-        }
-
         private void textBox3_MouseClick(object sender, MouseEventArgs e)
         {
             OnMouseClick(textBox3);
@@ -150,6 +145,11 @@ namespace MSearch
         private void textBox3_MouseLeave(object sender, EventArgs e)
         {
             OnMouseLeave(ton, textBox3);
+        }
+
+        private void linkOfficial_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            OpenExternalLink(linkOfficial.Text);
         }
     }
 }

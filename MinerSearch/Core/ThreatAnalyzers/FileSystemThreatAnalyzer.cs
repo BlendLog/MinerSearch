@@ -94,7 +94,7 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 // SFX с проблемным сертификатом — проверяем расположение
                 bool isInSuspiciousLocation = IsInSuspiciousFileSystemPath(filePath);
-                
+
                 if (isInSuspiciousLocation)
                 {
                     // В подозрительной папке — карантин
@@ -114,6 +114,20 @@ namespace MSearch.Core.ThreatAnalyzers
                     decision.ActionType = ScanActionType.Quarantine;
                     yield return decision;
                 }
+                yield break;
+            }
+
+            if (fileThreat.SourceTag == "specific_location_unsigned_exe")
+            {
+                // Исполняемый файл в корневой директории AppData/LocalAppData/CommonProgramFiles
+                // без валидной подписи — карантин + запрет исполнения
+                AppConfig.GetInstance.LL.LogWarnMediumMessage("_UnsignedExeInSystemLocation", filePath);
+                fileThreat.ShouldMoveFileToQuarantine = true;
+                fileThreat.ShouldDisableExecute = true;
+
+                var decision = new ThreatDecision(fileThreat, riskLevel: 2, ScanObjectType.Suspicious);
+                decision.ActionType = ScanActionType.Quarantine;
+                yield return decision;
                 yield break;
             }
 

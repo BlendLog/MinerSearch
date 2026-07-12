@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.33130.400
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37012.4 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinerSearch", "MinerSearch\MinerSearch.csproj", "{9A4C3043-8FD0-4F41-B012-FAB8DE92CE0D}"
 	ProjectSection(ProjectDependencies) = postProject

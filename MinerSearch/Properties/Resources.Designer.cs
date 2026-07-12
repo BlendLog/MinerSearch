@@ -19,7 +19,7 @@ namespace MSearch.Properties {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -3004,36 +3004,18 @@ namespace MSearch.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на News and updates.
         /// </summary>
-        internal static string _LabelBlogNews_EN {
+        internal static string _LabelNewsDescription_EN {
             get {
-                return ResourceManager.GetString("_LabelBlogNews_EN", resourceCulture);
+                return ResourceManager.GetString("_LabelNewsDescription_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Новости и обновления.
         /// </summary>
-        internal static string _LabelBlogNews_RU {
+        internal static string _LabelNewsDescription_RU {
             get {
-                return ResourceManager.GetString("_LabelBlogNews_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Discussion and help in removement threats.
-        /// </summary>
-        internal static string _LabelChatHelp_EN {
-            get {
-                return ResourceManager.GetString("_LabelChatHelp_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Обсуждение и помощь в устранении угроз.
-        /// </summary>
-        internal static string _LabelChatHelp_RU {
-            get {
-                return ResourceManager.GetString("_LabelChatHelp_RU", resourceCulture);
+                return ResourceManager.GetString("_LabelNewsDescription_RU", resourceCulture);
             }
         }
         
@@ -3128,6 +3110,24 @@ namespace MSearch.Properties {
         internal static string _LabelSupportText_RU {
             get {
                 return ResourceManager.GetString("_LabelSupportText_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Official web page.
+        /// </summary>
+        internal static string _LabelWebDescription_EN {
+            get {
+                return ResourceManager.GetString("_LabelWebDescription_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Официальная веб-страница.
+        /// </summary>
+        internal static string _LabelWebDescription_RU {
+            get {
+                return ResourceManager.GetString("_LabelWebDescription_RU", resourceCulture);
             }
         }
         
@@ -5379,6 +5379,24 @@ namespace MSearch.Properties {
         internal static string _RestoreFormTitle_RU {
             get {
                 return ResourceManager.GetString("_RestoreFormTitle_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Recommended action.
+        /// </summary>
+        internal static string _Review_RecommendedAction_EN {
+            get {
+                return ResourceManager.GetString("_Review_RecommendedAction_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Рекомендуемое действие.
+        /// </summary>
+        internal static string _Review_RecommendedAction_RU {
+            get {
+                return ResourceManager.GetString("_Review_RecommendedAction_RU", resourceCulture);
             }
         }
         
