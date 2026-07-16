@@ -51,66 +51,20 @@ namespace MSearch.UI
             dataGridReviewThreats.EditMode = DataGridViewEditMode.EditOnEnter;
             dataGridReviewThreats.RowHeadersVisible = false;
             dataGridReviewThreats.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            dataGridReviewThreats.AllowUserToResizeColumns = true;
+            dataGridReviewThreats.AllowUserToResizeRows = false;
 
-            // 2. Тип угрозы (Malware, Unsafe и т.д.)
-            var colType = new DataGridViewTextBoxColumn
-            {
-                Name = ColType,
-                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_ObjectType"),
-                ReadOnly = true,
-                FillWeight = 20
-            };
-            dataGridReviewThreats.Columns.Add(colType);
-
-            // 3. Путь / имя объекта
-            var colPath = new DataGridViewTextBoxColumn
-            {
-                Name = ColPath,
-                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Path"),
-                ReadOnly = true,
-                FillWeight = 40
-            };
-            dataGridReviewThreats.Columns.Add(colPath);
-
-            // 4. Класс (Process, File, Service и т.д.)
-            var colClass = new DataGridViewTextBoxColumn
-            {
-                Name = ColClass,
-                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Class"),
-                ReadOnly = true,
-                FillWeight = 12
-            };
-            dataGridReviewThreats.Columns.Add(colClass);
-
-            // 5. Текущее автоматическое действие
-            var colCurrentAction = new DataGridViewTextBoxColumn
-            {
-                Name = ColCurrentAction,
-                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_Review_RecommendedAction"),
-                ReadOnly = true,
-                FillWeight = 13
-            };
-            dataGridReviewThreats.Columns.Add(colCurrentAction);
-
-            // Явно помечаем не-ComboBox колонки как ReadOnly (на случай глобального ReadOnly=false)
-            foreach (var col in dataGridReviewThreats.Columns)
-            {
-                if (col is DataGridViewComboBoxColumn) continue;
-                ((DataGridViewTextBoxColumn)col).ReadOnly = true;
-            }
-
-            // 6. Выбранное пользователем действие (ComboBox) — только осмысленные операции
+            // 1. Выбор действия (ComboBox) — первое, что видит пользователь
             var colNewAction = new DataGridViewComboBoxColumn
             {
                 Name = ColNewAction,
                 HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_Review_SelectAction"),
                 DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox,
-                FlatStyle = FlatStyle.Standard,
-                FillWeight = 15
+                FlatStyle = FlatStyle.Flat,
+                Width = 200
             };
 
             // Заполняем ComboBox значениями нового enum ScanActionTypeUserSelected
-            // Храним строковое представление, при чтении парсим обратно в enum
             foreach (ScanActionTypeUserSelected action in Enum.GetValues(typeof(ScanActionTypeUserSelected)))
             {
                 colNewAction.Items.Add(GetLocalizedUserActionName(action));
@@ -118,8 +72,52 @@ namespace MSearch.UI
 
             dataGridReviewThreats.Columns.Add(colNewAction);
 
-            // DataGrid на всю ширину формы
-            dataGridReviewThreats.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            // 2. Рекомендуемое действие
+            var colCurrentAction = new DataGridViewTextBoxColumn
+            {
+                Name = ColCurrentAction,
+                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_Review_RecommendedAction"),
+                ReadOnly = true,
+                Width = 200
+            };
+            dataGridReviewThreats.Columns.Add(colCurrentAction);
+
+            // 3. Класс (Process, File, Service и т.д.)
+            var colClass = new DataGridViewTextBoxColumn
+            {
+                Name = ColClass,
+                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Class"),
+                ReadOnly = true,
+                Width = 120
+            };
+            dataGridReviewThreats.Columns.Add(colClass);
+
+            // 4. Тип угрозы (Malware, Unsafe и т.д.)
+            var colType = new DataGridViewTextBoxColumn
+            {
+                Name = ColType,
+                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_ObjectType"),
+                ReadOnly = true,
+                Width = 140
+            };
+            dataGridReviewThreats.Columns.Add(colType);
+
+            // 5. Путь / имя объекта — последний, заполняет остаток
+            var colPath = new DataGridViewTextBoxColumn
+            {
+                Name = ColPath,
+                HeaderText = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Path"),
+                ReadOnly = true,
+                Width = 400
+            };
+            dataGridReviewThreats.Columns.Add(colPath);
+
+            // Явно помечаем не-ComboBox колонки как ReadOnly
+            foreach (var col in dataGridReviewThreats.Columns)
+            {
+                if (col is DataGridViewComboBoxColumn) continue;
+                ((DataGridViewTextBoxColumn)col).ReadOnly = true;
+            }
         }
 
         void ApplyLocalization()
@@ -146,11 +144,11 @@ namespace MSearch.UI
                 string defaultActionText = GetLocalizedUserActionName(defaultUserAction);
 
                 int rowIndex = dataGridReviewThreats.Rows.Add(
-                    type,      // Type
-                    path,      // Path
-                    @class,    // Class
-                    defaultActionText, // Current Action
-                    defaultActionText  // New Action (default)
+                    defaultActionText, // New Action (Выбор)
+                    defaultActionText, // Current Action (Рекомендуемое)
+                    @class,            // Class
+                    type,              // Type
+                    path               // Path
                 );
 
                 var row = dataGridReviewThreats.Rows[rowIndex];
@@ -160,14 +158,14 @@ namespace MSearch.UI
                 switch (decision.ObjectType)
                 {
                     case ScanObjectType.Malware:
-                        row.Cells[0].Style.ForeColor = Color.Firebrick;
+                        row.Cells[ColType].Style.ForeColor = Color.Firebrick;
                         break;
                     case ScanObjectType.Infected:
                     case ScanObjectType.Unsafe:
-                        row.Cells[0].Style.ForeColor = Color.Red;
+                        row.Cells[ColType].Style.ForeColor = Color.Red;
                         break;
                     case ScanObjectType.Suspicious:
-                        row.Cells[0].Style.ForeColor = Color.Orange;
+                        row.Cells[ColType].Style.ForeColor = Color.Orange;
                         break;
                 }
 

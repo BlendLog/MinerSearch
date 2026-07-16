@@ -4,6 +4,7 @@ using MSearch.Core.ThreatObjects;
 using MSearch.UI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace MSearch.Core.Managers
@@ -50,7 +51,7 @@ namespace MSearch.Core.Managers
         }
 
         public void ApplyDecisions(IEnumerable<ThreatDecision> decisions, CleanupPhase phase)
-        {            
+        {
             if (_options.ScanOnly)
             {
                 foreach (ThreatDecision decision in decisions)
@@ -140,7 +141,45 @@ namespace MSearch.Core.Managers
                     _state.IncrementFoundThreats();
                 else if (decision.ObjectType == ScanObjectType.Suspicious)
                     _state.IncrementFoundSuspicious();
+
+                ResetFileAclForSkipped(decision.Target);
             }
+        }
+
+        /// <summary>
+        /// Сбрасывает ACL для всех файлов, связанных с пропущенной угрозой.
+        /// </summary>
+        private void ResetFileAclForSkipped(IThreatObject target)
+        {
+            var filePaths = new List<string>();
+
+            if (target.Kind == ThreatObjectKind.File)
+            {
+                var file = target as FileThreatObject;
+                if (FileNeedsAclReset(file))
+                    filePaths.Add(file.FilePath);
+            }
+
+            foreach (var path in filePaths)
+            {
+                try
+                {
+                    if (File.Exists(path))
+                        UnlockObjectClass.ResetObjectACL(path);
+                }
+                catch (Exception) { }
+            }
+        }
+
+        /// <summary>
+        /// Проверяет, был ли файл заблокирован через DisableExecute.
+        /// Блокировка происходит при ShouldDisableExecute или IsMalicious.
+        /// </summary>
+        private static bool FileNeedsAclReset(FileThreatObject file)
+        {
+            if (file == null || string.IsNullOrEmpty(file.FilePath))
+                return false;
+            return file.ShouldDisableExecute || (file.AnalysisResult?.IsMalicious == true);
         }
 
         private string GetPhaseHeaderResource(ThreatObjectKind kind)
@@ -198,7 +237,7 @@ namespace MSearch.Core.Managers
             }
         }
 
-       private ScanActionType MapResultToActionType(ApplyResult result, ThreatDecision decision)
+        private ScanActionType MapResultToActionType(ApplyResult result, ThreatDecision decision)
         {
             switch (result)
             {
