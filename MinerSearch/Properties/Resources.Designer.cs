@@ -2481,6 +2481,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Settings.
+        /// </summary>
+        internal static string _FormSettings_Title_EN {
+            get {
+                return ResourceManager.GetString("_FormSettings_Title_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Настройки.
+        /// </summary>
+        internal static string _FormSettings_Title_RU {
+            get {
+                return ResourceManager.GetString("_FormSettings_Title_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Found:.
         /// </summary>
         internal static string _Found_EN {
@@ -2984,7 +3002,43 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Send anonymous scan results to developer next time.
+        ///   Ищет локализованную строку, похожую на Automatically accept decisions for unknown threats.
+        /// </summary>
+        internal static string _label_autoApplyThreatAction_EN {
+            get {
+                return ResourceManager.GetString("_label_autoApplyThreatAction_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Принимать решение для неизвестных угроз автоматически.
+        /// </summary>
+        internal static string _label_autoApplyThreatAction_RU {
+            get {
+                return ResourceManager.GetString("_label_autoApplyThreatAction_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Open settings.
+        /// </summary>
+        internal static string _label_openSettings_EN {
+            get {
+                return ResourceManager.GetString("_label_openSettings_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Открыть настройки.
+        /// </summary>
+        internal static string _label_openSettings_RU {
+            get {
+                return ResourceManager.GetString("_label_openSettings_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Send anonymous reports to the developer about the results of each scan.
         /// </summary>
         internal static string _LabelAllowStatistics_EN {
             get {
@@ -2993,7 +3047,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Отправлять анонимные отчёты разработчику о результатах проверки в следующий раз.
+        ///   Ищет локализованную строку, похожую на Отправлять анонимные отчёты разработчику о результатах каждого сканирования.
         /// </summary>
         internal static string _LabelAllowStatistics_RU {
             get {
@@ -5509,6 +5563,42 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Automatically accept decisions for unknown threats?.
+        /// </summary>
+        internal static string _ReviewAutoAccept_Question_EN {
+            get {
+                return ResourceManager.GetString("_ReviewAutoAccept_Question_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Принимать решение для неизвестных угроз автоматически?.
+        /// </summary>
+        internal static string _ReviewAutoAccept_Question_RU {
+            get {
+                return ResourceManager.GetString("_ReviewAutoAccept_Question_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Unknown Threats.
+        /// </summary>
+        internal static string _ReviewAutoAccept_Title_EN {
+            get {
+                return ResourceManager.GetString("_ReviewAutoAccept_Title_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Неизвестные угрозы.
+        /// </summary>
+        internal static string _ReviewAutoAccept_Title_RU {
+            get {
+                return ResourceManager.GetString("_ReviewAutoAccept_Title_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Apply same action.
         /// </summary>
         internal static string _ReviewBulkAction_Apply_EN {
@@ -5599,7 +5689,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Apply the selected action to all highlighted threats..
+        ///   Ищет локализованную строку, похожую на Highlighted threats are incompatible with the current action. Select an action for them..
         /// </summary>
         internal static string _ReviewBulkConfirm_EN {
             get {
@@ -5608,7 +5698,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Применить выбранное действие ко всем выделенным угрозам..
+        ///   Ищет локализованную строку, похожую на Выделенные строки несовместимы с текущим действием. Выберите действие для них..
         /// </summary>
         internal static string _ReviewBulkConfirm_RU {
             get {

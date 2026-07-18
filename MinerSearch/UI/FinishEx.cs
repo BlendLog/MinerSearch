@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using MSearch.Core;
+using MSearch.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -63,8 +64,8 @@ namespace MSearch
             LBL_totalThreats.Text = AppConfig.GetInstance.LL.GetLocalizedString("_TotalThreatsFound");
             LBL_neutralizedThreats.Text = AppConfig.GetInstance.LL.GetLocalizedString("_TotalNeutralizedThreats");
             LBL_susObjects.Text = AppConfig.GetInstance.LL.GetLocalizedString("_SuspiciousObjects");
-            Label_allowStatistics.Text = AppConfig.GetInstance.LL.GetLocalizedString("_LabelAllowStatistics");
             Label_showAllLogs.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ShowFolderLogs");
+            Label_openSettings.Text = AppConfig.GetInstance.LL.GetLocalizedString("_label_openSettings");
             top.TextAlign = ContentAlignment.MiddleRight;
             top.Text = AppConfig.GetInstance.LL.GetLocalizedString("_PleaseWaitMessage");
             OpenQuarantineBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_OpenQuarantine");
@@ -294,16 +295,15 @@ namespace MSearch
         private void FinishEx_Load(object sender, EventArgs e)
         {
             BringFormToFront();
-            dataGridThreats.ClearSelection();
             TranslateForm();
             CollectStatistics(AppConfig.GetInstance.RegistryPathMain, AppConfig.GetInstance.StatisticsValueName);
-            UpdateToggle(AppConfig.GetInstance.RegistryPathMain, AppConfig.GetInstance.StatisticsValueName);
         }
 
         void BringFormToFront()
         {
             TopMost = true;
             TopMost = false;
+            dataGridThreats.ClearSelection();
         }
 
         async void CollectStatistics(string registryPath, string valueName)
@@ -319,21 +319,14 @@ namespace MSearch
             {
                 if (key == null) return;
 
-                object regValue = key.GetValue(valueName);
-                if (regValue == null)
+                var allowStatistics = key.GetValue(valueName);
+                if (allowStatistics == null)
                 {
-                    regValue = OSExtensions.GetWindowsVersion().IndexOf("Windows 7", StringComparison.OrdinalIgnoreCase) >= 0 ? 0 : 2;
-                    key.SetValue(valueName, regValue, RegistryValueKind.DWord);
-
-                    if ((int)regValue == 0)
-                    {
-                        DisableStatisticsUI();
-                    }
+                    key.SetValue(valueName, 2, RegistryValueKind.DWord);
+                    allowStatistics = key.GetValue(valueName);
                 }
 
-                int allowStatistics = (int)regValue;
-
-                switch (allowStatistics)
+                switch ((int)allowStatistics)
                 {
                     case 2:
                         if (MessageBoxCustom.Show(AppConfig.GetInstance.LL.GetLocalizedString("_AllowSentStatistics"), AppConfig.GetInstance._title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -366,27 +359,10 @@ namespace MSearch
             CloseBtn.Visible = true;
             MinimizeBtn.Visible = true;
             DonateBtn.Visible = true;
+            Label_openSettings.Visible = true;
             finishBtn.Enabled = true;
             finishBtn.BackColor = Color.RoyalBlue;
             finishBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_DataGrid_FinishBtn");
-
-            if (OSExtensions.GetWindowsVersion().IndexOf("Windows 7", StringComparison.OrdinalIgnoreCase) == -1)
-            {
-                ts_AllowCollectStatistics.Enabled = true;
-                ts_AllowCollectStatistics.OffBackColor = Color.Gray;
-                ts_AllowCollectStatistics.OffToggleColor = Color.White;
-                ts_AllowCollectStatistics.OnBackColor = Color.RoyalBlue;
-                ts_AllowCollectStatistics.OnToggleColor = Color.White;
-            }
-        }
-
-        void DisableStatisticsUI()
-        {
-            ts_AllowCollectStatistics.Enabled = false;
-            ts_AllowCollectStatistics.OffBackColor = Color.Gainsboro;
-            ts_AllowCollectStatistics.OffToggleColor = Color.Silver;
-            ts_AllowCollectStatistics.OnBackColor = Color.Gainsboro;
-            ts_AllowCollectStatistics.OnToggleColor = Color.Silver;
         }
 
         async Task SendLogAndHandleErrors()
@@ -470,26 +446,6 @@ namespace MSearch
             }
         }
 
-        void UpdateToggle(string registryPath, string valueName)
-        {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath, true))
-            {
-                if (key != null)
-                {
-                    object regValue = key.GetValue(valueName);
-
-                    if (regValue != null)
-                    {
-                        ts_AllowCollectStatistics.CheckedChanged -= ts_AllowCollectStatistics_CheckedChanged;
-                        ts_AllowCollectStatistics.Checked = (int)regValue == 1;
-                        ts_AllowCollectStatistics.CheckedChanged += ts_AllowCollectStatistics_CheckedChanged;
-
-                        LBL_ID.Visible = (int)regValue == 1;
-                    }
-                }
-            }
-        }
-
         private void Label_OpenLogsFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             TopMost = false;
@@ -531,46 +487,6 @@ namespace MSearch
                 splashForm.ShowDialog();
         }
 
-        private void ts_AllowCollectStatistics_CheckedChanged(object sender, EventArgs e)
-        {
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(AppConfig.GetInstance.RegistryPathMain, true);
-
-            if (key == null)
-            {
-                key = Registry.CurrentUser.CreateSubKey(AppConfig.GetInstance.RegistryPathMain);
-            }
-
-            if (key != null)
-            {
-                object regValue = key.GetValue(AppConfig.GetInstance.StatisticsValueName);
-
-                if (regValue != null)
-                {
-                    if (ts_AllowCollectStatistics.CheckState == CheckState.Checked)
-                    {
-                        key.SetValue(AppConfig.GetInstance.StatisticsValueName, 1, RegistryValueKind.DWord);
-                        LBL_ID.Visible = true;
-                    }
-                    else
-                    {
-                        key.SetValue(AppConfig.GetInstance.StatisticsValueName, 0, RegistryValueKind.DWord);
-                        LBL_ID.Visible = false;
-                    }
-                }
-                else
-                {
-                    key.SetValue(AppConfig.GetInstance.StatisticsValueName, 0, RegistryValueKind.DWord);
-                    LBL_ID.Visible = false;
-                }
-            }
-
-            if (key != null)
-            {
-                key.Close();
-            }
-
-        }
-
         private void MinimizeBtn_Click(object sender, EventArgs e)
         {
             WindowState = FormWindowState.Minimized;
@@ -598,6 +514,11 @@ namespace MSearch
         {
             LBL_ID.ForeColor = Color.DarkGray;
             LBL_ID.Text = LBL_id_text;
+        }
+
+        private void Label_openSettings_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            new FormSettings().ShowDialog();
         }
     }
 }

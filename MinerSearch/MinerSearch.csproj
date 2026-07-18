@@ -176,6 +176,12 @@
     <Compile Include="Infrastructure\TaskParser.cs" />
     <Compile Include="UI\DataGridViewCheckBoxHeaderCell.cs" />
     <Compile Include="UI\DialogDispatcher.cs" />
+    <Compile Include="UI\FormSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormSettings.Designer.cs">
+      <DependentUpon>FormSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\FormThreatReview.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -262,6 +268,9 @@
     <None Include="Resources\telegram_logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\FormSettings.resx">
+      <DependentUpon>FormSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\FormThreatReview.resx">
       <DependentUpon>FormThreatReview.cs</DependentUpon>
     </EmbeddedResource>

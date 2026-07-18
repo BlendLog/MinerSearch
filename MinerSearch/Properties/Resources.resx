@@ -1408,7 +1408,7 @@ Click \b Exit\b0  to exit.\par
     <value>Не удалось сбросить SDDL для службы</value>
   </data>
   <data name="_LabelAllowStatistics_RU" xml:space="preserve">
-    <value>Отправлять анонимные отчёты разработчику о результатах проверки в следующий раз</value>
+    <value>Отправлять анонимные отчёты разработчику о результатах каждого сканирования</value>
   </data>
   <data name="_ServiceName_EN" xml:space="preserve">
     <value>Service name:</value>
@@ -1486,7 +1486,7 @@ Click \b Exit\b0  to exit.\par
     <value>Restore from Quarantine</value>
   </data>
   <data name="_LabelAllowStatistics_EN" xml:space="preserve">
-    <value>Send anonymous scan results to developer next time</value>
+    <value>Send anonymous reports to the developer about the results of each scan</value>
   </data>
   <data name="_SuccessGrantPrivilege_EN" xml:space="preserve">
     <value>This application has found missing privileges for the Administrators group, which have been restored. To apply the changes, relogin or restart the computer.</value>
@@ -2923,5 +2923,23 @@ Do you want to continue?
   </data>
   <data name="_ReviewAutoAccept_Question_RU" xml:space="preserve">
     <value>Принимать решение для неизвестных угроз автоматически?</value>
+  </data>
+  <data name="_label_openSettings_EN" xml:space="preserve">
+    <value>Open settings</value>
+  </data>
+  <data name="_label_openSettings_RU" xml:space="preserve">
+    <value>Открыть настройки</value>
+  </data>
+  <data name="_FormSettings_Title_EN" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="_FormSettings_Title_RU" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="_label_autoApplyThreatAction_EN" xml:space="preserve">
+    <value>Automatically accept decisions for unknown threats</value>
+  </data>
+  <data name="_label_autoApplyThreatAction_RU" xml:space="preserve">
+    <value>Принимать решение для неизвестных угроз автоматически</value>
   </data>
 </root>

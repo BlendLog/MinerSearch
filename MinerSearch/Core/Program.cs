@@ -9,6 +9,7 @@ using MSearch.Core.ThreatHandlers;
 using MSearch.Core.ThreatObjects;
 using MSearch.Properties;
 using MSearch.UI;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -244,7 +245,7 @@ namespace MSearch
                 }
             }
 
-#if !DEBUG
+//#if !DEBUG
             if (!_options.help)
             {
                 Utils.SwitchMouseSelection();
@@ -255,7 +256,7 @@ namespace MSearch
                 AppConfig.GetInstance.LL.LogJustDisplayMessage("\t\t", $"_RelevantVer", "https://github.com/BlendLog/Mi?ne?rSea?rch/releases \n".Replace("?", ""), ConsoleColor.White);
             }
 
-#endif
+//#endif
             Logger.WriteLog("  \t  \tID: " + DeviceIdProvider.GetDeviceId(), ConsoleColor.White, false, true);
 
             if (!_options.help && !_options.silent)
@@ -265,7 +266,7 @@ namespace MSearch
 
             AppConfig.GetInstance.LL.LogMessage("\t\t", "_Version", AppConfig.GetInstance.CurrentVersion, ConsoleColor.White, false);
 
-#if !DEBUG
+//if !DEBUG
             if (!AppConfig.GetInstance.WinPEMode && !_options.QuarantineMode && !OSExtensions.GetWindowsVersion().Contains("Windows 7"))
             {
                 Utils.CheckLatestReleaseVersion();
@@ -280,7 +281,7 @@ namespace MSearch
                 }
                 return;
             }
-#endif
+//#endif
 
             if (AppConfig.GetInstance.WinPEMode && _options.nosignaturescan)
             {
@@ -299,9 +300,9 @@ namespace MSearch
                 Console.WriteLine("\t\t[SILENT MODE]");
                 Logger.WriteLog("\t\t[SILENT MODE]", ConsoleColor.White, false, true); //for write log
                 Thread.Sleep(1000);
-#if !DEBUG
+//#if !DEBUG
                 Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_HIDE);
-#endif
+//#endif
             }
 
             if (!_options.QuarantineMode)
@@ -366,9 +367,9 @@ namespace MSearch
 
             if (!_options.silent && !_options.console_mode)
             {
-#if !DEBUG
+//#if !DEBUG
                 Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_MINIMIZE);
-#endif
+//#endif
                 foreach (ScanResult result in state.GetScanResults())
                 {
                     if (result.RawAction == ScanActionType.LockedByAntivirus)
@@ -391,9 +392,7 @@ namespace MSearch
                 }
             }
 
-#if DEBUG
             Console.ReadLine();
-#endif
 
             // Cleanup: OS automatically releases handles on process exit.
             // Explicit ReleaseMutex calls are removed to avoid SynchronizationLockException (ownership was lost during checks).
@@ -510,19 +509,11 @@ namespace MSearch
                 allFinalizeDecisions.AddRange(signatureDecisions);
             }
 
-            // Удаляем дубликаты по нормализованному пути — MSData хранит пути без UNC (C:\...),
-            // а SignatureScanner формирует UNC (\\?\C:\...). Один и тот же файл не должен
-            // обрабатываться дважды.
-            allFinalizeDecisions = DeduplicateDecisions(allFinalizeDecisions);
 
-            // Разделяем известные (obfStr*) и неизвестные угрозы
+            allFinalizeDecisions = DeduplicateDecisions(allFinalizeDecisions);
             var knownDecisions = allFinalizeDecisions.Where(d => IsKnownThreat(d)).ToList();
             var unknownDecisions = allFinalizeDecisions.Where(d => !IsKnownThreat(d)).ToList();
 
-            // На review показываем неизвестные угрозы из signatureDecisions
-            // (чистая Finalize-фаза, без предварительной обработки).
-            // Неизвестные из processDecisions/commonDecisions уже прошли SuspendOnly/DisableExecuteOnly —
-            // применяем их автоматически, как известные.
             var unknownFromSignatures = signatureDecisions
                 .Where(d => d != null && !IsKnownThreat(d))
                 .ToList();
@@ -532,32 +523,64 @@ namespace MSearch
 
             cleanManager.BeginFinalCleanup();
 
-            // Применяем известные угрозы автоматически (без review).
-            // Сортируем по ThreatObjectKind: процессы (0) раньше файлов (2) и каталогов (3),
-            // чтобы не пытаться удалить файл до завершения процесса.
             var sortedKnownDecisions = knownDecisions.OrderBy(d => (int)d.Target.Kind).ToList();
             foreach (var decision in sortedKnownDecisions)
             {
                 cleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize);
             }
 
-            // Применяем неизвестные угрозы из ранних фаз автоматически (без review)
             if (unknownFromEarlier.Count > 0)
                 cleanManager.ApplyDecisions(unknownFromEarlier, CleanupPhase.Finalize);
 
-            // Показываем review-UI для неизвестных угроз из сигнатур
-            if (!options.no_review_interact && unknownFromSignatures.Count > 0)
+            if (!options.no_review_interact && unknownFromSignatures.Count > 0) // Показываем review-UI для неизвестных угроз из сигнатур
             {
-                // Вопрос: автоматически принимать решения для неизвестных угроз?
-                var autoAcceptResult = DialogDispatcher.Show(
-                    AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAutoAccept_Question"),
-                    AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAutoAccept_Title"),
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question);
+                int autoAcceptValue = 2;
+                try
+                {
+                    using (var baseKey = Registry.LocalMachine)
+                    using (var key = baseKey.OpenSubKey(AppConfig.GetInstance.RegistryPathMain))
+                    {
+                        if (key != null)
+                        {
+                            object value = key.GetValue(AppConfig.GetInstance.AutoAcceptUnknownValueName);
+                            if (value != null)
+                                autoAcceptValue = (int)value;
+                        }
+                    }
+                }
+                catch { }
 
-                if (autoAcceptResult == DialogResult.Yes)
+                if (autoAcceptValue == 1)
                 {
                     options.no_review_interact = true;
+                }
+                else if (autoAcceptValue == 0)
+                {
+                    options.no_review_interact = false;
+                }
+                else
+                {
+                    var autoAcceptResult = DialogDispatcher.Show(
+                        AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAutoAccept_Question"),
+                        AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAutoAccept_Title"),
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question);
+
+                    if (autoAcceptResult == DialogResult.Yes)
+                    {
+                        options.no_review_interact = true;
+                    }
+
+                    using (var key = Registry.LocalMachine.OpenSubKey(AppConfig.GetInstance.RegistryPathMain, true)
+                                ?? Registry.LocalMachine.CreateSubKey(AppConfig.GetInstance.RegistryPathMain))
+                    {
+                        if (key != null)
+                        {
+                            key.SetValue(AppConfig.GetInstance.AutoAcceptUnknownValueName,
+                                autoAcceptResult == DialogResult.Yes ? 1 : 0, RegistryValueKind.DWord);
+                            key.Close();
+                        }
+                    }
                 }
 
                 if (!options.no_review_interact)
@@ -907,6 +930,15 @@ namespace MSearch
             Console.WriteLine(@"                                                             |____/   \___|  \__|  \__,_|");
 #endif
             Console.WriteLine("\t\tby: BlendLog");
+        }
+
+        /// <summary>
+        /// Читает DWORD-значение из реестра. Возвращает defaultValue, если ключ не найден.
+        /// </summary>
+        private static int ReadRegistryDWord(string registryPath, string valueName, int defaultValue, RegistryHive hive = RegistryHive.LocalMachine)
+        {
+
+            return defaultValue;
         }
     }
 }

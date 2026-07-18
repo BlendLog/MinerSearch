@@ -29,6 +29,7 @@ namespace MSearch.Core
 
         public string RegistryPathMain { get; }
         public string StatisticsValueName { get; }
+        public string AutoAcceptUnknownValueName { get; }
         public string LaunchCountValueName { get; }
         public string QuarantineKeyPath { get; }
 
@@ -60,6 +61,7 @@ namespace MSearch.Core
         {
             RegistryPathMain = @"Software\M1nerSearch";
             StatisticsValueName = "allowstatistics";
+            AutoAcceptUnknownValueName = "autoacceptunknown";
             LaunchCountValueName = "runcount";
             QuarantineKeyPath = Path.Combine(RegistryPathMain, "Quarantine");
             using (Process p = Process.GetCurrentProcess())

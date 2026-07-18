@@ -36,8 +36,6 @@ namespace MSearch
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.LBL_ID = new System.Windows.Forms.Label();
-            this.Label_allowStatistics = new System.Windows.Forms.Label();
-            this.ts_AllowCollectStatistics = new MSearch.ToggleSwitch();
             this.panel2 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -64,6 +62,7 @@ namespace MSearch
             this.OpenQuarantineBtn = new MSearch.UI.RoundButton();
             this.Label_showAllLogs = new System.Windows.Forms.Label();
             this.Label_OpenLogsFolder = new System.Windows.Forms.LinkLabel();
+            this.Label_openSettings = new System.Windows.Forms.LinkLabel();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -102,9 +101,8 @@ namespace MSearch
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.SystemColors.Control;
+            this.panel3.Controls.Add(this.Label_openSettings);
             this.panel3.Controls.Add(this.LBL_ID);
-            this.panel3.Controls.Add(this.Label_allowStatistics);
-            this.panel3.Controls.Add(this.ts_AllowCollectStatistics);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Font = new System.Drawing.Font("Verdana", 10.2F, System.Drawing.FontStyle.Bold);
             this.panel3.Location = new System.Drawing.Point(1, 441);
@@ -129,39 +127,6 @@ namespace MSearch
             this.LBL_ID.Click += new System.EventHandler(this.LBL_ID_Click);
             this.LBL_ID.MouseEnter += new System.EventHandler(this.LBL_ID_MouseEnter);
             this.LBL_ID.MouseLeave += new System.EventHandler(this.LBL_ID_MouseLeave);
-            // 
-            // Label_allowStatistics
-            // 
-            this.Label_allowStatistics.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Label_allowStatistics.BackColor = System.Drawing.Color.Transparent;
-            this.Label_allowStatistics.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.Label_allowStatistics.ForeColor = System.Drawing.Color.Black;
-            this.Label_allowStatistics.Location = new System.Drawing.Point(170, 8);
-            this.Label_allowStatistics.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.Label_allowStatistics.Name = "Label_allowStatistics";
-            this.Label_allowStatistics.Size = new System.Drawing.Size(881, 19);
-            this.Label_allowStatistics.TabIndex = 15;
-            this.Label_allowStatistics.Text = "_label_allowStatistics";
-            this.Label_allowStatistics.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // ts_AllowCollectStatistics
-            // 
-            this.ts_AllowCollectStatistics.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ts_AllowCollectStatistics.AutoSize = true;
-            this.ts_AllowCollectStatistics.BackColor = System.Drawing.Color.Transparent;
-            this.ts_AllowCollectStatistics.Enabled = false;
-            this.ts_AllowCollectStatistics.Location = new System.Drawing.Point(1056, 8);
-            this.ts_AllowCollectStatistics.Margin = new System.Windows.Forms.Padding(2);
-            this.ts_AllowCollectStatistics.MinimumSize = new System.Drawing.Size(34, 18);
-            this.ts_AllowCollectStatistics.Name = "ts_AllowCollectStatistics";
-            this.ts_AllowCollectStatistics.OffBackColor = System.Drawing.Color.Gainsboro;
-            this.ts_AllowCollectStatistics.OffToggleColor = System.Drawing.Color.Silver;
-            this.ts_AllowCollectStatistics.OnBackColor = System.Drawing.Color.Gainsboro;
-            this.ts_AllowCollectStatistics.OnToggleColor = System.Drawing.Color.Silver;
-            this.ts_AllowCollectStatistics.Size = new System.Drawing.Size(34, 18);
-            this.ts_AllowCollectStatistics.TabIndex = 0;
-            this.ts_AllowCollectStatistics.UseVisualStyleBackColor = false;
-            this.ts_AllowCollectStatistics.CheckedChanged += new System.EventHandler(this.ts_AllowCollectStatistics_CheckedChanged);
             // 
             // panel2
             // 
@@ -628,6 +593,28 @@ namespace MSearch
             this.Label_OpenLogsFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Label_OpenLogsFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Label_OpenLogsFolder_LinkClicked);
             // 
+            // Label_openSettings
+            // 
+            this.Label_openSettings.ActiveLinkColor = System.Drawing.Color.Navy;
+            this.Label_openSettings.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.Label_openSettings.BackColor = System.Drawing.Color.Transparent;
+            this.Label_openSettings.DisabledLinkColor = System.Drawing.Color.Gray;
+            this.Label_openSettings.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.Label_openSettings.ForeColor = System.Drawing.Color.MediumSlateBlue;
+            this.Label_openSettings.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.Label_openSettings.LinkColor = System.Drawing.Color.RoyalBlue;
+            this.Label_openSettings.Location = new System.Drawing.Point(812, 8);
+            this.Label_openSettings.Margin = new System.Windows.Forms.Padding(0);
+            this.Label_openSettings.Name = "Label_openSettings";
+            this.Label_openSettings.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.Label_openSettings.Size = new System.Drawing.Size(276, 20);
+            this.Label_openSettings.TabIndex = 18;
+            this.Label_openSettings.TabStop = true;
+            this.Label_openSettings.Text = "label_openSettings";
+            this.Label_openSettings.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Label_openSettings.Visible = false;
+            this.Label_openSettings.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Label_openSettings_LinkClicked);
+            // 
             // FinishEx
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -642,7 +629,6 @@ namespace MSearch
             this.Load += new System.EventHandler(this.FinishEx_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
@@ -683,12 +669,11 @@ namespace MSearch
         private System.Windows.Forms.LinkLabel Label_OpenLogsFolder;
         private System.Windows.Forms.Label Label_showAllLogs;
         private System.Windows.Forms.Panel panel3;
-        private ToggleSwitch ts_AllowCollectStatistics;
-        private System.Windows.Forms.Label Label_allowStatistics;
         private PanelCustom panelCustom1;
         private System.Windows.Forms.Label LBL_ID;
         private UI.RoundButton OpenQuarantineBtn;
         private UI.RoundButton DonateBtn;
         private UI.RoundButton MinimizeBtn;
+        private System.Windows.Forms.LinkLabel Label_openSettings;
     }
 }
