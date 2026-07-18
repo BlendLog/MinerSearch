@@ -5581,7 +5581,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Apply to All.
+        ///   Ищет локализованную строку, похожую на Set to all.
         /// </summary>
         internal static string _ReviewBulkApplyBtn_EN {
             get {
@@ -5599,20 +5599,20 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Bulk action not applicable to some threats. What to do with the remaining threats?.
+        ///   Ищет локализованную строку, похожую на Apply the selected action to all highlighted threats..
         /// </summary>
-        internal static string _ReviewBulkIncompatible_EN {
+        internal static string _ReviewBulkConfirm_EN {
             get {
-                return ResourceManager.GetString("_ReviewBulkIncompatible_EN", resourceCulture);
+                return ResourceManager.GetString("_ReviewBulkConfirm_EN", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Общее действие к некоторым угрозам неприменимо. Что сделать с оставшимися угрозами?.
+        ///   Ищет локализованную строку, похожую на Применить выбранное действие ко всем выделенным угрозам..
         /// </summary>
-        internal static string _ReviewBulkIncompatible_RU {
+        internal static string _ReviewBulkConfirm_RU {
             get {
-                return ResourceManager.GetString("_ReviewBulkIncompatible_RU", resourceCulture);
+                return ResourceManager.GetString("_ReviewBulkConfirm_RU", resourceCulture);
             }
         }
         
@@ -5631,24 +5631,6 @@ namespace MSearch.Properties {
         internal static string _ReviewBulkLabel_RU {
             get {
                 return ResourceManager.GetString("_ReviewBulkLabel_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Cancel.
-        /// </summary>
-        internal static string _ReviewCancelBtn_EN {
-            get {
-                return ResourceManager.GetString("_ReviewCancelBtn_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Отмена.
-        /// </summary>
-        internal static string _ReviewCancelBtn_RU {
-            get {
-                return ResourceManager.GetString("_ReviewCancelBtn_RU", resourceCulture);
             }
         }
         

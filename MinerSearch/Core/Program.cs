@@ -144,8 +144,8 @@ namespace MSearch
                     if (Console.BufferWidth < w) Console.BufferWidth = w;
                     if (Console.BufferHeight < h) Console.BufferHeight = h;
 
-                    Console.WindowWidth = w;
-                    Console.WindowHeight = h;
+                    Console.WindowWidth = w < 0 ? 150 : w;
+                    Console.WindowHeight = h < 0 ? 40 : h;
 
                     WaterMark();
                 }
@@ -548,12 +548,27 @@ namespace MSearch
             // Показываем review-UI для неизвестных угроз из сигнатур
             if (!options.no_review_interact && unknownFromSignatures.Count > 0)
             {
-                var reviewForm = new FormThreatReview(unknownFromSignatures);
-                reviewForm.ShowDialog();
+                // Вопрос: автоматически принимать решения для неизвестных угроз?
+                var autoAcceptResult = DialogDispatcher.Show(
+                    AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAutoAccept_Question"),
+                    AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAutoAccept_Title"),
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
 
-                // Применяем выбор пользователя к флагам в ThreatObject перед выполнением очистки
-                if (reviewForm.IsApplied())
-                    reviewForm.ApplyUserOverrides();
+                if (autoAcceptResult == DialogResult.Yes)
+                {
+                    options.no_review_interact = true;
+                }
+
+                if (!options.no_review_interact)
+                {
+                    var reviewForm = new FormThreatReview(unknownFromSignatures);
+                    reviewForm.ShowDialog();
+
+                    // Применяем выбор пользователя к флагам в ThreatObject перед выполнением очистки
+                    if (reviewForm.IsApplied())
+                        reviewForm.ApplyUserOverrides();
+                }
             }
 
             // Применяем неизвестные угрозы из сигнатур (с учётом UserOverrideAction)
