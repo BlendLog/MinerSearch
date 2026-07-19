@@ -142,6 +142,7 @@ namespace MSearch.Core.Managers
                 else if (decision.ObjectType == ScanObjectType.Suspicious)
                     _state.IncrementFoundSuspicious();
 
+                _state.IncrementSkippedThreats();
                 ResetFileAclForSkipped(decision.Target);
             }
         }

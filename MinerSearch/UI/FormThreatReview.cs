@@ -1062,5 +1062,10 @@ namespace MSearch.UI
                 dataGridReviewThreats.CommitEdit(DataGridViewDataErrorContexts.Commit);
             }
         }
+
+        private void dataGridReviewThreats_Click(object sender, EventArgs e)
+        {
+            dataGridReviewThreats.ClearSelection();
+        }
     }
 }

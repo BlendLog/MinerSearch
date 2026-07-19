@@ -979,6 +979,9 @@ Do you want to continue?</value>
   <data name="_TotalNeutralizedThreats_RU" xml:space="preserve">
     <value>Устранено угроз:</value>
   </data>
+  <data name="_TotalSkippedThreats_RU" xml:space="preserve">
+    <value>Пропущено угроз:</value>
+  </data>
   <data name="_IsDotnetAssembly_EN" xml:space="preserve">
     <value>Dotnet assembly</value>
   </data>
@@ -1942,6 +1945,9 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_TotalNeutralizedThreats_EN" xml:space="preserve">
     <value>Total cured threats:</value>
+  </data>
+  <data name="_TotalSkippedThreats_EN" xml:space="preserve">
+    <value>Skipped threats:</value>
   </data>
   <data name="_WMIRestartApplication_EN" xml:space="preserve">
     <value>Restart Application...</value>

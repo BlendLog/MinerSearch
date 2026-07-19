@@ -45,6 +45,7 @@ namespace MSearch.Core
         public int totalFoundThreats { get; set; }
         public int totalFoundSuspiciousObjects { get; set; }
         public int totalNeutralizedThreats { get; set; }
+        public int userSkippedThreats { get; set; }
 
         public string drive_letter { get; set; } = "C";
         public string ActiveLanguage { get; set; } = "EN";

@@ -13,6 +13,7 @@ namespace MSearch
         void IncrementFoundThreats();
         void IncrementFoundSuspicious();
         void IncrementNeutralizedThreats();
+        void IncrementSkippedThreats();
     }
 
     public sealed class MinerSearchScanState : IScanState
@@ -35,6 +36,11 @@ namespace MSearch
         public void IncrementNeutralizedThreats()
         {
             AppConfig.GetInstance.totalNeutralizedThreats++;
+        }
+
+        public void IncrementSkippedThreats()
+        {
+            AppConfig.GetInstance.userSkippedThreats++;
         }
 
         public List<ScanResult> GetScanResults()
@@ -78,7 +84,7 @@ namespace MSearch
             string DeviceId = DeviceIdProvider.GetDeviceId();
             LogSender.UploadFile(Path.Combine(Logger.LogsFolder, Logger.logFileName), Convert.ToBase64String(Guid.Parse(DeviceId).ToByteArray()), $"{DeviceId}" +
                 $"\nv{AppConfig.GetInstance.CurrentVersion}" +
-                $"\nRuns: {AppConfig.GetInstance.RunCount}, Threats: {AppConfig.GetInstance.totalFoundThreats}, Cured: {AppConfig.GetInstance.totalNeutralizedThreats}");
+                $"\nRuns: {AppConfig.GetInstance.RunCount}, Threats: {AppConfig.GetInstance.totalFoundThreats}, Cured: {AppConfig.GetInstance.totalNeutralizedThreats}, Skipped: {AppConfig.GetInstance.userSkippedThreats}");
         }
     }
 }

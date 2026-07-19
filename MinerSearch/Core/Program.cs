@@ -716,6 +716,20 @@ namespace MSearch
                 }
             }
 
+            // Реестр — проверяем ValueName по obfStr3/obfStr4 (аналогично RegistryThreatAnalyzer)
+            var reg = target as RegistryThreatObject;
+            if (reg != null)
+            {
+                if (!string.IsNullOrEmpty(reg.ValueName))
+                {
+                    if (MSData.GetInstance.obfStr3.Any(s => reg.ValueName.Equals(s, StringComparison.OrdinalIgnoreCase)) ||
+                        MSData.GetInstance.obfStr4.Any(s => reg.ValueName.Equals(s, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        return true;
+                    }
+                }
+            }
+
             // Для остальных типов — не считаем известными по умолчанию
             return false;
         }
@@ -818,7 +832,7 @@ namespace MSearch
             Logger.WriteLog("\n\t\t-----------------------------------", ConsoleColor.White, false);
             LocalizedLogger.LogElapsedTime(elapsedTime);
             Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
-            LocalizedLogger.LogTotalScanResult(foundCount, neutralizedCount, suspiciousCount);
+            LocalizedLogger.LogTotalScanResult(foundCount, neutralizedCount, suspiciousCount, skippedCount);
             Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
 
             return new ScanStatistics
@@ -925,15 +939,6 @@ namespace MSearch
             Console.WriteLine(@"                                                             |____/   \___|  \__|  \__,_|");
 #endif
             Console.WriteLine("\t\tby: BlendLog");
-        }
-
-        /// <summary>
-        /// Читает DWORD-значение из реестра. Возвращает defaultValue, если ключ не найден.
-        /// </summary>
-        private static int ReadRegistryDWord(string registryPath, string valueName, int defaultValue, RegistryHive hive = RegistryHive.LocalMachine)
-        {
-
-            return defaultValue;
         }
     }
 }

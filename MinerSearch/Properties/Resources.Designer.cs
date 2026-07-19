@@ -5509,6 +5509,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Disable.
+        /// </summary>
+        internal static string _ReviewAction_Disable_EN {
+            get {
+                return ResourceManager.GetString("_ReviewAction_Disable_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отключить.
+        /// </summary>
+        internal static string _ReviewAction_Disable_RU {
+            get {
+                return ResourceManager.GetString("_ReviewAction_Disable_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Quarantine.
         /// </summary>
         internal static string _ReviewAction_Quarantine_EN {
@@ -5541,6 +5559,24 @@ namespace MSearch.Properties {
         internal static string _ReviewAction_Skip_RU {
             get {
                 return ResourceManager.GetString("_ReviewAction_Skip_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Terminate.
+        /// </summary>
+        internal static string _ReviewAction_Terminate_EN {
+            get {
+                return ResourceManager.GetString("_ReviewAction_Terminate_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Завершить.
+        /// </summary>
+        internal static string _ReviewAction_Terminate_RU {
+            get {
+                return ResourceManager.GetString("_ReviewAction_Terminate_RU", resourceCulture);
             }
         }
         
@@ -7197,6 +7233,24 @@ namespace MSearch.Properties {
         internal static string _TotalNeutralizedThreats_RU {
             get {
                 return ResourceManager.GetString("_TotalNeutralizedThreats_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Skipped threats:.
+        /// </summary>
+        internal static string _TotalSkippedThreats_EN {
+            get {
+                return ResourceManager.GetString("_TotalSkippedThreats_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пропущено угроз:.
+        /// </summary>
+        internal static string _TotalSkippedThreats_RU {
+            get {
+                return ResourceManager.GetString("_TotalSkippedThreats_RU", resourceCulture);
             }
         }
         

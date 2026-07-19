@@ -529,11 +529,12 @@ namespace MSearch
             Logger.WriteLog($"\t\t[$] {message} {elapsedTime}", ConsoleColor.White, false);
         }
 
-        public static void LogTotalScanResult(int _totalThreats, int _neutralizedThreats, int _suspObjects)
+        public static void LogTotalScanResult(int _totalThreats, int _neutralizedThreats, int _suspObjects, int _skippedThreats)
         {
             string totalThreats = Resources._TotalThreatsFound_EN;
             string neutralizedThreats = Resources._TotalNeutralizedThreats_EN;
             string totalSuspObj = Resources._TotalSuspObjects_EN;
+            string skippedThreats = Resources._TotalSkippedThreats_EN;
 
             switch (AppConfig.GetInstance.ActiveLanguage)
             {
@@ -541,11 +542,13 @@ namespace MSearch
                     totalThreats = Resources._TotalThreatsFound_RU;
                     neutralizedThreats = Resources._TotalNeutralizedThreats_RU;
                     totalSuspObj = Resources._TotalSuspObjects_RU;
+                    skippedThreats = Resources._TotalSkippedThreats_RU;
                     break;
                 case "EN":
                     totalThreats = Resources._TotalThreatsFound_EN;
                     neutralizedThreats = Resources._TotalNeutralizedThreats_EN;
                     totalSuspObj = Resources._TotalSuspObjects_EN;
+                    skippedThreats = Resources._TotalSkippedThreats_EN;
                     break;
             }
 
@@ -559,6 +562,7 @@ namespace MSearch
             if (!LaunchOptions.GetInstance.ScanOnly)
             {
                 Logger.WriteLog($"\t\t[&] {neutralizedThreats} [{_neutralizedThreats}]", color, false);
+                Logger.WriteLog($"\t\t[&] {skippedThreats} [{_skippedThreats}]", ConsoleColor.Gray, false);
             }
 
             Console.ResetColor();

@@ -112,15 +112,16 @@
             // 
             // panel2
             // 
+            this.panel2.BackColor = System.Drawing.SystemColors.Control;
             this.panel2.Controls.Add(this.Label_autoApplyThreatAction);
             this.panel2.Controls.Add(this.ts_AutoApplyThreatActions);
             this.panel2.Controls.Add(this.Label_allowStatistics);
             this.panel2.Controls.Add(this.ts_AllowCollectStatistics);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 36);
-            this.panel2.Margin = new System.Windows.Forms.Padding(0);
+            this.panel2.Location = new System.Drawing.Point(1, 36);
+            this.panel2.Margin = new System.Windows.Forms.Padding(1, 0, 1, 1);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(750, 152);
+            this.panel2.Size = new System.Drawing.Size(748, 151);
             this.panel2.TabIndex = 1;
             // 
             // Label_autoApplyThreatAction
@@ -187,8 +188,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.RoyalBlue;
             this.ClientSize = new System.Drawing.Size(750, 188);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
