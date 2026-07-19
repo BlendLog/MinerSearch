@@ -439,15 +439,19 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            // Решение для процесса
-            yield return new ThreatDecision(threat, riskLevel, scanType);
-
-            // Решение для связанного файла (если есть флаги действия)
-            if (proc.FileProcess.ShouldDeleteFile ||
-                proc.FileProcess.ShouldMoveFileToQuarantine ||
-                proc.FileProcess.ShouldDisableExecute)
+            // Создаём ThreatDecision только для подозрительных процессов
+            if (riskLevel >= 3)
             {
-                yield return new ThreatDecision(proc.FileProcess, riskLevel, scanType);
+                // Решение для процесса
+                yield return new ThreatDecision(threat, riskLevel, scanType);
+
+                // Решение для связанного файла (если есть флаги действия)
+                if (proc.FileProcess.ShouldDeleteFile ||
+                    proc.FileProcess.ShouldMoveFileToQuarantine ||
+                    proc.FileProcess.ShouldDisableExecute)
+                {
+                    yield return new ThreatDecision(proc.FileProcess, riskLevel, scanType);
+                }
             }
         }
 

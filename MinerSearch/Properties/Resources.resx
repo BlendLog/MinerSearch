@@ -837,6 +837,12 @@ Thank you for your help!</value>
   <data name="_ReviewAction_Delete_EN" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="_ReviewAction_Terminate_EN" xml:space="preserve">
+    <value>Terminate</value>
+  </data>
+  <data name="_ReviewAction_Disable_EN" xml:space="preserve">
+    <value>Disable</value>
+  </data>
   <data name="_CertDigsigDecode_RU" xml:space="preserve">
     <value>Ошибка при расшифровке ASN.1</value>
   </data>
@@ -1792,6 +1798,12 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_ReviewAction_Delete_RU" xml:space="preserve">
     <value>Удалить</value>
+  </data>
+  <data name="_ReviewAction_Terminate_RU" xml:space="preserve">
+    <value>Завершить</value>
+  </data>
+  <data name="_ReviewAction_Disable_RU" xml:space="preserve">
+    <value>Отключить</value>
   </data>
   <data name="_UACEnabled_EN" xml:space="preserve">
     <value>UAC: Enabled</value>

@@ -170,7 +170,7 @@ namespace MSearch.UI
 
                 // Настраиваем ComboBox: только применимые к данному классу действия
                 var cell = (DataGridViewComboBoxCell)row.Cells[ColNewAction];
-                var applicableActions = GetApplicableActions(decision.Target.Kind);
+                var applicableActions = GetApplicableActions(decision.Target.Kind, decision.Target);
                 cell.Items.Clear();
                 foreach (var action in applicableActions)
                     cell.Items.Add(GetLocalizedUserActionName(action));
@@ -208,7 +208,7 @@ namespace MSearch.UI
 
                 case ThreatObjectKind.Process:
                     var p = target as ProcessThreatObject;
-                    if (p != null && p.ShouldTerminate) return ScanActionTypeUserSelected.Delete;
+                    if (p != null && p.ShouldTerminate) return ScanActionTypeUserSelected.Terminate;
                     break;
 
                 case ThreatObjectKind.RegistryObject:
@@ -226,7 +226,7 @@ namespace MSearch.UI
                     {
                         if (svc.ShouldDeleteService) return ScanActionTypeUserSelected.Delete;
                         if (svc.ShouldRestoreService || svc.ShouldRestoreServiceDll) return ScanActionTypeUserSelected.Cure;
-                        if (svc.ShouldDisableService || svc.ShouldStopService) return ScanActionTypeUserSelected.Quarantine;
+                        if (svc.ShouldDisableService || svc.ShouldStopService) return ScanActionTypeUserSelected.Disable;
                     }
                     break;
 
@@ -264,35 +264,54 @@ namespace MSearch.UI
                 case ThreatObjectKind.WmiSubscription:
                     // Любое не-Skip = удаление подписки
                     return ScanActionTypeUserSelected.Delete;
+
+                case ThreatObjectKind.UserProfile:
+                    var up = target as UserProfileThreatObject;
+                    if (up != null && up.ShouldDelete) return ScanActionTypeUserSelected.Delete;
+                    break;
             }
             return ScanActionTypeUserSelected.Skip;
         }
 
         /// <summary>
         /// Возвращает список действий, применимых к данному классу угрозы.
-        /// Cure применимо только к Hosts (очистка строк), Service (восстановление) и Registry (восстановление).
+        /// Cure применимо только к Hosts (очистка строк), TermService (восстановление) и Registry (восстановление).
         /// </summary>
-        private static ScanActionTypeUserSelected[] GetApplicableActions(ThreatObjectKind kind)
+        private static ScanActionTypeUserSelected[] GetApplicableActions(ThreatObjectKind kind, IThreatObject target)
         {
             switch (kind)
             {
                 case ThreatObjectKind.Hosts:
-                    return new[] { ScanActionTypeUserSelected.Cure, ScanActionTypeUserSelected.Quarantine, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
+                    return new[] { ScanActionTypeUserSelected.Cure, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
+
+                case ThreatObjectKind.RegistryObject:
+                    // RegistryObject — Cure, Delete, Skip (нельзя в карантин)
+                    return new[] { ScanActionTypeUserSelected.Cure, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
 
                 case ThreatObjectKind.Service:
-                case ThreatObjectKind.RegistryObject:
-                    return new[] { ScanActionTypeUserSelected.Cure, ScanActionTypeUserSelected.Quarantine, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
+                    // TermService — Cure, Disable, Delete, Skip (можно вылечить)
+                    // Остальные службы — Disable, Delete, Skip (только отключить или удалить)
+                    if (target is ServiceThreatObject svc && svc.ServiceName.Equals("TermService", StringComparison.OrdinalIgnoreCase))
+                        return new[] { ScanActionTypeUserSelected.Cure, ScanActionTypeUserSelected.Disable, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
+                    return new[] { ScanActionTypeUserSelected.Disable, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
 
                 case ThreatObjectKind.FirewallRule:
                 case ThreatObjectKind.WmiSubscription:
                 case ThreatObjectKind.Directory:
                 case ThreatObjectKind.UserProfile:
-                case ThreatObjectKind.Other:
-                    // Только удалить или пропустить
+                    // Firewall, WMI, Directory, UserProfile, Other — только удалить или пропустить
                     return new[] { ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
 
+                case ThreatObjectKind.ScheduledTask:
+                    // ScheduledTask — только удалить или пропустить
+                    return new[] { ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
+
+                case ThreatObjectKind.Process:
+                    // Process — завершить или пропустить (нельзя в карантин/удалить)
+                    return new[] { ScanActionTypeUserSelected.Terminate, ScanActionTypeUserSelected.Skip };
+
                 default:
-                    // Process, File, ScheduledTask, ShellStartupFile — карантин, удалить, пропустить (без Cure)
+                    // File, ShellStartupFile — карантин, удалить, пропустить (без Cure)
                     return new[] { ScanActionTypeUserSelected.Quarantine, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
             }
         }
@@ -346,6 +365,10 @@ namespace MSearch.UI
                         return AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAction_Quarantine");
                     case ScanActionTypeUserSelected.Delete:
                         return AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAction_Delete");
+                    case ScanActionTypeUserSelected.Terminate:
+                        return AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAction_Terminate");
+                    case ScanActionTypeUserSelected.Disable:
+                        return AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAction_Disable");
                     case ScanActionTypeUserSelected.Skip:
                         return AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAction_Skip");
                     default:
@@ -558,6 +581,11 @@ namespace MSearch.UI
                     decision.ActionType = MapUserActionToScanAction(action: userAction);
                     break;
 
+                case ThreatObjectKind.UserProfile:
+                    // UserProfile — override через ActionType (Handler обрабатывает по ActionType)
+                    decision.ActionType = MapUserActionToScanAction(action: userAction);
+                    break;
+
                 default:
                     break;
             }
@@ -573,6 +601,10 @@ namespace MSearch.UI
                     return ScanActionType.Quarantine;
                 case ScanActionTypeUserSelected.Delete:
                     return ScanActionType.Deleted;
+                case ScanActionTypeUserSelected.Terminate:
+                    return ScanActionType.Terminated;
+                case ScanActionTypeUserSelected.Disable:
+                    return ScanActionType.Disabled;
                 case ScanActionTypeUserSelected.Skip:
                     return ScanActionType.Skipped;
                 default:
@@ -648,6 +680,10 @@ namespace MSearch.UI
 
             switch (action)
             {
+                case ScanActionTypeUserSelected.Terminate:
+                    proc.ShouldTerminate = true;
+                    break;
+
                 case ScanActionTypeUserSelected.Cure:
                 case ScanActionTypeUserSelected.Delete:
                 case ScanActionTypeUserSelected.Quarantine:
@@ -695,6 +731,11 @@ namespace MSearch.UI
                     svc.ShouldStopService = shouldStopServiceWasSet || true;
                     svc.ShouldDisableService = shouldDisableServiceWasSet || true;
                     svc.ShouldDeleteService = shouldDeleteServiceWasSet || true;
+                    svc.ShouldRemoveFromSafeMode = shouldRemoveFromSafeModeWasSet;
+                    break;
+                case ScanActionTypeUserSelected.Disable:
+                    // Отключение — останавливаем и отключаем службу
+                    svc.ShouldDisableService = true;
                     svc.ShouldRemoveFromSafeMode = shouldRemoveFromSafeModeWasSet;
                     break;
                 case ScanActionTypeUserSelected.Quarantine:
@@ -842,7 +883,7 @@ namespace MSearch.UI
             {
                 if (decision == null || decision.Target == null) continue;
 
-                var applicable = GetApplicableActions(decision.Target.Kind);
+                var applicable = GetApplicableActions(decision.Target.Kind, decision.Target);
                 var applicableList = new List<ScanActionTypeUserSelected>(applicable);
 
                 if (common == null)
@@ -875,7 +916,7 @@ namespace MSearch.UI
                     continue;
 
                 // Проверка: действие должно быть применимо к данному типу угрозы
-                var applicable = GetApplicableActions(decision.Target.Kind);
+                var applicable = GetApplicableActions(decision.Target.Kind, decision.Target);
                 bool applicableList = false;
                 foreach (var a in applicable)
                 {
@@ -961,7 +1002,7 @@ namespace MSearch.UI
                 if (!(row.Tag is ThreatDecision decision) || decision.Target == null)
                     continue;
 
-                var applicable = GetApplicableActions(decision.Target.Kind);
+                var applicable = GetApplicableActions(decision.Target.Kind, decision.Target);
                 var applicableList = new List<ScanActionTypeUserSelected>(applicable);
 
                 if (common == null)

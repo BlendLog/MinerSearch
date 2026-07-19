@@ -514,11 +514,10 @@ namespace MSearch
             var knownDecisions = allFinalizeDecisions.Where(d => IsKnownThreat(d)).ToList();
             var unknownDecisions = allFinalizeDecisions.Where(d => !IsKnownThreat(d)).ToList();
 
-            var unknownFromSignatures = signatureDecisions
-                .Where(d => d != null && !IsKnownThreat(d))
-                .ToList();
-            var unknownFromEarlier = unknownDecisions
-                .Except(unknownFromSignatures)
+            // Все неизвестные угрозы из всех типов сканов → FormThreatReview
+            // Rootkit (Other) всегда обрабатывается автоматически — исключаем из review
+            var allUnknownDecisions = unknownDecisions
+                .Where(d => d.Target.Kind != ThreatObjectKind.Other)
                 .ToList();
 
             cleanManager.BeginFinalCleanup();
@@ -529,10 +528,7 @@ namespace MSearch
                 cleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize);
             }
 
-            if (unknownFromEarlier.Count > 0)
-                cleanManager.ApplyDecisions(unknownFromEarlier, CleanupPhase.Finalize);
-
-            if (!options.no_review_interact && unknownFromSignatures.Count > 0) // Показываем review-UI для неизвестных угроз из сигнатур
+            if (!options.no_review_interact && allUnknownDecisions.Count > 0)
             {
                 int autoAcceptValue = 2;
                 try
@@ -585,7 +581,7 @@ namespace MSearch
 
                 if (!options.no_review_interact)
                 {
-                    var reviewForm = new FormThreatReview(unknownFromSignatures);
+                    var reviewForm = new FormThreatReview(allUnknownDecisions);
                     reviewForm.ShowDialog();
 
                     // Применяем выбор пользователя к флагам в ThreatObject перед выполнением очистки
@@ -594,12 +590,12 @@ namespace MSearch
                 }
             }
 
-            // Применяем неизвестные угрозы из сигнатур (с учётом UserOverrideAction)
+            // Применяем все неизвестные угрозы (с учётом UserOverrideAction)
             // Решения со Skip не применяем через Handler — записываем как пропущенные напрямую
             var decisionsToApply = new List<ThreatDecision>();
             var decisionsToSkip = new List<ThreatDecision>();
 
-            foreach (var decision in unknownFromSignatures)
+            foreach (var decision in allUnknownDecisions)
             {
                 if (decision.UserOverrideAction == ScanActionTypeUserSelected.Skip)
                     decisionsToSkip.Add(decision);
@@ -618,7 +614,6 @@ namespace MSearch
                 processDecisions.Select(d => d.Target.Id)
                     .Concat(commonDecisions.Select(d => d.Target.Id))
                     .Concat(knownDecisions.Select(d => d.Target.Id))
-                    .Concat(unknownFromEarlier.Select(d => d.Target.Id))
                     .Concat(decisionsToApply.Select(d => d.Target.Id))
                     .Concat(decisionsToSkip.Select(d => d.Target.Id)));
             
