@@ -18,15 +18,18 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 > [!CAUTION]
 > ### Windows 7 is outdated. MinerSearch development for this OS has been discontinued.
 
-Version v1.4.9.1
+Version v1.4.9.2
 
-- Fixed incorrect parsing of scheduler tasks
-- Fixed erroneous removal of Electron-based applications
-- Fixed erroneous removal of all SFX archives
-- Fixed the strategy for checking non-standard hidden services
-- Fixed erroneous removal of the Bluetooth driver
-- Added missing translation string resources
-- Added the ability to choose the location to restore a file from quarantine (original or specified)
+  - Added a new FormThreatReview form allowing users to choose an action for each detected threat
+  - Moved the "Allow sending statistics" toggle to a separate form
+  - Fixed false positive triggers related to Throne proxy
+  - Fixed a bug where UAC status was not being determined
+  - Fixed a ReleaseMutex bug that caused the application to crash after scanning in --silent mode
+  - Added validation for invalid characters when checking scheduled tasks & firewall rules
+  - The main FinishEx window no longer has the 'TopMost' attribute  
+  - Added a link to the official application page
+  - Updated rules for detecting and removing new cryptominers
+
 --------------------------------------------
 
 ## How to use
