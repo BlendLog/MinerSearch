@@ -37,13 +37,16 @@ namespace MSearch.Core.Scanners
             // 4. Каталоги по паттерну (GUID в ProgramData)
             ScanPatternBasedDirectories(results);
 
-            // 5. Bloated файлы в Windows
+            // 5. Каталоги с двойной точкой на конце (вирусной трюк: logdata.., config..)
+            ScanDoubleDotDirectories(results);
+
+            // 6. Bloated файлы в Windows
             ScanBloatedFiles(results);
 
-            // 6. Файлы в CommonApplicationData (bat + SFX)
+            // 7. Файлы в CommonApplicationData (bat + SFX)
             ScanCommonAppDataFiles(results);
 
-            // 7. Исполняемые файлы в корнях AppData/LocalAppData/Public
+            // 8. Исполняемые файлы в корнях AppData/LocalAppData/Public
             ScanSpecificLocations(results);
 
             return results;
@@ -192,12 +195,52 @@ namespace MSearch.Core.Scanners
                     if (hasMaliciousFile)
                     {
                         MSData.GetInstance.obfStr1.Add(directory); // Добавляем в базу
-                        
+
                         // SourceTag = "obfStr1" — теперь это известный вредоносный каталог
                         var dirThreat = new DirectoryThreatObject(directory, directoryName, sourceTag: "obfStr1");
                         results.Add(dirThreat);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Ищет в ProgramData каталоги, имя которых заканчивается на ".."
+        /// Вирус создаёт такие имена (logdata.., config..) чтобы сделать их сложнее удалить.
+        /// Для доступа используется UNC-формат с префиксом \\?\
+        /// </summary>
+        private void ScanDoubleDotDirectories(List<IThreatObject> results)
+        {
+            string baseDirectory = AppConfig.GetInstance.drive_letter + @":\ProgramData";
+
+            if (!Directory.Exists(baseDirectory))
+                return;
+
+            try
+            {
+                foreach (string directory in Directory.EnumerateDirectories(baseDirectory))
+                {
+                    string directoryName = Path.GetFileName(directory);
+
+                    // Ищем имена, заканчивающиеся на ".."
+                    if (directoryName.EndsWith("..", StringComparison.Ordinal))
+                    {
+                        // Формируем путь в UNC-формате с префиксом \\?\
+                        string uncPath = @"\\?\" + directory;
+
+                        // Проверяем существование через UNC-путь (на случай если Directory.Exists не работает с такими именами)
+                        if (Directory.Exists(uncPath))
+                        {
+                            // SourceTag = "double_dot_dir" — каталог с двойной точкой на конце
+                            var dirThreat = new DirectoryThreatObject(uncPath, directoryName, sourceTag: "double_dot_dir");
+                            results.Add(dirThreat);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
             }
         }
 

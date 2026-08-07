@@ -45,7 +45,14 @@ namespace MSearch.Core.ThreatHandlers
 
         private ApplyResult HandleDeleteDirectory(string dirPath, ThreatDecision decision)
         {
-            if (!Directory.Exists(dirPath))
+            // Для каталогов с ".." на конце — проверяем по UNC-пути
+            string checkPath = dirPath;
+            if (!dirPath.StartsWith(@"\\?\", StringComparison.Ordinal))
+            {
+                checkPath = @"\\?\" + dirPath;
+            }
+
+            if (!Directory.Exists(checkPath))
             {
                 AppConfig.GetInstance.LL.LogMessage("[_]", "_DirectoryIsNotFound", dirPath, ConsoleColor.DarkGray);
                 return ApplyResult.NotApplicable;
@@ -53,10 +60,10 @@ namespace MSearch.Core.ThreatHandlers
 
             try
             {
-                FileSystemManager.ResetAttributes(dirPath);
-                Directory.Delete(dirPath, true);
+                FileSystemManager.ResetAttributes(checkPath);
+                Directory.Delete(checkPath, true);
 
-                if (Directory.Exists(dirPath))
+                if (Directory.Exists(checkPath))
                 {
                     decision.ActionType = ScanActionType.Error;
                     return ApplyResult.Failed;
@@ -78,7 +85,14 @@ namespace MSearch.Core.ThreatHandlers
 
         private ApplyResult HandleUnlockAndDelete(string dirPath, ThreatDecision decision)
         {
-            if (!Directory.Exists(dirPath))
+            // Для каталогов с ".." на конце — используем UNC-путь
+            string checkPath = dirPath;
+            if (!dirPath.StartsWith(@"\\?\", StringComparison.Ordinal))
+            {
+                checkPath = @"\\?\" + dirPath;
+            }
+
+            if (!Directory.Exists(checkPath))
             {
                 AppConfig.GetInstance.LL.LogMessage("[_]", "_DirectoryIsNotFound", dirPath, ConsoleColor.DarkGray);
                 return ApplyResult.NotApplicable;
@@ -87,21 +101,21 @@ namespace MSearch.Core.ThreatHandlers
             try
             {
                 // Сначала пытаемся разблокировать
-                if (UnlockObjectClass.IsLockedObject(dirPath))
+                if (UnlockObjectClass.IsLockedObject(checkPath))
                 {
-                    if (UnlockObjectClass.ResetObjectACL(dirPath))
+                    if (UnlockObjectClass.ResetObjectACL(checkPath))
                     {
                         AppConfig.GetInstance.LL.LogSuccessMessage("_UnlockSuccess", dirPath);
                     }
                 }
 
-                FileSystemManager.ResetAttributes(dirPath);
+                FileSystemManager.ResetAttributes(checkPath);
 
-                if (!FileSystemManager.IsDirectoryEmpty(dirPath)) return ApplyResult.NotApplicable;
+                if (!FileSystemManager.IsDirectoryEmpty(checkPath)) return ApplyResult.NotApplicable;
 
-                Directory.Delete(dirPath, true);
+                Directory.Delete(checkPath, true);
 
-                if (Directory.Exists(dirPath))
+                if (Directory.Exists(checkPath))
                 {
                     decision.ActionType = ScanActionType.Error;
                     return ApplyResult.Failed;

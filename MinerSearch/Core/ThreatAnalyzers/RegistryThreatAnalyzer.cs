@@ -259,9 +259,14 @@ namespace MSearch.Core.ThreatAnalyzers
                 if (reg.ValueName.Equals("DisableTaskMgr", StringComparison.OrdinalIgnoreCase) ||
                     reg.ValueName.Equals("DisableRegistryTools", StringComparison.OrdinalIgnoreCase))
                 {
-                    risk += 3;
-                    reg.ActionDelete = true;
-                    AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
+                    // Значение 0 или отсутствует — ограничений нет, не угроза.
+                    // Значение != 0 — ограничения включены, угроза.
+                    if (int.TryParse(reg.ValueData, out int disableValue) && disableValue != 0)
+                    {
+                        risk += 3;
+                        reg.ActionDelete = true;
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
+                    }
                 }
             }
         }
