@@ -140,23 +140,20 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private void AnalyzeDisallowRun(RegistryThreatObject reg, ref int risk)
         {
-            if (reg.KeyPath.Equals(MSData.GetInstance.queries["ExplorerPolicies"], StringComparison.OrdinalIgnoreCase))
+            if (reg.NodeType == RegistryNodeType.Value && reg.KeyPath.Equals(MSData.GetInstance.queries["ExplorerDisallowRun"], StringComparison.OrdinalIgnoreCase))
             {
-                if (reg.ValueName.Equals("DisallowRun", StringComparison.OrdinalIgnoreCase))
+                // Проверка списка (common debloat targets)
+                string exeName = Path.GetFileName(reg.ValueData);
+                if (MSData.GetInstance.DisallowRunIgnoreList.Contains(exeName, StringComparer.OrdinalIgnoreCase))
                 {
-                    risk += 3;
-                    reg.ActionDelete = true;
-                    AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
+                    AppConfig.GetInstance.LL.LogMessage("[.]", "_RegistryValue", $"{reg.ValueName} | {reg.ValueData}", ConsoleColor.Gray);
+                    return;
                 }
-            }
-            else if (reg.KeyPath.Equals(MSData.GetInstance.queries["ExplorerDisallowRun"], StringComparison.OrdinalIgnoreCase))
-            {
-                if (reg.NodeType == RegistryNodeType.Key)
-                {
-                    risk += 3;
-                    reg.ActionDelete = true;
-                    AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.KeyPath);
-                }
+
+
+                risk += 3;
+                reg.ActionDelete = true; 
+                AppConfig.GetInstance.LL.LogSuccessMessage("_RegistryValue", $"{reg.ValueName} | {reg.ValueData} |", "_MarkedForRemoval");
             }
         }
 

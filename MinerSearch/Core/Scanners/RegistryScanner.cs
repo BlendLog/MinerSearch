@@ -22,7 +22,7 @@ namespace MSearch.Core.Scanners
             var msData = MSData.GetInstance;
 
             // --- 1. DisallowRun (HKCU) ---
-            CollectKeyAndValues(results, HKCU, msData.queries["ExplorerPolicies"], sectionName: "DisallowRun");
+            CollectKeyAndValues(results, HKCU, msData.queries["ExplorerDisallowRun"], sectionName: "DisallowRun");
 
             // --- 2. Appinit_dlls (HKLM) ---
             CollectKeyAndValues(results, HKLM, msData.queries["WindowsNT_CurrentVersion_Windows"], sectionName: "AppInitDLL");

