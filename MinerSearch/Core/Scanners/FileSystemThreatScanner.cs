@@ -86,6 +86,20 @@ namespace MSearch.Core.Scanners
                     MSData.GetInstance.obfStr6.Add(DownloadsPath);
                 }
             }
+
+            if (!AppConfig.GetInstance.WinPEMode)
+            {
+                string tempPath = Environment.GetEnvironmentVariable("TEMP");
+                if (string.IsNullOrEmpty(tempPath))
+                    tempPath = Environment.GetEnvironmentVariable("TMP");
+                if (string.IsNullOrEmpty(tempPath))
+                    tempPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "Local", "Temp");
+
+                if (!string.IsNullOrEmpty(tempPath) && Directory.Exists(tempPath))
+                {
+                    MSData.GetInstance.obfStr6.Add(@"\\?\" + tempPath);
+                }
+            }
         }
 
         private void ScanKnownDirectories(List<IThreatObject> results)
