@@ -215,8 +215,14 @@ namespace MSearch.Core.ThreatAnalyzers
             // Устанавливаем флаги действий
             svc.ShouldDisableService = true;
 
-            if (isMalicious)
+            if (svc.HasUnsignedServiceDll)
             {
+                // Неопределённость — нет подписи у ServiceDll → карантин
+                svc.ShouldQuarantineService = true;
+            }
+            else if (isMalicious)
+            {
+                // Подтверждена вредоносность → удаление
                 svc.ShouldStopService = true;
                 svc.ShouldDeleteService = true;
                 svc.ShouldResetSddl = true;  // Сбросить SDDL при удалении сервиса
@@ -274,6 +280,7 @@ namespace MSearch.Core.ThreatAnalyzers
                     {
                         AppConfig.GetInstance.LL.LogCautionMessage("_Found", $"{svc.ServiceName} {serviceDll}");
 
+                        svc.HasUnsignedServiceDll = true;
                         svc.LinkedServiceDll = CreateFileObject(serviceDll);
                         if (svc.LinkedServiceDll != null)
                         {

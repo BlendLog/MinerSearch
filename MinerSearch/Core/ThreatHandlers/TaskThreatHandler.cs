@@ -1,3 +1,4 @@
+using MSearch;
 using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
@@ -33,11 +34,24 @@ namespace MSearch.Core.ThreatHandlers
                 decision.ActionType = ScanActionType.Skipped;
             }
 
+
             if (phase == CleanupPhase.Finalize)
             {
 
+                // Quarantine the task before deletion
+                if (taskThreat.ActionQuarantineTask)
+                {
+                    if (!QuarantineManager.AddTask(taskThreat.Info))
+                    {
+                        AppConfig.GetInstance.LL.LogWarnMediumMessage("_QuarantineSaveFailed", $"{taskThreat.Info.Path}\\{taskThreat.Info.Name}");
+                        decision.ActionType = ScanActionType.Error;
+                        return ApplyResult.Failed;
+                    }
+                }
+
                 if (taskThreat.ActionDeleteTask)
                 {
+
                     if (DeleteTaskDirectly(taskThreat.Info, decision))
                     {
                         string reason = !string.IsNullOrEmpty(taskThreat.DetectionReasonRes)
@@ -53,6 +67,7 @@ namespace MSearch.Core.ThreatHandlers
                         return ApplyResult.Failed;
                     }
                 }
+
             }
 
             return ApplyResult.NotApplicable;

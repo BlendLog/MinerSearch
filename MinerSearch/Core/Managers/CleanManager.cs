@@ -116,7 +116,7 @@ namespace MSearch.Core.Managers
                         DirectoryThreatObject lockedDirTarget = decision.Target as DirectoryThreatObject;
                         string dirTag = lockedDirTarget.SourceTag;
 
-                        if (dirTag.Equals("locked") || dirTag.Equals("empty")) continue;
+                        if (dirTag.Equals("locked")) continue;
                     }
 
                     RecordResult(decision, result);
@@ -309,6 +309,9 @@ namespace MSearch.Core.Managers
                     return ScanActionType.Deleted;
 
                 case ThreatObjectKind.ScheduledTask:
+                    var task = decision.Target as TaskThreatObject;
+                    if (task != null && task.ActionQuarantineTask)
+                        return ScanActionType.Quarantine;
                     return ScanActionType.Deleted;
 
                 case ThreatObjectKind.WmiSubscription:
@@ -324,6 +327,7 @@ namespace MSearch.Core.Managers
                     var svc = decision.Target as ServiceThreatObject;
                     if (svc != null)
                     {
+                        if (svc.ShouldQuarantineService) return ScanActionType.Quarantine;
                         if (decision.ActionType == ScanActionType.Cured) return ScanActionType.Cured;
                         if (svc.ShouldDeleteService) return ScanActionType.Deleted;
                         if (svc.ShouldDisableService) return ScanActionType.Disabled;

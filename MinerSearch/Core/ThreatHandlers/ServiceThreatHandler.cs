@@ -1,3 +1,4 @@
+using MSearch;
 using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
@@ -27,7 +28,7 @@ namespace MSearch.Core.Handlers
             // ScanOnly — не выполняем действия
             if (LaunchOptions.GetInstance.ScanOnly) return ApplyResult.Skipped;
 
-            if (!svc.ShouldDisableService && !svc.ShouldDeleteService && !svc.ShouldRestoreServiceDll && !svc.ShouldResetSddl && !svc.ShouldRemoveFromSafeMode)
+            if (!svc.ShouldDisableService && !svc.ShouldDeleteService && !svc.ShouldQuarantineService && !svc.ShouldRestoreServiceDll && !svc.ShouldResetSddl && !svc.ShouldRemoveFromSafeMode)
                 return ApplyResult.Skipped;
 
             ServiceController service = null;
@@ -63,6 +64,8 @@ namespace MSearch.Core.Handlers
                     return ApplyResult.Failed;
                 }
 
+
+                if (svc.ShouldQuarantineService) return HandleMoveToQuarantine(svc, decision);
                 if (svc.ShouldDeleteService) return HandleDelete(service, svc, decision);
                 if (svc.ShouldRestoreService || svc.ShouldRestoreServiceDll) return HandleRestore(service, svc, decision);
                 if (svc.ShouldDisableService) return HandleDisableOnly(service, svc, decision);
@@ -163,8 +166,31 @@ namespace MSearch.Core.Handlers
             return false;
         }
 
+        ApplyResult HandleMoveToQuarantine(ServiceThreatObject svc, ThreatDecision decision)
+        {
+
+            if (svc.ShouldQuarantineService)
+            {
+                if (!QuarantineManager.AddService(svc.ServiceName, svc.Status, svc.StartMode))
+                {
+                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_QuarantineSaveFailed", svc.ServiceName);
+                    decision.ActionType = ScanActionType.Error;
+                    return ApplyResult.Failed;
+                }
+                else
+                {
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceQuarantined", svc.ServiceName);
+                    decision.ActionType = ScanActionType.Quarantine;
+                    return ApplyResult.Success;
+                }
+            }
+            return ApplyResult.NotApplicable;
+        }
+
+
         ApplyResult HandleDeleteWithoutController(ServiceThreatObject svc, ThreatDecision decision)
         {
+
             try
             {
                 NativeServiceController.SetServiceStartType(svc.ServiceName, NativeServiceController.ServiceStartMode.Disabled);
@@ -198,7 +224,6 @@ namespace MSearch.Core.Handlers
 
         ApplyResult HandleRestore(ServiceController service, ServiceThreatObject svc, ThreatDecision decision)
         {
-            // Специальная обработка для TermService - восстановление вместо удаления
             if (svc.ServiceName.Equals("TermService", StringComparison.OrdinalIgnoreCase))
             {
                 return HandleRestoreTermService(service, svc, decision);

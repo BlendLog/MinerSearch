@@ -158,7 +158,8 @@ namespace MSearch
                 Environment.Exit(1);
             }
 
-            // EULA and outdated OS warning (moved to EnvironmentChecker)
+            UnlockObjectClass.EnsureOwnSettingsKeyAccessible();
+
             if (!EnvironmentChecker.PromptEula(AppConfig.GetInstance))
             {
                 return;

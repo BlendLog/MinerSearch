@@ -32,6 +32,7 @@ namespace MSearch.Core.ThreatObjects
         public bool ActionDeleteTask { get; internal set; }
         public bool ActionDeleteFile { get; internal set; }
         public bool ActionDeleteAdditionalFile { get; internal set; }
+        public bool ActionQuarantineTask { get; internal set; }
         public string DetectionReasonRes { get; internal set; } // Чтобы знать, почему удаляем (Missing file / Malicious arg)
 
         public TaskThreatObject(ScheduledTaskInfo info, FileThreatObject linkedFile) : base(ThreatObjectKind.ScheduledTask, $"{info.Path}\\{info.Name}")

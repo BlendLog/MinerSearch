@@ -67,21 +67,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 yield break;
             }
 
-            // === РЕШЕНИЕ 3: Пустой каталог (autologger, av_block_remover) — удалить ===
-            if (dirThreat.SourceTag == "empty")
-            {
-                AppConfig.GetInstance.LL.LogWarnMessage("_SuspiciousPath", dirPath);
-
-                dirThreat.ShouldDeleteDirectory = true;
-
-                var decision = new ThreatDecision(dirThreat, riskLevel: 2, ScanObjectType.Malware);
-                decision.ActionType = ScanActionType.Deleted;
-                yield return decision;
-
-                yield break;
-            }
-
-            // === РЕШЕНИЕ 4: Каталог с двойной точкой на конце (вирусной трюк) — удалить ===
+            // === РЕШЕНИЕ 3: Каталог с двойной точкой на конце (вирусной трюк) — удалить ===
             if (dirThreat.SourceTag == "double_dot_dir")
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_MaliciousDir", dirPath);

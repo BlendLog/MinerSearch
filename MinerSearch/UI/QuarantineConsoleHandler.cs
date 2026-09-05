@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using MSearch;
 using MSearch.Core;
 using System;
 using System.Collections.Generic;
@@ -53,7 +54,7 @@ namespace MSearch.UI
 
         public void ShowQuarantineList()
         {
-            var entries = LoadQuarantineItems(REGISTRY_PATH_QUARANTINE);
+            var entries = QuarantineManager.List();
 
             if (entries.Count == 0)
             {
@@ -67,19 +68,21 @@ namespace MSearch.UI
             string path = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Path");
             string hash = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_FileHash");
             string size = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_FileSize");
+            string type = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Type");
 
-            Console.WriteLine($"Index | {path,-35} | {hash,-6} | {size}");
-            Console.WriteLine(new string('-', 70));
+            Console.WriteLine($"Index | {path,-35} | {hash,-6} | {size,-8} | {type}");
+            Console.WriteLine(new string('-', 80));
             for (int i = 0; i < entries.Count; i++)
             {
                 var e = entries[i];
-                Console.WriteLine(string.Format("{0,5} | {1,-35} | {2}... | {3}", i + 1, Shorten(e.OriginalPath, 35), e.FileHash.Substring(0, 6), e.FileSize));
+                string typeLabel = GetTypeLabel(e.ItemType);
+                Console.WriteLine(string.Format("{0,5} | {1,-35} | {2}... | {3,-8} | {4}", i + 1, Shorten(e.OriginalPath, 35), e.FileHash.Substring(0, 6), e.FileSize, typeLabel));
             }
         }
 
         public void RunNonInteractive(List<int> indexes, bool isDelete)
         {
-            var entries = LoadQuarantineItems(REGISTRY_PATH_QUARANTINE);
+            var entries = QuarantineManager.List();
 
             if (entries.Count == 0)
             {
@@ -99,9 +102,27 @@ namespace MSearch.UI
                     continue;
 
                 var item = entries[i];
-                bool ok = isDelete
-                    ? DeleteFileFromQuarantine(REGISTRY_PATH_QUARANTINE, item.FileHash)
-                    : RestoreFileFromQuarantine(REGISTRY_PATH_QUARANTINE, item.FileHash, item.OriginalPath);
+                bool ok = false;
+
+                if (isDelete)
+                {
+                    ok = QuarantineManager.Delete(item.FileHash);
+                }
+                else
+                {
+                    switch (item.ItemType)
+                    {
+                        case QuarantineItemType.Service:
+                            ok = QuarantineManager.RestoreService(item.FileHash);
+                            break;
+                        case QuarantineItemType.Task:
+                            ok = QuarantineManager.RestoreTask(item.FileHash);
+                            break;
+                        default:
+                            ok = QuarantineManager.RestoreFile(item.FileHash, item.OriginalPath);
+                            break;
+                    }
+                }
 
                 if (ok)
                     affected.Add(item.OriginalPath);
@@ -153,158 +174,9 @@ namespace MSearch.UI
             return "..." + path.Substring(path.Length - max + 3);
         }
 
-        List<QuarantineItem> LoadQuarantineItems(string path)
-        {
-            var result = new List<QuarantineItem>();
-
-            RegistryKey hkcu = Registry.CurrentUser.OpenSubKey(path);
-            if (hkcu != null)
-            {
-                LoadFrom(hkcu, result);
-                hkcu.Close();
-            }
-
-            RegistryKey hklm = Registry.LocalMachine.OpenSubKey(path);
-            if (hklm != null)
-            {
-                LoadFrom(hklm, result);
-                hklm.Close();
-            }
-
-            return result;
-        }
-
-        void LoadFrom(RegistryKey baseKey, List<QuarantineItem> result)
-        {
-            foreach (string subKey in baseKey.GetSubKeyNames())
-            {
-                RegistryKey key = baseKey.OpenSubKey(subKey);
-                if (key == null) continue;
-
-                string originalPath = key.GetValue("OriginalPath") as string;
-                byte[] data = key.GetValue("FileData") as byte[];
-                object totalPartsObj = key.GetValue("TotalParts");
-
-                long size = 0;
-                if (data != null) size = data.Length;
-                else if (totalPartsObj is int)
-                {
-                    int totalParts = (int)totalPartsObj;
-                    for (int i = 0; i < totalParts; i++)
-                    {
-                        var part = key.GetValue("FileData_Part" + i) as byte[];
-                        if (part != null) size += part.Length;
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(originalPath) && size > 0)
-                {
-                    result.Add(new QuarantineItem
-                    {
-                        OriginalPath = originalPath,
-                        FileHash = subKey,
-                        FileSize = FileChecker.GetFileSize(size)
-                    });
-                }
-                key.Close();
-            }
-        }
-
-        bool DeleteFileFromQuarantine(string path, string hash)
-        {
-            try
-            {
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
-                if (key != null && key.OpenSubKey(hash) != null)
-                {
-                    key.DeleteSubKey(hash);
-                    key.Close();
-                    return true;
-                }
-
-                key = Registry.LocalMachine.OpenSubKey(path, true);
-                if (key != null && key.OpenSubKey(hash) != null)
-                {
-                    key.DeleteSubKey(hash);
-                    key.Close();
-                    return true;
-                }
-
-                return false;
-            }
-            catch { return false; }
-        }
-
-        bool RestoreFileFromQuarantine(string path, string hash, string restorePath)
-        {
-            try
-            {
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
-                if (TryRestore(key, hash, restorePath))
-                {
-                    key.Close();
-                    return true;
-                }
-
-                key = Registry.LocalMachine.OpenSubKey(path, true);
-                if (TryRestore(key, hash, restorePath))
-                {
-                    key.Close();
-                    return true;
-                }
-
-                return false;
-            }
-            catch { return false; }
-        }
-
-        bool TryRestore(RegistryKey baseKey, string hash, string path)
-        {
-            if (baseKey == null) return false;
-            RegistryKey key = baseKey.OpenSubKey(hash);
-            if (key == null) return false;
-
-            byte[] encryptedData = key.GetValue("FileData") as byte[];
-            object totalPartsObj = key.GetValue("TotalParts");
-            byte[] data = null;
-
-            if (encryptedData != null)
-            {
-                data = DecryptData(encryptedData, Encoding.UTF8.GetBytes(hash.Substring(0, 8)));
-            }
-            else if (totalPartsObj is int)
-            {
-                int totalParts = (int)totalPartsObj;
-                List<byte> list = new List<byte>();
-                for (int i = 0; i < totalParts; i++)
-                {
-                    var part = key.GetValue("FileData_Part" + i) as byte[];
-                    if (part == null) return false;
-                    list.AddRange(part);
-                }
-                data = list.ToArray();
-            }
-            else return false;
-
-            key.Close();
-
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
-            File.WriteAllBytes(path, data);
-            baseKey.DeleteSubKey(hash);
-            return true;
-        }
-
-        byte[] DecryptData(byte[] encrypted, byte[] key)
-        {
-            byte[] output = new byte[encrypted.Length];
-            for (int i = 0; i < encrypted.Length; i++)
-                output[i] = (byte)(encrypted[i] ^ key[i % key.Length]);
-            return output;
-        }
-
         void InteractiveQuarantineMenu()
         {
-            var entries = LoadQuarantineItems(REGISTRY_PATH_QUARANTINE);
+            var entries = QuarantineManager.List();
             if (entries.Count == 0)
             {
                 PrintInfo(AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_Empty"));
@@ -341,7 +213,6 @@ namespace MSearch.UI
                 return;
             }
 
-            // Спрашиваем место восстановления только для restore
             if (isRestore)
             {
                 PromptRestoreDestination();
@@ -394,7 +265,7 @@ namespace MSearch.UI
 
         void RunInteractive(List<int> indexes, bool isDelete)
         {
-            var entries = LoadQuarantineItems(REGISTRY_PATH_QUARANTINE);
+            var entries = QuarantineManager.List();
 
             if (entries.Count == 0)
             {
@@ -416,14 +287,32 @@ namespace MSearch.UI
                 var item = entries[i];
                 string restorePath = item.OriginalPath;
 
-                if (!isDelete && !string.IsNullOrEmpty(SelectedCustomPath))
+                if (!isDelete && !string.IsNullOrEmpty(SelectedCustomPath) && item.ItemType == QuarantineItemType.File)
                 {
                     restorePath = Path.Combine(SelectedCustomPath, Path.GetFileName(item.OriginalPath));
                 }
 
-                bool ok = isDelete
-                    ? DeleteFileFromQuarantine(REGISTRY_PATH_QUARANTINE, item.FileHash)
-                    : RestoreFileFromQuarantine(REGISTRY_PATH_QUARANTINE, item.FileHash, restorePath);
+                bool ok = false;
+
+                if (isDelete)
+                {
+                    ok = QuarantineManager.Delete(item.FileHash);
+                }
+                else
+                {
+                    switch (item.ItemType)
+                    {
+                        case QuarantineItemType.Service:
+                            ok = QuarantineManager.RestoreService(item.FileHash);
+                            break;
+                        case QuarantineItemType.Task:
+                            ok = QuarantineManager.RestoreTask(item.FileHash);
+                            break;
+                        default:
+                            ok = QuarantineManager.RestoreFile(item.FileHash, restorePath);
+                            break;
+                    }
+                }
 
                 if (ok)
                     affected.Add(restorePath);
@@ -453,6 +342,19 @@ namespace MSearch.UI
             if (Environment.UserInteractive)
             {
                 Console.ReadLine();
+            }
+        }
+
+        string GetTypeLabel(QuarantineItemType type)
+        {
+            switch (type)
+            {
+                case QuarantineItemType.Service:
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Service");
+                case QuarantineItemType.Task:
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Task");
+                default:
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_File");
             }
         }
 

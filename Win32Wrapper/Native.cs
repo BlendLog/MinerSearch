@@ -310,6 +310,9 @@ namespace Win32Wrapper
         [DllImport("Advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern uint RegOpenKeyEx(IntPtr hKey, string lpSubKey, uint ulOptions, int samDesired, ref IntPtr phkResult);
 
+        [DllImport("Advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern uint RegCreateKeyEx(IntPtr hKey, string lpSubKey, int Reserved, string lpClass, uint dwOptions, int samDesired, IntPtr lpSecurityAttributes, out IntPtr phkResult, out uint lpdwDisposition);
+
 
         [DllImport("advapi32.dll", EntryPoint = "RegDeleteTreeW", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern int RegDeleteTree(IntPtr hKey, string lpSubKey);
@@ -1341,6 +1344,142 @@ namespace Win32Wrapper
 
                 if (scmHandle != IntPtr.Zero)
                     CloseServiceHandle(scmHandle);
+            }
+        }
+
+        #region CreateService
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern IntPtr CreateService(
+            IntPtr hSCManager,
+            string lpServiceName,
+            string lpDisplayName,
+            int dwDesiredAccess,
+            int dwServiceType,
+            int dwStartType,
+            int dwErrorControl,
+            string lpBinaryPathName,
+            string lpLoadOrderGroup,
+            IntPtr lpdwTagId,
+            string lpDependencies,
+            string lpServiceStartName,
+            string lpPassword);
+        #endregion
+
+        #region QueryServiceObjectSecurity
+        [DllImport("advapi32.dll", SetLastError = true)]
+        private static extern bool QueryServiceObjectSecurity(
+            IntPtr hService,
+            SecurityInfos dwSecurityInformation,
+            IntPtr lpSecurityDescriptor,
+            int cbBufSize,
+            out int pcbBytesNeeded);
+        #endregion
+
+        #region ConvertSecurityDescriptorToString
+        [DllImport("advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern bool ConvertSecurityDescriptorToStringSecurityDescriptor(
+            IntPtr SecurityDescriptor,
+            uint RequestedStringSDRevision,
+            out IntPtr StringSecurityDescriptor,
+            out IntPtr StringSecurityDescriptorLen);
+        #endregion
+
+        public const int SERVICE_WIN32_OWN_PROCESS = 0x00000010;
+        public const int SERVICE_WIN32_SHARE_PROCESS = 0x00000020;
+        public const int SERVICE_ERROR_NORMAL = 0x00000001;
+        public const int SERVICE_ERROR_IGNORE = 0x00000000;
+
+        public static IntPtr CreateServiceEntry(
+            string serviceName,
+            string displayName,
+            int serviceType,
+            int startType,
+            string binaryPathName,
+            string serviceStartName,
+            string dependencies,
+            string loadOrderGroup)
+        {
+            IntPtr scm = OpenSCManager(ScmAccessRights.Connect | ScmAccessRights.CreateService);
+            if (scm == IntPtr.Zero)
+                return IntPtr.Zero;
+
+            try
+            {
+                IntPtr svc = CreateService(
+                    scm,
+                    serviceName,
+                    displayName,
+                    (int)ServiceAccessRights.AllAccess,
+                    serviceType,
+                    startType,
+                    SERVICE_ERROR_NORMAL,
+                    binaryPathName,
+                    loadOrderGroup,
+                    IntPtr.Zero,
+                    dependencies,
+                    serviceStartName,
+                    null);
+
+                return svc;
+            }
+            finally
+            {
+                CloseServiceHandle(scm);
+            }
+        }
+
+        public static string GetServiceSddl(string serviceName)
+        {
+            IntPtr scm = OpenSCManager(ScmAccessRights.Connect);
+            if (scm == IntPtr.Zero) return null;
+
+            try
+            {
+                IntPtr svc = OpenService(scm, serviceName, ServiceAccessRights.ReadControl);
+                if (svc == IntPtr.Zero) return null;
+
+                try
+                {
+                    int bytesNeeded = 0;
+                    QueryServiceObjectSecurity(svc, SecurityInfos.DiscretionaryAcl, IntPtr.Zero, 0, out bytesNeeded);
+
+                    if (bytesNeeded <= 0) return null;
+
+                    IntPtr pSD = Marshal.AllocHGlobal(bytesNeeded);
+                    try
+                    {
+                        if (!QueryServiceObjectSecurity(svc, SecurityInfos.DiscretionaryAcl, pSD, bytesNeeded, out bytesNeeded))
+                            return null;
+
+                        IntPtr pStringSD = IntPtr.Zero;
+                        IntPtr stringLen = IntPtr.Zero;
+
+                        if (ConvertSecurityDescriptorToStringSecurityDescriptor(pSD, 1, out pStringSD, out stringLen))
+                        {
+                            try
+                            {
+                                return Marshal.PtrToStringUni(pStringSD);
+                            }
+                            finally
+                            {
+                                LocalFree(pStringSD);
+                            }
+                        }
+                        return null;
+                    }
+                    finally
+                    {
+                        Marshal.FreeHGlobal(pSD);
+                    }
+                }
+                finally
+                {
+                    CloseServiceHandle(svc);
+                }
+            }
+            finally
+            {
+                CloseServiceHandle(scm);
             }
         }
     }

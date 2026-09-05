@@ -266,75 +266,30 @@ namespace MSearch
                     UnlockObjectClass.UnblockRegistry(AppConfig.GetInstance.RegistryPathMain);
                 }
 
-                string fileHash = FileChecker.CalculateMD5(sourceFilePath);
-
-                const int blockSize = 1024 * 512;
-                using (var baseKey = Registry.LocalMachine.CreateSubKey(AppConfig.GetInstance.QuarantineKeyPath))
+                if (UnlockObjectClass.IsRegistryKeyBlocked(AppConfig.GetInstance.RegistryPathMain, RegistryHive.LocalMachine))
                 {
-                    if (baseKey == null)
-                        return;
-
-                    using (var subKey = baseKey.CreateSubKey(fileHash))
-                    {
-                        if (subKey == null)
-                            throw new InvalidOperationException($"Unable to create subkey: {fileHash}");
-
-                        subKey.SetValue("OriginalPath", sourceFilePath, RegistryValueKind.String);
-
-                        using (var fileStream = new FileStream(sourceFilePath, FileMode.Open, FileAccess.Read, FileShare.None))
-                        {
-                            long fileSize = fileStream.Length;
-                            int totalParts = (int)Math.Ceiling((double)fileSize / blockSize);
-                            subKey.SetValue("TotalParts", totalParts, RegistryValueKind.DWord);
-
-                            byte[] buffer = new byte[blockSize];
-                            for (int i = 0; i < totalParts; i++)
-                            {
-                                int bytesRead = fileStream.Read(buffer, 0, buffer.Length);
-                                if (bytesRead > 0)
-                                {
-                                    byte[] actualData = buffer;
-                                    if (bytesRead < blockSize)
-                                    {
-                                        actualData = new byte[bytesRead];
-                                        Array.Copy(buffer, actualData, bytesRead);
-                                    }
-
-                                    subKey.SetValue($"FileData_Part{i}", actualData, RegistryValueKind.Binary);
-                                }
-                            }
-                        }
-                    }
+                    UnlockObjectClass.UnblockRegistry(AppConfig.GetInstance.RegistryPathMain, RegistryHive.LocalMachine);
                 }
 
-                if (deleteFromSource)
-                {
-                    UnlockObjectClass.KillAndDelete(sourceFilePath);
-                }
+                QuarantineManager.AddFile(sourceFilePath, deleteFromSource);
 
                 if (!File.Exists(sourceFilePath))
                 {
                     AppConfig.GetInstance.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_MovedToQuarantine");
-                    //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Quarantine, note.Replace("?", "")));
                 }
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", sourceFilePath);
-                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, sourceFilePath, ScanActionType.LockedByAntivirus, note.Replace("?", "")));
 
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80070020)))
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByAnotherProcess", sourceFilePath);
-                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error, e.Message));
-                //AppConfig.GetInstance.totalNeutralizedThreats--;
             }
             catch (Exception ex)
             {
                 AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, sourceFilePath, "_File");
-                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, sourceFilePath, ScanActionType.Error, ex.Message));
-                //AppConfig.GetInstance.totalNeutralizedThreats--;
             }
         }
 

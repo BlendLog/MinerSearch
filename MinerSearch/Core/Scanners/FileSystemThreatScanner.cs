@@ -125,12 +125,10 @@ namespace MSearch.Core.Scanners
                     {
                         bool isLocked = UnlockObjectClass.IsLockedObject(dir);
 
-                        // Удаляем каталог если он заблокирован ИЛИ пуст
+                        // Удаляем каталог если он заблокирован
                         if (isLocked)
                         {
-                            // SourceTag = "locked" для заблокированных, "empty" для пустых
-                            string tag = "locked";
-                            var dirThreat = new DirectoryThreatObject(dir, Path.GetFileName(dir), sourceTag: tag);
+                            var dirThreat = new DirectoryThreatObject(dir, Path.GetFileName(dir), sourceTag: "locked");
                             results.Add(dirThreat);
                         }
                     }

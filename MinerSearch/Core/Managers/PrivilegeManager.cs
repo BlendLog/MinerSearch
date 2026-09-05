@@ -168,6 +168,7 @@ namespace MSearch.Core.Managers
             return false;
         }
 
+
         /// <summary>
         /// Возвращает список включённых привилегий (для DEBUG режима)
         /// </summary>

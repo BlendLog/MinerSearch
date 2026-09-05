@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using MSearch.Core;
+using MSearch.Core.Managers;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -113,7 +114,13 @@ namespace MSearch
 
         internal static bool IsRegistryKeyBlocked(string keyPath)
         {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(keyPath, RegistryKeyPermissionCheck.ReadSubTree, RegistryRights.ReadPermissions))
+            return IsRegistryKeyBlocked(keyPath, RegistryHive.CurrentUser);
+        }
+
+        internal static bool IsRegistryKeyBlocked(string keyPath, RegistryHive hive)
+        {
+            using (RegistryKey baseKey = RegistryKey.OpenBaseKey(hive, RegistryView.Registry64))
+            using (RegistryKey key = baseKey.OpenSubKey(keyPath, RegistryKeyPermissionCheck.ReadSubTree, RegistryRights.ReadPermissions))
             {
                 if (key != null)
                 {
@@ -133,13 +140,19 @@ namespace MSearch
             return false;
         }
 
-        internal static void UnblockRegistry(string keyPath)
+        internal static bool UnblockRegistry(string keyPath)
         {
-            using (RegistryKey baseKey = Registry.CurrentUser.OpenSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions))
+            return UnblockRegistry(keyPath, RegistryHive.CurrentUser);
+        }
+
+        internal static bool UnblockRegistry(string keyPath, RegistryHive hive)
+        {
+            using (RegistryKey baseKey = RegistryKey.OpenBaseKey(hive, RegistryView.Registry64))
+            using (RegistryKey hk = baseKey.OpenSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions))
             {
-                if (baseKey != null)
+                if (hk != null)
                 {
-                    var security = baseKey.GetAccessControl(AccessControlSections.Access);
+                    var security = hk.GetAccessControl(AccessControlSections.Access);
                     var rules = security.GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount));
 
                     bool changesMade = false;
@@ -159,50 +172,99 @@ namespace MSearch
 
                     if (changesMade)
                     {
-                        baseKey.SetAccessControl(security);
+                        hk.SetAccessControl(security);
 #if DEBUG
-                        Console.WriteLine($"[DBG] Update Access rules for key: {baseKey.Name}");
+                        Console.WriteLine($"[DBG] Update Access rules for key: {hk.Name}");
 #endif
                     }
+
+                    return changesMade;
                 }
             }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Определяет корень реестра по префиксу пути ("HKLM\", "HKEY_LOCAL_MACHINE\", "HKCU\", "HKEY_CURRENT_USER\").
+        /// Без префикса — совместимость: HKEY_CURRENT_USER.
+        /// </summary>
+        private static IntPtr ResolveRegistryRoot(string keyPath, out string subKeyPath)
+        {
+            subKeyPath = keyPath;
+
+            if (keyPath.StartsWith("HKLM\\", StringComparison.OrdinalIgnoreCase))
+            {
+                subKeyPath = keyPath.Substring(5);
+                return (IntPtr)Native.HKEY_LOCAL_MACHINE;
+            }
+            if (keyPath.StartsWith("HKEY_LOCAL_MACHINE\\", StringComparison.OrdinalIgnoreCase))
+            {
+                subKeyPath = keyPath.Substring(17);
+                return (IntPtr)Native.HKEY_LOCAL_MACHINE;
+            }
+            if (keyPath.StartsWith("HKCU\\", StringComparison.OrdinalIgnoreCase))
+            {
+                subKeyPath = keyPath.Substring(5);
+                return (IntPtr)Native.HKEY_CURRENT_USER;
+            }
+            if (keyPath.StartsWith("HKEY_CURRENT_USER\\", StringComparison.OrdinalIgnoreCase))
+            {
+                subKeyPath = keyPath.Substring(18);
+                return (IntPtr)Native.HKEY_CURRENT_USER;
+            }
+            return (IntPtr)Native.HKEY_CURRENT_USER;
         }
 
         //https://learn.microsoft.com/en-us/answers/questions/726748/how-can-i-change-particular-registry-owner-in-c
-        public static void TakeownRegKey(string keyPath)
+        public static bool TakeownRegKey(string keyPath)
         {
+            string subKeyPath;
+            IntPtr hRoot = ResolveRegistryRoot(keyPath, out subKeyPath);
+
             string sName = Environment.UserName;
             NTAccount ntAccount = new NTAccount(sName);
             string sSid = ntAccount.Translate(typeof(SecurityIdentifier)).Value;
             IntPtr pSid = IntPtr.Zero;
             Native.ConvertStringSidToSid(sSid, out pSid);
             IntPtr hKey = IntPtr.Zero;
-            uint dwErr = Native.RegOpenKeyEx((IntPtr)Native.HKEY_CURRENT_USER, keyPath, 0, Native.KEY_WOW64_64KEY | Native.WRITE_OWNER, ref hKey);
+            uint dwErr = Native.RegOpenKeyEx(hRoot, subKeyPath, 0, Native.KEY_WOW64_64KEY | Native.WRITE_OWNER, ref hKey);
             if (dwErr == 0)
             {
-                uint dwRet = Native.SetSecurityInfo(hKey,
-                      Native.SE_OBJECT_TYPE.SE_REGISTRY_KEY,
-                      Native.OWNER_SECURITY_INFORMATION,
-                      pSid,
-                      IntPtr.Zero,
-                      IntPtr.Zero,
-                      IntPtr.Zero);
-                Native.RegCloseKey(hKey);
+                try
+                {
+                    uint dwRet = Native.SetSecurityInfo(hKey,
+                          Native.SE_OBJECT_TYPE.SE_REGISTRY_KEY,
+                          Native.OWNER_SECURITY_INFORMATION,
+                          pSid,
+                          IntPtr.Zero,
+                          IntPtr.Zero,
+                          IntPtr.Zero);
+                    return dwRet == 0;
+                }
+                finally
+                {
+                    Native.RegCloseKey(hKey);
+                }
             }
+            return false;
         }
 
-        public static void ResetPermissionsToDefault(string keyPath)
+        public static bool ResetPermissionsToDefault(string keyPath)
         {
+            string subKeyPath;
+            IntPtr hRoot = ResolveRegistryRoot(keyPath, out subKeyPath);
+
             IntPtr hKey = IntPtr.Zero;
             uint err = Native.RegOpenKeyEx(
-                (IntPtr)Native.HKEY_CURRENT_USER,
-                keyPath,
+                hRoot,
+                subKeyPath,
                 0,
                 Native.KEY_WOW64_64KEY | Native.WRITE_DAC,
                 ref hKey);
 
             if (err != 0 || hKey == IntPtr.Zero)
-                throw new Win32Exception((int)err, "RegOpenKeyEx failed");
+                return false;
 
             try
             {
@@ -216,13 +278,110 @@ namespace MSearch
                     IntPtr.Zero
                 );
 
-                if (result != 0)
-                    throw new Win32Exception((int)result, "SetSecurityInfo failed");
+                return result == 0;
             }
             finally
             {
                 Native.RegCloseKey(hKey);
             }
+        }
+
+        /// <summary>
+        /// Создаёт собственные ключи настроек приложения (в HKCU и карантин в HKLM), если их ещё нет,
+        /// затем проверяет и восстанавливает доступ к ним: снимает Deny-ACE, а если отказа недостаточно —
+        /// забирает владение (WRITE_OWNER, при включённом SeTakeOwnershipPrivilege) и сбрасывает ACL через WRITE_DAC.
+        /// </summary>
+        internal static void EnsureOwnSettingsKeyAccessible()
+        {
+            try
+            {
+                string keyPath = AppConfig.GetInstance.RegistryPathMain;
+                string quarantinePath = AppConfig.GetInstance.QuarantineKeyPath;
+
+                EnsureKeyExists(keyPath, RegistryHive.CurrentUser);
+                EnsureKeyExists(quarantinePath, RegistryHive.LocalMachine);
+
+                if (!IsHiveKeyWritable(keyPath, RegistryHive.CurrentUser))
+                {
+                    RepairOwnKeyPath(keyPath, RegistryHive.CurrentUser);
+                }
+
+                if (!IsHiveKeyWritable(quarantinePath, RegistryHive.LocalMachine))
+                {
+                    RepairOwnKeyPath(quarantinePath, RegistryHive.LocalMachine);
+                }
+            }
+            catch (Exception ex)
+            {
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, AppConfig.GetInstance.RegistryPathMain);
+            }
+        }
+
+        private static bool RepairOwnKeyPath(string keyPath, RegistryHive hive)
+        {
+            try { UnblockRegistry(keyPath, hive); } catch { }
+
+            if (IsHiveKeyWritable(keyPath, hive))
+                return true;
+
+            string prefix = hive == RegistryHive.LocalMachine ? @"HKLM\" : @"HKCU\";
+            if (TakeownRegKey(prefix + keyPath))
+                ResetPermissionsToDefault(prefix + keyPath);
+
+            return IsHiveKeyWritable(keyPath, hive);
+        }
+
+        /// <summary>
+        /// Возвращает корневый дескриптор (HKEY_*) для заданного улья реестра.
+        /// </summary>
+        private static IntPtr GetHiveRoot(RegistryHive hive)
+        {
+            switch (hive)
+            {
+                case RegistryHive.LocalMachine:
+                    return (IntPtr)Native.HKEY_LOCAL_MACHINE;
+                case RegistryHive.ClassesRoot:
+                    return (IntPtr)Native.HKEY_CLASSES_ROOT;
+                default:
+                    return (IntPtr)Native.HKEY_CURRENT_USER;
+            }
+        }
+
+        /// <summary>
+        /// Создаёт ключ (и промежуточные родительские) через RegCreateKeyEx, если его ещё нет.
+        /// Не бросает исключений: при отказе в доступе просто возвращает false.
+        /// </summary>
+        private static bool EnsureKeyExists(string keyPath, RegistryHive hive)
+        {
+            IntPtr hRoot = GetHiveRoot(hive);
+
+            IntPtr hKey = IntPtr.Zero;
+            uint disposition;
+            uint result = Native.RegCreateKeyEx(hRoot, keyPath, 0, null, 0,
+                Native.KEY_WRITE | Native.KEY_WOW64_64KEY, IntPtr.Zero, out hKey, out disposition);
+
+            if (result == 0 && hKey != IntPtr.Zero)
+            {
+                Native.RegCloseKey(hKey);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool IsHiveKeyWritable(string keyPath, RegistryHive hive)
+        {
+            IntPtr hRoot = GetHiveRoot(hive);
+
+            IntPtr hKey = IntPtr.Zero;
+            uint result = Native.RegOpenKeyEx(hRoot, keyPath, 0,
+                Native.KEY_WRITE | Native.KEY_WOW64_64KEY, ref hKey);
+
+            if (result == 0 && hKey != IntPtr.Zero)
+            {
+                Native.RegCloseKey(hKey);
+                return true;
+            }
+            return false;
         }
 
         internal static bool KillAndDelete(string filePath)

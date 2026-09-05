@@ -2960,4 +2960,82 @@ Do you want to continue?
   <data name="_label_autoApplyThreatAction_RU" xml:space="preserve">
     <value>Принимать решение для неизвестных угроз автоматически</value>
   </data>
+  <data name="_UnsignedExeInSystemLocation_EN" xml:space="preserve">
+    <value>Unsigned executable found in system location:</value>
+  </data>
+  <data name="_UnsignedExeInSystemLocation_RU" xml:space="preserve">
+    <value>Неподписанный исполняемый файл в системном расположении:</value>
+  </data>
+  <data name="_RestoredRegKeyAccess_EN" xml:space="preserve">
+    <value>Access to application settings registry key has been restored:</value>
+  </data>
+  <data name="_RestoredRegKeyAccess_RU" xml:space="preserve">
+    <value>Восстановлен доступ к ключу реестра с настройками приложения:</value>
+  </data>
+  <data name="_RegKeyAccessNotRestored_EN" xml:space="preserve">
+    <value>Could not restore access to application settings registry key:</value>
+  </data>
+  <data name="_RegKeyAccessNotRestored_RU" xml:space="preserve">
+    <value>Не удалось восстановить доступ к ключу реестра с настройками приложения:</value>
+  </data>
+  <data name="_DataGridHeader_Type_EN" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="_DataGridHeader_Type_RU" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="_QuarantineType_File_EN" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="_QuarantineType_File_RU" xml:space="preserve">
+    <value>Файл</value>
+  </data>
+  <data name="_QuarantineType_Service_EN" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="_QuarantineType_Service_RU" xml:space="preserve">
+    <value>Служба</value>
+  </data>
+  <data name="_QuarantineType_Task_EN" xml:space="preserve">
+    <value>Task</value>
+  </data>
+  <data name="_QuarantineType_Task_RU" xml:space="preserve">
+    <value>Задача</value>
+  </data>
+  <data name="_QuarantineServiceRestored_EN" xml:space="preserve">
+    <value>Service restored from quarantine:</value>
+  </data>
+  <data name="_QuarantineServiceRestored_RU" xml:space="preserve">
+    <value>Служба восстановлена из карантина:</value>
+  </data>
+  <data name="_QuarantineServiceRestoreFailed_EN" xml:space="preserve">
+    <value>Failed to restore service from quarantine:</value>
+  </data>
+  <data name="_QuarantineServiceRestoreFailed_RU" xml:space="preserve">
+    <value>Не удалось восстановить службу из карантина:</value>
+  </data>
+  <data name="_QuarantineTaskRestored_EN" xml:space="preserve">
+    <value>Scheduled task restored from quarantine:</value>
+  </data>
+  <data name="_QuarantineTaskRestored_RU" xml:space="preserve">
+    <value>Задание по расписанию восстановлено из карантина:</value>
+  </data>
+  <data name="_QuarantineTaskRestoreFailed_EN" xml:space="preserve">
+    <value>Failed to restore scheduled task from quarantine:</value>
+  </data>
+  <data name="_QuarantineTaskRestoreFailed_RU" xml:space="preserve">
+    <value>Не удалось восстановить задание по расписанию из карантина:</value>
+  </data>
+  <data name="_QuarantineTaskRestoreSafeMode_EN" xml:space="preserve">
+    <value>Cannot restore scheduled task: system is running in Safe Mode, Task Scheduler service is unavailable.</value>
+  </data>
+  <data name="_QuarantineTaskRestoreSafeMode_RU" xml:space="preserve">
+    <value>Невозможно восстановить задание: система загружена в безопасном режиме, служба Планировщик заданий недоступна.</value>
+  </data>
+  <data name="_QuarantineSaveFailed_EN" xml:space="preserve">
+    <value>Failed to save item to quarantine, operation aborted:</value>
+  </data>
+  <data name="_QuarantineSaveFailed_RU" xml:space="preserve">
+    <value>Не удалось сохранить объект в карантин, операция прервана:</value>
+  </data>
 </root>

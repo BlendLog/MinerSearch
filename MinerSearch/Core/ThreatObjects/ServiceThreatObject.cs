@@ -21,11 +21,13 @@ namespace MSearch.Core.ThreatObjects
         public bool ShouldStopService { get; internal set; }
         public bool ShouldDisableService { get; internal set; }
         public bool ShouldDeleteService { get; internal set; }
+        public bool ShouldQuarantineService { get; internal set; }
         public bool ShouldRestoreService { get; internal set; } //special for TermService (full restore)
         public bool ShouldRestoreServiceDll { get; internal set; } // restore ServiceDll to original termsrv.dll
         public bool ShouldResetSddl { get; internal set; } // Сбросить SDDL службы к стандартному значению при очистке
         public bool ShouldRemoveFromSafeMode { get; internal set; } // Требуется удалить запись из SafeBoot
         public bool SCMUnavailable { get; internal set; }  // UnauthorizedAccessException / Win32Exception(5)
+        public bool HasUnsignedServiceDll { get; internal set; } // ServiceDll без подписи — неопределённость вредоносности
 
         public ServiceThreatObject(string serviceName, string servicePath, string servicePathWithArgs, ServiceControllerStatus status, bool hasInSafeMode, NativeServiceController.ServiceStartMode startMode) : base(ThreatObjectKind.Service, serviceName)
         {

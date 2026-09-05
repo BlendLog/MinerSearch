@@ -224,6 +224,7 @@ namespace MSearch.UI
                     var svc = target as ServiceThreatObject;
                     if (svc != null)
                     {
+                        if (svc.ShouldQuarantineService) return ScanActionTypeUserSelected.Quarantine;
                         if (svc.ShouldDeleteService) return ScanActionTypeUserSelected.Delete;
                         if (svc.ShouldRestoreService || svc.ShouldRestoreServiceDll) return ScanActionTypeUserSelected.Cure;
                         if (svc.ShouldDisableService || svc.ShouldStopService) return ScanActionTypeUserSelected.Disable;
@@ -234,6 +235,7 @@ namespace MSearch.UI
                     var t = target as TaskThreatObject;
                     if (t != null)
                     {
+                        if (t.ActionQuarantineTask) return ScanActionTypeUserSelected.Quarantine;
                         if (t.ActionDeleteTask) return ScanActionTypeUserSelected.Delete;
                     }
                     break;
@@ -290,10 +292,10 @@ namespace MSearch.UI
 
                 case ThreatObjectKind.Service:
                     // TermService — Cure, Disable, Delete, Skip (можно вылечить)
-                    // Остальные службы — Disable, Delete, Skip (только отключить или удалить)
+                    // Остальные службы — Quarantine, Disable, Delete, Skip
                     if (target is ServiceThreatObject svc && svc.ServiceName.Equals("TermService", StringComparison.OrdinalIgnoreCase))
                         return new[] { ScanActionTypeUserSelected.Cure, ScanActionTypeUserSelected.Disable, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
-                    return new[] { ScanActionTypeUserSelected.Disable, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
+                    return new[] { ScanActionTypeUserSelected.Quarantine, ScanActionTypeUserSelected.Disable, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
 
                 case ThreatObjectKind.FirewallRule:
                 case ThreatObjectKind.WmiSubscription:
@@ -303,8 +305,8 @@ namespace MSearch.UI
                     return new[] { ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
 
                 case ThreatObjectKind.ScheduledTask:
-                    // ScheduledTask — только удалить или пропустить
-                    return new[] { ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
+                    // ScheduledTask — Quarantine, Delete, Skip
+                    return new[] { ScanActionTypeUserSelected.Quarantine, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
 
                 case ThreatObjectKind.Process:
                     // Process — завершить или пропустить (нельзя в карантин/удалить)
@@ -702,6 +704,7 @@ namespace MSearch.UI
             bool shouldStopServiceWasSet = svc.ShouldStopService;
             bool shouldDisableServiceWasSet = svc.ShouldDisableService;
             bool shouldDeleteServiceWasSet = svc.ShouldDeleteService;
+            bool shouldQuarantineServiceWasSet = svc.ShouldQuarantineService;
             bool shouldRestoreServiceWasSet = svc.ShouldRestoreService;
             bool shouldRestoreServiceDllWasSet = svc.ShouldRestoreServiceDll;
             bool shouldResetSddlWasSet = svc.ShouldResetSddl;
@@ -711,6 +714,7 @@ namespace MSearch.UI
             svc.ShouldStopService = false;
             svc.ShouldDisableService = false;
             svc.ShouldDeleteService = false;
+            svc.ShouldQuarantineService = false;
             svc.ShouldRestoreService = false;
             svc.ShouldRestoreServiceDll = false;
             svc.ShouldResetSddl = false;
@@ -739,7 +743,8 @@ namespace MSearch.UI
                     svc.ShouldRemoveFromSafeMode = shouldRemoveFromSafeModeWasSet;
                     break;
                 case ScanActionTypeUserSelected.Quarantine:
-                    // Карантин — останавливаем и отключаем службу
+                    // Карантин — запоминаем конфиг, останавливаем и отключаем службу
+                    svc.ShouldQuarantineService = true;
                     svc.ShouldStopService = true;
                     svc.ShouldDisableService = true;
                     svc.ShouldRemoveFromSafeMode = shouldRemoveFromSafeModeWasSet;
@@ -805,11 +810,13 @@ namespace MSearch.UI
             bool actionDeleteTaskWasSet = task.ActionDeleteTask;
             bool actionDeleteFileWasSet = task.ActionDeleteFile;
             bool actionDeleteAdditionalFileWasSet = task.ActionDeleteAdditionalFile;
+            bool actionQuarantineTaskWasSet = task.ActionQuarantineTask;
 
             // Сбрасываем флаги
             task.ActionDeleteTask = false;
             task.ActionDeleteFile = false;
             task.ActionDeleteAdditionalFile = false;
+            task.ActionQuarantineTask = false;
 
             switch (action)
             {
@@ -821,9 +828,9 @@ namespace MSearch.UI
                     task.ActionDeleteAdditionalFile = actionDeleteAdditionalFileWasSet;
                     break;
                 case ScanActionTypeUserSelected.Quarantine:
-                    // Для карантина удаляем только задачу, файл помещаем в карантин
+                    // Карантин — сохраняем XML, затем удаляем задачу
+                    task.ActionQuarantineTask = true;
                     task.ActionDeleteTask = true;
-                    // Файл будет обработан через ApplyOverrideToFile (карантин)
                     break;
                 case ScanActionTypeUserSelected.Skip:
                     // Пропускаем — оставляем флаги сброшенными

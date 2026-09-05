@@ -3288,6 +3288,240 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Unsigned executable found in system location:.
+        /// </summary>
+        internal static string _UnsignedExeInSystemLocation_EN {
+            get {
+                return ResourceManager.GetString("_UnsignedExeInSystemLocation_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Неподписанный исполняемый файл в системном расположении:.
+        /// </summary>
+        internal static string _UnsignedExeInSystemLocation_RU {
+            get {
+                return ResourceManager.GetString("_UnsignedExeInSystemLocation_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Access to application settings registry key has been restored:.
+        /// </summary>
+        internal static string _RestoredRegKeyAccess_EN {
+            get {
+                return ResourceManager.GetString("_RestoredRegKeyAccess_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Восстановлен доступ к ключу реестра с настройками приложения:.
+        /// </summary>
+        internal static string _RestoredRegKeyAccess_RU {
+            get {
+                return ResourceManager.GetString("_RestoredRegKeyAccess_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Could not restore access to application settings registry key:.
+        /// </summary>
+        internal static string _RegKeyAccessNotRestored_EN {
+            get {
+                return ResourceManager.GetString("_RegKeyAccessNotRestored_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось восстановить доступ к ключу реестра с настройками приложения:.
+        /// </summary>
+        internal static string _RegKeyAccessNotRestored_RU {
+            get {
+                return ResourceManager.GetString("_RegKeyAccessNotRestored_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Type.
+        /// </summary>
+        internal static string _DataGridHeader_Type_EN {
+            get {
+                return ResourceManager.GetString("_DataGridHeader_Type_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тип.
+        /// </summary>
+        internal static string _DataGridHeader_Type_RU {
+            get {
+                return ResourceManager.GetString("_DataGridHeader_Type_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на File.
+        /// </summary>
+        internal static string _QuarantineType_File_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineType_File_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл.
+        /// </summary>
+        internal static string _QuarantineType_File_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineType_File_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Service.
+        /// </summary>
+        internal static string _QuarantineType_Service_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineType_Service_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Служба.
+        /// </summary>
+        internal static string _QuarantineType_Service_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineType_Service_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Task.
+        /// </summary>
+        internal static string _QuarantineType_Task_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineType_Task_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Задача.
+        /// </summary>
+        internal static string _QuarantineType_Task_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineType_Task_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Service restored from quarantine:.
+        /// </summary>
+        internal static string _QuarantineServiceRestored_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineServiceRestored_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Служба восстановлена из карантина:.
+        /// </summary>
+        internal static string _QuarantineServiceRestored_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineServiceRestored_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to restore service from quarantine:.
+        /// </summary>
+        internal static string _QuarantineServiceRestoreFailed_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineServiceRestoreFailed_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось восстановить службу из карантина:.
+        /// </summary>
+        internal static string _QuarantineServiceRestoreFailed_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineServiceRestoreFailed_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scheduled task restored from quarantine:.
+        /// </summary>
+        internal static string _QuarantineTaskRestored_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineTaskRestored_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Задание по расписанию восстановлено из карантина:.
+        /// </summary>
+        internal static string _QuarantineTaskRestored_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineTaskRestored_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to restore scheduled task from quarantine:.
+        /// </summary>
+        internal static string _QuarantineTaskRestoreFailed_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineTaskRestoreFailed_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось восстановить задание по расписанию из карантина:.
+        /// </summary>
+        internal static string _QuarantineTaskRestoreFailed_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineTaskRestoreFailed_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Cannot restore scheduled task: system is running in Safe Mode, Task Scheduler service is unavailable.
+        /// </summary>
+        internal static string _QuarantineTaskRestoreSafeMode_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineTaskRestoreSafeMode_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Невозможно восстановить задание: система загружена в безопасном режиме, служба Планировщик заданий недоступна.
+        /// </summary>
+        internal static string _QuarantineTaskRestoreSafeMode_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineTaskRestoreSafeMode_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to save item to quarantine, operation aborted:.
+        /// </summary>
+        internal static string _QuarantineSaveFailed_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineSaveFailed_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось сохранить объект в карантин, операция прервана:.
+        /// </summary>
+        internal static string _QuarantineSaveFailed_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineSaveFailed_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Checking for updates. Please, wait....
         /// </summary>
         internal static string _LogCheckingUpdates_EN {
