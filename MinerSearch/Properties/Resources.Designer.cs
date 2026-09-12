@@ -2786,6 +2786,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Подозрительная запись -.
+        /// </summary>
+        internal static string _SuspiciousHostsEntry_RU {
+            get {
+                return ResourceManager.GetString("_SuspiciousHostsEntry_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Suspicious entry -.
+        /// </summary>
+        internal static string _SuspiciousHostsEntry_EN {
+            get {
+                return ResourceManager.GetString("_SuspiciousHostsEntry_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Invalid signature file.
         /// </summary>
         internal static string _InvalidCertificateSignature_EN {

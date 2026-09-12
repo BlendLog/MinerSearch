@@ -281,6 +281,9 @@ Before proceeding, you must read the license agreement (license.rtf or a copy of
   <data name="_InfectedHosts_RU" xml:space="preserve">
     <value>Заражённый файл hosts -</value>
   </data>
+  <data name="_SuspiciousHostsEntry_RU" xml:space="preserve">
+    <value>Подозрительная запись -</value>
+  </data>
   <data name="_SuccessGrantPrivilege_RU" xml:space="preserve">
     <value>Приложение обнаружило недостающие права доступа для группы Администраторов, которые были восстановлены. Для применения изменений следует выполнить повторный вход в систему или перезагрузить компьютер.</value>
   </data>
@@ -2279,6 +2282,9 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_MaliciousEntry_EN" xml:space="preserve">
     <value>Malicious entry -</value>
+  </data>
+  <data name="_SuspiciousHostsEntry_EN" xml:space="preserve">
+    <value>Suspicious entry -</value>
   </data>
   <data name="_BlacklistedPort_RU" xml:space="preserve">
     <value>Нежелательный порт:</value>

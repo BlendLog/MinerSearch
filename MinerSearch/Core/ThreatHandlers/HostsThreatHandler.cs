@@ -13,7 +13,7 @@ namespace MSearch.Core.ThreatHandlers
     /// <summary>
     /// SRP: Обрабатывает заражённый файл hosts.
     /// - Копирует заражённый файл в карантин
-    /// - Удаляет вредоносные строки
+    /// - Удаляет строки-глушилки (Blocked); Redirect не трогаем
     /// - Записывает очищенный файл обратно
     /// </summary>
     internal sealed class HostsThreatHandler : IThreatHandler
@@ -29,7 +29,7 @@ namespace MSearch.Core.ThreatHandlers
             string hostsPath = hostsThreat.HostsFilePath;
 
 #if DEBUG
-            Console.WriteLine($"[DBG HostsThreatHandler] Phase={phase}, Path={hostsPath}, InfectedLines={hostsThreat.InfectedLinesCount}");
+            Console.WriteLine($"[DBG HostsThreatHandler] Phase={phase}, Path={hostsPath}, Blocked={hostsThreat.BlockedLinesCount}, Redirect={hostsThreat.RedirectLinesCount}");
 #endif
 
             if (phase != CleanupPhase.Finalize)
@@ -68,8 +68,13 @@ namespace MSearch.Core.ThreatHandlers
                     Utils.AddToQuarantine(hostsThreat.HostsFilePath, "", false);
                 }
 
-                // 2. Удаляем вредоносные строки
-                if (hostsThreat.ShouldRemoveInfectedLines && hostsThreat.InfectedLinesCount > 0)
+                // 2. Удаляем только глушилки. Redirect не трогаем (инфо-лог в анализаторе).
+                // Skip в review отсекается выше по пайплайну (Program.cs), сюда доходят только Cure/Delete.
+                List<string> linesToRemove = new List<string>();
+                if (hostsThreat.ShouldRemoveBlockedLines && hostsThreat.BlockedLinesCount > 0)
+                    linesToRemove.AddRange(hostsThreat.BlockedLines);
+
+                if (linesToRemove.Count > 0)
                 {
                     // Снять атрибут ReadOnly
                     File.SetAttributes(hostsPath, FileAttributes.Normal);
@@ -87,11 +92,12 @@ namespace MSearch.Core.ThreatHandlers
                         
                         // Работаем с копией (очистка вредоносных записей)
                         List<string> allLines = File.ReadLines(tempPath).ToList();
-                        HashSet<string> infectedSet = new HashSet<string>(hostsThreat.InfectedLines, StringComparer.Ordinal);
+                        HashSet<string> infectedSet = new HashSet<string>(linesToRemove, StringComparer.Ordinal);
 
-                        foreach (var line in infectedSet)
+                        foreach (var line in hostsThreat.BlockedLines)
                         {
-                            AppConfig.GetInstance.LL.LogWarnMessage("_MaliciousEntry", line);
+                            if (infectedSet.Contains(line))
+                                AppConfig.GetInstance.LL.LogWarnMessage("_MaliciousEntry", line);
                         }
 
                         List<string> cleanedLines = new List<string>();
@@ -112,7 +118,7 @@ namespace MSearch.Core.ThreatHandlers
                         File.Copy(tempPath, hostsPath, true);
                         NativeFileOperations.DeleteFileWithRetry(tempPath);
 
-                        AppConfig.GetInstance.LL.LogSuccessMessage("_HostsFileRecovered", hostsThreat.InfectedLinesCount.ToString());
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_HostsFileRecovered", linesToRemove.Count.ToString());
 
                         decision.ActionType = ScanActionType.Cured;
                         return ApplyResult.Success;
