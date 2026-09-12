@@ -735,6 +735,7 @@ namespace MSearch.UI
                     svc.ShouldStopService = shouldStopServiceWasSet || true;
                     svc.ShouldDisableService = shouldDisableServiceWasSet || true;
                     svc.ShouldDeleteService = shouldDeleteServiceWasSet || true;
+                    svc.ShouldResetSddl = shouldResetSddlWasSet;
                     svc.ShouldRemoveFromSafeMode = shouldRemoveFromSafeModeWasSet;
                     break;
                 case ScanActionTypeUserSelected.Disable:
@@ -809,13 +810,11 @@ namespace MSearch.UI
             // Сохраняем флаги, установленные анализатором
             bool actionDeleteTaskWasSet = task.ActionDeleteTask;
             bool actionDeleteFileWasSet = task.ActionDeleteFile;
-            bool actionDeleteAdditionalFileWasSet = task.ActionDeleteAdditionalFile;
             bool actionQuarantineTaskWasSet = task.ActionQuarantineTask;
 
             // Сбрасываем флаги
             task.ActionDeleteTask = false;
             task.ActionDeleteFile = false;
-            task.ActionDeleteAdditionalFile = false;
             task.ActionQuarantineTask = false;
 
             switch (action)
@@ -825,7 +824,6 @@ namespace MSearch.UI
                     // Восстанавливаем флаги для лечения/удаления
                     task.ActionDeleteTask = actionDeleteTaskWasSet || actionDeleteFileWasSet;
                     task.ActionDeleteFile = actionDeleteFileWasSet;
-                    task.ActionDeleteAdditionalFile = actionDeleteAdditionalFileWasSet;
                     break;
                 case ScanActionTypeUserSelected.Quarantine:
                     // Карантин — сохраняем XML, затем удаляем задачу

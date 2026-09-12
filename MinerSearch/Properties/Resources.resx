@@ -1551,6 +1551,9 @@ Click \b Exit\b0  to exit.\par
   <data name="_ServiceDisabled_EN" xml:space="preserve">
     <value>Service has been disabled</value>
   </data>
+  <data name="_ServiceQuarantined_EN" xml:space="preserve">
+    <value>Service moved to quarantine</value>
+  </data>
   <data name="_TryUnlockDirectory_RU" xml:space="preserve">
     <value>Попытка разблокировать каталог...</value>
   </data>
@@ -1988,6 +1991,9 @@ Click \b Exit\b0  to exit.\par
   <data name="_TaskMarkedToDelete_RU" xml:space="preserve">
     <value>Запланированная задача отмечена на удаление</value>
   </data>
+  <data name="_TaskMarkedToQuarantine_RU" xml:space="preserve">
+    <value>Запланированная задача отмечена на карантин (сохранение с последующим удалением)</value>
+  </data>
   <data name="_JoinToTelegram_EN" xml:space="preserve">
     <value>Have questions? Join the telegram!</value>
   </data>
@@ -2093,6 +2099,9 @@ Click \b Exit\b0  to exit.\par
   <data name="_TaskMarkedToDelete_EN" xml:space="preserve">
     <value>Scheduled task has beed marked to delete</value>
   </data>
+  <data name="_TaskMarkedToQuarantine_EN" xml:space="preserve">
+    <value>Scheduled task has been marked for quarantine (save then delete)</value>
+  </data>
   <data name="_ProcessingHosts_EN" xml:space="preserve">
     <value>Processing hosts file...</value>
   </data>
@@ -2171,6 +2180,9 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_ServiceDisabled_RU" xml:space="preserve">
     <value>Службы была отключена</value>
+  </data>
+  <data name="_ServiceQuarantined_RU" xml:space="preserve">
+    <value>Служба перемещена в карантин</value>
   </data>
   <data name="_ErrorFileOnlineOnly_EN" xml:space="preserve">
     <value>The file is only available online</value>
@@ -3037,5 +3049,17 @@ Do you want to continue?
   </data>
   <data name="_QuarantineSaveFailed_RU" xml:space="preserve">
     <value>Не удалось сохранить объект в карантин, операция прервана:</value>
+  </data>
+  <data name="_QuarantineRestoreTargetExists_EN" xml:space="preserve">
+    <value>Restore skipped: target file already exists and differs from quarantined copy:</value>
+  </data>
+  <data name="_QuarantineRestoreTargetExists_RU" xml:space="preserve">
+    <value>Восстановление пропущено: целевой файл уже существует и отличается от копии в карантине:</value>
+  </data>
+  <data name="_NoteDisallowRunBlocked_EN" xml:space="preserve">
+    <value>Blocked launch:</value>
+  </data>
+  <data name="_NoteDisallowRunBlocked_RU" xml:space="preserve">
+    <value>Заблокированный запуск:</value>
   </data>
 </root>

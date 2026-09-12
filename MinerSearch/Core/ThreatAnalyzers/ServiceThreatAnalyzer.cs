@@ -135,6 +135,28 @@ namespace MSearch.Core.ThreatAnalyzers
                 svc.ShouldRemoveFromSafeMode = true;
             }
 
+            // Зловредный SDDL: Deny-ACE для IU/SU/BA/WD блокируют опрос и управление
+            // службой (такие службы не видно в services.msc). Реальные образцы различаются,
+            // поэтому матчим суть (Deny + SID), а не строку целиком.
+            bool hasMaliciousSddl = false;
+            try
+            {
+                string currentSddl = ServiceHelper.GetServiceSddl(svc.ServiceName);
+                if (!string.IsNullOrEmpty(currentSddl))
+                {
+                    Regex sddlDenyRegex = new Regex(@"\(D;;[^()]*;;;(IU|SU|BA|WD)\)", RegexOptions.IgnoreCase);
+                    hasMaliciousSddl = sddlDenyRegex.IsMatch(currentSddl.Replace(" ", "").ToUpperInvariant());
+                }
+            }
+            catch { }
+
+            if (hasMaliciousSddl)
+            {
+                AppConfig.GetInstance.LL.LogCautionMessage("_Found", $"{svc.ServiceName} {svc.ServicePath}");
+                risk += 3;
+                isMalicious = true;
+            }
+
             // 4. Анализ файла сервиса (подпись, имя, путь, сигнатуры)
             if (svc.LinkedServiceFile != null)
             {
@@ -225,7 +247,10 @@ namespace MSearch.Core.ThreatAnalyzers
                 // Подтверждена вредоносность → удаление
                 svc.ShouldStopService = true;
                 svc.ShouldDeleteService = true;
-                svc.ShouldResetSddl = true;  // Сбросить SDDL при удалении сервиса
+                // Сброс SDDL только при признаках блокировки: SCM недоступен
+                // (текущий SDDL прочитать не удалось) или в SDDL есть Deny-ACE.
+                // Иначе тихо пропускаем, обычные службы не трогаем.
+                svc.ShouldResetSddl = svc.SCMUnavailable || hasMaliciousSddl;
             }
 
             // Решение для сервиса

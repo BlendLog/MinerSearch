@@ -84,7 +84,7 @@ namespace MSearch.Core.ThreatAnalyzers
             bool isMalicious = false;
 
             // 1. DisallowRun
-            AnalyzeDisallowRun(reg, ref risk);
+            string disallowRunNote = AnalyzeDisallowRun(reg, ref risk);
 
             // 2. Appinit_DLLs
             AnalyzeAppInit(reg, ref risk);
@@ -124,7 +124,10 @@ namespace MSearch.Core.ThreatAnalyzers
             ScanObjectType objType = isMalicious || risk >= 3 ? ScanObjectType.Malware : ScanObjectType.Suspicious;
 
             // Решение для объекта реестра
-            yield return new ThreatDecision(reg, risk, objType);
+            var decision = new ThreatDecision(reg, risk, objType);
+            if (disallowRunNote != null)
+                decision.Note = disallowRunNote;
+            yield return decision;
 
             // Решение для связанного файла (если есть флаги действия)
             if (reg.LinkedFile != null &&
@@ -138,7 +141,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
         // --- ПРАВИЛА (Методы-помощники) ---
 
-        private void AnalyzeDisallowRun(RegistryThreatObject reg, ref int risk)
+        private string AnalyzeDisallowRun(RegistryThreatObject reg, ref int risk)
         {
             if (reg.NodeType == RegistryNodeType.Value && reg.KeyPath.Equals(MSData.GetInstance.queries["ExplorerDisallowRun"], StringComparison.OrdinalIgnoreCase))
             {
@@ -147,14 +150,19 @@ namespace MSearch.Core.ThreatAnalyzers
                 if (MSData.GetInstance.DisallowRunIgnoreList.Contains(exeName, StringComparer.OrdinalIgnoreCase))
                 {
                     AppConfig.GetInstance.LL.LogMessage("[.]", "_RegistryValue", $"{reg.ValueName} | {reg.ValueData}", ConsoleColor.Gray);
-                    return;
+                    return null;
                 }
 
 
                 risk += 3;
                 reg.ActionDelete = true; 
                 AppConfig.GetInstance.LL.LogSuccessMessage("_RegistryValue", $"{reg.ValueName} | {reg.ValueData} |", "_MarkedForRemoval");
+
+                string displayName = !string.IsNullOrEmpty(exeName) ? exeName : reg.ValueName;
+                return AppConfig.GetInstance.LL.GetLocalizedString("_NoteDisallowRunBlocked") + " " + displayName;
             }
+
+            return null;
         }
 
         private void AnalyzeAppInit(RegistryThreatObject reg, ref int risk)

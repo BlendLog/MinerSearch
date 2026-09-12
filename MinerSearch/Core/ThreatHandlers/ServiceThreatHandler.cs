@@ -65,7 +65,7 @@ namespace MSearch.Core.Handlers
                 }
 
 
-                if (svc.ShouldQuarantineService) return HandleMoveToQuarantine(svc, decision);
+                if (svc.ShouldQuarantineService) return HandleMoveToQuarantine(service, svc, decision);
                 if (svc.ShouldDeleteService) return HandleDelete(service, svc, decision);
                 if (svc.ShouldRestoreService || svc.ShouldRestoreServiceDll) return HandleRestore(service, svc, decision);
                 if (svc.ShouldDisableService) return HandleDisableOnly(service, svc, decision);
@@ -166,25 +166,83 @@ namespace MSearch.Core.Handlers
             return false;
         }
 
-        ApplyResult HandleMoveToQuarantine(ServiceThreatObject svc, ThreatDecision decision)
+        ApplyResult HandleMoveToQuarantine(ServiceController service, ServiceThreatObject svc, ThreatDecision decision)
         {
+            if (!svc.ShouldQuarantineService)
+                return ApplyResult.NotApplicable;
 
-            if (svc.ShouldQuarantineService)
+            string serviceName = svc.ServiceName;
+
+            // 1. Копируем конфиг в карантин СТРОГО до любых изменений службы.
+            //    Если копия не создана — ничего с службой не делаем.
+            bool quarantined;
+            try
             {
-                if (!QuarantineManager.AddService(svc.ServiceName, svc.Status, svc.StartMode))
+                quarantined = QuarantineManager.AddService(serviceName, svc.Status, svc.StartMode);
+            }
+            catch (Exception qex)
+            {
+                AppConfig.GetInstance.LL.LogErrorMessage("_QuarantineSaveFailed", qex, serviceName, "_Service");
+                decision.ActionType = ScanActionType.Error;
+                return ApplyResult.Failed;
+            }
+            if (!quarantined)
+            {
+                AppConfig.GetInstance.LL.LogWarnMediumMessage("_QuarantineSaveFailed", serviceName);
+                decision.ActionType = ScanActionType.Error;
+                return ApplyResult.Failed;
+            }
+
+            // 2. Отключаем автозапуск (без этого удаление может не примениться до перезагрузки)
+            if (svc.StartMode != NativeServiceController.ServiceStartMode.Disabled)
+            {
+                try
                 {
-                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_QuarantineSaveFailed", svc.ServiceName);
+                    NativeServiceController.SetServiceStartType(serviceName, NativeServiceController.ServiceStartMode.Disabled);
+                }
+                catch (Win32Exception w32e)
+                {
+                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", w32e, serviceName, "_Service");
+                    decision.ApplyErrorMessage = w32e.Message;
                     decision.ActionType = ScanActionType.Error;
                     return ApplyResult.Failed;
                 }
-                else
+            }
+
+            // 3. Останавливаем, только если явно запрошено (UI-карантин). В авто-режиме — pending delete до перезагрузки.
+            if (svc.Status == ServiceControllerStatus.Running && svc.ShouldStopService)
+            {
+                try
                 {
-                    AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceQuarantined", svc.ServiceName);
-                    decision.ActionType = ScanActionType.Quarantine;
-                    return ApplyResult.Success;
+                    service.Stop();
+                    service.WaitForStatus(ServiceControllerStatus.Stopped, new TimeSpan(0, 0, 30));
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceStopped", serviceName);
+                }
+                catch (Exception ex)
+                {
+                    AppConfig.GetInstance.LL.LogWarnMessage("_ErrorCannotProceed", $"{serviceName}: {ex.Message}");
                 }
             }
-            return ApplyResult.NotApplicable;
+
+            // 4. Удаляем службу из SCM (запись уже сохранена в карантине)
+            try
+            {
+                ServiceHelper.Uninstall(serviceName);
+            }
+            catch (Win32Exception win32Ex) when (win32Ex.NativeErrorCode == 1072 || win32Ex.NativeErrorCode == 1060)
+            {
+                // ERROR_SERVICE_MARKED_FOR_DELETE / ERROR_SERVICE_DOES_NOT_EXIST — допустимо
+            }
+            catch (Exception ex)
+            {
+                decision.ApplyErrorMessage = ex.Message;
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, serviceName, "_Service");
+                return ApplyResult.Failed;
+            }
+
+            AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceQuarantined", serviceName);
+            decision.ActionType = ScanActionType.Quarantine;
+            return ApplyResult.Success;
         }
 
 
@@ -345,7 +403,7 @@ namespace MSearch.Core.Handlers
                     }
                     else
                     {
-                        decision.ApplyErrorMessage = "Не удалось открыть раздел реестра TermService\\Parameters";
+                        decision.ApplyErrorMessage = AppConfig.GetInstance.LL.GetLocalizedString("_ErrorRestoreTermServiceDll");
                         AppConfig.GetInstance.LL.LogErrorMessage("_ErrorRestoreTermService", null, "_Service");
                         return ApplyResult.Error;
                     }
@@ -366,7 +424,7 @@ namespace MSearch.Core.Handlers
                 }
                 catch (Exception ex)
                 {
-                    decision.ApplyErrorMessage = $"Служба восстановлена, но перезапуск не удался: {ex.Message}";
+                    decision.ApplyErrorMessage = string.Format("{0}: {1}", AppConfig.GetInstance.LL.GetLocalizedString("_ServiceRestartFailed"), ex.Message);
                     AppConfig.GetInstance.LL.LogWarnMessage("_ServiceRestartFailed", $"{serviceName}: {ex.Message}");
                     // Считаем успешным, так как путь восстановлен
                 }

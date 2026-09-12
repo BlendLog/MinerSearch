@@ -79,6 +79,7 @@ namespace MSearch
             lock (_logLock)
             {
                 _writer?.Dispose();
+                _writer = null;
             }
         }
 
@@ -120,7 +121,7 @@ namespace MSearch
                     }
 
 
-                    if (!_no_logs)
+                    if (!_no_logs && _writer != null)
                     {
                         _writer.WriteLine(logMessage);
                     }
@@ -186,7 +187,7 @@ namespace MSearch
                         }
                     }
 
-                    if (!_no_logs)
+                    if (!_no_logs && _writer != null)
                     {
                         _writer.WriteLine(logMessage);
                     }
@@ -251,7 +252,7 @@ namespace MSearch
                     }
 
 
-                    if (!_no_logs)
+                    if (!_no_logs && _writer != null)
                     {
                         _writer.WriteLine(logMessage);
                     }
@@ -291,7 +292,7 @@ namespace MSearch
                         Console.ResetColor();
                     }
 
-                    if (!_no_logs)
+                    if (!_no_logs && _writer != null)
                     {
                         _writer.WriteLine(logMessage);
                     }
@@ -329,7 +330,7 @@ namespace MSearch
                         Console.ResetColor();
                     }
 
-                    if (!_no_logs || force)
+                    if ((!_no_logs || force) && _writer != null)
                     {
                         _writer.WriteLine(logMessage);
                     }

@@ -61,12 +61,12 @@ namespace MSearch.Core.Managers
 
                     if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected || decision.ObjectType == ScanObjectType.Rootkit)
                     {
-                        _state.AddScanResult(new ScanResult(decision.ObjectType, GetDescription(decision), ScanActionType.Skipped, threatObjectId: decision.Target.Id, @class: decision.Target.Kind));
+                        _state.AddScanResult(new ScanResult(decision.ObjectType, GetDescription(decision), ScanActionType.Skipped, decision.Note, decision.Target.Id, decision.Target.Kind));
                         _state.IncrementFoundThreats();
                     }
                     else if (decision.ObjectType == ScanObjectType.Suspicious)
                     {
-                        _state.AddScanResult(new ScanResult(decision.ObjectType, GetDescription(decision), ScanActionType.Skipped, threatObjectId: decision.Target.Id, @class: decision.Target.Kind));
+                        _state.AddScanResult(new ScanResult(decision.ObjectType, GetDescription(decision), ScanActionType.Skipped, decision.Note, decision.Target.Id, decision.Target.Kind));
                         _state.IncrementFoundSuspicious();
                     }
                 }
@@ -135,7 +135,7 @@ namespace MSearch.Core.Managers
                 if (decision == null || decision.Target == null) continue;
 
                 string description = GetDescription(decision);
-                _state.AddScanResult(new ScanResult(decision.ObjectType, description, ScanActionType.Skipped, threatObjectId: decision.Target.Id, @class: decision.Target.Kind));
+                _state.AddScanResult(new ScanResult(decision.ObjectType, description, ScanActionType.Skipped, decision.Note, decision.Target.Id, decision.Target.Kind));
 
                 if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected || decision.ObjectType == ScanObjectType.Rootkit)
                     _state.IncrementFoundThreats();
@@ -211,8 +211,10 @@ namespace MSearch.Core.Managers
             // Формируем описание для лога
             string description = GetDescription(decision);
 
-            // Если была ошибка — добавляем сообщение в примечание
-            string note = (result == ApplyResult.Error) ? decision.ApplyErrorMessage : null;
+            // Если была ошибка — добавляем сообщение в примечание (к тексту от анализатора, если есть)
+            string note = decision.Note;
+            if (result == ApplyResult.Error && !string.IsNullOrEmpty(decision.ApplyErrorMessage))
+                note = string.IsNullOrEmpty(note) ? decision.ApplyErrorMessage : note + " | " + decision.ApplyErrorMessage;
 
             // Записываем в ScanResult
             _state.AddScanResult(new ScanResult(decision.ObjectType, description, actionType, note, decision.Target.Id, decision.Target.Kind));

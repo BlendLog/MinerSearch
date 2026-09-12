@@ -374,12 +374,23 @@ namespace MSearch
                     displayName = "..." + displayName.Substring(displayName.Length - 57);
                 }
                 
+                string skippedLabel = Resources._ActionType_Skipped_EN;
+                switch (AppConfig.GetInstance.ActiveLanguage)
+                {
+                    case "RU":
+                        skippedLabel = Resources._ActionType_Skipped_RU;
+                        break;
+                    case "EN":
+                        skippedLabel = Resources._ActionType_Skipped_EN;
+                        break;
+                }
+
                 Console.CursorLeft = 0;
-                Console.Write($"[~ {current,5}/{total}] {displayName,-60} (пропущен)");
+                Console.Write($"[~ {current,5}/{total}] {displayName,-60} ({skippedLabel})");
                 
                 if (LaunchOptions.GetInstance.verbose)
                 {
-                    Logger.WriteLog($"[~ {current}/{total}] {filePath} (already analyzed)", ConsoleColor.Gray, true);
+                    Logger.WriteLog($"[~ {current}/{total}] {filePath} ({skippedLabel})", ConsoleColor.Gray, true);
                 }
                 
                 Console.ForegroundColor = ConsoleColor.White;

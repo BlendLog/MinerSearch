@@ -50,7 +50,8 @@ namespace MSearch
                 Environment.Exit(1);
             }
 
-            Logger.InitLogger(_options.no_logs);
+            // Quarantine management (-q) is not a scan: suppress the scan log file (avoids empty logs).
+            Logger.InitLogger(_options.no_logs || _options.QuarantineMode);
 #if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(ExeptionHandler.HookExeption);
             AppConfig.GetInstance.ActiveLanguage = AppConfig.GetInstance.IsGuiAvailable ? LanguageManager.LoadLanguageSetting() : "EN";

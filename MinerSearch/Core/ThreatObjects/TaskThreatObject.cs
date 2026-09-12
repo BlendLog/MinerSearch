@@ -31,7 +31,6 @@ namespace MSearch.Core.ThreatObjects
         public FileThreatObject LinkedFileFromArgs { get; internal set; }
         public bool ActionDeleteTask { get; internal set; }
         public bool ActionDeleteFile { get; internal set; }
-        public bool ActionDeleteAdditionalFile { get; internal set; }
         public bool ActionQuarantineTask { get; internal set; }
         public string DetectionReasonRes { get; internal set; } // Чтобы знать, почему удаляем (Missing file / Malicious arg)
 

@@ -57,7 +57,8 @@ namespace MSearch.Core.ThreatHandlers
                         string reason = !string.IsNullOrEmpty(taskThreat.DetectionReasonRes)
                             ? taskThreat.DetectionReasonRes
                             : "_Malic1ousTask";
-                        AppConfig.GetInstance.LL.LogSuccessMessage(reason, $"{taskThreat.Info.Path}\\{taskThreat.Info.Name}", "_Deleted");
+                        string actionRes = taskThreat.ActionQuarantineTask ? "_MovedToQuarantine" : "_Deleted";
+                        AppConfig.GetInstance.LL.LogSuccessMessage(reason, $"{taskThreat.Info.Path}\\{taskThreat.Info.Name}", actionRes);
                         decision.ActionType = ScanActionType.Deleted;
                         return ApplyResult.Success;
                     }

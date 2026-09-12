@@ -1380,8 +1380,9 @@ namespace Win32Wrapper
         private static extern bool ConvertSecurityDescriptorToStringSecurityDescriptor(
             IntPtr SecurityDescriptor,
             uint RequestedStringSDRevision,
+            SecurityInfos SecurityInformation,
             out IntPtr StringSecurityDescriptor,
-            out IntPtr StringSecurityDescriptorLen);
+            out uint StringSecurityDescriptorLen);
         #endregion
 
         public const int SERVICE_WIN32_OWN_PROCESS = 0x00000010;
@@ -1452,10 +1453,11 @@ namespace Win32Wrapper
                             return null;
 
                         IntPtr pStringSD = IntPtr.Zero;
-                        IntPtr stringLen = IntPtr.Zero;
+                        uint stringLen = 0;
 
-                        if (ConvertSecurityDescriptorToStringSecurityDescriptor(pSD, 1, out pStringSD, out stringLen))
+                        if (ConvertSecurityDescriptorToStringSecurityDescriptor(pSD, 1, SecurityInfos.DiscretionaryAcl, out pStringSD, out stringLen))
                         {
+                            if (pStringSD == IntPtr.Zero) return null;
                             try
                             {
                                 return Marshal.PtrToStringUni(pStringSD);

@@ -3522,6 +3522,42 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Restore skipped: target file already exists and differs from quarantined copy:.
+        /// </summary>
+        internal static string _QuarantineRestoreTargetExists_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineRestoreTargetExists_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Восстановление пропущено: целевой файл уже существует и отличается от копии в карантине:.
+        /// </summary>
+        internal static string _QuarantineRestoreTargetExists_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineRestoreTargetExists_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Blocked launch:.
+        /// </summary>
+        internal static string _NoteDisallowRunBlocked_EN {
+            get {
+                return ResourceManager.GetString("_NoteDisallowRunBlocked_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Заблокированный запуск:.
+        /// </summary>
+        internal static string _NoteDisallowRunBlocked_RU {
+            get {
+                return ResourceManager.GetString("_NoteDisallowRunBlocked_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Checking for updates. Please, wait....
         /// </summary>
         internal static string _LogCheckingUpdates_EN {
@@ -6427,6 +6463,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Service moved to quarantine.
+        /// </summary>
+        internal static string _ServiceQuarantined_EN {
+            get {
+                return ResourceManager.GetString("_ServiceQuarantined_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Служба перемещена в карантин.
+        /// </summary>
+        internal static string _ServiceQuarantined_RU {
+            get {
+                return ResourceManager.GetString("_ServiceQuarantined_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Failed to disable service.
         /// </summary>
         internal static string _ServiceDisableFailed_EN {
@@ -7071,6 +7125,24 @@ namespace MSearch.Properties {
         internal static string _TaskMarkedToDelete_RU {
             get {
                 return ResourceManager.GetString("_TaskMarkedToDelete_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scheduled task has been marked for quarantine (save then delete).
+        /// </summary>
+        internal static string _TaskMarkedToQuarantine_EN {
+            get {
+                return ResourceManager.GetString("_TaskMarkedToQuarantine_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Запланированная задача отмечена на карантин (сохранение с последующим удалением).
+        /// </summary>
+        internal static string _TaskMarkedToQuarantine_RU {
+            get {
+                return ResourceManager.GetString("_TaskMarkedToQuarantine_RU", resourceCulture);
             }
         }
         

@@ -205,6 +205,14 @@ namespace MSearch
         {
             try
             {
+                // Never silently overwrite a different existing file (data loss).
+                // Identical content (same MD5 as the quarantine key) is harmless to rewrite.
+                if (!string.IsNullOrEmpty(restorePath) && File.Exists(restorePath) && !IsSameFileContent(restorePath, subKeyName))
+                {
+                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_QuarantineRestoreTargetExists", restorePath);
+                    return false;
+                }
+
                 // Try HKCU first (legacy XOR-encrypted)
                 using (var hkcu = Registry.CurrentUser.OpenSubKey(QUARANTINE_PATH, true))
                 {
@@ -621,13 +629,14 @@ namespace MSearch
 
         public static bool RestoreService(string subKeyName)
         {
+            string serviceName = null;
             try
             {
                 using (var hklm = Registry.LocalMachine.OpenSubKey($"{QUARANTINE_PATH}\\{subKeyName}"))
                 {
                     if (hklm == null) return false;
 
-                    string serviceName = hklm.GetValue(ORIGINAL_PATH) as string ?? subKeyName;
+                    serviceName = hklm.GetValue(ORIGINAL_PATH) as string ?? subKeyName;
                     string displayName = hklm.GetValue("DisplayName") as string ?? serviceName;
                     string imagePath = hklm.GetValue("ImagePath") as string;
                     int serviceType = GetIntValue(hklm, "ServiceType", GetIntValue(hklm, "Type", ServiceHelper.SERVICE_WIN32_OWN_PROCESS));
@@ -707,9 +716,13 @@ namespace MSearch
                     // Restore SafeBoot entries if they existed
                     // (Not restored for malware services — by design)
 
-                    AppConfig.GetInstance.LL.LogSuccessMessage("_QuarantineServiceRestored", serviceName);
-                    return true;
-                }
+                } // subkey handle closed before Delete (cf. RestoreTask)
+
+                // Delete from quarantine (was missing: counter stayed > 0 after service restore)
+                Delete(subKeyName);
+
+                AppConfig.GetInstance.LL.LogSuccessMessage("_QuarantineServiceRestored", serviceName);
+                return true;
             }
             catch (Exception ex)
             {
@@ -795,6 +808,20 @@ namespace MSearch
                     data.AddRange(part);
                 }
                 return data.ToArray();
+            }
+        }
+
+        static bool IsSameFileContent(string filePath, string quarantineHash)
+        {
+            try
+            {
+                string existingHash = FileChecker.CalculateMD5(filePath);
+                return !string.IsNullOrEmpty(existingHash) &&
+                       existingHash.Equals(quarantineHash, StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
             }
         }
 

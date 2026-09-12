@@ -12,15 +12,18 @@ namespace MSearch.Core.ThreatDecisions
 
         /// <summary>
         /// Действие, выбранное пользователем в review-UI.
-        /// null = использовать автоматическое решение (ActionType).
         /// </summary>
         public ScanActionTypeUserSelected? UserOverrideAction { get; set; }
 
         /// <summary>
         /// Сообщение об ошибке, возникшей при выполнении действия (Handler.Apply).
-        /// Заполняется обработчиком при ApplyResult.Error.
         /// </summary>
         public string ApplyErrorMessage { get; internal set; }
+
+        /// <summary>
+        /// Информативное примечание для колонки Note в FinishEx.
+        /// </summary>
+        public string Note { get; internal set; }
 
         public ThreatDecision(
             IThreatObject threatObject,

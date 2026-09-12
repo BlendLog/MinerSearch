@@ -154,9 +154,9 @@ namespace MSearch.Core.ThreatAnalyzers
                                     AppConfig.GetInstance.LL.LogWarnMediumMessage("_InvalidCertificateSignature", args);
                                     if (!LaunchOptions.GetInstance.ScanOnly)
                                     {
+                                        taskObj.ActionQuarantineTask = true;
                                         taskObj.ActionDeleteTask = true;
-                                        taskObj.ActionDeleteAdditionalFile = true;
-                                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+                                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToQuarantine");
                                     }
 
                                     taskObj.LinkedFileFromArgs = dll;
@@ -223,20 +223,20 @@ namespace MSearch.Core.ThreatAnalyzers
                             if (File.Exists(finalPath))
                             {
                                 AppConfig.GetInstance.LL.LogMessage("[.]", "_Just_File", finalPath, ConsoleColor.Gray);
-                                FileThreatObject dll = CreateFileObject(finalPath);
-                                if (!dll.IsValidSignature)
+                                FileThreatObject exeFromPcaluaArgs = CreateFileObject(finalPath);
+                                if (!exeFromPcaluaArgs.IsValidSignature)
                                 {
                                     if (!LaunchOptions.GetInstance.ScanOnly)
                                     {
+                                        taskObj.ActionQuarantineTask = true;
                                         taskObj.ActionDeleteTask = true;
-                                        taskObj.ActionDeleteAdditionalFile = true;
-                                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
+                                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToQuarantine");
 
                                     }
                                 }
 
-                                taskObj.LinkedFileFromArgs = dll;
-                                MarkFileForAction(dll);
+                                taskObj.LinkedFileFromArgs = exeFromPcaluaArgs;
+                                MarkFileForAction(exeFromPcaluaArgs);
                                 taskObj.DetectionReasonRes = "_PcaluaAbuse";
                                 yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
 
@@ -271,7 +271,6 @@ namespace MSearch.Core.ThreatAnalyzers
                                         if (!LaunchOptions.GetInstance.ScanOnly)
                                         {
                                             taskObj.ActionDeleteTask = true;
-                                            taskObj.ActionDeleteAdditionalFile = true;
                                             AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
 
                                         }
@@ -300,7 +299,6 @@ namespace MSearch.Core.ThreatAnalyzers
                                         if (!LaunchOptions.GetInstance.ScanOnly)
                                         {
                                             taskObj.ActionDeleteTask = true;
-                                            taskObj.ActionDeleteAdditionalFile = true;
                                             AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
 
                                         }
@@ -327,7 +325,6 @@ namespace MSearch.Core.ThreatAnalyzers
                             if (!LaunchOptions.GetInstance.ScanOnly && taskObj.LinkedFileFromArgs != null)
                             {
                                 taskObj.ActionDeleteTask = true;
-                                taskObj.ActionDeleteAdditionalFile = true;
                                 taskObj.LinkedFileFromArgs.ShouldDisableExecute = true;
                                 AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
 
@@ -397,7 +394,6 @@ namespace MSearch.Core.ThreatAnalyzers
                                     if (!LaunchOptions.GetInstance.ScanOnly)
                                     {
                                         taskObj.ActionDeleteTask = true;
-                                        taskObj.ActionDeleteAdditionalFile = true;
                                         AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
 
                                     }
@@ -442,7 +438,6 @@ namespace MSearch.Core.ThreatAnalyzers
                             if (!LaunchOptions.GetInstance.ScanOnly)
                             {
                                 taskObj.ActionDeleteTask = true;
-                                taskObj.ActionDeleteAdditionalFile = true;
                                 taskObj.LinkedFileFromArgs.ShouldDisableExecute = true;
                                 AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
 
@@ -526,7 +521,6 @@ namespace MSearch.Core.ThreatAnalyzers
                             }
 
                             taskObj.ActionDeleteTask = true;
-                            taskObj.ActionDeleteAdditionalFile = true;
                             AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
 
                         }
@@ -551,7 +545,6 @@ namespace MSearch.Core.ThreatAnalyzers
                             if (!LaunchOptions.GetInstance.ScanOnly)
                             {
                                 taskObj.ActionDeleteTask = true;
-                                taskObj.ActionDeleteAdditionalFile = true;
                                 AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
 
                             }
@@ -593,7 +586,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 if (!LaunchOptions.GetInstance.ScanOnly && taskObj.LinkedFileFromArgs != null)
                 {
                     taskObj.ActionDeleteTask = true;
-                    taskObj.ActionDeleteAdditionalFile = true;
                     taskObj.LinkedFileFromArgs.ShouldDisableExecute = true;
                     AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete");
 
