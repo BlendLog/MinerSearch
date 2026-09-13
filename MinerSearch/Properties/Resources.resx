@@ -960,6 +960,18 @@ Thank you for your help!</value>
   <data name="_ServiceSCMUnavailable_EN" xml:space="preserve">
     <value>SCM unavailable</value>
   </data>
+  <data name="_ServiceEncodedCommand_RU" xml:space="preserve">
+    <value>Служба запускает PowerShell со скрытой/закодированной командой:</value>
+  </data>
+  <data name="_ServiceEncodedCommand_EN" xml:space="preserve">
+    <value>Service launches PowerShell with an encoded command:</value>
+  </data>
+  <data name="_ServiceSuspiciousImagePath_RU" xml:space="preserve">
+    <value>Подозрительный образ службы:</value>
+  </data>
+  <data name="_ServiceSuspiciousImagePath_EN" xml:space="preserve">
+    <value>Suspicious service image:</value>
+  </data>
   <data name="_SignedAppInitValue_RU" xml:space="preserve">
     <value>Параметр RequireSignedAppInit_DLLs задан, но его значение = 0 (подпись не требуется)</value>
   </data>
@@ -1996,6 +2008,18 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_TaskMarkedToQuarantine_RU" xml:space="preserve">
     <value>Запланированная задача отмечена на карантин (сохранение с последующим удалением)</value>
+  </data>
+  <data name="_MasqueradedSystemTask_RU" xml:space="preserve">
+    <value>Задача маскируется под системный бинарник:</value>
+  </data>
+  <data name="_MasqueradedSystemTask_EN" xml:space="preserve">
+    <value>Task masquerades as a system binary:</value>
+  </data>
+  <data name="_SuspiciousTaskBinary_RU" xml:space="preserve">
+    <value>Подозрительный файл задачи:</value>
+  </data>
+  <data name="_SuspiciousTaskBinary_EN" xml:space="preserve">
+    <value>Suspicious task binary:</value>
   </data>
   <data name="_JoinToTelegram_EN" xml:space="preserve">
     <value>Have questions? Join the telegram!</value>

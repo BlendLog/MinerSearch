@@ -708,6 +708,76 @@ namespace DBase
 		Bfs.Create("UUKAZCAFv5zztaT7gF7QbQ==", "EFQml8R+15P4xREmFKHyv7AzQYvPRUz7Q4T5slgaawQ=", "YLvoGHTUs3ME7fwdY5ay+w=="), //MSASN1.dll
 		};
 
+        public string[] MasqueradeBinaryNames = new string[] {
+			Bfs.Create("EPh4Xr7Em8nh/lu/XGPRoA==", "BHjZeOsPRn57w9Uo04lJ8+cfs2rcilORS3wMZrKLR0c=", "1dWEnD/73sea4jpBVK9hVQ=="), //MsMpEng
+			Bfs.Create("Md31bAp/Nw3YglVosVsung==", "4I9OiJQzIZE5CKBxSB9rnaShoCKt/n4GYPWsgPD7Ke0=", "XAuJNyAWD5x7fgfcqSqmnQ=="), //MpCmdRun
+			Bfs.Create("HUDHJHjC/ad6VwON4XGhr1rZnLArAgQKMX9Vyer10Sc=", "xbEFvB6SdJP819wZm7Tp3spup6ZT7P6sHcZRtUsJNY4=", "7onMcguXlMb2yTlz0k+PqA=="), //MpDefenderCoreService
+			Bfs.Create("D6gcuq00Cd91g04kKKxq7A==", "+bfz44iMq6ugtwfFmHTxCcoG0SnJ2WKict+2NMVdV3U=", "umuL5D4TxpXzBJfGMkDQaw=="), //NisSrv
+			Bfs.Create("K4RaCjSDa8Nwz3oD8BKQxw==", "mXnlqgmzwf3Jui5HcO8oUmZhyf57xW8EoLSjPeQvZOg=", "pZW0Kdn7t9dymT5vOpp8oA=="), //smartscreen
+			Bfs.Create("qlz/uo6y1PMIg3oSEkoyAjrNpFOFRWZTkHUuJuzF6yQ=", "adtKBG4jWEJR3bDt13EemwIdi2dsqLBkFwIcmr5ryUc=", "WCYzchf7S/5LRcW2WHZ/EQ=="), //SecurityHealthService
+			Bfs.Create("wFuTndQ3DEthYPPB4plYRD+R+iz88afvp/+Z7Hyzjns=", "hD8aH+MOQ/Ln+7EImLHorc1EWs2qOinNfRgJ8Dnbew8=", "yN0UP111O9z1/3NcjbJtxw=="), //SecurityHealthSystray
+			Bfs.Create("uUEZCfZe0WzefQGXTmv5Kw==", "RPbkfurlbNbghDU1aAGhhP0pvWrzJaEfcwuieHt1obw=", "QdUY9ZLqFXQl3urXvKCQ4A=="), //explorer
+			Bfs.Create("jZ4NRvkLX35yYqk23g6gCQ==", "C25qM8N5FS+vJ9ChaQMHdDG0NGcNAhkmmUIMggtcF+w=", "XLQg/hqFMTbjAunE1Okm7w=="), //spoolsv
+			Bfs.Create("ht7uogcc9tirY81FyFQ41g==", "11t79OWUi1bNSOoP93O+st3YHNcDySUYFYo8m+lSQlc=", "7TjxTvGx7MYdJUYC0L4Sgw=="), //SearchIndexer
+			Bfs.Create("/E2r4Fo3Jqf6I0M8I9EjUjX3FjCOsmwjdWl5hSlbl5s=", "SzZvj7WGuvpBvjjIykGw6pdmvlHPoO1szbIQLq2qcIc=", "cuEqQVcBLwYsp1qadMoQmQ=="), //SearchFilterHost
+			Bfs.Create("7hsz/jwgk1AmtiqQqgSrKw==", "nCqWdiEXfBhVdsXby/ABKfo4RKgTSN2xaMTWkj/y5LY=", "J/+GgSuXwr6jbqwweMOTFg=="), //SearchHost
+			Bfs.Create("THslJdHTO6DQi4dgiblRxQ==", "zJT0A3Jq7kiVTe4hjcZOVdQ8QTCF/J5F/UNtLtHv/yk=", "nr5q62LZ/wCxifDha4KRSw=="), //SearchApp
+			Bfs.Create("x5fSWbyDF8qjmu20XUkR1Q==", "cP8reccT8ogH08CHFO/H4bhRgTFPHYMPFXyylYH+85I=", "WiSRs+7bhBKwemjMSZzLWw=="), //ShellHost
+			Bfs.Create("1nSKd3AE5IkQfuvdcv4e3g==", "78Bjhjj7+thjZGY5omj6vVSha/FqDljzP0D0PJPaGu4=", "f7F/a7eSYKbAAr5a8DRDng=="), //sihost
+			Bfs.Create("8QKKog6RqHn0f1+GLBeH5g==", "AFzOW24i+9t78q1MIsTvFNZV1QfGbRjY38KDRQkVPHo=", "6ZiUFyBKs3aVN0hvcM3Yjw=="), //ctfmon
+			Bfs.Create("8UNk/hEdd6QuALw4kSfV8w==", "gL6uBvHgEWXu1VOPb7JMPmJ///kfqWL4MeGRTHJinLk=", "Rh3c8KJeUq/Cc5PJXKhFJQ=="), //dasHost
+			Bfs.Create("+wPQ12+OEPt9+7GEPsnpB6vTYVp79I5DQwjASNORfN4=", "p9FlYHB8NSeyIYGtSdUkszawUcyQo01azpxDnJhOmYA=", "0j/o1CUNfo7lgdp7s75tkg=="), //StartMenuExperienceHost
+			Bfs.Create("DpVCu1AEcGzXIjrBnk01UA==", "ci7hm3nMxyBXoW+BlqOGaSW2QwkyRrhH/IBvEjZlOTA=", "apLmYMjHkdWzOWpOyomO4Q=="), //TextInputHost
+			Bfs.Create("5HITf87Cun61hFm3f3ObOey9vcb6x59RwpQo0GEOjW8=", "00wf8YfKCzufjuGsMcQHniuZwUp/QENEqtGt4n2D01k=", "QUMIwk24l6KDTxCxYYjHVA=="), //ShellExperienceHost
+			Bfs.Create("Zmj+O3nUR6xOYisN+VTa0RMNV1ORYaU0l8ljLG6zwiA=", "sZfNVqvInLlEbL6hDli7TaDZK+xo8B+C4oahD2qSzGI=", "9hby284xwW1rY1/a8NLrOQ=="), //ApplicationFrameHost
+			Bfs.Create("0Vj0C2tB8JkLTHOkz/RRJw==", "cBqJO/QGT/IBs7Wkn+r8+9Wh88rD5yCNmwZqakhf7Qg=", "7sQcwEcNXAlwjxG5VX4EVQ=="), //WUDFHost
+			Bfs.Create("lu4tCCtxa00SyvdS9G2DHg==", "mA2hOmDjHRcDVVB7T55CEWlRrU2MWq8MC0aEzuAwWfQ=", "wW88hQxU2ZUlZ7sSo1N2Fg=="), //LsaIso
+			Bfs.Create("LVmSNm6FW7ZZ3xXAnQWsQflGk3AqgpgHSLyqK+ycASs=", "t1ZiKi2YOkEmbYuM2n5TODE/k9k7h5Eeu1DspHGysdM=", "fZROVxUNKlsRSRLFySKm1w=="), //CrossDeviceResume
+			Bfs.Create("o1zVyC9h+1mJ9JjUUP1biA==", "yrW71k1SzguiThqX9HsweAZZiKEOGUlBxJvhMhPsVoE=", "s5gZYPObjoOsd3Mrexu+ig=="), //AggregatorHost
+			Bfs.Create("E5Uoqt38Bf+hcs00tLB8KA==", "/8mY9tbaZ+8SoRVmiSRZjSam7dbcDKNiDnXxjIQRj80=", "mku0FgO/rQnTc1VRlqgR6w=="), //GameInputSvc
+			Bfs.Create("c0DTecyob7l0sFy0xYVo9BFKRa6VBPwoNy/4G1kIWRM=", "zL41jUFTnEMUo1b6k7hx+ygxkNrametkhMXl+lHJKsA=", "CxhYv0Z1GpRKoQ8TENdzBw=="), //GameInputRedistService
+			Bfs.Create("Th+GM9I4X4nXKs5HOBbcBT0rgFwoYqdTvMWVYJnHOqE=", "2b/ayxAlDGqxffS8tpj3zETESNuyl5q1eVxb0xscU8I=", "Fq/fXm1hYK4ho038FH/xBQ=="), //WMIRegistrationService
+			Bfs.Create("1h2QEZzABqyYa4AucxusSA==", "NfH+WpJVUMOUz+SkgTnDy03tYpygtroHFVbpyG6VkRc=", "yI4S4Hhvdr3o81Jt40Kp/A=="), //wmpnetwk
+			Bfs.Create("lijFUNO+F/dCmkmGP3UTjg==", "QE8MrRRbxnD3dYP3Q4G8ztuVHrFYhPVkWCiC4eMCQOY=", "nabINqbCsEqyPicaCC8zVA=="), //wabmig
+			Bfs.Create("sQVAYymfRiW2nyXuqlIUQA==", "lYf+7pU+twWj++rLN/lbLgNvKPSW7GSaHM/AENY0voo=", "lY70bxzkU4g+bGUrhtw07g=="), //ImagingDevices
+			Bfs.Create("w7Xyv6ATQLUfGXWmURRsfQ==", "XaWal5zYooT+BCQbZW2Mz8Wh0OQofGfWslrGdpuQBvU=", "LtpOvxSMeqMjPkJtcNRrZA=="), //ieinstal
+			Bfs.Create("yvDscF9IPmbT8heY4Q5VIQ==", "ydnZt9mTVivUP5/FpMhkoP5wvjmVKEmA0Gf55R0N/PE=", "5DxzynwGKCJjBGxgQRlijA=="), //iediagcmd
+			Bfs.Create("FvpBwqTYlc/p79EOHGiQkw==", "JHByv81FxoU2Ec9JbvX+ayeKvLGQXIBZmGON49utZNU=", "suZfvkV1+xrixueeWDxXdQ=="), //ExtExport
+			Bfs.Create("qf0QZZdp2MU52VtiDEFOcwCbgbu+04czpZPXlsjvw14=", "SKA5GhZgnr53AAmGLuuAL9kmdY9oaRCW4lm6Tsi6joQ=", "wr/UbqHp4HJQOvHz9FkGtQ=="), //ConfigSecurityPolicy
+			Bfs.Create("KzJOBIQHPdmrFRijNzaebA==", "4dEdsbhslTcd0jl0oc/HfpZIoSo7qzwSy6kZ52zs7IE=", "KBbGBmiJy71IDhd6d7jWSg=="), //setup_wm
+			Bfs.Create("23VXcKd4lVk1vZ3hcHe5pw==", "xlp7Cq41uFG1eKY5BjsgKoWursVRG5FZ0421PlfHh9g=", "L8QB166ev8tuvhLHBV4Vhg=="), //WindowsTerminal
+			Bfs.Create("p+uRlJjdBh5uhJdVjrxI9w==", "VM00cFMLME1t4umkw6TcMZL0Gs2nZWXdvA1+QptsZSc=", "OKcCsX6/eUedcNLBBlVKKQ=="), //taskmgr
+			Bfs.Create("0kpmkdF8SGyv8uWQkyCL6A==", "wqq8bKnip0r9J5z6xyfOTkpfrPR1O9CC5iuVyxrExXM=", "UxcceQSp3iNRtZh5H0JcRg=="), //msiexec
+			Bfs.Create("p6Kaeq88fSVMean1oqlhHg==", "qBbhN4UO+ExIpqsw6BHFP4elzr1deNbAyp3P2tqzitU=", "cJqcwgc+wrDAvps2HVWvlQ=="), //regsvr32
+			Bfs.Create("e9TBoiS7G274HbgTMshPQg==", "R3j6NCYaVH0tXJZn1lZjmeBOgmvobfDZmOVWPm0ZyOw=", "zqih64lnl5Heb8XsN5kCjQ=="), //mshta
+			Bfs.Create("2nH6kEtB+EcpbXA2BCq5BQ==", "pO5EfWW4Ph5NlE37sUQcKxEJLBD1x9zzY0tlpkt9+KI=", "7VpyB7LRpKBUTZvUEeQf/Q=="), //wscript
+			Bfs.Create("aAIkSUoJ4h+hElXzarQqHw==", "6+DrVlCCMO7/vWOWcgM341pP//nXnvs/JJ0T4XWLqVg=", "n+132VaezWAlykuF+V0JSA=="), //cscript
+			Bfs.Create("7b3F/SAWlq4Gd0wCQrfdaA==", "Jyce2KjQcxOPCviJ2s4anTYf/EbCdgiugJ3M2S/sIOU=", "yluyA1aSj1nOmQb5w0vvpQ=="), //bitsadmin
+			Bfs.Create("VLNcmf4/xciwMP8Du/4YoQ==", "OJUTeOmeJ1g7J0wumBHL8u0S59APDBWCNkRGRuB1wE4=", "AnsOjjIBhEwuY/NNfY8Lqw=="), //certutil
+			Bfs.Create("TY4Mp0LG2h3MPiDeUUzN/Q==", "+acgPZlOR9GSgDl+mJk+yPqZH1X77SFjwma6vY4NPzc=", "vuPzpS/oiGLWxvviE4fdgw=="), //schtasks
+			Bfs.Create("E/lCLwiZbJsUoSm9GxJz9w==", "hFRHwC1wtol7jQFI2VtJfShNrnZfN5s7wv2HEdZ0EJg=", "ZqsH2wYgM8Fij+0qEncG1A=="), //powershell
+			Bfs.Create("eY62bEqI66Dywpwu4ASHhw==", "wJtT06IfH9N0K22T3MX0nVEAVztlkR2IBoVDCPja81c=", "Ox6u6182j9nsZYFl6liiNg=="), //pwsh
+			Bfs.Create("Sc/9oWIgFh1EJ39hapan3g==", "MSMSiLR1zZHSNad9CRtBFEwnla4oOuFKJEj1CQwaNR0=", "j9mgNYfUScFqE9AgwCIMjQ=="), //msedgewebview2
+			Bfs.Create("IexA0CORwd+P99MiXujcpw==", "+SwhvNNwkuv89Bxgv4YQq6Pgeh1G+jEJcQETZ0WdmGY=", "yiLVlzOHmCUrT+xMaO4HdQ=="), //steam
+			Bfs.Create("FLAz4V+YqqsDYsjNIQQ2Vw==", "4Fds8VpR6YnPLz4vxs5v3OPyhqruiICvdE2A4J77MBo=", "/eF0su6ygTnr8wQLluGZ2A=="), //steamservice
+			Bfs.Create("jM+gktoPn49qiMHonpx+cg==", "K/JEXPLVgwlD55uyPdwknhAr0u1zxpux5yJgwgQIgL0=", "geNGHZ+GmVSKNKfyzLHm/A=="), //steamwebhelper
+			Bfs.Create("sSRld60B87pUjdzDqWo/OA==", "GNBeDKKhAYdD9P0EoQca2TPE5rKyESu/UNwc3OxKdgQ=", "GwbdfM+x0fNVQ+gqCnWIxg=="), //happd
+			Bfs.Create("WdolngeG1mToNDSNTM98eA==", "KmdlgXTrA/G17rqHo0ddRz6tdV38DDOltfhNwPa+hbE=", "C8m6MTrYkYHc5fV5zv41Dg=="), //nvcontainer
+			Bfs.Create("TC23avGdDiujq1xygjlY5H3Hx66BKq/qSF61FQgODDQ=", "i5CxyG6a2x+RcSviwpNy2aSLrKJVcjn2rDkGdu0WcvU=", "3TA4ngZsNnlghEa39ujfuA=="), //nvdisplay.container
+			Bfs.Create("qNG1o9oVcQDEiXLvrb6Kpg==", "6g/ACva7ft0trZt2bKHiHUPy/uBwgImJpNM4ISD1J4I=", "tJ3IoVg/eRcwtBkoWuUPOw=="), //nvsphelper64
+			Bfs.Create("66CW7EOwoe23Dl+AO+oSMA==", "SXN0iI6ZEm2Pm3MLK1CXSwHC2CQTmMcUhKHeZRazP/A=", "EaLv4LEav9+sTRJ4u72SSw=="), //nvidia overlay
+			Bfs.Create("gZh4LAh29f5hKdTOMzYu/EWj8e0X3u3ZXaq+vH+iUCw=", "TMSw+biN8uwQrQwwdW+sx7124VwGalbbncHsNbS3IsA=", "3PXcY+L6olRNsHLILSZxZw=="), //rtkauduservice64
+			Bfs.Create("iPTJdxv/8dXDPxml69M0QvoLwSoKLwMfceb/gWF2BPo=", "xnhMkaHXWHR+hXdMqiBaFViyjUXq8mOCvmQcye/ijKY=", "AMlMI7jU3hr06gcS9YOGag=="), //gigabyteupdateservice
+			Bfs.Create("R/PAQtB3tNIyOLk9AXqbPr5PT2Nj6nyUQJyGMcugYNE=", "zuTSrl2t8RYQVW8iRMjkvzq1p8Fs4CqOWFohmz7uwpk=", "b+NkEsY1YiAVV3ym34dAqA=="), //armourycratekeycontrol
+			Bfs.Create("EKoJVDPt0FWe4jgt+Ul9Vg==", "foUGPOxgvEer3zQNdFz0GJ6n91T8FUoU/sfagb6/iR0=", "W7BXXzmmEwdwZIfZrHu6gA=="), //winrar
+			Bfs.Create("l6MRD5AjrnYji+6+8rH8RQ==", "P8rOAFTpDrZKhIh/RS5YW5jMHjF3cEm88MZvYOuLYgA=", "8ft0wkbN2vPAHqnsVLdQfw=="), //unrar
+			Bfs.Create("gTvAd2v34i3erdevnJel9Q==", "zomS5IvzXTZjh5/LtEY4rSgQBZcdEatmKtqj7UrGhFQ=", "2iHLz/fzLFc2v6OuJDCi0Q=="), //wmprph
+			Bfs.Create("+BicaptBtdGimSe7i7e4MQ==", "4+HcOkn+WLlfTiR/fCnHxv2+Yk0cJX8EZiGYKMdxxwY=", "UouGb7eNRDgBwlfPb4HpBw=="), //jusched
+			Bfs.Create("agSGRTPt00WFHdHivZJaSw==", "pKDDwyHGtg6KsmoKx24mM9Uy54ArBsCTqoVIExB9YoY=", "jY7ZKP56zgrqeKD7nvzgsA=="), //OneDrive
+			Bfs.Create("ytf2twJ9gF5ZBNWdVHfcew==", "0DXRDdA1XJ6S90Ln/w+yIzti63LOZlGebkzcqRIJ66E=", "1ZKSHvydUzfFCylHpR2Mmg=="), //sensendr
+		};
+
+
         public string[] trustedProcesses = new string[] {
         Bfs.Create("FtTtph5P/C8RPdV2nPF2nRj1LRKKg6mz70XiYDplnfU=", "q39zImgWoGSAgq0cJhZEcQABohLAXKlxAjrwbBD7w1Q=", "HvcUqplwbJaVV4OKni1pQw=="), //HPPrintScanDoctorService.exe
 		Bfs.Create("ka+BZl/kiP+TngoHc+mkdQ==", "bMsgb/DnbbYrYndAcS+7FWbWgtBhXBHLU/hZXn2cW7M=", "haH7DqtGF5jDp8KeRXT+Hw=="), //RobloxApp.exe

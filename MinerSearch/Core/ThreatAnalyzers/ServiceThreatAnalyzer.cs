@@ -28,6 +28,22 @@ namespace MSearch.Core.ThreatAnalyzers
         private static bool _headerLogged = false;
         private static readonly object _headerLock = new object();
 
+        private static readonly Regex EncodedCommandRegex = new Regex(
+            @"(?<![a-z0-9])-(e|ec|enc(odedcommand)?)(?![a-z0-9])",
+            RegexOptions.Compiled);
+
+        private static readonly Regex UserWritableDirRegex = new Regex(
+            @"(^|\\)(windows\\temp|users\\[^\\]+\\appdata)(\\|$)",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private static readonly Regex ExecutableExtensionRegex = new Regex(
+            @"\.(exe|dll|sys|com|bat|cmd|ps1|vbs|js|scr|msi|cpl|ocx)$",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private static readonly Regex ConsonantRunRegex = new Regex(
+            @"[bcdfghjklmnpqrstvwxz]{5,}",
+            RegexOptions.Compiled);
+
         public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
         {
             if (!_headerLogged)
@@ -104,6 +120,12 @@ namespace MSearch.Core.ThreatAnalyzers
                                    (normalized.Contains("cmd.exe /c start") ||
                                     normalized.StartsWith("\\\\.\\c:\\programdata", StringComparison.OrdinalIgnoreCase));
 
+            // Encoded PowerShell launcher
+            bool hasEncodedCommand = IsEncodedCommandLaunch(normalized);
+
+            // Random-named extensionless binary in a user-writable directory
+            bool hasSuspiciousImagePath = IsSuspiciousServiceImagePath(svc);
+
             if (hasSddlBlocking)
             {
                 AppConfig.GetInstance.LL.LogWarnMediumMessage("_ServiceSCMUnavailable", svc.ServiceName);
@@ -121,6 +143,21 @@ namespace MSearch.Core.ThreatAnalyzers
                 AppConfig.GetInstance.LL.LogCautionMessage("_Found", $"{svc.ServiceName} {svc.ServicePath}");
                 risk += 3;
                 isMalicious = true;
+            }
+
+            if (hasEncodedCommand)
+            {
+                AppConfig.GetInstance.LL.LogCautionMessage("_ServiceEncodedCommand", $"{svc.ServiceName} {svc.ServicePath}");
+                risk += 3;
+                isMalicious = true;
+            }
+
+            if (hasSuspiciousImagePath)
+            {
+                AppConfig.GetInstance.LL.LogCautionMessage("_ServiceSuspiciousImagePath", $"{svc.ServiceName} {svc.ServicePath}");
+                risk += 3;
+                isMalicious = true;
+                MarkFileForAction(svc.LinkedServiceFile);
             }
 
             if (hasSddlBlocking)
@@ -272,6 +309,77 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 yield return new ThreatDecision(svc.LinkedServiceDll, risk, objType);
             }
+        }
+
+        private static bool IsEncodedCommandLaunch(string normalizedServicePathWithArgs)
+        {
+            if (string.IsNullOrEmpty(normalizedServicePathWithArgs)) return false;
+
+            bool hasShell = normalizedServicePathWithArgs.Contains("powershell") ||
+                            normalizedServicePathWithArgs.Contains("pwsh");
+            if (!hasShell) return false;
+
+            return EncodedCommandRegex.IsMatch(normalizedServicePathWithArgs);
+        }
+
+        private static bool IsSuspiciousServiceImagePath(ServiceThreatObject svc)
+        {
+            string candidate = GetServiceImagePathCandidate(svc);
+            if (string.IsNullOrEmpty(candidate)) return false;
+
+            candidate = candidate.Trim().Trim('"').Replace('/', '\\');
+
+            if (!UserWritableDirRegex.IsMatch(candidate)) return false;
+            if (ExecutableExtensionRegex.IsMatch(candidate)) return false;
+
+            string fileName = Path.GetFileName(candidate);
+            return IsRandomLooking(svc.ServiceName) || IsRandomLooking(fileName);
+        }
+
+        private static string GetServiceImagePathCandidate(ServiceThreatObject svc)
+        {
+            if (!string.IsNullOrEmpty(svc.ServicePath))
+                return svc.ServicePath;
+
+            string raw = svc.ServicePathWithArgs;
+            if (string.IsNullOrEmpty(raw)) return null;
+
+            raw = Environment.ExpandEnvironmentVariables(raw.Trim());
+
+            if (raw.StartsWith("\""))
+            {
+                int closingQuote = raw.IndexOf('"', 1);
+                if (closingQuote > 0)
+                    return raw.Substring(1, closingQuote - 1);
+            }
+
+            int space = raw.IndexOf(' ');
+            return space > 0 ? raw.Substring(0, space) : raw;
+        }
+
+        private static bool IsRandomLooking(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return false;
+
+            string stem = Path.GetFileNameWithoutExtension(value);
+            if (stem.Length < 8) return false;
+
+            int digits = 0;
+            int uppers = 0;
+            int vowels = 0;
+
+            foreach (char c in stem)
+            {
+                if (char.IsDigit(c)) digits++;
+                if (char.IsUpper(c)) uppers++;
+                if ("aeiouyAEIOUY".IndexOf(c) >= 0) vowels++;
+            }
+
+            if (digits >= 3) return true;
+
+            return uppers >= 2 &&
+                   ConsonantRunRegex.IsMatch(stem.ToLowerInvariant()) &&
+                   vowels <= stem.Length * 0.25;
         }
 
         private void CheckServiceDll(ServiceThreatObject svc, ref int risk, ref bool isMalicious)
