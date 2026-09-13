@@ -49,6 +49,31 @@ namespace MSearch
             }
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            AdjustHeightForMessage();
+        }
+
+        /// <summary>
+        /// Увеличивает высоту формы, чтобы сообщение помещалось целиком
+        /// (с учётом переноса длинных строк по ширине колонки).
+        /// </summary>
+        private void AdjustHeightForMessage()
+        {
+            // Высота формы без сообщения: заголовок 32 + кнопки 63 + паддинги 2 (см. дизайнер)
+            const int nonMessageHeight = 97;
+            // Запас на округление/DPI, чтобы последняя строка не обрезалась
+            const int extraHeight = 6;
+
+            int requiredHeight = nonMessageHeight + labelMessage.Height + extraHeight;
+            if (requiredHeight <= ClientSize.Height)
+                return;
+
+            ClientSize = new Size(ClientSize.Width, requiredHeight);
+            tableLayoutPanel2.Height = requiredHeight - nonMessageHeight;
+        }
+
         private Image GetMessageBoxIcon(MessageBoxIcon icon)
         {
             switch (icon)
@@ -203,18 +228,6 @@ namespace MSearch
             top.Capture = false;
             Message m = Message.Create(Handle, 0xA1, new IntPtr(2), IntPtr.Zero);
             base.WndProc(ref m);
-        }
-
-        private void labelMessage_SizeChanged(object sender, EventArgs e)
-        {
-            foreach (char c in labelMessage.Text)
-            {
-                if (c.Equals('\n'))
-                {
-                    this.Height += labelMessage.Height / 25;
-                    tableLayoutPanel2.Height += labelMessage.Height / 25;
-                }
-            }
         }
     }
 }

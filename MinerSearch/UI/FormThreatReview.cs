@@ -12,6 +12,7 @@ namespace MSearch.UI
     {
         private readonly List<ThreatDecision> _decisions;
         private bool _applied = false;
+        private bool _suppressActionChanged = false;
 
         // Поля bulk-действия
         private List<int> _highlightedRows = new List<int>();
@@ -125,6 +126,7 @@ namespace MSearch.UI
             top.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewInstructions");
             btnApply.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewApplyBtn");
             bulkApplyBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewBulkApplyBtn");
+            btnSetRecommended.Text = AppConfig.GetInstance.LL.GetLocalizedString("_ReviewSetRecommendedBtn");
         }
 
         void PopulateDataGridView()
@@ -179,6 +181,7 @@ namespace MSearch.UI
             }
 
             dataGridReviewThreats.ClearSelection();
+            UpdateSetRecommendedButtonState();
         }
 
         /// <summary>
@@ -510,10 +513,41 @@ namespace MSearch.UI
 
         private void FormThreatReview_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!_applied && e.CloseReason == CloseReason.UserClosing)
+            if (!_applied)
             {
                 dataGridReviewThreats.CancelEdit();
+
+                if (e.CloseReason == CloseReason.UserClosing)
+                {
+                    var result = DialogDispatcher.Show(
+                        AppConfig.GetInstance.LL.GetLocalizedString("_ReviewCloseWarning"),
+                        AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAutoAccept_Title"),
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning);
+
+                    if (result != DialogResult.Yes)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+                }
+
+                // Пользователь отказался применять ручной выбор — откатываем его,
+                // чтобы дальше применялись только рекомендуемые действия
+                ResetUserOverrides();
                 _applied = false;
+            }
+        }
+
+        /// <summary>
+        /// Сбрасывает ручной выбор пользователя во всех решениях.
+        /// </summary>
+        private void ResetUserOverrides()
+        {
+            foreach (var decision in _decisions)
+            {
+                if (decision == null) continue;
+                decision.UserOverrideAction = null;
             }
         }
 
@@ -933,6 +967,8 @@ namespace MSearch.UI
                 cell.Value = GetLocalizedUserActionName(userAction);
                 decision.UserOverrideAction = userAction;
             }
+
+            UpdateSetRecommendedButtonState();
         }
 
         /// <summary>
@@ -1034,6 +1070,67 @@ namespace MSearch.UI
 
         #endregion
 
+        #region Set Recommended
+
+        /// <summary>
+        /// Кнопка "Задать рекомендуемые" активна, если хотя бы одно действие
+        /// вручную отличается от рекомендуемого анализатором.
+        /// </summary>
+        private void UpdateSetRecommendedButtonState()
+        {
+            bool hasManualChanges = false;
+
+            foreach (DataGridViewRow row in dataGridReviewThreats.Rows)
+            {
+                if (!(row.Tag is ThreatDecision decision) || decision.Target == null) continue;
+
+                var recommended = GetDefaultUserActionFromFlags(decision);
+                if (GetUserActionFromRow(row) != recommended)
+                {
+                    hasManualChanges = true;
+                    break;
+                }
+            }
+
+            btnSetRecommended.Enabled = hasManualChanges;
+        }
+
+        private ScanActionTypeUserSelected GetUserActionFromRow(DataGridViewRow row)
+        {
+            var value = row.Cells[ColNewAction].Value;
+            if (value == null) return ScanActionTypeUserSelected.Skip;
+            return ParseUserActionFromString(value.ToString());
+        }
+
+        /// <summary>
+        /// Возвращает рекомендуемые действия анализаторов для всех позиций,
+        /// сбрасывая ручной выбор. Ничего не применяет.
+        /// </summary>
+        private void btnSetRecommended_Click(object sender, EventArgs e)
+        {
+            _suppressActionChanged = true;
+            try
+            {
+                foreach (DataGridViewRow row in dataGridReviewThreats.Rows)
+                {
+                    if (!(row.Tag is ThreatDecision decision) || decision.Target == null) continue;
+
+                    var recommended = GetDefaultUserActionFromFlags(decision);
+                    row.Cells[ColNewAction].Value = GetLocalizedUserActionName(recommended);
+                    decision.UserOverrideAction = null;
+                }
+            }
+            finally
+            {
+                _suppressActionChanged = false;
+            }
+
+            dataGridReviewThreats.RefreshEdit();
+            UpdateSetRecommendedButtonState();
+        }
+
+        #endregion
+
         private void FormThreatReview_Load(object sender, EventArgs e)
         {
             dataGridReviewThreats.AutoResizeColumns();
@@ -1052,12 +1149,16 @@ namespace MSearch.UI
             if (dataGridReviewThreats.Columns[e.ColumnIndex].Name != ColNewAction) return;
             if (e.RowIndex >= dataGridReviewThreats.Rows.Count) return;
 
+            if (_suppressActionChanged) return;
+
             var row = dataGridReviewThreats.Rows[e.RowIndex];
             if (row.Tag is ThreatDecision decision && row.Cells[ColNewAction].Value != null)
             {
                 string selectedText = row.Cells[ColNewAction].Value.ToString();
                 decision.UserOverrideAction = ParseUserActionFromString(selectedText);
             }
+
+            UpdateSetRecommendedButtonState();
         }
 
         private void dataGridReviewThreats_CurrentCellDirtyStateChanged(object sender, EventArgs e)

@@ -15,6 +15,7 @@ namespace MSearch
     {
         FinishEx FinishEx = null;
         int SELECTED_ROWS_COUNT = 0;
+        const int MAX_SUMMARY_PATHS = 10;
 
         readonly string REGISTRY_PATH_QUARANTINE = @"Software\M1nerSearch\Quarantine";
         readonly string REGISTRY_PATH_MAIN = @"Software\M1nerSearch";
@@ -231,6 +232,31 @@ namespace MSearch
             }
         }
 
+        /// <summary>
+        /// Показывает итоговое сообщение со списком затронутых объектов.
+        /// Список путей ограничен, чтобы окно не растягивалось на весь экран.
+        /// </summary>
+        void ShowOperationSummary(string messageKey, List<string> affectedFiles)
+        {
+            StringBuilder pathList = new StringBuilder(
+                AppConfig.GetInstance.LL.GetLocalizedString(messageKey)
+                    .Replace("#FILESCOUNT#", affectedFiles.Count.ToString()) + "\n");
+
+            int shownCount = Math.Min(affectedFiles.Count, MAX_SUMMARY_PATHS);
+            for (int i = 0; i < shownCount; i++)
+            {
+                pathList.Append($"\n{affectedFiles[i]}");
+            }
+
+            if (affectedFiles.Count > shownCount)
+            {
+                pathList.Append("\n" + AppConfig.GetInstance.LL.GetLocalizedString("_AndMoreItems")
+                    .Replace("#COUNT#", (affectedFiles.Count - shownCount).ToString()));
+            }
+
+            MessageBoxCustom.Show(pathList.ToString(), AppConfig.GetInstance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         void dataGridQuarantineFiles_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             dataGridQuarantineFiles.ClearSelection();
@@ -405,14 +431,8 @@ namespace MSearch
 
             if (affectedFiles.Count > 0)
             {
-                StringBuilder pathList = new StringBuilder(AppConfig.GetInstance.LL.GetLocalizedString(message).Replace("#FILESCOUNT#", affectedFiles.Count.ToString()) + "\n");
-                foreach (string filePath in affectedFiles)
-                {
-                    pathList.Append($"\n{filePath}");
-                }
-
                 UpdateHeaderCheckBoxState();
-                MessageBoxCustom.Show(pathList.ToString(), AppConfig.GetInstance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ShowOperationSummary(message, affectedFiles);
             }
 
             SELECTED_ROWS_COUNT = 0;
@@ -477,13 +497,8 @@ namespace MSearch
 
                 if (affectedFiles.Count > 0)
                 {
-                    StringBuilder pathList = new StringBuilder(AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineRestoredFile").Replace("#FILESCOUNT#", affectedFiles.Count.ToString()) + "\n");
-                    foreach (string filePath in affectedFiles)
-                    {
-                        pathList.Append($"\n{filePath}");
-                    }
                     UpdateHeaderCheckBoxState();
-                    MessageBoxCustom.Show(pathList.ToString(), AppConfig.GetInstance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ShowOperationSummary("_QuarantineRestoredFile", affectedFiles);
                 }
 
                 SELECTED_ROWS_COUNT = 0;
@@ -527,14 +542,8 @@ namespace MSearch
 
                 if (affectedFiles.Count > 0)
                 {
-                    StringBuilder pathList = new StringBuilder(AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineRestoredFile").Replace("#FILESCOUNT#", affectedFiles.Count.ToString()) + "\n");
-                    foreach (string filePath in affectedFiles)
-                    {
-                        pathList.Append($"\n{filePath}");
-                    }
-
                     UpdateHeaderCheckBoxState();
-                    MessageBoxCustom.Show(pathList.ToString(), AppConfig.GetInstance.LL.GetLocalizedString("_Quarantine"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ShowOperationSummary("_QuarantineRestoredFile", affectedFiles);
                 }
 
                 SELECTED_ROWS_COUNT = 0;

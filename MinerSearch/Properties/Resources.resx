@@ -231,7 +231,7 @@
   </data>
   <data name="_License_console_EN" xml:space="preserve">
     <value>[Denial of responsibility]
-Before proceeding, you must read the license agreement (license.rtf or a copy of it on https://github.com/BlendLog/MinerSearch/blob/master/LICENSE.MD ). Continue?</value>
+Before proceeding, you must read the license agreement (eula.rtf or a copy of it on https://github.com/BlendLog/MinerSearch/blob/master/LICENSE.MD ). Continue?</value>
   </data>
   <data name="_Note_ApplockerHasBadSettings_RU" xml:space="preserve">
     <value>Содержит набор нежелательных правил, по которым блокируется запуск определенных приложений</value>
@@ -1343,7 +1343,7 @@ Do you want to continue?</value>
     <value>Error</value>
   </data>
   <data name="_LabelQuarantinedFiles_RU" xml:space="preserve">
-    <value>Файлы в карантине:</value>
+    <value>Объекты в карантине:</value>
   </data>
   <data name="_ChekingR00tkit_EN" xml:space="preserve">
     <value>Checking rootkit present...</value>
@@ -1368,7 +1368,7 @@ Do you want to continue?</value>
 {\colortbl ;\red118\green113\blue113;}
 {\*\generator Riched20 10.0.19041}{\*\mmathPr\mnaryLim0\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
 \pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\f0\fs28\par
-This software provided "as is" and was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurrency. The author is not responsible for incidental, indirect or unintentional damage of any kind during the use of this software. You may use it at your own risk.\par
+This software provided "as is" and was created exclusively to search and remove malware that secretly uses computer resources for mining cryptocurrency. The author is not responsible for incidental, indirect or unintentional damage of any kind during the use of this software. You may use it at your own risk. The software is an auxiliary tool and does not replace antivirus protection.\par
 \par
 \b Collecting technical information\par
 \b0 The application automatically generates an anonymous identifier key (Device ID) based on the device configuration (hardware characteristics, OS version). It is used exclusively for:\par
@@ -1381,6 +1381,12 @@ This software provided "as is" and was created exclusively to search and remove 
 \pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\par
 \b Where is the DeviceID displayed?\par
 \b0 The identifier key is indicated on the final application window with the summary report.\par
+\par
+\pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\b Optional sending of scan reports\par
+\pard\widctlpar\li142\ri212\sa160\sl276\slmult1\b0 On the first run the application offers to send the scan log to the developer; this can be changed at any time in the settings. If sending is allowed, the application transmits the scan log file, Device ID, application version, number of runs and scan statistics (found / neutralized / skipped) to the developer's server. The log file may contain paths to files, names of processes, services and scheduled tasks found on the device. The data is used solely for diagnosing and improving the application, is not shared with third parties and is not used for advertising or tracking.\par
+\par
+\pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\b Checking for updates\par
+\pard\widctlpar\li142\ri212\sa160\sl276\slmult1\b0 The application periodically requests the current version number from the developer's server and from the official GitHub repository. No personal data is transmitted.\par
 \par
 \cf1\b FAQ:\par
 \cf0 Why does my antivirus indicate that the software contains a Trojan/virus?\par
@@ -2007,7 +2013,7 @@ Click \b Exit\b0  to exit.\par
     <value>Запланированная задача отмечена на удаление</value>
   </data>
   <data name="_TaskMarkedToQuarantine_RU" xml:space="preserve">
-    <value>Запланированная задача отмечена на карантин (сохранение с последующим удалением)</value>
+    <value>Запланированная задача отмечена на карантин</value>
   </data>
   <data name="_MasqueradedSystemTask_RU" xml:space="preserve">
     <value>Задача маскируется под системный бинарник:</value>
@@ -2127,7 +2133,7 @@ Click \b Exit\b0  to exit.\par
     <value>Scheduled task has beed marked to delete</value>
   </data>
   <data name="_TaskMarkedToQuarantine_EN" xml:space="preserve">
-    <value>Scheduled task has been marked for quarantine (save then delete)</value>
+    <value>Scheduled task has been marked for quarantine</value>
   </data>
   <data name="_ProcessingHosts_EN" xml:space="preserve">
     <value>Processing hosts file...</value>
@@ -2352,7 +2358,7 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_License_console_RU" xml:space="preserve">
     <value>[Отказ от ответветственности]
-Прежде чем продолжить, вы должны ознакомится с лицензионным соглашением (license.rtf или его копию на https://github.com/BlendLog/MinerSearch/blob/master/LICENSE.MD). Продолжить?</value>
+Прежде чем продолжить, вы должны ознакомится с лицензионным соглашением (eula_ru.rtf или его копию на https://github.com/BlendLog/MinerSearch/blob/master/LICENSE.MD). Продолжить?</value>
   </data>
   <data name="_TotalThreatsFound_EN" xml:space="preserve">
     <value>Total threats:</value>
@@ -2457,7 +2463,7 @@ Click \b Exit\b0  to exit.\par
     <value>Can not remove</value>
   </data>
   <data name="_LabelQuarantinedFiles_EN" xml:space="preserve">
-    <value>Files in quarantine:</value>
+    <value>Objects in quarantine:</value>
   </data>
   <data name="_FoundMlwrKey_RU" xml:space="preserve">
     <value>Найден вредоносный ключ реестра - </value>
@@ -2834,7 +2840,7 @@ Click \b Exit\b0  to exit.\par
 {\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
 {\*\generator Riched20 10.0.19041}{\*\mmathPr\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
 \pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\tx284\f0\fs28\par
-\'c4\'e0\'ed\'ed\'ee\'e5 \'ef\'f0\'ee\'e3\'f0\'e0\'ec\'ec\'ed\'ee\'e5 \'ee\'e1\'e5\'f1\'ef\'e5\'f7\'e5\'ed\'e8\'e5 (\'c4\'e0\'eb\'e5\'e5 \'cf\'ce) \'ef\'f0\'e5\'e4\'ee\'f1\'f2\'e0\'e2\'eb\'ff\'e5\'f2\'f1\'ff "\'ea\'e0\'ea \'e5\'f1\'f2\'fc" \'e8 \'f1\'ee\'e7\'e4\'e0\'ed\'ee \'e8\'f1\'ea\'eb\'fe\'f7\'e8\'f2\'e5\'eb\'fc\'ed\'ee \'e4\'eb\'ff \'ef\'ee\'e8\'f1\'ea\'e0 \'e8 \'f3\'e4\'e0\'eb\'e5\'ed\'e8\'ff \'e2\'f0\'e5\'e4\'ee\'ed\'ee\'f1\'ed\'ee\'e3\'ee \'cf\'ce, \'f2\'e0\'e9\'ed\'ee \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'f3\'fe\'f9\'e5\'e5 \'f0\'e5\'f1\'f3\'f0\'f1\'fb \'ea\'ee\'ec\'ef\'fc\'fe\'f2\'e5\'f0\'e0 \'e4\'eb\'ff \'e4\'ee\'e1\'fb\'f7\'e8 (\'ec\'e0\'e9\'ed\'e8\'ed\'e3\'e0) \'ea\'f0\'e8\'ef\'f2\'ee\'e2\'e0\'eb\'fe\'f2\'fb. \'c0\'e2\'f2\'ee\'f0 \'ed\'e5 \'ed\'e5\'f1\'e5\'f2 \'ee\'f2\'e2\'e5\'f2\'f1\'f2\'e2\'e5\'ed\'ed\'ee\'f1\'f2\'e8 \'e7\'e0 \'ef\'f0\'e8\'f7\'e8\'ed\'e5\'ed\'ed\'fb\'e9 \'f1\'eb\'f3\'f7\'e0\'e9\'ed\'fb\'e9, \'ea\'ee\'f1\'e2\'e5\'ed\'ed\'fb\'e9 \'e8\'eb\'e8 \'ed\'e5\'ef\'f0\'e5\'e4\'ed\'e0\'ec\'e5\'f0\'e5\'ed\'ed\'fb\'e9 \'f3\'f9\'e5\'f0\'e1 \'eb\'fe\'e1\'ee\'e3\'ee \'f0\'ee\'e4\'e0 \'e2 \'f5\'ee\'e4\'e5 \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'ee\'e2\'e0\'ed\'e8\'ff \'e4\'e0\'ed\'ed\'ee\'e3\'ee \'cf\'ce. \'c2\'fb \'ec\'ee\'e6\'e5\'f2\'e5 \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'ee\'e2\'e0\'f2\'fc \'e5\'e3\'ee \'ed\'e0 \'f1\'e2\'ee\'e9 \'f1\'f2\'f0\'e0\'f5 \'e8 \'f0\'e8\'f1\'ea. \par
+\'c4\'e0\'ed\'ed\'ee\'e5 \'ef\'f0\'ee\'e3\'f0\'e0\'ec\'ec\'ed\'ee\'e5 \'ee\'e1\'e5\'f1\'ef\'e5\'f7\'e5\'ed\'e8\'e5 (\'c4\'e0\'eb\'e5\'e5 \'cf\'ce) \'ef\'f0\'e5\'e4\'ee\'f1\'f2\'e0\'e2\'eb\'ff\'e5\'f2\'f1\'ff "\'ea\'e0\'ea \'e5\'f1\'f2\'fc" \'e8 \'f1\'ee\'e7\'e4\'e0\'ed\'ee \'e8\'f1\'ea\'eb\'fe\'f7\'e8\'f2\'e5\'eb\'fc\'ed\'ee \'e4\'eb\'ff \'ef\'ee\'e8\'f1\'ea\'e0 \'e8 \'f3\'e4\'e0\'eb\'e5\'ed\'e8\'ff \'e2\'f0\'e5\'e4\'ee\'ed\'ee\'f1\'ed\'ee\'e3\'ee \'cf\'ce, \'f2\'e0\'e9\'ed\'ee \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'f3\'fe\'f9\'e5\'e5 \'f0\'e5\'f1\'f3\'f0\'f1\'fb \'ea\'ee\'ec\'ef\'fc\'fe\'f2\'e5\'f0\'e0 \'e4\'eb\'ff \'e4\'ee\'e1\'fb\'f7\'e8 (\'ec\'e0\'e9\'ed\'e8\'ed\'e3\'e0) \'ea\'f0\'e8\'ef\'f2\'ee\'e2\'e0\'eb\'fe\'f2\'fb. \'c0\'e2\'f2\'ee\'f0 \'ed\'e5 \'ed\'e5\'f1\'e5\'f2 \'ee\'f2\'e2\'e5\'f2\'f1\'f2\'e2\'e5\'ed\'ed\'ee\'f1\'f2\'e8 \'e7\'e0 \'ef\'f0\'e8\'f7\'e8\'ed\'e5\'ed\'ed\'fb\'e9 \'f1\'eb\'f3\'f7\'e0\'e9\'ed\'fb\'e9, \'ea\'ee\'f1\'e2\'e5\'ed\'ed\'fb\'e9 \'e8\'eb\'e8 \'ed\'e5\'ef\'f0\'e5\'e4\'ed\'e0\'ec\'e5\'f0\'e5\'ed\'ed\'fb\'e9 \'f3\'f9\'e5\'f0\'e1 \'eb\'fe\'e1\'ee\'e3\'ee \'f0\'ee\'e4\'e0 \'e2 \'f5\'ee\'e4\'e5 \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'ee\'e2\'e0\'ed\'e8\'ff \'e4\'e0\'ed\'ed\'ee\'e3\'ee \'cf\'ce. \'c2\'fb \'ec\'ee\'e6\'e5\'f2\'e5 \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'ee\'e2\'e0\'f2\'fc \'e5\'e3\'ee \'ed\'e0 \'f1\'e2\'ee\'e9 \'f1\'f2\'f0\'e0\'f5 \'e8 \'f0\'e8\'f1\'ea. \'cf\'f0\'e8\'eb\'ee\'e6\'e5\'ed\'e8\'e5 \'ff\'e2\'eb\'ff\'e5\'f2\'f1\'ff \'e2\'f1\'ef\'ee\'ec\'ee\'e3\'e0\'f2\'e5\'eb\'fc\'ed\'fb\'ec \'e8\'ed\'f1\'f2\'f0\'f3\'ec\'e5\'ed\'f2\'ee\'ec \'e8 \'ed\'e5 \'e7\'e0\'ec\'e5\'ed\'ff\'e5\'f2 \'e0\'ed\'f2\'e8\'e2\'e8\'f0\'f3\'f1\'ed\'f3\'fe \'e7\'e0\'f9\'e8\'f2\'f3.\par
 \par
 
 \pard\widctlpar\fi852\sa160\sl276\slmult1\kerning2\b\'d1\'e1\'ee\'f0 \'f2\'e5\'f5\'ed\'e8\'f7\'e5\'f1\'ea\'ee\'e9 \'e8\'ed\'f4\'ee\'f0\'ec\'e0\'f6\'e8\'e8\par
@@ -2853,7 +2859,12 @@ Click \b Exit\b0  to exit.\par
 \pard\widctlpar\li142\sa160\sl276\slmult1\b0\'ca\'eb\'fe\'f7-\'e8\'e4\'e5\'ed\'f2\'e8\'f4\'e8\'ea\'e0\'f2\'ee\'f0 \'f3\'ea\'e0\'e7\'e0\'ed \'ed\'e0 \'f4\'e8\'ed\'e0\'eb\'fc\'ed\'ee\'ec \'ee\'ea\'ed\'e5 \'ef\'f0\'e8\'eb\'ee\'e6\'e5\'ed\'e8\'ff c \'ea\'f0\'e0\'f2\'ea\'e8\'ec \'ee\'f2\'f7\'b8\'f2\'ee\'ec. \par
 
 \pard\widctlpar\sa160\sl276\slmult1\par
-
+\pard\widctlpar\fi710\li142\sa160\sl276\slmult1\b\'cd\'e5\'ee\'e1\'ff\'e7\'e0\'f2\'e5\'eb\'fc\'ed\'e0\'ff \'ee\'f2\'ef\'f0\'e0\'e2\'ea\'e0 \'ee\'f2\'f7\'b8\'f2\'ee\'e2 \'ee \'f1\'ea\'e0\'ed\'e8\'f0\'ee\'e2\'e0\'ed\'e8\'e8\par
+\pard\widctlpar\li142\sa160\sl276\slmult1\b0\'cf\'f0\'e8 \'ef\'e5\'f0\'e2\'ee\'ec \'e7\'e0\'ef\'f3\'f1\'ea\'e5 \'ef\'f0\'e8\'eb\'ee\'e6\'e5\'ed\'e8\'e5 \'ef\'f0\'e5\'e4\'eb\'e0\'e3\'e0\'e5\'f2 \'ee\'f2\'ef\'f0\'e0\'e2\'eb\'ff\'f2\'fc \'eb\'ee\'e3 \'f1\'ea\'e0\'ed\'e8\'f0\'ee\'e2\'e0\'ed\'e8\'ff \'f0\'e0\'e7\'f0\'e0\'e1\'ee\'f2\'f7\'e8\'ea\'f3; \'fd\'f2\'ee \'ec\'ee\'e6\'ed\'ee \'e8\'e7\'ec\'e5\'ed\'e8\'f2\'fc \'e2 \'eb\'fe\'e1\'ee\'e9 \'ec\'ee\'ec\'e5\'ed\'f2 \'e2 \'ed\'e0\'f1\'f2\'f0\'ee\'e9\'ea\'e0\'f5. \'c5\'f1\'eb\'e8 \'ee\'f2\'ef\'f0\'e0\'e2\'ea\'e0 \'f0\'e0\'e7\'f0\'e5\'f8\'e5\'ed\'e0, \'ef\'f0\'e8\'eb\'ee\'e6\'e5\'ed\'e8\'e5 \'ef\'e5\'f0\'e5\'e4\'e0\'b8\'f2 \'ed\'e0 \'f1\'e5\'f0\'e2\'e5\'f0 \'f0\'e0\'e7\'f0\'e0\'e1\'ee\'f2\'f7\'e8\'ea\'e0 \'eb\'ee\'e3-\'f4\'e0\'e9\'eb \'f1\'ea\'e0\'ed\'e8\'f0\'ee\'e2\'e0\'ed\'e8\'ff, DeviceID, \'e2\'e5\'f0\'f1\'e8\'fe \'ef\'f0\'e8\'eb\'ee\'e6\'e5\'ed\'e8\'ff, \'f7\'e8\'f1\'eb\'ee \'e7\'e0\'ef\'f3\'f1\'ea\'ee\'e2 \'e8 \'f1\'f2\'e0\'f2\'e8\'f1\'f2\'e8\'ea\'f3 (\'ed\'e0\'e9\'e4\'e5\'ed\'ee / \'ee\'e1\'e5\'e7\'e2\'f0\'e5\'e6\'e5\'ed\'ee / \'ef\'f0\'ee\'ef\'f3\'f9\'e5\'ed\'ee). \'cb\'ee\'e3-\'f4\'e0\'e9\'eb \'ec\'ee\'e6\'e5\'f2 \'f1\'ee\'e4\'e5\'f0\'e6\'e0\'f2\'fc \'ef\'f3\'f2\'e8 \'ea \'f4\'e0\'e9\'eb\'e0\'ec, \'e8\'ec\'e5\'ed\'e0 \'ef\'f0\'ee\'f6\'e5\'f1\'f1\'ee\'e2, \'f1\'eb\'f3\'e6\'e1 \'e8 \'e7\'e0\'e4\'e0\'f7 \'ef\'eb\'e0\'ed\'e8\'f0\'ee\'e2\'f9\'e8\'ea\'e0, \'ee\'e1\'ed\'e0\'f0\'f3\'e6\'e5\'ed\'ed\'fb\'f5 \'ed\'e0 \'f3\'f1\'f2\'f0\'ee\'e9\'f1\'f2\'e2\'e5. \'c4\'e0\'ed\'ed\'fb\'e5 \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'f3\'fe\'f2\'f1\'ff \'e8\'f1\'ea\'eb\'fe\'f7\'e8\'f2\'e5\'eb\'fc\'ed\'ee \'e4\'eb\'ff \'e4\'e8\'e0\'e3\'ed\'ee\'f1\'f2\'e8\'ea\'e8 \'e8 \'f3\'eb\'f3\'f7\'f8\'e5\'ed\'e8\'ff \'f0\'e0\'e1\'ee\'f2\'fb \'ef\'f0\'e8\'eb\'ee\'e6\'e5\'ed\'e8\'ff, \'ed\'e5 \'ef\'e5\'f0\'e5\'e4\'e0\'fe\'f2\'f1\'ff \'f2\'f0\'e5\'f2\'fc\'e8\'ec \'eb\'e8\'f6\'e0\'ec \'e8 \'ed\'e5 \'e8\'f1\'ef\'ee\'eb\'fc\'e7\'f3\'fe\'f2\'f1\'ff \'e4\'eb\'ff \'f0\'e5\'ea\'eb\'e0\'ec\'fb \'e8\'eb\'e8 \'f2\'f0\'e5\'ea\'e8\'ed\'e3\'e0.\par
+\par
+\pard\widctlpar\fi710\li142\sa160\sl276\slmult1\b\'cf\'f0\'ee\'e2\'e5\'f0\'ea\'e0 \'ee\'e1\'ed\'ee\'e2\'eb\'e5\'ed\'e8\'e9\par
+\pard\widctlpar\li142\sa160\sl276\slmult1\b0\'cf\'f0\'e8\'eb\'ee\'e6\'e5\'ed\'e8\'e5 \'ef\'e5\'f0\'e8\'ee\'e4\'e8\'f7\'e5\'f1\'ea\'e8 \'e7\'e0\'ef\'f0\'e0\'f8\'e8\'e2\'e0\'e5\'f2 \'ed\'ee\'ec\'e5\'f0 \'f2\'e5\'ea\'f3\'f9\'e5\'e9 \'e2\'e5\'f0\'f1\'e8\'e8 \'f1 \'f1\'e5\'f0\'e2\'e5\'f0\'e0 \'f0\'e0\'e7\'f0\'e0\'e1\'ee\'f2\'f7\'e8\'ea\'e0 \'e8 \'e8\'e7 \'ee\'f4\'e8\'f6\'e8\'e0\'eb\'fc\'ed\'ee\'e3\'ee \'f0\'e5\'ef\'ee\'e7\'e8\'f2\'ee\'f0\'e8\'ff GitHub. \'cf\'e5\'f0\'f1\'ee\'ed\'e0\'eb\'fc\'ed\'fb\'e5 \'e4\'e0\'ed\'ed\'fb\'e5 \'ef\'f0\'e8 \'fd\'f2\'ee\'ec \'ed\'e5 \'ef\'e5\'f0\'e5\'e4\'e0\'fe\'f2\'f1\'ff.\par
+\par
 \pard\widctlpar\fi710\li142\ri212\sa160\sl276\slmult1\qj\tx284\cf1\kerning0\b\'d7\'e0\'f1\'f2\'ee \'e7\'e0\'e4\'e0\'e2\'e0\'e5\'ec\'fb\'e5 \'e2\'ee\'ef\'f0\'ee\'f1\'fb:\par
 \cf0\'cf\'ee\'f7\'e5\'ec\'f3 \'ec\'ee\'e9 \'e0\'ed\'f2\'e8\'e2\'e8\'f0\'f3\'f1 \'f3\'ea\'e0\'e7\'fb\'e2\'e0\'e5\'f2, \'f7\'f2\'ee \'cf\'ce \'f1\'ee\'e4\'e5\'f0\'e6\'e8\'f2 \'f2\'f0\'ee\'ff\'ed/\'e2\'e8\'f0\'f3\'f1?\par
 \'ce\'f2\'e2\'e5\'f2\b0 : \'d1\'f2\'ee\'f0\'ee\'ed\'ed\'e8\'e9 \'e0\'ed\'f2\'e8\'e2\'e8\'f0\'f3\'f1 \'f0\'e5\'e3\'e8\'f1\'f2\'f0\'e8\'f0\'f3\'e5\'f2 \'f1\'e0\'ec \'f4\'e0\'ea\'f2 \'e2\'ec\'e5\'f8\'e0\'f2\'e5\'eb\'fc\'f1\'f2\'e2\'e0 \'e2 \'f1\'e8\'f1\'f2\'e5\'ec\'f3 \'e8 \'ed\'e5 \'ec\'ee\'e6\'e5\'f2 \'ee\'f2\'eb\'e8\'f7\'e8\'f2\'fc \'ea\'ee\'ed\'ea\'f0\'e5\'f2\'ed\'ee\'e5 \'e4\'e5\'e9\'f1\'f2\'e2\'e8\'e5 (\'e8\'e7\'ec\'e5\'ed\'e5\'ed\'e8\'e5), \'f7\'f2\'ee \'ea\'e0\'ea \'f0\'e0\'e7 \'ef\'ee\'f0\'ee\'e6\'e4\'e0\'e5\'f2 \'f2\'e0\'ea\'f3\'fe \'f0\'e5\'e0\'ea\'f6\'e8\'fe. \'cd\'e5\'e2\'ee\'e7\'ec\'ee\'e6\'ed\'ee \'ff\'e2\'ed\'ee \'f3\'ea\'e0\'e7\'e0\'f2\'fc, \'f7\'f2\'ee \'ef\'f0\'ee\'e8\'e7\'e2\'ee\'e4\'e8\'ec\'ee\'e5 \'e4\'e5\'e9\'f1\'f2\'e2\'e8\'e5 (\'e8\'e7\'ec\'e5\'ed\'e5\'ed\'e8\'e5) \'e2\'fb\'ef\'ee\'eb\'ed\'ff\'e5\'f2\'f1\'ff \'e2 \'e1\'eb\'e0\'e3\'e8\'f5 \'f6\'e5\'eb\'ff\'f5. \par
@@ -3091,5 +3102,23 @@ Do you want to continue?
   </data>
   <data name="_NoteDisallowRunBlocked_RU" xml:space="preserve">
     <value>Заблокированный запуск:</value>
+  </data>
+  <data name="_ReviewSetRecommendedBtn_EN" xml:space="preserve">
+    <value>Set recommended</value>
+  </data>
+  <data name="_ReviewSetRecommendedBtn_RU" xml:space="preserve">
+    <value>Задать рекомендуемые</value>
+  </data>
+  <data name="_ReviewCloseWarning_EN" xml:space="preserve">
+    <value>Recommended actions will be used for all threats. Close the form?</value>
+  </data>
+  <data name="_ReviewCloseWarning_RU" xml:space="preserve">
+    <value>Будут использованы рекомендуемые действия. Закрыть форму?</value>
+  </data>
+  <data name="_AndMoreItems_EN" xml:space="preserve">
+    <value>...and #COUNT# more</value>
+  </data>
+  <data name="_AndMoreItems_RU" xml:space="preserve">
+    <value>...и ещё #COUNT#</value>
   </data>
 </root>

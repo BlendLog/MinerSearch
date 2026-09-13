@@ -39,6 +39,7 @@ namespace MSearch.UI
             this.CloseBtn = new MSearch.UI.RoundButton();
             this.top = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnSetRecommended = new MSearch.UI.RoundButton();
             this.bulkApplyBtn = new MSearch.UI.RoundButton();
             this.btnApply = new MSearch.UI.RoundButton();
             this.bulkActionComboBox = new System.Windows.Forms.ComboBox();
@@ -169,6 +170,7 @@ namespace MSearch.UI
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.RoyalBlue;
+            this.panel2.Controls.Add(this.btnSetRecommended);
             this.panel2.Controls.Add(this.bulkApplyBtn);
             this.panel2.Controls.Add(this.btnApply);
             this.panel2.Controls.Add(this.bulkActionComboBox);
@@ -178,6 +180,27 @@ namespace MSearch.UI
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1100, 48);
             this.panel2.TabIndex = 6;
+            // 
+            // btnSetRecommended
+            // 
+            this.btnSetRecommended.AutoSize = true;
+            this.btnSetRecommended.BackColor = System.Drawing.Color.White;
+            this.btnSetRecommended.CornerRadius = 4;
+            this.btnSetRecommended.Enabled = false;
+            this.btnSetRecommended.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.btnSetRecommended.FlatAppearance.BorderSize = 0;
+            this.btnSetRecommended.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Navy;
+            this.btnSetRecommended.FlatAppearance.MouseOverBackColor = System.Drawing.Color.AliceBlue;
+            this.btnSetRecommended.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSetRecommended.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.btnSetRecommended.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.btnSetRecommended.Location = new System.Drawing.Point(472, 8);
+            this.btnSetRecommended.Name = "btnSetRecommended";
+            this.btnSetRecommended.Size = new System.Drawing.Size(247, 35);
+            this.btnSetRecommended.TabIndex = 3;
+            this.btnSetRecommended.Text = "_ReviewSetRecommendedBtn";
+            this.btnSetRecommended.UseVisualStyleBackColor = false;
+            this.btnSetRecommended.Click += new System.EventHandler(this.btnSetRecommended_Click);
             // 
             // bulkApplyBtn
             // 
@@ -261,6 +284,7 @@ namespace MSearch.UI
         private System.Windows.Forms.Label top;
         private System.Windows.Forms.ComboBox bulkActionComboBox;
         private RoundButton bulkApplyBtn;
+        private RoundButton btnSetRecommended;
         private System.Windows.Forms.Panel panel2;
         private RoundButton btnApply;
     }

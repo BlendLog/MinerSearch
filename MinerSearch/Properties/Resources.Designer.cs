@@ -349,6 +349,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на ...and #COUNT# more.
+        /// </summary>
+        internal static string _AndMoreItems_EN {
+            get {
+                return ResourceManager.GetString("_AndMoreItems_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на ...и ещё #COUNT#.
+        /// </summary>
+        internal static string _AndMoreItems_RU {
+            get {
+                return ResourceManager.GetString("_AndMoreItems_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Another copy of the application is already running. For display help message use --help option.
         /// </summary>
         internal static string _AppAlreadyRunning_EN {
@@ -3092,7 +3110,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Files in quarantine:.
+        ///   Ищет локализованную строку, похожую на Objects in quarantine:.
         /// </summary>
         internal static string _LabelQuarantinedFiles_EN {
             get {
@@ -3101,7 +3119,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Файлы в карантине:.
+        ///   Ищет локализованную строку, похожую на Объекты в карантине:.
         /// </summary>
         internal static string _LabelQuarantinedFiles_RU {
             get {
@@ -6031,6 +6049,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Recommended actions will be used for all threats. Close the form?.
+        /// </summary>
+        internal static string _ReviewCloseWarning_EN {
+            get {
+                return ResourceManager.GetString("_ReviewCloseWarning_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Будут использованы рекомендуемые действия. Закрыть форму?.
+        /// </summary>
+        internal static string _ReviewCloseWarning_RU {
+            get {
+                return ResourceManager.GetString("_ReviewCloseWarning_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Select action for each threat. Leave unchanged for auto-apply..
         /// </summary>
         internal static string _ReviewInstructions_EN {
@@ -6045,6 +6081,24 @@ namespace MSearch.Properties {
         internal static string _ReviewInstructions_RU {
             get {
                 return ResourceManager.GetString("_ReviewInstructions_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Set recommended.
+        /// </summary>
+        internal static string _ReviewSetRecommendedBtn_EN {
+            get {
+                return ResourceManager.GetString("_ReviewSetRecommendedBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Задать рекомендуемые.
+        /// </summary>
+        internal static string _ReviewSetRecommendedBtn_RU {
+            get {
+                return ResourceManager.GetString("_ReviewSetRecommendedBtn_RU", resourceCulture);
             }
         }
         
@@ -7201,7 +7255,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Scheduled task has been marked for quarantine (save then delete).
+        ///   Ищет локализованную строку, похожую на Scheduled task has been marked for quarantine.
         /// </summary>
         internal static string _TaskMarkedToQuarantine_EN {
             get {
@@ -7210,7 +7264,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Запланированная задача отмечена на карантин (сохранение с последующим удалением).
+        ///   Ищет локализованную строку, похожую на Запланированная задача отмечена на карантин.
         /// </summary>
         internal static string _TaskMarkedToQuarantine_RU {
             get {

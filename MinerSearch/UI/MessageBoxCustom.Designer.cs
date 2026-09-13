@@ -34,8 +34,8 @@ namespace MSearch
             this.panel1 = new System.Windows.Forms.Panel();
             this.CloseBtn = new MSearch.UI.RoundButton();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.labelMessage = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.labelMessage = new System.Windows.Forms.Label();
             this.panelButtons = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -54,7 +54,7 @@ namespace MSearch
             this.top.Margin = new System.Windows.Forms.Padding(0);
             this.top.Name = "top";
             this.top.Padding = new System.Windows.Forms.Padding(15, 0, 30, 0);
-            this.top.Size = new System.Drawing.Size(534, 32);
+            this.top.Size = new System.Drawing.Size(573, 32);
             this.top.TabIndex = 3;
             this.top.Text = "title";
             this.top.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -77,7 +77,7 @@ namespace MSearch
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 63F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(536, 200);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(575, 200);
             this.tableLayoutPanel1.TabIndex = 4;
             // 
             // panel1
@@ -88,21 +88,22 @@ namespace MSearch
             this.panel1.Location = new System.Drawing.Point(1, 1);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(534, 32);
+            this.panel1.Size = new System.Drawing.Size(573, 32);
             this.panel1.TabIndex = 4;
             // 
             // CloseBtn
             // 
             this.CloseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseBtn.BackColor = System.Drawing.Color.RoyalBlue;
-            this.CloseBtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.CloseBtn.CornerRadius = 4;
+            this.CloseBtn.FlatAppearance.BorderColor = System.Drawing.Color.RoyalBlue;
             this.CloseBtn.FlatAppearance.BorderSize = 0;
             this.CloseBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.CloseBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CloseBtn.Font = new System.Drawing.Font("Verdana", 8F, System.Drawing.FontStyle.Bold);
             this.CloseBtn.ForeColor = System.Drawing.Color.White;
             this.CloseBtn.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.CloseBtn.Location = new System.Drawing.Point(509, 7);
+            this.CloseBtn.Location = new System.Drawing.Point(548, 7);
             this.CloseBtn.Margin = new System.Windows.Forms.Padding(0);
             this.CloseBtn.Name = "CloseBtn";
             this.CloseBtn.Size = new System.Drawing.Size(22, 20);
@@ -126,33 +127,32 @@ namespace MSearch
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(534, 118);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(573, 118);
             this.tableLayoutPanel2.TabIndex = 6;
-            // 
-            // labelMessage
-            // 
-            this.labelMessage.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.labelMessage.AutoSize = true;
-            this.labelMessage.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.labelMessage.Location = new System.Drawing.Point(122, 49);
-            this.labelMessage.Margin = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.labelMessage.Name = "labelMessage";
-            this.labelMessage.Size = new System.Drawing.Size(45, 20);
-            this.labelMessage.TabIndex = 5;
-            this.labelMessage.Text = "blank";
-            this.labelMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelMessage.SizeChanged += new System.EventHandler(this.labelMessage_SizeChanged);
             // 
             // pictureBox1
             // 
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox1.Location = new System.Drawing.Point(24, 33);
+            this.pictureBox1.Location = new System.Drawing.Point(28, 33);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(48, 52);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
+            // 
+            // labelMessage
+            // 
+            this.labelMessage.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.labelMessage.AutoSize = true;
+            this.labelMessage.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.labelMessage.Location = new System.Drawing.Point(129, 49);
+            this.labelMessage.Margin = new System.Windows.Forms.Padding(25, 0, 0, 0);
+            this.labelMessage.Name = "labelMessage";
+            this.labelMessage.Size = new System.Drawing.Size(45, 20);
+            this.labelMessage.TabIndex = 5;
+            this.labelMessage.Text = "blank";
+            this.labelMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panelButtons
             // 
@@ -163,7 +163,7 @@ namespace MSearch
             this.panelButtons.Location = new System.Drawing.Point(1, 151);
             this.panelButtons.Margin = new System.Windows.Forms.Padding(0, 0, 0, 15);
             this.panelButtons.Name = "panelButtons";
-            this.panelButtons.Size = new System.Drawing.Size(534, 48);
+            this.panelButtons.Size = new System.Drawing.Size(573, 48);
             this.panelButtons.TabIndex = 7;
             // 
             // MessageBoxCustom
@@ -172,10 +172,9 @@ namespace MSearch
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClientSize = new System.Drawing.Size(536, 200);
+            this.ClientSize = new System.Drawing.Size(575, 200);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MessageBoxCustom";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
