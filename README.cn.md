@@ -11,30 +11,34 @@
 ## 更新新闻现在在 Telegram 上！
 ## https://t.me/MinerSearch_blog
 ## ⬇ ![下载最新版本](https://github.com/BlendLog/MinerSearch/releases/latest)
-### 需要 NET Framework 4.7.2
+### 需要 NET Framework 4.8
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
 
 > [!CAUTION]
 > ### Windows 7 已过时。MinerSearch 对该操作系统的开发已停止。
 
-版本 v1.4.9.0
+版本 v1.4.9.3
 
-- 新架构：Scanner -> Analyzer -> Handler
-- 更新代码库，进行全面审查
-- 新增删除新型挖矿程序
-- 修复错误删除所有 WMI 订阅的问题
-- 修复错误判定威胁类型的问题
-- 在报告窗体中新增"类别"列
-- 新增选项 --no-scan-wmi (-nwmi)
-- 新增选项 --no-scan-users (-nsu)
-- 新增选项 --no-scan-registry (-nsr)
-- 重新设计签名分析器
+- 服务和计划任务现在可以被移入隔离区
+- 更新了通过 WMI 识别和删除挖矿程序的方式
+- 修复了 DisableTaskMgr 和 DisableRegistryTools 参数值为 0 却被判定为威胁的问题
+- 修复了通过 -q 选项进入隔离区界面时创建空日志的问题
+- 为 DisallowRun 中的部分应用添加了排除列表（用于阻止 Windows 遥测）
+- 改进了计划任务和服务的启发式检测
+- 在 FormThreatReview 中新增了用于设置推荐操作的按钮
+- FormThreatReview 现在会在关闭窗体时显示警告
+- 更新/修复了本地化资源
+
 --------------------------------------------
 
 ## 使用方法
 
 将程序压缩包完全解压到独立文件夹中并运行应用程序。等待扫描完成。首次使用程序时，可选择性地向作者报告扫描结果。扫描完成后，将显示一个包含已消除威胁的简要报告的窗体。点击"打开报告"按钮可查看详细报告。点击"隔离区"按钮将打开隔离区管理器，您可以在其中完全删除文件或恢复文件。
+
+如果发现未知威胁，将打开"威胁审查"窗口。对于每个项目，您可以选择操作（清除、隔离、删除、终止、禁用、跳过），或为所有项目设置统一操作（"应用到全部"）。"设置推荐操作"按钮会恢复分析器推荐的操作。如果关闭窗口而未点击"应用"，确认后将应用推荐操作。可以在"打开设置"中或通过 -norev 参数启用自动接受未知威胁的处理决定。
+
+点击"打开隔离区"按钮将打开隔离区管理器，您可以在其中完全删除或恢复已隔离的文件、计划任务和服务。
 
 ----------------
 如何在应用中切换语言？

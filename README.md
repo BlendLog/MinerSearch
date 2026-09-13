@@ -18,23 +18,27 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 > [!CAUTION]
 > ### Windows 7 is outdated. MinerSearch development for this OS has been discontinued.
 
-Version v1.4.9.2
+Version v1.4.9.3
 
-  - Added a new FormThreatReview form allowing users to choose an action for each detected threat
-  - Moved the "Allow sending statistics" toggle to a separate form
-  - Fixed false positive triggers related to Throne proxy
-  - Fixed a bug where UAC status was not being determined
-  - Fixed a ReleaseMutex bug that caused the application to crash after scanning in --silent mode
-  - Added validation for invalid characters when checking scheduled tasks & firewall rules
-  - The main FinishEx window no longer has the 'TopMost' attribute  
-  - Added a link to the official application page
-  - Updated rules for detecting and removing new cryptominers
+  - Services and scheduled tasks can now be moved to quarantine
+  - Updated identification and removal of miners via WMI
+  - Fixed a bug where the DisableTaskMgr and DisableRegistryTools values were 0, but were detected as a threat
+  - Fixed a bug where an empty log was created when entering the quarantine UI via the -q option
+  - Added an exclusion list for some applications from DisallowRun, used to block Windows telemetry
+  - Improved heuristics for scheduled tasks and services
+  - Added a button in FormThreatReview to set recommended actions for threats
+  - FormThreatReview now shows a warning when the form is closed
+  - Updated / fixed localization resources
 
 --------------------------------------------
 
 ## How to use
 
 Completely unzip the archive with the program into a separate folder and launch the application. Wait for the scan to complete. When using the program for the first time, you are offered to report the scan results to the author at your discretion. After completion, a form will be shown with a brief report on the threats that have been eliminated. You can view the detailed report by clicking the "Open Report" button. Clicking the "Quarantine" button will open the Quarantine Manager, in which you can completely delete a file or restore it.
+
+If unknown threats are found, the "Threat Review" window opens. For each item you can select an action (Cure, Quarantine, Delete, Terminate, Disable, Skip) or set a single action for all items ("Set to all"). The "Set recommended" button restores the actions recommended by the analyzers. If the window is closed without clicking "Apply", the recommended actions are applied after confirmation. Automatic acceptance of decisions for unknown threats can be enabled in "Open settings" or with the -norev parameter.
+
+Clicking on the "Open quarantine" button will open the Quarantine Manager, in which you can completely delete or restore quarantined files, scheduled tasks and services.
 
 ----------------
 How to switch language in the app?
