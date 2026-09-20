@@ -388,8 +388,6 @@ namespace MSearch
                             AppConfig.GetInstance.LL.LogWarnMessage("_CertFileNotSigned", filePath);
                         else
                             AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", "_CertFileNotSigned", filePath, ConsoleColor.Yellow, false);
-
-                        Logger.WriteLog($"\t\t[SHA1: {FileChecker.CalculateSHA1(filePath)}]", ConsoleColor.White, false);
                     }
 
 

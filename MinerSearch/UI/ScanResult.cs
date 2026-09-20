@@ -1,10 +1,4 @@
-﻿using DBase;
-using MSearch.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MSearch.Core;
 
 namespace MSearch
 {
@@ -24,7 +18,8 @@ namespace MSearch
         Error,
         Inaccessible,
         Disabled,
-        LockedByAntivirus
+        LockedByAntivirus,
+        RebootPending
     }
 
     /// <summary>
@@ -54,7 +49,7 @@ namespace MSearch
     public class ScanResult
     {
         public string Type { get; }
-        public string Path { get;  }
+        public string Path { get; }
         public string Action { get; }
         public string Note { get; }
         public string Class { get; }
@@ -119,6 +114,8 @@ namespace MSearch
                     return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Disabled");
                 case ScanActionType.LockedByAntivirus:
                     return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_LockedByAV");
+                case ScanActionType.RebootPending:
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_RebootPending");
                 default:
                     return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Skipped");
             }

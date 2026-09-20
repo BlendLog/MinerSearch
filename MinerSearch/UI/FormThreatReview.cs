@@ -218,8 +218,16 @@ namespace MSearch.UI
                     var r = target as RegistryThreatObject;
                     if (r != null)
                     {
-                        if (r.ActionDelete) return ScanActionTypeUserSelected.Delete;
-                        if (r.ActionSetData || r.ActionSetSibling) return ScanActionTypeUserSelected.Cure;
+                        if (r.ActionQuarantine) return ScanActionTypeUserSelected.Quarantine;
+
+                        // Cure-правила (Winlogon, LSA, AppInit, Defender): удаление/карантин
+                        // таких значений ломает систему — рекомендация всегда Cure.
+                        if (r.ActionSetData || r.ActionSetSibling || r.ActionRemoveDefenderExclusion)
+                            return ScanActionTypeUserSelected.Cure;
+
+                        // Delete-правила: в т.ч. ActionDeleteParentKey (SilentProcessExit, Tekt0nit)
+                        if (r.ActionDelete || r.ActionDeleteParentKey)
+                            return ScanActionTypeUserSelected.Delete;
                     }
                     break;
 
@@ -290,8 +298,19 @@ namespace MSearch.UI
                     return new[] { ScanActionTypeUserSelected.Cure, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
 
                 case ThreatObjectKind.RegistryObject:
-                    // RegistryObject — Cure, Delete, Skip (нельзя в карантин)
-                    return new[] { ScanActionTypeUserSelected.Cure, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
+                    var reg = target as RegistryThreatObject;
+                    if (reg != null)
+                    {
+                        // Cure-правила: только Cure/Skip — удаление Userinit/Shell/Authentication Packages
+                        // и т.п. приведёт к повреждению системы; карантин для них не предлагается.
+                        if (reg.ActionSetData || reg.ActionSetSibling || reg.ActionRemoveDefenderExclusion)
+                            return new[] { ScanActionTypeUserSelected.Cure, ScanActionTypeUserSelected.Skip };
+
+                        // Delete-правила: карантин (снимок до удаления), удаление, пропуск
+                        if (reg.ActionDelete || reg.ActionDeleteParentKey)
+                            return new[] { ScanActionTypeUserSelected.Quarantine, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
+                    }
+                    return new[] { ScanActionTypeUserSelected.Skip };
 
                 case ThreatObjectKind.Service:
                     // TermService — Cure, Disable, Delete, Skip (можно вылечить)
@@ -800,33 +819,39 @@ namespace MSearch.UI
         {
             if (reg == null) return;
 
-            // Сохраняем флаги, установленные анализатором (для лечения)
+            // Сохраняем флаги, установленные анализатором
             bool actionSetDataWasSet = reg.ActionSetData;
             bool actionSetSiblingWasSet = reg.ActionSetSibling;
             bool actionUnlockFirstWasSet = reg.ActionUnlockFirst;
             bool actionDeleteParentKeyWasSet = reg.ActionDeleteParentKey;
+            bool actionDeleteWasSet = reg.ActionDelete;
+            bool actionRemoveDefenderExclusionWasSet = reg.ActionRemoveDefenderExclusion;
 
-            // Сбрасываем только флаги удаления
             reg.ActionDelete = false;
             reg.ActionSetData = false;
             reg.ActionSetSibling = false;
             reg.ActionUnlockFirst = false;
             reg.ActionDeleteParentKey = false;
+            reg.ActionQuarantine = false;
+            reg.ActionRemoveDefenderExclusion = false;
 
             switch (action)
             {
                 case ScanActionTypeUserSelected.Cure:
-                    // Лечение — восстанавливаем флаги, установленные анализатором
+                    // Лечение — восстанавливаем cure-флаги анализатора.
+                    // Флаги удаления НЕ восстанавливаем: Cure не должен ничего удалять.
                     reg.ActionSetData = actionSetDataWasSet;
                     reg.ActionSetSibling = actionSetSiblingWasSet;
-                    reg.ActionUnlockFirst = actionUnlockFirstWasSet;
-                    reg.ActionDeleteParentKey = actionDeleteParentKeyWasSet;
+                    reg.ActionRemoveDefenderExclusion = actionRemoveDefenderExclusionWasSet;
                     break;
                 case ScanActionTypeUserSelected.Delete:
-                    reg.ActionDelete = true;
+                    RestoreRegistryDeleteFlags(reg, actionDeleteWasSet, actionDeleteParentKeyWasSet, actionUnlockFirstWasSet);
                     break;
                 case ScanActionTypeUserSelected.Quarantine:
-                    reg.ActionDelete = true;
+                    // Снимок в карантин делает обработчик, затем удаляет ровно то,
+                    // что анализатор пометил на удаление (значение или всю ветку).
+                    reg.ActionQuarantine = true;
+                    RestoreRegistryDeleteFlags(reg, actionDeleteWasSet, actionDeleteParentKeyWasSet, actionUnlockFirstWasSet);
                     break;
                 case ScanActionTypeUserSelected.Skip:
                     // Пропускаем — оставляем все флаги сброшенными
@@ -835,6 +860,18 @@ namespace MSearch.UI
 
             if (reg.LinkedFile != null)
                 ApplyOverrideToFile(reg.LinkedFile, action);
+        }
+
+        /// <summary>
+        /// Восстанавливает флаги удаления реестра, выставленные анализатором:
+        /// SilentProcessExit/Tekt0nit помечают ActionDeleteParentKey, остальные — ActionDelete.
+        /// </summary>
+        private static void RestoreRegistryDeleteFlags(RegistryThreatObject reg, bool deleteWasSet, bool deleteParentKeyWasSet, bool unlockFirstWasSet)
+        {
+            reg.ActionDeleteParentKey = deleteParentKeyWasSet;
+            reg.ActionUnlockFirst = unlockFirstWasSet;
+            // если ParentKey не задан — удаляем значение/ключ напрямую
+            reg.ActionDelete = deleteWasSet || !deleteParentKeyWasSet;
         }
 
         private void ApplyOverrideToTask(TaskThreatObject task, ScanActionTypeUserSelected action)

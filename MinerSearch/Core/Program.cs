@@ -810,7 +810,8 @@ namespace MSearch
                             r.RawAction == ScanActionType.Quarantine ||
                             r.RawAction == ScanActionType.Cured ||
                             r.RawAction == ScanActionType.Disabled ||
-                            r.RawAction == ScanActionType.Suspended)
+                            r.RawAction == ScanActionType.Suspended ||
+                            r.RawAction == ScanActionType.RebootPending)
                 .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
                 .Distinct()
                 .Count();

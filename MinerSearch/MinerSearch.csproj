@@ -232,12 +232,6 @@
     </Compile>
     <Compile Include="UI\QuarantineItem.cs" />
     <Compile Include="UI\ScanResult.cs" />
-    <Compile Include="UI\SplashForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\SplashForm.Designer.cs">
-      <DependentUpon>SplashForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\ToggleSwitch.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -289,10 +283,6 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\SplashForm.resx">
-      <DependentUpon>SplashForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

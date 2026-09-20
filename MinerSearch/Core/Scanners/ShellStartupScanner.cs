@@ -109,7 +109,8 @@ namespace MSearch.Core.Scanners
                         {
                             try
                             {
-                                if (FileChecker.IsDotNetAssembly(uncFile))
+                                // ВАЖНО: AssemblyName.GetAssemblyName не понимает \\?\ - передаём обычный путь
+                                if (FileChecker.IsDotNetAssembly(file))
                                 {
                                     double entropy = FileChecker.CalculateShannonEntropy(File.ReadAllBytes(uncFile));
                                     if (entropy > 7.6)

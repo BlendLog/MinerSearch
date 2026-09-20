@@ -46,6 +46,16 @@ namespace MSearch.Core.Handlers
                     HandleRemoveFromSafeBoot(svc);
                 }
 
+                // Registry-only запись: SCM службу не знает (malware пишет ключ напрямую,
+                // Type=1, путь \??\C:\...). ServiceController в .NET ленив и в конструкторе
+                // НЕ падает для несуществующей службы, поэтому опрашиваем SCM явно.
+                if (ServiceRegistryKeyExists(svc.ServiceName)
+                    && !ScmKnowsService(svc.ServiceName))
+                {
+                    if (svc.ShouldQuarantineService) return HandleRegistryOnlyService(svc, decision);
+                    if (svc.ShouldDeleteService) return HandleDeleteRegistryOnlyService(svc, decision);
+                }
+
                 try
                 {
                     service = new ServiceController(svc.ServiceName);
@@ -53,6 +63,11 @@ namespace MSearch.Core.Handlers
                 catch (Exception svcEx)
                 {
                     AppConfig.GetInstance.LL.LogWarnMediumMessage("_ServiceOpenFailed", $"{svc.ServiceName}: {svcEx.Message}");
+
+                    if (svc.ShouldQuarantineService)
+                    {
+                        return HandleRegistryOnlyService(svc, decision);
+                    }
 
                     if (svc.ShouldDeleteService)
                     {
@@ -193,19 +208,18 @@ namespace MSearch.Core.Handlers
                 return ApplyResult.Failed;
             }
 
-            // 2. Отключаем автозапуск (без этого удаление может не примениться до перезагрузки)
+            // 2. Отключаем автозапуск (best-effort): для registry-only записей, где SCM
+            //    не может открыть службу на запись, выставляем Start=4 прямо в реестре.
             if (svc.StartMode != NativeServiceController.ServiceStartMode.Disabled)
             {
                 try
                 {
                     NativeServiceController.SetServiceStartType(serviceName, NativeServiceController.ServiceStartMode.Disabled);
                 }
-                catch (Win32Exception w32e)
+                catch (Exception w32e)
                 {
-                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", w32e, serviceName, "_Service");
-                    decision.ApplyErrorMessage = w32e.Message;
-                    decision.ActionType = ScanActionType.Error;
-                    return ApplyResult.Failed;
+                    if (!TrySetStartDisabledInRegistry(serviceName))
+                        AppConfig.GetInstance.LL.LogWarnMessage("_ErrorCannotProceed", $"{serviceName}: {w32e.Message}");
                 }
             }
 
@@ -224,25 +238,51 @@ namespace MSearch.Core.Handlers
                 }
             }
 
-            // 4. Удаляем службу из SCM (запись уже сохранена в карантине)
+            // 4. Удаляем службу: через SCM, а если он не может (registry-only/locked) —
+            //    сносим ветку ключа напрямую (конфиг уже сохранён в карантине).
+            bool scmRemoved = false;
             try
             {
                 ServiceHelper.Uninstall(serviceName);
+                scmRemoved = true;
             }
             catch (Win32Exception win32Ex) when (win32Ex.NativeErrorCode == 1072 || win32Ex.NativeErrorCode == 1060)
             {
                 // ERROR_SERVICE_MARKED_FOR_DELETE / ERROR_SERVICE_DOES_NOT_EXIST — допустимо
+                scmRemoved = true;
             }
             catch (Exception ex)
             {
-                decision.ApplyErrorMessage = ex.Message;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, serviceName, "_Service");
+                AppConfig.GetInstance.LL.LogWarnMessage("_ErrorCannotRemove", $"{serviceName}: {ex.Message}");
+            }
+
+            if (!scmRemoved && !TryDeleteServiceRegistryKey(serviceName))
+            {
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, serviceName, "_Service");
+                decision.ActionType = ScanActionType.Error;
                 return ApplyResult.Failed;
             }
 
             AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceQuarantined", serviceName);
             decision.ActionType = ScanActionType.Quarantine;
             return ApplyResult.Success;
+        }
+
+        /// <summary>
+        /// Best-effort выставление Start=4 в ветке службы (когда SCM недоступен на запись).
+        /// </summary>
+        static bool TrySetStartDisabledInRegistry(string serviceName)
+        {
+            try
+            {
+                using (var key = Registry.LocalMachine.OpenSubKey($@"SYSTEM\CurrentControlSet\Services\{serviceName}", true))
+                {
+                    if (key == null) return false;
+                    key.SetValue("Start", 4, RegistryValueKind.DWord);
+                    return true;
+                }
+            }
+            catch { return false; }
         }
 
 
@@ -261,23 +301,147 @@ namespace MSearch.Core.Handlers
             try
             {
                 ServiceHelper.Uninstall(svc.ServiceName);
+
+                if (ServiceRegistryKeyExists(svc.ServiceName))
+                    return HandleDeleteRegistryOnlyService(svc, decision);
+
                 AppConfig.GetInstance.LL.LogSuccessMessage("_MaliciousService", svc.ServiceName, "_Deleted");
                 decision.ActionType = ScanActionType.Deleted;
                 return ApplyResult.Success;
             }
             catch (Win32Exception win32Ex) when (win32Ex.NativeErrorCode == 1072 || win32Ex.NativeErrorCode == 1060)
             {
+                // ERROR_SERVICE_MARKED_FOR_DELETE или ERROR_SERVICE_DOES_NOT_EXIST.
+                // Если ключ реестра остался — это registry-only запись, SCM её не знает.
+                if (ServiceRegistryKeyExists(svc.ServiceName))
+                    return HandleDeleteRegistryOnlyService(svc, decision);
+
                 AppConfig.GetInstance.LL.LogSuccessMessage("_MaliciousService", svc.ServiceName, "_Deleted");
                 decision.ActionType = ScanActionType.Deleted;
                 return ApplyResult.Success;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                // ApplicationException("Service not installed.") и прочие — SCM не знает службу
+                if (ServiceRegistryKeyExists(svc.ServiceName))
+                    return HandleDeleteRegistryOnlyService(svc, decision);
+
                 decision.ActionType = ScanActionType.Error;
-                decision.ApplyErrorMessage = ex.Message;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, svc.ServiceName, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, svc.ServiceName, "_Service");
                 return ApplyResult.Failed;
             }
+        }
+
+        /// <summary>
+        /// Registry-only служба: SCM её не знает (malware пишет ключ напрямую, Type=1, путь \??\C:\...).
+        /// Сначала карантин (data-loss guard), затем удаление ветки ключа.
+        /// </summary>
+        ApplyResult HandleRegistryOnlyService(ServiceThreatObject svc, ThreatDecision decision)
+        {
+            string serviceName = svc.ServiceName;
+
+            bool quarantined;
+            try
+            {
+                quarantined = QuarantineManager.AddService(serviceName, svc.Status, svc.StartMode);
+            }
+            catch (Exception qex)
+            {
+                AppConfig.GetInstance.LL.LogErrorMessage("_QuarantineSaveFailed", qex, serviceName, "_Service");
+                decision.ActionType = ScanActionType.Error;
+                return ApplyResult.Failed;
+            }
+
+            if (!quarantined)
+            {
+                AppConfig.GetInstance.LL.LogWarnMediumMessage("_QuarantineSaveFailed", serviceName);
+                decision.ActionType = ScanActionType.Error;
+                return ApplyResult.Failed;
+            }
+
+            if (!TryDeleteServiceRegistryKey(serviceName))
+            {
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, serviceName, "_Service");
+                decision.ActionType = ScanActionType.Error;
+                return ApplyResult.Failed;
+            }
+
+            AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceQuarantined", serviceName);
+            decision.ActionType = ScanActionType.Quarantine;
+            return ApplyResult.Success;
+        }
+
+        /// <summary>
+        /// Registry-only запись при выбранном удалении (анализатор или пользователь в FormThreatReview):
+        /// карантин НЕ создаём — просто снимаем автозапуск и сносим ветку ключа.
+        /// </summary>
+        ApplyResult HandleDeleteRegistryOnlyService(ServiceThreatObject svc, ThreatDecision decision)
+        {
+            string serviceName = svc.ServiceName;
+
+            TrySetStartDisabledInRegistry(serviceName);
+
+            if (!TryDeleteServiceRegistryKey(serviceName))
+            {
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, serviceName, "_Service");
+                decision.ActionType = ScanActionType.Error;
+                return ApplyResult.Failed;
+            }
+
+            AppConfig.GetInstance.LL.LogSuccessMessage("_MaliciousService", serviceName, "_Deleted");
+            decision.ActionType = ScanActionType.Deleted;
+            return ApplyResult.Success;
+        }
+
+        static bool ServiceRegistryKeyExists(string serviceName)
+        {
+            using (var key = Registry.LocalMachine.OpenSubKey($@"SYSTEM\CurrentControlSet\Services\{serviceName}"))
+            {
+                return key != null;
+            }
+        }
+
+        /// <summary>
+        /// Знает ли SCM эту службу. OpenService падает (E_FAIL / ERROR_SERVICE_DOES_NOT_EXIST)
+        /// для registry-only записей, которые malware создал напрямую в ветке Services.
+        /// </summary>
+        static bool ScmKnowsService(string serviceName)
+        {
+            try
+            {
+                NativeServiceController.GetServiceStartType(serviceName);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        static bool TryDeleteServiceRegistryKey(string serviceName)
+        {
+            string subKeyPath = $@"SYSTEM\CurrentControlSet\Services\{serviceName}";
+
+            try
+            {
+                Registry.LocalMachine.DeleteSubKeyTree(subKeyPath, false);
+            }
+            catch { }
+
+            if (!ServiceRegistryKeyExists(serviceName))
+                return true;
+
+            // Ключ может быть залочен ACL: снимаем владельца/права и пробуем снова
+            string nativePath = @"HKLM\" + subKeyPath;
+            try
+            {
+                UnlockObjectClass.TakeownRegKey(nativePath);
+                UnlockObjectClass.ResetPermissionsToDefault(nativePath);
+                Registry.LocalMachine.DeleteSubKeyTree(subKeyPath, false);
+            }
+            catch { }
+
+            return !ServiceRegistryKeyExists(serviceName);
         }
 
         ApplyResult HandleRestore(ServiceController service, ServiceThreatObject svc, ThreatDecision decision)
@@ -302,6 +466,10 @@ namespace MSearch.Core.Handlers
                 }
                 catch (Win32Exception w32e)
                 {
+                    // SCM не даёт менять конфиг (registry-only / урезанный SD) — удаляем ветку ключа
+                    if (ServiceRegistryKeyExists(serviceName))
+                        return HandleDeleteRegistryOnlyService(svc, decision);
+
                     AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", w32e, serviceName, "_Service");
                     decision.ApplyErrorMessage = w32e.Message;
                     decision.ActionType = ScanActionType.Error;
@@ -365,8 +533,12 @@ namespace MSearch.Core.Handlers
             }
             catch (Win32Exception win32Ex) when (win32Ex.NativeErrorCode == 1072 || win32Ex.NativeErrorCode == 1060)
             {
+                // ERROR_SERVICE_MARKED_FOR_DELETE или ERROR_SERVICE_DOES_NOT_EXIST.
+                // Если ключ реестра остался — registry-only запись: удаляем ключ.
+                if (ServiceRegistryKeyExists(serviceName))
+                    return HandleDeleteRegistryOnlyService(svc, decision);
+
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", win32Ex, serviceName, "_Service");
-                // ERROR_SERVICE_MARKED_FOR_DELETE или ERROR_SERVICE_DOES_NOT_EXIST — это ОК
             }
             catch (Win32Exception win32Ex)
             {
@@ -376,6 +548,9 @@ namespace MSearch.Core.Handlers
             }
             catch (Exception ex)
             {
+                if (ServiceRegistryKeyExists(serviceName))
+                    return HandleDeleteRegistryOnlyService(svc, decision);
+
                 decision.ApplyErrorMessage = ex.Message;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, serviceName, "_Service");
                 return ApplyResult.Error;
@@ -465,6 +640,15 @@ namespace MSearch.Core.Handlers
                 }
                 catch (Win32Exception w32e)
                 {
+                    // SCM не даёт менять конфиг — выставляем Start=4 прямо в реестре
+                    if (ServiceRegistryKeyExists(serviceName))
+                    {
+                        TrySetStartDisabledInRegistry(serviceName);
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceDisabled", serviceName);
+                        decision.ActionType = ScanActionType.Disabled;
+                        return ApplyResult.Success;
+                    }
+
                     AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", w32e, serviceName, "_Service");
                     decision.ApplyErrorMessage = w32e.Message;
                     return ApplyResult.Failed;

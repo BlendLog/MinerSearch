@@ -118,6 +118,9 @@ namespace MSearch.UI
                         case QuarantineItemType.Task:
                             ok = QuarantineManager.RestoreTask(item.FileHash);
                             break;
+                        case QuarantineItemType.Registry:
+                            ok = QuarantineManager.RestoreRegistry(item.FileHash);
+                            break;
                         default:
                             ok = QuarantineManager.RestoreFile(item.FileHash, item.OriginalPath);
                             break;
@@ -308,6 +311,9 @@ namespace MSearch.UI
                         case QuarantineItemType.Task:
                             ok = QuarantineManager.RestoreTask(item.FileHash);
                             break;
+                        case QuarantineItemType.Registry:
+                            ok = QuarantineManager.RestoreRegistry(item.FileHash);
+                            break;
                         default:
                             ok = QuarantineManager.RestoreFile(item.FileHash, restorePath);
                             break;
@@ -353,6 +359,8 @@ namespace MSearch.UI
                     return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Service");
                 case QuarantineItemType.Task:
                     return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Task");
+                case QuarantineItemType.Registry:
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Registry");
                 default:
                     return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_File");
             }

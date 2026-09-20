@@ -4,7 +4,8 @@
     {
         File,
         Task,
-        Service
+        Service,
+        Registry
     }
 
     public class QuarantineItem

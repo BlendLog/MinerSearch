@@ -20,9 +20,12 @@ namespace MSearch.Core.ThreatHandlers
             // Если флагов действий нет, значит делать ничего не нужно.
             if (regThreat == null || decision.RiskLevel == 0 || phase != CleanupPhase.Finalize) return ApplyResult.NotApplicable;
 
+            if (regThreat.ActionQuarantine && !regThreat.ActionDelete && !regThreat.ActionDeleteParentKey)
+                regThreat.ActionQuarantine = false;
+
             bool hasAction = regThreat.ActionDelete || regThreat.ActionDeleteParentKey ||
                              regThreat.ActionSetData || regThreat.ActionSetSibling ||
-                             regThreat.ActionRemoveDefenderExclusion;
+                             regThreat.ActionRemoveDefenderExclusion || regThreat.ActionQuarantine;
 
             if (!hasAction) return ApplyResult.Skipped;
 
@@ -45,6 +48,27 @@ namespace MSearch.Core.ThreatHandlers
                 }
 
                 RegistryKey baseKey = regThreat.Hive == "HKEY_LOCAL_MACHINE" ? Registry.LocalMachine : Registry.CurrentUser;
+
+                // 0.1. Карантин (только по выбору пользователя): снимок обязан быть создан ДО удаления.
+                bool quarantined = false;
+                if (regThreat.ActionQuarantine &&
+                    (regThreat.ActionDelete || regThreat.ActionDeleteParentKey))
+                {
+                    // Источник мог исчезнуть: shared-ключ WOW64 (IFEO) уже снят первым дубликатом.
+                    if (!RegistrySourceExists(regThreat, baseKey))
+                    {
+                        AppConfig.GetInstance.LL.LogWarnMessage("_QuarantineSourceMissing", logPath);
+                        return ApplyResult.NotApplicable;
+                    }
+
+                    if (!QuarantineManager.AddRegistry(regThreat))
+                    {
+                        AppConfig.GetInstance.LL.LogErrorMessage("_QuarantineSaveFailed", null, logPath);
+                        decision.ActionType = ScanActionType.Error;
+                        return ApplyResult.Failed;
+                    }
+                    quarantined = true;
+                }
 
                 // 1. Спец-удаление для Windows Defender (WMI/Powershell)
                 if (regThreat.ActionRemoveDefenderExclusion)
@@ -122,7 +146,12 @@ namespace MSearch.Core.ThreatHandlers
                 }
 
                 // Определяем ActionType на основе выполненных действий
-                if (regThreat.ActionSetData || regThreat.ActionSetSibling)
+                if (quarantined)
+                {
+                    decision.ActionType = ScanActionType.Quarantine;
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_RegistryValueQuarantined", logPath);
+                }
+                else if (regThreat.ActionSetData || regThreat.ActionSetSibling)
                 {
                     decision.ActionType = ScanActionType.Cured;
                     AppConfig.GetInstance.LL.LogSuccessMessage("_RegistryValueRestoredDefault", logPath);
@@ -151,7 +180,26 @@ namespace MSearch.Core.ThreatHandlers
             }
         }
 
-        // Безопасное разделение пути реестра (не падает на запрещенных символах файлов)
+        private static bool RegistrySourceExists(RegistryThreatObject regThreat, RegistryKey baseKey)
+        {
+            try
+            {
+                bool wholeKey = regThreat.NodeType == RegistryNodeType.Key || regThreat.ActionDeleteParentKey;
+
+                using (RegistryKey key = baseKey.OpenSubKey(regThreat.KeyPath))
+                {
+                    if (key == null) return false;
+                    if (wholeKey) return true;
+
+                    return key.GetValue(regThreat.ValueName, null, RegistryValueOptions.DoNotExpandEnvironmentNames) != null;
+                }
+            }
+            catch
+            {
+                return true;
+            }
+        }
+
         private string GetParentPath(string fullKeyPath)
         {
             int lastSlash = fullKeyPath.LastIndexOf('\\');

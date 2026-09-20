@@ -2,6 +2,7 @@
 using DBase;
 using Microsoft.Win32;
 using MSearch.Core;
+using MSearch.Core.ThreatObjects;
 using MSearch.UI;
 using netlib;
 using System;
@@ -1660,9 +1661,55 @@ namespace MSearch
                 {
                     return "N/A";
                 }
+                catch (ArgumentException)
+                {
+                    return "N/A";
+                }
+                catch (NotSupportedException)
+                {
+                    return "N/A";
+                }
+                catch (System.Security.SecurityException)
+                {
+                    return "N/A";
+                }
 
             }
         }
+
+        internal static void LogUnsignedSha1(FileThreatObject file)
+        {
+            try
+            {
+                if (file == null || file.IsValidSignature) return;
+
+                string path = file.FilePath;
+                if (string.IsNullOrEmpty(path)) return;
+
+                string hash = file.Hash;
+                if (string.IsNullOrEmpty(hash))
+                {
+                    if (!File.Exists(path)) return;
+                    hash = CalculateSHA1(path);
+                }
+
+                if (string.IsNullOrEmpty(hash) || hash == "N/A") return;
+
+                // Один и тот же файл может встретиться в нескольких анализаторах
+                // (служба + файл, задача + файл) — логируем SHA1 только один раз
+                lock (_loggedSha1Lock)
+                {
+                    if (!_loggedSha1Paths.Add(path)) return;
+                }
+
+                Logger.WriteLog($"\t\t[SHA1: {hash}] {path}", ConsoleColor.White, false);
+            }
+            catch { }
+        }
+
+        private static readonly HashSet<string> _loggedSha1Paths =
+            new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private static readonly object _loggedSha1Lock = new object();
 
         internal static bool IsDigit(string str)
         {
@@ -1883,7 +1930,11 @@ namespace MSearch
 
             catch (UnauthorizedAccessException) { return false; }
 
+            catch (ArgumentException) { return false; }
 
+            catch (NotSupportedException) { return false; }
+
+            catch (System.Security.SecurityException) { return false; }
         }
 
         internal static bool IsBatchFileBad(string filePath)

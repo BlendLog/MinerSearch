@@ -79,6 +79,7 @@ namespace MSearch
                             {
                                 case "Task": itemType = QuarantineItemType.Task; break;
                                 case "Service": itemType = QuarantineItemType.Service; break;
+                                case "Registry": itemType = QuarantineItemType.Registry; break;
                                 default: itemType = QuarantineItemType.File; break;
                             }
                         }
@@ -156,6 +157,9 @@ namespace MSearch
 
                 case QuarantineItemType.Service:
                     return "Service";
+
+                case QuarantineItemType.Registry:
+                    return "Registry";
 
                 default:
                     return string.Empty;
@@ -508,6 +512,354 @@ namespace MSearch
                 return true;
             }
             catch { return false; }
+        }
+
+        #endregion
+
+        #region AddRegistry
+
+        const string REG_HIVE = "RegHive";
+        const string REG_KEY_PATH = "RegKeyPath";
+        const string REG_NODE_KIND = "RegNodeKind";
+        const string REG_VALUE_NAME = "RegValueName";
+
+        public static bool AddRegistry(RegistryThreatObject reg)
+        {
+            if (reg == null) return false;
+
+            try
+            {
+                EnsureRegistryAccessible();
+
+                RegistryKey baseKey = reg.Hive == "HKEY_LOCAL_MACHINE"
+                    ? Registry.LocalMachine
+                    : Registry.CurrentUser;
+
+                bool wholeKey = reg.NodeType == RegistryNodeType.Key || reg.ActionDeleteParentKey;
+
+                using (RegistryKey source = baseKey.OpenSubKey(reg.KeyPath))
+                {
+                    if (source == null) return false;
+
+                    byte[] blob;
+                    using (var ms = new MemoryStream())
+                    {
+                        using (var writer = new BinaryWriter(ms, Encoding.UTF8, true))
+                        {
+                            if (wholeKey)
+                                WriteRegistryKey(writer, source, true);
+                            else
+                                WriteSingleRegistryValue(writer, source, reg.ValueName);
+                        }
+                        blob = ms.ToArray();
+                    }
+
+                    string displayName = reg.NodeType == RegistryNodeType.Value && !string.IsNullOrEmpty(reg.ValueName)
+                        ? $@"{reg.Hive}\{reg.KeyPath}\{reg.ValueName}"
+                        : $@"{reg.Hive}\{reg.KeyPath}";
+
+                    string subKeyName = ComputeMd5Hex($"{reg.Hive}|{reg.KeyPath}|{reg.ValueName}");
+
+                    using (var baseQuarantine = Registry.LocalMachine.CreateSubKey(QUARANTINE_PATH))
+                    {
+                        if (baseQuarantine == null) return false;
+
+                        using (var subKey = baseQuarantine.CreateSubKey(subKeyName))
+                        {
+                            if (subKey == null) return false;
+
+                            subKey.SetValue(ITEM_TYPE, "Registry");
+                            subKey.SetValue(QUARANTINED_AT, DateTime.Now.ToString("o"));
+                            subKey.SetValue(ORIGINAL_PATH, displayName, RegistryValueKind.String);
+                            subKey.SetValue(REG_HIVE, reg.Hive, RegistryValueKind.String);
+                            subKey.SetValue(REG_KEY_PATH, reg.KeyPath, RegistryValueKind.String);
+                            subKey.SetValue(REG_NODE_KIND, wholeKey ? "Key" : "Value", RegistryValueKind.String);
+                            subKey.SetValue(REG_VALUE_NAME, reg.ValueName ?? string.Empty, RegistryValueKind.String);
+
+                            const int blockSize = 1024 * 512;
+                            int totalParts = (int)Math.Ceiling((double)blob.Length / blockSize);
+                            subKey.SetValue(TOTAL_PARTS, totalParts, RegistryValueKind.DWord);
+
+                            for (int i = 0; i < totalParts; i++)
+                            {
+                                int offset = i * blockSize;
+                                int length = Math.Min(blockSize, blob.Length - offset);
+                                byte[] chunk = new byte[length];
+                                Array.Copy(blob, offset, chunk, 0, length);
+                                subKey.SetValue($"FileData_Part{i}", chunk, RegistryValueKind.Binary);
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            }
+            catch { return false; }
+        }
+
+        static void WriteSingleRegistryValue(BinaryWriter writer, RegistryKey key, string valueName)
+        {
+            string name = valueName ?? string.Empty;
+
+            writer.Write(1); // values count
+            writer.Write(name);
+
+            object value = key.GetValue(name, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
+            RegistryValueKind kind = key.GetValueKind(name);
+            writer.Write((int)kind);
+            WriteRegistryValueData(writer, kind, value);
+
+            writer.Write(0); // no subkeys
+        }
+
+        static void WriteRegistryKey(BinaryWriter writer, RegistryKey key, bool includeSubKeys)
+        {
+            string[] names = key.GetValueNames();
+            writer.Write(names.Length);
+            foreach (string name in names)
+            {
+                writer.Write(name ?? string.Empty);
+
+                object value = key.GetValue(name, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
+                RegistryValueKind kind = key.GetValueKind(name);
+                writer.Write((int)kind);
+                WriteRegistryValueData(writer, kind, value);
+            }
+
+            string[] subKeys = includeSubKeys ? key.GetSubKeyNames() : new string[0];
+            writer.Write(subKeys.Length);
+            foreach (string sub in subKeys)
+            {
+                writer.Write(sub);
+                using (var subKey = key.OpenSubKey(sub))
+                {
+                    if (subKey == null)
+                    {
+                        WriteEmptyNode(writer);
+                        continue;
+                    }
+                    WriteRegistryKey(writer, subKey, true);
+                }
+            }
+        }
+
+        /// <summary>
+        /// пишется, когда подраздел не удалось открыть при снятии снимка.
+        /// </summary>
+        static void WriteEmptyNode(BinaryWriter writer)
+        {
+            writer.Write(0); // valuesCount
+            writer.Write(0); // subKeysCount
+        }
+
+        static void WriteRegistryValueData(BinaryWriter writer, RegistryValueKind kind, object value)
+        {
+            switch (kind)
+            {
+                case RegistryValueKind.String:
+                case RegistryValueKind.ExpandString:
+                    writer.Write(value as string ?? string.Empty);
+                    break;
+
+                case RegistryValueKind.DWord:
+                    writer.Write(value is int dw ? dw : 0);
+                    break;
+
+                case RegistryValueKind.QWord:
+                    writer.Write(value is long qw ? qw : 0L);
+                    break;
+
+                case RegistryValueKind.MultiString:
+                    string[] arr = value as string[] ?? new string[0];
+                    writer.Write(arr.Length);
+                    foreach (string s in arr)
+                        writer.Write(s ?? string.Empty);
+                    break;
+
+                case RegistryValueKind.Binary:
+                case RegistryValueKind.None:
+                    byte[] bytes = value as byte[];
+                    writer.Write(bytes?.Length ?? 0);
+                    if (bytes != null)
+                        writer.Write(bytes);
+                    break;
+
+                default:
+                    writer.Write(value?.ToString() ?? string.Empty);
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region RestoreRegistry
+
+        /// <summary>
+        /// Восстанавливает ветку/значение реестра из карантина.
+        /// </summary>
+        public static bool RestoreRegistry(string subKeyName)
+        {
+            try
+            {
+                string hive;
+                string keyPath;
+                bool wholeKey;
+
+                using (var subKey = Registry.LocalMachine.OpenSubKey($"{QUARANTINE_PATH}\\{subKeyName}"))
+                {
+                    if (subKey == null) return false;
+
+                    hive = subKey.GetValue(REG_HIVE) as string;
+                    keyPath = subKey.GetValue(REG_KEY_PATH) as string;
+                    wholeKey = string.Equals(subKey.GetValue(REG_NODE_KIND) as string, "Key", StringComparison.OrdinalIgnoreCase);
+                }
+
+                if (string.IsNullOrEmpty(hive) || string.IsNullOrEmpty(keyPath)) return false;
+
+                byte[] blob = ReadChunkedFromHive(subKeyName);
+                if (blob == null || blob.Length == 0) return false;
+
+                RegistryKey baseKey = hive == "HKEY_LOCAL_MACHINE"
+                    ? Registry.LocalMachine
+                    : Registry.CurrentUser;
+
+                using (RegistryKey key = baseKey.CreateSubKey(keyPath))
+                {
+                    if (key == null) return false;
+
+                    using (var ms = new MemoryStream(blob))
+                    using (var reader = new BinaryReader(ms, Encoding.UTF8))
+                    {
+                        if (wholeKey)
+                            ReadRegistryKey(reader, key);
+                        else
+                            ReadRegistryValue(reader, key);
+                    }
+                }
+
+                Delete(subKeyName);
+
+                AppConfig.GetInstance.LL.LogSuccessMessage("_QuarantineRegistryRestored", $@"{hive}\{keyPath}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AppConfig.GetInstance.LL.LogErrorMessage("_QuarantineRegistryRestoreFailed", ex, subKeyName);
+                return false;
+            }
+        }
+
+        static void ReadRegistryValue(BinaryReader reader, RegistryKey key)
+        {
+            int valuesCount = reader.ReadInt32();
+            if (valuesCount > 0)
+            {
+                string name = reader.ReadString();
+                RegistryValueKind kind = (RegistryValueKind)reader.ReadInt32();
+                object value = ReadRegistryValueData(reader, kind);
+                SetRegistryValue(key, name, kind, value);
+            }
+
+            SkipSubKeys(reader);
+        }
+
+        static void ReadRegistryKey(BinaryReader reader, RegistryKey key)
+        {
+            int valuesCount = reader.ReadInt32();
+            for (int i = 0; i < valuesCount; i++)
+            {
+                string name = reader.ReadString();
+                RegistryValueKind kind = (RegistryValueKind)reader.ReadInt32();
+                object value = ReadRegistryValueData(reader, kind);
+                SetRegistryValue(key, name, kind, value);
+            }
+
+            int subKeysCount = reader.ReadInt32();
+            for (int i = 0; i < subKeysCount; i++)
+            {
+                string subName = reader.ReadString();
+                using (var subKey = key.CreateSubKey(subName))
+                {
+                    if (subKey == null)
+                    {
+                        SkipEmptyNode(reader);
+                        continue;
+                    }
+                    ReadRegistryKey(reader, subKey);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Пропускает узел-заглушку [valuesCount=0][subKeysCount=0] (см. WriteEmptyNode).
+        /// </summary>
+        static void SkipEmptyNode(BinaryReader reader)
+        {
+            reader.ReadInt32(); // valuesCount
+            reader.ReadInt32(); // subKeysCount
+        }
+
+        static void SkipSubKeys(BinaryReader reader)
+        {
+            int subKeysCount = reader.ReadInt32();
+            for (int i = 0; i < subKeysCount; i++)
+            {
+                reader.ReadString();
+                SkipSubKeys(reader);
+            }
+        }
+
+        static object ReadRegistryValueData(BinaryReader reader, RegistryValueKind kind)
+        {
+            switch (kind)
+            {
+                case RegistryValueKind.String:
+                case RegistryValueKind.ExpandString:
+                    return reader.ReadString();
+
+                case RegistryValueKind.DWord:
+                    return reader.ReadInt32();
+
+                case RegistryValueKind.QWord:
+                    return reader.ReadInt64();
+
+                case RegistryValueKind.MultiString:
+                    int count = reader.ReadInt32();
+                    string[] arr = new string[count];
+                    for (int i = 0; i < count; i++)
+                        arr[i] = reader.ReadString();
+                    return arr;
+
+                case RegistryValueKind.Binary:
+                case RegistryValueKind.None:
+                    int len = reader.ReadInt32();
+                    return len > 0 ? reader.ReadBytes(len) : new byte[0];
+
+                default:
+                    return reader.ReadString();
+            }
+        }
+
+        static void SetRegistryValue(RegistryKey key, string name, RegistryValueKind kind, object value)
+        {
+            RegistryValueKind writeKind = kind == RegistryValueKind.None ? RegistryValueKind.Binary : kind;
+            try
+            {
+                key.SetValue(name ?? string.Empty, value, writeKind);
+            }
+            catch { }
+        }
+
+        static string ComputeMd5Hex(string input)
+        {
+            using (var md5 = MD5.Create())
+            {
+                byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input ?? string.Empty));
+                var sb = new StringBuilder(hash.Length * 2);
+                foreach (byte b in hash)
+                    sb.Append(b.ToString("x2"));
+                return sb.ToString();
+            }
         }
 
         #endregion

@@ -61,7 +61,6 @@ namespace MSearch
         /// </summary>
         private void AdjustHeightForMessage()
         {
-            // Высота формы без сообщения: заголовок 32 + кнопки 63 + паддинги 2 (см. дизайнер)
             const int nonMessageHeight = 97;
             // Запас на округление/DPI, чтобы последняя строка не обрезалась
             const int extraHeight = 6;

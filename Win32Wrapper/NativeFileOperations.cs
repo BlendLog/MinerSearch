@@ -12,6 +12,12 @@ namespace Win32Wrapper
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool MoveFileExW(string lpExistingFileName, string lpNewFileName, uint dwFlags);
+
+        private const uint MOVEFILE_DELAY_UNTIL_REBOOT = 0x4;
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetFileAttributes(string lpFileName, uint dwFileAttributes);
 
         private const uint FILE_ATTRIBUTE_NORMAL = 0x80;
@@ -56,6 +62,18 @@ namespace Win32Wrapper
             }
             
             return false;
+        }
+
+        public static bool ScheduleDeleteOnReboot(string path)
+        {
+            try
+            {
+                return MoveFileExW(path, null, MOVEFILE_DELAY_UNTIL_REBOOT);
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

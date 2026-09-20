@@ -124,7 +124,7 @@ namespace MSearch
 
             if (LaunchOptions.GetInstance.ScanOnly) Environment.Exit(0);
 
-#if !DEBUG
+//#if !DEBUG
             // Не спрашиваем reboot, если все угрозы либо обезврежены, либо пропущены намеренно
             int notNeutralized = threatsCount - curedCount - skippedCount;
             if (notNeutralized > 0)
@@ -142,16 +142,15 @@ namespace MSearch
                 }
                 else Environment.Exit(0);
             }
-            else if (curedCount == threatsCount && threatsCount > 0)
+            else if (curedCount == threatsCount && threatsCount > 0 && curedCount >= 5)
             {
                 if (!LaunchOptions.GetInstance.console_mode)
                 {
-                    Hide();
-                    SplashForm splashForm = new SplashForm();
-                    splashForm.ShowDialog();
+                    DonateBtn.PerformClick();
+                    Environment.Exit(0);
                 }
             }
-#endif
+//#endif
             Environment.Exit(0);
         }
 
@@ -441,6 +440,9 @@ namespace MSearch
                             row.Cells[row.Cells.Count - 2].Style.Font = new Font("Segoe UI", 11F);
                             row.Cells[row.Cells.Count - 2].Style.BackColor = Color.FromArgb(255, 206, 190, 250);
                             break;
+                        case ScanActionType.RebootPending:
+                            row.Cells[row.Cells.Count - 2].Style.BackColor = Color.Khaki;
+                            break;
                     }
                 }
             }
@@ -478,13 +480,11 @@ namespace MSearch
 
         private void DonateBtn_Click(object sender, EventArgs e)
         {
-            this.Opacity = 0.6;
-            Enabled = false;
-            using (SplashForm splashForm = new SplashForm(true)
+            Process.Start(new ProcessStartInfo
             {
-                Owner = this
-            })
-                splashForm.ShowDialog();
+                FileName = "https://blendlog.github.io/donate.html",
+                UseShellExecute = true
+            });
         }
 
         private void MinimizeBtn_Click(object sender, EventArgs e)

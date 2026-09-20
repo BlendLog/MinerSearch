@@ -28,8 +28,11 @@ namespace MSearch.Core.Scanners
             CollectKeyAndValues(results, HKLM, msData.queries["WindowsNT_CurrentVersion_Windows"], sectionName: "AppInitDLL");
 
             // --- 3. IFEO и WOW6432_IFEO (HKLM) ---
+            // IFEO — shared-ключ WOW64: 64-bit и WOW6432Node пути указывают на одно хранилище.
+            // Собираем имена 64-битного прохода и пропускаем их во втором, чтобы не дублировать угрозы.
+            var ifeo64Names = GetSubKeyNames(HKLM, msData.queries["IFEO"]);
             CollectSubkeysAndTheirValues(results, HKLM, msData.queries["IFEO"], "IFEO");
-            CollectSubkeysAndTheirValues(results, HKLM, msData.queries["Wow6432Node_IFEO"], "IFEO WOW6432");
+            CollectSubkeysAndTheirValues(results, HKLM, msData.queries["Wow6432Node_IFEO"], "IFEO WOW6432", ifeo64Names);
 
             // --- 4. SilentProcessExit (HKLM) ---
             CollectSubkeysAndTheirValues(results, HKLM, msData.queries["SilentProcessExit"], "Silent_Exit_Process");
@@ -171,7 +174,29 @@ namespace MSearch.Core.Scanners
             catch (Exception) { /* Игнорируем недоступные/сломанные пути */ }
         }
 
-        void CollectSubkeysAndTheirValues(List<IThreatObject> results, string hive, string parentPath, string sectionName)
+        /// <summary>
+        /// Имена непосредственных подразделов ключа (для дедупликации shared-ключей WOW64).
+        /// </summary>
+        HashSet<string> GetSubKeyNames(string hive, string parentPath)
+        {
+            var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            try
+            {
+                RegistryKey baseReg = GetBaseHive(hive);
+                using (RegistryKey parentKey = baseReg.OpenSubKey(parentPath))
+                {
+                    if (parentKey != null)
+                    {
+                        foreach (string name in parentKey.GetSubKeyNames())
+                            names.Add(name);
+                    }
+                }
+            }
+            catch { }
+            return names;
+        }
+
+        void CollectSubkeysAndTheirValues(List<IThreatObject> results, string hive, string parentPath, string sectionName, HashSet<string> skipNames = null)
         {
             RegistryKey baseReg = GetBaseHive(hive);
             try
@@ -182,6 +207,10 @@ namespace MSearch.Core.Scanners
                     {
                         foreach (string subKeyName in parentKey.GetSubKeyNames())
                         {
+                            // shared-ключи WOW64 (IFEO) уже отданы 64-битным проходом — не дублируем
+                            if (skipNames != null && skipNames.Contains(subKeyName))
+                                continue;
+
                             // Рекурсивно вызываем нашу же функцию для каждого дочернего элемента
                             CollectKeyAndValues(results, hive, $@"{parentPath}\{subKeyName}", false, sectionName);
                         }

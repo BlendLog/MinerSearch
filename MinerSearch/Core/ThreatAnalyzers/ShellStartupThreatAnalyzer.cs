@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace MSearch.Core.ThreatAnalyzers
 {
@@ -28,6 +29,11 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private static bool _headerLogged = false;
         private static readonly object _headerLock = new object();
+
+        // ...\Microsoft\Windows\Caches\<8hex>\RuntimeHost.exe
+        private static readonly Regex WindowsCachesRegex = new Regex(
+            @"\\windows\\caches\\",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
         {
@@ -102,6 +108,17 @@ namespace MSearch.Core.ThreatAnalyzers
                 risk += 3;
                 isMalicious = true;
                 file.ShouldDeleteFile = true;
+            }
+
+            if (HasMicrosoftCaches(file.ShortcutTargetPath))
+            {
+                AppConfig.GetInstance.LL.LogCautionMessage("_Malici0usFile", file.FilePath);
+                risk += 3;
+                isMalicious = true;
+                file.ShouldDeleteFile = true;
+
+                if (file.ShortcutTargetFile != null)
+                    file.ShortcutTargetFile.ShouldDeleteFile = true;
             }
 
             // 2. Аргументы содержат вредоносные паттерны
@@ -248,6 +265,20 @@ namespace MSearch.Core.ThreatAnalyzers
         {
             return MSData.GetInstance.obfStr2.Any(s =>
                 FileSystemManager.NormalizeExtendedPath(s).Equals(filePath, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private static bool HasMicrosoftCaches(string targetPath)
+        {
+            if (string.IsNullOrEmpty(targetPath)) return false;
+
+            string path = targetPath.Trim().Trim('"').Replace('/', '\\');
+
+            if (path.StartsWith(@"\\?\", StringComparison.Ordinal)) path = path.Substring(4);
+            else if (path.StartsWith(@"\??\", StringComparison.Ordinal)) path = path.Substring(4);
+            else if (path.StartsWith(@"\\.\", StringComparison.Ordinal)) path = path.Substring(4);
+            else if (path.StartsWith(@"\\", StringComparison.Ordinal)) path = path.Substring(2);
+
+            return WindowsCachesRegex.IsMatch(path);
         }
     }
 }

@@ -32,17 +32,14 @@ namespace MSearch.Core.ThreatAnalyzers
             @"(?<![a-z0-9])-(e|ec|enc(odedcommand)?)(?![a-z0-9])",
             RegexOptions.Compiled);
 
-        private static readonly Regex UserWritableDirRegex = new Regex(
-            @"(^|\\)(windows\\temp|users\\[^\\]+\\appdata)(\\|$)",
+        private static readonly Regex TempDirRegex = new Regex(
+            @"(^|\\)temp(\\|$)",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Regex ExecutableExtensionRegex = new Regex(
-            @"\.(exe|dll|sys|com|bat|cmd|ps1|vbs|js|scr|msi|cpl|ocx)$",
+        // wscl.exe в {GUID}-каталоге внутри любого \Temp\
+        private static readonly Regex WsclInTempRegex = new Regex(
+            @"\\temp\\\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}\\wscl\.exe",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        private static readonly Regex ConsonantRunRegex = new Regex(
-            @"[bcdfghjklmnpqrstvwxz]{5,}",
-            RegexOptions.Compiled);
 
         public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
         {
@@ -95,6 +92,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             int risk = 0;
             bool isMalicious = false;
+            bool forceQuarantineService = false;
 
             string servicePathWithArgs = svc.ServicePathWithArgs;
             string normalized = servicePathWithArgs.ToLowerInvariant();
@@ -155,9 +153,18 @@ namespace MSearch.Core.ThreatAnalyzers
             if (hasSuspiciousImagePath)
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ServiceSuspiciousImagePath", $"{svc.ServiceName} {svc.ServicePath}");
-                risk += 3;
-                isMalicious = true;
-                MarkFileForAction(svc.LinkedServiceFile);
+                if (svc.LinkedServiceFile == null)
+                {
+                    risk += 2;
+                    forceQuarantineService = true;
+                }
+                else
+                {
+                    risk += 3;
+                    isMalicious = true;
+                    svc.LinkedServiceFile.ShouldDisableExecute = true;
+                    svc.LinkedServiceFile.ShouldDeleteFile = true;
+                }
             }
 
             if (hasSddlBlocking)
@@ -172,9 +179,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 svc.ShouldRemoveFromSafeMode = true;
             }
 
-            // Зловредный SDDL: Deny-ACE для IU/SU/BA/WD блокируют опрос и управление
-            // службой (такие службы не видно в services.msc). Реальные образцы различаются,
-            // поэтому матчим суть (Deny + SID), а не строку целиком.
             bool hasMaliciousSddl = false;
             try
             {
@@ -236,7 +240,7 @@ namespace MSearch.Core.ThreatAnalyzers
                         string dllName = Path.GetFileName(dll);
                         if (MSData.GetInstance.sideloadableDlls.Any(s => dllName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0))
                         {
-                            var dllSignature = WinTrust.GetInstance.VerifyEmbeddedSignature(dll);
+                            var dllSignature = WinTrust.GetInstance.VerifyEmbeddedSignature(dll, true);
                             if (dllSignature != WinVerifyTrustResult.Success)
                             {
                                 AppConfig.GetInstance.LL.LogCautionMessage("_Found",
@@ -244,7 +248,7 @@ namespace MSearch.Core.ThreatAnalyzers
                                         .Replace("#SERVICENAME#", svc.ServiceName)
                                         .Replace("#DLLNAME#", dllName));
 
-                                svc.LinkedServiceDll = CreateFileObject(dll);
+                                svc.LinkedServiceDll = CreateFileObject(dll, dllSignature);
                                 if (svc.LinkedServiceDll != null)
                                 {
                                     svc.LinkedServiceDll.ShouldDisableExecute = true;
@@ -271,29 +275,23 @@ namespace MSearch.Core.ThreatAnalyzers
 
             ScanObjectType objType = isMalicious ? ScanObjectType.Malware : ScanObjectType.Suspicious;
 
-            // Устанавливаем флаги действий
             svc.ShouldDisableService = true;
 
-            if (svc.HasUnsignedServiceDll)
+            if (svc.HasUnsignedServiceDll || forceQuarantineService)
             {
-                // Неопределённость — нет подписи у ServiceDll → карантин
                 svc.ShouldQuarantineService = true;
             }
             else if (isMalicious)
             {
-                // Подтверждена вредоносность → удаление
                 svc.ShouldStopService = true;
                 svc.ShouldDeleteService = true;
-                // Сброс SDDL только при признаках блокировки: SCM недоступен
-                // (текущий SDDL прочитать не удалось) или в SDDL есть Deny-ACE.
-                // Иначе тихо пропускаем, обычные службы не трогаем.
                 svc.ShouldResetSddl = svc.SCMUnavailable || hasMaliciousSddl;
             }
 
-            // Решение для сервиса
+            FileChecker.LogUnsignedSha1(svc.LinkedServiceFile);
+            FileChecker.LogUnsignedSha1(svc.LinkedServiceDll);
             yield return new ThreatDecision(svc, risk, objType);
 
-            // Решения для связанных файлов
             if (svc.LinkedServiceFile != null &&
                 (svc.LinkedServiceFile.ShouldDeleteFile ||
                  svc.LinkedServiceFile.ShouldMoveFileToQuarantine ||
@@ -324,23 +322,86 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private static bool IsSuspiciousServiceImagePath(ServiceThreatObject svc)
         {
-            string candidate = GetServiceImagePathCandidate(svc);
+            if (CheckSuspiciousImagePathCandidate(svc, svc.ServicePath)) return true;
+
+            string raw = GetRawImagePathToken(svc);
+            if (!string.IsNullOrEmpty(raw) &&
+                !string.Equals(raw, svc.ServicePath, StringComparison.OrdinalIgnoreCase))
+            {
+                return CheckSuspiciousImagePathCandidate(svc, raw);
+            }
+
+            return false;
+        }
+
+        private static bool CheckSuspiciousImagePathCandidate(ServiceThreatObject svc, string candidate)
+        {
             if (string.IsNullOrEmpty(candidate)) return false;
 
             candidate = candidate.Trim().Trim('"').Replace('/', '\\');
+            if (IsNtOrRawDrivePath(candidate))
+                candidate = StripNtPrefix(candidate);
 
-            if (!UserWritableDirRegex.IsMatch(candidate)) return false;
-            if (ExecutableExtensionRegex.IsMatch(candidate)) return false;
+            // wscl.exe из {GUID}-каталога в Temp — известный дроппер
+            if (WsclInTempRegex.IsMatch(candidate))
+                return true;
 
-            string fileName = Path.GetFileName(candidate);
-            return IsRandomLooking(svc.ServiceName) || IsRandomLooking(fileName);
+            // Random-named служба: имя службы совпадает с именем файла (без расширения),
+            // файл лежит в любом Temp-содержащем каталоге и не имеет валидной подписи.
+            if (!TempDirRegex.IsMatch(candidate))
+                return false;
+
+            string fileStem = Path.GetFileNameWithoutExtension(candidate);
+            if (!string.Equals(fileStem, svc.ServiceName, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            return !HasValidSignature(candidate);
         }
 
-        private static string GetServiceImagePathCandidate(ServiceThreatObject svc)
+        private static bool HasValidSignature(string path)
         {
-            if (!string.IsNullOrEmpty(svc.ServicePath))
-                return svc.ServicePath;
+            try
+            {
+                if (string.IsNullOrEmpty(path) || !File.Exists(path))
+                    return false;
 
+                var trust = WinTrust.GetInstance.VerifyEmbeddedSignature(path);
+                return trust == WinVerifyTrustResult.Success ||
+                       trust == WinVerifyTrustResult.SubjectCertExpired;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static string StripNtPrefix(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return path;
+
+            if (path.StartsWith(@"\\?\", StringComparison.Ordinal)) return path.Substring(4);
+            if (path.StartsWith(@"\??\", StringComparison.Ordinal)) return path.Substring(4);
+            if (path.StartsWith(@"\\.\", StringComparison.Ordinal)) return path.Substring(4);
+            if (path.StartsWith(@"\\", StringComparison.Ordinal)) return path.Substring(2);
+
+            return path;
+        }
+
+        private static bool IsNtOrRawDrivePath(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return false;
+
+            int i = 0;
+            if (path.StartsWith(@"\\?\", StringComparison.Ordinal)) i = 4;
+            else if (path.StartsWith(@"\??\", StringComparison.Ordinal)) i = 4;
+            else if (path.StartsWith(@"\\.\", StringComparison.Ordinal)) i = 4;
+            else if (path.StartsWith(@"\\", StringComparison.Ordinal)) i = 2;
+
+            return path.Length > i + 1 && char.IsLetter(path[i]) && path[i + 1] == ':';
+        }
+
+        private static string GetRawImagePathToken(ServiceThreatObject svc)
+        {
             string raw = svc.ServicePathWithArgs;
             if (string.IsNullOrEmpty(raw)) return null;
 
@@ -355,31 +416,6 @@ namespace MSearch.Core.ThreatAnalyzers
 
             int space = raw.IndexOf(' ');
             return space > 0 ? raw.Substring(0, space) : raw;
-        }
-
-        private static bool IsRandomLooking(string value)
-        {
-            if (string.IsNullOrEmpty(value)) return false;
-
-            string stem = Path.GetFileNameWithoutExtension(value);
-            if (stem.Length < 8) return false;
-
-            int digits = 0;
-            int uppers = 0;
-            int vowels = 0;
-
-            foreach (char c in stem)
-            {
-                if (char.IsDigit(c)) digits++;
-                if (char.IsUpper(c)) uppers++;
-                if ("aeiouyAEIOUY".IndexOf(c) >= 0) vowels++;
-            }
-
-            if (digits >= 3) return true;
-
-            return uppers >= 2 &&
-                   ConsonantRunRegex.IsMatch(stem.ToLowerInvariant()) &&
-                   vowels <= stem.Length * 0.25;
         }
 
         private void CheckServiceDll(ServiceThreatObject svc, ref int risk, ref bool isMalicious)
@@ -414,7 +450,7 @@ namespace MSearch.Core.ThreatAnalyzers
                         AppConfig.GetInstance.LL.LogCautionMessage("_Found", $"{svc.ServiceName} {serviceDll}");
 
                         svc.HasUnsignedServiceDll = true;
-                        svc.LinkedServiceDll = CreateFileObject(serviceDll);
+                        svc.LinkedServiceDll = CreateFileObject(serviceDll, dllSignature);
                         if (svc.LinkedServiceDll != null)
                         {
                             svc.LinkedServiceDll.ShouldDisableExecute = true;
@@ -482,12 +518,13 @@ namespace MSearch.Core.ThreatAnalyzers
             return null;
         }
 
-        private FileThreatObject CreateFileObject(string path)
+        private FileThreatObject CreateFileObject(string path, WinVerifyTrustResult? trustResult = null)
         {
             try
             {
                 if (!File.Exists(path)) return null;
-                var trust = WinTrust.GetInstance.VerifyEmbeddedSignature(path, true);
+
+                var trust = trustResult ?? WinTrust.GetInstance.VerifyEmbeddedSignature(path, true);
                 var fileInfo = new FileInfo(path);
                 var versionInfo = FileVersionInfo.GetVersionInfo(path);
                 string originalName = versionInfo.OriginalFilename ?? string.Empty;

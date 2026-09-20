@@ -406,6 +406,8 @@ namespace MSearch
                             ok = QuarantineManager.RestoreService(hash);
                         else if (rowType == QuarantineItemType.Task)
                             ok = QuarantineManager.RestoreTask(hash);
+                        else if (rowType == QuarantineItemType.Registry)
+                            ok = QuarantineManager.RestoreRegistry(hash);
                         else
                             ok = QuarantineManager.RestoreFile(hash, path);
 
@@ -457,7 +459,7 @@ namespace MSearch
                 if (GetCheckState(cell) == CheckState.Checked)
                 {
                     QuarantineItemType? t = GetRowType(row);
-                    if (t == QuarantineItemType.Service || t == QuarantineItemType.Task)
+                    if (t == QuarantineItemType.Service || t == QuarantineItemType.Task || t == QuarantineItemType.Registry)
                     {
                         hasNonFile = true;
                     }
@@ -483,6 +485,8 @@ namespace MSearch
                             ok = QuarantineManager.RestoreService(hash);
                         else if (rowType == QuarantineItemType.Task)
                             ok = QuarantineManager.RestoreTask(hash);
+                        else if (rowType == QuarantineItemType.Registry)
+                            ok = QuarantineManager.RestoreRegistry(hash);
                         else
                             ok = QuarantineManager.RestoreFile(hash, path);
 
@@ -563,6 +567,8 @@ namespace MSearch
                     return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Service");
                 case QuarantineItemType.Task:
                     return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Task");
+                case QuarantineItemType.Registry:
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Registry");
                 default:
                     return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_File");
             }

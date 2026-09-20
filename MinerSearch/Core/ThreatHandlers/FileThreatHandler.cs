@@ -101,28 +101,45 @@ namespace MSearch.Core.ThreatHandlers
             {
                 // Сбросить ACL перед удалением
                 UnlockObjectClass.ResetObjectACL(path);
-                
-                if (NativeFileOperations.DeleteFileWithRetry(path))
+
+                int lastError = 0;
+                if (!NativeFileOperations.DeleteFileWithRetry(path))
+                    lastError = Marshal.GetLastWin32Error();
+
+                if (!File.Exists(path))
                 {
-                    if (!File.Exists(path))
-                    {
-                        decision.ActionType = ScanActionType.Deleted;
-                        return ApplyResult.Success;
-                    }
-                    else
-                    {
-                        decision.ActionType = ScanActionType.Error;
-                        return ApplyResult.Failed;
-                    }
+                    decision.ActionType = ScanActionType.Deleted;
+                    return ApplyResult.Success;
                 }
-                else
+
+                UnlockObjectClass.KillAndDelete(path);
+                if (!File.Exists(path))
                 {
-                    int lastError = Marshal.GetLastWin32Error();
-                    decision.ApplyErrorMessage = new Win32Exception(lastError).Message;
-                    decision.ActionType = ScanActionType.Error;
-                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, path, "_File");
-                    return ApplyResult.Failed;
+                    decision.ActionType = ScanActionType.Deleted;
+                    return ApplyResult.Success;
                 }
+
+                if (CanScheduleDeleteOnReboot() && NativeFileOperations.ScheduleDeleteOnReboot(path))
+                {
+                    var fileThreat = decision.Target as FileThreatObject;
+                    if (fileThreat != null)
+                        fileThreat.DeleteScheduledOnReboot = true;
+
+                    decision.ActionType = ScanActionType.RebootPending;
+                    string rebootPendingNote = AppConfig.GetInstance.LL.GetLocalizedString("_RebootPendingNote");
+                    if (!string.IsNullOrEmpty(rebootPendingNote) &&
+                        (string.IsNullOrEmpty(decision.Note) || decision.Note.IndexOf(rebootPendingNote, StringComparison.Ordinal) < 0))
+                    {
+                        decision.Note = string.IsNullOrEmpty(decision.Note) ? rebootPendingNote : decision.Note + " | " + rebootPendingNote;
+                    }
+                    AppConfig.GetInstance.LL.LogWarnMessage("_FileScheduledDeleteOnReboot", path);
+                    return ApplyResult.Success;
+                }
+
+                decision.ApplyErrorMessage = lastError != 0 ? new Win32Exception(lastError).Message : null;
+                decision.ActionType = ScanActionType.Error;
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, path, "_File");
+                return ApplyResult.Failed;
             }
             catch (Exception ex)
             {
@@ -149,6 +166,12 @@ namespace MSearch.Core.ThreatHandlers
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotDisableExecute", ex, path, "_File");
                 return ApplyResult.Error;
             }
+        }
+
+        private static bool CanScheduleDeleteOnReboot()
+        {
+            return !LaunchOptions.GetInstance.winpemode &&
+                   AppConfig.GetInstance.bootMode == BootMode.Normal;
         }
     }
 }

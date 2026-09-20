@@ -947,6 +947,13 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 yield return new ThreatDecision(taskObj.LinkedFileFromArgs, risk, ScanObjectType.Malware);
             }
+
+            // SHA1 неподписанных файлов задачи — при любом детекте
+            if (taskObj.ActionDeleteTask || taskObj.ActionQuarantineTask)
+            {
+                FileChecker.LogUnsignedSha1(taskObj.LinkedFile);
+                FileChecker.LogUnsignedSha1(taskObj.LinkedFileFromArgs);
+            }
         }
 
         // Вспомогательные методы внутри Анализатора ------------------------------

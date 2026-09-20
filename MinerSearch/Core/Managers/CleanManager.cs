@@ -216,6 +216,17 @@ namespace MSearch.Core.Managers
             if (result == ApplyResult.Error && !string.IsNullOrEmpty(decision.ApplyErrorMessage))
                 note = string.IsNullOrEmpty(note) ? decision.ApplyErrorMessage : note + " | " + decision.ApplyErrorMessage;
 
+            // Удаление запланировано на перезагрузку — помечаем в столбце Note (FinishEx)
+            if (actionType == ScanActionType.RebootPending)
+            {
+                string rebootNote = AppConfig.GetInstance.LL.GetLocalizedString("_RebootPendingNote");
+                if (!string.IsNullOrEmpty(rebootNote) &&
+                    (string.IsNullOrEmpty(note) || note.IndexOf(rebootNote, StringComparison.Ordinal) < 0))
+                {
+                    note = string.IsNullOrEmpty(note) ? rebootNote : note + " | " + rebootNote;
+                }
+            }
+
             // Записываем в ScanResult
             _state.AddScanResult(new ScanResult(decision.ObjectType, description, actionType, note, decision.Target.Id, decision.Target.Kind));
 
@@ -233,7 +244,8 @@ namespace MSearch.Core.Managers
                     actionType == ScanActionType.Terminated ||
                     actionType == ScanActionType.Quarantine ||
                     actionType == ScanActionType.Disabled ||
-                    actionType == ScanActionType.Suspended)
+                    actionType == ScanActionType.Suspended ||
+                    actionType == ScanActionType.RebootPending)
                 {
                     _state.IncrementNeutralizedThreats();
                 }
@@ -245,6 +257,9 @@ namespace MSearch.Core.Managers
             switch (result)
             {
                 case ApplyResult.Success:
+                    if (decision.Target is FileThreatObject rebootPendingFile && rebootPendingFile.DeleteScheduledOnReboot)
+                        return ScanActionType.RebootPending;
+
                     // Если пользователь выбрал действие в review-UI — маппим на ScanActionType
                     if (decision.UserOverrideAction.HasValue)
                         return MapUserActionToScanAction(decision.UserOverrideAction.Value);
@@ -305,6 +320,8 @@ namespace MSearch.Core.Managers
                     var reg = decision.Target as RegistryThreatObject;
                     if (reg != null)
                     {
+                        // Карантин ветки/значения реестра
+                        if (reg.ActionQuarantine) return ScanActionType.Quarantine;
                         // ActionSetData = исправлено значение → Cured
                         if (reg.ActionSetData || reg.ActionSetSibling) return ScanActionType.Cured;
                     }
