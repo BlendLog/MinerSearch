@@ -18,17 +18,12 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 > [!CAUTION]
 > ### Windows 7 is outdated. MinerSearch development for this OS has been discontinued.
 
-Version v1.4.9.3
+Version v1.4.9.4
 
-  - Services and scheduled tasks can now be moved to quarantine
-  - Updated identification and removal of miners via WMI
-  - Fixed a bug where the DisableTaskMgr and DisableRegistryTools values were 0, but were detected as a threat
-  - Fixed a bug where an empty log was created when entering the quarantine UI via the -q option
-  - Added an exclusion list for some applications from DisallowRun, used to block Windows telemetry
-  - Improved heuristics for scheduled tasks and services
-  - Added a button in FormThreatReview to set recommended actions for threats
-  - FormThreatReview now shows a warning when the form is closed
-  - Updated / fixed localization resources
+- Expanded service and autorun heuristics (including items hidden from standard system tools), fewer false positives
+- Added registry value quarantine with restore. Boot-critical system parameters are only cured
+- Added deletion of malicious files on the next reboot, reflected in the report
+- SHA1 of unsigned files is logged regardless of the verdict
 
 --------------------------------------------
 
@@ -38,7 +33,7 @@ Completely unzip the archive with the program into a separate folder and launch 
 
 If unknown threats are found, the "Threat Review" window opens. For each item you can select an action (Cure, Quarantine, Delete, Terminate, Disable, Skip) or set a single action for all items ("Set to all"). The "Set recommended" button restores the actions recommended by the analyzers. If the window is closed without clicking "Apply", the recommended actions are applied after confirmation. Automatic acceptance of decisions for unknown threats can be enabled in "Open settings" or with the -norev parameter.
 
-Clicking on the "Open quarantine" button will open the Quarantine Manager, in which you can completely delete or restore quarantined files, scheduled tasks and services.
+Clicking on the "Open quarantine" button will open the Quarantine Manager, in which you can completely delete or restore quarantined files, scheduled tasks, services and registry entries.
 
 ----------------
 How to switch language in the app?
