@@ -1897,7 +1897,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на All threats has been neutralized!.
+        ///   Ищет локализованную строку, похожую на All founded threats has been neutralized!.
         /// </summary>
         internal static string _FinishAllThreatsNeutralized_EN {
             get {
@@ -1906,7 +1906,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Все угрозы были устранены!.
+        ///   Ищет локализованную строку, похожую на Все найденные угрозы были устранены!.
         /// </summary>
         internal static string _FinishAllThreatsNeutralized_RU {
             get {
@@ -3886,6 +3886,42 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Registry item restored from quarantine:.
+        /// </summary>
+        internal static string _QuarantineRegistryRestored_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineRegistryRestored_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Объект реестра восстановлен из карантина:.
+        /// </summary>
+        internal static string _QuarantineRegistryRestored_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineRegistryRestored_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to restore registry item from quarantine:.
+        /// </summary>
+        internal static string _QuarantineRegistryRestoreFailed_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineRegistryRestoreFailed_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось восстановить объект реестра из карантина:.
+        /// </summary>
+        internal static string _QuarantineRegistryRestoreFailed_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineRegistryRestoreFailed_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Remove #FILESCOUNT# file(s) from quarantine?.
         /// </summary>
         internal static string _QuarantineRemoveBtn_EN {
@@ -3976,24 +4012,6 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Object is already gone, quarantine skipped:.
-        /// </summary>
-        internal static string _QuarantineSourceMissing_EN {
-            get {
-                return ResourceManager.GetString("_QuarantineSourceMissing_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Объект уже отсутствует, карантин не требуется:.
-        /// </summary>
-        internal static string _QuarantineSourceMissing_RU {
-            get {
-                return ResourceManager.GetString("_QuarantineSourceMissing_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Service restored from quarantine:.
         /// </summary>
         internal static string _QuarantineServiceRestored_EN {
@@ -4026,6 +4044,24 @@ namespace MSearch.Properties {
         internal static string _QuarantineServiceRestoreFailed_RU {
             get {
                 return ResourceManager.GetString("_QuarantineServiceRestoreFailed_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Object is already gone, quarantine skipped:.
+        /// </summary>
+        internal static string _QuarantineSourceMissing_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineSourceMissing_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Объект уже отсутствует, карантин не требуется:.
+        /// </summary>
+        internal static string _QuarantineSourceMissing_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineSourceMissing_RU", resourceCulture);
             }
         }
         
@@ -4102,6 +4138,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Registry.
+        /// </summary>
+        internal static string _QuarantineType_Registry_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineType_Registry_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Реестр.
+        /// </summary>
+        internal static string _QuarantineType_Registry_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineType_Registry_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Service.
         /// </summary>
         internal static string _QuarantineType_Service_EN {
@@ -4134,78 +4188,6 @@ namespace MSearch.Properties {
         internal static string _QuarantineType_Task_RU {
             get {
                 return ResourceManager.GetString("_QuarantineType_Task_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Registry.
-        /// </summary>
-        internal static string _QuarantineType_Registry_EN {
-            get {
-                return ResourceManager.GetString("_QuarantineType_Registry_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Реестр.
-        /// </summary>
-        internal static string _QuarantineType_Registry_RU {
-            get {
-                return ResourceManager.GetString("_QuarantineType_Registry_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Registry item restored from quarantine:.
-        /// </summary>
-        internal static string _QuarantineRegistryRestored_EN {
-            get {
-                return ResourceManager.GetString("_QuarantineRegistryRestored_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Объект реестра восстановлен из карантина:.
-        /// </summary>
-        internal static string _QuarantineRegistryRestored_RU {
-            get {
-                return ResourceManager.GetString("_QuarantineRegistryRestored_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Failed to restore registry item from quarantine:.
-        /// </summary>
-        internal static string _QuarantineRegistryRestoreFailed_EN {
-            get {
-                return ResourceManager.GetString("_QuarantineRegistryRestoreFailed_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Не удалось восстановить объект реестра из карантина:.
-        /// </summary>
-        internal static string _QuarantineRegistryRestoreFailed_RU {
-            get {
-                return ResourceManager.GetString("_QuarantineRegistryRestoreFailed_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Registry item moved to quarantine:.
-        /// </summary>
-        internal static string _RegistryValueQuarantined_EN {
-            get {
-                return ResourceManager.GetString("_RegistryValueQuarantined_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Объект реестра помещён в карантин:.
-        /// </summary>
-        internal static string _RegistryValueQuarantined_RU {
-            get {
-                return ResourceManager.GetString("_RegistryValueQuarantined_RU", resourceCulture);
             }
         }
         
@@ -4314,6 +4296,24 @@ namespace MSearch.Properties {
         internal static string _RegistryValue_RU {
             get {
                 return ResourceManager.GetString("_RegistryValue_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Registry item moved to quarantine:.
+        /// </summary>
+        internal static string _RegistryValueQuarantined_EN {
+            get {
+                return ResourceManager.GetString("_RegistryValueQuarantined_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Объект реестра помещён в карантин:.
+        /// </summary>
+        internal static string _RegistryValueQuarantined_RU {
+            get {
+                return ResourceManager.GetString("_RegistryValueQuarantined_RU", resourceCulture);
             }
         }
         

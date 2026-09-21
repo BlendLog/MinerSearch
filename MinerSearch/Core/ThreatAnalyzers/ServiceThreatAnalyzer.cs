@@ -36,7 +36,6 @@ namespace MSearch.Core.ThreatAnalyzers
             @"(^|\\)temp(\\|$)",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        // wscl.exe в {GUID}-каталоге внутри любого \Temp\
         private static readonly Regex WsclInTempRegex = new Regex(
             @"\\temp\\\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}\\wscl\.exe",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -69,6 +68,8 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 AppConfig.GetInstance.LL.LogMessage("[.]", "_FileSize", FileChecker.GetFileSize(svc.LinkedServiceFile.FileSize), ConsoleColor.White);
             }
+
+            FileChecker.LogUnsignedSha1(svc.LinkedServiceFile);
 
             string[] specialScan = { "TermService" };
             foreach (string name in specialScan)
@@ -288,7 +289,8 @@ namespace MSearch.Core.ThreatAnalyzers
                 svc.ShouldResetSddl = svc.SCMUnavailable || hasMaliciousSddl;
             }
 
-            FileChecker.LogUnsignedSha1(svc.LinkedServiceFile);
+            // LinkedServiceFile уже залогирован в шапке службы; здесь остаётся ServiceDll,
+            // который становится известен только в ходе анализа
             FileChecker.LogUnsignedSha1(svc.LinkedServiceDll);
             yield return new ThreatDecision(svc, risk, objType);
 
@@ -342,12 +344,9 @@ namespace MSearch.Core.ThreatAnalyzers
             if (IsNtOrRawDrivePath(candidate))
                 candidate = StripNtPrefix(candidate);
 
-            // wscl.exe из {GUID}-каталога в Temp — известный дроппер
             if (WsclInTempRegex.IsMatch(candidate))
                 return true;
 
-            // Random-named служба: имя службы совпадает с именем файла (без расширения),
-            // файл лежит в любом Temp-содержащем каталоге и не имеет валидной подписи.
             if (!TempDirRegex.IsMatch(candidate))
                 return false;
 

@@ -308,7 +308,7 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
     <value>Ошибка эндпоинта</value>
   </data>
   <data name="_FinishAllThreatsNeutralized_EN" xml:space="preserve">
-    <value>All threats has been neutralized!</value>
+    <value>All founded threats has been neutralized!</value>
   </data>
   <data name="_ProcessingRegistry_EN" xml:space="preserve">
     <value>Processing registry...</value>
@@ -1003,7 +1003,7 @@ Press any key to continue...</value>
     <value>Processing files...</value>
   </data>
   <data name="_FinishAllThreatsNeutralized_RU" xml:space="preserve">
-    <value>Все угрозы были устранены!</value>
+    <value>Все найденные угрозы были устранены!</value>
   </data>
   <data name="_ProcessingRegistry_RU" xml:space="preserve">
     <value>Обработка реестра...</value>

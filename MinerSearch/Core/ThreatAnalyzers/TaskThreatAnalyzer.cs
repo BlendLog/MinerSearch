@@ -136,6 +136,10 @@ namespace MSearch.Core.ThreatAnalyzers
                 {
                     Logger.WriteLog($"\t[OK]", Logger.success, false);
                 }
+                else
+                {
+                    FileChecker.LogUnsignedSha1(taskObj.LinkedFile);
+                }
 
                 if (!string.IsNullOrEmpty(args))
                 {
@@ -948,12 +952,8 @@ namespace MSearch.Core.ThreatAnalyzers
                 yield return new ThreatDecision(taskObj.LinkedFileFromArgs, risk, ScanObjectType.Malware);
             }
 
-            // SHA1 неподписанных файлов задачи — при любом детекте
-            if (taskObj.ActionDeleteTask || taskObj.ActionQuarantineTask)
-            {
-                FileChecker.LogUnsignedSha1(taskObj.LinkedFile);
-                FileChecker.LogUnsignedSha1(taskObj.LinkedFileFromArgs);
-            }
+            // SHA1 неподписанных файлов, извлечённых из аргументов задачи (независимо от детекта)
+            FileChecker.LogUnsignedSha1(taskObj.LinkedFileFromArgs);
         }
 
         // Вспомогательные методы внутри Анализатора ------------------------------
