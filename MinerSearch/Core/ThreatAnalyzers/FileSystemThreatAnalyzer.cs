@@ -170,6 +170,12 @@ namespace MSearch.Core.ThreatAnalyzers
                     decision.ActionType = ScanActionType.LockedByAntivirus;
                     yield return decision;
                 }
+                else if (sigAnalysisResult.IsAccessDenied)
+                {
+                    var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Suspicious);
+                    decision.ActionType = ScanActionType.Skipped;
+                    yield return decision;
+                }
                 yield break;
             }
 
@@ -218,6 +224,12 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Malware);
                 decision.ActionType = ScanActionType.LockedByAntivirus;
+                yield return decision;
+            }
+            else if (otherAnalysisResult.IsAccessDenied)
+            {
+                var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Suspicious);
+                decision.ActionType = ScanActionType.Skipped;
                 yield return decision;
             }
         }

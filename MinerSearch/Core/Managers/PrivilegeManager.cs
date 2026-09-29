@@ -64,8 +64,9 @@ namespace MSearch.Core.Managers
                 privilegesToEnable.Add(SystemPrivilege.SeDebugPrivilege);
             }
 
-            if (!_options.no_runtime)
+            if (!_options.no_runtime || !_options.nosignaturescan)
             {
+                // чтение файлов с deny-ACL через FILE_FLAG_BACKUP_SEMANTICS
                 privilegesToEnable.Add(SystemPrivilege.SeBackupPrivilege);
             }
 
@@ -74,7 +75,7 @@ namespace MSearch.Core.Managers
                 privilegesToEnable.Add(SystemPrivilege.SeRestorePrivilege);
             }
 
-            if (!_options.no_scan_registry && !_options.ScanOnly)
+            if ((!_options.no_scan_registry && !_options.ScanOnly) || !_options.nosignaturescan)
             {
                 privilegesToEnable.Add(SystemPrivilege.SeTakeOwnershipPrivilege);
             }

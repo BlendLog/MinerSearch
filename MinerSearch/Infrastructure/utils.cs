@@ -219,9 +219,15 @@ namespace MSearch
 
             if (exclusionType == "") return;
 
+            // Remove-MpPreference работает через WMI (winmgmt): если служба остановлена
+            // (например, скан шёл с -nwmi и CheckWMI не выполнялся) - команда упадёт.
+            EnsureWinmgmtRunning();
+
+            string escapedValue = (value ?? string.Empty).Replace("'", "''");
+
             ProcessStartInfo psi = new ProcessStartInfo();
             psi.FileName = "powershell.exe";
-            psi.Arguments = "-Exe~cuti~onPo~~licy By~pa~ss -c \"Re~mo~ve~-~M~p~Prefe~~rence -Ex~~clus~ion".Replace("~", "") + exclusionType + " '" + value + "'\"";
+            psi.Arguments = "-Exe~cuti~onPo~~licy By~pa~ss -c \"Re~mo~ve~-~M~p~Prefe~~rence -Ex~~clus~ion".Replace("~", "") + exclusionType + " '" + escapedValue + "'\"";
             psi.UseShellExecute = false;
             psi.CreateNoWindow = true;
 
@@ -230,6 +236,34 @@ namespace MSearch
                 process.WaitForExit();
             }
 
+        }
+
+        /// <summary>
+        /// Поднимает winmgmt (тип запуска AutoStart + запуск), не трогая WMI-базу
+        /// </summary>
+        private static void EnsureWinmgmtRunning()
+        {
+            try
+            {
+                string serviceName = "wi~nm~gm~t".Replace("~", "");
+                if (!ServiceIsInstalled(serviceName)) return;
+
+                var serviceInfo = GetServiceInfo(serviceName);
+                if ((ServiceBootFlag)serviceInfo.StartType != ServiceBootFlag.AutoStart)
+                {
+                    ChangeStartMode(serviceName, ServiceBootFlag.AutoStart);
+                }
+
+                if (GetServiceState(serviceName) != ServiceState.Running)
+                {
+                    StartService(serviceName);
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_CriticalServiceRestart");
+                }
+            }
+            catch
+            {
+                // не удалось поднять службу - Remove-MpPreference сам сообщит об ошибке
+            }
         }
 
         internal static bool SwitchMouseSelection(bool enable = false)
@@ -367,7 +401,7 @@ namespace MSearch
                     var message = DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), latest, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                     if (message == DialogResult.Yes)
                     {
-                        Process.Start("explorer", "https://github.com/BlendLog/MinerSearch/releases/latest");
+                        Process.Start("explorer", "https://blendlog.github.io");
                         return 1;
                     }
                     else
@@ -1276,6 +1310,43 @@ namespace MSearch
     {
         static string batchSig = MSData.GetInstance.queries["Defender_AddExclusionPath"];
 
+        /// <summary>
+        /// Открывает файл на чтение; при отказе в доступе (deny-ACL) сначала пробует backup-semantics
+        /// (без изменения файла/ACL), и только затем крайнюю меру — сброс ACL для разрешённых каталогов.
+        /// </summary>
+        internal static FileStream OpenReadWithFallback(string filePath, FileShare share, int bufferSize = 4096)
+        {
+            try
+            {
+                return new FileStream(filePath, FileMode.Open, FileAccess.Read, share, bufferSize);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                FileStream recovered = UnlockObjectClass.OpenReadWithBackupSemantics(filePath);
+                if (recovered != null)
+                    return recovered;
+
+                if (UnlockObjectClass.IsFileAclResetAllowed(filePath) &&
+                    UnlockObjectClass.RestoreFileAclForRead(filePath))
+                {
+                    AppConfig.GetInstance.LL.LogWarnMessage("_WarnFileAclRecovered", filePath);
+                    return new FileStream(filePath, FileMode.Open, FileAccess.Read, share, bufferSize);
+                }
+
+                throw;
+            }
+        }
+
+        internal static byte[] ReadAllBytesWithFallback(string filePath)
+        {
+            using (FileStream fs = OpenReadWithFallback(filePath, FileShare.Read))
+            using (MemoryStream ms = new MemoryStream())
+            {
+                fs.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+
         internal static List<byte[]> RestoreSignatures(List<byte[]> signatures)
         {
             foreach (var sig in signatures)
@@ -1304,7 +1375,7 @@ namespace MSearch
             long globalOffset = 0;
 
             double entropy;
-            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, FileOptions.SequentialScan))
+            using (FileStream fs = OpenReadWithFallback(filePath, FileShare.Read, bufferSize))
             {
                 byte[] entropyCalcBuffer = new byte[Math.Min(bufferSize, fs.Length)];
                 fs.Read(entropyCalcBuffer, 0, entropyCalcBuffer.Length);
@@ -1367,7 +1438,7 @@ namespace MSearch
 
         internal static bool CheckDynamicSignature(string filePath, int sequenceLength, int minOccurrences)
         {
-            byte[] allBytes = File.ReadAllBytes(filePath);
+            byte[] allBytes = ReadAllBytesWithFallback(filePath);
             int length = allBytes.Length;
             if (length < sequenceLength)
                 return false;
@@ -1463,7 +1534,7 @@ namespace MSearch
 
             byte[] sequenceInRange = new byte[sequenceLength];
 
-            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (FileStream fs = OpenReadWithFallback(filePath, FileShare.Read))
             {
                 if (fs.Length < offset + sequenceLength)
                 {
@@ -1601,7 +1672,7 @@ namespace MSearch
             {
                 try
                 {
-                    using (var stream = File.OpenRead(filePath))
+                    using (var stream = OpenReadWithFallback(filePath, FileShare.Read))
                     {
                         byte[] hashBytes = md5.ComputeHash(stream);
                         StringBuilder sb = new StringBuilder();
@@ -1636,7 +1707,7 @@ namespace MSearch
             {
                 try
                 {
-                    using (var stream = File.OpenRead(filePath))
+                    using (var stream = OpenReadWithFallback(filePath, FileShare.Read))
                     {
                         byte[] hashBytes = sha1.ComputeHash(stream);
                         StringBuilder sb = new StringBuilder();
@@ -1726,7 +1797,7 @@ namespace MSearch
         {
             try
             {
-                using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                using (var fs = OpenReadWithFallback(path, FileShare.Read))
                 using (var br = new BinaryReader(fs))
                 {
                     long off = GetPeTailOffset(br);

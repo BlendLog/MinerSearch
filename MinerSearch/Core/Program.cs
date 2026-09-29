@@ -394,7 +394,7 @@ namespace MSearch
                 }
             }
 
-            Console.ReadLine();
+            //Console.ReadLine();
 
             // Cleanup: OS automatically releases handles on process exit.
             // Explicit ReleaseMutex calls are removed to avoid SynchronizationLockException (ownership was lost during checks).

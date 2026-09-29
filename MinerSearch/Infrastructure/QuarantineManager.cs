@@ -304,7 +304,7 @@ namespace MSearch
                         subKey.SetValue(QUARANTINED_AT, DateTime.Now.ToString("o"));
                         subKey.SetValue(ORIGINAL_PATH, sourceFilePath, RegistryValueKind.String);
 
-                        using (var fileStream = new FileStream(sourceFilePath, FileMode.Open, FileAccess.Read, FileShare.None))
+                        using (var fileStream = FileChecker.OpenReadWithFallback(sourceFilePath, FileShare.None))
                         {
                             long fileSize = fileStream.Length;
                             int totalParts = (int)Math.Ceiling((double)fileSize / blockSize);
@@ -1129,7 +1129,7 @@ namespace MSearch
                 FileShare.Read,
                 IntPtr.Zero,
                 FileMode.Open,
-                0,
+                (FileAttributes)Native.FILE_FLAG_BACKUP_SEMANTICS,
                 IntPtr.Zero))
             {
                 if (fileHandle.IsInvalid) return null;

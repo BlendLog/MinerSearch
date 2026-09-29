@@ -24,6 +24,7 @@ namespace MSearch.Core.ThreatAnalyzers
         public bool IsSuspicious { get; private set; }
         public bool IsLockedByAntivirus { get; private set; }
         public bool ErrorResult { get; private set; }
+        public bool IsAccessDenied { get; private set; }
 
         public FileContentAnalysisResult(
             bool isMalicious,
@@ -60,6 +61,14 @@ namespace MSearch.Core.ThreatAnalyzers
         public static FileContentAnalysisResult Error()
         {
             return new FileContentAnalysisResult(false, false, false, true);
+        }
+
+        public static FileContentAnalysisResult AccessDenied()
+        {
+            return new FileContentAnalysisResult(false, false, false, false)
+            {
+                IsAccessDenied = true
+            };
         }
     }
 
@@ -180,6 +189,16 @@ namespace MSearch.Core.ThreatAnalyzers
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", fileThreat.FilePath);
                 return FileContentAnalysisResult.LockedByAv();
             }
+            catch (UnauthorizedAccessException)
+            {
+                AppConfig.GetInstance.LL.LogWarnMediumMessage("_WarnFileAccessDenied", fileThreat.FilePath);
+                return FileContentAnalysisResult.AccessDenied();
+            }
+            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80070005)))
+            {
+                AppConfig.GetInstance.LL.LogWarnMediumMessage("_WarnFileAccessDenied", fileThreat.FilePath);
+                return FileContentAnalysisResult.AccessDenied();
+            }
             catch (Exception ex)
             {
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorAnalyzingFile", ex, fileThreat.FilePath);
@@ -278,6 +297,14 @@ namespace MSearch.Core.ThreatAnalyzers
                 {
                     var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Malware);
                     decision.ActionType = ScanActionType.LockedByAntivirus;
+                    decisions.Add(decision);
+                }
+                else if (result.IsAccessDenied)
+                {
+                    // Файл с deny-ACL не удалось прочитать даже с обходом DACL —
+                    // показываем пользователю в review вместо молчаливого пропуска
+                    var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Suspicious);
+                    decision.ActionType = ScanActionType.Skipped;
                     decisions.Add(decision);
                 }
             }

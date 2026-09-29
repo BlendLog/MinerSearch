@@ -503,6 +503,12 @@ namespace DBase
 		@"\\?\" + Drive.Letter + Bfs.Create("TdYJqJySYeJi/6HK+fiH4Q==", "PqtWaFwWY2Cva7ABeWnj7MiAFvEbVUH9ysuyIs9bJME=", "pDAfFhalQgVLSK0X1BFElg=="), //:\Users
 		};
 
+        public List<string> aclResetForbiddenDirs = new List<string>();
+
+        public string[] aclResetForbiddenFragments = new string[] {
+        "\\w?im_mou?nt\\".Replace("?", ""), //\wim_mount\
+        };
+
 
         public HashSet<string> badArgStrings = new HashSet<string>()
         {
@@ -559,6 +565,9 @@ namespace DBase
             ["StartupRun"] = Bfs.Create("VkAZXhNpDaSQYunTXAP06PvhVaNN13fcCcM2QuC0400At+NIoJeRyMYUajPPzAja", "PYuDGVKLcBQ7HkOxTCK1V9V4i9KDak1TQoQzWOJK15Y=", "fE2CmM9j2hYIO4dX2ECvQQ=="), //Software\Microsoft\Windows\CurrentVersion\Run
             ["WDExclusionsPolicies"] = Bfs.Create("jw207AYJ1AIyl1Gl1MoEC+i234PHIXFfGz6BTvHoMslOG9M5nLz/B2xSG2/EIxv9TNy7wdamNV/DRN7Ex6arGw==", "/eSaR0SQX+iTF7XKq/QBKEks63MhsIA5WDyFk3IVSpc=", "K691oZjFNL/QnXpFHiQ+UA=="), //Software\Policies\Microsoft\Windows Defender\Exclusions
             ["WDExclusionsLocal"] = Bfs.Create("z/qlEghv+Oilg62sLRP3cuk4M7H0OJ8AduIt5nRD/bLbWGDbZiNv7R3b+33RIN8n", "SUaYEuStNQfygR68aV3IdP34p93J3hkmAZ2tdEpf0N4=", "tFOguEE5ZCKrwjVozlzvbg=="), //Software\Microsoft\Windows Defender\Exclusions
+            ["WDBasePolicies"] = Bfs.Create("RCo5798dDDVvbZb3sN20S+3YKB/EOG66psC9vyVBTuwgQXHYVT7VoctEo3+qVXu/", "Pseb2Jmut0j0Cja3Xm2RZDND3aRh8yQVXDAcD055HDk=", "IIhUEvD5YbRP0tv90OUk5w=="), //Software\Policies\Microsoft\Windows Defender
+            ["WDBaseLocal"] = Bfs.Create("iWxjnWeL+YOkO3pB9BDNHHgH9Re1oaUVU1YNWKX7a754LnnokRFGeJra8m8O5cLW", "2LP4rIh5Yc9M89fSNXrwnqzWS9aOC5xG8QYVTm83Z4w=", "Rxi4zo8Gccp/lOner/0EiQ=="), //Software\Microsoft\Windows Defender
+            ["WDFlags"] = Bfs.Create("Yco59q624xhj4Wpacf6bGdMo7Q3GqudKPPANkQvpXAmfUDcrDjysW1xrNW0qZD9S", "uj53mxXRHcyAyyQJrxkAwzEGHNUt/pKJ46bZZ4IhnjQ=", "UgE0gVpy/r9Nfj0O32Ia7g=="), //DisableAntiSpyware|DisableAntiVirus
             ["Wow6432Node_StartupRun"] = Bfs.Create("/Zmm8EnxIQF/p2KhFAq2OLRRGCZdYuZByL/FEVbwWoOvEZRsyuEYoVfGP56EL9fm9hAhT2MovOyOv2/u6WSNLg==", "gZ/aXbPfWrT5haMJiLdDqqG/CjGJi32mvldNGueoUk4=", "ilReVFMp6vOaxo8QPxLVOg=="), //SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run
             ["PowerShellPath"] = Drive.Letter + Bfs.Create("IQe3UNy8dckbYwg60MsQCSML4WC38PbWP/YIctXHk4Wpp0kvPrKfBfsqMm4/w7kr", "HOBaM10qALm8/l7U/1I9ZMMYNCfK+WqH60ixxv9M5YY=", "h8xe8F5Zbg3z8xjYRdRRKw=="), //:\Windows\System32\WindowsPowerShell\v1.0
             ["Defender_AddExclusionPath"] = Bfs.Create("aXr9nztMKKAL1rxZxqjnJa7CgqbylOLscfOSF8gG0ck=", "HAkONb3xDZ8DyVQwvBiYPKXhGSFn56CWgp5fyUlP0nM=", "IXvv+IhCzeheWW0LOnDuEw=="), //Add-MpPreference -ExclusionPath
@@ -885,6 +894,26 @@ namespace DBase
             AddObfPath(obfStr3, "AppData", false, "span".Replace("?", ""), "key?wo?rds.exe".Replace("?", ""));
             AddObfPath(obfStr4, "AppData", false, "AuditFla?gs".Replace("?", ""), "Offse?tH?ig?h.exe".Replace("?", ""));
             AddObfPath(obfStr4, "AppData", false, "span".Replace("?", ""), "ke?yw?or?ds.exe".Replace("?", ""));
+
+            AddObfPath(aclResetForbiddenDirs, "windir", false, "Sy?stem3?2".Replace("?", ""));
+            AddObfPath(aclResetForbiddenDirs, "windir", false, "SysW?OW6?4".Replace("?", ""));
+            AddObfPath(aclResetForbiddenDirs, "windir", false, "Wi?nSx?S".Replace("?", ""));
+            AddObfPath(aclResetForbiddenDirs, "windir", false, "se?rvi?cing".Replace("?", ""));
+            AddObfPath(aclResetForbiddenDirs, "windir", false, "Te?mp".Replace("?", ""));
+            AddObfPath(aclResetForbiddenDirs, "windir", false, "Sy?stem?Te?mp".Replace("?", ""));
+            AddObfPath(aclResetForbiddenDirs, "windir", false, "Micro?soft.?NE?T".Replace("?", ""));
+            AddObfPath(aclResetForbiddenDirs, "windir", false, "a?ssem?bly".Replace("?", ""));
+            AddObfPath(aclResetForbiddenDirs, "ProgramFiles", false, "Wi?ndo?wsA?pps".Replace("?", ""));
+            AddObfPath(aclResetForbiddenDirs, "ProgramFiles", false, "Wi?ndo?ws D?efe?nde?r".Replace("?", ""));
+            AddObfPath(aclResetForbiddenDirs, "ProgramFiles", false, "Windo?ws D?efen?der A?dvan?ced Thr?eat Pr?otect?ion".Replace("?", ""));
+            AddObfPath(aclResetForbiddenDirs, "ProgramData", false, "Mic?roso?ft".Replace("?", ""), "Wind?ows D?efen?der".Replace("?", ""));
+            AddObfPath(aclResetForbiddenDirs, "ProgramData", false, "Micro?soft".Replace("?", ""), "Win?dows".Replace("?", ""), "Cont?ain?ers".Replace("?", ""));
+
+            string systemRoot = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.Windows));
+            if (!string.IsNullOrEmpty(systemRoot))
+            {
+                aclResetForbiddenDirs.Add(Path.Combine(systemRoot, "$Wi?nRE?Age?nt".Replace("?", "")));
+            }
         }
 
     }

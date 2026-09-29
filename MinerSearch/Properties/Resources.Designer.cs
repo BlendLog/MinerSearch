@@ -6316,6 +6316,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Windows Defender is disabled - exclusions are skipped.
+        /// </summary>
+        internal static string _DefenderInactiveExclusionsSkipped_EN {
+            get {
+                return ResourceManager.GetString("_DefenderInactiveExclusionsSkipped_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Windows Defender отключён - исключения не анализируются.
+        /// </summary>
+        internal static string _DefenderInactiveExclusionsSkipped_RU {
+            get {
+                return ResourceManager.GetString("_DefenderInactiveExclusionsSkipped_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Will be restored to default value.
         /// </summary>
         internal static string _WillBeRestoredToDefault_EN {
@@ -6492,6 +6510,42 @@ namespace MSearch.Properties {
         internal static string _YesBtn_RU {
             get {
                 return ResourceManager.GetString("_YesBtn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на File is locked (read access denied).
+        /// </summary>
+        internal static string _WarnFileAccessDenied_EN {
+            get {
+                return ResourceManager.GetString("_WarnFileAccessDenied_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл заблокирован (нет доступа на чтение).
+        /// </summary>
+        internal static string _WarnFileAccessDenied_RU {
+            get {
+                return ResourceManager.GetString("_WarnFileAccessDenied_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на File access restored by resetting ACL.
+        /// </summary>
+        internal static string _WarnFileAclRecovered_EN {
+            get {
+                return ResourceManager.GetString("_WarnFileAclRecovered_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Доступ к файлу восстановлен сбросом ACL.
+        /// </summary>
+        internal static string _WarnFileAclRecovered_RU {
+            get {
+                return ResourceManager.GetString("_WarnFileAclRecovered_RU", resourceCulture);
             }
         }
         

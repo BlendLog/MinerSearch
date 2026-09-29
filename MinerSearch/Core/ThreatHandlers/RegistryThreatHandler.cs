@@ -70,11 +70,20 @@ namespace MSearch.Core.ThreatHandlers
                     quarantined = true;
                 }
 
-                // 1. Спец-удаление для Windows Defender (WMI/Powershell)
+                // 1. Спец-удаление для Windows Defender: сначала штатный путь через WMI/PowerShell.
                 if (regThreat.ActionRemoveDefenderExclusion)
                 {
                     string subKey = GetKeyName(regThreat.KeyPath); // "Paths", "Processes" и т.д.
                     Utils.RemoveDefenderExclusion(subKey, regThreat.ValueName);
+
+                    if (RegistrySourceExists(regThreat, baseKey) &&
+                        !TryDeleteRegistryValueWithUnlock(regThreat, baseKey, hiveShort))
+                    {
+                        decision.ApplyErrorMessage = AppConfig.GetInstance.LL.GetLocalizedString("_ErrorCannotRemove");
+                        decision.ActionType = ScanActionType.Error;
+                        AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, logPath);
+                        return ApplyResult.Error;
+                    }
                 }
 
                 // 2. Удаление родительского ключа (для SilentExit и плохих параметров Tektonit)
@@ -177,6 +186,45 @@ namespace MSearch.Core.ThreatHandlers
                 decision.ActionType = ScanActionType.Error;
                 AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, logPath);
                 return ApplyResult.Error;
+            }
+        }
+
+        private static bool TryDeleteRegistryValueWithUnlock(RegistryThreatObject regThreat, RegistryKey baseKey, string hiveShort)
+        {
+            if (TryDeleteRegistryValue(regThreat, baseKey))
+                return true;
+
+            string unlockPath = $@"{hiveShort}\{regThreat.KeyPath}";
+            UnlockObjectClass.TakeownRegKey(unlockPath);
+            UnlockObjectClass.ResetPermissionsToDefault(unlockPath);
+
+            return TryDeleteRegistryValue(regThreat, baseKey);
+        }
+
+        private static bool TryDeleteRegistryValue(RegistryThreatObject regThreat, RegistryKey baseKey)
+        {
+            try
+            {
+                using (RegistryKey key = baseKey.OpenSubKey(regThreat.KeyPath, writable: true))
+                {
+                    if (key == null)
+                        return true;
+
+                    key.DeleteValue(regThreat.ValueName, throwOnMissingValue: false);
+                }
+                return true;
+            }
+            catch (SecurityException)
+            {
+                return false;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 

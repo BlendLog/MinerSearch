@@ -882,6 +882,9 @@ Press any key to continue...</value>
   <data name="_WillBeRemovedFromExclusions_EN" xml:space="preserve">
     <value>Will be removed from exclusions</value>
   </data>
+  <data name="_DefenderInactiveExclusionsSkipped_EN" xml:space="preserve">
+    <value>Windows Defender is disabled - exclusions are skipped</value>
+  </data>
   <data name="_EndpointError_EN" xml:space="preserve">
     <value>Endpoint error</value>
   </data>
@@ -1028,6 +1031,9 @@ Press any key to continue...</value>
   </data>
   <data name="_WillBeRemovedFromExclusions_RU" xml:space="preserve">
     <value>Будет удалено из исключений</value>
+  </data>
+  <data name="_DefenderInactiveExclusionsSkipped_RU" xml:space="preserve">
+    <value>Windows Defender отключён - исключения не анализируются</value>
   </data>
   <data name="_ErrorQuarantineListEnumIsNull_EN" xml:space="preserve">
     <value>The expected list of indexes for files from quarantine cannot be empty. To view the list, use "-q [-cm]"</value>
@@ -2460,5 +2466,17 @@ Do you want to continue?
   </data>
   <data name="_AndMoreItems_RU" xml:space="preserve">
     <value>...и ещё #COUNT#</value>
+  </data>
+  <data name="_WarnFileAccessDenied_EN" xml:space="preserve">
+    <value>File is locked (read access denied)</value>
+  </data>
+  <data name="_WarnFileAccessDenied_RU" xml:space="preserve">
+    <value>Файл заблокирован (нет доступа на чтение)</value>
+  </data>
+  <data name="_WarnFileAclRecovered_EN" xml:space="preserve">
+    <value>File access restored by resetting ACL</value>
+  </data>
+  <data name="_WarnFileAclRecovered_RU" xml:space="preserve">
+    <value>Доступ к файлу восстановлен сбросом ACL</value>
   </data>
 </root>

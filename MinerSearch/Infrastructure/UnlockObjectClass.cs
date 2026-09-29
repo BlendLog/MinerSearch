@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using DBase;
+using Microsoft.Win32;
+using Microsoft.Win32.SafeHandles;
 using MSearch.Core;
 using MSearch.Core.Managers;
 using System;
@@ -66,6 +68,171 @@ namespace MSearch
             }
         }
 
+        private static bool PathStartsWith(string path, string directory)
+        {
+            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(directory))
+                return false;
+
+            string normalizedDir = directory.TrimEnd('\\') + "\\";
+            return path.StartsWith(normalizedDir, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Разрешает сброс ACL (смена владельца/DACL) только для пользовательских и прикладных каталогов.
+        /// В системных и защищённых AV-деревьях отказ 0x80070005 ожидаем — там доступно только чтение.
+        /// Список запретов хранится в MSData (обфусцированные строки).
+        /// </summary>
+        internal static bool IsFileAclResetAllowed(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+                return false;
+
+            string path = filePath.StartsWith(@"\\?\") ? filePath.Substring(4) : filePath;
+
+            try
+            {
+                string programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+                string programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+                string programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+                string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+                foreach (string dir in MSData.GetInstance.aclResetForbiddenDirs)
+                {
+                    if (PathStartsWith(path, dir))
+                        return false;
+                }
+
+                foreach (string fragment in MSData.GetInstance.aclResetForbiddenFragments)
+                {
+                    if (!string.IsNullOrEmpty(fragment) &&
+                        path.IndexOf(fragment, StringComparison.OrdinalIgnoreCase) >= 0)
+                        return false;
+                }
+
+                string[] allowed =
+                {
+                    programFiles,
+                    programFilesX86,
+                    programData,
+                    userProfile,
+                    Path.GetTempPath(),
+                };
+
+                foreach (string dir in allowed)
+                {
+                    if (PathStartsWith(path, dir))
+                        return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Открывает файл на чтение в обход DACL через SeBackupPrivilege + FILE_FLAG_BACKUP_SEMANTICS.
+        /// Файл не изменяется. Возвращает null, если открыть не удалось.
+        /// </summary>
+        internal static FileStream OpenReadWithBackupSemantics(string filePath)
+        {
+            try
+            {
+                string longPath = filePath.StartsWith(@"\\?\") ? filePath : @"\\?\" + filePath;
+
+                SafeFileHandle safeHandle = Native.CreateFile(
+                    longPath,
+                    FileAccess.Read,
+                    FileShare.ReadWrite | FileShare.Delete,
+                    IntPtr.Zero,
+                    FileMode.Open,
+                    (FileAttributes)Native.FILE_FLAG_BACKUP_SEMANTICS,
+                    IntPtr.Zero);
+
+                if (safeHandle.IsInvalid)
+                {
+                    safeHandle.Dispose();
+                    return null;
+                }
+
+                try
+                {
+                    return new FileStream(safeHandle, FileAccess.Read);
+                }
+                catch
+                {
+                    safeHandle.Dispose();
+                    return null;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Крайняя мера для файлов с deny-ACL: забирает владение (SeTakeOwnershipPrivilege) и выставляет
+        /// разрешающий DACL (наследование включено, deny-ACE убраны), после чего файл снова читается.
+        /// </summary>
+        internal static bool RestoreFileAclForRead(string filePath)
+        {
+            try
+            {
+                string longPath = filePath.StartsWith(@"\\?\") ? filePath : @"\\?\" + filePath;
+
+                WindowsIdentity identity = WindowsIdentity.GetCurrent();
+                if (identity == null || identity.User == null)
+                    return false;
+
+                byte[] ownerBytes = new byte[identity.User.BinaryLength];
+                identity.User.GetBinaryForm(ownerBytes, 0);
+
+                IntPtr pOwner = Marshal.AllocHGlobal(ownerBytes.Length);
+                try
+                {
+                    Marshal.Copy(ownerBytes, 0, pOwner, ownerBytes.Length);
+
+                    Native.SetNamedSecurityInfo(
+                        longPath,
+                        Native.SE_FILE_OBJECT,
+                        Native.OWNER_SECURITY_INFORMATION,
+                        pOwner,
+                        IntPtr.Zero,
+                        IntPtr.Zero,
+                        IntPtr.Zero);
+                }
+                finally
+                {
+                    Marshal.FreeHGlobal(pOwner);
+                }
+
+                FileSecurity security = new FileSecurity();
+                security.SetAccessRuleProtection(false, false);
+                security.AddAccessRule(new FileSystemAccessRule(
+                    identity.User, FileSystemRights.FullControl, AccessControlType.Allow));
+                security.AddAccessRule(new FileSystemAccessRule(
+                    new SecurityIdentifier(WellKnownSidType.LocalSystemSid, null),
+                    FileSystemRights.FullControl, AccessControlType.Allow));
+
+                File.SetAccessControl(longPath, security);
+
+                using (new FileStream(longPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                Console.WriteLine($"[DBG] RestoreFileAclForRead failed: {filePath}: {ex.Message}");
+#endif
+                return false;
+            }
+        }
+
         internal static bool IsLockedObject(string path)
         {
             try
@@ -100,7 +267,6 @@ namespace MSearch
             catch (Exception ex) when (ex.HResult.Equals(unchecked((int)0x800700E1)) || ex.HResult.Equals(0xE1))
             {
                 AppConfig.GetInstance.LL.LogWarnMediumMessage("_ErrorLockedByWD", path);
-                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, path, ScanActionType.LockedByAntivirus));
                 return true;
             }
             catch (Exception ex)
@@ -420,7 +586,6 @@ namespace MSearch
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
-                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, filePath, ScanActionType.LockedByAntivirus));
             }
             catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
             {
@@ -448,7 +613,6 @@ namespace MSearch
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
-                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, filePath, ScanActionType.LockedByAntivirus));
             }
             catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
             {
@@ -486,7 +650,6 @@ namespace MSearch
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
-                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Malware, filePath, ScanActionType.LockedByAntivirus));
             }
             catch (Exception e)
             {

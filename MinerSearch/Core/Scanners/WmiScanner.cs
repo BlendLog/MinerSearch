@@ -14,6 +14,9 @@ namespace MSearch.Core.Scanners
 
             try
             {
+                AppConfig.GetInstance.LL.LogHeadMessage("_WMIHead");
+                Utils.CheckWMI(false);
+
                 ManagementScope scope = new ManagementScope(@"\\.\root\subscription");
                 scope.Connect();
 

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.ServiceProcess;
 using System.Text;
 
 namespace MSearch.Core.ThreatAnalyzers
@@ -24,6 +25,10 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private static bool _headerLogged = false;
         private static readonly object _headerLock = new object();
+
+        // Активность Defender: -1 - не проверялось, 0 - отключён, 1 - активен
+        private int _defenderActive = -1;
+        private bool _defenderInactiveLogged;
 
         private static readonly HashSet<string> _loggedSections = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private static readonly object _sectionLock = new object();
@@ -376,36 +381,113 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private void AnalyzeDefenderExclusions(RegistryThreatObject reg, ref int risk)
         {
-            if (reg.NodeType == RegistryNodeType.Value &&
-                (reg.KeyPath.Contains(MSData.GetInstance.queries["WDExclusionsLocal"]) ||
-                 reg.KeyPath.Contains(MSData.GetInstance.queries["WDExclusionsPolicies"])))
+            if (reg.NodeType != RegistryNodeType.Value) return;
+
+            bool isLocal = reg.KeyPath.Contains(MSData.GetInstance.queries["WDExclusionsLocal"]);
+            bool isPolicies = reg.KeyPath.Contains(MSData.GetInstance.queries["WDExclusionsPolicies"]);
+            if (!isLocal && !isPolicies) return;
+
+            // Defender отключён - его исключения ни на что не влияют, угрозой не считаем
+            if (!IsDefenderActive())
             {
-                string subKey = Path.GetFileName(reg.KeyPath); // Paths, Processes или Extensions
-                bool isBad = false;
+                LogDefenderInactiveOnce();
+                return;
+            }
 
-                if (subKey.Equals("Processes", StringComparison.OrdinalIgnoreCase))
-                    isBad = MSData.GetInstance.obfStr4.Contains(reg.ValueName, StringComparer.OrdinalIgnoreCase);
-                else if (subKey.Equals("Extensions", StringComparison.OrdinalIgnoreCase))
-                    isBad = reg.ValueName.Equals(".exe", StringComparison.OrdinalIgnoreCase) || reg.ValueName.Equals(".tmp", StringComparison.OrdinalIgnoreCase);
-                else
-                    isBad = MSData.GetInstance.obfStr3.Contains(reg.ValueName, StringComparer.OrdinalIgnoreCase);
+            string subKey = Path.GetFileName(reg.KeyPath); // Paths, Processes или Extensions
+            bool isBad = false;
 
-                if (isBad)
+            if (subKey.Equals("Processes", StringComparison.OrdinalIgnoreCase))
+                isBad = MSData.GetInstance.obfStr4.Contains(reg.ValueName, StringComparer.OrdinalIgnoreCase);
+            else if (subKey.Equals("Extensions", StringComparison.OrdinalIgnoreCase))
+                isBad = reg.ValueName.Equals(".exe", StringComparison.OrdinalIgnoreCase) || reg.ValueName.Equals(".tmp", StringComparison.OrdinalIgnoreCase);
+            else
+                isBad = MSData.GetInstance.obfStr3.Contains(reg.ValueName, StringComparer.OrdinalIgnoreCase);
+
+            if (isBad)
+            {
+                risk += 3;
+                if (isLocal)
                 {
-                    risk += 3;
-                    if (reg.KeyPath.Contains(MSData.GetInstance.queries["WDExclusionsLocal"]))
+                    // Локальные исключения Defender'а удаляются спец. методом (WMI)
+                    reg.ActionRemoveDefenderExclusion = true;
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_WillBeRemovedFromExclusions", reg.ValueName);
+                }
+                else
+                {
+                    reg.ActionDelete = true;
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
+                }
+            }
+        }
+
+        private bool IsDefenderActive()
+        {
+            if (_defenderActive < 0)
+            {
+                _defenderActive = ComputeDefenderActive() ? 1 : 0;
+            }
+            return _defenderActive == 1;
+        }
+
+        private static bool ComputeDefenderActive()
+        {
+            // 1. Служба должна быть запущена
+            try
+            {
+                using (var service = new ServiceController("WinDefend"))
+                {
+                    if (service.Status != ServiceControllerStatus.Running) return false;
+                }
+            }
+            catch
+            {
+                // Служба отсутствует/недоступна - считаем, что Defender не работает
+                return false;
+            }
+
+            // 2. Read windefender flags
+            var queries = MSData.GetInstance.queries;
+            string[] baseKeys = { queries["WDBasePolicies"], queries["WDBaseLocal"] };
+            string[] flagNames = queries["WDFlags"].Split('|');
+
+            foreach (RegistryView view in new[] { RegistryView.Registry64, RegistryView.Registry32 })
+            {
+                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, view))
+                {
+                    foreach (string baseKey in baseKeys)
                     {
-                        // Локальные исключения Defender'а удаляются спец. методом (WMI)
-                        reg.ActionRemoveDefenderExclusion = true;
-                        AppConfig.GetInstance.LL.LogSuccessMessage("_WillBeRemovedFromExclusions", reg.ValueName);
-                    }
-                    else
-                    {
-                        reg.ActionDelete = true;
-                        AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
+                        foreach (string flagName in flagNames)
+                        {
+                            if (IsDisabledFlag(hklm, baseKey, flagName)) return false;
+                        }
                     }
                 }
             }
+            return true;
+        }
+
+        private static bool IsDisabledFlag(RegistryKey hklm, string subKey, string valueName)
+        {
+            try
+            {
+                using (var key = hklm.OpenSubKey(subKey))
+                {
+                    object value = key?.GetValue(valueName);
+                    return value != null && Convert.ToInt32(value) == 1;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private void LogDefenderInactiveOnce()
+        {
+            if (_defenderInactiveLogged) return;
+            _defenderInactiveLogged = true;
+            AppConfig.GetInstance.LL.LogWarnMessage("_DefenderInactiveExclusionsSkipped");
         }
 
         private void AnalyzeAutorun(RegistryThreatObject reg, ref int risk, ref bool isMalicious)
