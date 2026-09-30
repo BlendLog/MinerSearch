@@ -368,7 +368,6 @@ namespace MSearch
                             break; // Continue to return result
 
                         case WinVerifyTrustResult.FileNotSigned:
-                            result = VerifyByCatalog(filePath);
                             break; // Continue to return result based on catalog check
 
                         default:
