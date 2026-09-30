@@ -269,7 +269,7 @@ namespace MSearch
             AppConfig.GetInstance.LL.LogMessage("\t\t", "_Version", AppConfig.GetInstance.CurrentVersion, ConsoleColor.White, false);
 
 //if !DEBUG
-            if (!AppConfig.GetInstance.WinPEMode && !_options.QuarantineMode && !OSExtensions.GetWindowsVersion().Contains("Windows 7"))
+            if (!AppConfig.GetInstance.WinPEMode && !_options.QuarantineMode && !OSExtensions.IsWindows7())
             {
                 Utils.CheckLatestReleaseVersion();
             }

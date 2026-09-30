@@ -2726,16 +2726,66 @@ namespace MSearch
             return null;
         }
 
+        public static bool IsWindows7()
+        {
+            Version osVersion = Environment.OSVersion.Version;
+            return osVersion.Major == 6 && osVersion.Minor == 1;
+        }
+
         public static string GetWindowsVersion()
         {
             Version osVersion = Environment.OSVersion.Version;
+            string name;
 
-            if (Enum.IsDefined(typeof(Native.BuildNumber), (uint)osVersion.Build))
+            if (osVersion.Major == 10)
             {
-                return Enum.GetName(typeof(Native.BuildNumber), (uint)osVersion.Build)?.Replace('_', ' ');
+                name = osVersion.Build >= 22000 ? "Windows 11" : "Windows 10";
+            }
+            else if (osVersion.Major == 6 && osVersion.Minor == 1)
+            {
+                name = "Windows 7";
+            }
+            else if (osVersion.Major == 6 && osVersion.Minor == 2)
+            {
+                name = "Windows 8";
+            }
+            else if (osVersion.Major == 6 && osVersion.Minor == 3)
+            {
+                name = "Windows 8.1";
+            }
+            else
+            {
+                name = $"Windows {osVersion.Major}.{osVersion.Minor}";
             }
 
-            return $"Undefined Windows version ({osVersion})";
+            string release = GetWindowsReleaseName();
+            return string.IsNullOrEmpty(release) ? $"{name} (build {osVersion.Build})" : $"{name} {release}";
+        }
+
+        private static string GetWindowsReleaseName()
+        {
+            try
+            {
+                using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+                {
+                    if (key == null) return null;
+
+                    string[] valueNames = { "DisplayVersion", "ReleaseId", "CSDVersion" };
+                    foreach (string valueName in valueNames)
+                    {
+                        string value = key.GetValue(valueName) as string;
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            return value.Trim();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return null;
         }
         internal static BootMode GetBootMode()
         {

@@ -59,7 +59,7 @@ namespace MSearch.Core
             const string registryValueName = "acceptedEula";
 
             // Проверка Windows 7
-            if ((Environment.OSVersion.Version.Major == 6) && (Environment.OSVersion.Version.Minor == 1))
+            if (OSExtensions.IsWindows7())
             {
                 DialogDispatcher.Show(config.LL.GetLocalizedString("_WarnOutdatedOS"), config._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;

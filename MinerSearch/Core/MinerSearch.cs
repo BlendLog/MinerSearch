@@ -55,7 +55,7 @@ namespace MSearch
     {
         internal static void SentLog()
         {
-            if (OSExtensions.GetWindowsVersion().IndexOf("Windows 7", StringComparison.OrdinalIgnoreCase) >= 0 || AppConfig.GetInstance.bootMode == BootMode.SafeMinimal)
+            if (OSExtensions.IsWindows7() || AppConfig.GetInstance.bootMode == BootMode.SafeMinimal)
             {
                 return;
             }
