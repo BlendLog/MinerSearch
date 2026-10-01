@@ -36,7 +36,7 @@ namespace MSearch
                     break;
             }
 
-            Logger.WriteLog($"\t\t{_winver} {winver}".Replace("?", ""), ConsoleColor.DarkGray, false);
+            Logger.WriteLog($"\t\t{Deobfuscate(_winver)} {winver}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_username} {username}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_pcname} {pcname}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_bootmode} {bootmode}", ConsoleColor.DarkGray, false);
@@ -111,7 +111,7 @@ namespace MSearch
             }
 
             Console.BackgroundColor = ConsoleColor.DarkMagenta;
-            Logger.WriteLog($"\t\t[!!!!] {message}".Replace("?", ""), ConsoleColor.White, false);
+            Logger.WriteLog($"\t\t[!!!!] {Deobfuscate(message)}", ConsoleColor.White, false);
             Console.BackgroundColor = ConsoleColor.Black;
 
         }
@@ -398,10 +398,15 @@ namespace MSearch
         }
 
         //-------------------------------------------------
+        private static string Deobfuscate(string value)
+        {
+            return string.IsNullOrEmpty(value) ? value : value.Replace("?", "");
+        }
+
         public void LogMessage(string sign, string ResourceKey, string target, ConsoleColor consoleColor, bool DisplayTime = true)
         {
             string message = GetLocalizedString(ResourceKey);
-            Logger.WriteLog($"{sign} {message} {target}".Replace("?", ""), consoleColor, DisplayTime);
+            Logger.WriteLog($"{sign} {Deobfuscate(message)} {target}", consoleColor, DisplayTime);
         }
 
         public void LogJustDisplayMessage(string sign, string ResourceKey, string target, ConsoleColor consoleColor)
@@ -420,15 +425,15 @@ namespace MSearch
             string message = GetLocalizedString(ResourceKey);
             if (!AppConfig.GetInstance.RunAsSystem)
             {
-                Logger.WriteLog($"\t\t{message}".Replace("?", ""), Logger.head, false);
+                Logger.WriteLog($"\t\t{Deobfuscate(message)}", Logger.head, false);
             }
-            else Logger.WriteLog($"\t\t{message}".Replace("?", ""), ConsoleColor.Magenta, false);
+            else Logger.WriteLog($"\t\t{Deobfuscate(message)}", ConsoleColor.Magenta, false);
         }
 
         public void LogWarnMessage(string ResourceKey, string target = "")
         {
             string message = GetLocalizedString(ResourceKey);
-            Logger.WriteLog($"\t[!] {message} {target}".Replace("?", ""), Logger.warn);
+            Logger.WriteLog($"\t[!] {Deobfuscate(message)} {target}", Logger.warn);
         }
 
         public void LogWarnMediumMessage(string ResourceKey, string target = "", string trigger = "")
@@ -436,18 +441,18 @@ namespace MSearch
             string message = GetLocalizedString(ResourceKey);
             if (trigger == "")
             {
-                Logger.WriteLog($"\t[!!] {message} {target}".Replace("?", ""), Logger.warnMedium);
+                Logger.WriteLog($"\t[!!] {Deobfuscate(message)} {target}", Logger.warnMedium);
             }
             else
             {
-                Logger.WriteLog($"\t[!!] {target} \"{trigger}\" {message}".Replace("?", ""), Logger.warnMedium);
+                Logger.WriteLog($"\t[!!] {target} \"{trigger}\" {Deobfuscate(message)}", Logger.warnMedium);
             }
         }
 
         public void LogCautionMessage(string ResourceKey, string subject = "")
         {
             string message = GetLocalizedString(ResourceKey);
-            Logger.WriteLog($"\t[!!!] {message} {subject}".Replace("?", ""), Logger.caution);
+            Logger.WriteLog($"\t[!!!] {Deobfuscate(message)} {subject}", Logger.caution);
         }
 
         public void LogSuccessMessage(string ResourceKey, string subject = "", string ResourceKeyAction = "")
@@ -455,12 +460,12 @@ namespace MSearch
             string message = GetLocalizedString(ResourceKey);
             if (ResourceKeyAction == "")
             {
-                Logger.WriteLog($"\t[+] {message} {subject}".Replace("?", ""), Logger.success);
+                Logger.WriteLog($"\t[+] {Deobfuscate(message)} {subject}", Logger.success);
             }
             else
             {
                 string action = GetLocalizedString(ResourceKeyAction);
-                Logger.WriteLog($"\t[+] {message} {subject} {action}".Replace("?", ""), Logger.success);
+                Logger.WriteLog($"\t[+] {Deobfuscate(message)} {subject} {Deobfuscate(action)}", Logger.success);
             }
         }
 
@@ -468,27 +473,27 @@ namespace MSearch
         {
             if (ex == null)
             {
-                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {target}".Replace("?", ""), Logger.error);
+                Logger.WriteLog($"\t[x] {Deobfuscate(GetLocalizedString(MessageResourceKey))} {target}", Logger.error);
                 return;
             }
 
 #if !DEBUG
             if (targetType != "")
             {
-                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {GetLocalizedString(targetType)} {target} | {ex.Message} | HR=0x{ex.HResult:X8}".Replace("?", ""), Logger.error);
+                Logger.WriteLog($"\t[x] {Deobfuscate(GetLocalizedString(MessageResourceKey))} {Deobfuscate(GetLocalizedString(targetType))} {target} | {ex.Message} | HR=0x{ex.HResult:X8}", Logger.error);
             }
             else
             {
-                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {target} | {ex.Message} | HR=0x{ex.HResult:X8}".Replace("?", ""), Logger.error);
+                Logger.WriteLog($"\t[x] {Deobfuscate(GetLocalizedString(MessageResourceKey))} {target} | {ex.Message} | HR=0x{ex.HResult:X8}", Logger.error);
             }
 #else
             if (targetType != "")
             {
-                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {GetLocalizedString(targetType)} {target} | {ex.Message} | {ex.StackTrace}".Replace("?", ""), Logger.error);
+                Logger.WriteLog($"\t[x] {Deobfuscate(GetLocalizedString(MessageResourceKey))} {Deobfuscate(GetLocalizedString(targetType))} {target} | {ex.Message} | {ex.StackTrace}", Logger.error);
             }
             else
             {
-                Logger.WriteLog($"\t[x] {GetLocalizedString(MessageResourceKey)} {target} | {ex.Message} | {ex.StackTrace}".Replace("?", ""), Logger.error);
+                Logger.WriteLog($"\t[x] {Deobfuscate(GetLocalizedString(MessageResourceKey))} {target} | {ex.Message} | {ex.StackTrace}", Logger.error);
             }
 #endif
         }
@@ -498,7 +503,7 @@ namespace MSearch
         public void LogStatusMessage(string MessageResourceKey)
         {
             string message = GetLocalizedString(MessageResourceKey);
-            Logger.WriteLog($"\t[#] {message}".Replace("?", ""), ConsoleColor.Blue);
+            Logger.WriteLog($"\t[#] {Deobfuscate(message)}", ConsoleColor.Blue);
         }
 
         internal string GetLocalizedString(string ResourceKey)
