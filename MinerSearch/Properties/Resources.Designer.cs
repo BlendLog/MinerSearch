@@ -1843,6 +1843,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на File read error (corrupted data).
+        /// </summary>
+        internal static string _FileReadCorrupted_EN {
+            get {
+                return ResourceManager.GetString("_FileReadCorrupted_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка чтения файла (повреждение данных).
+        /// </summary>
+        internal static string _FileReadCorrupted_RU {
+            get {
+                return ResourceManager.GetString("_FileReadCorrupted_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на File is locked. Deletion scheduled for the next reboot:.
         /// </summary>
         internal static string _FileScheduledDeleteOnReboot_EN {

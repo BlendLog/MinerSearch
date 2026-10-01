@@ -2008,6 +2008,16 @@ namespace MSearch
             catch (System.Security.SecurityException) { return false; }
         }
 
+        internal static bool IsDataReadError(Exception ex)
+        {
+            if (ex == null) return false;
+
+            int hr = ex.HResult;
+            return hr == unchecked((int)0x80070017)   // ERROR_CRC
+                || hr == unchecked((int)0x8007001E)   // ERROR_READ_FAULT
+                || hr == unchecked((int)0x8007045D);  // ERROR_IO_DEVICE
+        }
+
         internal static bool IsBatchFileBad(string filePath)
         {
             try
@@ -2028,6 +2038,10 @@ namespace MSearch
                         }
                     }
                 }
+            }
+            catch (Exception ex) when (IsDataReadError(ex))
+            {
+                AppConfig.GetInstance.LL.LogWarnMediumMessage("_FileReadCorrupted", filePath);
             }
             catch (Exception ex)
             {

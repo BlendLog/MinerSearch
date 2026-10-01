@@ -199,6 +199,11 @@ namespace MSearch.Core.ThreatAnalyzers
                 AppConfig.GetInstance.LL.LogWarnMediumMessage("_WarnFileAccessDenied", fileThreat.FilePath);
                 return FileContentAnalysisResult.AccessDenied();
             }
+            catch (Exception e) when (FileChecker.IsDataReadError(e))
+            {
+                AppConfig.GetInstance.LL.LogWarnMediumMessage("_FileReadCorrupted", fileThreat.FilePath);
+                return FileContentAnalysisResult.Error();
+            }
             catch (Exception ex)
             {
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorAnalyzingFile", ex, fileThreat.FilePath);

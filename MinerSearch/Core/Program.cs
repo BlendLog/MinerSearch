@@ -707,12 +707,20 @@ namespace MSearch
                 }
             }
 
-            // Задачи — проверяем XML путь по obfStr2
+            // Задачи — проверяем связанные файлы (payload из аргументов/исполняемый файл) по obfStr2
             var task = target as TaskThreatObject;
-            if (task?.Info != null)
+            if (task != null)
             {
-                if (!string.IsNullOrEmpty(task.Info.XmlPath) &&
-                    IsPathInObfStr2(task.Info.XmlPath))
+                if (task.LinkedFileFromArgs != null &&
+                    !string.IsNullOrEmpty(task.LinkedFileFromArgs.FilePath) &&
+                    IsPathInObfStr2(task.LinkedFileFromArgs.FilePath))
+                {
+                    return true;
+                }
+
+                if (task.LinkedFile != null &&
+                    !string.IsNullOrEmpty(task.LinkedFile.FilePath) &&
+                    IsPathInObfStr2(task.LinkedFile.FilePath))
                 {
                     return true;
                 }

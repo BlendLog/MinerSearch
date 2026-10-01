@@ -397,6 +397,9 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_FileIsNotFound_EN" xml:space="preserve">
     <value>File is not found:</value>
   </data>
+  <data name="_FileReadCorrupted_EN" xml:space="preserve">
+    <value>File read error (corrupted data)</value>
+  </data>
   <data name="_NoInternetForUpdates_EN" xml:space="preserve">
     <value>No internet connection — unable to check updates</value>
   </data>
@@ -1834,6 +1837,9 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_FileIsNotFound_RU" xml:space="preserve">
     <value>Файл не найден:</value>
+  </data>
+  <data name="_FileReadCorrupted_RU" xml:space="preserve">
+    <value>Ошибка чтения файла (повреждение данных)</value>
   </data>
   <data name="_GPULibsUsage_RU" xml:space="preserve">
     <value>Объемное потребление ресурсов ГП:</value>

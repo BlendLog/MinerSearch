@@ -169,7 +169,7 @@ namespace MSearch.Core.ThreatAnalyzers
                             {
                                 FileThreatObject dll = CreateFileObject(resolvedDllPath);
                                 AppConfig.GetInstance.LL.LogMessage("[.]", "_Just_File", resolvedDllPath, ConsoleColor.Gray);
-                                if (!dll.IsValidSignature)
+                                if (dll != null && !dll.IsValidSignature)
                                 {
                                     AppConfig.GetInstance.LL.LogWarnMediumMessage("_InvalidCertificateSignature", args);
                                     if (!LaunchOptions.GetInstance.ScanOnly)
@@ -244,7 +244,7 @@ namespace MSearch.Core.ThreatAnalyzers
                             {
                                 AppConfig.GetInstance.LL.LogMessage("[.]", "_Just_File", finalPath, ConsoleColor.Gray);
                                 FileThreatObject exeFromPcaluaArgs = CreateFileObject(finalPath);
-                                if (!exeFromPcaluaArgs.IsValidSignature)
+                                if (exeFromPcaluaArgs != null && !exeFromPcaluaArgs.IsValidSignature)
                                 {
                                     if (!LaunchOptions.GetInstance.ScanOnly)
                                     {
@@ -286,7 +286,7 @@ namespace MSearch.Core.ThreatAnalyzers
                                 if (File.Exists(normalizedPath))
                                 {
                                     FileThreatObject pfx = CreateFileObject(normalizedPath);
-                                    if (!pfx.IsValidSignature)
+                                    if (pfx != null && !pfx.IsValidSignature)
                                     {
                                         if (!LaunchOptions.GetInstance.ScanOnly)
                                         {
@@ -310,11 +310,34 @@ namespace MSearch.Core.ThreatAnalyzers
 
                             if (normalizedPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                             {
-                                if (File.Exists(normalizedPath) && (normalizedPath.IndexOf("programdata", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                bool isKnownMalicious = IsKnownMaliciousFile(normalizedPath);
+
+                                if (isKnownMalicious)
+                                {
+                                    if (!LaunchOptions.GetInstance.ScanOnly)
+                                    {
+                                        taskObj.ActionDeleteTask = true;
+                                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete", $"{taskObj.Info.Path}\\{taskObj.Info.Name}");
+                                    }
+
+                                    if (File.Exists(normalizedPath))
+                                    {
+                                        FileThreatObject knownDll = CreateFileObject(normalizedPath);
+                                        if (knownDll != null)
+                                        {
+                                            taskObj.LinkedFileFromArgs = knownDll;
+                                            MarkFileForAction(knownDll);
+                                        }
+                                    }
+
+                                    taskObj.DetectionReasonRes = "_SuspiciousRegsvr32";
+                                    yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
+                                }
+                                else if (File.Exists(normalizedPath) && (normalizedPath.IndexOf("programdata", StringComparison.OrdinalIgnoreCase) >= 0 ||
                                             normalizedPath.IndexOf("appdata", StringComparison.OrdinalIgnoreCase) >= 0))
                                 {
                                     FileThreatObject dll = CreateFileObject(normalizedPath);
-                                    if (!dll.IsValidSignature)
+                                    if (dll != null && !dll.IsValidSignature)
                                     {
                                         if (!LaunchOptions.GetInstance.ScanOnly)
                                         {
@@ -1171,8 +1194,13 @@ namespace MSearch.Core.ThreatAnalyzers
 
         bool IsKnownMaliciousFile(string filePath)
         {
+            if (string.IsNullOrEmpty(filePath))
+                return false;
+
+            string normalizedPath = FileSystemManager.NormalizeExtendedPath(filePath);
+
             return MSData.GetInstance.obfStr2.Any(s =>
-                FileSystemManager.NormalizeExtendedPath(s).Equals(filePath, StringComparison.OrdinalIgnoreCase));
+                FileSystemManager.NormalizeExtendedPath(s).Equals(normalizedPath, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
