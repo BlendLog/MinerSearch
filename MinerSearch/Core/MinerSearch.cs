@@ -53,7 +53,7 @@ namespace MSearch
 
     public class MinerSearch
     {
-        internal static void SentLog()
+        internal static void SentLog(int foundThreats, int neutralizedThreats, int skippedThreats)
         {
             if (OSExtensions.IsWindows7() || AppConfig.GetInstance.bootMode == BootMode.SafeMinimal)
             {
@@ -84,7 +84,7 @@ namespace MSearch
             string DeviceId = DeviceIdProvider.GetDeviceId();
             LogSender.UploadFile(Path.Combine(Logger.LogsFolder, Logger.logFileName), Convert.ToBase64String(Guid.Parse(DeviceId).ToByteArray()), $"{DeviceId}" +
                 $"\nv{AppConfig.GetInstance.CurrentVersion}" +
-                $"\nRuns: {AppConfig.GetInstance.RunCount}, Threats: {AppConfig.GetInstance.totalFoundThreats}, Cured: {AppConfig.GetInstance.totalNeutralizedThreats}, Skipped: {AppConfig.GetInstance.userSkippedThreats}");
+                $"\nRuns: {AppConfig.GetInstance.RunCount}, Threats: {foundThreats}, Cured: {neutralizedThreats}, Skipped: {skippedThreats}");
         }
     }
 }
