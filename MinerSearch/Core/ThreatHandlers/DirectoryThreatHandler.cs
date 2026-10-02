@@ -78,7 +78,7 @@ namespace MSearch.Core.ThreatHandlers
             {
                 decision.ApplyErrorMessage = ex.Message;
                 decision.ActionType = ScanActionType.Error;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, dirPath, "_Directory");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, dirPath, "_ObjectType_Directory");
                 return ApplyResult.Error;
             }
         }
@@ -130,7 +130,7 @@ namespace MSearch.Core.ThreatHandlers
             {
                 decision.ApplyErrorMessage = ex.Message;
                 decision.ActionType = ScanActionType.Error;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, dirPath, "_Directory");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, dirPath, "_ObjectType_Directory");
                 return ApplyResult.Error;
             }
         }

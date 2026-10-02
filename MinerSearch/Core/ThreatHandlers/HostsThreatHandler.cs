@@ -141,7 +141,7 @@ namespace MSearch.Core.ThreatHandlers
                 // Антивирус/HIPS блокирует доступ
                 decision.ApplyErrorMessage = ex.Message;
                 decision.ActionType = ScanActionType.Inaccessible;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, hostsPath, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, hostsPath, "_ObjectType_File");
                 
                 return ApplyResult.Error;
             }

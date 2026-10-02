@@ -159,7 +159,7 @@ namespace MSearch
             this.RestoreSelectedBtn.Name = "RestoreSelectedBtn";
             this.RestoreSelectedBtn.Size = new System.Drawing.Size(165, 36);
             this.RestoreSelectedBtn.TabIndex = 13;
-            this.RestoreSelectedBtn.Text = "_RestoreBtnText";
+            this.RestoreSelectedBtn.Text = "_Action_Restore";
             this.RestoreSelectedBtn.UseVisualStyleBackColor = false;
             this.RestoreSelectedBtn.Click += new System.EventHandler(this.RestoreSelectedBtn_Click);
             // 
@@ -180,7 +180,7 @@ namespace MSearch
             this.DeleteSelectedBtn.Name = "DeleteSelectedBtn";
             this.DeleteSelectedBtn.Size = new System.Drawing.Size(165, 36);
             this.DeleteSelectedBtn.TabIndex = 12;
-            this.DeleteSelectedBtn.Text = "_DeleteBtnText";
+            this.DeleteSelectedBtn.Text = "_Action_Delete";
             this.DeleteSelectedBtn.UseVisualStyleBackColor = false;
             this.DeleteSelectedBtn.Click += new System.EventHandler(this.DeleteSelectedBtn_Click);
             // 

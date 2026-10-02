@@ -84,7 +84,7 @@ namespace MSearch.Core.ThreatHandlers
             {
                 decision.ApplyErrorMessage = ex.Message;
                 decision.ActionType = ScanActionType.Error;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, path, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, path, "_ObjectType_File");
                 return ApplyResult.Error;
             }
         }
@@ -138,14 +138,14 @@ namespace MSearch.Core.ThreatHandlers
 
                 decision.ApplyErrorMessage = lastError != 0 ? new Win32Exception(lastError).Message : null;
                 decision.ActionType = ScanActionType.Error;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, path, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, path, "_ObjectType_File");
                 return ApplyResult.Failed;
             }
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
                 decision.ActionType = ScanActionType.Error;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, path, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, path, "_ObjectType_File");
                 return ApplyResult.Error;
             }
         }
@@ -163,7 +163,7 @@ namespace MSearch.Core.ThreatHandlers
             {
                 decision.ApplyErrorMessage = ex.Message;
                 decision.ActionType = ScanActionType.Error;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotDisableExecute", ex, path, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotDisableExecute", ex, path, "_ObjectType_File");
                 return ApplyResult.Error;
             }
         }

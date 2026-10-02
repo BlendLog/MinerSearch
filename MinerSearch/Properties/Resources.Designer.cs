@@ -63,18 +63,18 @@ namespace MSearch.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Yes.
         /// </summary>
-        internal static string _accept_en {
+        internal static string _AcceptBtn_EN {
             get {
-                return ResourceManager.GetString("_accept_en", resourceCulture);
+                return ResourceManager.GetString("_AcceptBtn_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Принять.
         /// </summary>
-        internal static string _accept_ru {
+        internal static string _AcceptBtn_RU {
             get {
-                return ResourceManager.GetString("_accept_ru", resourceCulture);
+                return ResourceManager.GetString("_AcceptBtn_RU", resourceCulture);
             }
         }
         
@@ -169,24 +169,6 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Error.
-        /// </summary>
-        internal static string _ActionType_Error_EN {
-            get {
-                return ResourceManager.GetString("_ActionType_Error_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Ошибка.
-        /// </summary>
-        internal static string _ActionType_Error_RU {
-            get {
-                return ResourceManager.GetString("_ActionType_Error_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Inaccassible for changes.
         /// </summary>
         internal static string _ActionType_Inaccessible_EN {
@@ -219,24 +201,6 @@ namespace MSearch.Properties {
         internal static string _ActionType_LockedByAV_RU {
             get {
                 return ResourceManager.GetString("_ActionType_LockedByAV_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Moved to quarantine.
-        /// </summary>
-        internal static string _ActionType_Quarantine_EN {
-            get {
-                return ResourceManager.GetString("_ActionType_Quarantine_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Перемещено в карантин.
-        /// </summary>
-        internal static string _ActionType_Quarantine_RU {
-            get {
-                return ResourceManager.GetString("_ActionType_Quarantine_RU", resourceCulture);
             }
         }
         
@@ -291,6 +255,114 @@ namespace MSearch.Properties {
         internal static string _ActionType_Terminated_RU {
             get {
                 return ResourceManager.GetString("_ActionType_Terminated_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Cure.
+        /// </summary>
+        internal static string _Action_Cure_EN {
+            get {
+                return ResourceManager.GetString("_Action_Cure_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Лечить.
+        /// </summary>
+        internal static string _Action_Cure_RU {
+            get {
+                return ResourceManager.GetString("_Action_Cure_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Delete.
+        /// </summary>
+        internal static string _Action_Delete_EN {
+            get {
+                return ResourceManager.GetString("_Action_Delete_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удалить.
+        /// </summary>
+        internal static string _Action_Delete_RU {
+            get {
+                return ResourceManager.GetString("_Action_Delete_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Disable.
+        /// </summary>
+        internal static string _Action_Disable_EN {
+            get {
+                return ResourceManager.GetString("_Action_Disable_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отключить.
+        /// </summary>
+        internal static string _Action_Disable_RU {
+            get {
+                return ResourceManager.GetString("_Action_Disable_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Restore.
+        /// </summary>
+        internal static string _Action_Restore_EN {
+            get {
+                return ResourceManager.GetString("_Action_Restore_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Восстановить.
+        /// </summary>
+        internal static string _Action_Restore_RU {
+            get {
+                return ResourceManager.GetString("_Action_Restore_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Skip.
+        /// </summary>
+        internal static string _Action_Skip_EN {
+            get {
+                return ResourceManager.GetString("_Action_Skip_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пропустить.
+        /// </summary>
+        internal static string _Action_Skip_RU {
+            get {
+                return ResourceManager.GetString("_Action_Skip_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Terminate.
+        /// </summary>
+        internal static string _Action_Terminate_EN {
+            get {
+                return ResourceManager.GetString("_Action_Terminate_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Завершить.
+        /// </summary>
+        internal static string _Action_Terminate_RU {
+            get {
+                return ResourceManager.GetString("_Action_Terminate_RU", resourceCulture);
             }
         }
         
@@ -1051,24 +1123,6 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Type.
-        /// </summary>
-        internal static string _DataGridHeader_Type_EN {
-            get {
-                return ResourceManager.GetString("_DataGridHeader_Type_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Тип.
-        /// </summary>
-        internal static string _DataGridHeader_Type_RU {
-            get {
-                return ResourceManager.GetString("_DataGridHeader_Type_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Debugger has cross-reference from &quot;App Paths&quot;.
         /// </summary>
         internal static string _DebuggerAliasAppPath_EN {
@@ -1105,20 +1159,20 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Delete.
+        ///   Ищет локализованную строку, похожую на Windows Defender is disabled - exclusions are skipped.
         /// </summary>
-        internal static string _DeleteBtnText_EN {
+        internal static string _DefenderInactiveExclusionsSkipped_EN {
             get {
-                return ResourceManager.GetString("_DeleteBtnText_EN", resourceCulture);
+                return ResourceManager.GetString("_DefenderInactiveExclusionsSkipped_EN", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Удалить.
+        ///   Ищет локализованную строку, похожую на Windows Defender отключён - исключения не анализируются.
         /// </summary>
-        internal static string _DeleteBtnText_RU {
+        internal static string _DefenderInactiveExclusionsSkipped_RU {
             get {
-                return ResourceManager.GetString("_DeleteBtnText_RU", resourceCulture);
+                return ResourceManager.GetString("_DefenderInactiveExclusionsSkipped_RU", resourceCulture);
             }
         }
         
@@ -1155,24 +1209,6 @@ namespace MSearch.Properties {
         internal static string _DepthInvalidValue_RU {
             get {
                 return ResourceManager.GetString("_DepthInvalidValue_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на directory.
-        /// </summary>
-        internal static string _Directory_EN {
-            get {
-                return ResourceManager.GetString("_Directory_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на каталог.
-        /// </summary>
-        internal static string _Directory_RU {
-            get {
-                return ResourceManager.GetString("_Directory_RU", resourceCulture);
             }
         }
         
@@ -1591,24 +1627,6 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Failed to reset SDDL for service.
-        /// </summary>
-        internal static string _ErrorResetSddl_EN {
-            get {
-                return ResourceManager.GetString("_ErrorResetSddl_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Не удалось сбросить SDDL для службы.
-        /// </summary>
-        internal static string _ErrorResetSddl_RU {
-            get {
-                return ResourceManager.GetString("_ErrorResetSddl_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Cannot open TermService\\Parameters registry key.
         /// </summary>
         internal static string _ErrorRestoreTermServiceDll_EN {
@@ -1755,18 +1773,18 @@ namespace MSearch.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Exit.
         /// </summary>
-        internal static string _exit_EN {
+        internal static string _ExitBtn_EN {
             get {
-                return ResourceManager.GetString("_exit_EN", resourceCulture);
+                return ResourceManager.GetString("_ExitBtn_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Выйти.
         /// </summary>
-        internal static string _exit_RU {
+        internal static string _ExitBtn_RU {
             get {
-                return ResourceManager.GetString("_exit_RU", resourceCulture);
+                return ResourceManager.GetString("_ExitBtn_RU", resourceCulture);
             }
         }
         
@@ -1785,24 +1803,6 @@ namespace MSearch.Properties {
         internal static string _FakeSystemTask_RU {
             get {
                 return ResourceManager.GetString("_FakeSystemTask_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на file.
-        /// </summary>
-        internal static string _File_EN {
-            get {
-                return ResourceManager.GetString("_File_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на файл.
-        /// </summary>
-        internal static string _File_RU {
-            get {
-                return ResourceManager.GetString("_File_RU", resourceCulture);
             }
         }
         
@@ -2984,24 +2984,6 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Path:.
-        /// </summary>
-        internal static string _Path_EN {
-            get {
-                return ResourceManager.GetString("_Path_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Путь:.
-        /// </summary>
-        internal static string _Path_RU {
-            get {
-                return ResourceManager.GetString("_Path_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на PAUSE BEFORE CLEANUP
         ///Press any key to continue....
         /// </summary>
@@ -4138,78 +4120,6 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на File.
-        /// </summary>
-        internal static string _QuarantineType_File_EN {
-            get {
-                return ResourceManager.GetString("_QuarantineType_File_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Файл.
-        /// </summary>
-        internal static string _QuarantineType_File_RU {
-            get {
-                return ResourceManager.GetString("_QuarantineType_File_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Registry.
-        /// </summary>
-        internal static string _QuarantineType_Registry_EN {
-            get {
-                return ResourceManager.GetString("_QuarantineType_Registry_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Реестр.
-        /// </summary>
-        internal static string _QuarantineType_Registry_RU {
-            get {
-                return ResourceManager.GetString("_QuarantineType_Registry_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Service.
-        /// </summary>
-        internal static string _QuarantineType_Service_EN {
-            get {
-                return ResourceManager.GetString("_QuarantineType_Service_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Служба.
-        /// </summary>
-        internal static string _QuarantineType_Service_RU {
-            get {
-                return ResourceManager.GetString("_QuarantineType_Service_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Task.
-        /// </summary>
-        internal static string _QuarantineType_Task_EN {
-            get {
-                return ResourceManager.GetString("_QuarantineType_Task_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Задача.
-        /// </summary>
-        internal static string _QuarantineType_Task_RU {
-            get {
-                return ResourceManager.GetString("_QuarantineType_Task_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Miner&apos;s rootkit detected! Try to remove....
         /// </summary>
         internal static string _R00tkitPresent_EN {
@@ -4390,42 +4300,6 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Restore.
-        /// </summary>
-        internal static string _RestoreBtn_EN {
-            get {
-                return ResourceManager.GetString("_RestoreBtn_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Восстановить.
-        /// </summary>
-        internal static string _RestoreBtn_RU {
-            get {
-                return ResourceManager.GetString("_RestoreBtn_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Restore.
-        /// </summary>
-        internal static string _RestoreBtnText_EN {
-            get {
-                return ResourceManager.GetString("_RestoreBtnText_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Восстановить.
-        /// </summary>
-        internal static string _RestoreBtnText_RU {
-            get {
-                return ResourceManager.GetString("_RestoreBtnText_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Select the folder where you want to restore files.
         /// </summary>
         internal static string _RestoreFolderDialog_EN {
@@ -4530,114 +4404,6 @@ namespace MSearch.Properties {
         internal static string _Review_SelectAction_RU {
             get {
                 return ResourceManager.GetString("_Review_SelectAction_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Cure.
-        /// </summary>
-        internal static string _ReviewAction_Cure_EN {
-            get {
-                return ResourceManager.GetString("_ReviewAction_Cure_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Лечить.
-        /// </summary>
-        internal static string _ReviewAction_Cure_RU {
-            get {
-                return ResourceManager.GetString("_ReviewAction_Cure_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Delete.
-        /// </summary>
-        internal static string _ReviewAction_Delete_EN {
-            get {
-                return ResourceManager.GetString("_ReviewAction_Delete_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Удалить.
-        /// </summary>
-        internal static string _ReviewAction_Delete_RU {
-            get {
-                return ResourceManager.GetString("_ReviewAction_Delete_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Disable.
-        /// </summary>
-        internal static string _ReviewAction_Disable_EN {
-            get {
-                return ResourceManager.GetString("_ReviewAction_Disable_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Отключить.
-        /// </summary>
-        internal static string _ReviewAction_Disable_RU {
-            get {
-                return ResourceManager.GetString("_ReviewAction_Disable_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Quarantine.
-        /// </summary>
-        internal static string _ReviewAction_Quarantine_EN {
-            get {
-                return ResourceManager.GetString("_ReviewAction_Quarantine_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Карантин.
-        /// </summary>
-        internal static string _ReviewAction_Quarantine_RU {
-            get {
-                return ResourceManager.GetString("_ReviewAction_Quarantine_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Skip.
-        /// </summary>
-        internal static string _ReviewAction_Skip_EN {
-            get {
-                return ResourceManager.GetString("_ReviewAction_Skip_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Пропустить.
-        /// </summary>
-        internal static string _ReviewAction_Skip_RU {
-            get {
-                return ResourceManager.GetString("_ReviewAction_Skip_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Terminate.
-        /// </summary>
-        internal static string _ReviewAction_Terminate_EN {
-            get {
-                return ResourceManager.GetString("_ReviewAction_Terminate_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Завершить.
-        /// </summary>
-        internal static string _ReviewAction_Terminate_RU {
-            get {
-                return ResourceManager.GetString("_ReviewAction_Terminate_RU", resourceCulture);
             }
         }
         
@@ -4998,24 +4764,6 @@ namespace MSearch.Properties {
         internal static string _SelectFolderDialog_RU {
             get {
                 return ResourceManager.GetString("_SelectFolderDialog_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на service.
-        /// </summary>
-        internal static string _Service_EN {
-            get {
-                return ResourceManager.GetString("_Service_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на службу.
-        /// </summary>
-        internal static string _Service_RU {
-            get {
-                return ResourceManager.GetString("_Service_RU", resourceCulture);
             }
         }
         
@@ -5652,234 +5400,234 @@ namespace MSearch.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Directory.
         /// </summary>
-        internal static string _ThreatClass_Directory_EN {
+        internal static string _ObjectType_Directory_EN {
             get {
-                return ResourceManager.GetString("_ThreatClass_Directory_EN", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_Directory_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Каталог.
         /// </summary>
-        internal static string _ThreatClass_Directory_RU {
+        internal static string _ObjectType_Directory_RU {
             get {
-                return ResourceManager.GetString("_ThreatClass_Directory_RU", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_Directory_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на File.
         /// </summary>
-        internal static string _ThreatClass_File_EN {
+        internal static string _ObjectType_File_EN {
             get {
-                return ResourceManager.GetString("_ThreatClass_File_EN", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_File_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Файл.
         /// </summary>
-        internal static string _ThreatClass_File_RU {
+        internal static string _ObjectType_File_RU {
             get {
-                return ResourceManager.GetString("_ThreatClass_File_RU", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_File_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Firewall Rule.
         /// </summary>
-        internal static string _ThreatClass_FirewallRule_EN {
+        internal static string _ObjectType_FirewallRule_EN {
             get {
-                return ResourceManager.GetString("_ThreatClass_FirewallRule_EN", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_FirewallRule_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Правило фаервола.
         /// </summary>
-        internal static string _ThreatClass_FirewallRule_RU {
+        internal static string _ObjectType_FirewallRule_RU {
             get {
-                return ResourceManager.GetString("_ThreatClass_FirewallRule_RU", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_FirewallRule_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Hosts File.
         /// </summary>
-        internal static string _ThreatClass_Hosts_EN {
+        internal static string _ObjectType_Hosts_EN {
             get {
-                return ResourceManager.GetString("_ThreatClass_Hosts_EN", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_Hosts_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Файл Hosts.
         /// </summary>
-        internal static string _ThreatClass_Hosts_RU {
+        internal static string _ObjectType_Hosts_RU {
             get {
-                return ResourceManager.GetString("_ThreatClass_Hosts_RU", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_Hosts_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Other.
         /// </summary>
-        internal static string _ThreatClass_Other_EN {
+        internal static string _ObjectType_Other_EN {
             get {
-                return ResourceManager.GetString("_ThreatClass_Other_EN", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_Other_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Другое.
         /// </summary>
-        internal static string _ThreatClass_Other_RU {
+        internal static string _ObjectType_Other_RU {
             get {
-                return ResourceManager.GetString("_ThreatClass_Other_RU", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_Other_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Process.
         /// </summary>
-        internal static string _ThreatClass_Process_EN {
+        internal static string _ObjectType_Process_EN {
             get {
-                return ResourceManager.GetString("_ThreatClass_Process_EN", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_Process_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Процесс.
         /// </summary>
-        internal static string _ThreatClass_Process_RU {
+        internal static string _ObjectType_Process_RU {
             get {
-                return ResourceManager.GetString("_ThreatClass_Process_RU", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_Process_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Registry Key / Value.
         /// </summary>
-        internal static string _ThreatClass_RegistryObject_EN {
+        internal static string _ObjectType_RegistryObject_EN {
             get {
-                return ResourceManager.GetString("_ThreatClass_RegistryObject_EN", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_RegistryObject_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Ключ / Значение реестра.
         /// </summary>
-        internal static string _ThreatClass_RegistryObject_RU {
+        internal static string _ObjectType_RegistryObject_RU {
             get {
-                return ResourceManager.GetString("_ThreatClass_RegistryObject_RU", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_RegistryObject_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Scheduled Task.
         /// </summary>
-        internal static string _ThreatClass_ScheduledTask_EN {
+        internal static string _ObjectType_ScheduledTask_EN {
             get {
-                return ResourceManager.GetString("_ThreatClass_ScheduledTask_EN", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_ScheduledTask_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Планируемая задача.
         /// </summary>
-        internal static string _ThreatClass_ScheduledTask_RU {
+        internal static string _ObjectType_ScheduledTask_RU {
             get {
-                return ResourceManager.GetString("_ThreatClass_ScheduledTask_RU", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_ScheduledTask_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Service.
         /// </summary>
-        internal static string _ThreatClass_Service_EN {
+        internal static string _ObjectType_Service_EN {
             get {
-                return ResourceManager.GetString("_ThreatClass_Service_EN", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_Service_EN", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Служа.
+        ///   Ищет локализованную строку, похожую на Служба.
         /// </summary>
-        internal static string _ThreatClass_Service_RU {
+        internal static string _ObjectType_Service_RU {
             get {
-                return ResourceManager.GetString("_ThreatClass_Service_RU", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_Service_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Shell Startup File.
         /// </summary>
-        internal static string _ThreatClass_ShellStartupFile_EN {
+        internal static string _ObjectType_ShellStartupFile_EN {
             get {
-                return ResourceManager.GetString("_ThreatClass_ShellStartupFile_EN", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_ShellStartupFile_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Файл автозагрузки.
         /// </summary>
-        internal static string _ThreatClass_ShellStartupFile_RU {
+        internal static string _ObjectType_ShellStartupFile_RU {
             get {
-                return ResourceManager.GetString("_ThreatClass_ShellStartupFile_RU", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_ShellStartupFile_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Unknown.
         /// </summary>
-        internal static string _ThreatClass_Unknown_EN {
+        internal static string _ObjectType_Unknown_EN {
             get {
-                return ResourceManager.GetString("_ThreatClass_Unknown_EN", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_Unknown_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Неизвестный.
         /// </summary>
-        internal static string _ThreatClass_Unknown_RU {
+        internal static string _ObjectType_Unknown_RU {
             get {
-                return ResourceManager.GetString("_ThreatClass_Unknown_RU", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_Unknown_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на User Profile.
         /// </summary>
-        internal static string _ThreatClass_UserProfile_EN {
+        internal static string _ObjectType_UserProfile_EN {
             get {
-                return ResourceManager.GetString("_ThreatClass_UserProfile_EN", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_UserProfile_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на Профиль пользователя.
         /// </summary>
-        internal static string _ThreatClass_UserProfile_RU {
+        internal static string _ObjectType_UserProfile_RU {
             get {
-                return ResourceManager.GetString("_ThreatClass_UserProfile_RU", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_UserProfile_RU", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на WMI Subscription.
         /// </summary>
-        internal static string _ThreatClass_WmiSubscription_EN {
+        internal static string _ObjectType_WmiSubscription_EN {
             get {
-                return ResourceManager.GetString("_ThreatClass_WmiSubscription_EN", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_WmiSubscription_EN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на WMI Подписка.
         /// </summary>
-        internal static string _ThreatClass_WmiSubscription_RU {
+        internal static string _ObjectType_WmiSubscription_RU {
             get {
-                return ResourceManager.GetString("_ThreatClass_WmiSubscription_RU", resourceCulture);
+                return ResourceManager.GetString("_ObjectType_WmiSubscription_RU", resourceCulture);
             }
         }
         
@@ -6262,6 +6010,42 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на File is locked (read access denied).
+        /// </summary>
+        internal static string _WarnFileAccessDenied_EN {
+            get {
+                return ResourceManager.GetString("_WarnFileAccessDenied_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл заблокирован (нет доступа на чтение).
+        /// </summary>
+        internal static string _WarnFileAccessDenied_RU {
+            get {
+                return ResourceManager.GetString("_WarnFileAccessDenied_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на File access restored by resetting ACL.
+        /// </summary>
+        internal static string _WarnFileAclRecovered_EN {
+            get {
+                return ResourceManager.GetString("_WarnFileAclRecovered_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Доступ к файлу восстановлен сбросом ACL.
+        /// </summary>
+        internal static string _WarnFileAclRecovered_RU {
+            get {
+                return ResourceManager.GetString("_WarnFileAclRecovered_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Support for this application on Windows 7 has been discontinued. .
         /// </summary>
         internal static string _WarnOutdatedOS_EN {
@@ -6330,24 +6114,6 @@ namespace MSearch.Properties {
         internal static string _WillBeRemovedFromExclusions_RU {
             get {
                 return ResourceManager.GetString("_WillBeRemovedFromExclusions_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Windows Defender is disabled - exclusions are skipped.
-        /// </summary>
-        internal static string _DefenderInactiveExclusionsSkipped_EN {
-            get {
-                return ResourceManager.GetString("_DefenderInactiveExclusionsSkipped_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Windows Defender отключён - исключения не анализируются.
-        /// </summary>
-        internal static string _DefenderInactiveExclusionsSkipped_RU {
-            get {
-                return ResourceManager.GetString("_DefenderInactiveExclusionsSkipped_RU", resourceCulture);
             }
         }
         
@@ -6528,42 +6294,6 @@ namespace MSearch.Properties {
         internal static string _YesBtn_RU {
             get {
                 return ResourceManager.GetString("_YesBtn_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на File is locked (read access denied).
-        /// </summary>
-        internal static string _WarnFileAccessDenied_EN {
-            get {
-                return ResourceManager.GetString("_WarnFileAccessDenied_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Файл заблокирован (нет доступа на чтение).
-        /// </summary>
-        internal static string _WarnFileAccessDenied_RU {
-            get {
-                return ResourceManager.GetString("_WarnFileAccessDenied_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на File access restored by resetting ACL.
-        /// </summary>
-        internal static string _WarnFileAclRecovered_EN {
-            get {
-                return ResourceManager.GetString("_WarnFileAclRecovered_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Доступ к файлу восстановлен сбросом ACL.
-        /// </summary>
-        internal static string _WarnFileAclRecovered_RU {
-            get {
-                return ResourceManager.GetString("_WarnFileAclRecovered_RU", resourceCulture);
             }
         }
         

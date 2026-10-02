@@ -324,7 +324,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, sourceFilePath, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, sourceFilePath, "_ObjectType_File");
             }
         }
 
@@ -2177,7 +2177,7 @@ namespace MSearch
             }
             catch (IOException ex)
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ex, filePath, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ex, filePath, "_ObjectType_File");
             }
             catch (Exception ex)
             {
@@ -2274,11 +2274,11 @@ namespace MSearch
             {
                 if (LaunchOptions.GetInstance.verbose)
                 {
-                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_File");
+                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_ObjectType_File");
                 }
             }
             catch (Win32Exception) { AppConfig.GetInstance.LL.LogWarnMessage("_Error", path); }
-            catch (IOException ioex) { AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_File"); }
+            catch (IOException ioex) { AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_ObjectType_File"); }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", path);
@@ -2289,7 +2289,7 @@ namespace MSearch
             {
                 if (LaunchOptions.GetInstance.verbose)
                 {
-                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, path, "_File");
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, path, "_ObjectType_File");
                 }
             }
 
@@ -2311,11 +2311,11 @@ namespace MSearch
             {
                 if (LaunchOptions.GetInstance.verbose)
                 {
-                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_Directory");
+                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", uax, path, "_ObjectType_Directory");
                 }
             }
             catch (Win32Exception) { AppConfig.GetInstance.LL.LogWarnMessage("_Error", path); }
-            catch (IOException ioex) { AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_Directory"); }
+            catch (IOException ioex) { AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ioex, path, "_ObjectType_Directory"); }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", path);
@@ -2326,7 +2326,7 @@ namespace MSearch
             {
                 if (LaunchOptions.GetInstance.verbose)
                 {
-                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, path, "_Directory");
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, path, "_ObjectType_Directory");
                 }
             }
 

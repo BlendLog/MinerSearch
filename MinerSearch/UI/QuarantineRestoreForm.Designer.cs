@@ -257,7 +257,7 @@ namespace MSearch
             this.btnRestore.Name = "btnRestore";
             this.btnRestore.Size = new System.Drawing.Size(141, 36);
             this.btnRestore.TabIndex = 0;
-            this.btnRestore.Text = "_RestoreBtn";
+            this.btnRestore.Text = "_Action_Restore";
             this.btnRestore.UseVisualStyleBackColor = false;
             this.btnRestore.Click += new System.EventHandler(this.btnRestore_Click);
             // 

@@ -90,7 +90,7 @@ namespace MSearch.Core.Handlers
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ex, svc.ServiceName, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ex, svc.ServiceName, "_ObjectType_Service");
                 return ApplyResult.Error;
             }
             finally
@@ -118,7 +118,7 @@ namespace MSearch.Core.Handlers
             }
             catch (Exception ex)
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorResetSddl", ex, svc.ServiceName, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ServiceResetSddlFailed", ex, svc.ServiceName, "_ObjectType_Service");
                 return false;
             }
         }
@@ -148,7 +148,7 @@ namespace MSearch.Core.Handlers
             catch (Exception ex)
             {
                 success = false;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorDeleteRegistryKey", ex, $"{basePath}\\Minimal\\{serviceName}", "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorDeleteRegistryKey", ex, $"{basePath}\\Minimal\\{serviceName}", "_ObjectType_Service");
             }
 
             try
@@ -170,7 +170,7 @@ namespace MSearch.Core.Handlers
             catch (Exception ex)
             {
                 success = false;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorDeleteRegistryKey", ex, $"{basePath}\\Network\\{serviceName}", "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorDeleteRegistryKey", ex, $"{basePath}\\Network\\{serviceName}", "_ObjectType_Service");
             }
 
             if (success)
@@ -197,7 +197,7 @@ namespace MSearch.Core.Handlers
             }
             catch (Exception qex)
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_QuarantineSaveFailed", qex, serviceName, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_QuarantineSaveFailed", qex, serviceName, "_ObjectType_Service");
                 decision.ActionType = ScanActionType.Error;
                 return ApplyResult.Failed;
             }
@@ -258,7 +258,7 @@ namespace MSearch.Core.Handlers
 
             if (!scmRemoved && !TryDeleteServiceRegistryKey(serviceName))
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, serviceName, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, serviceName, "_ObjectType_Service");
                 decision.ActionType = ScanActionType.Error;
                 return ApplyResult.Failed;
             }
@@ -327,7 +327,7 @@ namespace MSearch.Core.Handlers
                     return HandleDeleteRegistryOnlyService(svc, decision);
 
                 decision.ActionType = ScanActionType.Error;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, svc.ServiceName, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, svc.ServiceName, "_ObjectType_Service");
                 return ApplyResult.Failed;
             }
         }
@@ -347,7 +347,7 @@ namespace MSearch.Core.Handlers
             }
             catch (Exception qex)
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_QuarantineSaveFailed", qex, serviceName, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_QuarantineSaveFailed", qex, serviceName, "_ObjectType_Service");
                 decision.ActionType = ScanActionType.Error;
                 return ApplyResult.Failed;
             }
@@ -361,7 +361,7 @@ namespace MSearch.Core.Handlers
 
             if (!TryDeleteServiceRegistryKey(serviceName))
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, serviceName, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, serviceName, "_ObjectType_Service");
                 decision.ActionType = ScanActionType.Error;
                 return ApplyResult.Failed;
             }
@@ -383,7 +383,7 @@ namespace MSearch.Core.Handlers
 
             if (!TryDeleteServiceRegistryKey(serviceName))
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, serviceName, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", null, serviceName, "_ObjectType_Service");
                 decision.ActionType = ScanActionType.Error;
                 return ApplyResult.Failed;
             }
@@ -470,7 +470,7 @@ namespace MSearch.Core.Handlers
                     if (ServiceRegistryKeyExists(serviceName))
                         return HandleDeleteRegistryOnlyService(svc, decision);
 
-                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", w32e, serviceName, "_Service");
+                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", w32e, serviceName, "_ObjectType_Service");
                     decision.ApplyErrorMessage = w32e.Message;
                     decision.ActionType = ScanActionType.Error;
                     return ApplyResult.Failed;
@@ -509,7 +509,7 @@ namespace MSearch.Core.Handlers
                     }
                     catch (Exception ex)
                     {
-                        AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ex, serviceName, "_Service");
+                        AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ex, serviceName, "_ObjectType_Service");
                     }
                 }
             }
@@ -520,7 +520,7 @@ namespace MSearch.Core.Handlers
             var newStartMode = NativeServiceController.GetServiceStartType(serviceName);
             if (newStartMode != NativeServiceController.ServiceStartMode.Disabled)
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", null, serviceName, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", null, serviceName, "_ObjectType_Service");
                 decision.ActionType = ScanActionType.Error;
                 return ApplyResult.Failed;
             }
@@ -538,12 +538,12 @@ namespace MSearch.Core.Handlers
                 if (ServiceRegistryKeyExists(serviceName))
                     return HandleDeleteRegistryOnlyService(svc, decision);
 
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", win32Ex, serviceName, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", win32Ex, serviceName, "_ObjectType_Service");
             }
             catch (Win32Exception win32Ex)
             {
                 decision.ApplyErrorMessage = win32Ex.Message;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", win32Ex, serviceName, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", win32Ex, serviceName, "_ObjectType_Service");
                 return ApplyResult.Failed;
             }
             catch (Exception ex)
@@ -552,7 +552,7 @@ namespace MSearch.Core.Handlers
                     return HandleDeleteRegistryOnlyService(svc, decision);
 
                 decision.ApplyErrorMessage = ex.Message;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, serviceName, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, serviceName, "_ObjectType_Service");
                 return ApplyResult.Error;
             }
 
@@ -579,7 +579,7 @@ namespace MSearch.Core.Handlers
                     else
                     {
                         decision.ApplyErrorMessage = AppConfig.GetInstance.LL.GetLocalizedString("_ErrorRestoreTermServiceDll");
-                        AppConfig.GetInstance.LL.LogErrorMessage("_ErrorRestoreTermService", null, "_Service");
+                        AppConfig.GetInstance.LL.LogErrorMessage("_ErrorRestoreTermService", null, "_ObjectType_Service");
                         return ApplyResult.Error;
                     }
                 }
@@ -615,7 +615,7 @@ namespace MSearch.Core.Handlers
                 decision.ApplyErrorMessage = ex.Message;
                 decision.ObjectType = ScanObjectType.Infected;
                 decision.ActionType = ScanActionType.Error;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorRestoreTermService", ex, "_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorRestoreTermService", ex, "_ObjectType_Service");
                 return ApplyResult.Error;
             }
         }
@@ -649,7 +649,7 @@ namespace MSearch.Core.Handlers
                         return ApplyResult.Success;
                     }
 
-                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", w32e, serviceName, "_Service");
+                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", w32e, serviceName, "_ObjectType_Service");
                     decision.ApplyErrorMessage = w32e.Message;
                     return ApplyResult.Failed;
                 }

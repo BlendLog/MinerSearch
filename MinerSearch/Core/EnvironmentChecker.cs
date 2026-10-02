@@ -144,15 +144,15 @@ namespace MSearch.Core
                         {
                             licenseForm.Label_LicenseCaption.Text = Resources._LicenseCaption_EN;
                             licenseForm.richTextBox1.Rtf = Resources._License_EN;
-                            licenseForm.Accept_btn.Text = Resources._accept_en;
-                            licenseForm.Exit_btn.Text = Resources._exit_EN;
+                            licenseForm.Accept_btn.Text = Resources._AcceptBtn_EN;
+                            licenseForm.Exit_btn.Text = Resources._ExitBtn_EN;
                         }
                         else if (config.ActiveLanguage == "RU")
                         {
                             licenseForm.Label_LicenseCaption.Text = Resources._LicenseCaption_RU;
                             licenseForm.richTextBox1.Rtf = Resources._License_RU;
-                            licenseForm.Accept_btn.Text = Resources._accept_ru;
-                            licenseForm.Exit_btn.Text = Resources._exit_RU;
+                            licenseForm.Accept_btn.Text = Resources._AcceptBtn_RU;
+                            licenseForm.Exit_btn.Text = Resources._ExitBtn_RU;
                         }
 
                         licenseForm.ShowDialog();

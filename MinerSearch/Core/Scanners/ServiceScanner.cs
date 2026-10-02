@@ -146,7 +146,7 @@ namespace MSearch.Core.Scanners
                 }
                 catch (Exception ex)
                 {
-                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ex, serviceName, "_Service");
+                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotProceed", ex, serviceName, "_ObjectType_Service");
                 }
             }
 

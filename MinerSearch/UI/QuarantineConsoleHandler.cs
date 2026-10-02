@@ -68,7 +68,7 @@ namespace MSearch.UI
             string path = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Path");
             string hash = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_FileHash");
             string size = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_FileSize");
-            string type = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_Type");
+            string type = AppConfig.GetInstance.LL.GetLocalizedString("_DataGridHeader_ObjectType");
 
             Console.WriteLine($"Index | {path,-35} | {hash,-6} | {size,-8} | {type}");
             Console.WriteLine(new string('-', 80));
@@ -356,13 +356,13 @@ namespace MSearch.UI
             switch (type)
             {
                 case QuarantineItemType.Service:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Service");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Service");
                 case QuarantineItemType.Task:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Task");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_ScheduledTask");
                 case QuarantineItemType.Registry:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Registry");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_RegistryObject");
                 default:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_File");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_File");
             }
         }
 

@@ -120,7 +120,7 @@ namespace MSearch.Core.ThreatHandlers
                     if (!Native.DeleteFile(longPath))
                     {
                         int errorCode = Marshal.GetLastWin32Error();
-                        AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", new System.ComponentModel.Win32Exception(errorCode), taskToDelete.XmlPath, "_File");
+                        AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", new System.ComponentModel.Win32Exception(errorCode), taskToDelete.XmlPath, "_ObjectType_File");
                         success = false;
                     }
                 }
@@ -128,7 +128,7 @@ namespace MSearch.Core.ThreatHandlers
             catch (Exception ex)
             {
                 decision.ApplyErrorMessage = ex.Message;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, taskToDelete.XmlPath, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, taskToDelete.XmlPath, "_ObjectType_File");
                 success = false;
             }
 

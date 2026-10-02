@@ -88,7 +88,7 @@ namespace MSearch.Core.ThreatHandlers
             {
                 decision.ApplyErrorMessage = ex.Message;
                 decision.ActionType = ScanActionType.Error;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, path, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, path, "_ObjectType_File");
                 return ApplyResult.Error;
             }
         }
@@ -120,7 +120,7 @@ namespace MSearch.Core.ThreatHandlers
             {
                 decision.ApplyErrorMessage = ex.Message;
                 decision.ActionType = ScanActionType.Error;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, path, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, path, "_ObjectType_File");
                 return ApplyResult.Error;
             }
         }
@@ -137,7 +137,7 @@ namespace MSearch.Core.ThreatHandlers
             {
                 decision.ApplyErrorMessage = ex.Message;
                 decision.ActionType = ScanActionType.Error;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotDisableExecute", ex, path, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotDisableExecute", ex, path, "_ObjectType_File");
                 return ApplyResult.Error;
             }
         }

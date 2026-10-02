@@ -99,11 +99,11 @@ namespace MSearch
                 case ScanActionType.Cured:
                     return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Cured");
                 case ScanActionType.Quarantine:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Quarantine");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_MovedToQuarantine");
                 case ScanActionType.Deleted:
                     return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Deleted");
                 case ScanActionType.Error:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Error");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_Error");
                 case ScanActionType.Active:
                     return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Active");
                 case ScanActionType.Terminated:
@@ -126,31 +126,31 @@ namespace MSearch
             switch (kind)
             {
                 case ThreatObjectKind.Process:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatClass_Process");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Process");
                 case ThreatObjectKind.RegistryObject:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatClass_RegistryObject");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_RegistryObject");
                 case ThreatObjectKind.File:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatClass_File");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_File");
                 case ThreatObjectKind.Directory:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatClass_Directory");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Directory");
                 case ThreatObjectKind.FirewallRule:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatClass_FirewallRule");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_FirewallRule");
                 case ThreatObjectKind.UserProfile:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatClass_UserProfile");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_UserProfile");
                 case ThreatObjectKind.WmiSubscription:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatClass_WmiSubscription");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_WmiSubscription");
                 case ThreatObjectKind.ScheduledTask:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatClass_ScheduledTask");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_ScheduledTask");
                 case ThreatObjectKind.Service:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatClass_Service");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Service");
                 case ThreatObjectKind.ShellStartupFile:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatClass_ShellStartupFile");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_ShellStartupFile");
                 case ThreatObjectKind.Hosts:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatClass_Hosts");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Hosts");
                 case ThreatObjectKind.Other:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatClass_Other");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Other");
                 default:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ThreatClass_Unknown");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Unknown");
             }
         }
     }

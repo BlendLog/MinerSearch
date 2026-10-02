@@ -58,9 +58,9 @@ namespace MSearch
         {
             LBL_Quarantine.Text = AppConfig.GetInstance.LL.GetLocalizedString("_Quarantine");
             LBL_QuarantinedFiles.Text = AppConfig.GetInstance.LL.GetLocalizedString("_LabelQuarantinedFiles");
-            RestoreSelectedBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_RestoreBtnText");
-            DeleteSelectedBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_DeleteBtnText");
-            finishBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString(LaunchOptions.GetInstance.QuarantineMode == true ? "_exit" : "_BtnBack");
+            RestoreSelectedBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_Action_Restore");
+            DeleteSelectedBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString("_Action_Delete");
+            finishBtn.Text = AppConfig.GetInstance.LL.GetLocalizedString(LaunchOptions.GetInstance.QuarantineMode == true ? "_ExitBtn" : "_BtnBack");
             top.Text = AppConfig.GetInstance._title;
         }
 
@@ -564,13 +564,13 @@ namespace MSearch
             switch (type)
             {
                 case QuarantineItemType.Service:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Service");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Service");
                 case QuarantineItemType.Task:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Task");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_ScheduledTask");
                 case QuarantineItemType.Registry:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_Registry");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_RegistryObject");
                 default:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_QuarantineType_File");
+                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_File");
             }
         }
     }

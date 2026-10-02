@@ -30,7 +30,7 @@ namespace MSearch
             rbCustomPath.Text = AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_RestoreOptionCustomPath");
             lblCustomDesc.Text = AppConfig.GetInstance.LL.GetLocalizedString("_Q_CLI_RestoreOptionCustomDesc");
             btnBrowse.Text = AppConfig.GetInstance.LL.GetLocalizedString("_BrowseButton");
-            btnRestore.Text = AppConfig.GetInstance.LL.GetLocalizedString("_RestoreBtn");
+            btnRestore.Text = AppConfig.GetInstance.LL.GetLocalizedString("_Action_Restore");
             btnCancel.Text = AppConfig.GetInstance.LL.GetLocalizedString("_CancelBtn");
         }
 

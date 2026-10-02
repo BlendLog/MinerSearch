@@ -597,7 +597,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, filePath, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, filePath, "_ObjectType_File");
             }
 
             try
@@ -624,7 +624,7 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, filePath, "_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, filePath, "_ObjectType_File");
             }
 
             return false;

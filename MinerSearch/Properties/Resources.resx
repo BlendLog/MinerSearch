@@ -183,12 +183,6 @@
   <data name="_RebootPCNowDialog_RU" xml:space="preserve">
     <value>Перезагрузить компьютер сейчас?</value>
   </data>
-  <data name="_Directory_RU" xml:space="preserve">
-    <value>каталог</value>
-  </data>
-  <data name="_RestoreBtnText_RU" xml:space="preserve">
-    <value>Восстановить</value>
-  </data>
   <data name="_MarkedForRemoval_RU" xml:space="preserve">
     <value>Помечен на удаление</value>
   </data>
@@ -226,7 +220,7 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_MaliciousDir_RU" xml:space="preserve">
     <value>Вредоносный каталог</value>
   </data>
-  <data name="_accept_en" xml:space="preserve">
+  <data name="_AcceptBtn_EN" xml:space="preserve">
     <value>Yes</value>
   </data>
   <data name="_End_EN" xml:space="preserve">
@@ -252,9 +246,6 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   </data>
   <data name="_ErrorTaskDeletion_EN" xml:space="preserve">
     <value>Error on task deletion</value>
-  </data>
-  <data name="_ReviewAction_Skip_RU" xml:space="preserve">
-    <value>Пропустить</value>
   </data>
   <data name="_CertSubjectExplicitlyDistrusted_RU" xml:space="preserve">
     <value>Сертификат подписавшего находится в хранилище ненадежных издателей</value>
@@ -286,11 +277,8 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_ErrorSpecifiedPathNotFound_EN" xml:space="preserve">
     <value>The specified path #PATH# is not found</value>
   </data>
-  <data name="_exit_EN" xml:space="preserve">
+  <data name="_ExitBtn_EN" xml:space="preserve">
     <value>Exit</value>
-  </data>
-  <data name="_RestoreBtn_RU" xml:space="preserve">
-    <value>Восстановить</value>
   </data>
   <data name="_AnalyzingFile_RU" xml:space="preserve">
     <value>Анализ</value>
@@ -316,17 +304,11 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_SuspiciousPath_EN" xml:space="preserve">
     <value>Suspicious path</value>
   </data>
-  <data name="_File_RU" xml:space="preserve">
-    <value>файл</value>
-  </data>
   <data name="_ProcessNotRunning_EN" xml:space="preserve">
     <value>The process is not running</value>
   </data>
   <data name="_PrefixNewVersionAvailable_RU" xml:space="preserve">
     <value>&lt;-- Доступно обновление #LATEST#</value>
-  </data>
-  <data name="_DeleteBtnText_RU" xml:space="preserve">
-    <value>Удалить</value>
   </data>
   <data name="_CertSignatureOrFileCorrupt_EN" xml:space="preserve">
     <value>The signed file is modified or does not match this signature.</value>
@@ -334,16 +316,13 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_ErrorTerminateProcess_RU" xml:space="preserve">
     <value>Не удалось завершить вредоносный процесс:</value>
   </data>
-  <data name="_ErrorResetSddl_EN" xml:space="preserve">
-    <value>Failed to reset SDDL for service</value>
-  </data>
   <data name="_PCName_RU" xml:space="preserve">
     <value>Имя компьютера:</value>
   </data>
   <data name="_ActionType_LockedByAV_EN" xml:space="preserve">
     <value>Blocked by antivirus</value>
   </data>
-  <data name="_ThreatClass_Directory_EN" xml:space="preserve">
+  <data name="_ObjectType_Directory_EN" xml:space="preserve">
     <value>Directory</value>
   </data>
   <data name="_RebootPCNowDialog_EN" xml:space="preserve">
@@ -360,9 +339,6 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   </data>
   <data name="_ScanHosts_EN" xml:space="preserve">
     <value>Scan hosts file...</value>
-  </data>
-  <data name="_ReviewAction_Quarantine_RU" xml:space="preserve">
-    <value>Карантин</value>
   </data>
   <data name="_ProcessFile_MarkedToDelete_RU" xml:space="preserve">
     <value>Связанный файл помечен на удаление</value>
@@ -463,7 +439,7 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_HostsFileMissing_EN" xml:space="preserve">
     <value>Hosts file is missing</value>
   </data>
-  <data name="_ThreatClass_Process_EN" xml:space="preserve">
+  <data name="_ObjectType_Process_EN" xml:space="preserve">
     <value>Process</value>
   </data>
   <data name="_HostsFileCreated_RU" xml:space="preserve">
@@ -511,7 +487,7 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_ProcessFound_RU" xml:space="preserve">
     <value>Обнаружен вредоносный процесс! Уровень риска:</value>
   </data>
-  <data name="_ThreatClass_UserProfile_EN" xml:space="preserve">
+  <data name="_ObjectType_UserProfile_EN" xml:space="preserve">
     <value>User Profile</value>
   </data>
   <data name="_ProcessingServices_RU" xml:space="preserve">
@@ -538,7 +514,7 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_ThreatType_Unsafe_RU" xml:space="preserve">
     <value>Небезопасно</value>
   </data>
-  <data name="_ThreatClass_RegistryObject_RU" xml:space="preserve">
+  <data name="_ObjectType_RegistryObject_RU" xml:space="preserve">
     <value>Ключ / Значение реестра</value>
   </data>
   <data name="_ActionType_Inaccessible_EN" xml:space="preserve">
@@ -589,7 +565,7 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_PreparingToScan_RU" xml:space="preserve">
     <value>Подготовка сканирования, пожалуйста, подождите...</value>
   </data>
-  <data name="_ThreatClass_Service_EN" xml:space="preserve">
+  <data name="_ObjectType_Service_EN" xml:space="preserve">
     <value>Service</value>
   </data>
   <data name="_WinPEMode_RU" xml:space="preserve">
@@ -597,9 +573,6 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   </data>
   <data name="_PrivilegeRequiresReboot_RU" xml:space="preserve">
     <value>Привилегия '{0}' требует перезагрузки для применения. Перезагрузить сейчас?</value>
-  </data>
-  <data name="_Service_EN" xml:space="preserve">
-    <value>service</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="quarantine_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -609,7 +582,7 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
     <value>PAUSE BEFORE CLEANUP
 Press any key to continue...</value>
   </data>
-  <data name="_ThreatClass_FirewallRule_EN" xml:space="preserve">
+  <data name="_ObjectType_FirewallRule_EN" xml:space="preserve">
     <value>Firewall Rule</value>
   </data>
   <data name="_PleaseWaitMessage_EN" xml:space="preserve">
@@ -620,9 +593,6 @@ Press any key to continue...</value>
   </data>
   <data name="_AppAlreadyRunning_EN" xml:space="preserve">
     <value>Another copy of the application is already running. For display help message use --help option</value>
-  </data>
-  <data name="_ActionType_Error_RU" xml:space="preserve">
-    <value>Ошибка</value>
   </data>
   <data name="_WMIRegister_RU" xml:space="preserve">
     <value>Регистрация необходимых DLL...</value>
@@ -641,15 +611,6 @@ Press any key to continue...</value>
   </data>
   <data name="_ScanTasks_RU" xml:space="preserve">
     <value>Сканирование задач планировщика...</value>
-  </data>
-  <data name="_ReviewAction_Delete_EN" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-  <data name="_ReviewAction_Terminate_EN" xml:space="preserve">
-    <value>Terminate</value>
-  </data>
-  <data name="_ReviewAction_Disable_EN" xml:space="preserve">
-    <value>Disable</value>
   </data>
   <data name="_CertDigsigDecode_RU" xml:space="preserve">
     <value>Ошибка при расшифровке ASN.1</value>
@@ -711,7 +672,7 @@ Press any key to continue...</value>
   <data name="_UnlockSuccess_EN" xml:space="preserve">
     <value>Unlock success</value>
   </data>
-  <data name="_ThreatClass_Other_RU" xml:space="preserve">
+  <data name="_ObjectType_Other_RU" xml:space="preserve">
     <value>Другое</value>
   </data>
   <data name="_MaliciousFileDeleted_RU" xml:space="preserve">
@@ -720,7 +681,7 @@ Press any key to continue...</value>
   <data name="_QuarantineRemovedFiles_EN" xml:space="preserve">
     <value>Files successfully removed</value>
   </data>
-  <data name="_ThreatClass_Unknown_RU" xml:space="preserve">
+  <data name="_ObjectType_Unknown_RU" xml:space="preserve">
     <value>Неизвестный</value>
   </data>
   <data name="_TermServiceInvalidPath_EN" xml:space="preserve">
@@ -737,9 +698,6 @@ Press any key to continue...</value>
   </data>
   <data name="_ErrorScanProcesses_EN" xml:space="preserve">
     <value>Something is prevent the search for malicious processes. You should temporarily turn off your antivirus and try again.</value>
-  </data>
-  <data name="_ReviewAction_Quarantine_EN" xml:space="preserve">
-    <value>Quarantine</value>
   </data>
   <data name="_Winver_RU" xml:space="preserve">
     <value>Версия Windows:</value>
@@ -792,13 +750,10 @@ Press any key to continue...</value>
   <data name="_ProcessingShellStartup_EN" xml:space="preserve">
     <value>Processing startup folder files...</value>
   </data>
-  <data name="_RestoreBtn_EN" xml:space="preserve">
-    <value>Restore</value>
-  </data>
   <data name="_CertSignatureOrFileCorrupt_RU" xml:space="preserve">
     <value>Подписанный файл модифицирован или не соответствует этой подписи</value>
   </data>
-  <data name="_ThreatClass_RegistryObject_EN" xml:space="preserve">
+  <data name="_ObjectType_RegistryObject_EN" xml:space="preserve">
     <value>Registry Key / Value</value>
   </data>
   <data name="_ProcessingProcesses_EN" xml:space="preserve">
@@ -894,7 +849,7 @@ Press any key to continue...</value>
   <data name="_MessageNewVersion_RU" xml:space="preserve">
     <value>Доступна новая версия #LATEST#. Настоятельно рекомендуется использовать последнюю версию приложения для устранения новых угроз. Перейти на страницу загрузки?</value>
   </data>
-  <data name="_ThreatClass_ShellStartupFile_EN" xml:space="preserve">
+  <data name="_ObjectType_ShellStartupFile_EN" xml:space="preserve">
     <value>Shell Startup File</value>
   </data>
   <data name="_ReviewInstructions_EN" xml:space="preserve">
@@ -917,9 +872,6 @@ Press any key to continue...</value>
   </data>
   <data name="_CertActionUnknown_RU" xml:space="preserve">
     <value>Указанная операция проверки доверия не поддерживается выбранным поставщиком доверия</value>
-  </data>
-  <data name="_ReviewAction_Skip_EN" xml:space="preserve">
-    <value>Skip</value>
   </data>
   <data name="_ErrorRestoreTermServiceDll_RU" xml:space="preserve">
     <value>Не удалось открыть раздел реестра TermService\Parameters</value>
@@ -963,11 +915,8 @@ Press any key to continue...</value>
   <data name="_MovedToQuarantine_RU" xml:space="preserve">
     <value>Перемещено в карантин</value>
   </data>
-  <data name="_ThreatClass_File_EN" xml:space="preserve">
+  <data name="_ObjectType_File_EN" xml:space="preserve">
     <value>File</value>
-  </data>
-  <data name="_ReviewAction_Cure_RU" xml:space="preserve">
-    <value>Лечить</value>
   </data>
   <data name="_CriticalServiceRestart_EN" xml:space="preserve">
     <value>Critical service has been restarted</value>
@@ -992,9 +941,6 @@ Press any key to continue...</value>
   </data>
   <data name="_Elapse_EN" xml:space="preserve">
     <value>Scan elapsed time:</value>
-  </data>
-  <data name="_RestoreBtnText_EN" xml:space="preserve">
-    <value>Restore</value>
   </data>
   <data name="_IncorrectDrive_EN" xml:space="preserve">
     <value>Incorrect drive letter</value>
@@ -1052,9 +998,6 @@ Press any key to continue...</value>
   </data>
   <data name="_ChekingR00tkit_EN" xml:space="preserve">
     <value>Checking rootkit present...</value>
-  </data>
-  <data name="_ActionType_Quarantine_RU" xml:space="preserve">
-    <value>Перемещено в карантин</value>
   </data>
   <data name="_Q_CLI_FileFailed_RU" xml:space="preserve">
     <value>Не удалось {0}: {1}</value>
@@ -1135,9 +1078,6 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_Q_CLI_ForceRequired_EN" xml:space="preserve">
     <value>[Warning] This operation is potentially dangerous. Use --force if you are sure.</value>
-  </data>
-  <data name="_ErrorResetSddl_RU" xml:space="preserve">
-    <value>Не удалось сбросить SDDL для службы</value>
   </data>
   <data name="_LabelAllowStatistics_RU" xml:space="preserve">
     <value>Отправлять анонимные отчёты разработчику о результатах каждого сканирования</value>
@@ -1220,9 +1160,6 @@ Click \b Exit\b0  to exit.\par
   <data name="_StartupCount_RU" xml:space="preserve">
     <value>Кол-во запусков</value>
   </data>
-  <data name="_ActionType_Quarantine_EN" xml:space="preserve">
-    <value>Moved to quarantine</value>
-  </data>
   <data name="_ActionType_RebootPending_EN" xml:space="preserve">
     <value>Delete scheduled on reboot</value>
   </data>
@@ -1262,7 +1199,7 @@ Click \b Exit\b0  to exit.\par
   <data name="_ServiceRestarted_EN" xml:space="preserve">
     <value>Service has been restarted</value>
   </data>
-  <data name="_ThreatClass_FirewallRule_RU" xml:space="preserve">
+  <data name="_ObjectType_FirewallRule_RU" xml:space="preserve">
     <value>Правило фаервола</value>
   </data>
   <data name="_R00tkitPresent_EN" xml:space="preserve">
@@ -1352,7 +1289,7 @@ Click \b Exit\b0  to exit.\par
   <data name="_LogCheckingUpdates_EN" xml:space="preserve">
     <value>Checking for updates. Please, wait...</value>
   </data>
-  <data name="_ThreatClass_ScheduledTask_RU" xml:space="preserve">
+  <data name="_ObjectType_ScheduledTask_RU" xml:space="preserve">
     <value>Планируемая задача</value>
   </data>
   <data name="_ScanTasks_EN" xml:space="preserve">
@@ -1403,15 +1340,6 @@ Click \b Exit\b0  to exit.\par
   <data name="_UnknownCommand_EN" xml:space="preserve">
     <value>Unknown command</value>
   </data>
-  <data name="_ReviewAction_Delete_RU" xml:space="preserve">
-    <value>Удалить</value>
-  </data>
-  <data name="_ReviewAction_Terminate_RU" xml:space="preserve">
-    <value>Завершить</value>
-  </data>
-  <data name="_ReviewAction_Disable_RU" xml:space="preserve">
-    <value>Отключить</value>
-  </data>
   <data name="_UACEnabled_EN" xml:space="preserve">
     <value>UAC: Enabled</value>
   </data>
@@ -1442,7 +1370,7 @@ Click \b Exit\b0  to exit.\par
   <data name="_ProcessInj3cti0n_EN" xml:space="preserve">
     <value>Process injection</value>
   </data>
-  <data name="_ThreatClass_ShellStartupFile_RU" xml:space="preserve">
+  <data name="_ObjectType_ShellStartupFile_RU" xml:space="preserve">
     <value>Файл автозагрузки</value>
   </data>
   <data name="_ValidServiceDLLHijacking_RU" xml:space="preserve">
@@ -1472,7 +1400,7 @@ Click \b Exit\b0  to exit.\par
   <data name="_DataGridHeader_Select_EN" xml:space="preserve">
     <value>Select</value>
   </data>
-  <data name="_ThreatClass_Directory_RU" xml:space="preserve">
+  <data name="_ObjectType_Directory_RU" xml:space="preserve">
     <value>Каталог</value>
   </data>
   <data name="_ScanUserProfiles_EN" xml:space="preserve">
@@ -1481,7 +1409,7 @@ Click \b Exit\b0  to exit.\par
   <data name="_SuspiciousRegsvr32_EN" xml:space="preserve">
     <value>Regsvr32 execution with a suspicious file</value>
   </data>
-  <data name="_ThreatClass_File_RU" xml:space="preserve">
+  <data name="_ObjectType_File_RU" xml:space="preserve">
     <value>Файл</value>
   </data>
   <data name="_ProcessTerminated_EN" xml:space="preserve">
@@ -1514,7 +1442,7 @@ Click \b Exit\b0  to exit.\par
   <data name="_RegistryValueRestoredDefault_RU" xml:space="preserve">
     <value>Параметр восстановлен по умолчанию</value>
   </data>
-  <data name="_accept_ru" xml:space="preserve">
+  <data name="_AcceptBtn_RU" xml:space="preserve">
     <value>Принять</value>
   </data>
   <data name="_Scanning_EN" xml:space="preserve">
@@ -1526,8 +1454,8 @@ Click \b Exit\b0  to exit.\par
   <data name="_TotalSkippedThreats_EN" xml:space="preserve">
     <value>Skipped threats:</value>
   </data>
-  <data name="_ThreatClass_Service_RU" xml:space="preserve">
-    <value>Служа</value>
+  <data name="_ObjectType_Service_RU" xml:space="preserve">
+    <value>Служба</value>
   </data>
   <data name="_DataGridHeader_Class_RU" xml:space="preserve">
     <value>Класс</value>
@@ -1538,10 +1466,10 @@ Click \b Exit\b0  to exit.\par
   <data name="_ErrorCannotDeleteUser_EN" xml:space="preserve">
     <value>Unable to delete user profile</value>
   </data>
-  <data name="_ThreatClass_Hosts_RU" xml:space="preserve">
+  <data name="_ObjectType_Hosts_RU" xml:space="preserve">
     <value>Файл Hosts</value>
   </data>
-  <data name="_ThreatClass_Process_RU" xml:space="preserve">
+  <data name="_ObjectType_Process_RU" xml:space="preserve">
     <value>Процесс</value>
   </data>
   <data name="_Q_CLI_Empty_EN" xml:space="preserve">
@@ -1577,7 +1505,7 @@ Click \b Exit\b0  to exit.\par
   <data name="_SuspiciousTaskBinary_EN" xml:space="preserve">
     <value>Suspicious task binary:</value>
   </data>
-  <data name="_ThreatClass_ScheduledTask_EN" xml:space="preserve">
+  <data name="_ObjectType_ScheduledTask_EN" xml:space="preserve">
     <value>Scheduled Task</value>
   </data>
   <data name="_DataGridHeader_FileHash_EN" xml:space="preserve">
@@ -1636,9 +1564,6 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_CertDigsigDecode_EN" xml:space="preserve">
     <value>Error due to problem in ASN.1 decoding process</value>
-  </data>
-  <data name="_DeleteBtnText_EN" xml:space="preserve">
-    <value>Delete</value>
   </data>
   <data name="_ScanProcesses_RU" xml:space="preserve">
     <value>Сканирование процессов...</value>
@@ -1728,16 +1653,13 @@ Click \b Exit\b0  to exit.\par
   <data name="_AccessDenied_EN" xml:space="preserve">
     <value>Access denied</value>
   </data>
-  <data name="_ReviewAction_Cure_EN" xml:space="preserve">
-    <value>Cure</value>
-  </data>
   <data name="_ActionType_Active_EN" xml:space="preserve">
     <value>Active</value>
   </data>
-  <data name="_ThreatClass_Unknown_EN" xml:space="preserve">
+  <data name="_ObjectType_Unknown_EN" xml:space="preserve">
     <value>Unknown</value>
   </data>
-  <data name="_exit_RU" xml:space="preserve">
+  <data name="_ExitBtn_RU" xml:space="preserve">
     <value>Выйти</value>
   </data>
   <data name="_CertSubjectCertificateRevoked_RU" xml:space="preserve">
@@ -1748,9 +1670,6 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_State_EN" xml:space="preserve">
     <value>State:</value>
-  </data>
-  <data name="_Directory_EN" xml:space="preserve">
-    <value>directory</value>
   </data>
   <data name="_ProcessRiskLevel_Medium_EN" xml:space="preserve">
     <value>middle</value>
@@ -1767,7 +1686,7 @@ Click \b Exit\b0  to exit.\par
   <data name="_QuarantineRemoveBtn_RU" xml:space="preserve">
     <value>Удалить файл(ы) (#FILESCOUNT#) из карантина?</value>
   </data>
-  <data name="_ThreatClass_WmiSubscription_EN" xml:space="preserve">
+  <data name="_ObjectType_WmiSubscription_EN" xml:space="preserve">
     <value>WMI Subscription</value>
   </data>
   <data name="_ErrorCleanHosts_EN" xml:space="preserve">
@@ -1799,9 +1718,6 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_EmptyTask_RU" xml:space="preserve">
     <value>Пустая задача</value>
-  </data>
-  <data name="_Service_RU" xml:space="preserve">
-    <value>службу</value>
   </data>
   <data name="_Q_CLI_ActionHint_RU" xml:space="preserve">
     <value>Введите действие (например, restore/delete/res/del):</value>
@@ -1853,7 +1769,7 @@ Click \b Exit\b0  to exit.\par
   <data name="_Quarantine_EN" xml:space="preserve">
     <value>Quarantine</value>
   </data>
-  <data name="_ThreatClass_Hosts_EN" xml:space="preserve">
+  <data name="_ObjectType_Hosts_EN" xml:space="preserve">
     <value>Hosts File</value>
   </data>
   <data name="_ActionType_Disabled_EN" xml:space="preserve">
@@ -1862,7 +1778,7 @@ Click \b Exit\b0  to exit.\par
   <data name="_MaliciousService_EN" xml:space="preserve">
     <value>Malicious Service -</value>
   </data>
-  <data name="_ThreatClass_WmiSubscription_RU" xml:space="preserve">
+  <data name="_ObjectType_WmiSubscription_RU" xml:space="preserve">
     <value>WMI Подписка</value>
   </data>
   <data name="_Just_Username_RU" xml:space="preserve">
@@ -1876,9 +1792,6 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_ThreatType_Malware_EN" xml:space="preserve">
     <value>Malware</value>
-  </data>
-  <data name="_Path_EN" xml:space="preserve">
-    <value>Path:</value>
   </data>
   <data name="_Q_CLI_Empty_RU" xml:space="preserve">
     <value>Файлы не найдены.</value>
@@ -1900,9 +1813,6 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_TermServiceInvalidPath_RU" xml:space="preserve">
     <value>TermService: некорректный путь к библиотеке</value>
-  </data>
-  <data name="_File_EN" xml:space="preserve">
-    <value>file</value>
   </data>
   <data name="_PcaluaAbuse_RU" xml:space="preserve">
     <value>Исполняется через pcalua.exe. Возможно злоупотребление легитимного ПО. </value>
@@ -1979,7 +1889,7 @@ Click \b Exit\b0  to exit.\par
   <data name="_FirewallRule_Matched_RU" xml:space="preserve">
     <value>Правило брандмауэра для вредоносного файла</value>
   </data>
-  <data name="_ThreatClass_Other_EN" xml:space="preserve">
+  <data name="_ObjectType_Other_EN" xml:space="preserve">
     <value>Other</value>
   </data>
   <data name="_UACUnknown_RU" xml:space="preserve">
@@ -1987,9 +1897,6 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_ProcessFile_MarkedToDelete_EN" xml:space="preserve">
     <value>Associated file marked for deletion</value>
-  </data>
-  <data name="_ActionType_Error_EN" xml:space="preserve">
-    <value>Error</value>
   </data>
   <data name="_Quarantine_RU" xml:space="preserve">
     <value>Карантин</value>
@@ -2060,7 +1967,7 @@ Click \b Exit\b0  to exit.\par
   <data name="_ThreatType_Infected_EN" xml:space="preserve">
     <value>Infected</value>
   </data>
-  <data name="_ThreatClass_UserProfile_RU" xml:space="preserve">
+  <data name="_ObjectType_UserProfile_RU" xml:space="preserve">
     <value>Профиль пользователя</value>
   </data>
   <data name="_ProcessSuspendedPartially_RU" xml:space="preserve">
@@ -2116,6 +2023,42 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_ActionType_Terminated_RU" xml:space="preserve">
     <value>Прерван</value>
+  </data>
+  <data name="_Action_Cure_EN" xml:space="preserve">
+    <value>Cure</value>
+  </data>
+  <data name="_Action_Cure_RU" xml:space="preserve">
+    <value>Лечить</value>
+  </data>
+  <data name="_Action_Delete_EN" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="_Action_Delete_RU" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="_Action_Disable_EN" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="_Action_Disable_RU" xml:space="preserve">
+    <value>Отключить</value>
+  </data>
+  <data name="_Action_Restore_EN" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="_Action_Restore_RU" xml:space="preserve">
+    <value>Восстановить</value>
+  </data>
+  <data name="_Action_Skip_EN" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="_Action_Skip_RU" xml:space="preserve">
+    <value>Пропустить</value>
+  </data>
+  <data name="_Action_Terminate_EN" xml:space="preserve">
+    <value>Terminate</value>
+  </data>
+  <data name="_Action_Terminate_RU" xml:space="preserve">
+    <value>Завершить</value>
   </data>
   <data name="_LogLastVersion_EN" xml:space="preserve">
     <value>[OK] You have latest version</value>
@@ -2272,9 +2215,6 @@ Do you want to continue?
   <data name="_Just_Service_RU" xml:space="preserve">
     <value>Служба:</value>
   </data>
-  <data name="_Path_RU" xml:space="preserve">
-    <value>Путь:</value>
-  </data>
   <data name="_Rundll32Abuse_EN" xml:space="preserve">
     <value>Abuse of RunDll32.exe for malicious DLL execution</value>
   </data>
@@ -2352,36 +2292,6 @@ Do you want to continue?
   </data>
   <data name="_UnsignedExeInSystemLocation_RU" xml:space="preserve">
     <value>Неподписанный исполняемый файл в системном расположении:</value>
-  </data>
-  <data name="_DataGridHeader_Type_EN" xml:space="preserve">
-    <value>Type</value>
-  </data>
-  <data name="_DataGridHeader_Type_RU" xml:space="preserve">
-    <value>Тип</value>
-  </data>
-  <data name="_QuarantineType_File_EN" xml:space="preserve">
-    <value>File</value>
-  </data>
-  <data name="_QuarantineType_File_RU" xml:space="preserve">
-    <value>Файл</value>
-  </data>
-  <data name="_QuarantineType_Service_EN" xml:space="preserve">
-    <value>Service</value>
-  </data>
-  <data name="_QuarantineType_Service_RU" xml:space="preserve">
-    <value>Служба</value>
-  </data>
-  <data name="_QuarantineType_Task_EN" xml:space="preserve">
-    <value>Task</value>
-  </data>
-  <data name="_QuarantineType_Task_RU" xml:space="preserve">
-    <value>Задача</value>
-  </data>
-  <data name="_QuarantineType_Registry_EN" xml:space="preserve">
-    <value>Registry</value>
-  </data>
-  <data name="_QuarantineType_Registry_RU" xml:space="preserve">
-    <value>Реестр</value>
   </data>
   <data name="_QuarantineRegistryRestored_EN" xml:space="preserve">
     <value>Registry item restored from quarantine:</value>
