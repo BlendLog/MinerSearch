@@ -230,7 +230,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
                 catch (Exception ex)
                 {
-                    AppConfig.GetInstance.LL.LogWarnMessage("_WarnCannotDisableExecute", 
+                    AppConfig.GetInstance.LL.LogWarnMessage("_WarnCannotDisableExecution", 
                         $"{fileThreat.FilePath}: {ex.Message}");
                 }
             }

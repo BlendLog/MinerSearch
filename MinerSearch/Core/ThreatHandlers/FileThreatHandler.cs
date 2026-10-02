@@ -163,7 +163,7 @@ namespace MSearch.Core.ThreatHandlers
             {
                 decision.ApplyErrorMessage = ex.Message;
                 decision.ActionType = ScanActionType.Error;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotDisableExecute", ex, path, "_ObjectType_File");
+                AppConfig.GetInstance.LL.LogErrorMessage("_WarnCannotDisableExecution", ex, path, "_ObjectType_File");
                 return ApplyResult.Error;
             }
         }

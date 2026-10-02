@@ -579,7 +579,7 @@ namespace MSearch.Core.Handlers
                     else
                     {
                         decision.ApplyErrorMessage = AppConfig.GetInstance.LL.GetLocalizedString("_ErrorRestoreTermServiceDll");
-                        AppConfig.GetInstance.LL.LogErrorMessage("_ErrorRestoreTermService", null, "_ObjectType_Service");
+                        AppConfig.GetInstance.LL.LogErrorMessage("_ErrorRestoreTermServiceDll", null, "_ObjectType_Service");
                         return ApplyResult.Error;
                     }
                 }

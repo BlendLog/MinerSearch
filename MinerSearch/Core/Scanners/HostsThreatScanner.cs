@@ -73,11 +73,11 @@ namespace MSearch.Core.Scanners
             }
             catch (UnauthorizedAccessException ex)
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, hostsPath_full, "_ErrorReadHosts");
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, hostsPath_full, "_ObjectType_Hosts");
             }
             catch (Exception ex)
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, hostsPath_full, "_ErrorReadHosts");
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, hostsPath_full, "_ObjectType_Hosts");
             }
 
             return new List<IThreatObject>();

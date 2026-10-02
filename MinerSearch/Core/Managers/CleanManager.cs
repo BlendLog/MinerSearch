@@ -106,7 +106,7 @@ namespace MSearch.Core.Managers
                     }
                     catch (Exception ex)
                     {
-                        AppConfig.GetInstance.LL.LogErrorMessage("_HandlerApplyError", ex, decision.Target.Kind.ToString(), "_Error");
+                        AppConfig.GetInstance.LL.LogErrorMessage("_HandlerApplyError", ex, decision.Target.Kind.ToString());
                         result = ApplyResult.Error;
                     }
 

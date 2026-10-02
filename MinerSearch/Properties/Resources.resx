@@ -2395,4 +2395,40 @@ Do you want to continue?
   <data name="_WarnFileAclRecovered_RU" xml:space="preserve">
     <value>Доступ к файлу восстановлен сбросом ACL</value>
   </data>
+  <data name="_DirectoryIsNotFound_EN" xml:space="preserve">
+    <value>Directory is not found:</value>
+  </data>
+  <data name="_DirectoryIsNotFound_RU" xml:space="preserve">
+    <value>Каталог не найден:</value>
+  </data>
+  <data name="_ErrorCannotRemoveWmi_EN" xml:space="preserve">
+    <value>Cannot remove WMI subscription</value>
+  </data>
+  <data name="_ErrorCannotRemoveWmi_RU" xml:space="preserve">
+    <value>Не удалось удалить подписку WMI</value>
+  </data>
+  <data name="_ErrorRestoreTermService_EN" xml:space="preserve">
+    <value>Failed to restore TermService</value>
+  </data>
+  <data name="_ErrorRestoreTermService_RU" xml:space="preserve">
+    <value>Не удалось восстановить TermService</value>
+  </data>
+  <data name="_ErrorScanningDirectory_EN" xml:space="preserve">
+    <value>Error scanning directory</value>
+  </data>
+  <data name="_ErrorScanningDirectory_RU" xml:space="preserve">
+    <value>Ошибка сканирования каталога</value>
+  </data>
+  <data name="_HandlerApplyError_EN" xml:space="preserve">
+    <value>Error applying handler</value>
+  </data>
+  <data name="_HandlerApplyError_RU" xml:space="preserve">
+    <value>Ошибка применения обработчика</value>
+  </data>
+  <data name="_RegistryKeyNotFound_EN" xml:space="preserve">
+    <value>Registry key not found:</value>
+  </data>
+  <data name="_RegistryKeyNotFound_RU" xml:space="preserve">
+    <value>Раздел реестра не найден:</value>
+  </data>
 </root>

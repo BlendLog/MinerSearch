@@ -1212,6 +1212,24 @@ namespace MSearch.Properties {
             }
         }
         
+        /// <summary
+        ///   Ищет локализованную строку, похожую на Directory is not found:.
+        /// </summary
+        internal static string _DirectoryIsNotFound_EN {
+            get {
+                return ResourceManager.GetString("_DirectoryIsNotFound_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary
+        ///   Ищет локализованную строку, похожую на Каталог не найден:.
+        /// </summary
+        internal static string _DirectoryIsNotFound_RU {
+            get {
+                return ResourceManager.GetString("_DirectoryIsNotFound_RU", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на Donate $$$.
         /// </summary>
@@ -1428,6 +1446,24 @@ namespace MSearch.Properties {
             }
         }
         
+        /// <summary
+        ///   Ищет локализованную строку, похожую на Cannot remove WMI subscription.
+        /// </summary
+        internal static string _ErrorCannotRemoveWmi_EN {
+            get {
+                return ResourceManager.GetString("_ErrorCannotRemoveWmi_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary
+        ///   Ищет локализованную строку, похожую на Не удалось удалить подписку WMI.
+        /// </summary
+        internal static string _ErrorCannotRemoveWmi_RU {
+            get {
+                return ResourceManager.GetString("_ErrorCannotRemoveWmi_RU", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на Unable to check locked object.
         /// </summary>
@@ -1626,6 +1662,24 @@ namespace MSearch.Properties {
             }
         }
         
+        /// <summary
+        ///   Ищет локализованную строку, похожую на Failed to restore TermService.
+        /// </summary
+        internal static string _ErrorRestoreTermService_EN {
+            get {
+                return ResourceManager.GetString("_ErrorRestoreTermService_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary
+        ///   Ищет локализованную строку, похожую на Не удалось восстановить TermService.
+        /// </summary
+        internal static string _ErrorRestoreTermService_RU {
+            get {
+                return ResourceManager.GetString("_ErrorRestoreTermService_RU", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Ищет локализованную строку, похожую на Cannot open TermService\\Parameters registry key.
         /// </summary>
@@ -1641,6 +1695,24 @@ namespace MSearch.Properties {
         internal static string _ErrorRestoreTermServiceDll_RU {
             get {
                 return ResourceManager.GetString("_ErrorRestoreTermServiceDll_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary
+        ///   Ищет локализованную строку, похожую на Error scanning directory.
+        /// </summary
+        internal static string _ErrorScanningDirectory_EN {
+            get {
+                return ResourceManager.GetString("_ErrorScanningDirectory_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary
+        ///   Ищет локализованную строку, похожую на Ошибка сканирования каталога.
+        /// </summary
+        internal static string _ErrorScanningDirectory_RU {
+            get {
+                return ResourceManager.GetString("_ErrorScanningDirectory_RU", resourceCulture);
             }
         }
         
@@ -2055,6 +2127,24 @@ namespace MSearch.Properties {
         internal static string _GPULibsUsage_RU {
             get {
                 return ResourceManager.GetString("_GPULibsUsage_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary
+        ///   Ищет локализованную строку, похожую на Error applying handler.
+        /// </summary
+        internal static string _HandlerApplyError_EN {
+            get {
+                return ResourceManager.GetString("_HandlerApplyError_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary
+        ///   Ищет локализованную строку, похожую на Ошибка применения обработчика.
+        /// </summary
+        internal static string _HandlerApplyError_RU {
+            get {
+                return ResourceManager.GetString("_HandlerApplyError_RU", resourceCulture);
             }
         }
         
@@ -4188,6 +4278,24 @@ namespace MSearch.Properties {
         internal static string _RebootRequired_RU {
             get {
                 return ResourceManager.GetString("_RebootRequired_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary
+        ///   Ищет локализованную строку, похожую на Registry key not found:.
+        /// </summary
+        internal static string _RegistryKeyNotFound_EN {
+            get {
+                return ResourceManager.GetString("_RegistryKeyNotFound_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary
+        ///   Ищет локализованную строку, похожую на Раздел реестра не найден:.
+        /// </summary
+        internal static string _RegistryKeyNotFound_RU {
+            get {
+                return ResourceManager.GetString("_RegistryKeyNotFound_RU", resourceCulture);
             }
         }
         
