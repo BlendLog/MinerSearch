@@ -707,9 +707,12 @@ namespace MSearch
 
         static bool IsShell(string exe)
         {
+            string fileName = Path.GetFileName(exe);
+
             foreach (string pattern in MSData.GetInstance.shellPatterns)
             {
-                if (exe.Equals(pattern, StringComparison.OrdinalIgnoreCase))
+                if (exe.Equals(pattern, StringComparison.OrdinalIgnoreCase) ||
+                    fileName.Equals(pattern, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }

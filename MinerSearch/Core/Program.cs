@@ -684,45 +684,73 @@ namespace MSearch
                 }
             }
 
-            // Процессы — проверяем путь связанного файла по obfStr2
+            // Процессы — проверяем путь связанного файла (obfStr2 + известные каталоги obfStr1)
             var proc = target as ProcessThreatObject;
             if (proc?.FileProcess != null)
             {
                 var filePath = proc.FileProcess.FilePath;
                 if (!string.IsNullOrEmpty(filePath) &&
-                    IsPathInObfStr2(filePath))
+                    MSData.GetInstance.IsKnownMaliciousPath(filePath))
                 {
                     return true;
                 }
             }
 
-            // Службы — проверяем путь бинарника по obfStr2
+            // Службы — проверяем путь бинарника (obfStr2 + известные каталоги obfStr1)
             var svc = target as ServiceThreatObject;
             if (svc != null)
             {
                 if (!string.IsNullOrEmpty(svc.ServicePath) &&
-                    IsPathInObfStr2(svc.ServicePath))
+                    MSData.GetInstance.IsKnownMaliciousPath(svc.ServicePath))
+                {
+                    return true;
+                }
+
+                if (!string.IsNullOrEmpty(svc.ServicePathWithArgs) &&
+                    MSData.GetInstance.ContainsKnownMaliciousDir(svc.ServicePathWithArgs))
                 {
                     return true;
                 }
             }
 
-            // Задачи — проверяем связанные файлы (payload из аргументов/исполняемый файл) по obfStr2
+            // Задачи — проверяем связанные файлы (payload из аргументов/исполняемый файл)
+            // и сами аргументы задачи по obfStr1/obfStr2
             var task = target as TaskThreatObject;
             if (task != null)
             {
                 if (task.LinkedFileFromArgs != null &&
                     !string.IsNullOrEmpty(task.LinkedFileFromArgs.FilePath) &&
-                    IsPathInObfStr2(task.LinkedFileFromArgs.FilePath))
+                    MSData.GetInstance.IsKnownMaliciousPath(task.LinkedFileFromArgs.FilePath))
                 {
                     return true;
                 }
 
                 if (task.LinkedFile != null &&
                     !string.IsNullOrEmpty(task.LinkedFile.FilePath) &&
-                    IsPathInObfStr2(task.LinkedFile.FilePath))
+                    MSData.GetInstance.IsKnownMaliciousPath(task.LinkedFile.FilePath))
                 {
                     return true;
+                }
+
+                if (task.Info != null && task.Info.ExecActions != null)
+                {
+                    foreach (var action in task.Info.ExecActions)
+                    {
+                        if (action == null) continue;
+
+                        if (!string.IsNullOrEmpty(action.Path) &&
+                            (MSData.GetInstance.ContainsKnownMaliciousDir(action.Path) ||
+                             MSData.GetInstance.IsUnderKnownMaliciousDir(action.Path)))
+                        {
+                            return true;
+                        }
+
+                        if (!string.IsNullOrEmpty(action.Arguments) &&
+                            MSData.GetInstance.ContainsKnownMaliciousDir(action.Arguments))
+                        {
+                            return true;
+                        }
+                    }
                 }
             }
 
@@ -742,20 +770,6 @@ namespace MSearch
 
             // Для остальных типов — не считаем известными по умолчанию
             return false;
-        }
-
-        /// <summary>
-        /// Проверяет, есть ли путь в MSData.obfStr2 с учётом UNC-префикса (\\?\).
-        /// SignatureScanner формирует пути как \\?\C:\..., а MSData хранит C:\...
-        /// </summary>
-        private static bool IsPathInObfStr2(string testPath)
-        {
-            string normalizedTest = testPath.StartsWith(@"\\?\") ? testPath.Substring(4) : testPath;
-            return MSData.GetInstance.obfStr2.Any(s =>
-            {
-                string normalized = s.StartsWith(@"\\?\") ? s.Substring(4) : s;
-                return normalized.Equals(normalizedTest, StringComparison.OrdinalIgnoreCase);
-            });
         }
 
         /// <summary>

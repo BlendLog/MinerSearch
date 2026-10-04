@@ -6406,6 +6406,96 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Task uses mshta:.
+        /// </summary>
+        internal static string _MshtaTask_EN {
+            get {
+                return ResourceManager.GetString("_MshtaTask_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Задача использует mshta:.
+        /// </summary>
+        internal static string _MshtaTask_RU {
+            get {
+                return ResourceManager.GetString("_MshtaTask_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Obfuscated if exist (0x22) in task:.
+        /// </summary>
+        internal static string _IfExistHexQuoteTask_EN {
+            get {
+                return ResourceManager.GetString("_IfExistHexQuoteTask_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обфусцированный if exist (0x22) в задаче:.
+        /// </summary>
+        internal static string _IfExistHexQuoteTask_RU {
+            get {
+                return ResourceManager.GetString("_IfExistHexQuoteTask_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Task runs a binary from %TEMP%:.
+        /// </summary>
+        internal static string _TempBinaryTask_EN {
+            get {
+                return ResourceManager.GetString("_TempBinaryTask_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Задача запускает файл из %TEMP%:.
+        /// </summary>
+        internal static string _TempBinaryTask_RU {
+            get {
+                return ResourceManager.GetString("_TempBinaryTask_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Service launches mshta:.
+        /// </summary>
+        internal static string _ServiceMshtaLauncher_EN {
+            get {
+                return ResourceManager.GetString("_ServiceMshtaLauncher_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Служба запускает mshta:.
+        /// </summary>
+        internal static string _ServiceMshtaLauncher_RU {
+            get {
+                return ResourceManager.GetString("_ServiceMshtaLauncher_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Suspicious mshta usage:.
+        /// </summary>
+        internal static string _ProcessMshta_EN {
+            get {
+                return ResourceManager.GetString("_ProcessMshta_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подозрительное использование mshta:.
+        /// </summary>
+        internal static string _ProcessMshta_RU {
+            get {
+                return ResourceManager.GetString("_ProcessMshta_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap quarantine_logo {

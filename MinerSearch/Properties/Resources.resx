@@ -2431,4 +2431,34 @@ Do you want to continue?
   <data name="_RegistryKeyNotFound_RU" xml:space="preserve">
     <value>Раздел реестра не найден:</value>
   </data>
+  <data name="_MshtaTask_EN" xml:space="preserve">
+    <value>Task uses mshta:</value>
+  </data>
+  <data name="_MshtaTask_RU" xml:space="preserve">
+    <value>Задача использует mshta:</value>
+  </data>
+  <data name="_IfExistHexQuoteTask_EN" xml:space="preserve">
+    <value>Obfuscated if exist (0x22) in task:</value>
+  </data>
+  <data name="_IfExistHexQuoteTask_RU" xml:space="preserve">
+    <value>Обфусцированный if exist (0x22) в задаче:</value>
+  </data>
+  <data name="_TempBinaryTask_EN" xml:space="preserve">
+    <value>Task runs a binary from %TEMP%:</value>
+  </data>
+  <data name="_TempBinaryTask_RU" xml:space="preserve">
+    <value>Задача запускает файл из %TEMP%:</value>
+  </data>
+  <data name="_ServiceMshtaLauncher_EN" xml:space="preserve">
+    <value>Service launches mshta:</value>
+  </data>
+  <data name="_ServiceMshtaLauncher_RU" xml:space="preserve">
+    <value>Служба запускает mshta:</value>
+  </data>
+  <data name="_ProcessMshta_EN" xml:space="preserve">
+    <value>Suspicious mshta usage:</value>
+  </data>
+  <data name="_ProcessMshta_RU" xml:space="preserve">
+    <value>Подозрительное использование mshta:</value>
+  </data>
 </root>

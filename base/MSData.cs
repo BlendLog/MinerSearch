@@ -329,7 +329,9 @@ namespace DBase
 		@"\\?\" + Drive.Letter + Bfs.Create("sv37xQuWhzfP7CUMzRy6g8XYaMdM+479zBKv4SeQcfJ3fN44Ljj98AveEnZAgfI2", "H0+/V/77hUvUsMhIsAzQYrPUSZUbjAHFNDaBkU+rZyY=", "f6lvTvwKmsaI0tIhJtwGOA=="), //:\Users\Public\Libraries\AMD\opencl
 		@"\\?\" + Drive.Letter + Bfs.Create("XfJzeSDCisXG2kUL334P9coMxsnATTElTY49PorbtcpTKYHstMB7U9hB1FXBhJua", "HSYF1DXQNsE5piguggQ1cSaKMw/o65Ph9Tg8cuiFRb8=", "UnzhdlMTDljHCYurKQAK8A=="), //:\Users\Public\Libraries\directx
 		@"\\?\" + Drive.Letter + Bfs.Create("ip24jNzCIuuQYBBFsQpFbK7iEUJhtE+Cx+nmgko5Ryw=", "7pMFi6KnMxembnEnhHQVV/mBoNZtVaGXk7jy4O5L1TE=", "e8JGu7rLv9X0rk1Bx/GdvQ=="), //:\ProgramData\DirectX\graphics
-		};
+		@"\\?\" + Drive.Letter + Bfs.Create("lfSqDx69Vx668jG5tJ0OPeek4DZZhvkEsz8aaWUHVW4=", "s8/6KnR/oZXg7QbydHeMr7SmoOkonjQJEPMvknpBbvI=", "Kay5BwID3MddvQNP29LVxQ=="), //:\ProgramData\SystemUpdate
+		@"\\?\" + Drive.Letter + Bfs.Create("sDoDlFCJRfB5Z2WhruKOTw3tjIsIPIeImvQ6wF//yT0=", "JeiFGCBjYvYT6gp7bGfmF9uCJy9EcCk+EvTrliHt6pI=", "PuwZNsYUkOi01IApLKXceg=="), //:\Program Files\SystemUpdate
+	};
 
         public List<string> obfStr2 = new List<string>() {
         @"\\?\" + Drive.Letter + Bfs.Create("pCjsezSUxu6d1ZDESiGU7jSgbzjw3saYF4CHiiB807A=", "L4dgcWpJNFAG+mIW00ZPcezTVYDevdatQpQDP4T+ZE8=", "yHPQ1+WKsT59EOrXirznmw=="), //:\ProgramData\Microsoft\win.exe
@@ -632,7 +634,8 @@ namespace DBase
 		Bfs.Create("zC/t0Ua78SnA4sMfTjnpvw==", "C7pNV0K3dS/EJtL39/7ryvr2589W9985FQIFLYAnJUA=", "de8B7Wgqear/k05OWOjgVQ=="), //mousocoreworker
 		Bfs.Create("Mg95DJ0kBArh/OUP5rFGIw==", "wy5yeYmD7TgWUO7mHP7RgAbg+brcYZa8sA3OHacwRuE=", "pxDfPgSEmEqdaIaO7HfuyA=="), //wmiprvse
 		Bfs.Create("aUigRO6MG2ycC/KgtarYLg==", "cL4Gin2pw2lTLKzjdrdkPQNVgTRpI8+jj04x/jgK8jI=", "CGMAMl670OkxjgGhZOODcw=="), //useroobebroker
-		};
+		Bfs.Create("8KDWByDoT43CyCXlITtATg==", "c5Ubcm06CEGqI1GfB3giSdIJRaOLc3uiGburuIwnjp4=", "pdzJV4fUQRE3LrqlQgGQ4w=="), //mshta
+	};
 
 
 
@@ -676,7 +679,8 @@ namespace DBase
 			38872, //regsvcs
 			1974272, //MoUSOCoreWorker
 			499712, //WmiPrvSE
-			90112 //UserOOBEBroker
+			90112, //UserOOBEBroker
+			36864 //mshta
 		};
 
         public readonly string[] _nvdlls = new[]
@@ -857,6 +861,101 @@ namespace DBase
                 if (!targetList.Contains(withSlash))
                     targetList.Add(withSlash);
             }
+        }
+
+        public bool IsUnderKnownMaliciousDir(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                return false;
+
+            string normalizedPath = NormalizeKnownPath(path);
+            if (normalizedPath.Length == 0)
+                return false;
+
+            foreach (string dir in obfStr1)
+            {
+                string normalizedDir = NormalizeKnownPath(dir);
+                if (normalizedDir.Length == 0)
+                    continue;
+
+                if (normalizedPath.Equals(normalizedDir, StringComparison.OrdinalIgnoreCase) ||
+                    normalizedPath.StartsWith(normalizedDir + "\\", StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool ContainsKnownMaliciousDir(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return false;
+
+            string normalizedText = NormalizeKnownPath(text);
+            if (normalizedText.Length == 0)
+                return false;
+
+            foreach (string dir in obfStr1)
+            {
+                string normalizedDir = NormalizeKnownPath(dir);
+                if (normalizedDir.Length == 0)
+                    continue;
+
+                int index = normalizedText.IndexOf(normalizedDir, StringComparison.OrdinalIgnoreCase);
+                while (index >= 0)
+                {
+                    int end = index + normalizedDir.Length;
+                    if (end >= normalizedText.Length)
+                        return true;
+
+                    char next = normalizedText[end];
+                    if (next == '\\' || next == '/' || char.IsWhiteSpace(next) ||
+                        next == '"' || next == '\'' || next == ';' || next == ',' ||
+                        next == '&' || next == '|' || next == ')' || next == ']')
+                    {
+                        return true;
+                    }
+
+                    index = normalizedText.IndexOf(normalizedDir, index + 1, StringComparison.OrdinalIgnoreCase);
+                }
+            }
+
+            return false;
+        }
+
+        public bool IsKnownMaliciousPath(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                return false;
+
+            if (IsUnderKnownMaliciousDir(path))
+                return true;
+
+            string normalizedPath = NormalizeKnownPath(path);
+
+            foreach (string knownFile in obfStr2)
+            {
+                if (NormalizeKnownPath(knownFile).Equals(normalizedPath, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
+
+        static string NormalizeKnownPath(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return string.Empty;
+
+            string result = value.Trim().Trim('"');
+
+            if (result.StartsWith(@"\\?\", StringComparison.Ordinal)) result = result.Substring(4);
+            else if (result.StartsWith(@"\??\", StringComparison.Ordinal)) result = result.Substring(4);
+            else if (result.StartsWith(@"\\.\", StringComparison.Ordinal)) result = result.Substring(4);
+
+            return result.TrimEnd('\\', ' ');
         }
 
         public void UpdateData()

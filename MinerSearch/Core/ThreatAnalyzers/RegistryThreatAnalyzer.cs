@@ -213,6 +213,18 @@ namespace MSearch.Core.ThreatAnalyzers
                         reg.ActionDelete = true;
                         AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
                     }
+                    else if (reg.ValueName.Equals("debugger", StringComparison.OrdinalIgnoreCase) &&
+                             !string.IsNullOrEmpty(reg.ValueData) &&
+                             (reg.ValueData.IndexOf(MSData.GetInstance.SysFileName[39], StringComparison.OrdinalIgnoreCase) >= 0 ||
+                              reg.ValueData.IndexOf("javascript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                              reg.ValueData.IndexOf("vbscript:", StringComparison.OrdinalIgnoreCase) >= 0))
+                    {
+                        risk += 3;
+                        isMalicious = true;
+                        reg.ActionQuarantine = true;
+                        reg.ActionDelete = true;
+                        AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
+                    }
                     else if (reg.ValueName.Equals("debugger", StringComparison.OrdinalIgnoreCase) && IfeoDbgHelper.ShouldRemoveDbg(reg.ValueData))
                     {
                         risk += 3;
@@ -499,7 +511,17 @@ namespace MSearch.Core.ThreatAnalyzers
                 string val = reg.ValueData;
 
                 // 1. Эвристика по строке
-                if (val.IndexOf("RealtekHD\\task", StringComparison.InvariantCultureIgnoreCase) >= 0 ||
+                if (val.IndexOf(MSData.GetInstance.SysFileName[39], StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    val.IndexOf("javascript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    val.IndexOf("vbscript:", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    risk += 3;
+                    isMalicious = true;
+                    reg.ActionQuarantine = true;
+                    reg.ActionDelete = true;
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
+                }
+                else if (val.IndexOf("RealtekHD\\task", StringComparison.InvariantCultureIgnoreCase) >= 0 ||
                     val.IndexOf("ReaItekHD\\task", StringComparison.InvariantCultureIgnoreCase) >= 0 ||
                     (val.IndexOf(" /c cd ", StringComparison.OrdinalIgnoreCase) >= 0 && val.IndexOf(" && ", StringComparison.OrdinalIgnoreCase) >= 0) ||
                     (val.IndexOf("regsvr32", StringComparison.OrdinalIgnoreCase) >= 0 && (val.Contains("/u") || val.Contains("/s") || val.Contains("/i:"))))
@@ -643,8 +665,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
         bool IsKnownMaliciousFile(string filePath)
         {
-            return MSData.GetInstance.obfStr2.Any(s =>
-                FileSystemManager.NormalizeExtendedPath(s).Equals(filePath, StringComparison.OrdinalIgnoreCase));
+            return MSData.GetInstance.IsKnownMaliciousPath(filePath);
         }
 
         private static string GetKeyName(string keyPath)

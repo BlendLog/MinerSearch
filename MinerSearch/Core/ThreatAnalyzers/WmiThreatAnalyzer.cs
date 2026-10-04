@@ -47,7 +47,14 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private static bool IsCommandLineSuspicious(string commandLine)
         {
-            return !string.IsNullOrEmpty(commandLine) && (commandLine.Contains("..\\") || commandLine.Contains("cmd.exe /c "));
+            if (string.IsNullOrEmpty(commandLine))
+                return false;
+
+            return commandLine.Contains("..\\") ||
+                   commandLine.Contains("cmd.exe /c ") ||
+                   commandLine.IndexOf(DBase.MSData.GetInstance.SysFileName[39], StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   commandLine.IndexOf("javascript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   commandLine.IndexOf("vbscript:", StringComparison.OrdinalIgnoreCase) >= 0;
         }
     }
 }

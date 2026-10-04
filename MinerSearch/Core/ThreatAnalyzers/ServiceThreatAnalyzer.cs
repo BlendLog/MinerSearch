@@ -125,6 +125,14 @@ namespace MSearch.Core.ThreatAnalyzers
             // Random-named extensionless binary in a user-writable directory
             bool hasSuspiciousImagePath = IsSuspiciousServiceImagePath(svc);
 
+            // mshta в ImagePath (javascript:/vbscript:/remote .hta)
+            bool hasMshtaLauncher = normalized.Contains(MSData.GetInstance.SysFileName[39]);
+
+            // Путь службы из известного вредоносного каталога (MSData.obfStr1/obfStr2)
+            bool hasKnownMaliciousPath =
+                MSData.GetInstance.ContainsKnownMaliciousDir(servicePathWithArgs) ||
+                MSData.GetInstance.IsUnderKnownMaliciousDir(svc.ServicePath);
+
             if (hasSddlBlocking)
             {
                 AppConfig.GetInstance.LL.LogWarnMediumMessage("_ServiceSCMUnavailable", svc.ServiceName);
@@ -149,6 +157,25 @@ namespace MSearch.Core.ThreatAnalyzers
                 AppConfig.GetInstance.LL.LogCautionMessage("_ServiceEncodedCommand", $"{svc.ServiceName} {svc.ServicePath}");
                 risk += 3;
                 isMalicious = true;
+            }
+
+            if (hasMshtaLauncher)
+            {
+                AppConfig.GetInstance.LL.LogCautionMessage("_ServiceMshtaLauncher", $"{svc.ServiceName} {svc.ServicePath}");
+                risk += 3;
+                isMalicious = true;
+            }
+
+            if (hasKnownMaliciousPath)
+            {
+                AppConfig.GetInstance.LL.LogCautionMessage("_Found", $"{svc.ServiceName} {svc.ServicePath}");
+                risk += 3;
+                isMalicious = true;
+
+                if (svc.LinkedServiceFile != null)
+                {
+                    MarkFileForAction(svc.LinkedServiceFile);
+                }
             }
 
             if (hasSuspiciousImagePath)
@@ -552,8 +579,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private bool IsKnownMaliciousFile(string filePath)
         {
-            return MSData.GetInstance.obfStr2.Any(s =>
-                FileSystemManager.NormalizeExtendedPath(s).Equals(filePath, StringComparison.OrdinalIgnoreCase));
+            return MSData.GetInstance.IsKnownMaliciousPath(filePath);
         }
     }
 }

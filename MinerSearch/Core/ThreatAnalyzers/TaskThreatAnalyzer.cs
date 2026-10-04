@@ -28,6 +28,12 @@ namespace MSearch.Core.ThreatAnalyzers
 
         readonly Regex IfExistPathRegex = new Regex(@"if\s+exist\s+(?:""|\^"")(?<filepath>[A-Z]:\\.*?\.(?:dll|wsf|ps1|bat|cmd|psm1|psd1|psxml))(?:""|\^"")", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        readonly Regex IfExistHexQuoteRegex = new Regex(@"if\s+exist\s+0x22", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        readonly Regex IfExistHexQuotePathRegex = new Regex(@"if\s+exist\s+0x22\s*(?<filepath>[A-Za-z]:\\[^""]+?)(?:0x22|\s|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        readonly Regex MshtaRegex = new Regex(@"(^|[\\/""' ])" + Regex.Escape(MSData.GetInstance.SysFileName[39]) + @"(\.exe)?([ ""'/]|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         private static readonly Regex EncodedCommandRegex = new Regex(
             @"(?<![a-z0-9])-(e|ec|enc(odedcommand)?)(?![a-z0-9])",
             RegexOptions.Compiled);
@@ -123,6 +129,75 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete", $"{taskObj.Info.Path}\\{taskObj.Info.Name}");
                 yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
+            }
+
+            // mshta в задаче — подозрительно, задача в карантин
+            if (MshtaRegex.IsMatch(fullCommand))
+            {
+                risk += 3;
+                taskObj.DetectionReasonRes = "_MshtaTask";
+
+                if (!LaunchOptions.GetInstance.ScanOnly)
+                {
+                    taskObj.ActionQuarantineTask = true;
+                    taskObj.ActionDeleteTask = true;
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToQuarantine", $"{taskObj.Info.Path}\\{taskObj.Info.Name}");
+                }
+
+                yield return new ThreatDecision(taskObj, risk, ScanObjectType.Suspicious);
+            }
+
+            // PowerShell + путь из известного вредоносного каталога (MSData.obfStr1)
+            if (hasShellWrapper && MSData.GetInstance.ContainsKnownMaliciousDir(fullCommand))
+            {
+                risk += 3;
+                taskObj.DetectionReasonRes = "_Malic1ousTask";
+
+                if (!LaunchOptions.GetInstance.ScanOnly)
+                {
+                    taskObj.ActionDeleteTask = true;
+                    MarkFileFromArgsIfExists(ExtractFirstAbsolutePath(args), taskObj);
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete", $"{taskObj.Info.Path}\\{taskObj.Info.Name}");
+                }
+
+                yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
+            }
+
+            // if exist 0x22<path>0x22 — обфускация кавычек
+            if (IfExistHexQuoteRegex.IsMatch(args))
+            {
+                risk += 3;
+                taskObj.DetectionReasonRes = "_IfExistHexQuoteTask";
+
+                if (!LaunchOptions.GetInstance.ScanOnly)
+                {
+                    taskObj.ActionDeleteTask = true;
+                    Match hexPathMatch = IfExistHexQuotePathRegex.Match(args);
+                    if (hexPathMatch.Success)
+                    {
+                        MarkFileFromArgsIfExists(hexPathMatch.Groups["filepath"].Value, taskObj);
+                    }
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete", $"{taskObj.Info.Path}\\{taskObj.Info.Name}");
+                }
+
+                yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
+            }
+
+            // %Temp% в пути к бинарнику
+            if (IsTempBinaryPath(action.Path) &&
+                (taskObj.LinkedFile == null || !taskObj.LinkedFile.IsValidSignature))
+            {
+                risk += 3;
+                taskObj.DetectionReasonRes = "_TempBinaryTask";
+
+                if (!LaunchOptions.GetInstance.ScanOnly)
+                {
+                    taskObj.ActionQuarantineTask = true;
+                    taskObj.ActionDeleteTask = true;
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToQuarantine", $"{taskObj.Info.Path}\\{taskObj.Info.Name}");
+                }
+
+                yield return new ThreatDecision(taskObj, risk, ScanObjectType.Suspicious);
             }
 
             // 2 Этап -------------------------------------------
@@ -358,7 +433,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
                     }
 
-                    if (args.IndexOf("if exist", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (args.IndexOf("if exist", StringComparison.OrdinalIgnoreCase) >= 0 && !IfExistHexQuoteRegex.IsMatch(args))
                     {
                         string expectedSuspiciousPath = ExtractFilePathFromIfExist(args);
 
@@ -1194,13 +1269,69 @@ namespace MSearch.Core.ThreatAnalyzers
 
         bool IsKnownMaliciousFile(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath))
+            return MSData.GetInstance.IsKnownMaliciousPath(filePath);
+        }
+
+        string ExtractFirstAbsolutePath(string arguments)
+        {
+            if (string.IsNullOrEmpty(arguments))
+                return null;
+
+            Match match = Regex.Match(arguments, @"[A-Za-z]:\\[^""'<>|]+", RegexOptions.IgnoreCase);
+            if (!match.Success)
+                return null;
+
+            return match.Value.Trim().TrimEnd('"', '\'', ' ');
+        }
+
+        void MarkFileFromArgsIfExists(string candidatePath, TaskThreatObject taskObj)
+        {
+            if (string.IsNullOrWhiteSpace(candidatePath) || taskObj == null)
+                return;
+
+            string expanded = Environment.ExpandEnvironmentVariables(candidatePath.Trim().Trim('"'));
+
+            if (!File.Exists(expanded))
+                return;
+
+            FileThreatObject file = CreateFileObject(expanded);
+            if (file == null)
+                return;
+
+            taskObj.LinkedFileFromArgs = file;
+            MarkFileForAction(file);
+        }
+
+        bool IsTempBinaryPath(string rawPath)
+        {
+            if (string.IsNullOrWhiteSpace(rawPath))
                 return false;
 
-            string normalizedPath = FileSystemManager.NormalizeExtendedPath(filePath);
+            string raw = rawPath.Trim().Trim('"');
 
-            return MSData.GetInstance.obfStr2.Any(s =>
-                FileSystemManager.NormalizeExtendedPath(s).Equals(normalizedPath, StringComparison.OrdinalIgnoreCase));
+            if (raw.IndexOf("%temp%", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                raw.IndexOf("%tmp%", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return true;
+            }
+
+            string expanded = Environment.ExpandEnvironmentVariables(raw);
+            if (string.IsNullOrEmpty(expanded))
+                return false;
+
+            string userTemp = Path.GetTempPath().TrimEnd('\\');
+            if (userTemp.Length > 0 && expanded.StartsWith(userTemp, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            string windowsDir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+            if (!string.IsNullOrEmpty(windowsDir))
+            {
+                string winTemp = Path.Combine(windowsDir, "Temp").TrimEnd('\\');
+                if (expanded.StartsWith(winTemp, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
         }
     }
 }

@@ -55,8 +55,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private bool IsKnownMaliciousFile(string filePath)
         {
-            return MSData.GetInstance.obfStr2.Any(s =>
-                FileSystemManager.NormalizeExtendedPath(s).Equals(filePath, StringComparison.OrdinalIgnoreCase));
+            return MSData.GetInstance.IsKnownMaliciousPath(filePath);
         }
     }
 }

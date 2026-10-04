@@ -137,6 +137,23 @@ namespace MSearch.Core.ThreatAnalyzers
                     AppConfig.GetInstance.LL.LogWarnMediumMessage("_PresentInCmdArgs", proc.ProcessArgs);
                 }
 
+                string mshtaProcessName = MSData.GetInstance.SysFileName[39];
+
+                bool isMshtaProcess =
+                    proc.ProcessName.Equals(mshtaProcessName, StringComparison.OrdinalIgnoreCase) ||
+                    (proc.FileProcess.FileName != null && proc.FileProcess.FileName.Equals(mshtaProcessName + ".exe", StringComparison.OrdinalIgnoreCase));
+
+                if (isMshtaProcess &&
+                    (proc.ProcessArgs.IndexOf("javascript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                     proc.ProcessArgs.IndexOf("vbscript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                     proc.ProcessArgs.IndexOf("http://", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                     proc.ProcessArgs.IndexOf("https://", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                     proc.ProcessArgs.IndexOf(".hta", StringComparison.OrdinalIgnoreCase) >= 0))
+                {
+                    riskLevel += 3;
+                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_ProcessMshta", $"{proc.FileProcess.FilePath} PID: {proc.ProcessId}");
+                }
+
 
                 if (proc.ProcessArgs.IndexOf("-systemcheck", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
@@ -457,8 +474,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
         bool IsKnownMaliciousFile(string filePath)
         {
-            return MSData.GetInstance.obfStr2.Any(s =>
-                FileSystemManager.NormalizeExtendedPath(s).Equals(filePath, StringComparison.OrdinalIgnoreCase));
+            return MSData.GetInstance.IsKnownMaliciousPath(filePath);
         }
     }
 }

@@ -68,6 +68,24 @@ namespace MSearch.Core.ThreatAnalyzers
             if (file.IsShortcut)
             {
                 AnalyzeShortcut(file, ref risk, ref isMalicious);
+
+                if (IsMshtaShortcut(file, out string htaPayload))
+                {
+                    AppConfig.GetInstance.LL.LogCautionMessage("_Malici0usFile", file.FilePath);
+                    risk += 3;
+                    isMalicious = true;
+                    file.ShouldMoveToQuarantine = true;
+
+                    if (!string.IsNullOrEmpty(htaPayload) && File.Exists(htaPayload))
+                    {
+                        FileThreatObject htaFile = CreateFileObject(htaPayload);
+                        if (htaFile != null)
+                        {
+                            htaFile.ShouldMoveFileToQuarantine = true;
+                            yield return new ThreatDecision(htaFile, risk, ScanObjectType.Malware);
+                        }
+                    }
+                }
             }
             else
             {
@@ -263,8 +281,70 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private bool IsKnownMaliciousFile(string filePath)
         {
-            return MSData.GetInstance.obfStr2.Any(s =>
-                FileSystemManager.NormalizeExtendedPath(s).Equals(filePath, StringComparison.OrdinalIgnoreCase));
+            return MSData.GetInstance.IsKnownMaliciousPath(filePath);
+        }
+
+        private static bool IsMshtaShortcut(ShellStartupFileThreatObject file, out string htaPayload)
+        {
+            htaPayload = null;
+
+            string targetPath = file.ShortcutTargetPath ?? string.Empty;
+            string targetArgs = file.ShortcutTargetArgs ?? string.Empty;
+
+            string targetName = string.Empty;
+            try
+            {
+                targetName = System.IO.Path.GetFileName(targetPath.Trim().Trim('"'));
+            }
+            catch { }
+
+            string mshtaName = MSData.GetInstance.SysFileName[39];
+
+            bool isMshta = targetName.Equals(mshtaName + ".exe", StringComparison.OrdinalIgnoreCase) ||
+                           targetPath.IndexOf(mshtaName, StringComparison.OrdinalIgnoreCase) >= 0;
+
+            bool hasPayload = targetArgs.IndexOf("javascript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                              targetArgs.IndexOf("vbscript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                              targetPath.IndexOf("javascript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                              targetPath.IndexOf("vbscript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                              targetArgs.IndexOf(".hta", StringComparison.OrdinalIgnoreCase) >= 0;
+
+            if (!isMshta && !hasPayload)
+                return false;
+
+            Match m = Regex.Match(targetArgs, @"[A-Za-z]:\\[^""']+\.hta", RegexOptions.IgnoreCase);
+            if (m.Success)
+            {
+                htaPayload = Environment.ExpandEnvironmentVariables(m.Value.Trim().Trim('"'));
+            }
+
+            return true;
+        }
+
+        private static FileThreatObject CreateFileObject(string path)
+        {
+            try
+            {
+                if (!File.Exists(path))
+                    return null;
+
+                var trust = WinTrust.GetInstance.VerifyEmbeddedSignature(path, true);
+                var fileInfo = new FileInfo(path);
+                var versionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(path);
+
+                return new FileThreatObject(
+                    path,
+                    System.IO.Path.GetFileName(path),
+                    fileInfo.Length,
+                    versionInfo.OriginalFilename ?? string.Empty,
+                    versionInfo.FileDescription ?? string.Empty,
+                    FileChecker.CalculateSHA1(path),
+                    trust);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private static bool HasMicrosoftCaches(string targetPath)
