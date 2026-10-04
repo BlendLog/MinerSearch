@@ -67,6 +67,7 @@ namespace MSearch.Core.ThreatAnalyzers
             var reg = threat as RegistryThreatObject;
             if (reg == null) yield break;
 
+            FileChecker.LogUnsignedSha1(reg.LinkedFile);
 
             // Логирование файлов из Autorun для читаемости лога
             LogSectionHeader(reg.SectionName);

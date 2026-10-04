@@ -81,6 +81,7 @@ namespace MSearch.Core.ThreatAnalyzers
                         FileThreatObject htaFile = CreateFileObject(htaPayload);
                         if (htaFile != null)
                         {
+                            FileChecker.LogUnsignedSha1(htaFile);
                             htaFile.ShouldMoveFileToQuarantine = true;
                             yield return new ThreatDecision(htaFile, risk, ScanObjectType.Malware);
                         }
@@ -164,8 +165,9 @@ namespace MSearch.Core.ThreatAnalyzers
                 if (file.ShortcutTargetFile.TrustResult == WinVerifyTrustResult.FileNotSigned)
                 {
                     AppConfig.GetInstance.LL.LogWarnMessage("_CertFileNotSigned", file.ShortcutTargetFile.FilePath);
-                    Logger.WriteLog($"\t\t[SHA1: {file.ShortcutTargetFile.Hash}]", ConsoleColor.White, false);
                 }
+
+                FileChecker.LogUnsignedSha1(file.ShortcutTargetFile);
 
                 if (fileResult.IsMalicious)
                 {
@@ -258,6 +260,8 @@ namespace MSearch.Core.ThreatAnalyzers
                 string.Empty,
                 string.Empty,
                 trustResult);
+
+            FileChecker.LogUnsignedSha1(tempFileObj);
 
             var fileResult = _fileAnalyzer.Analyze(tempFileObj, false);
 

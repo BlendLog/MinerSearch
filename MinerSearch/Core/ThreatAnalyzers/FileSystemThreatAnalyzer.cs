@@ -45,6 +45,8 @@ namespace MSearch.Core.ThreatAnalyzers
                 yield break;
             }
 
+            FileChecker.LogUnsignedSha1(fileThreat);
+
             if (fileThreat.SourceTag == "obfStr2")
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_Malici0usFile", filePath);

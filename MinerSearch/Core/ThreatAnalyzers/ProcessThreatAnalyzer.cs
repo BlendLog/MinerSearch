@@ -51,6 +51,8 @@ namespace MSearch.Core.ThreatAnalyzers
                 LocalizedLogger.LogScanning(proc.ProcessName, proc.ProcessArgs);
             }
 
+            FileChecker.LogUnsignedSha1(proc.FileProcess);
+
             int riskLevel = 0;
 
             if (!proc.FileProcess.IsValidSignature)

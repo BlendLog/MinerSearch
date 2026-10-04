@@ -245,7 +245,6 @@ namespace MSearch.Core.ThreatAnalyzers
             int current = 0;
             int analyzedCount = 0;
 
-            //Console.WriteLine($"  [{total}] файлов найдено. Начинаю анализ...");
             AppConfig.GetInstance.LL.LogMessage($"\t[{total}]", "_FilesCount_PreparingAnalysis", "", ConsoleColor.White, false);
 
             AppConfig.GetInstance.LL.LogHeadMessage("_StartSignatureScan");
@@ -275,6 +274,11 @@ namespace MSearch.Core.ThreatAnalyzers
                 catch
                 {
                     fileThreat.TrustResult = WinVerifyTrustResult.Error;
+                }
+
+                if (LaunchOptions.GetInstance.verbose)
+                {
+                    FileChecker.LogUnsignedSha1(fileThreat);
                 }
 
                 var result = AnalyzeAndDisable(fileThreat, displayProgress: false);
