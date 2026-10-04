@@ -19,7 +19,7 @@ namespace netlib
             {
                 client.Timeout = TimeSpan.FromSeconds(5);
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("request");
-                return client.GetStringAsync(url).Result;
+                return client.GetStringAsync(url).GetAwaiter().GetResult();
             }
         }
 

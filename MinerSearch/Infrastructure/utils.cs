@@ -336,22 +336,14 @@ namespace MSearch
             try
             {
                 int checkVersionResult = -1;
-                // Fallback: если primary timeout — сразу secondary без ping
+                // Fallback: если primary недоступен — сразу secondary без ping
                 try
                 {
                     _versionEndpoint = "primary";
                     checkVersionResult = IsNewVersionAvailable();
                 }
-                catch (OperationCanceledException)
+                catch (Exception)
                 {
-                    AppConfig.GetInstance.LL.LogWarnMessage("_EndpointTimeout", "primary");
-                    _versionEndpoint = "secondary";
-                    checkVersionResult = IsNewVersionAvailable();
-                }
-                catch (Exception ex)
-                {
-                    // Primary failed — try secondary directly
-                    AppConfig.GetInstance.LL.LogWarnMessage("_EndpointError", ex.Message);
                     _versionEndpoint = "secondary";
                     checkVersionResult = IsNewVersionAvailable();
                 }
@@ -372,20 +364,13 @@ namespace MSearch
             }
             catch (Exception ex)
             {
-                if (ex is AggregateException agg)
-                {
-                    var flattened = agg.Flatten();
-                    bool isNetError = flattened.InnerException is System.Net.Sockets.SocketException
-                        || flattened.InnerException is System.Net.Http.HttpRequestException;
-                    if (isNetError)
-                        AppConfig.GetInstance.LL.LogWarnMessage("_NoInternetForUpdates");
-                    else
-                        AppConfig.GetInstance.LL.LogWarnMessage("_UpdateCheckError", flattened.InnerException.Message);
-                }
+                Exception inner = ex is AggregateException agg ? agg.Flatten().InnerException : ex;
+                bool isNetError = inner is System.Net.Sockets.SocketException
+                    || inner is System.Net.Http.HttpRequestException;
+                if (isNetError)
+                    AppConfig.GetInstance.LL.LogWarnMessage("_NoInternetForUpdates");
                 else
-                {
-                    AppConfig.GetInstance.LL.LogWarnMessage("_UpdateCheckError", ex.Message);
-                }
+                    AppConfig.GetInstance.LL.LogWarnMessage("_UpdateCheckError", inner?.Message ?? ex.Message);
             }
         }
 
