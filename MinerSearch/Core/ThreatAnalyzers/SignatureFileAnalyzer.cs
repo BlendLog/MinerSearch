@@ -186,8 +186,16 @@ namespace MSearch.Core.ThreatAnalyzers
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
+                fileThreat.IsLockedByAntivirus = true;
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", fileThreat.FilePath);
                 return FileContentAnalysisResult.LockedByAv();
+            }
+            catch (Exception e) when (FileChecker.IsSharingViolation(e))
+            {
+                // Файл удерживается другим процессом с write/delete-доступом даже после
+                // ослабления share-режима (эксклюзивный держатель) — не рискуем, просто пропускаем
+                AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByAnotherProcess", fileThreat.FilePath);
+                return FileContentAnalysisResult.Error();
             }
             catch (UnauthorizedAccessException)
             {
@@ -219,7 +227,7 @@ namespace MSearch.Core.ThreatAnalyzers
             var result = Analyze(fileThreat, displayProgress);
             
             // Немедленная блокировка выполнения для вредоносных файлов
-            if (result.IsMalicious && !fileThreat.IsValidSignature)
+            if (result.IsMalicious && !fileThreat.IsValidSignature && !fileThreat.IsLockedByAntivirus)
             {
                 try
                 {
@@ -304,6 +312,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
                 else if (result.IsLockedByAntivirus)
                 {
+                    fileThreat.IsLockedByAntivirus = true;
                     var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Malware);
                     decision.ActionType = ScanActionType.LockedByAntivirus;
                     decisions.Add(decision);

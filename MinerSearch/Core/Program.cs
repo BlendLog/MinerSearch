@@ -518,8 +518,10 @@ namespace MSearch
 
             // Все неизвестные угрозы из всех типов сканов → FormThreatReview
             // Rootkit (Other) всегда обрабатывается автоматически — исключаем из review
+            // Заблокированные Defender-ом файлы не трогаем вообще — их не показываем и не предлагаем действия
             var allUnknownDecisions = unknownDecisions
                 .Where(d => d.Target.Kind != ThreatObjectKind.Other)
+                .Where(d => d.ActionType != ScanActionType.LockedByAntivirus)
                 .ToList();
 
             cleanManager.BeginFinalCleanup();

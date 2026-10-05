@@ -22,6 +22,12 @@ namespace MSearch.Core.ThreatObjects
         public bool IsSuspiciousPath { get; internal set; }
         public bool IsFileTooLarge { get; internal set; }
         public bool ShouldDisableExecute { get; internal set; }
+
+        /// <summary>
+        /// Файл заблокирован Windows Defender (ERROR_VIRUS_INFECTED): не трогаем его вообще —
+        /// ни чтения, ни карантин, ни удаление, ни Deny-Execute.
+        /// </summary>
+        public bool IsLockedByAntivirus { get; internal set; }
         
         /// <summary>
         /// Тег источника обнаружения (заполняется сканером). 

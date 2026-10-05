@@ -306,11 +306,16 @@ namespace MSearch
                     UnlockObjectClass.UnblockRegistry(AppConfig.GetInstance.RegistryPathMain, RegistryHive.LocalMachine);
                 }
 
-                QuarantineManager.AddFile(sourceFilePath, deleteFromSource);
+                bool saved = QuarantineManager.AddFile(sourceFilePath, deleteFromSource);
 
                 if (!File.Exists(sourceFilePath))
                 {
                     AppConfig.GetInstance.LL.LogSuccessMessage("_Malici0usFile", sourceFilePath, "_MovedToQuarantine");
+                }
+                else if (!saved)
+                {
+                    // Снимок не сохранён (файл залочен/недоступен) — удаление отменено (data-loss guard)
+                    AppConfig.GetInstance.LL.LogWarnMediumMessage("_QuarantineSaveFailed", sourceFilePath);
                 }
             }
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
@@ -318,7 +323,7 @@ namespace MSearch
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", sourceFilePath);
 
             }
-            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80070020)))
+            catch (Exception e) when (FileChecker.IsSharingViolation(e))
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByAnotherProcess", sourceFilePath);
             }
@@ -1301,16 +1306,39 @@ namespace MSearch
         /// <summary>
         /// Открывает файл на чтение; при отказе в доступе (deny-ACL) сначала пробует backup-semantics
         /// (без изменения файла/ACL), и только затем крайнюю меру — сброс ACL для разрешённых каталогов.
+        /// При ERROR_SHARING_VIOLATION (0x80070020) и allowBroadShareFallback ослабляет собственный
+        /// share-режим (файл удерживают майнер/Defender с write/delete-доступом) и пробует снова.
+        /// Для карантина broadening запрещён (allowBroadShareFallback: false) — иначе снимок может быть повреждён.
         /// </summary>
-        internal static FileStream OpenReadWithFallback(string filePath, FileShare share, int bufferSize = 4096)
+        internal static FileStream OpenReadWithFallback(string filePath, FileShare share, int bufferSize = 4096, bool allowBroadShareFallback = true)
         {
             try
             {
                 return new FileStream(filePath, FileMode.Open, FileAccess.Read, share, bufferSize);
             }
-            catch (UnauthorizedAccessException)
+            catch (Exception ex) when (IsSharingViolation(ex) || ex is UnauthorizedAccessException)
             {
-                FileStream recovered = UnlockObjectClass.OpenReadWithBackupSemantics(filePath);
+                if (IsSharingViolation(ex))
+                {
+                    if (!allowBroadShareFallback || share == (FileShare.ReadWrite | FileShare.Delete))
+                        throw;
+
+                    try
+                    {
+                        return new FileStream(filePath, FileMode.Open, FileAccess.Read,
+                            FileShare.ReadWrite | FileShare.Delete, bufferSize);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        // deny-ACL поверх блокировки — продолжаем восстановление доступа
+                    }
+                }
+
+                FileShare recoveryShare = allowBroadShareFallback
+                    ? FileShare.ReadWrite | FileShare.Delete
+                    : share;
+
+                FileStream recovered = UnlockObjectClass.OpenReadWithBackupSemantics(filePath, recoveryShare);
                 if (recovered != null)
                     return recovered;
 
@@ -1318,7 +1346,7 @@ namespace MSearch
                     UnlockObjectClass.RestoreFileAclForRead(filePath))
                 {
                     AppConfig.GetInstance.LL.LogWarnMessage("_WarnFileAclRecovered", filePath);
-                    return new FileStream(filePath, FileMode.Open, FileAccess.Read, share, bufferSize);
+                    return new FileStream(filePath, FileMode.Open, FileAccess.Read, recoveryShare, bufferSize);
                 }
 
                 throw;
@@ -1994,6 +2022,36 @@ namespace MSearch
             catch (NotSupportedException) { return false; }
 
             catch (System.Security.SecurityException) { return false; }
+        }
+
+        internal static bool IsSharingViolation(Exception ex)
+        {
+            return ex != null && ex.HResult.Equals(unchecked((int)0x80070020)); // ERROR_SHARING_VIOLATION
+        }
+
+        /// <summary>
+        /// Проверяет, что файл заблокирован Windows Defender (ERROR_VIRUS_INFECTED).
+        /// Читающее открытие с широким share-режимом не изменяет файл; при вирусном фильтре
+        /// Defender CreateFile сразу возвращает 0x800700E1.
+        /// </summary>
+        internal static bool IsBlockedByDefender(string filePath)
+        {
+            try
+            {
+                using (new FileStream(filePath, FileMode.Open, FileAccess.Read,
+                    FileShare.ReadWrite | FileShare.Delete, 1))
+                {
+                }
+                return false;
+            }
+            catch (Exception ex) when (ex.HResult.Equals(unchecked((int)0x800700E1)))
+            {
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         internal static bool IsDataReadError(Exception ex)

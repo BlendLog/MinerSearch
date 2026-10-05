@@ -135,8 +135,9 @@ namespace MSearch
         /// <summary>
         /// Открывает файл на чтение в обход DACL через SeBackupPrivilege + FILE_FLAG_BACKUP_SEMANTICS.
         /// Файл не изменяется. Возвращает null, если открыть не удалось.
+        /// share по умолчанию широкий; карантин передаёт FileShare.None, чтобы сохранить эксклюзивность снимка.
         /// </summary>
-        internal static FileStream OpenReadWithBackupSemantics(string filePath)
+        internal static FileStream OpenReadWithBackupSemantics(string filePath, FileShare share = FileShare.ReadWrite | FileShare.Delete)
         {
             try
             {
@@ -145,7 +146,7 @@ namespace MSearch
                 SafeFileHandle safeHandle = Native.CreateFile(
                     longPath,
                     FileAccess.Read,
-                    FileShare.ReadWrite | FileShare.Delete,
+                    share,
                     IntPtr.Zero,
                     FileMode.Open,
                     (FileAttributes)Native.FILE_FLAG_BACKUP_SEMANTICS,

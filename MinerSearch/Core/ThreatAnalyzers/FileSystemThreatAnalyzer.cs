@@ -168,6 +168,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
                 else if (sigAnalysisResult.IsLockedByAntivirus)
                 {
+                    fileThreat.IsLockedByAntivirus = true;
                     var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Malware);
                     decision.ActionType = ScanActionType.LockedByAntivirus;
                     yield return decision;
@@ -224,6 +225,7 @@ namespace MSearch.Core.ThreatAnalyzers
             }
             else if (otherAnalysisResult.IsLockedByAntivirus)
             {
+                fileThreat.IsLockedByAntivirus = true;
                 var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Malware);
                 decision.ActionType = ScanActionType.LockedByAntivirus;
                 yield return decision;

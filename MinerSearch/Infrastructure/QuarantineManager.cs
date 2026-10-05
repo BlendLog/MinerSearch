@@ -285,27 +285,44 @@ namespace MSearch
         {
             if (!File.Exists(sourceFilePath)) return false;
 
+            const int blockSize = 1024 * 512;
+            string subKeyName = null;
+
             try
             {
                 EnsureRegistryAccessible();
 
-                string fileHash = FileChecker.CalculateMD5(sourceFilePath);
-                const int blockSize = 1024 * 512;
+                // Карантин — только консистентный снимок: эксклюзивное открытие на всё время копирования.
+                // Broad-share fallback здесь запрещён, иначе в карантин может попасть «рваный» файл.
+                FileStream fileStream = OpenExclusiveWithRetry(sourceFilePath);
+                if (fileStream == null)
+                    return false;
 
-                using (var baseKey = Registry.LocalMachine.CreateSubKey(QUARANTINE_PATH))
+                try
                 {
-                    if (baseKey == null) return false;
-
-                    using (var subKey = baseKey.CreateSubKey(fileHash))
+                    using (var md5 = MD5.Create())
                     {
-                        if (subKey == null) return false;
+                        byte[] hashBytes = md5.ComputeHash(fileStream);
+                        StringBuilder sb = new StringBuilder();
+                        foreach (byte b in hashBytes)
+                            sb.Append(b.ToString("x2"));
+                        subKeyName = sb.ToString();
+                    }
 
-                        subKey.SetValue(ITEM_TYPE, "File");
-                        subKey.SetValue(QUARANTINED_AT, DateTime.Now.ToString("o"));
-                        subKey.SetValue(ORIGINAL_PATH, sourceFilePath, RegistryValueKind.String);
+                    fileStream.Seek(0, SeekOrigin.Begin);
 
-                        using (var fileStream = FileChecker.OpenReadWithFallback(sourceFilePath, FileShare.None))
+                    using (var baseKey = Registry.LocalMachine.CreateSubKey(QUARANTINE_PATH))
+                    {
+                        if (baseKey == null) return false;
+
+                        using (var subKey = baseKey.CreateSubKey(subKeyName))
                         {
+                            if (subKey == null) return false;
+
+                            subKey.SetValue(ITEM_TYPE, "File");
+                            subKey.SetValue(QUARANTINED_AT, DateTime.Now.ToString("o"));
+                            subKey.SetValue(ORIGINAL_PATH, sourceFilePath, RegistryValueKind.String);
+
                             long fileSize = fileStream.Length;
                             int totalParts = (int)Math.Ceiling((double)fileSize / blockSize);
                             subKey.SetValue(TOTAL_PARTS, totalParts, RegistryValueKind.DWord);
@@ -328,13 +345,61 @@ namespace MSearch
                         }
                     }
                 }
+                finally
+                {
+                    fileStream.Dispose();
+                }
 
                 if (deleteFromSource)
                     UnlockObjectClass.KillAndDelete(sourceFilePath);
 
-                return !File.Exists(sourceFilePath);
+                return !deleteFromSource || !File.Exists(sourceFilePath);
             }
-            catch { return false; }
+            catch
+            {
+                DeleteQuarantineSubKey(subKeyName);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Эксклюзивное открытие файла с ретраями: транзиентные блокировки (в т.ч. сканирование Defender)
+        /// обычно снимаются за доли секунды. Broad-share fallback отключён — снимок должен быть консистентным.
+        /// </summary>
+        static FileStream OpenExclusiveWithRetry(string filePath, int attempts = 3)
+        {
+            for (int i = 0; i < attempts; i++)
+            {
+                try
+                {
+                    return FileChecker.OpenReadWithFallback(filePath, FileShare.None, 4096, allowBroadShareFallback: false);
+                }
+                catch
+                {
+                    if (i == attempts - 1)
+                        return null;
+
+                    System.Threading.Thread.Sleep(150);
+                }
+            }
+
+            return null;
+        }
+
+        static void DeleteQuarantineSubKey(string subKeyName)
+        {
+            if (string.IsNullOrEmpty(subKeyName))
+                return;
+
+            try
+            {
+                using (var baseKey = Registry.LocalMachine.OpenSubKey(QUARANTINE_PATH, true))
+                {
+                    if (baseKey != null)
+                        baseKey.DeleteSubKeyTree(subKeyName, false);
+                }
+            }
+            catch { }
         }
 
         #endregion

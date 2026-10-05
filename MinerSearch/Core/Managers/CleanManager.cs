@@ -268,6 +268,9 @@ namespace MSearch.Core.Managers
                 case ApplyResult.Failed:
                     return GetActionTypeForFailed(decision);
 
+                case ApplyResult.LockedByAntivirus:
+                    return ScanActionType.LockedByAntivirus;
+
                 case ApplyResult.Error:
                     return ScanActionType.Error;
 

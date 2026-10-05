@@ -20,6 +20,16 @@ namespace MSearch.Core.ThreatHandlers
 
             string path = fileThreat.FilePath;
 
+            // Файл заблокирован Defender (ERROR_VIRUS_INFECTED) — не трогаем вообще:
+            // ни ACL/атрибуты, ни карантин, ни удаление, ни отложенное удаление, ни Deny-Execute.
+            if (fileThreat.IsLockedByAntivirus)
+            {
+                decision.ActionType = ScanActionType.LockedByAntivirus;
+                if (phase == CleanupPhase.Finalize)
+                    AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", path);
+                return ApplyResult.LockedByAntivirus;
+            }
+
 #if DEBUG
             Console.WriteLine($"[DBG FileSystemThreatHandler] Phase={phase}, Path={path}, Delete={fileThreat.ShouldDeleteFile}, Quarantine={fileThreat.ShouldMoveFileToQuarantine}, DisableExec={fileThreat.ShouldDisableExecute}");
 #endif
@@ -47,6 +57,25 @@ namespace MSearch.Core.ThreatHandlers
             return ApplyResult.NotApplicable;
         }
 
+        /// <summary>
+        /// Страховка для файлов, не прошедших контент-анализ: пробуем открыть и ловим ERROR_VIRUS_INFECTED.
+        /// При срабатывании помечаем файл и запрещаем любые операции над ним.
+        /// </summary>
+        private static bool IsDefenderLocked(string path, ThreatDecision decision, bool log = true)
+        {
+            if (!FileChecker.IsBlockedByDefender(path))
+                return false;
+
+            var fileThreat = decision.Target as FileThreatObject;
+            if (fileThreat != null)
+                fileThreat.IsLockedByAntivirus = true;
+
+            decision.ActionType = ScanActionType.LockedByAntivirus;
+            if (log)
+                AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", path);
+            return true;
+        }
+
         private ApplyResult HandleMoveToQuarantine(string path, ThreatDecision decision)
         {
             if (!File.Exists(path))
@@ -54,6 +83,9 @@ namespace MSearch.Core.ThreatHandlers
                 AppConfig.GetInstance.LL.LogMessage("[_]", "_FileIsNotFound", path, ConsoleColor.Gray);
                 return ApplyResult.NotApplicable;
             }
+
+            if (IsDefenderLocked(path, decision))
+                return ApplyResult.LockedByAntivirus;
 
             try
             {
@@ -96,6 +128,9 @@ namespace MSearch.Core.ThreatHandlers
                 AppConfig.GetInstance.LL.LogMessage("[_]", "_FileIsNotFound", path, ConsoleColor.Gray);
                 return ApplyResult.NotApplicable;
             }
+
+            if (IsDefenderLocked(path, decision))
+                return ApplyResult.LockedByAntivirus;
 
             try
             {
@@ -152,6 +187,9 @@ namespace MSearch.Core.ThreatHandlers
 
         private ApplyResult HandleDisableExecutePhase(string path, ThreatDecision decision)
         {
+            if (IsDefenderLocked(path, decision, log: false))
+                return ApplyResult.LockedByAntivirus;
+
             try
             {
                 UnlockObjectClass.DisableExecute(path);
