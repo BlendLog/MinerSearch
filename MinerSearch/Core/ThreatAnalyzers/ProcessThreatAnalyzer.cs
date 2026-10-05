@@ -178,18 +178,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
                 }
 
-                if ((proc.ProcessName.Equals(MSData.GetInstance.SysFileName[3], StringComparison.OrdinalIgnoreCase) && proc.ProcessArgs.IndexOf($"\\??\\{AppConfig.GetInstance.drive_letter}:\\", StringComparison.OrdinalIgnoreCase) == -1))
-                {
-                    riskLevel += 3;
-                    if (proc.ProcessArgs.IndexOf($"\\\\?\\{AppConfig.GetInstance.drive_letter}:\\", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        riskLevel--;
-                    }
-                    else
-                    {
-                        AppConfig.GetInstance.LL.LogWarnMediumMessage("_WatchdogProcess", $"PID: {proc.ProcessId}");
-                    }
-                }
+
                 if (proc.ProcessName.Equals(MSData.GetInstance.SysFileName[4], StringComparison.OrdinalIgnoreCase) && (proc.ProcessArgs.IndexOf($"{MSData.GetInstance.SysFileName[4]}.exe -k dcomlaunch", StringComparison.OrdinalIgnoreCase) >= 0))
                 {
                     foreach (ProcessModule pMod in proc.ProcessModules)
