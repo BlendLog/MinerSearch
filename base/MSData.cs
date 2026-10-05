@@ -330,6 +330,7 @@ namespace DBase
 		@"\\?\" + Drive.Letter + Bfs.Create("XfJzeSDCisXG2kUL334P9coMxsnATTElTY49PorbtcpTKYHstMB7U9hB1FXBhJua", "HSYF1DXQNsE5piguggQ1cSaKMw/o65Ph9Tg8cuiFRb8=", "UnzhdlMTDljHCYurKQAK8A=="), //:\Users\Public\Libraries\directx
 		@"\\?\" + Drive.Letter + Bfs.Create("ip24jNzCIuuQYBBFsQpFbK7iEUJhtE+Cx+nmgko5Ryw=", "7pMFi6KnMxembnEnhHQVV/mBoNZtVaGXk7jy4O5L1TE=", "e8JGu7rLv9X0rk1Bx/GdvQ=="), //:\ProgramData\DirectX\graphics
 		@"\\?\" + Drive.Letter + Bfs.Create("lfSqDx69Vx668jG5tJ0OPeek4DZZhvkEsz8aaWUHVW4=", "s8/6KnR/oZXg7QbydHeMr7SmoOkonjQJEPMvknpBbvI=", "Kay5BwID3MddvQNP29LVxQ=="), //:\ProgramData\SystemUpdate
+		@"\\?\" + Drive.Letter + Bfs.Create("9Y09iUXFwEfuqzTfpZCOeRbWock5Jc3BbzW2da11oO4=","KUZeiPwQ2+eVr2Mej01vqDfPo8niBtkzPqPYNL6nQKk=", "FTgahii5EQxwN3r4F24yWw=="), //:\ProgramData\CACService
 		@"\\?\" + Drive.Letter + Bfs.Create("sDoDlFCJRfB5Z2WhruKOTw3tjIsIPIeImvQ6wF//yT0=", "JeiFGCBjYvYT6gp7bGfmF9uCJy9EcCk+EvTrliHt6pI=", "PuwZNsYUkOi01IApLKXceg=="), //:\Program Files\SystemUpdate
 	};
 

@@ -65,6 +65,16 @@ namespace MSearch.Core
                 return false;
             }
 
+            // --accept-eula / -a: принять соглашение без показа окна
+            if (LaunchOptions.GetInstance.accept_eula)
+            {
+                using (RegistryKey acceptKey = Registry.CurrentUser.CreateSubKey(registryKeyPath))
+                {
+                    acceptKey?.SetValue(registryValueName, 1);
+                }
+                return true;
+            }
+
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(registryKeyPath))
             {
                 var eulaValue = key.GetValue(registryValueName);

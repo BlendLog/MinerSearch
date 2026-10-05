@@ -18,18 +18,31 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 > [!CAUTION]
 > ### Windows 7 is outdated. MinerSearch development for this OS has been discontinued.
 
-Version v1.4.9.4
+Version v1.4.9.5
 
-- Expanded service and autorun heuristics (including items hidden from standard system tools), fewer false positives
-- Added registry value quarantine with restore. Boot-critical system parameters are only cured
-- Added deletion of malicious files on the next reboot, reflected in the report
-- SHA1 of unsigned files is logged regardless of the verdict
+- Windows version detection mechanism updated
+- Improved accuracy of digital signature verification of files
+- Fixed display of file paths in the log
+- Improved detection of suspicious scheduled tasks
+- Expanded heuristics for scheduled tasks
+- Fixed the link to the download page when a new version is available
+- Eliminated false access errors during file analysis
+- Fixed background mode (--silent)
+- Eliminated endless attempts to remove unwanted Windows Defender exclusions
+- Restored WMI integrity check
+- Added handling of read errors for corrupted files
+- Optimized language resources (deduplication)
+- Expanded the list of detectable malicious services
+- Added scanning of COM autostart components
+- SHA1 hashes of unsigned files are now recorded at all scanning stages
+- Fixed analysis error for files locked by other processes
+- Eliminated false positives on a legitimate system process (conhost)
 
 --------------------------------------------
 
 ## How to use
 
-Completely unzip the archive with the program into a separate folder and launch the application. Wait for the scan to complete. When using the program for the first time, you are offered to report the scan results to the author at your discretion. After completion, a form will be shown with a brief report on the threats that have been eliminated. You can view the detailed report by clicking the "Open Report" button. Clicking the "Quarantine" button will open the Quarantine Manager, in which you can completely delete a file or restore it.
+Completely unzip the archive with the program into a separate folder and launch the application. Wait for the scan to complete. When using the program for the first time, you are offered to report the scan results to the author at your discretion. After completion, a form will be shown with a brief report on the threats that have been eliminated. You can view the detailed log by clicking the "Show Log" button. Clicking the "Quarantine" button will open the Quarantine Manager, in which you can completely delete a file or restore it.
 
 If unknown threats are found, the "Threat Review" window opens. For each item you can select an action (Cure, Quarantine, Delete, Terminate, Disable, Skip) or set a single action for all items ("Set to all"). The "Set recommended" button restores the actions recommended by the analyzers. If the window is closed without clicking "Apply", the recommended actions are applied after confirmation. Automatic acceptance of decisions for unknown threats can be enabled in "Open settings" or with the -norev parameter.
 
@@ -56,7 +69,6 @@ Additional launch parameters (usually not required):
 | `-h` | `--help` | Show this help message |
 | `-a` | `--accept-eula` | Accept the End-User License Agreement (EULA) |
 | `-nl` | `--no-logs` | Do not write logs to a file |
-| `-nstm` | `--no-scantime` | Scan only processes |
 | `-nwmi` | `--no-scan-wmi` | Do not check WMI integrity and/or event subscriptions |
 | `-nr` | `--no-runtime` | Do not scan processes (only directories, files, registry keys, etc.) |
 | `-nse` | `--no-services` | Skip scanning services |
@@ -76,12 +88,13 @@ Additional launch parameters (usually not required):
 | `-s` | `--select` | Scan only the selected directory, including subdirectories |
 | `-s=` | `--select= <path>` | Same as `--select (-s)`. Where `<path>` specifies the directory path to scan |
 | `-si` | `--silent` | Enables silent (background) mode without dialog boxes. The application switches to background mode, messages are not displayed, but are still written to the log. Incompatible with `--select` or `--winpemode` parameters. |
-| `-d=` | `--depth=<num>` | Where `<num>` is the maximum search depth level. Example usage: `-d=5` (default is 8) |
+| `-d=` | `--depth=<num>` | Where `<num>` is the maximum search depth level. Example usage: `-d=5` (default is 8, maximum is 16) |
 | `-v` | `--verbose` | Outputs detailed information about processes to the console, and also disables the filter for lines with files not recognized as malicious. May increase log file size. |
 | `-w` | `--winpemode` | Starts scanning in WinPE mode (without scanning processes, registry, firewall rules, services, scheduler tasks) |
 | `-q` | `--open-quarantine` | Open the quarantine manager |
-| `-res` | `--restore= <list>` | Restore files from quarantine in console mode (e.g., `1,2,3`). Enter `-q -cm` to view the list. |
-| `-del` | `--delete= <list>` | Delete files from quarantine in console mode (e.g., `1,2,3`). Enter `-q -cm` to view the list. |
+| `-res=` | `--restore= <list>` | Restore items (files, tasks, services, registry entries) from quarantine in console mode (e.g., `-res= 1,2,3`). Requires `-f`. Use `-q -cm` to view the list. |
+| `-del=` | `--delete= <list>` | Delete items from quarantine in console mode (e.g., `-del= 1,2,3`). Use `-q -cm` to view the list. |
+| `-norev` | `--no-review-interact` | Skip the Threat Review window; recommended actions are applied automatically to unknown threats |
 
 * Not necessarily in strict order
 ----------------------------

@@ -273,16 +273,6 @@ namespace MSearch
             {
                 Utils.CheckLatestReleaseVersion();
             }
-
-            if (_options.no_runtime && _options.no_scantime && !AppConfig.GetInstance.WinPEMode)
-            {
-                LocalizedLogger.LogErrorDisabledScan();
-                if (AppConfig.GetInstance.IsGuiAvailable)
-                {
-                    Console.ReadKey();
-                }
-                return;
-            }
 //#endif
 
             if (AppConfig.GetInstance.WinPEMode && _options.nosignaturescan)

@@ -60,9 +60,6 @@ namespace MSearch.Core
         /// <summary>--silent / -si — silent mode</summary>
         public bool silent { get; internal set; }
 
-        /// <summary>--no-scantime / -nstm — scan only processes</summary>
-        public bool no_scantime { get; internal set; }
-
         /// <summary>--no-scan-wmi / -nwmi — skip WMI scanning</summary>
         public bool no_scan_wmi { get; internal set; }
 
@@ -164,7 +161,7 @@ namespace MSearch.Core
             errors.Clear();
             parsed = false;
 
-            help = Force = silent = no_scantime = no_scan_wmi = nosignaturescan = false;
+            help = Force = silent = no_scan_wmi = nosignaturescan = false;
             no_runtime = no_scan_registry = no_scan_tasks = pause = false;
             RemoveEmptyTasks = no_rootkit_check = no_services = false;
             ScanOnly = fullScan = QuarantineMode = winpemode = false;
@@ -206,6 +203,15 @@ namespace MSearch.Core
                     continue;
                 }
 
+                // --accept-eula / -a
+                if (arg.Equals("--accept-eula", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("-a", StringComparison.OrdinalIgnoreCase))
+                {
+                    inst.accept_eula = true;
+                    continue;
+                }
+
+                // --no-logs / -nl
                 if (arg.Equals("--no-logs", StringComparison.OrdinalIgnoreCase) ||
                      arg.Equals("-nl", StringComparison.OrdinalIgnoreCase))
                 {
@@ -234,14 +240,6 @@ namespace MSearch.Core
                     arg.Equals("-cm", StringComparison.OrdinalIgnoreCase))
                 {
                     inst.console_mode = true;
-                    continue;
-                }
-
-                // --no-scantime / -nstm
-                if (arg.Equals("--no-scantime", StringComparison.OrdinalIgnoreCase) ||
-                    arg.Equals("-nstm", StringComparison.OrdinalIgnoreCase))
-                {
-                    inst.no_scantime = true;
                     continue;
                 }
 
@@ -520,7 +518,6 @@ namespace MSearch.Core
         private static readonly HashSet<string> PassiveArgs = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "--no-logs", "-nl",
-            "--accept-eula", "-a",
             "--console-mode", "-cm",
             "--silent", "-si"
         };

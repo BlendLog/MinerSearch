@@ -1555,24 +1555,6 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Error: you cannot disable all types of scanning.
-        /// </summary>
-        internal static string _ErrorDisabledScan_EN {
-            get {
-                return ResourceManager.GetString("_ErrorDisabledScan_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Ошибка: невозможно отключить все типы сканирования.
-        /// </summary>
-        internal static string _ErrorDisabledScan_RU {
-            get {
-                return ResourceManager.GetString("_ErrorDisabledScan_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на The file is only available online.
         /// </summary>
         internal static string _ErrorFileOnlineOnly_EN {
@@ -2190,7 +2172,6 @@ namespace MSearch.Properties {
         ///-h     --help                 Display this help message
         ///-a     --accept-eula          Accept the End-User License Agreement (EULA)
         ///-nl    --no-logs              Do not write logs to a file
-        ///-nstm  --no-scantime          Scan only running processes
         ///-nwmi  --no-scan-wmi          Do not check WMI and/or event subscription integrity
         ///-nr    --no-runtime           Do not scan running processes (only directories, files, registry keys, etc.)
         ///-nse   --no-services          Skip scanning servic [остаток строки не уместился]&quot;;.
@@ -2207,7 +2188,6 @@ namespace MSearch.Properties {
         ///-h     --help                 Вызов этой справки
         ///-a     --accept-eula          Принять лицензионное соглашение
         ///-nl    --no-logs              Не записывать лог в файл
-        ///-nstm  --no-scantime          Сканировать только процессы
         ///-nwmi  --no-scan-wmi          Не проверять целостность WMI и/или подписок на события
         ///-nr    --no-runtime           Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)
         ///-nse   --no-services          Пропустить сканирование служб

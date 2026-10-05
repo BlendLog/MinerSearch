@@ -234,25 +234,6 @@ namespace MSearch
 
         }
 
-        public static void LogErrorDisabledScan()
-        {
-            string message = Resources._ErrorDisabledScan_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._ErrorDisabledScan_RU;
-                    break;
-                case "EN":
-                    message = Resources._ErrorDisabledScan_EN;
-                    break;
-            }
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"\t\t{message}");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.Black;
-
-        }
-
         public static void LogPAUSE()
         {
             string message = Resources._PAUSE_EN;

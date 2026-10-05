@@ -702,9 +702,6 @@ Press any key to continue...</value>
   <data name="_Winver_RU" xml:space="preserve">
     <value>Версия Windows:</value>
   </data>
-  <data name="_ErrorDisabledScan_EN" xml:space="preserve">
-    <value>Error: you cannot disable all types of scanning</value>
-  </data>
   <data name="_ErrorLockedByAnotherProcess_EN" xml:space="preserve">
     <value>File used by another process</value>
   </data>
@@ -1153,9 +1150,6 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_ScanStarupFolder_RU" xml:space="preserve">
     <value>Сканирование каталога автозагрузки...</value>
-  </data>
-  <data name="_ErrorDisabledScan_RU" xml:space="preserve">
-    <value>Ошибка: невозможно отключить все типы сканирования</value>
   </data>
   <data name="_StartupCount_RU" xml:space="preserve">
     <value>Кол-во запусков</value>
@@ -1607,7 +1601,6 @@ Click \b Exit\b0  to exit.\par
 -h     --help                 Display this help message
 -a     --accept-eula          Accept the End-User License Agreement (EULA)
 -nl    --no-logs              Do not write logs to a file
--nstm  --no-scantime          Scan only running processes
 -nwmi  --no-scan-wmi          Do not check WMI and/or event subscription integrity
 -nr    --no-runtime           Do not scan running processes (only directories, files, registry keys, etc.)
 -nse   --no-services          Skip scanning services
@@ -1623,20 +1616,20 @@ Click \b Exit\b0  to exit.\par
 -ret   --remove-empty-tasks   Remove a task from Task Scheduler if its executable file does not exist
 -so    --scan-only            Report malicious or suspicious objects but do not remove or quarantine them
 -fs    --full-scan            Include all local drives in the signature scan
--ras   --run-as-system        [Temporarly removed]
 -f     --force                Suppress confirmation prompts for potentially dangerous actions
 -s     --select               Scan only the selected directory and its subdirectories (recursively)
 -s=    --select= &lt;path&gt;       Same as --select (-s). Specifies the directory path to scan.
 -si    --silent               Enable silent mode. The application runs in the background without dialog boxes. 
                               Messages are suppressed but still written to the log file. Incompatible with --select and --winpemode.
--d=    --depth=&lt;num&gt;          Sets the maximum scan depth. Example: -d=5 (default is 8).
+-d=    --depth=&lt;num&gt;          Sets the maximum scan depth. Example: -d=5 (default is 8, maximum is 16).
 -v     --verbose              Enable verbose output. Displays detailed process information and includes non-malicious files in the output. 
                               This may significantly increase the log file size.
 -w     --winpemode            Run the scan in WinPE mode 
                               (skips scanning processes, registry, firewall rules, services, and scheduled tasks).
 -q     --open-quarantine      Open the Quarantine Manager
--res   --restore= &lt;list&gt;      Restore files from quarantine in console mode (e.g., 1,2,3). Use '-q -cm' to see the list of quarantined items.
--del   --delete= &lt;list&gt;       Delete files from quarantine in console mode (e.g., 1,2,3). Use '-q -cm' to see the list of quarantined items.</value>
+-res=  --restore= &lt;list&gt;      Restore items from quarantine in console mode (e.g., -res= 1,2,3). Requires --force. Use '-q -cm' to see the list of quarantined items.
+-del=  --delete= &lt;list&gt;       Delete items from quarantine in console mode (e.g., -del= 1,2,3). Use '-q -cm' to see the list of quarantined items.
+-norev --no-review-interact   Skip the Threat Review window; recommended actions are applied automatically to unknown threats</value>
   </data>
   <data name="_ServiceDisabled_RU" xml:space="preserve">
     <value>Службы была отключена</value>
@@ -2081,7 +2074,6 @@ Click \b Exit\b0  to exit.\par
 -h     --help                 Вызов этой справки
 -a     --accept-eula          Принять лицензионное соглашение
 -nl    --no-logs              Не записывать лог в файл
--nstm  --no-scantime          Сканировать только процессы
 -nwmi  --no-scan-wmi          Не проверять целостность WMI и/или подписок на события
 -nr    --no-runtime           Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)
 -nse   --no-services          Пропустить сканирование служб
@@ -2097,20 +2089,20 @@ Click \b Exit\b0  to exit.\par
 -ret   --remove-empty-tasks   Удалять задачу из Планировщика задач, если файл приложения в ней не существует
 -so    --scan-only            Отображать вредоносный или подозрительный объект, но не выполнять лечение
 -fs    --full-scan            Целиком добавляет другие локальные диски для сигнатурного сканирования
--ras   --run-as-system        [Временно удалено]
 -f     --force                Служит для подавления запроса подтверждения потенциально опасных функций
 -s     --select               Сканировать только выбранный каталог, включая вложенные каталоги
 -s=    --select= &lt;путь&gt;       Аналогично --select (-s). Где &lt;путь&gt; укажите путь на каталог для проверки
 -si    --silent               Включает тихий (фоновый) режим без диалоговых окон. Приложение переходит в фоновый режим, сообщения
                               не отображаются, но по-прежнему записываются в лог. Несовместимо с параметрами --select или --winpemode.
--d=    --depth=&lt;num&gt;          Где &lt;num&gt; - уровень максимальной глубины поиска. Пример использования: -d=5 (по-умолчанию 8)
+-d=    --depth=&lt;num&gt;          Где &lt;num&gt; - уровень максимальной глубины поиска. Пример использования: -d=5 (по-умолчанию 8, максимум 16)
 -v     --verbose              Выводит подробные сведения о процессах в консоль, а также 
                               отключает фильтр строк с файлами не признанных вредоносными. Может увеличить размер лог-файла.
 -w     --winpemode            Запускает сканирование в режиме WinPE
                               (без сканирования процессов, реестра, правил фаерволла, служб, задач планировщика)
 -q     --open-quarantine      Открыть менеджер карантина
--res   --restore= &lt;list&gt;      Восстановление файлов из карантина в консольном режиме (например, 1,2,3). Введите -q -cm для просмотра списка.
--del   --delete= &lt;list&gt;       Удаление файлов из карантина в консольном режиме (например, 1,2,3). Введите -q -cm для просмотра списка.</value>
+-res=  --restore= &lt;list&gt;      Восстановление объектов из карантина в консольном режиме (например, -res= 1,2,3). Требуется --force. Введите -q -cm для просмотра списка.
+-del=  --delete= &lt;list&gt;       Удаление объектов из карантина в консольном режиме (например, -del= 1,2,3). Введите -q -cm для просмотра списка.
+-norev --no-review-interact   Пропустить окно обзора угроз; для неизвестных угроз автоматически применяются рекомендуемые действия</value>
   </data>
   <data name="_ScanOnlyMode_EN" xml:space="preserve">
     <value>Scan only mode</value>
