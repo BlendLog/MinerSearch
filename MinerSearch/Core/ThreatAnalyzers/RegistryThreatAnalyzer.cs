@@ -125,6 +125,9 @@ namespace MSearch.Core.ThreatAnalyzers
             // 12. Lsa Authentication Packages
             AnalyzeLsaAuthenticationPackages(reg, ref risk, ref isMalicious);
 
+            // 13. Custom CLSIDs (пользовательские COM-обработчики, только вывод информации)
+            AnalyzeCustomClsids(reg);
+
             if (risk == 0) yield break; // Угрозы нет
 
             ScanObjectType objType = isMalicious || risk >= 3 ? ScanObjectType.Malware : ScanObjectType.Suspicious;
@@ -382,7 +385,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 if (reg.NodeType == RegistryNodeType.Key)
                 {
                     string subKeyName = Path.GetFileName(reg.KeyPath); // Берем хвост пути
-                    if (MSData.GetInstance.badSubkeys.Contains(subKeyName, StringComparer.OrdinalIgnoreCase))
+                    if (MSData.GetInstance.badApplockerRules.Contains(subKeyName, StringComparer.OrdinalIgnoreCase))
                     {
                         risk += 3;
                         reg.ActionDelete = true;
@@ -631,6 +634,31 @@ namespace MSearch.Core.ThreatAnalyzers
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Разделы [Reg] HKU Custom CLSIDs / HKLM Custom CLSIDs: сбор информации о пользовательских
+        /// и общих InprocServer32. Неподписанные обработчики выводятся предупреждением, остальные —
+        /// только при --verbose. Решения не создаются: этап сбора данных, действия не применяются.
+        /// </summary>
+        private void AnalyzeCustomClsids(RegistryThreatObject reg)
+        {
+            if (reg.SectionName == null ||
+                !reg.SectionName.EndsWith("Custom CLSIDs", StringComparison.Ordinal))
+                return;
+
+            string guid = GetKeyName(reg.KeyPath);
+            string handlerPath = reg.ValueData;
+
+            if (reg.LinkedFile != null && !reg.LinkedFile.IsValidSignature)
+            {
+                AppConfig.GetInstance.LL.LogWarnMessage("_ClsidCustomHandler",
+                    $"{guid} [{reg.LinkedFile.TrustResult}] -> {handlerPath}");
+            }
+            else if (LaunchOptions.GetInstance.verbose)
+            {
+                AppConfig.GetInstance.LL.LogMessage("[.]", "_ClsidHandler", $"{guid} -> {handlerPath}", ConsoleColor.Gray);
             }
         }
 

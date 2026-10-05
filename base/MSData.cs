@@ -222,7 +222,7 @@ namespace DBase
 			new HashedString("b868b32c3ea132d50bd673545e3f3403",18), //zonerantivirus.com
 		};
 
-        public List<string> badSubkeys = new List<string>()
+        public List<string> badApplockerRules = new List<string>()
             {
                 "046f9638-b658-43ee-97f8-e15031db0b6f",
                 "0cfc12f8-7909-4835-90dd-68d33e7f0f10",

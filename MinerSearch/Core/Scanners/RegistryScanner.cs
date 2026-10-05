@@ -72,6 +72,13 @@ namespace MSearch.Core.Scanners
             // --- 12. App Paths (HKLM) ---
             CollectSubkeysAndSpecifiedValue(results, HKLM, msData.queries["AppPaths"], "App Paths");
 
+            // --- 13. Custom CLSIDs (пользовательские COM-обработчики, HKU) ---
+            var clsidLinkedFileCache = new Dictionary<string, FileThreatObject>(StringComparer.OrdinalIgnoreCase);
+            CollectHkuClsidHandlers(results, clsidLinkedFileCache);
+
+            // --- 14. Custom CLSIDs (общие COM-обработчики, HKLM) ---
+            CollectHklmClsidHandlers(results, clsidLinkedFileCache);
+
             return results;
         }
 
@@ -81,7 +88,7 @@ namespace MSearch.Core.Scanners
             return hiveName == "HKEY_LOCAL_MACHINE" ? Registry.LocalMachine : Registry.CurrentUser;
         }
 
-        FileThreatObject TryExtractLinkedFile(string commandLine)
+        FileThreatObject TryExtractLinkedFile(string commandLine, bool showUnsigned = true)
         {
             if (string.IsNullOrEmpty(commandLine)) return null;
 
@@ -93,7 +100,7 @@ namespace MSearch.Core.Scanners
                     return null;
                 }
 
-                WinVerifyTrustResult trustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(path, true);
+                WinVerifyTrustResult trustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(path, showUnsigned);
                 long fileSize = new FileInfo(path).Length;
 
                 var fileInfo = FileVersionInfo.GetVersionInfo(path);
@@ -316,6 +323,127 @@ namespace MSearch.Core.Scanners
                 results.Add(regObj);
             }
             catch (Exception) { }
+        }
+
+        /// <summary>
+        /// Пользовательские COM-обработчики (default-значение подраздела InprocServer32) из веток Classes
+        /// загруженных профилей: HKEY_USERS\&lt;SID&gt;_Classes\CLSID\&lt;GUID&gt;\InprocServer32.
+        /// HKCU\Software\Classes — merged-представление этих же данных, поэтому отдельно не сканируется.
+        /// </summary>
+        void CollectHkuClsidHandlers(List<IThreatObject> results, Dictionary<string, FileThreatObject> linkedFileCache)
+        {
+            const string sectionName = "HKU Custom CLSIDs";
+
+            try
+            {
+                RegistryKey users = Registry.Users;
+                if (users == null) return;
+
+                foreach (string sidKeyName in users.GetSubKeyNames())
+                {
+                    if (!sidKeyName.EndsWith("_Classes", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    string clsidPath = $@"{sidKeyName}\CLSID";
+
+                    try
+                    {
+                        CollectClsidHandlers(results, "HKEY_USERS", "HKU", users, clsidPath, sectionName, linkedFileCache);
+                    }
+                    catch (SecurityException se)
+                    {
+                        AppConfig.GetInstance.LL.LogErrorMessage("_AccessDenied", se, $@"HKEY_USERS\{clsidPath}");
+                    }
+                    catch (Exception) { }
+                }
+            }
+            catch (Exception) { }
+        }
+
+        /// <summary>
+        /// Общие COM-обработчики из HKLM\SOFTWARE\Classes\CLSID (64-битное представление, без Wow6432Node).
+        /// </summary>
+        void CollectHklmClsidHandlers(List<IThreatObject> results, Dictionary<string, FileThreatObject> linkedFileCache)
+        {
+            const string sectionName = "HKLM Custom CLSIDs";
+            const string clsidPath = @"SOFTWARE\Classes\CLSID";
+
+            try
+            {
+                CollectClsidHandlers(results, "HKEY_LOCAL_MACHINE", "HKLM", Registry.LocalMachine, clsidPath, sectionName, linkedFileCache);
+            }
+            catch (SecurityException se)
+            {
+                AppConfig.GetInstance.LL.LogErrorMessage("_AccessDenied", se, $@"HKEY_LOCAL_MACHINE\{clsidPath}");
+            }
+            catch (Exception) { }
+        }
+
+        /// <summary>
+        /// Общий перебор CLSID\{GUID}\InprocServer32 под указанным корнем.
+        /// linkedFileCache исключает повторные WinTrust/SHA1/FileVersionInfo для одинаковых путей.
+        /// </summary>
+        void CollectClsidHandlers(
+            List<IThreatObject> results,
+            string hive,
+            string hiveShort,
+            RegistryKey baseKey,
+            string clsidPath,
+            string sectionName,
+            Dictionary<string, FileThreatObject> linkedFileCache)
+        {
+            using (RegistryKey clsidKey = baseKey.OpenSubKey(clsidPath))
+            {
+                if (clsidKey == null)
+                    return;
+
+                foreach (string guidName in clsidKey.GetSubKeyNames())
+                {
+                    string guidPath = $@"{clsidPath}\{guidName}";
+                    string inprocPath = $@"{guidPath}\InprocServer32";
+
+                    try
+                    {
+                        using (RegistryKey inprocKey = baseKey.OpenSubKey(inprocPath))
+                        {
+                            if (inprocKey == null)
+                                continue;
+
+                            // Путь к DLL хранится в default-значении подраздела InprocServer32
+                            object rawValue = inprocKey.GetValue(null);
+                            if (rawValue == null)
+                                continue;
+
+                            string valueData = rawValue.ToString();
+                            if (string.IsNullOrWhiteSpace(valueData))
+                                continue;
+
+                            RegistryValueKind kind = inprocKey.GetValueKind(null);
+
+                            FileThreatObject linkedFile;
+                            if (!linkedFileCache.TryGetValue(valueData, out linkedFile))
+                            {
+                                // showUnsigned: false — выводом управляет анализатор (по verbose)
+                                linkedFile = TryExtractLinkedFile(valueData, showUnsigned: false);
+                                linkedFileCache[valueData] = linkedFile;
+                            }
+
+                            var regObj = new RegistryThreatObject(
+                                hive, guidPath, RegistryNodeType.Key,
+                                "InprocServer32", valueData, kind, false, linkedFile)
+                            {
+                                SectionName = sectionName
+                            };
+                            results.Add(regObj);
+                        }
+                    }
+                    catch (SecurityException se)
+                    {
+                        AppConfig.GetInstance.LL.LogErrorMessage("_AccessDenied", se, $@"{hiveShort}\{inprocPath}");
+                    }
+                    catch (Exception) { /* Игнорируем недоступные/сломанные пути */ }
+                }
+            }
         }
     }
 }

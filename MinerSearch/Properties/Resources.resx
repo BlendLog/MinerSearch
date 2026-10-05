@@ -2365,6 +2365,18 @@ Do you want to continue?
   <data name="_NoteDisallowRunBlocked_RU" xml:space="preserve">
     <value>Заблокированный запуск:</value>
   </data>
+  <data name="_ClsidHandler_EN" xml:space="preserve">
+    <value>COM handler (InprocServer32):</value>
+  </data>
+  <data name="_ClsidHandler_RU" xml:space="preserve">
+    <value>COM-обработчик (InprocServer32):</value>
+  </data>
+  <data name="_ClsidCustomHandler_EN" xml:space="preserve">
+    <value>Кастомный COM handler (InprocServer32):</value>
+  </data>
+  <data name="_ClsidCustomHandler_RU" xml:space="preserve">
+    <value>Кастомный COM-обработчик (InprocServer32):</value>
+  </data>
   <data name="_ReviewSetRecommendedBtn_EN" xml:space="preserve">
     <value>Set recommended</value>
   </data>
