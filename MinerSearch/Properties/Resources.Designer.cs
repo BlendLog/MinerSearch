@@ -871,7 +871,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Кастомный COM handler (InprocServer32):.
+        ///   Ищет локализованную строку, похожую на Custom COM handler (InprocServer32):.
         /// </summary>
         internal static string _ClsidCustomHandler_EN {
             get {
@@ -2174,7 +2174,8 @@ namespace MSearch.Properties {
         ///-nl    --no-logs              Do not write logs to a file
         ///-nwmi  --no-scan-wmi          Do not check WMI and/or event subscription integrity
         ///-nr    --no-runtime           Do not scan running processes (only directories, files, registry keys, etc.)
-        ///-nse   --no-services          Skip scanning servic [остаток строки не уместился]&quot;;.
+        ///-nse   --no-services          Skip scanning services
+        ///-nst   --no-scan-tasks        Skip scanning Scheduled T [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _Help_EN {
             get {
@@ -2191,7 +2192,7 @@ namespace MSearch.Properties {
         ///-nwmi  --no-scan-wmi          Не проверять целостность WMI и/или подписок на события
         ///-nr    --no-runtime           Не сканировать процессы (только каталоги, файлы, ключи реестра, и т.д.)
         ///-nse   --no-services          Пропустить сканирование служб
-        ///-nst   --no- [остаток строки не уместился]&quot;;.
+        ///-nst   --no-scan-tasks        Пропустить сканирование задач планировщик [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string _Help_RU {
             get {

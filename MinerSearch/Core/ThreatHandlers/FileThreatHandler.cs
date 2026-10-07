@@ -48,6 +48,13 @@ namespace MSearch.Core.ThreatHandlers
                 if (fileThreat.ShouldDeleteFile)
                     return HandleDeleteFile(path, decision);
 
+                // Deny-Execute уже применён в промежуточной фазе — фиксируем результат
+                if (fileThreat.ShouldDisableExecute)
+                {
+                    decision.ActionType = ScanActionType.Disabled;
+                    return ApplyResult.Success;
+                }
+
 #if DEBUG
                 Console.WriteLine($"[DBG FileSystemThreatHandler] SKIPPED — no flags set");
 #endif
@@ -144,6 +151,7 @@ namespace MSearch.Core.ThreatHandlers
                 if (!File.Exists(path))
                 {
                     decision.ActionType = ScanActionType.Deleted;
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_MaliciousFileDeleted", path);
                     return ApplyResult.Success;
                 }
 
@@ -151,6 +159,7 @@ namespace MSearch.Core.ThreatHandlers
                 if (!File.Exists(path))
                 {
                     decision.ActionType = ScanActionType.Deleted;
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_MaliciousFileDeleted", path);
                     return ApplyResult.Success;
                 }
 
@@ -187,7 +196,7 @@ namespace MSearch.Core.ThreatHandlers
 
         private ApplyResult HandleDisableExecutePhase(string path, ThreatDecision decision)
         {
-            if (IsDefenderLocked(path, decision, log: false))
+            if (IsDefenderLocked(path, decision))
                 return ApplyResult.LockedByAntivirus;
 
             try

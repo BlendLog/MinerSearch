@@ -771,11 +771,28 @@ namespace MSearch
         /// </summary>
         private static List<ThreatDecision> DeduplicateDecisions(List<ThreatDecision> decisions)
         {
-            return decisions
-                .Where(d => d != null && d.Target != null)
-                .GroupBy(d => GetDedupKey(d))
-                .Select(g => g.First())
-                .ToList();
+            var result = new List<ThreatDecision>();
+            var byKey = new Dictionary<string, ThreatDecision>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var d in decisions)
+            {
+                if (d == null || d.Target == null) continue;
+
+                string key = GetDedupKey(d);
+                if (!byKey.TryGetValue(key, out var existing))
+                {
+                    byKey[key] = d;
+                    result.Add(d);
+                    continue;
+                }
+
+                // Дубликат из другой фазы — переносим флаги, не теряем более сильное действие
+                ThreatManager.MergeTargetFlags(existing.Target, d.Target);
+                if (ThreatManager.ActionPriority(d.ActionType) < ThreatManager.ActionPriority(existing.ActionType))
+                    existing.ActionType = d.ActionType;
+            }
+
+            return result;
         }
 
         private static string GetDedupKey(ThreatDecision d)

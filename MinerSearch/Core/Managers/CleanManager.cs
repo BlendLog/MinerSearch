@@ -312,8 +312,8 @@ namespace MSearch.Core.Managers
                     {
                         if (file.ShouldMoveFileToQuarantine) return ScanActionType.Quarantine;
                         if (file.ShouldDeleteFile) return ScanActionType.Deleted;
+                        if (file.ShouldDisableExecute) return ScanActionType.Disabled;
                     }
-                    // Для файлов никогда не используем Disabled - только для служб
                     return ScanActionType.Deleted;
 
                 case ThreatObjectKind.Directory:

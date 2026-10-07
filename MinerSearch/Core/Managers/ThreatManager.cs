@@ -142,7 +142,7 @@ namespace MSearch.Core.Managers
 
         private void _AggregateDecision(ThreatDecision decision)
         {
-            string id = decision.Target.Id;
+            string id = GetAggregationKey(decision.Target);
 
             if (!_aggregatedDecisions.TryGetValue(id, out var existing))
             {
@@ -150,14 +150,63 @@ namespace MSearch.Core.Managers
                 return;
             }
 
-            // Конфликт — выбираем приоритетное действие
+            // Один файл может быть найден несколькими анализаторами — флаги объединяем
             if (ActionPriority(decision.ActionType) < ActionPriority(existing.ActionType))
             {
+                MergeTargetFlags(decision.Target, existing.Target);
                 _aggregatedDecisions[id] = decision;
+            }
+            else
+            {
+                MergeTargetFlags(existing.Target, decision.Target);
             }
         }
 
-        private static int ActionPriority(ScanActionType action)
+        private static string GetAggregationKey(IThreatObject target)
+        {
+            var file = target as FileThreatObject;
+            if (file != null && !string.IsNullOrEmpty(file.FilePath))
+            {
+                string path = file.FilePath;
+                if (path.StartsWith(@"\\?\", StringComparison.Ordinal)) path = path.Substring(4);
+                return "File|" + path;
+            }
+            return target.Kind + "|" + (target.Id ?? string.Empty);
+        }
+
+        // Delete > Quarantine > Disable
+        internal static void MergeTargetFlags(IThreatObject target, IThreatObject other)
+        {
+            var file = target as FileThreatObject;
+            var otherFile = other as FileThreatObject;
+            if (file == null || otherFile == null) return;
+
+            if (otherFile.ShouldDeleteFile)
+            {
+                file.ShouldDeleteFile = true;
+                file.ShouldMoveFileToQuarantine = false;
+            }
+            else if (otherFile.ShouldMoveFileToQuarantine && !file.ShouldDeleteFile)
+            {
+                file.ShouldMoveFileToQuarantine = true;
+            }
+
+            file.ShouldDisableExecute |= otherFile.ShouldDisableExecute;
+            file.IsLockedByAntivirus |= otherFile.IsLockedByAntivirus;
+            file.DeleteScheduledOnReboot |= otherFile.DeleteScheduledOnReboot;
+
+            if (otherFile.AnalysisResult != null &&
+                (file.AnalysisResult == null ||
+                 (otherFile.AnalysisResult.IsMalicious && !file.AnalysisResult.IsMalicious)))
+            {
+                file.AnalysisResult = otherFile.AnalysisResult;
+            }
+
+            if (string.IsNullOrEmpty(file.SourceTag) && !string.IsNullOrEmpty(otherFile.SourceTag))
+                file.SourceTag = otherFile.SourceTag;
+        }
+
+        internal static int ActionPriority(ScanActionType action)
         {
             return _actionPriority.TryGetValue(action, out int priority) ? priority : 99;
         }

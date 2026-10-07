@@ -2364,7 +2364,7 @@ Do you want to continue?
     <value>COM-обработчик (InprocServer32):</value>
   </data>
   <data name="_ClsidCustomHandler_EN" xml:space="preserve">
-    <value>Кастомный COM handler (InprocServer32):</value>
+    <value>Custom COM handler (InprocServer32):</value>
   </data>
   <data name="_ClsidCustomHandler_RU" xml:space="preserve">
     <value>Кастомный COM-обработчик (InprocServer32):</value>
