@@ -8,7 +8,7 @@ namespace MSearch.Core.ThreatDecisions
         public int RiskLevel { get; }
 
         public ScanObjectType ObjectType { get; internal set; }
-        public ScanActionType ActionType { get; internal set; }
+        public ScanActionType ActionType { get; internal set; } = ScanActionType.Skipped;
 
         /// <summary>
         /// Действие, выбранное пользователем в review-UI.

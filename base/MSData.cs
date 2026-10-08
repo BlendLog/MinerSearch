@@ -961,14 +961,16 @@ namespace DBase
             return false;
         }
 
-        static string NormalizeKnownPath(string value)
+        public static string NormalizeKnownPath(string value)
         {
             if (string.IsNullOrEmpty(value))
                 return string.Empty;
 
             string result = value.Trim().Trim('"');
 
-            if (result.StartsWith(@"\\?\", StringComparison.Ordinal)) result = result.Substring(4);
+            if (result.StartsWith(@"\\?\UNC\", StringComparison.OrdinalIgnoreCase))
+                result = @"\\" + result.Substring(8);
+            else if (result.StartsWith(@"\\?\", StringComparison.Ordinal)) result = result.Substring(4);
             else if (result.StartsWith(@"\??\", StringComparison.Ordinal)) result = result.Substring(4);
             else if (result.StartsWith(@"\\.\", StringComparison.Ordinal)) result = result.Substring(4);
 

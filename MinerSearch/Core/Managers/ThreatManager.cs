@@ -167,9 +167,7 @@ namespace MSearch.Core.Managers
             var file = target as FileThreatObject;
             if (file != null && !string.IsNullOrEmpty(file.FilePath))
             {
-                string path = file.FilePath;
-                if (path.StartsWith(@"\\?\", StringComparison.Ordinal)) path = path.Substring(4);
-                return "File|" + path;
+                return "File|" + MSData.NormalizeKnownPath(file.FilePath);
             }
             return target.Kind + "|" + (target.Id ?? string.Empty);
         }

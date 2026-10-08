@@ -25,6 +25,7 @@ namespace MSearch.Core.Managers
         static readonly object _headerLock = new object();
 
         private readonly LaunchOptions _options;
+        private readonly HashSet<string> _recordedLockedPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         public CleanManager(IEnumerable<IThreatHandler> handlers, IScanState state)
         {
@@ -35,6 +36,8 @@ namespace MSearch.Core.Managers
 
         public void BeginFinalCleanup()
         {
+            _recordedLockedPaths.Clear();
+
             if (!_processingHeaderLogged)
             {
                 lock (_headerLock)
@@ -208,6 +211,10 @@ namespace MSearch.Core.Managers
             // Определяем ScanActionType на основе ApplyResult и фазы
             ScanActionType actionType = MapResultToActionType(result, decision);
 
+            // Locked-by-AV отражаем один раз на объект (в т.ч. при разных спеллингах пути)
+            if (actionType == ScanActionType.LockedByAntivirus && !_recordedLockedPaths.Add(GetLockedKey(decision)))
+                return;
+
             // Формируем описание для лога
             string description = GetDescription(decision);
 
@@ -250,6 +257,22 @@ namespace MSearch.Core.Managers
                     _state.IncrementNeutralizedThreats();
                 }
             }
+        }
+
+        /// <summary>
+        /// Ключ для дедупликации строк LockedByAntivirus: нормализованный путь файла или Id объекта.
+        /// </summary>
+        private static string GetLockedKey(ThreatDecision decision)
+        {
+            var file = decision.Target as FileThreatObject;
+            if (file != null && !string.IsNullOrEmpty(file.FilePath))
+            {
+                string normalized = MSData.NormalizeKnownPath(file.FilePath);
+                if (!string.IsNullOrEmpty(normalized))
+                    return normalized;
+            }
+
+            return decision.Target.Kind + "|" + (decision.Target.Id ?? string.Empty);
         }
 
         private ScanActionType MapResultToActionType(ApplyResult result, ThreatDecision decision)

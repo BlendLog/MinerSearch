@@ -196,7 +196,8 @@ namespace MSearch.Core.ThreatHandlers
 
         private ApplyResult HandleDisableExecutePhase(string path, ThreatDecision decision)
         {
-            if (IsDefenderLocked(path, decision))
+            // Промежуточная фаза неинформативна: о блокировке ACL сообщаем только в Finalize
+            if (IsDefenderLocked(path, decision, log: false))
                 return ApplyResult.LockedByAntivirus;
 
             try

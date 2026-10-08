@@ -503,18 +503,23 @@ namespace MSearch
 
 
             allFinalizeDecisions = DeduplicateDecisions(allFinalizeDecisions);
-            var knownDecisions = allFinalizeDecisions.Where(d => IsKnownThreat(d)).ToList();
-            var unknownDecisions = allFinalizeDecisions.Where(d => !IsKnownThreat(d)).ToList();
+
+            // Заблокированные Defender-ом объекты не показываем в review, но отражаем в FinishEx.
+            // Обрабатываем их отдельным батчем ровно один раз.
+            var lockedByAvDecisions = allFinalizeDecisions.Where(d => IsLockedByAv(d)).ToList();
+            var knownDecisions = allFinalizeDecisions.Where(d => !IsLockedByAv(d) && IsKnownThreat(d)).ToList();
+            var unknownDecisions = allFinalizeDecisions.Where(d => !IsLockedByAv(d) && !IsKnownThreat(d)).ToList();
 
             // Все неизвестные угрозы из всех типов сканов → FormThreatReview
             // Rootkit (Other) всегда обрабатывается автоматически — исключаем из review
-            // Заблокированные Defender-ом файлы не трогаем вообще — их не показываем и не предлагаем действия
             var allUnknownDecisions = unknownDecisions
                 .Where(d => d.Target.Kind != ThreatObjectKind.Other)
-                .Where(d => d.ActionType != ScanActionType.LockedByAntivirus)
                 .ToList();
 
             cleanManager.BeginFinalCleanup();
+
+            if (lockedByAvDecisions.Count > 0)
+                cleanManager.ApplyDecisions(lockedByAvDecisions, CleanupPhase.Finalize);
 
             var sortedKnownDecisions = knownDecisions.OrderBy(d => (int)d.Target.Kind).ToList();
             foreach (var decision in sortedKnownDecisions)
@@ -604,19 +609,21 @@ namespace MSearch
             if (decisionsToSkip.Count > 0)
                 cleanManager.ApplySkippedDecisions(decisionsToSkip);
 
-            var alreadyAppliedIds = new HashSet<string>(
-                processDecisions.Select(d => d.Target.Id)
-                    .Concat(commonDecisions.Select(d => d.Target.Id))
-                    .Concat(knownDecisions.Select(d => d.Target.Id))
-                    .Concat(decisionsToApply.Select(d => d.Target.Id))
-                    .Concat(decisionsToSkip.Select(d => d.Target.Id)));
-            
+            // Ссылочное множество уже обработанных Finalize-решений.
+            // Ключ по Target.Id здесь ненадёжен: у сигнатурных файлов Id пустой,
+            // а разные объекты могут иметь совпадающий Id.
+            var alreadyApplied = new HashSet<ThreatDecision>(
+                knownDecisions
+                    .Concat(decisionsToApply)
+                    .Concat(decisionsToSkip)
+                    .Concat(lockedByAvDecisions));
+
             // Применяем только оставшиеся Finalize-решения (например signatureDecisions,
             // которые не попали ни в knownDecisions, ни в unknownDecisions)
             var finalizeOnlyDecisions = allFinalizeDecisions
-                .Where(d => d != null && !alreadyAppliedIds.Contains(d.Target.Id))
+                .Where(d => d != null && !alreadyApplied.Contains(d))
                 .ToList();
-            
+
             if (finalizeOnlyDecisions.Count > 0)
             {
                 cleanManager.ApplyDecisions(finalizeOnlyDecisions, CleanupPhase.Finalize);
@@ -795,20 +802,34 @@ namespace MSearch
             return result;
         }
 
+        /// <summary>
+        /// Файл заблокирован Defender-ом: объект не трогаем, в review не показываем,
+        /// но отражаем в результатах FinishEx (ровно один раз).
+        /// </summary>
+        private static bool IsLockedByAv(ThreatDecision decision)
+        {
+            if (decision == null || decision.Target == null)
+                return false;
+
+            if (decision.ActionType == ScanActionType.LockedByAntivirus)
+                return true;
+
+            var file = decision.Target as FileThreatObject;
+            return file != null && file.IsLockedByAntivirus;
+        }
+
         private static string GetDedupKey(ThreatDecision d)
         {
-            // Для файлов: всегда нормализованный путь (без \\?\).
+            // Для файлов: всегда нормализованный путь (без \\?\ / \??\).
             // Хеш не используется — разные сканеры могут вычислять хеш по-разному или не вычислять вовсе.
             if (d.Target is FileThreatObject file && !string.IsNullOrEmpty(file.FilePath))
             {
-                string normalizedPath = file.FilePath.StartsWith(@"\\?\") ? file.FilePath.Substring(4) : file.FilePath;
-                return "File:" + normalizedPath;
+                return "File:" + MSData.NormalizeKnownPath(file.FilePath);
             }
             // Для каталогов: нормализованный путь
             if (d.Target is DirectoryThreatObject dir && !string.IsNullOrEmpty(dir.DirectoryPath))
             {
-                string normalizedPath = dir.DirectoryPath.StartsWith(@"\\?\") ? dir.DirectoryPath.Substring(4) : dir.DirectoryPath;
-                return "Dir:" + normalizedPath;
+                return "Dir:" + MSData.NormalizeKnownPath(dir.DirectoryPath);
             }
             // Для всех остальных: Target.Id
             return d.Target.Kind + ":" + (d.Target.Id ?? "");

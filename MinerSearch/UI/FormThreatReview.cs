@@ -140,7 +140,7 @@ namespace MSearch.UI
                 string @class = GetLocalizedClassName(decision.Target.Kind);
 
                 // Действие по умолчанию — на основе флагов threat-объекта, а не ActionType
-                // (ActionType по умолчанию == Cured, анализаторы его не выставляют)
+                // (ActionType по умолчанию Skipped и выставляется только при явном решении)
                 var defaultUserAction = GetDefaultUserActionFromFlags(decision);
                 string defaultActionText = GetLocalizedUserActionName(defaultUserAction);
 
