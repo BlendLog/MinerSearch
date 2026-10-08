@@ -907,14 +907,8 @@ namespace DBase
                 int index = normalizedText.IndexOf(normalizedDir, StringComparison.OrdinalIgnoreCase);
                 while (index >= 0)
                 {
-                    int end = index + normalizedDir.Length;
-                    if (end >= normalizedText.Length)
-                        return true;
-
-                    char next = normalizedText[end];
-                    if (next == '\\' || next == '/' || char.IsWhiteSpace(next) ||
-                        next == '"' || next == '\'' || next == ';' || next == ',' ||
-                        next == '&' || next == '|' || next == ')' || next == ']')
+                    if (IsKnownDirLeftBoundary(normalizedText, index) &&
+                        IsKnownDirRightBoundary(normalizedText, index + normalizedDir.Length))
                     {
                         return true;
                     }
@@ -924,6 +918,28 @@ namespace DBase
             }
 
             return false;
+        }
+
+        static bool IsKnownDirLeftBoundary(string text, int index)
+        {
+            if (index == 0)
+                return true;
+
+            char prev = text[index - 1];
+            return char.IsWhiteSpace(prev) || prev == '"' || prev == '\'' || prev == '=' ||
+                   prev == '(' || prev == '[' || prev == ',' || prev == ';' || prev == '&' ||
+                   prev == '|' || prev == ':' || prev == '/';
+        }
+
+        static bool IsKnownDirRightBoundary(string text, int end)
+        {
+            if (end >= text.Length)
+                return true;
+
+            char next = text[end];
+            return next == '\\' || next == '/' || next == '"' || next == '\'' ||
+                   next == ';' || next == ',' || next == '&' || next == '|' ||
+                   next == ')' || next == ']';
         }
 
         public bool IsKnownMaliciousPath(string path)
