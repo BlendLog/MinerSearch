@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Threading;
@@ -223,14 +224,22 @@ namespace MSearch.Core.Handlers
                 }
             }
 
-            // 3. Останавливаем, только если явно запрошено (UI-карантин). В авто-режиме — pending delete до перезагрузки.
-            if (svc.Status == ServiceControllerStatus.Running && svc.ShouldStopService)
+            // 3. Останавливаем работающую службу, если запрошено или если её файлы
+            //    (ServiceDll / образ) должны быть удалены/карантинены: пока svchost
+            //    держит DLL, файл заблокирован и снимок карантина не снимается.
+            bool hasPendingLinkedFiles = HasPendingLinkedFileRemoval(svc);
+            bool stopRequested = svc.ShouldStopService || hasPendingLinkedFiles;
+
+            if (svc.Status == ServiceControllerStatus.Running && stopRequested)
             {
                 try
                 {
                     service.Stop();
                     service.WaitForStatus(ServiceControllerStatus.Stopped, new TimeSpan(0, 0, 30));
                     AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceStopped", serviceName);
+
+                    if (hasPendingLinkedFiles)
+                        WaitForLinkedFilesUnload(svc);
                 }
                 catch (Exception ex)
                 {
@@ -266,6 +275,51 @@ namespace MSearch.Core.Handlers
             AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceQuarantined", serviceName);
             decision.ActionType = ScanActionType.Quarantine;
             return ApplyResult.Success;
+        }
+
+        static bool HasPendingLinkedFileRemoval(ServiceThreatObject svc)
+        {
+            return HasPendingFileFlags(svc?.LinkedServiceFile) || HasPendingFileFlags(svc?.LinkedServiceDll);
+        }
+
+        static bool HasPendingFileFlags(FileThreatObject file)
+        {
+            return file != null && (file.ShouldDeleteFile || file.ShouldMoveFileToQuarantine);
+        }
+
+        static void WaitForLinkedFilesUnload(ServiceThreatObject svc, int timeoutMs = 3000)
+        {
+            var paths = new System.Collections.Generic.List<string>();
+
+            foreach (var file in new[] { svc?.LinkedServiceFile, svc?.LinkedServiceDll })
+            {
+                if (file == null || string.IsNullOrEmpty(file.FilePath)) continue;
+                if (!HasPendingFileFlags(file)) continue;
+                paths.Add(file.FilePath);
+            }
+
+            if (paths.Count == 0) return;
+
+            Stopwatch sw = Stopwatch.StartNew();
+            while (sw.ElapsedMilliseconds < timeoutMs)
+            {
+                bool anyLoaded = false;
+                foreach (string path in paths)
+                {
+                    try
+                    {
+                        if (File.Exists(path) && ProcessManager.GetProcessIdByFilePath(path) != 0)
+                        {
+                            anyLoaded = true;
+                            break;
+                        }
+                    }
+                    catch { }
+                }
+
+                if (!anyLoaded) return;
+                Thread.Sleep(200);
+            }
         }
 
         /// <summary>

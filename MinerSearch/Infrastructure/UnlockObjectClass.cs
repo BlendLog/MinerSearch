@@ -563,7 +563,15 @@ namespace MSearch
                         return true;
                 }
             }
-            catch (Exception) { }
+            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
+            {
+                AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
+            }
+            catch (Exception)
+            {
+                // Отказ доступа/блокировка — попробуем снять процесс-держатель ниже.
+                // Итоговая ошибка удаления логируется вызывающим кодом, без дублей.
+            }
 
             uint processId = 0;
             try
@@ -588,17 +596,14 @@ namespace MSearch
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
             }
-            catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
+            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80070057)) ||
+                                      e.HResult.Equals(unchecked((int)0x80131509)))
             {
                 AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
             }
-            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80131509)))
+            catch (Exception)
             {
-                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
-            }
-            catch (Exception ex)
-            {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, filePath, "_ObjectType_File");
+
             }
 
             try
@@ -615,17 +620,9 @@ namespace MSearch
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", filePath);
             }
-            catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
+            catch (Exception)
             {
-                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
-            }
-            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80131509)))
-            {
-                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {processId}");
-            }
-            catch (Exception ex)
-            {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", ex, filePath, "_ObjectType_File");
+                // Не логируем: вызывающий код напишет одну итоговую ошибку (_ErrorCannotRemove)
             }
 
             return false;

@@ -5208,7 +5208,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Службы была отключена.
+        ///   Ищет локализованную строку, похожую на Служба была отключена.
         /// </summary>
         internal static string _ServiceDisabled_RU {
             get {
@@ -5478,7 +5478,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Службы была остановлена.
+        ///   Ищет локализованную строку, похожую на Служба была остановлена.
         /// </summary>
         internal static string _ServiceStopped_RU {
             get {

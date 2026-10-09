@@ -898,7 +898,16 @@ namespace MSearch
             {
                 do
                 {
-                    Process process = Process.GetProcessById((int)processEntry.th32ProcessID);
+                    Process process;
+                    try
+                    {
+                        process = Process.GetProcessById((int)processEntry.th32ProcessID);
+                    }
+                    catch (ArgumentException)
+                    {
+                        // PID завершился между снимком и открытием — пропускаем
+                        continue;
+                    }
 
                     try
                     {
@@ -914,6 +923,10 @@ namespace MSearch
                     catch (Exception)
                     {
                         // Ignore any exceptions caused by accessing the process modules.
+                    }
+                    finally
+                    {
+                        process.Dispose();
                     }
                 } while (Native.Process32Next(snapshotHandle, ref processEntry));
             }

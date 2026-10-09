@@ -1527,7 +1527,7 @@ Click \b Exit\b0  to exit.\par
     <value>Copied</value>
   </data>
   <data name="_ServiceStopped_RU" xml:space="preserve">
-    <value>Службы была остановлена</value>
+    <value>Служба была остановлена</value>
   </data>
   <data name="_ProcessFound_EN" xml:space="preserve">
     <value>Malicious process detected! Risk level:</value>
@@ -1632,7 +1632,7 @@ Click \b Exit\b0  to exit.\par
 -norev --no-review-interact   Skip the Threat Review window; recommended actions are applied automatically to unknown threats</value>
   </data>
   <data name="_ServiceDisabled_RU" xml:space="preserve">
-    <value>Службы была отключена</value>
+    <value>Служба была отключена</value>
   </data>
   <data name="_ServiceQuarantined_RU" xml:space="preserve">
     <value>Служба перемещена в карантин</value>

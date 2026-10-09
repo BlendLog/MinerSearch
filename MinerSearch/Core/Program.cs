@@ -521,7 +521,7 @@ namespace MSearch
             if (lockedByAvDecisions.Count > 0)
                 cleanManager.ApplyDecisions(lockedByAvDecisions, CleanupPhase.Finalize);
 
-            var sortedKnownDecisions = knownDecisions.OrderBy(d => (int)d.Target.Kind).ToList();
+            var sortedKnownDecisions = knownDecisions.OrderBy(d => CleanManager.GetCleanupOrder(d.Target.Kind)).ToList();
             foreach (var decision in sortedKnownDecisions)
             {
                 cleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize);

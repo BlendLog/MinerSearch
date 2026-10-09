@@ -53,6 +53,28 @@ namespace MSearch.Core.Managers
             }
         }
 
+        /// <summary>
+        /// Порядок применения решений
+        /// </summary>
+        internal static int GetCleanupOrder(ThreatObjectKind kind)
+        {
+            switch (kind)
+            {
+                case ThreatObjectKind.Process: return 0;
+                case ThreatObjectKind.RegistryObject: return 1;
+                case ThreatObjectKind.Service: return 2;
+                case ThreatObjectKind.File: return 3;
+                case ThreatObjectKind.Directory: return 4;
+                case ThreatObjectKind.FirewallRule: return 5;
+                case ThreatObjectKind.UserProfile: return 6;
+                case ThreatObjectKind.WmiSubscription: return 7;
+                case ThreatObjectKind.ScheduledTask: return 8;
+                case ThreatObjectKind.ShellStartupFile: return 9;
+                case ThreatObjectKind.Hosts: return 10;
+                default: return 11;
+            }
+        }
+
         public void ApplyDecisions(IEnumerable<ThreatDecision> decisions, CleanupPhase phase)
         {
             if (_options.ScanOnly)
@@ -80,7 +102,7 @@ namespace MSearch.Core.Managers
             var groupedByKind = decisions
                 .Where(d => d != null && d.Target != null)
                 .GroupBy(d => d.Target.Kind)
-                .OrderBy(g => (int)g.Key)
+                .OrderBy(g => GetCleanupOrder(g.Key))
                 .ToList();
 
             bool logPhaseHeaders = phase == CleanupPhase.Finalize && groupedByKind.Count > 1;

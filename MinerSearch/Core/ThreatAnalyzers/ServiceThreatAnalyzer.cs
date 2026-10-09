@@ -308,6 +308,7 @@ namespace MSearch.Core.ThreatAnalyzers
             if (svc.HasUnsignedServiceDll || forceQuarantineService)
             {
                 svc.ShouldQuarantineService = true;
+                svc.ShouldStopService = true;
             }
             else if (isMalicious)
             {
