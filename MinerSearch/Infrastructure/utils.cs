@@ -2591,6 +2591,10 @@ namespace MSearch
 
         public static string NormalizeExtendedPath(string path)
         {
+            if (string.IsNullOrEmpty(path))
+            {
+                return path;
+            }
 
             if (path.StartsWith(@"\Device\", StringComparison.OrdinalIgnoreCase))
             {
@@ -2617,6 +2621,11 @@ namespace MSearch
             catch (ArgumentException)
             {
                 AppConfig.GetInstance?.LL.LogWarnMessage("_InvalidCharInPath", path);
+                return path;
+            }
+            catch (Exception ex) when (ex is NotSupportedException || ex is PathTooLongException)
+            {
+                AppConfig.GetInstance?.LL.LogWarnMessage("_UnsupportedPathFormat", path);
                 return path;
             }
 

@@ -209,7 +209,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             string fullPath = proc.FileProcess.FilePath;
             string appData = FileSystemManager.NormalizeExtendedPath(Environment.GetEnvironmentVariable("AppData")) ?? "";
-            if (!proc.FileProcess.IsValidSignature && fullPath.StartsWith(appData, StringComparison.OrdinalIgnoreCase) && string.IsNullOrEmpty(Path.GetExtension(fullPath)))
+            if (!proc.FileProcess.IsValidSignature && !string.IsNullOrEmpty(appData) && fullPath.StartsWith(appData, StringComparison.OrdinalIgnoreCase) && string.IsNullOrEmpty(Path.GetExtension(fullPath)))
             {
                 AppConfig.GetInstance.LL.LogWarnMessage("_SuspiciousPath", fullPath);
                 proc.FileProcess.IsSuspiciousPath = true;

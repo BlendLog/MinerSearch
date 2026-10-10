@@ -2291,7 +2291,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Obfuscated if exist (0x22) in task:.
+        ///   Ищет локализованную строку, похожую на Hex quote-masked path.
         /// </summary>
         internal static string _IfExistHexQuoteTask_EN {
             get {
@@ -2300,7 +2300,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Обфусцированный if exist (0x22) в задаче:.
+        ///   Ищет локализованную строку, похожую на 16-ричное экранирование кавычек пути.
         /// </summary>
         internal static string _IfExistHexQuoteTask_RU {
             get {
@@ -6113,6 +6113,24 @@ namespace MSearch.Properties {
         internal static string _UnsignedExeInSystemLocation_RU {
             get {
                 return ResourceManager.GetString("_UnsignedExeInSystemLocation_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Unsupported path format, normalization skipped:.
+        /// </summary>
+        internal static string _UnsupportedPathFormat_EN {
+            get {
+                return ResourceManager.GetString("_UnsupportedPathFormat_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Неподдерживаемый формат пути, нормализация пропущена:.
+        /// </summary>
+        internal static string _UnsupportedPathFormat_RU {
+            get {
+                return ResourceManager.GetString("_UnsupportedPathFormat_RU", resourceCulture);
             }
         }
         

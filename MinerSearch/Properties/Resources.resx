@@ -523,6 +523,9 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_InvalidCharInPath_EN" xml:space="preserve">
     <value>Invalid characters in path (IsPathRooted failed):</value>
   </data>
+  <data name="_UnsupportedPathFormat_EN" xml:space="preserve">
+    <value>Unsupported path format, normalization skipped:</value>
+  </data>
   <data name="_CriticalServiceRestart_RU" xml:space="preserve">
     <value>Важный для работы компонент (служба) был перезапущен</value>
   </data>
@@ -929,6 +932,9 @@ Press any key to continue...</value>
   </data>
   <data name="_InvalidCharInPath_RU" xml:space="preserve">
     <value>Недопустимые символы в пути (сбой IsPathRooted):</value>
+  </data>
+  <data name="_UnsupportedPathFormat_RU" xml:space="preserve">
+    <value>Неподдерживаемый формат пути, нормализация пропущена:</value>
   </data>
   <data name="_WMIEvent_EN" xml:space="preserve">
     <value>WMI Event </value>
@@ -2442,10 +2448,10 @@ Do you want to continue?
     <value>Задача использует mshta:</value>
   </data>
   <data name="_IfExistHexQuoteTask_EN" xml:space="preserve">
-    <value>Obfuscated if exist (0x22) in task:</value>
+    <value>Hex quote-masked path</value>
   </data>
   <data name="_IfExistHexQuoteTask_RU" xml:space="preserve">
-    <value>Обфусцированный if exist (0x22) в задаче:</value>
+    <value>16-ричное экранирование кавычек пути</value>
   </data>
   <data name="_TempBinaryTask_EN" xml:space="preserve">
     <value>Task runs a binary from %TEMP%:</value>

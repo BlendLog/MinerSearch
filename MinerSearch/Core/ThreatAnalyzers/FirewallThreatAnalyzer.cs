@@ -1,7 +1,6 @@
 using DBase;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
-using MSearch.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +37,7 @@ namespace MSearch.Core.ThreatAnalyzers
             int risk = 0;
             bool isMalicious = false;
 
-            if (IsKnownMaliciousFile(FileSystemManager.NormalizeExtendedPath(rule.ApplicationName)))
+            if (IsKnownMaliciousFile(rule.ApplicationName))
             {
                 AppConfig.GetInstance.LL.LogMessage("[.]", "_FirewallRule_Matched", $"{rule.RuleName} → {rule.ApplicationName}", ConsoleColor.Gray);
                 risk += 3;
