@@ -50,11 +50,12 @@ namespace MSearch.Core.ThreatAnalyzers
             if (string.IsNullOrEmpty(commandLine))
                 return false;
 
+            var data = DBase.MSData.GetInstance;
+
             return commandLine.Contains("..\\") ||
-                   commandLine.Contains("cmd.exe /c ") ||
-                   commandLine.IndexOf(DBase.MSData.GetInstance.SysFileName[39], StringComparison.OrdinalIgnoreCase) >= 0 ||
-                   commandLine.IndexOf("javascript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                   commandLine.IndexOf("vbscript:", StringComparison.OrdinalIgnoreCase) >= 0;
+                   DBase.MSData.ContainsAnyMarker(commandLine, data.markerSets[DBase.MSKeys.WmiCommandMarkers]) ||
+                   commandLine.IndexOf(data.SysFileName[39], StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   DBase.MSData.ContainsAnyMarker(commandLine, data.markerSets[DBase.MSKeys.ScriptMarkers]);
         }
     }
 }

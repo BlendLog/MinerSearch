@@ -178,16 +178,16 @@ namespace MSearch.Core.ThreatAnalyzers
         {
             if (reg.KeyPath.Equals(MSData.GetInstance.queries["WindowsNT_CurrentVersion_Windows"], StringComparison.OrdinalIgnoreCase))
             {
-                if (reg.ValueName.Equals("AppInit_DLLs", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(reg.ValueData))
+                if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.AppInitDlls], StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(reg.ValueData))
                 {
                     risk += 2; // Присутствие DLL в AppInit — уже риск
 
                     // Требуем от обработчика создать/обновить соседа
                     reg.ActionSetSibling = true;
-                    reg.SiblingName = "RequireSignedAppInit_DLLs";
+                    reg.SiblingName = MSData.GetInstance.regValueNames[MSKeys.RequireSignedAppInitDlls];
                     reg.SiblingData = "1";
                     reg.SiblingKind = RegistryValueKind.DWord;
-                    AppConfig.GetInstance.LL.LogSuccessMessage("_WillBeRestoredToDefault", reg.KeyPath + "\\RequireSignedAppInit_DLLs");
+                    AppConfig.GetInstance.LL.LogSuccessMessage("_WillBeRestoredToDefault", reg.KeyPath + "\\" + MSData.GetInstance.regValueNames[MSKeys.RequireSignedAppInitDlls]);
                 }
             }
         }
@@ -206,22 +206,21 @@ namespace MSearch.Core.ThreatAnalyzers
                 if (reg.NodeType == RegistryNodeType.Value)
                 {
                     // Выводим все отладчики в лог
-                    if (reg.ValueName.Equals("debugger", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(reg.ValueData))
+                    if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.Debugger], StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(reg.ValueData))
                     {
                         AppConfig.GetInstance.LL.LogMessage("[.]", "_DebuggerString", $"{reg.KeyPath.Split('\\').Last()} {reg.ValueData}", ConsoleColor.Gray);
                     }
 
-                    if (reg.ValueName.Equals("GlobalFlag", StringComparison.OrdinalIgnoreCase) && reg.ValueData == "512") // 0x200
+                    if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.GlobalFlag], StringComparison.OrdinalIgnoreCase) && reg.ValueData == "512") // 0x200
                     {
                         risk += 2;
                         reg.ActionDelete = true;
                         AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
                     }
-                    else if (reg.ValueName.Equals("debugger", StringComparison.OrdinalIgnoreCase) &&
+                    else if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.Debugger], StringComparison.OrdinalIgnoreCase) &&
                              !string.IsNullOrEmpty(reg.ValueData) &&
                              (reg.ValueData.IndexOf(MSData.GetInstance.SysFileName[39], StringComparison.OrdinalIgnoreCase) >= 0 ||
-                              reg.ValueData.IndexOf("javascript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                              reg.ValueData.IndexOf("vbscript:", StringComparison.OrdinalIgnoreCase) >= 0))
+                              MSData.ContainsAnyMarker(reg.ValueData, MSData.GetInstance.markerSets[MSKeys.ScriptMarkers])))
                     {
                         risk += 3;
                         isMalicious = true;
@@ -229,7 +228,7 @@ namespace MSearch.Core.ThreatAnalyzers
                         reg.ActionDelete = true;
                         AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
                     }
-                    else if (reg.ValueName.Equals("debugger", StringComparison.OrdinalIgnoreCase) && IfeoDbgHelper.ShouldRemoveDbg(reg.ValueData))
+                    else if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.Debugger], StringComparison.OrdinalIgnoreCase) && IfeoDbgHelper.ShouldRemoveDbg(reg.ValueData))
                     {
                         risk += 3;
                         isMalicious = true;
@@ -237,7 +236,7 @@ namespace MSearch.Core.ThreatAnalyzers
                         AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
                     }
                     // Cross-reference: если Debugger содержит путь, чей .exe совпадает с именем подраздела App Paths, помеченного на удаление
-                    else if (reg.ValueName.Equals("debugger", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(reg.ValueData))
+                    else if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.Debugger], StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(reg.ValueData))
                     {
                         // Извлекаем последний компонент пути (имя .exe)
                         string exeName = ExtractLastComponent(reg.ValueData);
@@ -251,7 +250,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
                         }
                     }
-                    else if (reg.ValueName.Equals("MinimumStackCommitInBytes", StringComparison.OrdinalIgnoreCase))
+                    else if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.MinimumStackCommit], StringComparison.OrdinalIgnoreCase))
                     {
                         if (int.TryParse(reg.ValueData, out int stack) && stack > 32768)
                         {
@@ -269,7 +268,7 @@ namespace MSearch.Core.ThreatAnalyzers
         {
             if (reg.KeyPath.Contains(MSData.GetInstance.queries["SilentProcessExit"]))
             {
-                if (reg.NodeType == RegistryNodeType.Value && reg.ValueName.Equals("MonitorProcess", StringComparison.OrdinalIgnoreCase))
+                if (reg.NodeType == RegistryNodeType.Value && reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.MonitorProcess], StringComparison.OrdinalIgnoreCase))
                 {
                     risk += 3;
                     reg.ActionDeleteParentKey = true; // Нужно удалить раздел программы целиком
@@ -282,8 +281,8 @@ namespace MSearch.Core.ThreatAnalyzers
         {
             if (reg.KeyPath.Equals(MSData.GetInstance.queries["SystemPolicies"], StringComparison.OrdinalIgnoreCase))
             {
-                if (reg.ValueName.Equals("DisableTaskMgr", StringComparison.OrdinalIgnoreCase) ||
-                    reg.ValueName.Equals("DisableRegistryTools", StringComparison.OrdinalIgnoreCase))
+                if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.DisableTaskMgr], StringComparison.OrdinalIgnoreCase) ||
+                    reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.DisableRegistryTools], StringComparison.OrdinalIgnoreCase))
                 {
                     // Значение 0 или отсутствует — ограничений нет, не угроза.
                     // Значение != 0 — ограничения включены, угроза.
@@ -301,9 +300,9 @@ namespace MSearch.Core.ThreatAnalyzers
         {
             if (reg.KeyPath.Equals(MSData.GetInstance.queries["WindowsNT_CurrentVersion_Winlogon"], StringComparison.OrdinalIgnoreCase))
             {
-                if (reg.ValueName.Equals("Userinit", StringComparison.OrdinalIgnoreCase))
+                if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.Userinit], StringComparison.OrdinalIgnoreCase))
                 {
-                    string defaultData = $@"{AppConfig.GetInstance.drive_letter}:\windows\system32\userinit.exe,";
+                    string defaultData = AppConfig.GetInstance.drive_letter + MSData.GetInstance.consts[MSKeys.UserinitDefault];
                     if (!reg.ValueData.Equals(defaultData, StringComparison.InvariantCultureIgnoreCase))
                     {
                         risk += 3;
@@ -313,10 +312,10 @@ namespace MSearch.Core.ThreatAnalyzers
                         AppConfig.GetInstance.LL.LogSuccessMessage("_WillBeRestoredToDefault", reg.ValueName);
                     }
                 }
-                else if (reg.ValueName.Equals("Shell", StringComparison.OrdinalIgnoreCase))
+                else if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.WinlogonShell], StringComparison.OrdinalIgnoreCase))
                 {
-                    string def1 = "explorer.exe";
-                    string def2 = $@"{AppConfig.GetInstance.drive_letter}:\Windows\explorer.exe";
+                    string def1 = MSData.GetInstance.consts[MSKeys.ExplorerExe];
+                    string def2 = AppConfig.GetInstance.drive_letter + MSData.GetInstance.consts[MSKeys.ExplorerExePath];
                     if (!reg.ValueData.Equals(def1, StringComparison.InvariantCultureIgnoreCase) &&
                         !reg.ValueData.Equals(def2, StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -362,11 +361,10 @@ namespace MSearch.Core.ThreatAnalyzers
                         AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", GetKeyName(reg.KeyPath));
                     }
 
-                    if (reg.ValueName.Equals("FUSClientPath", StringComparison.OrdinalIgnoreCase))
+                    if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.FusClientPath], StringComparison.OrdinalIgnoreCase))
                     {
                         string path = reg.ValueData;
-                        if (path.IndexOf("programdata", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                            path.IndexOf("appdata", StringComparison.OrdinalIgnoreCase) >= 0)
+                        if (MSData.ContainsAnyMarker(path, MSData.GetInstance.markerSets[MSKeys.UserWritableMarkers]))
                         {
                             risk += 3;
                             isMalicious = true;
@@ -413,9 +411,9 @@ namespace MSearch.Core.ThreatAnalyzers
             string subKey = Path.GetFileName(reg.KeyPath); // Paths, Processes или Extensions
             bool isBad = false;
 
-            if (subKey.Equals("Processes", StringComparison.OrdinalIgnoreCase))
+            if (subKey.Equals(MSData.GetInstance.regValueNames[MSKeys.DefenderProcesses], StringComparison.OrdinalIgnoreCase))
                 isBad = MSData.GetInstance.obfStr4.Contains(reg.ValueName, StringComparer.OrdinalIgnoreCase);
-            else if (subKey.Equals("Extensions", StringComparison.OrdinalIgnoreCase))
+            else if (subKey.Equals(MSData.GetInstance.regValueNames[MSKeys.DefenderExtensions], StringComparison.OrdinalIgnoreCase))
                 isBad = reg.ValueName.Equals(".exe", StringComparison.OrdinalIgnoreCase) || reg.ValueName.Equals(".tmp", StringComparison.OrdinalIgnoreCase);
             else
                 isBad = MSData.GetInstance.obfStr3.Contains(reg.ValueName, StringComparer.OrdinalIgnoreCase);
@@ -451,7 +449,7 @@ namespace MSearch.Core.ThreatAnalyzers
             // 1. Служба должна быть запущена
             try
             {
-                using (var service = new ServiceController("WinDefend"))
+                using (var service = new ServiceController(MSData.GetInstance.consts[MSKeys.WinDefendService]))
                 {
                     if (service.Status != ServiceControllerStatus.Running) return false;
                 }
@@ -516,8 +514,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
                 // 1. Эвристика по строке
                 if (val.IndexOf(MSData.GetInstance.SysFileName[39], StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    val.IndexOf("javascript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    val.IndexOf("vbscript:", StringComparison.OrdinalIgnoreCase) >= 0)
+                    MSData.ContainsAnyMarker(val, MSData.GetInstance.markerSets[MSKeys.ScriptMarkers]))
                 {
                     risk += 3;
                     isMalicious = true;
@@ -525,18 +522,17 @@ namespace MSearch.Core.ThreatAnalyzers
                     reg.ActionDelete = true;
                     AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
                 }
-                else if (val.IndexOf("RealtekHD\\task", StringComparison.InvariantCultureIgnoreCase) >= 0 ||
-                    val.IndexOf("ReaItekHD\\task", StringComparison.InvariantCultureIgnoreCase) >= 0 ||
-                    (val.IndexOf(" /c cd ", StringComparison.OrdinalIgnoreCase) >= 0 && val.IndexOf(" && ", StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (val.IndexOf("regsvr32", StringComparison.OrdinalIgnoreCase) >= 0 && (val.Contains("/u") || val.Contains("/s") || val.Contains("/i:"))))
+                else if (MSData.ContainsAnyMarker(val, MSData.GetInstance.markerSets[MSKeys.RealtekTaskMarkers]) ||
+                    MSData.ContainsAllMarkers(val, MSData.GetInstance.markerSets[MSKeys.AutorunChainMarkers]) ||
+                    (val.IndexOf(MSData.GetInstance.hostNames[MSKeys.Regsvr32], StringComparison.OrdinalIgnoreCase) >= 0 &&
+                     MSData.ContainsAnyMarker(val, MSData.GetInstance.markerSets[MSKeys.RegsvrFlagMarkers])))
                 {
                     risk += 3;
                     isMalicious = true;
                     reg.ActionDelete = true;
                     AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
                 }
-                else if (val.IndexOf("explorer.exe ", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                         val.IndexOf("cmd.exe /c ", StringComparison.OrdinalIgnoreCase) >= 0)
+                else if (MSData.ContainsAnyMarker(val, MSData.GetInstance.markerSets[MSKeys.AutorunWeakMarkers]))
                 {
                     risk += 2;
                     reg.ActionDelete = true;
@@ -610,27 +606,29 @@ namespace MSearch.Core.ThreatAnalyzers
         {
             if (reg.KeyPath.Equals(MSData.GetInstance.queries["LsaAuthenticationPackages"], StringComparison.OrdinalIgnoreCase))
             {
-                if (reg.NodeType == RegistryNodeType.Value && reg.ValueName.Equals("Authentication Packages", StringComparison.OrdinalIgnoreCase))
+                if (reg.NodeType == RegistryNodeType.Value && reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.AuthenticationPackages], StringComparison.OrdinalIgnoreCase))
                 {
                     // REG_MULTI_SZ — стандартное значение содержит только "msv1_0"
                     if (reg.ValueKind == RegistryValueKind.MultiString)
                     {
+                        string msv10 = MSData.GetInstance.consts[MSKeys.Msv10];
+
                         // Проверяем массив элементов: должен быть ровно ["msv1_0"]
-                        if (reg.ValueDataArray == null || reg.ValueDataArray.Length != 1 || !reg.ValueDataArray[0].Equals("msv1_0", StringComparison.OrdinalIgnoreCase))
+                        if (reg.ValueDataArray == null || reg.ValueDataArray.Length != 1 || !reg.ValueDataArray[0].Equals(msv10, StringComparison.OrdinalIgnoreCase))
                         {
                             risk += 3;
                             isMalicious = true;
                             reg.ActionSetData = true;
-                            reg.TargetDataArray = new string[] { "msv1_0" };
+                            reg.TargetDataArray = new string[] { msv10 };
                             reg.TargetKind = RegistryValueKind.MultiString;
                             AppConfig.GetInstance.LL.LogSuccessMessage("_WillBeRestoredToDefault", reg.ValueName);
 
                             // Устанавливаем RunAsPPL = 1
                             reg.ActionSetSibling = true;
-                            reg.SiblingName = "RunAsPPL";
+                            reg.SiblingName = MSData.GetInstance.regValueNames[MSKeys.RunAsPpl];
                             reg.SiblingData = "1";
                             reg.SiblingKind = RegistryValueKind.DWord;
-                            AppConfig.GetInstance.LL.LogSuccessMessage("_WillBeRestoredToDefault", "RunAsPPL");
+                            AppConfig.GetInstance.LL.LogSuccessMessage("_WillBeRestoredToDefault", MSData.GetInstance.regValueNames[MSKeys.RunAsPpl]);
                         }
                     }
                 }
@@ -669,12 +667,11 @@ namespace MSearch.Core.ThreatAnalyzers
                 return;
 
             // Только для Key NodeType с (default) значением
-            if (reg.NodeType == RegistryNodeType.Key && reg.ValueName.Equals("(default)", StringComparison.OrdinalIgnoreCase))
+            if (reg.NodeType == RegistryNodeType.Key && reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.Default], StringComparison.OrdinalIgnoreCase))
             {
                 // Проверяем расширение ValueData
                 if (!string.IsNullOrEmpty(reg.ValueData) &&
-                    (reg.ValueData.EndsWith(".bat", StringComparison.OrdinalIgnoreCase) ||
-                     reg.ValueData.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase)))
+                    MSData.GetInstance.batchExtensions.Any(ext => reg.ValueData.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
                 {
                     risk += 3;
                     isMalicious = true;

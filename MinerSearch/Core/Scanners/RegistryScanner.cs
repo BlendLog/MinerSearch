@@ -59,7 +59,11 @@ namespace MSearch.Core.Scanners
 
             // --- 11. Windows Defender Exclusions (HKLM - Local и Policies) ---
             string[] wdBaseKeys = { msData.queries["WDExclusionsLocal"], msData.queries["WDExclusionsPolicies"] };
-            string[] wdSubKeys = { "Paths", "Processes", "Extensions" };
+            string[] wdSubKeys = {
+                msData.regValueNames[MSKeys.DefenderPaths],
+                msData.regValueNames[MSKeys.DefenderProcesses],
+                msData.regValueNames[MSKeys.DefenderExtensions]
+            };
 
             foreach (string wdBaseKey in wdBaseKeys)
             {
@@ -291,7 +295,7 @@ namespace MSearch.Core.Scanners
                                         string valueData = defaultValue?.ToString() ?? string.Empty;
 
                                         // Добавляем Key-объект со значением для дальнейшего анализа
-                                        var regObj = new RegistryThreatObject(hive, subKeyPath, RegistryNodeType.Key, "(default)", valueData, RegistryValueKind.Unknown, false, null)
+                                        var regObj = new RegistryThreatObject(hive, subKeyPath, RegistryNodeType.Key, MSData.GetInstance.regValueNames[MSKeys.Default], valueData, RegistryValueKind.Unknown, false, null)
                                         {
                                             SectionName = sectionName
                                         };
@@ -400,7 +404,7 @@ namespace MSearch.Core.Scanners
                 foreach (string guidName in clsidKey.GetSubKeyNames())
                 {
                     string guidPath = $@"{clsidPath}\{guidName}";
-                    string inprocPath = $@"{guidPath}\InprocServer32";
+                    string inprocPath = $@"{guidPath}\{MSData.GetInstance.regValueNames[MSKeys.InprocServer32]}";
 
                     try
                     {
@@ -430,7 +434,7 @@ namespace MSearch.Core.Scanners
 
                             var regObj = new RegistryThreatObject(
                                 hive, guidPath, RegistryNodeType.Key,
-                                "InprocServer32", valueData, kind, false, linkedFile)
+                                MSData.GetInstance.regValueNames[MSKeys.InprocServer32], valueData, kind, false, linkedFile)
                             {
                                 SectionName = sectionName
                             };

@@ -20,7 +20,7 @@ namespace MSearch.Core.Scanners
 
             try
             {
-                Type typeFWPolicy2 = Type.GetTypeFromProgID("HNetCfg.FwPolicy2");
+                Type typeFWPolicy2 = Type.GetTypeFromProgID(MSData.GetInstance.consts[MSKeys.FwPolicyProgId]);
                 if (typeFWPolicy2 == null) return results;
 
                 dynamic fwPolicy2 = Activator.CreateInstance(typeFWPolicy2);

@@ -1,3 +1,4 @@
+using DBase;
 using MSearch;
 using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
@@ -128,11 +129,12 @@ namespace MSearch.Core.Handlers
         {
             bool success = true;
             string serviceName = svc.ServiceName;
-            string basePath = @"SYSTEM\CurrentControlSet\Control\SafeBoot";
+            string minimalPath = MSData.GetInstance.queries["SafeBootMinimal"];
+            string networkPath = MSData.GetInstance.queries["SafeBootNetwork"];
 
             try
             {
-                using (var minimalKey = Registry.LocalMachine.OpenSubKey($"{basePath}\\Minimal", true))
+                using (var minimalKey = Registry.LocalMachine.OpenSubKey(minimalPath, true))
                 {
                     if (minimalKey != null)
                     {
@@ -142,19 +144,19 @@ namespace MSearch.Core.Handlers
                     else
                     {
                         success = false;
-                        AppConfig.GetInstance.LL.LogWarnMessage("_RegistryKeyNotFound", $"{basePath}\\Minimal");
+                        AppConfig.GetInstance.LL.LogWarnMessage("_RegistryKeyNotFound", minimalPath);
                     }
                 }
             }
             catch (Exception ex)
             {
                 success = false;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorDeleteRegistryKey", ex, $"{basePath}\\Minimal\\{serviceName}", "_ObjectType_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorDeleteRegistryKey", ex, $"{minimalPath}\\{serviceName}", "_ObjectType_Service");
             }
 
             try
             {
-                using (var networkKey = Registry.LocalMachine.OpenSubKey($"{basePath}\\Network", true))
+                using (var networkKey = Registry.LocalMachine.OpenSubKey(networkPath, true))
                 {
                     if (networkKey != null)
                     {
@@ -164,14 +166,14 @@ namespace MSearch.Core.Handlers
                     else
                     {
                         success = false;
-                        AppConfig.GetInstance.LL.LogWarnMessage("_RegistryKeyNotFound", $"{basePath}\\Network");
+                        AppConfig.GetInstance.LL.LogWarnMessage("_RegistryKeyNotFound", networkPath);
                     }
                 }
             }
             catch (Exception ex)
             {
                 success = false;
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorDeleteRegistryKey", ex, $"{basePath}\\Network\\{serviceName}", "_ObjectType_Service");
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorDeleteRegistryKey", ex, $"{networkPath}\\{serviceName}", "_ObjectType_Service");
             }
 
             if (success)
@@ -329,10 +331,10 @@ namespace MSearch.Core.Handlers
         {
             try
             {
-                using (var key = Registry.LocalMachine.OpenSubKey($@"SYSTEM\CurrentControlSet\Services\{serviceName}", true))
+                using (var key = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["ServicesBase"] + "\\" + serviceName, true))
                 {
                     if (key == null) return false;
-                    key.SetValue("Start", 4, RegistryValueKind.DWord);
+                    key.SetValue(MSData.GetInstance.regValueNames[MSKeys.Start], 4, RegistryValueKind.DWord);
                     return true;
                 }
             }
@@ -449,7 +451,7 @@ namespace MSearch.Core.Handlers
 
         static bool ServiceRegistryKeyExists(string serviceName)
         {
-            using (var key = Registry.LocalMachine.OpenSubKey($@"SYSTEM\CurrentControlSet\Services\{serviceName}"))
+            using (var key = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["ServicesBase"] + "\\" + serviceName))
             {
                 return key != null;
             }
@@ -474,7 +476,7 @@ namespace MSearch.Core.Handlers
 
         static bool TryDeleteServiceRegistryKey(string serviceName)
         {
-            string subKeyPath = $@"SYSTEM\CurrentControlSet\Services\{serviceName}";
+            string subKeyPath = MSData.GetInstance.queries["ServicesBase"] + "\\" + serviceName;
 
             try
             {
@@ -500,7 +502,7 @@ namespace MSearch.Core.Handlers
 
         ApplyResult HandleRestore(ServiceController service, ServiceThreatObject svc, ThreatDecision decision)
         {
-            if (svc.ServiceName.Equals("TermService", StringComparison.OrdinalIgnoreCase))
+            if (svc.ServiceName.Equals(MSData.GetInstance.consts[MSKeys.TermServiceName], StringComparison.OrdinalIgnoreCase))
             {
                 return HandleRestoreTermService(service, svc, decision);
             }
@@ -617,8 +619,8 @@ namespace MSearch.Core.Handlers
         ApplyResult HandleRestoreTermService(ServiceController service, ServiceThreatObject svc, ThreatDecision decision)
         {
             string serviceName = svc.ServiceName;
-            string registryPath = @"SYSTEM\CurrentControlSet\Services\TermService\Parameters";
-            string originalDll = @"%SystemRoot%\System32\termsrv.dll";
+            string registryPath = MSData.GetInstance.queries["TermServiceParameters"];
+            string originalDll = MSData.GetInstance.queries["TermsrvDll"];
 
             try
             {
@@ -627,7 +629,7 @@ namespace MSearch.Core.Handlers
                 {
                     if (key != null)
                     {
-                        key.SetValue("ServiceDll", originalDll, RegistryValueKind.ExpandString);
+                        key.SetValue(MSData.GetInstance.regValueNames[MSKeys.ServiceDll], originalDll, RegistryValueKind.ExpandString);
                         AppConfig.GetInstance.LL.LogSuccessMessage("_TermServiceRestored");
                     }
                     else

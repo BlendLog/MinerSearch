@@ -1,3 +1,4 @@
+using DBase;
 using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
@@ -79,14 +80,14 @@ namespace MSearch.Core.ThreatHandlers
 
             try
             {
-                string treeParentPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree" + taskToDelete.Path;
+                string treeParentPath = MSData.GetInstance.queries["TaskCacheTree"] + taskToDelete.Path;
                 string treeKeyNameToDelete = taskToDelete.Name;
                 if (!DeleteRegistryKeyNative(treeParentPath, treeKeyNameToDelete))
                 {
                     success = false;
                 }
 
-                string cacheParentPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks";
+                string cacheParentPath = MSData.GetInstance.queries["TaskCacheTasks"];
                 string cacheKeyNameToDelete = taskToDelete.Guid.ToString("B");
                 if (!DeleteRegistryKeyNative(cacheParentPath, cacheKeyNameToDelete))
                 {

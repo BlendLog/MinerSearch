@@ -29,15 +29,15 @@ namespace MSearch.Core.ThreatAnalyzers
         private static readonly object _headerLock = new object();
 
         private static readonly Regex EncodedCommandRegex = new Regex(
-            @"(?<![a-z0-9])-(e|ec|enc(odedcommand)?)(?![a-z0-9])",
+            MSData.GetInstance.regexPatterns[MSKeys.EncodedCommand],
             RegexOptions.Compiled);
 
         private static readonly Regex TempDirRegex = new Regex(
-            @"(^|\\)temp(\\|$)",
+            MSData.GetInstance.regexPatterns[MSKeys.TempDirSegment],
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private static readonly Regex WsclInTempRegex = new Regex(
-            @"\\temp\\\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}\\wscl\.exe",
+            MSData.GetInstance.regexPatterns[MSKeys.WsclInTemp],
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
@@ -71,7 +71,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             FileChecker.LogUnsignedSha1(svc.LinkedServiceFile);
 
-            string[] specialScan = { "TermService" };
+            string[] specialScan = { MSData.GetInstance.consts[MSKeys.TermServiceName] };
             foreach (string name in specialScan)
             {
                 if (svc.ServiceName.Equals(name, StringComparison.OrdinalIgnoreCase))
@@ -101,23 +101,20 @@ namespace MSearch.Core.ThreatAnalyzers
 
             // 1. Download+Exec pattern (irm + iex)
             bool hasDownloadExec =
-                (normalized.Contains("iex") || normalized.Contains("invoke-expression")) &&
-                (normalized.Contains("irm") || normalized.Contains("invoke-restmethod")) &&
-                Regex.IsMatch(normalized, @"https?://[^\s""]+");
+                MSData.ContainsAnyMarker(normalized, MSData.GetInstance.markerSets[MSKeys.ExecCallMarkers]) &&
+                MSData.ContainsAnyMarker(normalized, MSData.GetInstance.markerSets[MSKeys.DownloadCallMarkers]) &&
+                Regex.IsMatch(normalized, MSData.GetInstance.regexPatterns[MSKeys.Url]);
 
             // 2. Fileless persistence
-            bool hasFilelessPersistence = normalized.Contains("[reflection.assembly]::") ||
-                                          normalized.Contains("[runtime.interopservices.marshal]::") ||
-                                          normalized.Contains("[reflection.emit") ||
-                                          normalized.Contains("[microsoft.win32.registry]::");
+            bool hasFilelessPersistence = MSData.ContainsAnyMarker(normalized, MSData.GetInstance.markerSets[MSKeys.FilelessMarkers]);
 
             // 3. Malicious pattern
-            bool hasMaliciousPattern = normalized.Contains("e=access&y=guest&h=");
+            bool hasMaliciousPattern = normalized.Contains(MSData.GetInstance.consts[MSKeys.ServiceGuestPattern]);
 
             // 4. SDDL blocking pattern — реальный SACL-блок + подозрительный путь
             bool hasSddlBlocking = svc.SCMUnavailable &&
-                                   (normalized.Contains("cmd.exe /c start") ||
-                                    normalized.StartsWith("\\\\.\\c:\\programdata", StringComparison.OrdinalIgnoreCase));
+                                   (normalized.Contains(MSData.GetInstance.consts[MSKeys.ServiceCmdStart]) ||
+                                    normalized.StartsWith(MSData.GetInstance.consts[MSKeys.SddlBlockPath], StringComparison.OrdinalIgnoreCase));
 
             // Encoded PowerShell launcher
             bool hasEncodedCommand = IsEncodedCommandLaunch(normalized);
@@ -213,7 +210,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 string currentSddl = ServiceHelper.GetServiceSddl(svc.ServiceName);
                 if (!string.IsNullOrEmpty(currentSddl))
                 {
-                    Regex sddlDenyRegex = new Regex(@"\(D;;[^()]*;;;(IU|SU|BA|WD)\)", RegexOptions.IgnoreCase);
+                    Regex sddlDenyRegex = new Regex(MSData.GetInstance.regexPatterns[MSKeys.SddlDenyAce], RegexOptions.IgnoreCase);
                     hasMaliciousSddl = sddlDenyRegex.IsMatch(currentSddl.Replace(" ", "").ToUpperInvariant());
                 }
             }
@@ -241,8 +238,8 @@ namespace MSearch.Core.ThreatAnalyzers
                 else if (!svc.LinkedServiceFile.IsValidSignature &&
                          svc.LinkedServiceFile.TrustResult != WinVerifyTrustResult.Error)
                 {
-                    Regex nameRegex = new Regex(@"^[a-zA-Z]{8}$");
-                    Regex pathRegex = new Regex(@"^(\\\\\?\\)?[a-fA-F]:\\ProgramData\\[a-zA-Z]{12}\\[a-zA-Z]{12}\.exe$");
+                    Regex nameRegex = new Regex(MSData.GetInstance.regexPatterns[MSKeys.RandomServiceName]);
+                    Regex pathRegex = new Regex(MSData.GetInstance.regexPatterns[MSKeys.RandomProgramDataPath]);
 
                     bool suspiciousNameAndPath = nameRegex.IsMatch(svc.ServiceName) && pathRegex.IsMatch(svc.ServicePath);
                     bool tooLarge = svc.LinkedServiceFile.FileSize >= svc.LinkedServiceFile.MAX_FILE_SIZE;
@@ -343,8 +340,7 @@ namespace MSearch.Core.ThreatAnalyzers
         {
             if (string.IsNullOrEmpty(normalizedServicePathWithArgs)) return false;
 
-            bool hasShell = normalizedServicePathWithArgs.Contains("powershell") ||
-                            normalizedServicePathWithArgs.Contains("pwsh");
+            bool hasShell = MSData.ContainsAnyMarker(normalizedServicePathWithArgs, MSData.GetInstance.markerSets[MSKeys.ShellWrapperMarkers]);
             if (!hasShell) return false;
 
             return EncodedCommandRegex.IsMatch(normalizedServicePathWithArgs);
@@ -447,17 +443,17 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private void CheckServiceDll(ServiceThreatObject svc, ref int risk, ref bool isMalicious)
         {
-            string registryPath = new StringBuilder("SY").Append("ST").Append("EM").Append("\\C").Append("ur").Append("re").Append("nt").Append("Co").Append("nt").Append("ro").Append("lS").Append("et").Append("\\S").Append("er").Append("vi").Append("ce").Append("s").ToString();
+            string registryPath = MSData.GetInstance.queries["ServicesBase"];
 
             using (RegistryKey servicesKey = Registry.LocalMachine.OpenSubKey(registryPath))
             {
                 if (servicesKey == null) return;
 
-                using (RegistryKey serviceKey = servicesKey.OpenSubKey(svc.ServiceName + @"\Parameters"))
+                using (RegistryKey serviceKey = servicesKey.OpenSubKey(svc.ServiceName + "\\" + MSData.GetInstance.regValueNames[MSKeys.Parameters]))
                 {
                     if (serviceKey == null) return;
 
-                    object serviceDllValue = serviceKey.GetValue("ServiceDll");
+                    object serviceDllValue = serviceKey.GetValue(MSData.GetInstance.regValueNames[MSKeys.ServiceDll]);
                     if (serviceDllValue == null) return;
 
                     string serviceDll = Environment.ExpandEnvironmentVariables(serviceDllValue.ToString());
@@ -500,7 +496,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             string registryPath = MSData.GetInstance.queries["TermServiceParameters"];
             string desiredValue = MSData.GetInstance.queries["TermsrvDll"];
-            string paramName = "ServiceDll";
+            string paramName = MSData.GetInstance.regValueNames[MSKeys.ServiceDll];
 
             try
             {
@@ -533,7 +529,7 @@ namespace MSearch.Core.ThreatAnalyzers
                     }
                     else
                     {
-                        AppConfig.GetInstance.LL.LogWarnMediumMessage("_ServiceNotInstalled", "TermService");
+                        AppConfig.GetInstance.LL.LogWarnMediumMessage("_ServiceNotInstalled", MSData.GetInstance.consts[MSKeys.TermServiceName]);
                     }
                 }
             }

@@ -1,3 +1,4 @@
+using DBase;
 using Microsoft.Win32;
 using MSearch.Core.Managers;
 using MSearch.Core.ThreatObjects;
@@ -100,7 +101,7 @@ namespace MSearch.Core.Scanners
                     bool hasInNetwork = false;
                     try
                     {
-                        using (var minimalKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal"))
+                        using (var minimalKey = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["SafeBootMinimal"]))
                         {
                             if (minimalKey != null)
                             {
@@ -112,7 +113,7 @@ namespace MSearch.Core.Scanners
 
                     try
                     {
-                        using (var networkKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\SafeBoot\Network"))
+                        using (var networkKey = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["SafeBootNetwork"]))
                         {
                             if (networkKey != null)
                             {

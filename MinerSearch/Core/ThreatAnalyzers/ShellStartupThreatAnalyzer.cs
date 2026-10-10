@@ -32,7 +32,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
         // ...\Microsoft\Windows\Caches\<8hex>\RuntimeHost.exe
         private static readonly Regex WindowsCachesRegex = new Regex(
-            @"\\windows\\caches\\",
+            MSData.GetInstance.regexPatterns[MSKeys.WinCaches],
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
@@ -118,8 +118,8 @@ namespace MSearch.Core.ThreatAnalyzers
         private void AnalyzeShortcut(ShellStartupFileThreatObject file, ref int risk, ref bool isMalicious)
         {
             // 1. Явные маркеры: cmd.exe /c или невидимые символы в имени
-            bool isCmdSlashC = file.ShortcutTargetPath?.EndsWith("cmd.exe", StringComparison.OrdinalIgnoreCase) == true
-                               && file.ShortcutTargetArgs?.StartsWith("/c ", StringComparison.OrdinalIgnoreCase) == true;
+            bool isCmdSlashC = file.ShortcutTargetPath?.EndsWith(MSData.GetInstance.hostNames[MSKeys.CmdExe], StringComparison.OrdinalIgnoreCase) == true
+                               && file.ShortcutTargetArgs?.StartsWith(MSData.GetInstance.consts[MSKeys.SlashCArg], StringComparison.OrdinalIgnoreCase) == true;
 
             if (isCmdSlashC || file.HasInvisibleChars)
             {
@@ -307,16 +307,14 @@ namespace MSearch.Core.ThreatAnalyzers
             bool isMshta = targetName.Equals(mshtaName + ".exe", StringComparison.OrdinalIgnoreCase) ||
                            targetPath.IndexOf(mshtaName, StringComparison.OrdinalIgnoreCase) >= 0;
 
-            bool hasPayload = targetArgs.IndexOf("javascript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                              targetArgs.IndexOf("vbscript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                              targetPath.IndexOf("javascript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                              targetPath.IndexOf("vbscript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                              targetArgs.IndexOf(".hta", StringComparison.OrdinalIgnoreCase) >= 0;
+            bool hasPayload = MSData.ContainsAnyMarker(targetArgs, MSData.GetInstance.markerSets[MSKeys.ScriptMarkers]) ||
+                              MSData.ContainsAnyMarker(targetPath, MSData.GetInstance.markerSets[MSKeys.ScriptMarkers]) ||
+                              MSData.ContainsAnyMarker(targetArgs, MSData.GetInstance.markerSets[MSKeys.HtaMarkers]);
 
             if (!isMshta && !hasPayload)
                 return false;
 
-            Match m = Regex.Match(targetArgs, @"[A-Za-z]:\\[^""']+\.hta", RegexOptions.IgnoreCase);
+            Match m = Regex.Match(targetArgs, MSData.GetInstance.regexPatterns[MSKeys.HtaPath], RegexOptions.IgnoreCase);
             if (m.Success)
             {
                 htaPayload = Environment.ExpandEnvironmentVariables(m.Value.Trim().Trim('"'));

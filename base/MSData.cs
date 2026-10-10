@@ -11,6 +11,123 @@ namespace DBase
         public static string Letter { get; set; }
     }
 
+    // >>> BLENDFUSCATOR:MSKEYS:START
+    public static class MSKeys
+    {
+
+        // markerSets
+        public const string ScriptMarkers = "ScriptMarkers";
+        public const string UrlMarkers = "UrlMarkers";
+        public const string HtaMarkers = "HtaMarkers";
+        public const string FilelessMarkers = "FilelessMarkers";
+        public const string ExecCallMarkers = "ExecCallMarkers";
+        public const string DownloadCallMarkers = "DownloadCallMarkers";
+        public const string EncodedArgMarkers = "EncodedArgMarkers";
+        public const string ShellWrapperMarkers = "ShellWrapperMarkers";
+        public const string TaskCommandMarkers = "TaskCommandMarkers";
+        public const string AutorunChainMarkers = "AutorunChainMarkers";
+        public const string RegsvrFlagMarkers = "RegsvrFlagMarkers";
+        public const string AutorunWeakMarkers = "AutorunWeakMarkers";
+        public const string TempPathMarkers = "TempPathMarkers";
+        public const string WmiCommandMarkers = "WmiCommandMarkers";
+        public const string RealtekTaskMarkers = "RealtekTaskMarkers";
+        public const string FakeDescriptionMarkers = "FakeDescriptionMarkers";
+        public const string FakeOriginalNameMarkers = "FakeOriginalNameMarkers";
+        public const string FakeProcessNameMarkers = "FakeProcessNameMarkers";
+        public const string HelperMarkers = "HelperMarkers";
+        public const string FakeTaskLocationMarkers = "FakeTaskLocationMarkers";
+        public const string FakeSystemCheckMarkers = "FakeSystemCheckMarkers";
+        public const string RegasmArgMarkers = "RegasmArgMarkers";
+        public const string IfExistMarkers = "IfExistMarkers";
+        public const string UserWritableMarkers = "UserWritableMarkers";
+        public const string ConhostArgMarkers = "ConhostArgMarkers";
+
+        // regexPatterns
+        public const string EncodedCommand = "EncodedCommand";
+        public const string TempDirSegment = "TempDirSegment";
+        public const string WsclInTemp = "WsclInTemp";
+        public const string RandomServiceName = "RandomServiceName";
+        public const string RandomProgramDataPath = "RandomProgramDataPath";
+        public const string SddlDenyAce = "SddlDenyAce";
+        public const string WinCaches = "WinCaches";
+        public const string HtaPath = "HtaPath";
+        public const string IfExistPath = "IfExistPath";
+        public const string IfExistHex = "IfExistHex";
+        public const string IfExistHexPath = "IfExistHexPath";
+        public const string PcaluaArgs = "PcaluaArgs";
+        public const string GuidFile = "GuidFile";
+        public const string GuidAny = "GuidAny";
+        public const string ClsidDir = "ClsidDir";
+        public const string StartProcessArgs = "StartProcessArgs";
+        public const string NodeScript = "NodeScript";
+        public const string ArgsSplit = "ArgsSplit";
+        public const string AbsolutePath = "AbsolutePath";
+        public const string Url = "Url";
+
+        // regValueNames
+        public const string AppInitDlls = "AppInitDlls";
+        public const string RequireSignedAppInitDlls = "RequireSignedAppInitDlls";
+        public const string Debugger = "Debugger";
+        public const string GlobalFlag = "GlobalFlag";
+        public const string MinimumStackCommit = "MinimumStackCommit";
+        public const string MonitorProcess = "MonitorProcess";
+        public const string DisableTaskMgr = "DisableTaskMgr";
+        public const string DisableRegistryTools = "DisableRegistryTools";
+        public const string Userinit = "Userinit";
+        public const string WinlogonShell = "WinlogonShell";
+        public const string FusClientPath = "FusClientPath";
+        public const string AuthenticationPackages = "AuthenticationPackages";
+        public const string RunAsPpl = "RunAsPpl";
+        public const string ServiceDll = "ServiceDll";
+        public const string Parameters = "Parameters";
+        public const string Start = "Start";
+        public const string Default = "Default";
+        public const string InprocServer32 = "InprocServer32";
+        public const string DefenderPaths = "DefenderPaths";
+        public const string DefenderProcesses = "DefenderProcesses";
+        public const string DefenderExtensions = "DefenderExtensions";
+
+        // hostNames
+        public const string PowerShell = "PowerShell";
+        public const string Pwsh = "Pwsh";
+        public const string Rundll32 = "Rundll32";
+        public const string Pcalua = "Pcalua";
+        public const string Regsvr32 = "Regsvr32";
+        public const string Regasm = "Regasm";
+        public const string Forfiles = "Forfiles";
+        public const string Wscript = "Wscript";
+        public const string Msiexec = "Msiexec";
+        public const string Msbuild = "Msbuild";
+        public const string Conhost = "Conhost";
+        public const string NodeExe = "NodeExe";
+        public const string CmdExe = "CmdExe";
+
+        // consts
+        public const string FwPolicyProgId = "FwPolicyProgId";
+        public const string WinDefendService = "WinDefendService";
+        public const string TermServiceName = "TermServiceName";
+        public const string WmiNamespace = "WmiNamespace";
+        public const string WmiQuery = "WmiQuery";
+        public const string WmiConsumerClass = "WmiConsumerClass";
+        public const string UserinitDefault = "UserinitDefault";
+        public const string ExplorerExe = "ExplorerExe";
+        public const string ExplorerExePath = "ExplorerExePath";
+        public const string Msv10 = "Msv10";
+        public const string ServiceCmdStart = "ServiceCmdStart";
+        public const string ServiceGuestPattern = "ServiceGuestPattern";
+        public const string DcomLaunchArgs = "DcomLaunchArgs";
+        public const string SlashCArg = "SlashCArg";
+        public const string JarArg = "JarArg";
+        public const string ProDirMarker = "ProDirMarker";
+        public const string LhsArg = "LhsArg";
+        public const string TArg = "TArg";
+        public const string VerysilentArg = "VerysilentArg";
+        public const string SddlBlockPath = "SddlBlockPath";
+        public const string StartProcessCmd = "StartProcessCmd";
+        public const string ArgumentListArg = "ArgumentListArg";
+    }
+    // <<< BLENDFUSCATOR:MSKEYS:END
+
     public class MSData
     {
         public List<HashedString> hStrings = new List<HashedString>() {
@@ -513,22 +630,21 @@ namespace DBase
         };
 
 
-        public HashSet<string> badArgStrings = new HashSet<string>()
-        {
-            new StringBuilder("--").Append("al").Append("go").ToString(),
-            new StringBuilder("--").Append("co").Append("in").ToString(),
-            new StringBuilder("--").Append("pa").Append("ss").Append(" x").ToString(),
-            new StringBuilder(".p").Append("oo").Append("l.").ToString(),
-            new StringBuilder("mi").Append("ni").Append("ng").Append("oc").Append("ea").Append("n.").ToString(),
-            new StringBuilder("na").Append("no").Append("po").Append("ol").ToString(),
-            new StringBuilder("-o").Append(" p").Append("oo").Append("l.").ToString(),
-            new StringBuilder("-o").Append(" x").Append("mr").Append(".").ToString(),
-            new StringBuilder("po").Append("ol").Append(".c").Append("om").ToString(),
-            new StringBuilder("po").Append("ol").Append(".m").ToString(),
-            new StringBuilder("r").Append("eg").Append(" co").Append("py").ToString(),
-            new StringBuilder("st").Append("ra").Append("tu").Append("m").ToString(),
-            new StringBuilder("st").Append("ra").Append("tu").Append("m+").ToString(),
-        };
+        public HashSet<string> badArgStrings = new HashSet<string>() {
+		new StringBuilder("--").Append("al").Append("go").ToString(),
+		new StringBuilder("--").Append("co").Append("in").ToString(),
+		new StringBuilder("--").Append("pa").Append("ss").Append(" x").ToString(),
+		new StringBuilder(".p").Append("oo").Append("l.").ToString(),
+		new StringBuilder("mi").Append("ni").Append("ng").Append("oc").Append("ea").Append("n.").ToString(),
+		new StringBuilder("na").Append("no").Append("po").Append("ol").ToString(),
+		new StringBuilder("-o").Append(" p").Append("oo").Append("l.").ToString(),
+		new StringBuilder("-o").Append(" x").Append("mr").Append(".").ToString(),
+		new StringBuilder("po").Append("ol").Append(".c").Append("om").ToString(),
+		new StringBuilder("po").Append("ol").Append(".m").ToString(),
+		new StringBuilder("re").Append("g ").Append("co").Append("py").ToString(),
+		new StringBuilder("st").Append("ra").Append("tu").Append("m").ToString(),
+		new StringBuilder("st").Append("ra").Append("tu").Append("m+").ToString(),
+		};
 
         public List<string> JohnPatterns = new List<string>() {
         Bfs.Create("6G6b4czn85AO6Fny0oqiSA==", "8R5rVFJaibwvbhh/QYuG35IcvKULZsUw2dlfQfS44Y4=", "ZEYIbm/EDWdvuXRRhyoyuQ=="), //winserv
@@ -585,7 +701,241 @@ namespace DBase
             ["disableSmb1Script"] = Drive.Letter + Bfs.Create("Slmp2l1rASfTyTvibIInYfRniP6nWpfZTw2b7FY+oBu9CUx1aaQnQjyPqHZ6n8fTlgfUDnWf76/yGX3hNn/GtbUWYsCefrrkXdQDOMH2ejw=", "SrCLxI9J4EmbIWGC44yxMOUp8nNkdv+oLtD5iJ3sxLE=", "fWEUsPOB4KfWtRd5c/XcyA=="), //%windir%\system32\WindowsPowerShell\v1.0\Modules\SmbShare\DisableUnusedSmb1.ps1
             ["LsaAuthenticationPackages"] = Bfs.Create("PHcLU26zmHTWZunWfUaJGrJzc7r9f9ThKgbsgy/i2Q9BhXq6AUME8Dzy2UjQkXcF", "lZz0M02eomLYGwgtD34PejBJNYzS/L6oIyhSkn5jyeg=", "KiIJo3MERHjMe7RRtP39tQ=="), //SYSTEM\CurrentControlSet\Control\Lsa
             ["AppPaths"] = Bfs.Create("MUYSHXrp7fKvj8E7ytB/VSNIhQnHF6/s5HtTeFdX5cUAAPtntsqOLYVY61T/9vlIVwzZTiaPtdwPaUmFIAon/w==", "kRGB3NzotSOmDyuqWzCMLhFYggRkjoL3KL+0X/9gzlg=", "T3/T2rZokrncGJjJhuUN0g=="), //SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths
+            ["SafeBootMinimal"] = Bfs.Create("7tR0PfSV1zSdtLwt45ARrrm0nlqaV1whhE2TeY6HMY+/msPfphTXoo5otmti2ZFuhwBFvGBVtOyg13c18HMUmQ==", "8R5rVFJaibwvbhh/QYuG35IcvKULZsUw2dlfQfS44Y4=", "ZEYIbm/EDWdvuXRRhyoyuQ=="),
+            ["SafeBootNetwork"] = Bfs.Create("7tR0PfSV1zSdtLwt45ARrrm0nlqaV1whhE2TeY6HMY98u+tfShGtSyEZmPgDbjBGNiM3Isqq9c/97Q8O90DaGw==", "8R5rVFJaibwvbhh/QYuG35IcvKULZsUw2dlfQfS44Y4=", "ZEYIbm/EDWdvuXRRhyoyuQ=="),
+            ["TaskCacheTree"] = Bfs.Create("zWBo0dup3eVbzbOsgpCmd6+L59xk6wDrbp2xhFw57xOCExw0nobcdvU6Mz2aGjUsl6Xb6xtnPVFU1MqPP+nFOZXJulcUJO9qC1ogPCOF7wY=", "8R5rVFJaibwvbhh/QYuG35IcvKULZsUw2dlfQfS44Y4=", "ZEYIbm/EDWdvuXRRhyoyuQ=="),
+            ["TaskCacheTasks"] = Bfs.Create("zWBo0dup3eVbzbOsgpCmd6+L59xk6wDrbp2xhFw57xOCExw0nobcdvU6Mz2aGjUsl6Xb6xtnPVFU1MqPP+nFOTnkuHiy63iHqfWKy5odq7g=", "8R5rVFJaibwvbhh/QYuG35IcvKULZsUw2dlfQfS44Y4=", "ZEYIbm/EDWdvuXRRhyoyuQ=="),
+            ["ServicesBase"] = Bfs.Create("7tR0PfSV1zSdtLwt45ARrixtsnNHV97yJB9oXJPvXxeJDNU9iQwkehIo2fqoTUOE", "8R5rVFJaibwvbhh/QYuG35IcvKULZsUw2dlfQfS44Y4=", "ZEYIbm/EDWdvuXRRhyoyuQ=="),
+            ["SpecialAccountsUserList"] = Bfs.Create("zWBo0dup3eVbzbOsgpCmd6+L59xk6wDrbp2xhFw57xMFaMnXfKfB6fIbHNfyGMWUCLcfLi+sejjm2mU9bUUP+U5AAmhlgtM5oajLoBM9KrM=", "8R5rVFJaibwvbhh/QYuG35IcvKULZsUw2dlfQfS44Y4=", "ZEYIbm/EDWdvuXRRhyoyuQ=="),
+            ["SysWow64Dir"] = Drive.Letter + Bfs.Create("WPsFTYEJZnQYCsUhZfg3SO198AvsQv/zTw7647UhjUg=", "8R5rVFJaibwvbhh/QYuG35IcvKULZsUw2dlfQfS44Y4=", "ZEYIbm/EDWdvuXRRhyoyuQ=="),
+            ["WbemDir"] = Drive.Letter + Bfs.Create("UnzMCv0/wOqTrjOGXRWqsG5d0k1XHFyIz3CfPpm1WB0=", "8R5rVFJaibwvbhh/QYuG35IcvKULZsUw2dlfQfS44Y4=", "ZEYIbm/EDWdvuXRRhyoyuQ=="),
         };
+
+
+        // >>> BLENDFUSCATOR:NEWSECTIONS:START
+
+
+	public Dictionary<string, string[]> markerSets = new Dictionary<string, string[]>() {
+		[MSKeys.ScriptMarkers] = new string[] {
+			Bfs.Create("KtbPsBmdUV4XWhMKqyXpjw==", "r0WwbXIOeK1SdKAJ74NNWwPoD2tPH1IMxQ+dvR5Ar7w=", "8ZzjQubaStqK9fkZiGWB2g=="), //javascript:
+			Bfs.Create("YI5qqIK49FoPSquKe+O02A==", "wD60NmnhiwFE02GuWtRx7ATodSK+iexELFS84El8kEE=", "YlX1yTaNnXEPerKyJnz5sQ=="), //vbscript:
+		},
+		[MSKeys.UrlMarkers] = new string[] {
+			Bfs.Create("FCofNeycCW50onuNfqHQQA==", "AWhB1sr42fAlBkosPAkKMGLGHOxwQgA0qqlq97goFvQ=", "ZUYXpQaYRq+XL0H8Qzc6Mw=="), //http://
+			Bfs.Create("fMxvfskcXJUuHaahmbo+vw==", "bPJOCaGhaXPXKQbWpYgkQ7txKaVSiMiBAYuoisQT0mE=", "pNZJVnQxSRRYYWH+/brxkQ=="), //https://
+		},
+		[MSKeys.HtaMarkers] = new string[] {
+			Bfs.Create("BrRQKIW07Lw41rTOfcIAYA==", "Z+V5ekCy6TToUHUmVTVrcTfc7DlyyuwUZFwtA6so+KI=", "MtWAUuwZmQYmssCIsgCGWA=="), //.hta
+		},
+		[MSKeys.FilelessMarkers] = new string[] {
+			Bfs.Create("J4Z/+m7dQr1wT+wZGmCbZjTCd/cjN79wG1x4c5Oq0+s=", "16NFfyRh5P35gPU2pnzoFO00e1r30/a3KoKUzAuiyiI=", "eH/u7baver68UmnrcTBtGw=="), //[reflection.assembly]::
+			Bfs.Create("0CuYivhXxQRwxG88mOMRLGn2u0RHYd0RoXYGfPU3zLEjRGoQKU+b4iKWvgZuwI44", "ZQCAjxKL/O1W5BuWhjdTRbRJqGHYHXd2zz2BYoYKrv8=", "b/0iQ/gRkE0pdBZenKJk3A=="), //[runtime.interopservices.marshal]::
+			Bfs.Create("N+hs7I3nOCdT8TjbG7HQVlM6LIVsb9vD9YB8aBJuutU=", "lfBQ66uYQB+wlOgaxZKKNYqY8WkGr6wbc9Od/laHut8=", "AjEMpB4luqxLjRjubo44/A=="), //[reflection.emit
+			Bfs.Create("xNP/M/06r+nOYqJoziV99GQ1vCMP9vJzei+YiP8LitI=", "lZk4CKx4hymrlL640v/mWUaDOTTj/qodINp1W/9dY5c=", "N7ELwdVzUgR+9JLCkLnZiw=="), //[microsoft.win32.registry]::
+		},
+		[MSKeys.ExecCallMarkers] = new string[] {
+			Bfs.Create("59TJANa5ooqs03x2RIvMPw==", "t+mQI1+giZ2cT227ZnIVCIYVHeYjK9EdrZVenVboFEU=", "4bn/z1dofwDvTxwxs/5viw=="), //iex
+			Bfs.Create("uDfX0oOzGL1hkmqSp0mNVzEJO6u4w9fWUCh7RUX8To8=", "LjTsDrANKRJZ5H13bdy8JiT0GXHJOIfjEVvj8wOA/y4=", "cILXjuPWHEgFc+0dfm1maA=="), //invoke-expression
+		},
+		[MSKeys.DownloadCallMarkers] = new string[] {
+			Bfs.Create("SHsng6ED6JHcdl4FY7L1JA==", "EUvqqeED7AZLgRoATmWWeW2ZsyDWzxgtpFjhWi7O0og=", "Qn99W/6dFyWJ/oQSmKH6iA=="), //irm
+			Bfs.Create("CPcQl7RI+muxE9wpC4vPzlBkIKtR0YTa/XSouCMFmK8=", "HN6eRi9k1hICYfIjUzXBsw0nmDCgzap4zk0Vlyinprg=", "uyFWUsiRhLfiucInYr7uRw=="), //invoke-restmethod
+		},
+		[MSKeys.EncodedArgMarkers] = new string[] {
+			Bfs.Create("POwZPJlwRe9hhXYjYjdm2Q==", "lMEdgBkerhgLA9dZjABy/h10B48In6Ffk3CkHFRKJ9M=", "m62tlPdRxuri9rVilAfp3Q=="), // -e 
+			Bfs.Create("xFqO9Ds8q8VJXu6dy25xVg==", "t8a78hqpW/PXj6RKKjpnVl7Na6AgYXLjg3Wl9NhQH7g=", "PJYHw9hNirphAwfpItVMMQ=="), //-encodedcommand
+			Bfs.Create("B4rDiibJYGC5gFaXFovr6g==", "xSwMm1ySwAd013UCC84QmvnODU9a5lQRIvkOZJCd04Y=", "7Ul5H2Z3epfp77fbJRTiFA=="), //| iex
+		},
+		[MSKeys.ShellWrapperMarkers] = new string[] {
+			Bfs.Create("iFb7KWpTZ77AqT6Z6Y1yLQ==", "E45gCE01q2Sc6Sv4KZg+86i3gLtE3iuRWyU1nHtExHk=", "11JQ3D5EViUM1s8tuol2oA=="), //powershell
+			Bfs.Create("/1f9ch1ugdYX9kQZmuYmRw==", "VxWhpOaJSgXW6nkDXmdKDQFrsc2IejQwYrvCp16UQ2s=", "eHHPlmvqN3AlxIRmFMHwsw=="), //pwsh
+		},
+		[MSKeys.TaskCommandMarkers] = new string[] {
+			Bfs.Create("vxG9UkvSDbuCjOllSZssbg==", "14WRh2BzICBqlMC+5lRpiHt64HTNKQNJqdBkUTmlB0I=", "ZNGLpQo3BrXzqan/bWXa5w=="), ///c reg add 
+			Bfs.Create("Fmg8qN2uIAUJdxOv+FcVLHbFb0GFeSvEdHDqOctBYkc=", "f9ht9YYklBP9AlR2GmbmAIt2Ja+x/aaaL3aGeojyDJQ=", "CVUWfDMIxstKWpLz9/dSPA=="), ///c echo function 
+		},
+		[MSKeys.AutorunChainMarkers] = new string[] {
+			Bfs.Create("N+q9/p7S73TpVJh5QPSc/A==", "+zx7yYGDISxVhEeY1ZWXqRiAiyjv4Do18z3WeVocTaY=", "wplMwvKU+eT3XFcsubXWtQ=="), // /c cd 
+			Bfs.Create("Cil+jZpB93Z9xxFYS3tkmw==", "NHo2E4MVcXiXKkqTK3aWK8nfIoDgxnjRW058wmo9SGo=", "FjTWNPd01o3SlpLYCTjmug=="), // && 
+		},
+		[MSKeys.RegsvrFlagMarkers] = new string[] {
+			Bfs.Create("JdhL4U/+XeXOCCP8E0GJnA==", "cvuPkqrgZxqbPbfWcvtvWEw6jzNgInimkkRPDucQ2gU=", "J+UQheXZmKZOgA6O75HxmQ=="), ///u
+			Bfs.Create("x1Gdc49z1vB91ck6jlKMFg==", "DOeywU2y2jh4CQ/i3fk1dFC6IWra0Rsgxn/AZb8yJJo=", "hAAt67+1Y4lURCSdGqo/pA=="), ///s
+			Bfs.Create("ztYkL7n+z90ixtZZ7x4urw==", "6WsuQWqCk8dArrmkanLWfVOTf/zqGS1SZrGUFuRKxs4=", "Mrx1/Piy/szEMZWqr7Ic3Q=="), ///i:
+		},
+		[MSKeys.AutorunWeakMarkers] = new string[] {
+			Bfs.Create("Kc4UMxg97hOnopER9AWdCw==", "DjrsufiEIJgNXTerjhtXpevZ6SBBjHVTAe/yPESfl1E=", "r1ZEgzK47XvRSDqA1iHIkw=="), //explorer.exe 
+			Bfs.Create("Rx/ARxmiDauwpyP/K5TWhg==", "5qopY4EB4YmqANHFes4mV2VjD8qtYTmCHSApjS7W9Q0=", "Yl+iKbD0s+SryIis8/4HnQ=="), //cmd.exe /c 
+		},
+		[MSKeys.TempPathMarkers] = new string[] {
+			Bfs.Create("WpGNJHQjoOi2Z+xf6CxqUw==", "1VBFQQgbw+DgSJqcRW3875E9TH1gcgfEgdLMoRfiFmo=", "EaPJRHlXNtO4nAizluw1jw=="), //%temp%
+			Bfs.Create("b32/jnox4+YW7vQBaDyfWw==", "+DPUYA2EILhc+SL605ReiD3fwIBS6uW6pjtp6mNIPf8=", "DGg+A+g4MJnkmsaQVH53TQ=="), //%tmp%
+		},
+		[MSKeys.WmiCommandMarkers] = new string[] {
+			Bfs.Create("1qCLySByHY9+CXsj/D7NoQ==", "gV3oekjA40z9wyMJ4TjSCbAIQ5cmrEyNqruxJ3Yej04=", "UKh1rfy20338V0rqd/Hsng=="), //cmd.exe /c 
+		},
+		[MSKeys.RealtekTaskMarkers] = new string[] {
+			Bfs.Create("YHmU/xDTrzojpXu7l12Pgw==", "LCsz4i8vYhria4ei9GbvERbRcN8jpPcBIYb8e7mt2z0=", "2b1zTyqeMP5Ti61n3kEwxA=="), //RealtekHD\task
+			Bfs.Create("Ep0Q3+D5VQ3Jl5UZE/eKpw==", "/Utzaiy1KSA+UiiN8UGHc67MdYE3CNlJuWYyVOXOYLY=", "N1UOPnqqwwcX6m1l0DqxvA=="), //ReaItekHD\task
+		},
+		[MSKeys.FakeDescriptionMarkers] = new string[] {
+			Bfs.Create("1D3TIlqW8wl8nbP0NRIaGw==", "5llnC9JWY24xvpmJG2AvEo95Y04yutgpiUPSAp+xg6c=", "7QahY2nZYcLJDJcSrHQBZg=="), //svhost
+		},
+		[MSKeys.FakeOriginalNameMarkers] = new string[] {
+			Bfs.Create("rcXBH/0W9wU+Q/fjM9CDB8QZ8Oub4RDsP0abB5gi1nE=", "LINmhTAM1pz8V50Gw1kE6IA1X+Y8H1cohqql3FN1P7E=", "hJXJb5DH3tKs6G9eQrRjxw=="), //SpotifyStartupTask.exe
+		},
+		[MSKeys.FakeProcessNameMarkers] = new string[] {
+			Bfs.Create("0Ibm62hZpAm6/1qXFB3smA==", "QUfR5A6CXK1AQkYDegQpzW+MOWvXHqnjBIj+sBGX7LU=", "wFI4u3+P/bSnbZPkTkFI1Q=="), //rundll
+			Bfs.Create("r5aq72xNsqztiZoxOWd2Kg==", "oLuOjvRyhXvrf5YAA+oTQRXJt7OrOaWileA5uDMiVaM=", "A288tuh2j6mzskHYKPWewg=="), //system
+			Bfs.Create("/xxEnwAiTFGkDSk8f1lDTg==", "7hPwIXjgYmmxmgrLWWsTCYEzitPn2pMfQTsXj2p4r40=", "KnENr6vy+qz1MImKBk+lhA=="), //winserv
+		},
+		[MSKeys.HelperMarkers] = new string[] {
+			Bfs.Create("lgiLDG2XE1UQ0kfewxFw/w==", "sfcF1AMSmGQr9hgWV1QMWd583scCjGtl3XWO5oVdjlk=", "IFOouilq3pz8DVHwct0fww=="), //helper
+		},
+		[MSKeys.FakeTaskLocationMarkers] = new string[] {
+			Bfs.Create("fB6qU9/11qfIWTUpb5LIsg==", "Qu4PneZ7acb0ApH2lr+k7yrARsNkHj6zO4PvJ0oPXjQ=", "ouUcHbtNn5Ra3V+KDj7GQw=="), //appdata
+			Bfs.Create("MxSfOBxqegxi7Ut81bfQmg==", "PxJeUrIJmsEA0sksYyJNwWvIaC2L/3gNji09JoYrZCo=", "xCXrz13xgpZBK1j9E+CYwA=="), //windows
+		},
+		[MSKeys.FakeSystemCheckMarkers] = new string[] {
+			Bfs.Create("B7ar7RsDJIyyKSHsI07EIQ==", "+JhooPnkwKkb1kRZNkkIYYO1LLGF6SfqxjkoYgjKo28=", "+m0kXGCBoVr5aRf4njV6+w=="), //-systemcheck
+		},
+		[MSKeys.RegasmArgMarkers] = new string[] {
+			Bfs.Create("eCOwIfuq/gI3hEPVMMDShw==", "LP2uL1de46PnN/vodR5TiBqDSYT2E4J9nwR9ElDXSDA=", "lU//DOW1SMJqjREV+3BHUg=="), //#system32
+		},
+		[MSKeys.IfExistMarkers] = new string[] {
+			Bfs.Create("xZKETL90u+ZmbaqBg3Pfew==", "JValwGEHQoMhIsOA1M9k/TNfe9MDuO1BRX1jmREBmMU=", "pG85wreTUzz7y2tuBK5EXA=="), //if exist
+		},
+		[MSKeys.UserWritableMarkers] = new string[] {
+			Bfs.Create("h1lR/fc1twGXYgUX05VtRA==", "Ju3KqfJDNyIDaehuzHWGhgFMrw7prGvlRgARxymExUI=", "clygYTQLFkiPXqXQpghUrw=="), //programdata
+			Bfs.Create("oZ6khK2JHlC3S+F2Nc0lVw==", "DoSDrJJA/60HEdRCLHjL2UXFISd6OsbLfzeHrzziAjk=", "hBv34bUpGxGSMKM2pjbQUA=="), //appdata
+		},
+		[MSKeys.ConhostArgMarkers] = new string[] {
+			Bfs.Create("IhmrKMhW0nyCTya9Jw3y7w==", "vWY50b7MgddgE4Bky6L0B9tbxoxm69h/86y3kR6hWD0=", "dMwPen2dpT4TorRMvLZH6w=="), //--headless
+			Bfs.Create("7XD8sVZFio6nwJmnMt2hIg==", "gu4yw0aWt4Pszw9BwFlKrog8DRUG3PPtcnmiT157qQc=", "ks8GzF4BEi62Nbe1D5cizA=="), // -ec 
+			Bfs.Create("vgimNUqX44UZocbaKdRJdy64vYMGzT1elT28gM6BJpw=", "kFRrVW/86FIRPW8NMrHxH7O31+F+v5MvQY7oCYM6o5s=", "36FYWpUd59+H3bfgBPE3Uw=="), // -encodedcommand 
+			Bfs.Create("K4G/p/DEutCKJ36R01U6ow==", "PfSjQRlOEOehYdJ2wzu7GOW1dOQOOOLJpvEMHgU6rA8=", "XC4HhOel4Zp7UuvU2Ly4uQ=="), //appdata\local
+		},
+		};
+
+	public Dictionary<string, string> regexPatterns = new Dictionary<string, string>() {
+		[MSKeys.EncodedCommand] = @"(?<![a-z0-9])-(e|ec|enc(odedcommand)?)(?![a-z0-9])",
+		[MSKeys.TempDirSegment] = @"(^|\\)temp(\\|$)",
+		[MSKeys.WsclInTemp] = @"\\temp\\\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}\\wscl\.exe",
+		[MSKeys.RandomServiceName] = @"^[a-zA-Z]{8}$",
+		[MSKeys.RandomProgramDataPath] = @"^(\\\\\?\\)?[a-fA-F]:\\ProgramData\\[a-zA-Z]{12}\\[a-zA-Z]{12}\.exe$",
+		[MSKeys.SddlDenyAce] = @"\(D;;[^()]*;;;(IU|SU|BA|WD)\)",
+		[MSKeys.WinCaches] = @"\\windows\\caches\\",
+		[MSKeys.HtaPath] = @"[A-Za-z]:\\[^""']+\.hta",
+		[MSKeys.IfExistPath] = @"if\s+exist\s+(?:""|\^"")(?<filepath>[A-Z]:\\.*?\.(?:dll|wsf|ps1|bat|cmd|psm1|psd1|psxml))(?:""|\^"")",
+		[MSKeys.IfExistHex] = @"if\s+exist\s+0x22",
+		[MSKeys.IfExistHexPath] = @"if\s+exist\s+0x22\s*(?<filepath>[A-Za-z]:\\[^""]+?)(?:0x22|\s|$)",
+		[MSKeys.PcaluaArgs] = @"-a\s+(?:""(?<filepath>[^""]+)""|(?<filepath>\S+))",
+		[MSKeys.GuidFile] = @"^\{?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}?$",
+		[MSKeys.GuidAny] = @"\{?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}?",
+		[MSKeys.ClsidDir] = @"^.*\.{[0-9A-F]{8}(-[0-9A-F]{4}){3}-[0-9A-F]{12}\}$",
+		[MSKeys.StartProcessArgs] = @"-(filepath|windowstyle|verb|workingdirectory)\s+",
+		[MSKeys.NodeScript] = @"(?i)""?(?<script>[a-z]:\\[^""]+)""?",
+		[MSKeys.ArgsSplit] = @"""[^""]+""|\S+",
+		[MSKeys.AbsolutePath] = @"[A-Za-z]:\\[^""'<>|]+",
+		[MSKeys.Url] = @"https?://[^\s""]+",
+		};
+
+	public Dictionary<string, string> regValueNames = new Dictionary<string, string>() {
+		[MSKeys.AppInitDlls] = Bfs.Create("tYzHuF8b5tvYw6AcbD6AUA==", "j4jz2MWYgwGoArqIaHbDcyuflH9Bs8yuFkdfBdGJDgY=", "OUZsBiGdjNCjcskTdETDgw=="), //AppInit_DLLs
+		[MSKeys.RequireSignedAppInitDlls] = Bfs.Create("+4HCd8iZVza543Dhmx51iOkrd8cks/oDudLAqxomWnI=", "7TZXtcAcIcXMziuCEWC8mPuusk8ug1i0rGNPVQgyyLQ=", "ZbGPIpjd25XGq7Cbg4mx/w=="), //RequireSignedAppInit_DLLs
+		[MSKeys.Debugger] = Bfs.Create("P+AsV+jbKiW7WZ4goRsSZQ==", "yoVrdiXTh6pwQ5Ippc78OJC8bTOs44qMK7UEzbQrWU4=", "VXf7X0kvGCSg8+kHC3B5PQ=="), //debugger
+		[MSKeys.GlobalFlag] = Bfs.Create("r2fu5rj/4qkgknCpydqrvA==", "v/yRNiujXnUPqmZ2YRHAV3RCaat7ruvHUFIKNvU2tDk=", "BGo9ok83QU4DRI1eCRqOVA=="), //GlobalFlag
+		[MSKeys.MinimumStackCommit] = Bfs.Create("VAdhIwt5ZcvwRVKySJdipkuZCguMiEoFT9RcpAT3NnI=", "po3fkLy7WmR4/j2a5GsaKZw/4rZNh1DGmUCKUCYSMZk=", "XUu4nnSdewR6vl6DVemH1w=="), //MinimumStackCommitInBytes
+		[MSKeys.MonitorProcess] = Bfs.Create("Zblo0BqyPN5r1xyTembjaQ==", "+fyzWMSXilElBV1sPN98MjXN9bUL/6zBWZl7w/yooGU=", "SUl7buJMOM2TDZLRdUuebQ=="), //MonitorProcess
+		[MSKeys.DisableTaskMgr] = Bfs.Create("cdI1nIa/WZfRPR8fPu+TCg==", "h2JFkIJhqpFYb89/g93aUpBfKl+WXNzB6dmKhIJdoKw=", "UhYn4Nv97y2vFJRQ9NSbzA=="), //DisableTaskMgr
+		[MSKeys.DisableRegistryTools] = Bfs.Create("p8q/WwVjrBbG/ScVkXu/bt5WOf2wcERaIH2cKqUsjFo=", "TVAnNxNIL903GliGhxvRHdBpIV3Zp+dWlhyYbrbDcj8=", "tFfOudzU2EmT+pV8WSVGpQ=="), //DisableRegistryTools
+		[MSKeys.Userinit] = Bfs.Create("T6LXrUNq6yAkw10oe/D/sg==", "QiOA+ybaKM7M8pAT5IETEfTopl56BWOy6trtxgsWmW4=", "tA397e4yqCaSwmabSlK2dg=="), //Userinit
+		[MSKeys.WinlogonShell] = Bfs.Create("qHvQLWicX+z1QeWxDhKUBQ==", "3Imyfl8a7dLlaNmbS4edMk3Fi0omayBBujc86Ip9o8k=", "/lGJ0h2I8KUfsn2L77B4Xw=="), //Shell
+		[MSKeys.FusClientPath] = Bfs.Create("lyP80THjP7ZWARkM86LfUw==", "YHrDgYA5arEW8jbYLBu0vsHTEQudV3sRaJDAFBzkrPI=", "Qdt+hgXDbF4hUcuXkfuY0Q=="), //FUSClientPath
+		[MSKeys.AuthenticationPackages] = Bfs.Create("YZPU+dZ1RUQLhpFYytrC4R7xhRPJmEV27RkK1ZLswkg=", "JzQT2gCUq9GkIQF8HuhuFlEUz1n3vKh9eLDT6nSf5VE=", "64McHnv7dQZkGIxSnnVAMA=="), //Authentication Packages
+		[MSKeys.RunAsPpl] = Bfs.Create("+IY7qxscdst9sCKMzjR2nA==", "TMSOkUf6NvZpgLsGGQWUTzIpw5FatrcgcOx1BxfUQvg=", "pcUWjzx+MRpKqOqrZqVphA=="), //RunAsPPL
+		[MSKeys.ServiceDll] = Bfs.Create("pHqbGTf35Bvx1/owWt6Ohw==", "2OTMs2eEeLTFFt/bUpvLKtTngspFaHtn8A0Q0LDq5hg=", "eh/nH4rEmSO48xLL9bkGBA=="), //ServiceDll
+		[MSKeys.Parameters] = Bfs.Create("umRe/6cRH/jq8zHXlNCRYQ==", "8WnIlhvkG96Dt3eGKF1xcVNcr9WYAzK919lip6H9Wbo=", "ZP2B+QIC7m8tfCwVIG6C/Q=="), //Parameters
+		[MSKeys.Start] = Bfs.Create("xN92pBBx8JKIX5CYV+dEmw==", "pvXLILQj7Dzlcfd/bqLu80DU1dhTiwF4atSTncsDWNQ=", "HWRuwDxem0f2OPWj7Sdpzw=="), //Start
+		[MSKeys.Default] = Bfs.Create("1QXzILQjj/NBSXqu/bpEVg==", "ZEQsSODQ3t9cYGXz4+eUOTl+TIUBc5QF3Z4K987KoD4=", "u58q7Bj8EZSlUyJdtE3lUQ=="), //(default)
+		[MSKeys.InprocServer32] = Bfs.Create("Lih3As1bndUu2CQOtA6tRg==", "eMAh922W83nkTXikbI9K9rBcxLlTFwZJVeDEpXCusng=", "tJXfZiJ6StipnGnNmNu/Fg=="), //InprocServer32
+		[MSKeys.DefenderPaths] = Bfs.Create("IeyjtCu62+VlPr9wvvepSw==", "2ug3wE6zsJze71/QldNM2fJF7UkUUxn3Fc/nBNHVVjA=", "dsNW5QkMUh5zLs6eVaVitg=="), //Paths
+		[MSKeys.DefenderProcesses] = Bfs.Create("2LBbfhiZ32FpQWe3c3PSIQ==", "rwU+I82x0zTnUljjzJb6LvHn0eFL2HYaIJvx/vcjqRU=", "Tp9mt+lcSN1ioSMWEJl4SA=="), //Processes
+		[MSKeys.DefenderExtensions] = Bfs.Create("mGYIWixdc95qVqVuVvIeCw==", "xqtlLBpIB01xL+5XDPWr37INYrHZZIeMeySpWJnprMc=", "5+phltfZL+bPp50nUQBw/A=="), //Extensions
+		};
+
+	public Dictionary<string, string> hostNames = new Dictionary<string, string>() {
+		[MSKeys.PowerShell] = Bfs.Create("nA7/wKWR8t3NmcRX0/RTjw==", "27yBca0uaiN9bVaQKBpaIngDQixcAlrkaG+xfT8rqV0=", "da7wY9JqU1Ipt0qXIiWEvg=="), //powershell
+		[MSKeys.Pwsh] = Bfs.Create("dogNCR/k+umtugLPQJJUkA==", "wg2KbzZ+RJOiVWJs+e+FEe4G55gvjCnQQnNkkjlG/Js=", "cZqZk+trMPq5Ct9VspDgfw=="), //pwsh
+		[MSKeys.Rundll32] = Bfs.Create("tYfCCYftyy/sKjY+eLLsiw==", "GA8QMDud773UTwVqxrEG5RgfW8YRPmlUb/3ugplmADw=", "z+atHLbku7acFlywePBf0g=="), //rundll32
+		[MSKeys.Pcalua] = Bfs.Create("pK9B219054S48A3W9D/2dg==", "CQz5oF0Ogkx86wC5dM8sDzYrfhlb2DGH8iJIQEugvhY=", "X0DXJ9sLxIUVRdipS+R1ow=="), //pcalua
+		[MSKeys.Regsvr32] = Bfs.Create("edkvHUlfI8fB9eTXSPnbZg==", "smbzSGOlzNoAh8ph10SImdOrm7GHWL6wI80FVGSNRR4=", "dxHbrdKFIWpyoVwU/KTcag=="), //regsvr32
+		[MSKeys.Regasm] = Bfs.Create("Q1wDxG5RMAwS8TZmnreBnw==", "hCw3l1JRSrSnoeaEbJgLd84KDQg+9rv3zcu1fkLckW8=", "7vUZB9kXwTMw9Tlr8u/SOw=="), //regasm
+		[MSKeys.Forfiles] = Bfs.Create("mqeC1A4aMQ0YjK11PBht0Q==", "iLu/1EFbsMk7rPojGXcsM6CnjJoBgqD5IjbzvufEbEE=", "pVu7oTgtwnGYzm2DhBTe/g=="), //forfiles
+		[MSKeys.Wscript] = Bfs.Create("nEBkXxFK+GqibIzOF+jDbg==", "akUEJFctcwsS4Ejb05dw7Fx88A0hi2KT9sftmWKK5BU=", "zUFZ6gHmE/VeiqtZkYMk5g=="), //wscript
+		[MSKeys.Msiexec] = Bfs.Create("VAB0atG+CvMv8m6hxhmCuA==", "FYYobJQUNF47hVifJYMAP2g2/ZNR9cblgy7AS9X5fOU=", "i4e7bKl3itAVgD2hs2jpXg=="), //msiexec
+		[MSKeys.Msbuild] = Bfs.Create("j3VuEq/p7cyW0Ew+E/eMSw==", "5Az8Av8auZdW8lFtLboOOX4MMEKm/5rgNly6Dkzzm6g=", "kssntiIgU/fFX8Pj6prp+g=="), //msbuild.exe
+		[MSKeys.Conhost] = Bfs.Create("gSUZBcf0xXBh/JIv1me+Xg==", "agzMF8v+i8FBhBsqcC3/ZfgcVk9ar8wkIzctiSsjrP4=", "EqvtlUaUbajVMytksp/H6Q=="), //conhost
+		[MSKeys.NodeExe] = Bfs.Create("/8PNUHjEY4vYyRGea8QsdA==", "UNxBR6uY1b2uD3c1+AYt3SdCm4kLPzl0tQ9tjT3PMFQ=", "Kl9SjZUs72+6phMRX4AzxQ=="), //node.exe
+		[MSKeys.CmdExe] = Bfs.Create("ZzmQBIULkfJbV/OcM1vacA==", "pRygqAsK0jWc+RoU6+iNloy2wWmZ18nUS+jy+wXhB68=", "TcR2R9sIkLpE1fc1gK4obw=="), //cmd.exe
+		};
+
+	public Dictionary<string, string> consts = new Dictionary<string, string>() {
+		[MSKeys.FwPolicyProgId] = Bfs.Create("G1MjmpgBYu4FiYdIA8N9UTBSDK8Uajk4ygBWaq/IysQ=", "MNxXkvUgbLNuy6Urpz1GHL29T/yKtKz5rxNb1y5Pfa4=", "4Wt7zU+UK8iBT9Erbjxsow=="), //HNetCfg.FwPolicy2
+		[MSKeys.WinDefendService] = Bfs.Create("AWiYP8cwiH+2Lv2JGl1eEA==", "W6Ahsy1F/10XN/xxZCH1ZJoVDdiZhgxks2EbGY4HURs=", "79PwJ40c7pHXGnEM0KLGBA=="), //WinDefend
+		[MSKeys.TermServiceName] = Bfs.Create("/JYkHd5AVJXmhehUmxiwDQ==", "cV+GL9aOlDWn4eyrhPB2gV4uwdUO7CreS5azUP71MmY=", "xXiodWN00W32zOLPoyxmyQ=="), //TermService
+		[MSKeys.WmiNamespace] = Bfs.Create("49XaJCiubYswoc74TEvDtqCAdC+ju/VBVkPABZaN4Bs=", "ToVJxexR3z6wSVE7eiMSqsNfXcq1bUUPQDzRd/O9P40=", "p4ie3XCEO6lyOFljhR9BMQ=="), //\\.\root\subscription
+		[MSKeys.WmiQuery] = Bfs.Create("9omrl7fSn9oWFKNMQG9eFSAO6eGSD+uQtof8+UC4BdXPOiLNJEFr8bZ0TXobTAuz", "EGIWoRKFgdWJrv+23ZkV6FlP+6HTO+pgWT0cNK4xGYg=", "rVf5+BpgRr7U4PnuLM3m+Q=="), //SELECT * FROM CommandLineEventConsumer
+		[MSKeys.WmiConsumerClass] = Bfs.Create("lIMiaKp+tqDt3+UTEVCZGKLKQ8z4yXrOUoY33D6YynI=", "xLxfyKs7HF8MrVDxi4ekdaZeyNdaVt4LzWerYCNIDzE=", "4cy9U10Ee2HQYVf7GsbBFA=="), //CommandLineEventConsumer
+		[MSKeys.UserinitDefault] = Bfs.Create("evYmQ/jR/YqGaJGcGMdRywb4+psIhCcBIJcqZeGOj9Vky8n/CtoXoeADptyTNxQZ", "ll1exEUyXGPmXEE/sh0DZzs8yqGmOt5M92R+Ep+Ia/k=", "xZj4275DAn/f2J6m2j0++A=="), //:\windows\system32\userinit.exe,
+		[MSKeys.ExplorerExe] = Bfs.Create("3N6YpRQmK6KnaR+eKKxTbA==", "FiFUKZhjhViFsrLcnH/ge72WelkJmJEtS6l7nx0t90k=", "bK9Il2S8VMQaDouACN4AEA=="), //explorer.exe
+		[MSKeys.ExplorerExePath] = Bfs.Create("S0dtfEaff8MaieUzl/vnVZT4ot3c90PTGWbCxLT299E=", "NxGVnXaWLJ8WHyKUB3RX76oH4gwnMwq0gY29745mhlU=", "nn7G8xKdLdrGbwsotay4WQ=="), //:\Windows\explorer.exe
+		[MSKeys.Msv10] = Bfs.Create("tS3q92OlrSgINX4ueT+izA==", "DPo+8g3fkSV9YklVTGeb1N4oW32LvrwaLZ34t8uqD14=", "HECfzUaiLFw8U6qMYHLw0g=="), //msv1_0
+		[MSKeys.ServiceCmdStart] = Bfs.Create("uRVnJBPJ4TU/FUaYJkdzzF6UJpL4zUedlaABwwRlMbc=", "nucAgQcKAyclMRlbK5Twb7SFkmg8jKgRa7H0UJ5+6iM=", "sxhpOXqIYMgvSNzb5cPeow=="), //cmd.exe /c start
+		[MSKeys.ServiceGuestPattern] = Bfs.Create("A7HiUFHyNbXAVvQrdyRC8PIexGLtBchNbD0hW3xgNak=", "3uL9OTwa74uuqm2C6C9ouXJ9Iqb05SeuMabTCqtwsuI=", "7UhFT3EAUVWh1TArJuAYtA=="), //e=access&y=guest&h=
+		[MSKeys.DcomLaunchArgs] = Bfs.Create("rCBtbm93TYj8JKkKQvySpjSUiOtjTdchlmPUWgNlgDY=", "RjoErCxNNWOodF/ybq6BQA+Cy28wymNl4+h4xuX7XwI=", "jdOztc8OwafVutQX8qO4AQ=="), //.exe -k dcomlaunch
+		[MSKeys.SlashCArg] = Bfs.Create("MSRLqZYXdYHxxQ1bNewKFw==", "fqcnYARt8XTj0KeINy9tI9VaQYMtA5TNEXUNyW8P/OE=", "D5SMd/3SHYTFkBw3Jicz/g=="), ///c 
+		[MSKeys.JarArg] = Bfs.Create("xNjP+EukHMg/huj/9aCOQA==", "QGLjeb2veS2h5qrTcxdMNhLePaI4kXGYhd2znDx4Txw=", "VHvwd4/InzYmu1Q1KCL7xw=="), //-jar 
+		[MSKeys.ProDirMarker] = Bfs.Create("4FnUWhMM9LzXzK+ml0z8Hg==", "hYQxN27kWKgp3k9OVQqymJOtXKr57u040pI1OCKQwcA=", "InS6sE30N6Ug4MRAMSW7DA=="), //\pro\
+		[MSKeys.LhsArg] = Bfs.Create("EHMwWG1pl+6Y43aSpE31zw==", "TrVNvBF1VWRjHLXYmRSw9ThVdoo4IH3Czfv1InExtFQ=", "kIx/guNxGzz/ZX1eL6bTZA=="), ///LHS
+		[MSKeys.TArg] = Bfs.Create("VCO1KXuJ09w6sI9rVFLh1A==", "7R+f+bxCUotXxlorAEl/0QgQgi8nhs2mAreeKizwho0=", "ExgD1yISMEQCUeZPJFKUQg=="), ///T
+		[MSKeys.VerysilentArg] = Bfs.Create("xhOAAvcVu+CHQFOFwSq4Ww==", "J6CF9dz0cx0dm9fAKBVNiKfl0AMDCSLr/HDW1Snt3K8=", "HewtrlK3znYWEd15BXyMIQ=="), ///verysilent
+		[MSKeys.SddlBlockPath] = Bfs.Create("WKSgVFZt2awESESvgpDhtNpTDi8UIsm+sjzFbjWJB3c=", "VWHCmfHh01SDLuPmxIq4SUzJ2Us0p7W+NURADZI96hY=", "UPTXZqOIUnyNCRByg1lwzA=="), //\\.\c:\programdata
+		[MSKeys.StartProcessCmd] = Bfs.Create("hDIHCPkQ4MilU+WEBiMtmg==", "SHdg6Rg8g6F+qP4ctdOZiYob/z/jL3bsqasC7ubom4M=", "gUo9fNk5jZ5X6trRZ7Uz/g=="), //start-process
+		[MSKeys.ArgumentListArg] = Bfs.Create("yUoLR2CT5u6Lc6nNvJb09w==", "hP/lGOXsd63zK3DP8z1W+OlJRXdlU9IR53CD7R+iV10=", "pn88rBffEm3gbx9nVC/Y2w=="), //-argumentlist
+		};
+
+	public string[] systemPathFragments = new string[] {
+		Bfs.Create("lO+ESNAb3buMdpje7nWcfCRqxitqzm0qc7/NrchNDo0=", "dO4XxPXSHeTo4iFoA9vRNJVMxlwY2fKYud5dW52ZZ2M=", "0UmHb+FQf14pvaDGFgWSvQ=="), //:\windows\system32
+		Bfs.Create("S/Q0tIxSKTGlYOyn8zQTJEN1gbyR5+zOO1tA/N01Nik=", "CjYOyglraEMh0gZu2m9klhFo/QRvBIHYIgSBIy4g+tE=", "4z1HQxgv9rfbNBvElufGMA=="), //:\windows\system32\wbem
+		Bfs.Create("G+ddy63FuXltxfzliFRiX+K6b2/Z2NqwEP68niqhQus=", "/7ujbiohqKc9nMGAsxFFB8g9vm0iHmjnP2TZBKNhVeo=", "/P+QrcwYIBq24yjYRB9K/Q=="), //:\windows\syswow64
+		Bfs.Create("POx/3oI6qYjKzgjWvjK5fzPFp2DcGdgcWSmQCxe1yz8=", "r4wxIG1M84XZCvJNx/iJ70rd54BeKnS+acxBL2iQOsU=", "5jwLIN/4Ly4X4T6MZaeJ6Q=="), //:\windows\winsxs\amd64
+		Bfs.Create("g3P5ZtlHgbSVFYCZJTtn2DgCpPQjucEA0OQkOjsHDIk=", "JCqaPbhLit97QHjZpfa5ntCyS6baQXSNdnTXb0PmKGQ=", "LCZPtHV4v8uESQ2q7iepRw=="), //:\windows\winsxs\x86
+		Bfs.Create("gQ6xWdUjhrs4dVxtGUdW4d3ff8sOxEQ2+3rmYEgD6Omml6mGGsTEm7VkzziDPChO", "s8VzQX/S6A4T6Ut0rTAQeXJNx9PUkfh6yCDbsb1Dx6E=", "zccTEjKccLXErx6rIkkVLA=="), //:\windows\microsoft.net\framework64
+		Bfs.Create("U7Q9oG6dB17iSXxSwp/S0iJaW4N+I8v6lpOeMTL0c6fLFloc+t4s6UA1eg4W/kiv", "bJKn1aQCyh5vtm0gZgEQ9vNq+0vCA2pAN9Ady5W5RJg=", "x91UjJAIuxBTymcMFfXNYg=="), //:\windows\microsoft.net\framework
+		};
+
+	public string[] systemDirFragments = new string[] {
+		Bfs.Create("LZ3gMiFftJRbMXHsgKbGtw==", "QKxMHoyWba5NAu/C65no2qJX3Jf8sSbfL3iPRGs63zo=", "+PWPU8+EooSDuTk+ejp6/Q=="), //\system32\
+		Bfs.Create("rVOLoCeEH577TdyesYysyA==", "md+nfwQN7SdHqombBZHRSK4cGjF/Wm16ZeGtKnfZufk=", "dH84uumiorM3U89URNfYqg=="), //\syswow64\
+		Bfs.Create("d0QKKl3lyiMl3kanloP36w==", "T0XBFB19TMxz5bhtryZWRiu9o+pJPxu1MkD6KIo9T5U=", "fa7dPkEqFHnwbuFeC2BmKQ=="), //\winsxs\
+		Bfs.Create("QAFGRc/pAdWwL8zo4mCCZQ==", "d8R3FLG/3wmxrwOx4ab6ugOsln+nblDk+FGA5+8y9GQ=", "p3Pld4Tf+Pvmi3z5S2/21w=="), //\servicing\
+		Bfs.Create("Jplq8HmBXbaRD2MPo6qDXQ==", "QZIkY+0cMcDJ+qU8Y6K7NOg0PMkfwoGrhqV99FBK46Y=", "/s/Q8+gJL8Z8CiGlZ4V/6w=="), //\microsoft.net\
+		Bfs.Create("z10mlqxhRU9TdnODnJN1yg==", "KbTT5ndZJNLjy6bfsyIa32+2nWzVqRXKjp83n928Pi0=", "AatKqM8JVfgkxy0d7uNwgQ=="), //\assembly\
+		};
+
+	public string[] batchExtensions = new string[] {
+		Bfs.Create("4IY2Wths61MmY7eetn+ggQ==", "c2QKEymp3bZWZyetXLnvbYbo5TCv04hUgfTPZ3G/ad0=", "zY7Lq4hEOmebX/N7GlT+7w=="), //.bat
+		Bfs.Create("SI+39yxNTMb6lIfymX/ocQ==", "ubEzv6e2E7ysyMuxVvybcBgZnA1WLaUyDg5S6SO72RE=", "R1V94E+LiMQHk6Ctdlp4qQ=="), //.cmd
+		};
+
+	public string[] certificateExtensions = new string[] {
+		Bfs.Create("04EtRNKp3AJlwdvLsy2dSg==", "tNqjpaBEiPbdW/vShx4D1RpxA4ZcInBuXg6+uwb1d3I=", "4lZ5NtYVfPr2ZAaAfp7yRA=="), //.pfx
+		Bfs.Create("Z81tNPZPq6+HLgZVWK5LoA==", "WWIF48JcuG7ozrusf12dAxOWTPQPATUJsn79br7Lgzs=", "yr7WUEb27GKjLnuQaM5b9Q=="), //.p12
+		};
+        // <<< BLENDFUSCATOR:NEWSECTIONS:END
+
+        public List<string> suspiciousUserDirs = new List<string>();
 
 
         public Dictionary<string, string> conhostPatterns = new Dictionary<string, string>()
@@ -864,6 +1214,19 @@ namespace DBase
             }
         }
 
+        void AddSuspiciousUserDir(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return;
+
+            string normalized = path.TrimEnd('\\');
+            if (string.IsNullOrEmpty(normalized))
+                return;
+
+            if (!suspiciousUserDirs.Contains(normalized, StringComparer.OrdinalIgnoreCase))
+                suspiciousUserDirs.Add(normalized);
+        }
+
         public bool IsUnderKnownMaliciousDir(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -977,8 +1340,41 @@ namespace DBase
             return result.TrimEnd('\\', ' ');
         }
 
+        public static bool ContainsAnyMarker(string text, string[] markers)
+        {
+            if (string.IsNullOrEmpty(text) || markers == null)
+                return false;
+
+            foreach (string marker in markers)
+            {
+                if (!string.IsNullOrEmpty(marker) && text.IndexOf(marker, StringComparison.OrdinalIgnoreCase) >= 0)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool ContainsAllMarkers(string text, string[] markers)
+        {
+            if (string.IsNullOrEmpty(text) || markers == null || markers.Length == 0)
+                return false;
+
+            foreach (string marker in markers)
+            {
+                if (string.IsNullOrEmpty(marker) || text.IndexOf(marker, StringComparison.OrdinalIgnoreCase) < 0)
+                    return false;
+            }
+
+            return true;
+        }
+
         public void UpdateData()
         {
+            AddSuspiciousUserDir(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
+            AddSuspiciousUserDir(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+            AddSuspiciousUserDir(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            AddSuspiciousUserDir(Environment.GetEnvironmentVariable("PUBLIC"));
+
             AddObfPath(obfStr1, new StringBuilder("Lo").Append("ca").Append("lA").Append("pp").Append("Da").Append("ta").ToString(), false, "clienth?elpe?r-updater".Replace("?", ""));
             AddObfPath(obfStr1, new StringBuilder("Lo").Append("ca").Append("lA").Append("pp").Append("Da").Append("ta").ToString(), false, "torrentpro-upd?a?ter".Replace("?", ""));
             AddObfPath(obfStr1, new StringBuilder("Lo").Append("ca").Append("lA").Append("pp").Append("Da").Append("ta").ToString(), false, "P?ro?gr?ams".Replace("?", ""), "C?ommon".Replace("?", ""), "O?neDr?iveCloud".Replace("?", ""));

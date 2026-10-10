@@ -1,3 +1,4 @@
+using DBase;
 using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
@@ -31,7 +32,7 @@ namespace MSearch.Core.ThreatHandlers
         {
             try
             {
-                Type typeFWPolicy2 = Type.GetTypeFromProgID("HNetCfg.FwPolicy2");
+                Type typeFWPolicy2 = Type.GetTypeFromProgID(MSData.GetInstance.consts[MSKeys.FwPolicyProgId]);
                 if (typeFWPolicy2 == null) return ApplyResult.Error;
 
                 dynamic fwPolicy2 = Activator.CreateInstance(typeFWPolicy2);

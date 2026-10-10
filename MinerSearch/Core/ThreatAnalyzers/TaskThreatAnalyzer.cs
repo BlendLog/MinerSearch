@@ -21,21 +21,21 @@ namespace MSearch.Core.ThreatAnalyzers
         readonly string[] checkDirectories =
         {
             Environment.SystemDirectory,
-            new StringBuilder(AppConfig.GetInstance.drive_letter).Append(":\\W").Append("in").Append("do").Append("ws").Append("\\S").Append("ys").Append("WO").Append("W6").Append("4").ToString(),
-            new StringBuilder(AppConfig.GetInstance.drive_letter).Append(":\\W").Append("in").Append("do").Append("ws").Append("\\S").Append("ys").Append("te").Append("m3").Append("2\\").Append("wb").Append("em").ToString(),
+            MSData.GetInstance.queries["SysWow64Dir"],
+            MSData.GetInstance.queries["WbemDir"],
             MSData.GetInstance.queries["PowerShellPath"],
         };
 
-        readonly Regex IfExistPathRegex = new Regex(@"if\s+exist\s+(?:""|\^"")(?<filepath>[A-Z]:\\.*?\.(?:dll|wsf|ps1|bat|cmd|psm1|psd1|psxml))(?:""|\^"")", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        readonly Regex IfExistPathRegex = new Regex(MSData.GetInstance.regexPatterns[MSKeys.IfExistPath], RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        readonly Regex IfExistHexQuoteRegex = new Regex(@"if\s+exist\s+0x22", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        readonly Regex IfExistHexQuoteRegex = new Regex(MSData.GetInstance.regexPatterns[MSKeys.IfExistHex], RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        readonly Regex IfExistHexQuotePathRegex = new Regex(@"if\s+exist\s+0x22\s*(?<filepath>[A-Za-z]:\\[^""]+?)(?:0x22|\s|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        readonly Regex IfExistHexQuotePathRegex = new Regex(MSData.GetInstance.regexPatterns[MSKeys.IfExistHexPath], RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         readonly Regex MshtaRegex = new Regex(@"(^|[\\/""' ])" + Regex.Escape(MSData.GetInstance.SysFileName[39]) + @"(\.exe)?([ ""'/]|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private static readonly Regex EncodedCommandRegex = new Regex(
-            @"(?<![a-z0-9])-(e|ec|enc(odedcommand)?)(?![a-z0-9])",
+            MSData.GetInstance.regexPatterns[MSKeys.EncodedCommand],
             RegexOptions.Compiled);
 
         private static HashSet<string> _masqueradeNames;
@@ -77,7 +77,7 @@ namespace MSearch.Core.ThreatAnalyzers
             AppConfig.GetInstance.LL.LogMessage("[#]", "_Scanning", $"{taskObj.Info.Name} | {taskObj.Info.Path}", ConsoleColor.White);
             // 1 Этап -----------------------------------------------------
 
-            if (taskObj.Info.Name.StartsWith("dialer"))
+            if (taskObj.Info.Name.StartsWith(MSData.GetInstance.SysFileName[17], StringComparison.Ordinal))
             {
                 risk += 3;
                 taskObj.ActionDeleteTask = true;
@@ -95,21 +95,23 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            if (args.IndexOf("/c reg add ", StringComparison.OrdinalIgnoreCase) >= 0)
+            string[] taskCommandMarkers = MSData.GetInstance.markerSets[MSKeys.TaskCommandMarkers];
+
+            if (args.IndexOf(taskCommandMarkers[0], StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 risk += 3;
                 taskObj.ActionDeleteTask = true;
                 taskObj.DetectionReasonRes = "_Malic1ousTask";
             }
 
-            if (args.IndexOf("/c echo function ", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (args.IndexOf(taskCommandMarkers[1], StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 risk += 3;
                 taskObj.ActionDeleteTask = true;
                 taskObj.DetectionReasonRes = "_Malic1ousTask";
             }
 
-            if (args.IndexOf("-jar ", StringComparison.OrdinalIgnoreCase) >= 0 && args.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+            if (args.IndexOf(MSData.GetInstance.consts[MSKeys.JarArg], StringComparison.OrdinalIgnoreCase) >= 0 && args.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
             {
                 risk += 3;
                 taskObj.ActionDeleteTask = true;
@@ -117,7 +119,7 @@ namespace MSearch.Core.ThreatAnalyzers
             }
 
             string fullCommand = ((action.Path ?? "") + " " + args).ToLowerInvariant();
-            bool hasShellWrapper = fullCommand.Contains("powershell") || fullCommand.Contains("pwsh");
+            bool hasShellWrapper = MSData.ContainsAnyMarker(fullCommand, MSData.GetInstance.markerSets[MSKeys.ShellWrapperMarkers]);
             if (hasShellWrapper && EncodedCommandRegex.IsMatch(fullCommand))
             {
                 risk += 3;
@@ -218,7 +220,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
                 if (!string.IsNullOrEmpty(args))
                 {
-                    if (filePathFromTask.IndexOf("rundll32", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (filePathFromTask.IndexOf(MSData.GetInstance.hostNames[MSKeys.Rundll32], StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         List<string> argsList = SplitCommandLineArguments(args);
                         string dllPathCandidate = null;
@@ -273,9 +275,9 @@ namespace MSearch.Core.ThreatAnalyzers
                         }
                     }
 
-                    if (filePathFromTask.IndexOf("pcalua", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (filePathFromTask.IndexOf(MSData.GetInstance.hostNames[MSKeys.Pcalua], StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        Match matchRegex = Regex.Match(args, @"-a\s+(?:""(?<filepath>[^""]+)""|(?<filepath>\S+))", RegexOptions.IgnoreCase);
+                        Match matchRegex = Regex.Match(args, MSData.GetInstance.regexPatterns[MSKeys.PcaluaArgs], RegexOptions.IgnoreCase);
                         string fileFromArgs = "";
 
 
@@ -345,7 +347,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
                     }
 
-                    if (filePathFromTask.IndexOf("regsvr32", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (filePathFromTask.IndexOf(MSData.GetInstance.hostNames[MSKeys.Regsvr32], StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         List<string> argsList = SplitCommandLineArguments(args);
 
@@ -355,8 +357,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
                             string normalizedPath = NormalizePath(potentialPath).Replace("\\\\", "\\");
 
-                            if (normalizedPath.EndsWith(".pfx", StringComparison.OrdinalIgnoreCase) ||
-                                normalizedPath.EndsWith(".p12", StringComparison.OrdinalIgnoreCase))
+                            if (MSData.GetInstance.certificateExtensions.Any(ext => normalizedPath.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
                             {
                                 if (File.Exists(normalizedPath))
                                 {
@@ -408,8 +409,7 @@ namespace MSearch.Core.ThreatAnalyzers
                                     taskObj.DetectionReasonRes = "_SuspiciousRegsvr32";
                                     yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
                                 }
-                                else if (File.Exists(normalizedPath) && (normalizedPath.IndexOf("programdata", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                            normalizedPath.IndexOf("appdata", StringComparison.OrdinalIgnoreCase) >= 0))
+                                else if (File.Exists(normalizedPath) && MSData.ContainsAnyMarker(normalizedPath, MSData.GetInstance.markerSets[MSKeys.UserWritableMarkers]))
                                 {
                                     FileThreatObject dll = CreateFileObject(normalizedPath);
                                     if (dll != null && !dll.IsValidSignature)
@@ -433,7 +433,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
                     }
 
-                    if (args.IndexOf("if exist", StringComparison.OrdinalIgnoreCase) >= 0 && !IfExistHexQuoteRegex.IsMatch(args))
+                    if (MSData.ContainsAnyMarker(args, MSData.GetInstance.markerSets[MSKeys.IfExistMarkers]) && !IfExistHexQuoteRegex.IsMatch(args))
                     {
                         string expectedSuspiciousPath = ExtractFilePathFromIfExist(args);
 
@@ -490,7 +490,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             // 3 Этап -------------------------------------------
 
-            if (filePathFromTask.IndexOf("powershell", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (filePathFromTask.IndexOf(MSData.GetInstance.hostNames[MSKeys.PowerShell], StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 if (args.IndexOf(MSData.GetInstance.queries["disableSmb1Script"], StringComparison.OrdinalIgnoreCase) >= 0)
                 {
@@ -580,7 +580,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
 
                 string normalizedArgs = args.Replace("'", "");
-                if (normalizedArgs.Length >= 500 || normalizedArgs.IndexOf(" -e ", StringComparison.OrdinalIgnoreCase) >= 0 || normalizedArgs.IndexOf("-encodedcommand", StringComparison.OrdinalIgnoreCase) >= 0 || normalizedArgs.IndexOf("| iex", StringComparison.OrdinalIgnoreCase) >= 0)
+                if (normalizedArgs.Length >= 500 || MSData.ContainsAnyMarker(normalizedArgs, MSData.GetInstance.markerSets[MSKeys.EncodedArgMarkers]))
                 {
                     if (!LaunchOptions.GetInstance.ScanOnly)
                     {
@@ -596,7 +596,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            if ((filePathFromTask.EndsWith(".bat", StringComparison.OrdinalIgnoreCase) || filePathFromTask.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase)))
+            if (MSData.GetInstance.batchExtensions.Any(ext => filePathFromTask.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
             {
                 if (taskObj.LinkedFile != null && taskObj.LinkedFile.FileSize >= 1024 * 1024)
                 {
@@ -616,7 +616,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             }
 
-            if (filePathFromTask.IndexOf("msiexec", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (filePathFromTask.IndexOf(MSData.GetInstance.hostNames[MSKeys.Msiexec], StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 foreach (string argsPart in args.Split(' '))
                 {
@@ -650,7 +650,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             }
 
-            if (filePathFromTask.IndexOf(new StringBuilder("for").Append("files").ToString(), StringComparison.OrdinalIgnoreCase) >= 0)
+            if (filePathFromTask.IndexOf(MSData.GetInstance.hostNames[MSKeys.Forfiles], StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 if (args.Count(c => c == '^') == 2)
                 {
@@ -681,7 +681,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            if (filePathFromTask.IndexOf(new StringBuilder("ws").Append("cri").Append("pt").ToString(), StringComparison.OrdinalIgnoreCase) >= 0)
+            if (filePathFromTask.IndexOf(MSData.GetInstance.hostNames[MSKeys.Wscript], StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 if (!LaunchOptions.GetInstance.ScanOnly)
                 {
@@ -696,7 +696,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             }
 
-            if (filePathFromTask.IndexOf("regasm", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (filePathFromTask.IndexOf(MSData.GetInstance.hostNames[MSKeys.Regasm], StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 string dllPath = FileSystemManager.ExtractDllPath(args);
 
@@ -715,14 +715,14 @@ namespace MSearch.Core.ThreatAnalyzers
 
             }
 
-            if (filePathFromTask.IndexOf("conhost", StringComparison.OrdinalIgnoreCase) >= 0 && args.IndexOf("--headless", StringComparison.OrdinalIgnoreCase) >= 0)
+            string[] conhostArgMarkers = MSData.GetInstance.markerSets[MSKeys.ConhostArgMarkers];
+
+            if (filePathFromTask.IndexOf(MSData.GetInstance.hostNames[MSKeys.Conhost], StringComparison.OrdinalIgnoreCase) >= 0 && args.IndexOf(conhostArgMarkers[0], StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 if (args.IndexOf(MSData.GetInstance.conhostPatterns["convert-from"], StringComparison.OrdinalIgnoreCase) >= 0 ||
                     args.IndexOf(MSData.GetInstance.conhostPatterns["invoke-pattern"], StringComparison.OrdinalIgnoreCase) >= 0 ||
                     args.IndexOf(MSData.GetInstance.conhostPatterns["policy-bp"], StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    args.IndexOf(" -ec ", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    args.IndexOf(" -encodedcommand ", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    args.IndexOf("appdata\\local", StringComparison.OrdinalIgnoreCase) >= 0)
+                    MSData.ContainsAnyMarker(args, conhostArgMarkers))
                 {
 
                     if (!LaunchOptions.GetInstance.ScanOnly)
@@ -738,9 +738,9 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            if (filePathFromTask.EndsWith(@"\node.exe", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(args))
+            if (filePathFromTask.EndsWith("\\" + MSData.GetInstance.hostNames[MSKeys.NodeExe], StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(args))
             {
-                Match m = Regex.Match(args, @"(?i)""?(?<script>[a-z]:\\[^""]+)""?");
+                Match m = Regex.Match(args, MSData.GetInstance.regexPatterns[MSKeys.NodeScript]);
 
                 if (m.Success)
                 {
@@ -767,13 +767,13 @@ namespace MSearch.Core.ThreatAnalyzers
                         }
 
                         string fileName = Path.GetFileName(fullPathToJs);
-                        if (Regex.IsMatch(fileName, @"^\{?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}?$", RegexOptions.IgnoreCase))
+                        if (Regex.IsMatch(fileName, MSData.GetInstance.regexPatterns[MSKeys.GuidFile], RegexOptions.IgnoreCase))
                         {
                             score += 2;
                         }
 
                         string dirName = Path.GetDirectoryName(fullPathToJs) ?? "";
-                        if (Regex.IsMatch(dirName, @"\{?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}?", RegexOptions.IgnoreCase))
+                        if (Regex.IsMatch(dirName, MSData.GetInstance.regexPatterns[MSKeys.GuidAny], RegexOptions.IgnoreCase))
                         {
                             score += 2;
                         }
@@ -822,9 +822,9 @@ namespace MSearch.Core.ThreatAnalyzers
             }
 
             if (filePathFromTask.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) &&
-                ((filePathFromTask.IndexOf("\\pro\\", StringComparison.OrdinalIgnoreCase) >= 0) ||
-                args.Equals("/LHS", StringComparison.OrdinalIgnoreCase) ||
-                args.Equals("/T", StringComparison.OrdinalIgnoreCase)))
+                ((filePathFromTask.IndexOf(MSData.GetInstance.consts[MSKeys.ProDirMarker], StringComparison.OrdinalIgnoreCase) >= 0) ||
+                args.Equals(MSData.GetInstance.consts[MSKeys.LhsArg], StringComparison.OrdinalIgnoreCase) ||
+                args.Equals(MSData.GetInstance.consts[MSKeys.TArg], StringComparison.OrdinalIgnoreCase)))
             {
                 if (!LaunchOptions.GetInstance.ScanOnly && taskObj.LinkedFile != null)
                 {
@@ -840,7 +840,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
             }
 
-            if (filePathFromTask.IndexOf("msbuild.exe", StringComparison.OrdinalIgnoreCase) >= 0 || args.IndexOf("msbuild.exe", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (filePathFromTask.IndexOf(MSData.GetInstance.hostNames[MSKeys.Msbuild], StringComparison.OrdinalIgnoreCase) >= 0 || args.IndexOf(MSData.GetInstance.hostNames[MSKeys.Msbuild], StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 if (!LaunchOptions.GetInstance.ScanOnly)
                 {
@@ -856,7 +856,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             if (filePathFromTask.StartsWith(Environment.GetEnvironmentVariable("AppData"), StringComparison.OrdinalIgnoreCase))
             {
-                if (args.Equals(new StringBuilder("/v").Append("er").Append("ys").Append("il").Append("en").Append("t").ToString(), StringComparison.OrdinalIgnoreCase) || (FileChecker.IsExecutable(filePathFromTask) && string.IsNullOrEmpty(Path.GetExtension(filePathFromTask))))
+                if (args.Equals(MSData.GetInstance.consts[MSKeys.VerysilentArg], StringComparison.OrdinalIgnoreCase) || (FileChecker.IsExecutable(filePathFromTask) && string.IsNullOrEmpty(Path.GetExtension(filePathFromTask))))
                 {
                     if (!LaunchOptions.GetInstance.ScanOnly && taskObj.LinkedFile != null)
                     {
@@ -1089,22 +1089,24 @@ namespace MSearch.Core.ThreatAnalyzers
 
         string ExtractPwshStartProcessTarget(string arguments)
         {
-            int idx = arguments.IndexOf("start-process", StringComparison.OrdinalIgnoreCase);
+            string startProcessCmd = MSData.GetInstance.consts[MSKeys.StartProcessCmd];
+
+            int idx = arguments.IndexOf(startProcessCmd, StringComparison.OrdinalIgnoreCase);
             if (idx < 0)
                 return null;
 
-            string tail = arguments.Substring(idx + "start-process".Length);
+            string tail = arguments.Substring(idx + startProcessCmd.Length);
 
-            int argListIdx = tail.IndexOf("-argumentlist", StringComparison.OrdinalIgnoreCase);
+            int argListIdx = tail.IndexOf(MSData.GetInstance.consts[MSKeys.ArgumentListArg], StringComparison.OrdinalIgnoreCase);
             if (argListIdx > 0)
                 tail = tail.Substring(0, argListIdx);
 
             tail = Regex.Replace(tail,
-                @"-(filepath|windowstyle|verb|workingdirectory)\s+",
+                MSData.GetInstance.regexPatterns[MSKeys.StartProcessArgs],
                 "",
                 RegexOptions.IgnoreCase);
 
-            var m = Regex.Match(tail, @"(""[^""]+""|\S+)");
+            var m = Regex.Match(tail, MSData.GetInstance.regexPatterns[MSKeys.ArgsSplit]);
             if (!m.Success)
                 return null;
 
@@ -1113,10 +1115,15 @@ namespace MSearch.Core.ThreatAnalyzers
 
         bool IsInSuspiciousLocation(string filePath)
         {
-            return filePath.IndexOf(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), StringComparison.OrdinalIgnoreCase) >= 0 ||
-                              filePath.IndexOf(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), StringComparison.OrdinalIgnoreCase) >= 0 ||
-                              filePath.IndexOf(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), StringComparison.OrdinalIgnoreCase) >= 0 ||
-                              filePath.IndexOf(Environment.GetEnvironmentVariable("PUBLIC"), StringComparison.OrdinalIgnoreCase) >= 0;
+            if (string.IsNullOrEmpty(filePath)) return false;
+
+            foreach (string dir in MSData.GetInstance.suspiciousUserDirs)
+            {
+                if (!string.IsNullOrEmpty(dir) && filePath.IndexOf(dir, StringComparison.OrdinalIgnoreCase) >= 0)
+                    return true;
+            }
+
+            return false;
         }
 
         bool IsSystemFileName(string filePath)
@@ -1146,7 +1153,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             if (!string.IsNullOrEmpty(directoryName) && directoryName.Contains(".{") && directoryName.EndsWith("}"))
             {
-                if (Regex.IsMatch(directoryName, @"^.*\.{[0-9A-F]{8}(-[0-9A-F]{4}){3}-[0-9A-F]{12}\}$", RegexOptions.IgnoreCase))
+                if (Regex.IsMatch(directoryName, MSData.GetInstance.regexPatterns[MSKeys.ClsidDir], RegexOptions.IgnoreCase))
                 {
                     return true;
                 }
@@ -1169,7 +1176,7 @@ namespace MSearch.Core.ThreatAnalyzers
         List<string> SplitCommandLineArguments(string commandLine)
         {
             var args = new List<string>();
-            var matches = Regex.Matches(commandLine, @"""[^""]+""|\S+");
+            var matches = Regex.Matches(commandLine, MSData.GetInstance.regexPatterns[MSKeys.ArgsSplit]);
             foreach (Match match in matches)
             {
                 args.Add(match.Value.Trim('"'));
@@ -1211,12 +1218,13 @@ namespace MSearch.Core.ThreatAnalyzers
             string windows = Environment.GetFolderPath(Environment.SpecialFolder.Windows)
                 .Replace('/', '\\').TrimEnd('\\').ToLowerInvariant();
 
-            return path.StartsWith(windows + @"\system32\") ||
-                   path.StartsWith(windows + @"\syswow64\") ||
-                   path.StartsWith(windows + @"\winsxs\") ||
-                   path.StartsWith(windows + @"\servicing\") ||
-                   path.StartsWith(windows + @"\microsoft.net\") ||
-                   path.StartsWith(windows + @"\assembly\");
+            foreach (string fragment in MSData.GetInstance.systemDirFragments)
+            {
+                if (path.StartsWith(windows + fragment, StringComparison.Ordinal))
+                    return true;
+            }
+
+            return false;
         }
 
         bool IsMasqueradedBinaryName(string fileName)
@@ -1277,7 +1285,7 @@ namespace MSearch.Core.ThreatAnalyzers
             if (string.IsNullOrEmpty(arguments))
                 return null;
 
-            Match match = Regex.Match(arguments, @"[A-Za-z]:\\[^""'<>|]+", RegexOptions.IgnoreCase);
+            Match match = Regex.Match(arguments, MSData.GetInstance.regexPatterns[MSKeys.AbsolutePath], RegexOptions.IgnoreCase);
             if (!match.Success)
                 return null;
 
@@ -1309,8 +1317,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             string raw = rawPath.Trim().Trim('"');
 
-            if (raw.IndexOf("%temp%", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                raw.IndexOf("%tmp%", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (MSData.ContainsAnyMarker(raw, MSData.GetInstance.markerSets[MSKeys.TempPathMarkers]))
             {
                 return true;
             }

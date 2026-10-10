@@ -1,3 +1,4 @@
+using DBase;
 using MSearch.Core.Managers;
 using MSearch.Core.ThreatObjects;
 using System;
@@ -17,10 +18,10 @@ namespace MSearch.Core.Scanners
                 AppConfig.GetInstance.LL.LogHeadMessage("_WMIHead");
                 Utils.CheckWMI(false);
 
-                ManagementScope scope = new ManagementScope(@"\\.\root\subscription");
+                ManagementScope scope = new ManagementScope(MSData.GetInstance.consts[MSKeys.WmiNamespace]);
                 scope.Connect();
 
-                ObjectQuery query = new ObjectQuery("SELECT * FROM CommandLineEventConsumer");
+                ObjectQuery query = new ObjectQuery(MSData.GetInstance.consts[MSKeys.WmiQuery]);
                 using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query))
                 {
                     using (ManagementObjectCollection resultsCollection = searcher.Get())
@@ -33,7 +34,7 @@ namespace MSearch.Core.Scanners
                             var wmiThreat = new WmiSubscriptionThreatObject(
                                 name,
                                 commandLine,
-                                "CommandLineEventConsumer");
+                                MSData.GetInstance.consts[MSKeys.WmiConsumerClass]);
 
                             results.Add(wmiThreat);
                         }

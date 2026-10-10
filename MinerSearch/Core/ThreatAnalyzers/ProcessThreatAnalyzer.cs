@@ -68,7 +68,7 @@ namespace MSearch.Core.ThreatAnalyzers
             string fileDescription = proc.FileProcess.FileDescription;
             if (fileDescription != null)
             {
-                if (fileDescription.Equals("svhost", StringComparison.OrdinalIgnoreCase))
+                if (MSData.GetInstance.markerSets[MSKeys.FakeDescriptionMarkers].Any(m => fileDescription.Equals(m, StringComparison.OrdinalIgnoreCase)))
                 {
                     AppConfig.GetInstance.LL.LogWarnMediumMessage("_ProbablyRAT", $"{proc.FileProcess.FilePath} PID: {proc.ProcessId}");
                     proc.FileProcess.IsSuspiciousPath = true;
@@ -79,7 +79,7 @@ namespace MSearch.Core.ThreatAnalyzers
             string originalFileName = proc.FileProcess.FileNameOriginal;
             if (originalFileName != null)
             {
-                if (originalFileName.IndexOf(new StringBuilder("Spot").Append("ifySta").Append("rtupTas").Append("k.exe").ToString(), StringComparison.OrdinalIgnoreCase) >= 0)
+                if (MSData.ContainsAnyMarker(originalFileName, MSData.GetInstance.markerSets[MSKeys.FakeOriginalNameMarkers]))
                 {
                     AppConfig.GetInstance.LL.LogWarnMediumMessage("_ProbablyRAT", $"{proc.FileProcess.FilePath} PID: {proc.ProcessId}");
                     riskLevel += 3;
@@ -91,7 +91,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 riskLevel += 1;
             }
 
-            if (proc.ProcessName.IndexOf("helper", StringComparison.OrdinalIgnoreCase) >= 0 && !proc.FileProcess.IsValidSignature)
+            if (MSData.ContainsAnyMarker(proc.ProcessName, MSData.GetInstance.markerSets[MSKeys.HelperMarkers]) && !proc.FileProcess.IsValidSignature)
             {
                 riskLevel += 1;
             }
@@ -146,25 +146,23 @@ namespace MSearch.Core.ThreatAnalyzers
                     (proc.FileProcess.FileName != null && proc.FileProcess.FileName.Equals(mshtaProcessName + ".exe", StringComparison.OrdinalIgnoreCase));
 
                 if (isMshtaProcess &&
-                    (proc.ProcessArgs.IndexOf("javascript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                     proc.ProcessArgs.IndexOf("vbscript:", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                     proc.ProcessArgs.IndexOf("http://", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                     proc.ProcessArgs.IndexOf("https://", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                     proc.ProcessArgs.IndexOf(".hta", StringComparison.OrdinalIgnoreCase) >= 0))
+                    (MSData.ContainsAnyMarker(proc.ProcessArgs, MSData.GetInstance.markerSets[MSKeys.ScriptMarkers]) ||
+                     MSData.ContainsAnyMarker(proc.ProcessArgs, MSData.GetInstance.markerSets[MSKeys.UrlMarkers]) ||
+                     MSData.ContainsAnyMarker(proc.ProcessArgs, MSData.GetInstance.markerSets[MSKeys.HtaMarkers])))
                 {
                     riskLevel += 3;
                     AppConfig.GetInstance.LL.LogWarnMediumMessage("_ProcessMshta", $"{proc.FileProcess.FilePath} PID: {proc.ProcessId}");
                 }
 
 
-                if (proc.ProcessArgs.IndexOf("-systemcheck", StringComparison.OrdinalIgnoreCase) >= 0)
+                if (MSData.ContainsAnyMarker(proc.ProcessArgs, MSData.GetInstance.markerSets[MSKeys.FakeSystemCheckMarkers]))
                 {
                     riskLevel += 2;
                     AppConfig.GetInstance.LL.LogWarnMessage("_FakeSystemTask");
 
                     try
                     {
-                        if (proc.FileProcess.FilePath.IndexOf("appdata", StringComparison.OrdinalIgnoreCase) >= 0 && proc.FileProcess.FilePath.IndexOf("windows", StringComparison.OrdinalIgnoreCase) >= 0)
+                        if (MSData.ContainsAllMarkers(proc.FileProcess.FilePath, MSData.GetInstance.markerSets[MSKeys.FakeTaskLocationMarkers]))
                         {
                             riskLevel += 1;
                             proc.FileProcess.IsSuspiciousPath = true;
@@ -179,7 +177,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
 
 
-                if (proc.ProcessName.Equals(MSData.GetInstance.SysFileName[4], StringComparison.OrdinalIgnoreCase) && (proc.ProcessArgs.IndexOf($"{MSData.GetInstance.SysFileName[4]}.exe -k dcomlaunch", StringComparison.OrdinalIgnoreCase) >= 0))
+                if (proc.ProcessName.Equals(MSData.GetInstance.SysFileName[4], StringComparison.OrdinalIgnoreCase) && (proc.ProcessArgs.IndexOf(MSData.GetInstance.SysFileName[4] + MSData.GetInstance.consts[MSKeys.DcomLaunchArgs], StringComparison.OrdinalIgnoreCase) >= 0))
                 {
                     foreach (ProcessModule pMod in proc.ProcessModules)
                     {
@@ -191,7 +189,7 @@ namespace MSearch.Core.ThreatAnalyzers
                     }
                 }
 
-                if (proc.ProcessName.Equals(MSData.GetInstance.SysFileName[32], StringComparison.OrdinalIgnoreCase) && proc.ProcessArgs.IndexOf("#system32", StringComparison.OrdinalIgnoreCase) >= 0)
+                if (proc.ProcessName.Equals(MSData.GetInstance.SysFileName[32], StringComparison.OrdinalIgnoreCase) && MSData.ContainsAnyMarker(proc.ProcessArgs, MSData.GetInstance.markerSets[MSKeys.RegasmArgMarkers]))
                 {
                     AppConfig.GetInstance.LL.LogWarnMediumMessage("_ProbablyRAT", $"{proc.FileProcess.FilePath} PID: {proc.ProcessId}");
                     riskLevel += 3;
@@ -203,7 +201,7 @@ namespace MSearch.Core.ThreatAnalyzers
                     riskLevel += 3;
                 }
 
-                if (proc.ProcessName.Equals("explorer", StringComparison.OrdinalIgnoreCase) && proc.ProcessArgs.IndexOf($@"{AppConfig.GetInstance.drive_letter}:\Windows\Explorer.exe", StringComparison.OrdinalIgnoreCase) == -1)
+                if (proc.ProcessName.Equals("explorer", StringComparison.OrdinalIgnoreCase) && proc.ProcessArgs.IndexOf(AppConfig.GetInstance.drive_letter + MSData.GetInstance.consts[MSKeys.ExplorerExePath], StringComparison.OrdinalIgnoreCase) == -1)
                 {
                     riskLevel++;
                 }
@@ -218,7 +216,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 riskLevel += 2;
             }
 
-            if (proc.ProcessName.Equals(MSData.GetInstance.SysFileName[28], StringComparison.OrdinalIgnoreCase) && fullPath.IndexOf($"{AppConfig.GetInstance.drive_letter}:\\windows\\system32", StringComparison.OrdinalIgnoreCase) == -1)
+            if (proc.ProcessName.Equals(MSData.GetInstance.SysFileName[28], StringComparison.OrdinalIgnoreCase) && fullPath.IndexOf(AppConfig.GetInstance.drive_letter + MSData.GetInstance.systemPathFragments[0], StringComparison.OrdinalIgnoreCase) == -1)
             {
                 AppConfig.GetInstance.LL.LogWarnMessage("_SuspiciousPath", fullPath);
                 proc.FileProcess.IsSuspiciousPath = true;
@@ -231,15 +229,18 @@ namespace MSearch.Core.ThreatAnalyzers
                 if (proc.ProcessName.Equals(MSData.GetInstance.SysFileName[i], StringComparison.OrdinalIgnoreCase))
                 {
 
-                    if (fullPath.IndexOf($"{AppConfig.GetInstance.drive_letter}:\\windows\\system32", StringComparison.OrdinalIgnoreCase) == -1
-                        && fullPath.IndexOf($"{AppConfig.GetInstance.drive_letter}:\\windows\\system32\\wbem", StringComparison.OrdinalIgnoreCase) == -1
-                        && fullPath.IndexOf($"{AppConfig.GetInstance.drive_letter}:\\windows\\syswow64", StringComparison.OrdinalIgnoreCase) == -1
-                        && fullPath.IndexOf($"{AppConfig.GetInstance.drive_letter}:\\windows\\winsxs\\amd64", StringComparison.OrdinalIgnoreCase) == -1
-                        && fullPath.IndexOf($"{AppConfig.GetInstance.drive_letter}:\\windows\\winsxs\\x86", StringComparison.OrdinalIgnoreCase) == -1
-                        && fullPath.IndexOf($"{AppConfig.GetInstance.drive_letter}:\\windows\\microsoft.net\\framework64", StringComparison.OrdinalIgnoreCase) == -1
-                        && fullPath.IndexOf($"{AppConfig.GetInstance.drive_letter}:\\windows\\microsoft.net\\framework", StringComparison.OrdinalIgnoreCase) == -1)
+                    bool inSystemPath = false;
+                    foreach (string pathFragment in MSData.GetInstance.systemPathFragments)
                     {
+                        if (fullPath.IndexOf(AppConfig.GetInstance.drive_letter + pathFragment, StringComparison.OrdinalIgnoreCase) != -1)
+                        {
+                            inSystemPath = true;
+                            break;
+                        }
+                    }
 
+                    if (!inSystemPath)
+                    {
                         AppConfig.GetInstance.LL.LogWarnMessage("_SuspiciousPath", fullPath);
                         proc.FileProcess.IsSuspiciousPath = true;
                         riskLevel += 2;
@@ -275,7 +276,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 yield break;
             }
 
-            if (proc.ProcessName.Equals("rundll", StringComparison.OrdinalIgnoreCase) || proc.ProcessName.Equals("system", StringComparison.OrdinalIgnoreCase) || proc.ProcessName.Equals("wi?ns?er?v".Replace("?", ""), StringComparison.OrdinalIgnoreCase))
+            if (MSData.GetInstance.markerSets[MSKeys.FakeProcessNameMarkers].Any(m => proc.ProcessName.Equals(m, StringComparison.OrdinalIgnoreCase)))
             {
                 AppConfig.GetInstance.LL.LogWarnMediumMessage("_ProbablyRAT", $"{proc.FileProcess.FilePath} PID: {proc.ProcessId}");
 

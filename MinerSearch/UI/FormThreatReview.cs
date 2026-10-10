@@ -1,4 +1,5 @@
-﻿using MSearch.Core;
+﻿using DBase;
+using MSearch.Core;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
@@ -315,7 +316,7 @@ namespace MSearch.UI
                 case ThreatObjectKind.Service:
                     // TermService — Cure, Disable, Delete, Skip (можно вылечить)
                     // Остальные службы — Quarantine, Disable, Delete, Skip
-                    if (target is ServiceThreatObject svc && svc.ServiceName.Equals("TermService", StringComparison.OrdinalIgnoreCase))
+                    if (target is ServiceThreatObject svc && svc.ServiceName.Equals(MSData.GetInstance.consts[MSKeys.TermServiceName], StringComparison.OrdinalIgnoreCase))
                         return new[] { ScanActionTypeUserSelected.Cure, ScanActionTypeUserSelected.Disable, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
                     return new[] { ScanActionTypeUserSelected.Quarantine, ScanActionTypeUserSelected.Disable, ScanActionTypeUserSelected.Delete, ScanActionTypeUserSelected.Skip };
 

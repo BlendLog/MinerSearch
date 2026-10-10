@@ -1,3 +1,4 @@
+using DBase;
 using Microsoft.Win32;
 using MSearch.Core.Managers;
 using MSearch.Core.ThreatObjects;
@@ -26,7 +27,7 @@ namespace MSearch.Core.Scanners
             }
 
             List<string> users = OSExtensions.GetUsers();
-            string specialAccountsPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList";
+            string specialAccountsPath = MSData.GetInstance.queries["SpecialAccountsUserList"];
 
             foreach (string userName in users)
             {
