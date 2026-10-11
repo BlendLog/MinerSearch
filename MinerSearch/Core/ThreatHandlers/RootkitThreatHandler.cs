@@ -1,3 +1,4 @@
+using DBase;
 using Microsoft.Win32;
 using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
@@ -52,17 +53,17 @@ namespace MSearch.Core.Handlers
 
             try
             {
-                // 1. Детачим инжектированные процессы (R77_SIGNATURE)
+                // 1. Удаляем Windows-службы руткита ($77svc / dialersvc): иначе после перезагрузки стагер поднимет её заново
+                bool serviceRemoved = RemoveR77Services();
+
+                // 2. Graceful-detach core-инжектов и сервиса (сервис r77 1.8.x живёт внутри winlogon.exe)
                 DetachR77Processes(rootkit.R77Processes);
 
-                // 2. Терминируем dialer процессы
+                // 3. Терминируем dialer процессы (SilentCryptoMiner)
                 dialerTerminated = TerminateDialerProcesses(rootkit.DialerPids);
 
-                // 3. Терминируем R77-сервисы и хелперы
-                TerminateRemainingR77Services(rootkit.R77Processes);
-
-                // 4. Удаляем конфигурацию
-                success = RemoveR77Config();
+                // 4. Удаляем значения стагера и конфигурацию
+                success = RemoveR77Config() || serviceRemoved;
             }
             catch (Exception ex)
             {
@@ -85,7 +86,7 @@ namespace MSearch.Core.Handlers
         }
 
         /// <summary>
-        /// Детачит инжектированные процессы R77 (R77_SIGNATURE).
+        /// Graceful-detach инжектов R77: core (R77_SIGNATURE) и сервиса (R77_SERVICE_SIGNATURE).
         /// </summary>
         private void DetachR77Processes(Native.R77_PROCESS[] r77Processes)
         {
@@ -94,18 +95,16 @@ namespace MSearch.Core.Handlers
 
             foreach (Native.R77_PROCESS r77 in r77Processes)
             {
-                if (r77.Signature == (int)Native.R77_SIGNATURE && r77.DetachAddress != 0)
+                // Сервис (host — winlogon.exe) снимается тем же detach-адресом, что и core.
+                bool detachable = r77.Signature == (int)Native.R77_SIGNATURE ||
+                                  r77.Signature == (int)Native.R77_SERVICE_SIGNATURE;
+
+                if (detachable && r77.DetachAddress != 0)
                 {
                     IntPtr process = IntPtr.Zero;
                     try
                     {
-                        process = Native.OpenProcess(
-                            Native.PROCESS_CREATE_THREAD |
-                            Native.PROCESS_VM_OPERATION |
-                            Native.PROCESS_VM_WRITE |
-                            Native.PROCESS_QUERY_INFORMATION,
-                            false,
-                            (int)r77.ProcessId);
+                        process = OpenProcessForDetach((int)r77.ProcessId);
 
                         if (process != IntPtr.Zero)
                         {
@@ -139,6 +138,24 @@ namespace MSearch.Core.Handlers
                     }
                 }
             }
+        }
+
+        private static IntPtr OpenProcessForDetach(int pid)
+        {
+            IntPtr process = Native.OpenProcess(
+                Native.PROCESS_CREATE_THREAD |
+                Native.PROCESS_VM_OPERATION |
+                Native.PROCESS_VM_WRITE |
+                Native.PROCESS_QUERY_INFORMATION,
+                false,
+                pid);
+
+            if (process == IntPtr.Zero)
+            {
+                process = Native.OpenProcess(0x001F0FFF /* PROCESS_ALL_ACCESS */, false, pid);
+            }
+
+            return process;
         }
 
         /// <summary>
@@ -229,86 +246,27 @@ namespace MSearch.Core.Handlers
         }
 
         /// <summary>
-        /// Завершает оставшиеся процессы R77-сервиса и хелперов.
-        /// R77_SIGNATURE (0x7277) — НЕ терминирует (только детачинг).
+        /// Удаляет Windows-службы руткита
         /// </summary>
-        private void TerminateRemainingR77Services(Native.R77_PROCESS[] r77Processes)
+        private static bool RemoveR77Services()
         {
-            if (r77Processes == null)
-                return;
+            string[] serviceNames = { MSKeys.R77_SERVICE_NAME, MSKeys.DIALER_SERVICE_NAME };
+            bool removed = false;
 
-            // Получаем текущий список процессов с R77-подписью
-            uint[] processes = new uint[Native.MaxProcesses];
-            int processCount = 0;
-            IntPtr[] modules = new IntPtr[Native.MaxModules];
-            uint moduleCount = 0;
-            byte[] moduleBytes = new byte[512];
-
-            if (!Native.EnumProcesses(processes, processes.Length * sizeof(uint), out processCount))
+            foreach (string serviceName in serviceNames)
             {
-                return;
-            }
-
-            processCount /= sizeof(uint);
-
-            for (int i = 0; i < processCount; i++)
-            {
-                IntPtr process = Native.OpenProcess(0x0410, false, (int)processes[i]);
-                if (process != IntPtr.Zero)
+                try
                 {
-                    try
-                    {
-                        if (Native.EnumProcessModulesEx(process, modules, (uint)modules.Length * (uint)IntPtr.Size, out moduleCount, 0x03))
-                        {
-                            moduleCount /= (uint)IntPtr.Size;
-
-                            for (uint j = 0; j < moduleCount; j++)
-                            {
-                                if (Native.ReadProcessMemory(process, modules[j], moduleBytes, moduleBytes.Length, IntPtr.Zero))
-                                {
-                                    ushort signature = BitConverter.ToUInt16(moduleBytes, 0x40);
-                                    if (signature == Native.R77_SERVICE_SIGNATURE || signature == Native.R77_HELPER_SIGNATURE)
-                                    {
-                                        int pid = (int)processes[i];
-                                        int isCritical = 0;
-
-                                        IntPtr procHandle = Native.OpenProcess(0x0001 | 0x0200, false, pid);
-                                        if (procHandle != IntPtr.Zero)
-                                        {
-                                            try
-                                            {
-                                                Native.NtSetInformationProcess(procHandle, 0x1D, ref isCritical, sizeof(int));
-
-                                                try
-                                                {
-                                                    using (var p = Process.GetProcessById(pid))
-                                                    {
-                                                        if (!p.HasExited)
-                                                        {
-                                                            p.Kill();
-                                                        }
-                                                    }
-                                                }
-                                                catch (ArgumentException) { }
-                                                catch (InvalidOperationException) { }
-                                                catch (Win32Exception) { }
-                                            }
-                                            finally
-                                            {
-                                                Native.CloseHandle(procHandle);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        Native.CloseHandle(process);
-                    }
+                    if (ServiceHelper.TryDelete(serviceName))
+                        removed = true;
+                }
+                catch (Exception ex)
+                {
+                    AppConfig.GetInstance.LL.LogWarnMessage("_ErrorCannotRemove", $"{serviceName}: {ex.Message}");
                 }
             }
+
+            return removed;
         }
 
         /// <summary>
@@ -340,15 +298,20 @@ namespace MSearch.Core.Handlers
                     }
                 }
 
-                string subKeyPath = @"dialerconfig";
 
                 using (RegistryKey baseKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true))
                 {
-                    if (baseKey != null && baseKey.OpenSubKey(subKeyPath) != null)
+                    if (baseKey != null)
                     {
-                        baseKey.DeleteSubKeyTree(subKeyPath);
-                        AppConfig.GetInstance.LL.LogSuccessMessage("_RegistryKeyRemoved", subKeyPath);
-                        success = true;
+                        foreach (string subKeyPath in MSData.GetInstance.r77SubKeys)
+                        {
+                            if (baseKey.OpenSubKey(subKeyPath) != null)
+                            {
+                                baseKey.DeleteSubKeyTree(subKeyPath);
+                                AppConfig.GetInstance.LL.LogSuccessMessage("_RegistryKeyRemoved", subKeyPath);
+                                success = true;
+                            }
+                        }
                     }
                 }
             }

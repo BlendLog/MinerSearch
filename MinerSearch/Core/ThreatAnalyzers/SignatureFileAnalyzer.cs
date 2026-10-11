@@ -226,8 +226,8 @@ namespace MSearch.Core.ThreatAnalyzers
         {
             var result = Analyze(fileThreat, displayProgress);
             
-            // Немедленная блокировка выполнения для вредоносных файлов
-            if (result.IsMalicious && !fileThreat.IsValidSignature && !fileThreat.IsLockedByAntivirus)
+            if (result.IsMalicious && !fileThreat.IsValidSignature && !fileThreat.IsLockedByAntivirus &&
+                !LaunchOptions.GetInstance.ScanOnly)
             {
                 try
                 {

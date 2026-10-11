@@ -1,20 +1,9 @@
 using MSearch.Core.Managers;
-using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
-using Win32Wrapper;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.AccessControl;
-using System.Security.Principal;
-using System.Text;
-using System.Windows.Forms;
-using Microsoft.Win32;
+using Win32Wrapper;
 
 namespace MSearch.Core.Scanners
 {
@@ -35,7 +24,6 @@ namespace MSearch.Core.Scanners
             CheckCurrentProcess(ref isInfected);
 
             var rootkitThreat = new RootkitThreatObject(isInfected);
-            AppConfig.GetInstance.totalFoundThreats += isInfected ? 1 : 0;
 
             yield return rootkitThreat;
         }
@@ -71,7 +59,17 @@ namespace MSearch.Core.Scanners
                                 moduleBytes.Length,
                                 IntPtr.Zero))
                             {
-                                ushort signature = BitConverter.ToUInt16(moduleBytes, 0x40);
+                                // r77 >= 1.8.0 — 0x28, r77 <= 1.7.x — legacy 0x40
+                                int headerOffset = Native.R77_HEADER_OFFSET;
+                                ushort signature = BitConverter.ToUInt16(moduleBytes, headerOffset);
+                                if (signature != Native.R77_SIGNATURE &&
+                                    signature != Native.R77_SERVICE_SIGNATURE &&
+                                    signature != Native.R77_HELPER_SIGNATURE)
+                                {
+                                    headerOffset = Native.R77_HEADER_OFFSET_LEGACY;
+                                    signature = BitConverter.ToUInt16(moduleBytes, headerOffset);
+                                }
+
                                 if (signature == Native.R77_SIGNATURE ||
                                     signature == Native.R77_SERVICE_SIGNATURE ||
                                     signature == Native.R77_HELPER_SIGNATURE)
@@ -82,7 +80,7 @@ namespace MSearch.Core.Scanners
                                     DetachR77Processes(
                                         new[] { currentProcess.Id },
                                         new[] { (uint)signature },
-                                        new[] { signature == Native.R77_SIGNATURE ? BitConverter.ToUInt64(moduleBytes, 0x42) : 0UL });
+                                        new[] { signature == Native.R77_SIGNATURE ? BitConverter.ToUInt64(moduleBytes, headerOffset + 2) : 0UL });
                                     break;
                                 }
                             }

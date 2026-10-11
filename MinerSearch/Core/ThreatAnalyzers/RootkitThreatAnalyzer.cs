@@ -1,3 +1,4 @@
+using DBase;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
@@ -69,7 +70,17 @@ namespace MSearch.Core.ThreatAnalyzers
                                 {
                                     if (Native.ReadProcessMemory(process, modules[j], moduleBytes, moduleBytes.Length, IntPtr.Zero))
                                     {
-                                        ushort signature = BitConverter.ToUInt16(moduleBytes, 0x40);
+                                        // r77 >= 1.8.0 — 0x28, r77 <= 1.7.x — legacy 0x40
+                                        int headerOffset = Native.R77_HEADER_OFFSET;
+                                        ushort signature = BitConverter.ToUInt16(moduleBytes, headerOffset);
+                                        if (signature != Native.R77_SIGNATURE &&
+                                            signature != Native.R77_SERVICE_SIGNATURE &&
+                                            signature != Native.R77_HELPER_SIGNATURE)
+                                        {
+                                            headerOffset = Native.R77_HEADER_OFFSET_LEGACY;
+                                            signature = BitConverter.ToUInt16(moduleBytes, headerOffset);
+                                        }
+
                                         if (signature == Native.R77_SIGNATURE ||
                                             signature == Native.R77_SERVICE_SIGNATURE ||
                                             signature == Native.R77_HELPER_SIGNATURE)
@@ -81,9 +92,12 @@ namespace MSearch.Core.ThreatAnalyzers
                                                 DetachAddress = 0
                                             };
 
-                                            if (signature == Native.R77_SIGNATURE)
+                                            // Detach-адрес пишется и для сервисной сигнатуры
+                                            // (r77 сам читает его для R77_SIGNATURE и R77_SERVICE_SIGNATURE)
+                                            if (signature == Native.R77_SIGNATURE ||
+                                                signature == Native.R77_SERVICE_SIGNATURE)
                                             {
-                                                r77Proc.DetachAddress = BitConverter.ToUInt64(moduleBytes, 0x40 + 2);
+                                                r77Proc.DetachAddress = BitConverter.ToUInt64(moduleBytes, headerOffset + 2);
                                             }
 
                                             r77Processes.Add(r77Proc);
@@ -101,7 +115,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            string dialerPattern = "di" + "al" + "er";
+            string dialerPattern = MSData.GetInstance.SysFileName[17];
             foreach (Process process in ProcessManager.SafeGetProcesses())
             {
                 if (!process.ProcessName.StartsWith(dialerPattern, StringComparison.OrdinalIgnoreCase)) continue;
@@ -109,7 +123,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 {
                     ProcessManager.SuspendProcess(process.Id);
                     dialerPids.Add(process.Id);
-                    AppConfig.GetInstance.totalFoundThreats++;
                 }
                 catch (Exception) { }
             }

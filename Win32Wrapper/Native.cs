@@ -636,6 +636,11 @@ namespace Win32Wrapper
         public const uint R77_SIGNATURE = 0x7277;
         public const uint R77_SERVICE_SIGNATURE = 0x7273;
         public const uint R77_HELPER_SIGNATURE = 0x7268;
+
+
+        public const int R77_HEADER_OFFSET = 0x28;
+        public const int R77_HEADER_OFFSET_LEGACY = 0x40;
+
         public const int MaxProcesses = 10000;
         public const int MaxModules = 10000;
 
@@ -1056,6 +1061,36 @@ namespace Win32Wrapper
 
                     if (!DeleteService(service))
                         throw new ApplicationException("Could not delete service " + Marshal.GetLastWin32Error());
+                }
+                finally
+                {
+                    CloseServiceHandle(service);
+                }
+            }
+            finally
+            {
+                CloseServiceHandle(scm);
+            }
+        }
+
+        /// <summary>
+        /// Удаляет службу без попытки остановки: если процесс службы ещё запущен,
+        /// SCM завершит удаление, когда он остановится.
+        /// Возвращает false, если служба не найдена или удалить не удалось.
+        /// </summary>
+        public static bool TryDelete(string serviceName)
+        {
+            IntPtr scm = OpenSCManager(ScmAccessRights.AllAccess);
+
+            try
+            {
+                IntPtr service = OpenService(scm, serviceName, ServiceAccessRights.AllAccess);
+                if (service == IntPtr.Zero)
+                    return false;
+
+                try
+                {
+                    return DeleteService(service);
                 }
                 finally
                 {
