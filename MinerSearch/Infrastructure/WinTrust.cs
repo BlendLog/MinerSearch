@@ -1,8 +1,10 @@
 ﻿//Thanx for https://www.pinvoke.net/default.aspx/WinTrust.GetInstance.winverifytrust
 // credit to Alex Dragokas https://github.com/dragokas/Verify-Signature-Cpp/blob/master/verify.cpp
 
+using DBase;
 using MSearch.Core;
 using System;
+using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 
 namespace MSearch
@@ -325,7 +327,31 @@ namespace MSearch
                 AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", logMessageKey, filePath, ConsoleColor.Yellow, false);
         }
 
+        private static readonly ConcurrentDictionary<string, WinVerifyTrustResult> _sessionResultCache =
+            new ConcurrentDictionary<string, WinVerifyTrustResult>(StringComparer.OrdinalIgnoreCase);
+
         public WinVerifyTrustResult VerifyEmbeddedSignature(string filePath, bool showUnsigned = false, bool showTimestamp = true)
+        {
+            string cacheKey = MSData.NormalizeKnownPath(filePath);
+            WinVerifyTrustResult result;
+
+            if (cacheKey.Length == 0)
+            {
+                result = VerifyEmbeddedSignatureUncached(filePath);
+            }
+            else if (!_sessionResultCache.TryGetValue(cacheKey, out result))
+            {
+                result = VerifyEmbeddedSignatureUncached(filePath);
+
+                if (result != WinVerifyTrustResult.Error)
+                    _sessionResultCache[cacheKey] = result;
+            }
+
+            LogVerificationResult(result, filePath, showUnsigned, showTimestamp);
+            return result;
+        }
+
+        private WinVerifyTrustResult VerifyEmbeddedSignatureUncached(string filePath)
         {
             try
             {
@@ -339,64 +365,62 @@ namespace MSearch
                     if (result == WinVerifyTrustResult.FileNotSigned)
                         result = VerifyByCatalog(filePath);
 
-
-                    switch (result)
-                    {
-                        case WinVerifyTrustResult.Success:
-                            break; // Continue to return result
-
-                        case WinVerifyTrustResult.ProviderUnknown:
-                        case WinVerifyTrustResult.SubjectNotTrusted:
-                        case WinVerifyTrustResult.SubjectExplicitlyDistrusted:
-                        case WinVerifyTrustResult.SignatureOrFileCorrupt:
-                        case WinVerifyTrustResult.SubjectCertExpired:
-                        case WinVerifyTrustResult.SubjectCertificateRevoked:
-                        case WinVerifyTrustResult.UntrustedRoot:
-                        case WinVerifyTrustResult.DIGSIG_ENCODE:
-                        case WinVerifyTrustResult.DIGSIG_DECODE:
-                            // Log specific warnings for signature issues, but keep the original result.
-                            LogWinTrustResult(result, filePath, showTimestamp);
-                            break; // Continue to return result
-
-                        case WinVerifyTrustResult.ActionUnknown:
-                        case WinVerifyTrustResult.SubjectFormUnknown:
-                            // Log specific warnings if verbose
-                            if (LaunchOptions.GetInstance.verbose)
-                            {
-                                LogWinTrustResult(result, filePath, showTimestamp);
-                            }
-                            break; // Continue to return result
-
-                        case WinVerifyTrustResult.FileNotSigned:
-                            break; // Continue to return result based on catalog check
-
-                        default:
-                            if (LaunchOptions.GetInstance.verbose)
-                            {
-                                if (showTimestamp)
-                                    AppConfig.GetInstance.LL.LogWarnMessage("_CertUnknownResult", filePath);
-                                else
-                                    AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", "_CertUnknownResult", filePath, ConsoleColor.Yellow, false);
-                            }
-                            break; // Continue to return result
-                    }
-
-                    if (result == WinVerifyTrustResult.FileNotSigned && (showUnsigned || LaunchOptions.GetInstance.verbose))
-                    {
-                        if (showTimestamp)
-                            AppConfig.GetInstance.LL.LogWarnMessage("_CertFileNotSigned", filePath);
-                        else
-                            AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", "_CertFileNotSigned", filePath, ConsoleColor.Yellow, false);
-                    }
-
-
-
                     return result;
                 }
             }
             catch
             {
                 return WinVerifyTrustResult.Error;
+            }
+        }
+
+        private void LogVerificationResult(WinVerifyTrustResult result, string filePath, bool showUnsigned, bool showTimestamp)
+        {
+            switch (result)
+            {
+                case WinVerifyTrustResult.Success:
+                    break;
+
+                case WinVerifyTrustResult.ProviderUnknown:
+                case WinVerifyTrustResult.SubjectNotTrusted:
+                case WinVerifyTrustResult.SubjectExplicitlyDistrusted:
+                case WinVerifyTrustResult.SignatureOrFileCorrupt:
+                case WinVerifyTrustResult.SubjectCertExpired:
+                case WinVerifyTrustResult.SubjectCertificateRevoked:
+                case WinVerifyTrustResult.UntrustedRoot:
+                case WinVerifyTrustResult.DIGSIG_ENCODE:
+                case WinVerifyTrustResult.DIGSIG_DECODE:
+                    LogWinTrustResult(result, filePath, showTimestamp);
+                    break;
+
+                case WinVerifyTrustResult.ActionUnknown:
+                case WinVerifyTrustResult.SubjectFormUnknown:
+                    if (LaunchOptions.GetInstance.verbose)
+                    {
+                        LogWinTrustResult(result, filePath, showTimestamp);
+                    }
+                    break;
+
+                case WinVerifyTrustResult.FileNotSigned:
+                    break;
+
+                default:
+                    if (LaunchOptions.GetInstance.verbose)
+                    {
+                        if (showTimestamp)
+                            AppConfig.GetInstance.LL.LogWarnMessage("_CertUnknownResult", filePath);
+                        else
+                            AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", "_CertUnknownResult", filePath, ConsoleColor.Yellow, false);
+                    }
+                    break;
+            }
+
+            if (result == WinVerifyTrustResult.FileNotSigned && (showUnsigned || LaunchOptions.GetInstance.verbose))
+            {
+                if (showTimestamp)
+                    AppConfig.GetInstance.LL.LogWarnMessage("_CertFileNotSigned", filePath);
+                else
+                    AppConfig.GetInstance.LL.LogMessage("\n\t\t[!]", "_CertFileNotSigned", filePath, ConsoleColor.Yellow, false);
             }
         }
 

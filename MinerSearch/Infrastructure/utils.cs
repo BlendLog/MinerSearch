@@ -6,6 +6,7 @@ using MSearch.Core.ThreatObjects;
 using MSearch.UI;
 using netlib;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -916,10 +917,15 @@ namespace MSearch
             return "";
         }
 
-        internal static int GetPortByProcessId(int pid)
+        internal static Dictionary<int, int> BuildPortMap()
         {
+            var portMap = new Dictionary<int, int>();
             int buffSize = 0;
             Native.GetExtendedTcpTable(IntPtr.Zero, ref buffSize, true, 2, Native.TcpTableClass.TCP_TABLE_OWNER_PID_ALL, 0);
+
+            if (buffSize <= 4)
+                return portMap;
+
             IntPtr tcpTable = Marshal.AllocHGlobal(buffSize);
 
             try
@@ -932,10 +938,12 @@ namespace MSearch
                 for (int i = 0; i < rowNumber; i++)
                 {
                     Native.MIB_TCPROW_OWNER_PID row = (Native.MIB_TCPROW_OWNER_PID)Marshal.PtrToStructure(rowPtr, typeof(Native.MIB_TCPROW_OWNER_PID));
-                    if (row.owningPid == pid)
+
+                    if (!portMap.ContainsKey(row.owningPid))
                     {
-                        return BitConverter.ToUInt16(new byte[2] { row.remotePort[1], row.remotePort[0] }, 0);
+                        portMap[row.owningPid] = BitConverter.ToUInt16(new byte[2] { row.remotePort[1], row.remotePort[0] }, 0);
                     }
+
                     rowPtr = (IntPtr)(rowPtr.ToInt64() + Marshal.SizeOf(row));
                 }
             }
@@ -944,7 +952,7 @@ namespace MSearch
                 Marshal.FreeHGlobal(tcpTable);
             }
 
-            return -1;
+            return portMap;
         }
 
         internal static uint GetProcessIdByFilePath(string filePath)
@@ -1790,7 +1798,28 @@ namespace MSearch
             }
         }
 
+        private static readonly ConcurrentDictionary<string, string> _sha1SessionCache =
+            new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
         internal static string CalculateSHA1(string filePath)
+        {
+            string cacheKey = MSData.NormalizeKnownPath(filePath);
+            if (cacheKey.Length == 0)
+                cacheKey = null;
+
+            string cachedHash;
+            if (cacheKey != null && _sha1SessionCache.TryGetValue(cacheKey, out cachedHash))
+                return cachedHash;
+
+            string hash = CalculateSHA1Uncached(filePath);
+
+            if (cacheKey != null && hash != "N/A")
+                _sha1SessionCache[cacheKey] = hash;
+
+            return hash;
+        }
+
+        private static string CalculateSHA1Uncached(string filePath)
         {
             using (var sha1 = SHA1.Create())
             {

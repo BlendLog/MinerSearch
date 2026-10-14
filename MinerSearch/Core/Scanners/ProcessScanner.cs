@@ -22,6 +22,10 @@ namespace MSearch.Core.Scanners
             AppConfig.GetInstance.LL.LogHeadMessage("_PreparingToScan");
             List<Process> procs = ProcessManager.SafeGetProcesses();
 
+            var portMap = AppConfig.GetInstance.bootMode != BootMode.SafeMinimal
+                ? ProcessManager.BuildPortMap()
+                : null;
+
             foreach (Process p in procs.OrderBy(p => p.ProcessName).ToList())
             {
                 try
@@ -79,9 +83,9 @@ namespace MSearch.Core.Scanners
                     bool isDotnet = ProcessManager.IsDotnetProcess(p);
 
                     int remotePort = -1;
-                    if (AppConfig.GetInstance.bootMode != BootMode.SafeMinimal)
+                    if (portMap != null && portMap.TryGetValue(p.Id, out int portByPid))
                     {
-                        remotePort = ProcessManager.GetPortByProcessId(p.Id);
+                        remotePort = portByPid;
                     }
 
                     bool hasSystemPrivilege = ProcessManager.IsSystemProcess(processId);
