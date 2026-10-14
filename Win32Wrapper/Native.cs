@@ -106,9 +106,26 @@ namespace Win32Wrapper
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+
+        [DllImport("user32.dll")]
+        public static extern bool AllowSetForegroundWindow(uint dwProcessId);
+
+        [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        public static extern bool IsIconic(IntPtr hWnd);
+
+        public const uint ASFW_ANY = 0xFFFFFFFF;
         public const int SW_HIDE = 0;
         public const int SW_SHOW = 5;
         public const int SW_MINIMIZE = 6;
+        public const int SW_RESTORE = 9;
 
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

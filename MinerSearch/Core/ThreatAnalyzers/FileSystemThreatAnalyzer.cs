@@ -133,6 +133,18 @@ namespace MSearch.Core.ThreatAnalyzers
                 yield break;
             }
 
+            if (fileThreat.SourceTag == "caches_exec")
+            {
+                AppConfig.GetInstance.LL.LogWarnMediumMessage("_ExecutableInUserCaches", filePath);
+                fileThreat.ShouldMoveFileToQuarantine = true;
+                fileThreat.ShouldDisableExecute = true;
+
+                var decision = new ThreatDecision(fileThreat, riskLevel: 2, ScanObjectType.Suspicious);
+                decision.ActionType = ScanActionType.Quarantine;
+                yield return decision;
+                yield break;
+            }
+
             if (fileThreat.SourceTag == "signature_scan")
             {
                 if (!File.Exists(filePath))

@@ -134,21 +134,7 @@ namespace MSearch
             {
                 if (!ProcessManager.IsPwshAsParentProcess(Process.GetCurrentProcess().Id))
                 {
-                    int targetW = 150;
-                    int targetH = 40;
-
-                    int maxW = Console.LargestWindowWidth;
-                    int maxH = Console.LargestWindowHeight;
-
-                    int w = Math.Min(targetW, maxW);
-                    int h = Math.Min(targetH, maxH);
-
-                    if (Console.BufferWidth < w) Console.BufferWidth = w;
-                    if (Console.BufferHeight < h) Console.BufferHeight = h;
-
-                    Console.WindowWidth = w < 0 ? 150 : w;
-                    Console.WindowHeight = h < 0 ? 40 : h;
-
+                    TryInitConsoleWindow();
                     WaterMark();
                 }
             }
@@ -255,7 +241,7 @@ namespace MSearch
 
             if (!_options.silent)
             {
-                AppConfig.GetInstance.LL.LogJustDisplayMessage("\t\t", $"_RelevantVer", "https://github.com/BlendLog/Mi?ne?rSea?rch/releases \n".Replace("?", ""), ConsoleColor.White);
+                AppConfig.GetInstance.LL.LogJustDisplayMessage("\t\t", $"_RelevantVer", "https://blendlog.github.io \n", ConsoleColor.White);
             }
 
 //#endif
@@ -335,6 +321,7 @@ namespace MSearch
 
             FileChecker.RestoreSignatures(MSData.GetInstance.signatures);
             new PrivilegeManager(_options).Enable();
+            PrepareSpecialDirectories();
             Stopwatch startTime = Stopwatch.StartNew();
 
             // Create scanning infrastructure (moved to separate method)
@@ -384,15 +371,31 @@ namespace MSearch
                 }
             }
 
-            //Console.ReadLine();
-
-            // Cleanup: OS automatically releases handles on process exit.
-            // Explicit ReleaseMutex calls are removed to avoid SynchronizationLockException (ownership was lost during checks).
-
             return;
         }
 
         #region Extracted methods
+
+        private static void PrepareSpecialDirectories()
+        {
+            if (AppConfig.GetInstance.WinPEMode || AppConfig.GetInstance.RunAsSystem)
+                return;
+
+            string tempPath = Environment.GetEnvironmentVariable("TEMP");
+            if (string.IsNullOrEmpty(tempPath))
+                tempPath = Environment.GetEnvironmentVariable("TMP");
+            if (string.IsNullOrEmpty(tempPath))
+            {
+                string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                if (!string.IsNullOrEmpty(userProfile))
+                    tempPath = Path.Combine(userProfile, "AppData", "Local", "Temp");
+            }
+
+            MSData.GetInstance.PrepareSpecialDirectories(
+                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                FileSystemManager.GetDownloadsPath(),
+                tempPath);
+        }
 
         /// <summary>
         /// Creates all scanners, analyzers and managers for scanning.
@@ -964,6 +967,29 @@ namespace MSearch
             public int Suspicious { get; set; }
             public int Skipped { get; set; }
             public string ElapsedTime { get; set; }
+        }
+
+        private static void TryInitConsoleWindow()
+        {
+            try
+            {
+                int maxW = Console.LargestWindowWidth;
+                int maxH = Console.LargestWindowHeight;
+
+                // 0 = нет консольного буфера (ConPTY и подобные) — ресайз невозможен
+                if (maxW <= 0 || maxH <= 0)
+                    return;
+
+                int w = Math.Min(150, maxW);
+                int h = Math.Min(40, maxH);
+
+                if (Console.BufferWidth < w) Console.BufferWidth = w;
+                if (Console.BufferHeight < h) Console.BufferHeight = h;
+
+                Console.WindowWidth = w;
+                Console.WindowHeight = h;
+            }
+            catch { }
         }
 
         private static void WaterMark()

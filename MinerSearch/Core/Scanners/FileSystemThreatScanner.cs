@@ -22,9 +22,6 @@ namespace MSearch.Core.Scanners
         {
             var results = new List<IThreatObject>();
 
-            // Подготовка специфичных каталогов (Desktop, Downloads)
-            PrepareSpecialDirectories();
-
             // 1. Известные вредоносные каталоги (obfStr1)
             ScanKnownDirectories(results);
 
@@ -49,57 +46,10 @@ namespace MSearch.Core.Scanners
             // 8. Исполняемые файлы в корнях AppData/LocalAppData/Public
             ScanSpecificLocations(results);
 
+            // 9. Исполняемые файлы в кэш-каталоге
+            ScanUserCaches(results);
+
             return results;
-        }
-
-        /// <summary>
-        /// Подготавливает специфичные каталоги на рабочем столе и в загрузках.
-        /// Это каталоги типа "autologger", "av_block_remover" которые должны удаляться.
-        /// </summary>
-        private void PrepareSpecialDirectories()
-        {
-            if (AppConfig.GetInstance.WinPEMode || AppConfig.GetInstance.RunAsSystem)
-                return;
-
-            string DesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            if (DesktopPath != null)
-            {
-                MSData.GetInstance.obfStr5.Add(Path.Combine(DesktopPath, "aut~olo~~gger".Replace("~", "")));
-                MSData.GetInstance.obfStr5.Add(Path.Combine(DesktopPath, "av~_bl~~ock~_rem~~over".Replace("~", "")));
-                
-                if (!Path.GetPathRoot(DesktopPath).Equals("C:\\", StringComparison.OrdinalIgnoreCase) && 
-                    !AppConfig.GetInstance.WinPEMode && !LaunchOptions.GetInstance.fullScan)
-                {
-                    MSData.GetInstance.obfStr6.Add(DesktopPath);
-                }
-            }
-
-            string DownloadsPath = FileSystemManager.GetDownloadsPath();
-            if (DownloadsPath != null)
-            {
-                MSData.GetInstance.obfStr5.Add(Path.Combine(DownloadsPath, "auto~lo~gge~~r".Replace("~", "")));
-                MSData.GetInstance.obfStr5.Add(Path.Combine(DownloadsPath, "av_~bl~o~ck~_re~m~over".Replace("~", "")));
-
-                if (!Path.GetPathRoot(DownloadsPath).Equals("C:\\", StringComparison.OrdinalIgnoreCase) &&
-                    !AppConfig.GetInstance.WinPEMode && !LaunchOptions.GetInstance.fullScan)
-                {
-                    MSData.GetInstance.obfStr6.Add(DownloadsPath);
-                }
-            }
-
-            if (!AppConfig.GetInstance.WinPEMode)
-            {
-                string tempPath = Environment.GetEnvironmentVariable("TEMP");
-                if (string.IsNullOrEmpty(tempPath))
-                    tempPath = Environment.GetEnvironmentVariable("TMP");
-                if (string.IsNullOrEmpty(tempPath))
-                    tempPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "Local", "Temp");
-
-                if (!string.IsNullOrEmpty(tempPath) && Directory.Exists(tempPath))
-                {
-                    MSData.GetInstance.obfStr6.Add(@"\\?\" + tempPath);
-                }
-            }
         }
 
         private void ScanKnownDirectories(List<IThreatObject> results)
@@ -443,6 +393,55 @@ namespace MSearch.Core.Scanners
                         var fileThreat = new FileThreatObject(filePath, Path.GetFileName(filePath), fileSize, originalName, description, hash, trustResult)
                         {
                             SourceTag = "specific_location_unsigned_exe"
+                        };
+
+                        results.Add(fileThreat);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
+                }
+            }
+        }
+
+        private void ScanUserCaches(List<IThreatObject> results)
+        {
+            foreach (string cachesDir in MSData.GetInstance.exeForbiddenDirs)
+            {
+                if (string.IsNullOrEmpty(cachesDir) || !Directory.Exists(cachesDir))
+                    continue;
+
+                try
+                {
+                    foreach (string filePath in FileEnumerator.GetFiles(cachesDir, "*.*", 0, LaunchOptions.GetInstance.maxSubfolders))
+                    {
+                        if (!FileChecker.IsExecutable(filePath))
+                            continue;
+
+                        if (FileSystemManager.IsReparsePoint(filePath) || !FileSystemManager.IsAccessibleFile(filePath))
+                            continue;
+
+                        WinVerifyTrustResult trustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(filePath);
+
+                        long fileSize = 0;
+                        string originalName = "";
+                        string description = "";
+                        string hash = "";
+
+                        try { fileSize = new FileInfo(filePath).Length; } catch { }
+                        try
+                        {
+                            var fvi = FileVersionInfo.GetVersionInfo(filePath);
+                            originalName = fvi.OriginalFilename ?? "";
+                            description = fvi.FileDescription ?? "";
+                        }
+                        catch { }
+                        try { hash = FileChecker.CalculateSHA1(filePath); } catch { }
+
+                        var fileThreat = new FileThreatObject(filePath, Path.GetFileName(filePath), fileSize, originalName, description, hash, trustResult)
+                        {
+                            SourceTag = "caches_exec"
                         };
 
                         results.Add(fileThreat);

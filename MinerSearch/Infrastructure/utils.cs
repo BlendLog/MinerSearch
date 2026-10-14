@@ -226,8 +226,8 @@ namespace MSearch
             string escapedValue = (value ?? string.Empty).Replace("'", "''");
 
             ProcessStartInfo psi = new ProcessStartInfo();
-            psi.FileName = "powershell.exe";
-            psi.Arguments = "-Exe~cuti~onPo~~licy By~pa~ss -c \"Re~mo~ve~-~M~p~Prefe~~rence -Ex~~clus~ion".Replace("~", "") + exclusionType + " '" + escapedValue + "'\"";
+            psi.FileName = MSData.GetInstance.shellPatterns[3];
+            psi.Arguments = MSData.GetInstance.queries["WDRemoveExclusions"] + exclusionType + " '" + escapedValue + "'\"";
             psi.UseShellExecute = false;
             psi.CreateNoWindow = true;
 
@@ -413,9 +413,69 @@ namespace MSearch
             return 0;
         }
 
+        internal static void OpenUrlInBrowser(string url, int waitForWindowMs = 3000)
+        {
+            Process browser = null;
+
+            try
+            {
+                Native.AllowSetForegroundWindow(Native.ASFW_ANY);
+                browser = Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+            }
+            catch
+            {
+                // не удалось открыть браузер
+            }
+
+            if (browser == null)
+                return;
+
+            try
+            {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+                while (stopwatch.ElapsedMilliseconds < waitForWindowMs)
+                {
+                    try
+                    {
+                        if (browser.HasExited)
+                            return;
+
+                        IntPtr hwnd = browser.MainWindowHandle;
+                        if (hwnd != IntPtr.Zero)
+                        {
+                            if (Native.GetForegroundWindow() != hwnd)
+                            {
+                                if (Native.IsIconic(hwnd))
+                                    Native.ShowWindowAsync(hwnd, Native.SW_RESTORE);
+
+                                Native.SetForegroundWindow(hwnd);
+                            }
+
+                            if (Native.GetForegroundWindow() == hwnd)
+                                return;
+                        }
+                    }
+                    catch
+                    {
+                        return;
+                    }
+
+                    Thread.Sleep(100);
+                }
+            }
+            finally
+            {
+                browser.Dispose();
+            }
+        }
+
         public static void CheckWMI(bool restartCheck)
         {
-            string serviceName = "wi~nm~gm~t".Replace("~", "");
+            string serviceName = "win~mg~mt".Replace("~", "");
             try
             {
                 if (ServiceIsInstalled(serviceName))
@@ -516,7 +576,7 @@ namespace MSearch
                 {
                     Process.Start(new ProcessStartInfo()
                     {
-                        FileName = "regsvr32.exe",
+                        FileName = MSData.GetInstance.hostNames[MSKeys.Regsvr32],
                         Arguments = $"-s \"{file}\"",
                         UseShellExecute = false,
                         CreateNoWindow = true
@@ -565,7 +625,7 @@ namespace MSearch
             debugger = debugger.Trim();
 
 
-            if (debugger == "*" || debugger == "/" || debugger.Equals("nul", StringComparison.OrdinalIgnoreCase))
+            if (debugger == "*" || debugger == "/" || debugger.Equals("nul", StringComparison.OrdinalIgnoreCase) || debugger.Equals("disabled", StringComparison.OrdinalIgnoreCase))
                 return false;
 
             string exe;
@@ -582,7 +642,7 @@ namespace MSearch
                 return AnalyzeShellPayload(exe, args);
             }
 
-            if (exe == "rundll32" || exe == "rundll32.exe")
+            if (exe.Equals(MSData.GetInstance.hostNames[MSKeys.Rundll32], StringComparison.OrdinalIgnoreCase) || exe.Equals($"{MSData.GetInstance.hostNames[MSKeys.Rundll32]}.exe", StringComparison.OrdinalIgnoreCase))
             {
                 string dllPath = ExtractRundllDll(args);
                 if (dllPath == null)
@@ -1749,27 +1809,7 @@ namespace MSearch
                         return sb.ToString();
                     }
                 }
-                catch (IOException)
-                {
-                    return "N/A";
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    return "N/A";
-                }
-                catch (Win32Exception)
-                {
-                    return "N/A";
-                }
-                catch (ArgumentException)
-                {
-                    return "N/A";
-                }
-                catch (NotSupportedException)
-                {
-                    return "N/A";
-                }
-                catch (System.Security.SecurityException)
+                catch (Exception)
                 {
                     return "N/A";
                 }
@@ -2341,7 +2381,6 @@ namespace MSearch
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", path);
-                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, path, ScanActionType.LockedByAntivirus));
 
             }
             catch (Exception ex)
@@ -2378,7 +2417,6 @@ namespace MSearch
             catch (Exception e) when (e.HResult.Equals(unchecked((int)0x800700E1)))
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_ErrorLockedByWD", path);
-                //MinerSearch.scanResults.Add(new ScanResult(ScanObjectType.Unknown, path, ScanActionType.LockedByAntivirus));
 
             }
             catch (Exception ex)
@@ -2969,8 +3007,8 @@ namespace MSearch
         static string GetSystemLanguage()
         {
 
-            string registryKeyPath = @"SYSTEM\Current?Control?Set\Con?trol\N?ls\Lang?uage".Replace("?", "");
-            string registryValueName = "Install~Language".Replace("~", "");
+            string registryKeyPath = @"SYSTEM\CurrentControlSet\Control\Nls\Language";
+            string registryValueName = "InstallLanguage";
 
             string[] CodeLang = new string[]
             {

@@ -2471,4 +2471,10 @@ Do you want to continue?
   <data name="_ProcessMshta_RU" xml:space="preserve">
     <value>Подозрительное использование mshta:</value>
   </data>
+  <data name="_ExecutableInUserCaches_EN" xml:space="preserve">
+    <value>Executable file in the user cache directory:</value>
+  </data>
+  <data name="_ExecutableInUserCaches_RU" xml:space="preserve">
+    <value>Исполняемый файл в кэш-каталоге пользователя:</value>
+  </data>
 </root>

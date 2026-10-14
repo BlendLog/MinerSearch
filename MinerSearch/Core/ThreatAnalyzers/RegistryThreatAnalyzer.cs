@@ -512,8 +512,19 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 string val = reg.ValueData;
 
+                bool hasMinerCli = false;
+                foreach (string minerMarker in MSData.GetInstance.badArgStrings)
+                {
+                    if (val.IndexOf(minerMarker, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        hasMinerCli = true;
+                        break;
+                    }
+                }
+
                 // 1. Эвристика по строке
-                if (val.IndexOf(MSData.GetInstance.SysFileName[39], StringComparison.OrdinalIgnoreCase) >= 0 ||
+                if (hasMinerCli ||
+                    val.IndexOf(MSData.GetInstance.SysFileName[39], StringComparison.OrdinalIgnoreCase) >= 0 ||
                     MSData.ContainsAnyMarker(val, MSData.GetInstance.markerSets[MSKeys.ScriptMarkers]))
                 {
                     risk += 3;

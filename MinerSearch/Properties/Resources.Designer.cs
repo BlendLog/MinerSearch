@@ -1843,6 +1843,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Executable file in the user cache directory:.
+        /// </summary>
+        internal static string _ExecutableInUserCaches_EN {
+            get {
+                return ResourceManager.GetString("_ExecutableInUserCaches_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Исполняемый файл в кэш-каталоге пользователя:.
+        /// </summary>
+        internal static string _ExecutableInUserCaches_RU {
+            get {
+                return ResourceManager.GetString("_ExecutableInUserCaches_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Unhandled Exeption.
         /// </summary>
         internal static string _ExeptionTitle_EN {

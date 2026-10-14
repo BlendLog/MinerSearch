@@ -480,11 +480,7 @@ namespace MSearch
 
         private void DonateBtn_Click(object sender, EventArgs e)
         {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "https://blendlog.github.io/donate.html",
-                UseShellExecute = true
-            });
+            Utils.OpenUrlInBrowser("https://blendlog.github.io/donate.html");
         }
 
         private void MinimizeBtn_Click(object sender, EventArgs e)

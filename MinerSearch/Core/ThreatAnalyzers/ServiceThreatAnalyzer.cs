@@ -374,6 +374,11 @@ namespace MSearch.Core.ThreatAnalyzers
             if (!TempDirRegex.IsMatch(candidate))
                 return false;
 
+            string extension = Path.GetExtension(candidate);
+            if (extension.Equals(".tmp", StringComparison.OrdinalIgnoreCase) ||
+                extension.Equals(".log", StringComparison.OrdinalIgnoreCase))
+                return true;
+
             string fileStem = Path.GetFileNameWithoutExtension(candidate);
             if (!string.Equals(fileStem, svc.ServiceName, StringComparison.OrdinalIgnoreCase))
                 return false;
