@@ -36,7 +36,7 @@ namespace MSearch
                     break;
             }
 
-            Logger.WriteLog($"\t\t{Deobfuscate(_winver)} {winver}", ConsoleColor.DarkGray, false);
+            Logger.WriteLog($"\t\t{Decode(_winver)} {winver}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_username} {username}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_pcname} {pcname}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_bootmode} {bootmode}", ConsoleColor.DarkGray, false);
@@ -111,7 +111,7 @@ namespace MSearch
             }
 
             Console.BackgroundColor = ConsoleColor.DarkMagenta;
-            Logger.WriteLog($"\t\t[!!!!] {Deobfuscate(message)}", ConsoleColor.White, false);
+            Logger.WriteLog($"\t\t[!!!!] {Decode(message)}", ConsoleColor.White, false);
             Console.BackgroundColor = ConsoleColor.Black;
 
         }
@@ -312,33 +312,45 @@ namespace MSearch
             }
         }
 
+        private static volatile bool _inPlaceConsoleProgressAvailable = true;
+
+        private static void WriteInPlaceConsoleProgress(string text, ConsoleColor color)
+        {
+            if (!_inPlaceConsoleProgressAvailable)
+                return;
+
+            try
+            {
+                Console.ForegroundColor = color;
+                Console.CursorLeft = 0;
+                Console.Write(text);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            catch
+            {
+                _inPlaceConsoleProgressAvailable = false;
+            }
+        }
+
         public static void LogSignatureScanProgress(int current, int total, string filePath)
         {
             lock (Logger._logLock)
             {
-                Console.ForegroundColor = ConsoleColor.DarkGray;
                 string displayName = Path.GetFileName(filePath);
-                
+
                 // Обрезаем имя файла до 60 символов
                 if (displayName.Length > 60)
                 {
                     displayName = "..." + displayName.Substring(displayName.Length - 57);
                 }
-                
-                // Возвращаем курсор в начало строки
-                Console.CursorLeft = 0;
-                
-                // Выводим прогресс с фиксированной шириной поля для имени (60 символов)
-                // Паддинг автоматически затрёт хвост от предыдущего имени
-                Console.Write($"[{current,6}/{total}] {displayName,-60}");
-                
+
+                WriteInPlaceConsoleProgress($"[{current,6}/{total}] {displayName,-60}", ConsoleColor.DarkGray);
+
                 // Лог: полный путь (если verbose)
                 if (LaunchOptions.GetInstance.verbose)
                 {
                     Logger.WriteLog($"[{current}/{total}] {filePath}", ConsoleColor.Gray, true);
                 }
-                
-                Console.ForegroundColor = ConsoleColor.White;
             }
         }
 
@@ -346,15 +358,14 @@ namespace MSearch
         {
             lock (Logger._logLock)
             {
-                Console.ForegroundColor = ConsoleColor.Gray;
                 string displayName = Path.GetFileName(filePath);
-                
+
                 // Обрезаем имя файла до 60 символов
                 if (displayName.Length > 60)
                 {
                     displayName = "..." + displayName.Substring(displayName.Length - 57);
                 }
-                
+
                 string skippedLabel = Resources._ActionType_Skipped_EN;
                 switch (AppConfig.GetInstance.ActiveLanguage)
                 {
@@ -366,20 +377,17 @@ namespace MSearch
                         break;
                 }
 
-                Console.CursorLeft = 0;
-                Console.Write($"[~ {current,5}/{total}] {displayName,-60} ({skippedLabel})");
-                
+                WriteInPlaceConsoleProgress($"[~ {current,5}/{total}] {displayName,-60} ({skippedLabel})", ConsoleColor.Gray);
+
                 if (LaunchOptions.GetInstance.verbose)
                 {
                     Logger.WriteLog($"[~ {current}/{total}] {filePath} ({skippedLabel})", ConsoleColor.Gray, true);
                 }
-                
-                Console.ForegroundColor = ConsoleColor.White;
             }
         }
 
         //-------------------------------------------------
-        private static string Deobfuscate(string value)
+        private static string Decode(string value)
         {
             return string.IsNullOrEmpty(value) ? value : value.Replace("?", "");
         }
@@ -387,7 +395,7 @@ namespace MSearch
         public void LogMessage(string sign, string ResourceKey, string target, ConsoleColor consoleColor, bool DisplayTime = true)
         {
             string message = GetLocalizedString(ResourceKey);
-            Logger.WriteLog($"{sign} {Deobfuscate(message)} {target}", consoleColor, DisplayTime);
+            Logger.WriteLog($"{sign} {Decode(message)} {target}", consoleColor, DisplayTime);
         }
 
         public void LogJustDisplayMessage(string sign, string ResourceKey, string target, ConsoleColor consoleColor)
@@ -406,15 +414,15 @@ namespace MSearch
             string message = GetLocalizedString(ResourceKey);
             if (!AppConfig.GetInstance.RunAsSystem)
             {
-                Logger.WriteLog($"\t\t{Deobfuscate(message)}", Logger.head, false);
+                Logger.WriteLog($"\t\t{Decode(message)}", Logger.head, false);
             }
-            else Logger.WriteLog($"\t\t{Deobfuscate(message)}", ConsoleColor.Magenta, false);
+            else Logger.WriteLog($"\t\t{Decode(message)}", ConsoleColor.Magenta, false);
         }
 
         public void LogWarnMessage(string ResourceKey, string target = "")
         {
             string message = GetLocalizedString(ResourceKey);
-            Logger.WriteLog($"\t[!] {Deobfuscate(message)} {target}", Logger.warn);
+            Logger.WriteLog($"\t[!] {Decode(message)} {target}", Logger.warn);
         }
 
         public void LogWarnMediumMessage(string ResourceKey, string target = "", string trigger = "")
@@ -422,18 +430,18 @@ namespace MSearch
             string message = GetLocalizedString(ResourceKey);
             if (trigger == "")
             {
-                Logger.WriteLog($"\t[!!] {Deobfuscate(message)} {target}", Logger.warnMedium);
+                Logger.WriteLog($"\t[!!] {Decode(message)} {target}", Logger.warnMedium);
             }
             else
             {
-                Logger.WriteLog($"\t[!!] {target} \"{trigger}\" {Deobfuscate(message)}", Logger.warnMedium);
+                Logger.WriteLog($"\t[!!] {target} \"{trigger}\" {Decode(message)}", Logger.warnMedium);
             }
         }
 
         public void LogCautionMessage(string ResourceKey, string subject = "")
         {
             string message = GetLocalizedString(ResourceKey);
-            Logger.WriteLog($"\t[!!!] {Deobfuscate(message)} {subject}", Logger.caution);
+            Logger.WriteLog($"\t[!!!] {Decode(message)} {subject}", Logger.caution);
         }
 
         public void LogSuccessMessage(string ResourceKey, string subject = "", string ResourceKeyAction = "")
@@ -441,12 +449,12 @@ namespace MSearch
             string message = GetLocalizedString(ResourceKey);
             if (ResourceKeyAction == "")
             {
-                Logger.WriteLog($"\t[+] {Deobfuscate(message)} {subject}", Logger.success);
+                Logger.WriteLog($"\t[+] {Decode(message)} {subject}", Logger.success);
             }
             else
             {
                 string action = GetLocalizedString(ResourceKeyAction);
-                Logger.WriteLog($"\t[+] {Deobfuscate(message)} {subject} {Deobfuscate(action)}", Logger.success);
+                Logger.WriteLog($"\t[+] {Decode(message)} {subject} {Decode(action)}", Logger.success);
             }
         }
 
@@ -454,18 +462,18 @@ namespace MSearch
         {
             if (ex == null)
             {
-                Logger.WriteLog($"\t[x] {Deobfuscate(GetLocalizedString(MessageResourceKey))} {target}", Logger.error);
+                Logger.WriteLog($"\t[x] {Decode(GetLocalizedString(MessageResourceKey))} {target}", Logger.error);
                 return;
             }
 
 #if !DEBUG
             if (targetType != "")
             {
-                Logger.WriteLog($"\t[x] {Deobfuscate(GetLocalizedString(MessageResourceKey))} {Deobfuscate(GetLocalizedString(targetType))} {target} | {ex.Message} | HR=0x{ex.HResult:X8}", Logger.error);
+                Logger.WriteLog($"\t[x] {Decode(GetLocalizedString(MessageResourceKey))} {Decode(GetLocalizedString(targetType))} {target} | {ex.Message} | HR=0x{ex.HResult:X8}", Logger.error);
             }
             else
             {
-                Logger.WriteLog($"\t[x] {Deobfuscate(GetLocalizedString(MessageResourceKey))} {target} | {ex.Message} | HR=0x{ex.HResult:X8}", Logger.error);
+                Logger.WriteLog($"\t[x] {Decode(GetLocalizedString(MessageResourceKey))} {target} | {ex.Message} | HR=0x{ex.HResult:X8}", Logger.error);
             }
 #else
             if (targetType != "")
@@ -484,7 +492,7 @@ namespace MSearch
         public void LogStatusMessage(string MessageResourceKey)
         {
             string message = GetLocalizedString(MessageResourceKey);
-            Logger.WriteLog($"\t[#] {Deobfuscate(message)}", ConsoleColor.Blue);
+            Logger.WriteLog($"\t[#] {Decode(message)}", ConsoleColor.Blue);
         }
 
         internal string GetLocalizedString(string ResourceKey)

@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 using MSearch;
 
@@ -257,11 +259,12 @@ namespace MSearch.Core.ThreatAnalyzers
 
             AppConfig.GetInstance.LL.LogHeadMessage("_StartSignatureScan");
 
-            List<ThreatDecision> decisions = new List<ThreatDecision>();
+            var decisionsByIndex = new ThreatDecision[total];
 
-            foreach (var fileThreat in fileList)
+            Parallel.For(0, total, i =>
             {
-                current++;
+                var fileThreat = fileList[i];
+                Interlocked.Increment(ref current);
 
                 if (fileThreat.IsAlreadyAnalyzed)
                 {
@@ -269,69 +272,75 @@ namespace MSearch.Core.ThreatAnalyzers
                     {
                         LocalizedLogger.LogSignatureScanSkipped(current, total, fileThreat.FilePath);
                     }
-                    continue;
+                    return;
                 }
-
-                analyzedCount++;
-                LocalizedLogger.LogSignatureScanProgress(analyzedCount, total, fileThreat.FilePath);
 
                 try
                 {
-                    fileThreat.TrustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(fileThreat.FilePath, LaunchOptions.GetInstance.verbose, false);
-                }
-                catch
-                {
-                    fileThreat.TrustResult = WinVerifyTrustResult.Error;
-                }
+                    LocalizedLogger.LogSignatureScanProgress(Interlocked.Increment(ref analyzedCount), total, fileThreat.FilePath);
 
-                if (LaunchOptions.GetInstance.verbose)
-                {
-                    FileChecker.LogUnsignedSha1(fileThreat);
-                }
+                    try
+                    {
+                        fileThreat.TrustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(fileThreat.FilePath, LaunchOptions.GetInstance.verbose, false);
+                    }
+                    catch
+                    {
+                        fileThreat.TrustResult = WinVerifyTrustResult.Error;
+                    }
 
-                var result = AnalyzeAndDisable(fileThreat, displayProgress: false);
-                fileThreat.AnalysisResult = result;
+                    if (LaunchOptions.GetInstance.verbose)
+                    {
+                        FileChecker.LogUnsignedSha1(fileThreat);
+                    }
 
-                // Генерируем ThreatDecision на основе результата анализа
-                if (result.IsMalicious)
-                {
-                    fileThreat.ShouldMoveFileToQuarantine = true;
-                    AppConfig.GetInstance.LL.LogCautionMessage("_Malici0usFile", fileThreat.FilePath);
+                    var result = AnalyzeAndDisable(fileThreat, displayProgress: false);
+                    fileThreat.AnalysisResult = result;
 
-                    var decision = new ThreatDecision(fileThreat, riskLevel: 3, ScanObjectType.Malware);
-                    decision.ActionType = ScanActionType.Quarantine;
-                    decisions.Add(decision);
-                }
-                else if (result.IsSuspicious)
-                {
-                    AppConfig.GetInstance.LL.LogWarnMessage("_SuspiciousFile", fileThreat.FilePath);
+                    // Генерируем ThreatDecision на основе результата анализа
+                    if (result.IsMalicious)
+                    {
+                        fileThreat.ShouldMoveFileToQuarantine = true;
+                        AppConfig.GetInstance.LL.LogCautionMessage("_Malici0usFile", fileThreat.FilePath);
 
-                    var decision = new ThreatDecision(fileThreat, riskLevel: 2, ScanObjectType.Suspicious);
-                    decision.ActionType = ScanActionType.Skipped;
-                    decisions.Add(decision);
+                        var decision = new ThreatDecision(fileThreat, riskLevel: 3, ScanObjectType.Malware);
+                        decision.ActionType = ScanActionType.Quarantine;
+                        decisionsByIndex[i] = decision;
+                    }
+                    else if (result.IsSuspicious)
+                    {
+                        AppConfig.GetInstance.LL.LogWarnMessage("_SuspiciousFile", fileThreat.FilePath);
+
+                        var decision = new ThreatDecision(fileThreat, riskLevel: 2, ScanObjectType.Suspicious);
+                        decision.ActionType = ScanActionType.Skipped;
+                        decisionsByIndex[i] = decision;
+                    }
+                    else if (result.IsLockedByAntivirus)
+                    {
+                        fileThreat.IsLockedByAntivirus = true;
+                        var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Malware);
+                        decision.ActionType = ScanActionType.LockedByAntivirus;
+                        decisionsByIndex[i] = decision;
+                    }
+                    else if (result.IsAccessDenied)
+                    {
+                        // Файл с deny-ACL не удалось прочитать даже с обходом DACL —
+                        // показываем пользователю в review вместо молчаливого пропуска
+                        var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Suspicious);
+                        decision.ActionType = ScanActionType.Skipped;
+                        decisionsByIndex[i] = decision;
+                    }
                 }
-                else if (result.IsLockedByAntivirus)
+                catch (Exception ex)
                 {
-                    fileThreat.IsLockedByAntivirus = true;
-                    var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Malware);
-                    decision.ActionType = ScanActionType.LockedByAntivirus;
-                    decisions.Add(decision);
+                    AppConfig.GetInstance.LL.LogErrorMessage("_ErrorAnalyzingFile", ex, fileThreat.FilePath);
                 }
-                else if (result.IsAccessDenied)
-                {
-                    // Файл с deny-ACL не удалось прочитать даже с обходом DACL —
-                    // показываем пользователю в review вместо молчаливого пропуска
-                    var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Suspicious);
-                    decision.ActionType = ScanActionType.Skipped;
-                    decisions.Add(decision);
-                }
-            }
+            });
 
             Console.WriteLine();
             string completeMessage = AppConfig.GetInstance.LL.GetLocalizedString("_SignatureScanComplete");
             Logger.WriteLog($"[#] {completeMessage}", ConsoleColor.White, true);
 
-            return decisions;
+            return decisionsByIndex.Where(decision => decision != null).ToList();
         }
     }
 }
