@@ -279,6 +279,13 @@ namespace MSearch.Core.Managers
                     _state.IncrementNeutralizedThreats();
                 }
             }
+
+            // Заблокированные Defender-ом объекты тоже считаются обезвреженными (их блокирует антивирус),
+            // чтобы счётчики не расходились с итогом сканирования.
+            if (result == ApplyResult.LockedByAntivirus)
+            {
+                _state.IncrementNeutralizedThreats();
+            }
         }
 
         /// <summary>

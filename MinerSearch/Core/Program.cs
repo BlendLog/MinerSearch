@@ -362,7 +362,7 @@ namespace MSearch
                     }
                 }
 
-                using (FinishEx finish = new FinishEx(scanStats.Found, scanStats.Neutralized, scanStats.Suspicious, scanStats.ElapsedTime, state.GetScanResults(), scanStats.Skipped)
+                using (FinishEx finish = new FinishEx(scanStats.Found, scanStats.Neutralized, scanStats.Suspicious, scanStats.ElapsedTime, state.GetScanResults(), scanStats.Skipped, scanStats.LockedByAv)
                 {
                     TopMost = true
                 })
@@ -859,6 +859,8 @@ namespace MSearch
                 .Distinct()
                 .Count();
 
+            // Заблокированные Defender-ом объекты считаются обезвреженными (их блокирует антивирус),
+            // поэтому входят в нейтрализованные; отдельный подсчёт — для отдельного текста итога.
             int neutralizedCount = scanResults
                 .Where(r => r.RawAction == ScanActionType.Deleted ||
                             r.RawAction == ScanActionType.Terminated ||
@@ -866,7 +868,14 @@ namespace MSearch
                             r.RawAction == ScanActionType.Cured ||
                             r.RawAction == ScanActionType.Disabled ||
                             r.RawAction == ScanActionType.Suspended ||
-                            r.RawAction == ScanActionType.RebootPending)
+                            r.RawAction == ScanActionType.RebootPending ||
+                            r.RawAction == ScanActionType.LockedByAntivirus)
+                .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
+                .Distinct()
+                .Count();
+
+            int lockedByAvCount = scanResults
+                .Where(r => r.RawAction == ScanActionType.LockedByAntivirus)
                 .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
                 .Distinct()
                 .Count();
@@ -897,6 +906,7 @@ namespace MSearch
             {
                 Found = foundCount,
                 Neutralized = neutralizedCount,
+                LockedByAv = lockedByAvCount,
                 Suspicious = suspiciousCount,
                 Skipped = skippedCount,
                 ElapsedTime = elapsedTime
@@ -964,6 +974,7 @@ namespace MSearch
         {
             public int Found { get; set; }
             public int Neutralized { get; set; }
+            public int LockedByAv { get; set; }
             public int Suspicious { get; set; }
             public int Skipped { get; set; }
             public string ElapsedTime { get; set; }

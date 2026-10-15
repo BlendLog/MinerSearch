@@ -476,7 +476,10 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
     <value>Указанный каталог</value>
   </data>
   <data name="_FinishSomeThreatsSkipped_EN" xml:space="preserve">
-    <value>Some threats has been skipped by user</value>
+    <value>Some threats were skipped by user: #COUNT#</value>
+  </data>
+  <data name="_FinishThreatsBlockedByAV_EN" xml:space="preserve">
+    <value>All found threats have been resolved. Blocked by Windows Defender: #COUNT#</value>
   </data>
   <data name="_ErrorDeleteRegistryKey_EN" xml:space="preserve">
     <value>Error deleting registry key: #1# (#2#)</value>
@@ -1308,7 +1311,10 @@ Click \b Exit\b0  to exit.\par
     <value>Service removed from SafeBoot mode</value>
   </data>
   <data name="_FinishSomeThreatsSkipped_RU" xml:space="preserve">
-    <value>Некоторые угрозы были пропущены пользователем</value>
+    <value>Некоторые угрозы были пропущены пользователем: #COUNT#</value>
+  </data>
+  <data name="_FinishThreatsBlockedByAV_RU" xml:space="preserve">
+    <value>Все найденные угрозы устранены. Заблокировано защитником Windows: #COUNT#</value>
   </data>
   <data name="_DataGridHeader_FileHash_RU" xml:space="preserve">
     <value>Хеш</value>

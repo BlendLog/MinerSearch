@@ -2059,7 +2059,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Some threats has been skipped by user.
+        ///   Ищет локализованную строку, похожую на Some threats were skipped by user: #COUNT#.
         /// </summary>
         internal static string _FinishSomeThreatsSkipped_EN {
             get {
@@ -2068,11 +2068,29 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Некоторые угрозы были пропущены пользователем.
+        ///   Ищет локализованную строку, похожую на Некоторые угрозы были пропущены пользователем: #COUNT#.
         /// </summary>
         internal static string _FinishSomeThreatsSkipped_RU {
             get {
                 return ResourceManager.GetString("_FinishSomeThreatsSkipped_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на All found threats have been resolved. Blocked by Windows Defender: #COUNT#.
+        /// </summary>
+        internal static string _FinishThreatsBlockedByAV_EN {
+            get {
+                return ResourceManager.GetString("_FinishThreatsBlockedByAV_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Все найденные угрозы устранены. Заблокировано защитником Windows: #COUNT#.
+        /// </summary>
+        internal static string _FinishThreatsBlockedByAV_RU {
+            get {
+                return ResourceManager.GetString("_FinishThreatsBlockedByAV_RU", resourceCulture);
             }
         }
         

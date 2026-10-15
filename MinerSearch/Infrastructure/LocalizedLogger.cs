@@ -478,11 +478,11 @@ namespace MSearch
 #else
             if (targetType != "")
             {
-                Logger.WriteLog($"\t[x] {Deobfuscate(GetLocalizedString(MessageResourceKey))} {Deobfuscate(GetLocalizedString(targetType))} {target} | {ex.Message} | {ex.StackTrace}", Logger.error);
+                Logger.WriteLog($"\t[x] {Decode(GetLocalizedString(MessageResourceKey))} {Decode(GetLocalizedString(targetType))} {target} | {ex.Message} | {ex.StackTrace}", Logger.error);
             }
             else
             {
-                Logger.WriteLog($"\t[x] {Deobfuscate(GetLocalizedString(MessageResourceKey))} {target} | {ex.Message} | {ex.StackTrace}", Logger.error);
+                Logger.WriteLog($"\t[x] {Decode(GetLocalizedString(MessageResourceKey))} {target} | {ex.Message} | {ex.StackTrace}", Logger.error);
             }
 #endif
         }

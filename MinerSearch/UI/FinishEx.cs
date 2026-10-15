@@ -16,10 +16,11 @@ namespace MSearch
         int threatsCount = 0;
         int curedCount = 0;
         int skippedCount = 0;
+        int lockedByAvCount = 0;
         string LBL_id_text = "";
         bool _no_logs = LaunchOptions.GetInstance.no_logs;
 
-        public FinishEx(int _totalThreats, int _neutralizedThreats, int _suspObj, string _elapsedTime, List<ScanResult> results, int _skipped = 0)
+        public FinishEx(int _totalThreats, int _neutralizedThreats, int _suspObj, string _elapsedTime, List<ScanResult> results, int _skipped = 0, int _lockedByAv = 0)
         {
             InitializeComponent();
             ProcessManager.SetSmallWindowIconRandomHash(Handle);
@@ -30,6 +31,7 @@ namespace MSearch
             threatsCount = _totalThreats;
             curedCount = _neutralizedThreats;
             skippedCount = _skipped;
+            lockedByAvCount = _lockedByAv;
             LBL_threatsCount.Text = _totalThreats.ToString();
             LBL_curedCount.Text = _neutralizedThreats.ToString();
             LBL_susCount.Text = _suspObj.ToString();
@@ -83,16 +85,25 @@ namespace MSearch
                     int notNeutralized = threatsCount - curedCount - skippedCount;
                     if (curedCount == threatsCount)
                     {
-                        // Все угрозы обезврежены
-                        FinalStatus_label.Text = AppConfig.GetInstance.LL.GetLocalizedString("_FinishAllThreatsNeutralized");
-                        FinalStatus_label.ForeColor = System.Drawing.Color.LightGreen;
+                        if (lockedByAvCount > 0)
+                        {
+                            // Все угрозы устранены, но часть из них заблокировал защитник Windows
+                            FinalStatus_label.Text = AppConfig.GetInstance.LL.GetLocalizedString("_FinishThreatsBlockedByAV")
+                                .Replace("#COUNT#", lockedByAvCount.ToString());
+                            FinalStatus_label.ForeColor = System.Drawing.Color.LightGreen;
+                        }
+                        else
+                        {
+                            // Все угрозы обезврежены
+                            FinalStatus_label.Text = AppConfig.GetInstance.LL.GetLocalizedString("_FinishAllThreatsNeutralized");
+                            FinalStatus_label.ForeColor = System.Drawing.Color.LightGreen;
+                        }
                     }
                     else if (skippedCount > 0 && notNeutralized <= 0)
                     {
                         // Часть угроз пропущена намеренно, остальные обезврежены
-                        FinalStatus_label.Text = string.Format(
-                            AppConfig.GetInstance.LL.GetLocalizedString("_FinishSomeThreatsSkipped"),
-                            skippedCount);
+                        FinalStatus_label.Text = AppConfig.GetInstance.LL.GetLocalizedString("_FinishSomeThreatsSkipped")
+                            .Replace("#COUNT#", skippedCount.ToString());
                         FinalStatus_label.ForeColor = System.Drawing.Color.Gold;
                     }
                     else if (skippedCount > 0)
