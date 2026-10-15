@@ -18,25 +18,18 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 > [!CAUTION]
 > ### Windows 7 is outdated. MinerSearch development for this OS has been discontinued.
 
-Version v1.4.9.5
+Version v1.4.9.6
 
-- Windows version detection mechanism updated
-- Improved accuracy of digital signature verification of files
-- Fixed display of file paths in the log
-- Improved detection of suspicious scheduled tasks
-- Expanded heuristics for scheduled tasks
-- Fixed the link to the download page when a new version is available
-- Eliminated false access errors during file analysis
-- Fixed background mode (--silent)
-- Eliminated endless attempts to remove unwanted Windows Defender exclusions
-- Restored WMI integrity check
-- Added handling of read errors for corrupted files
-- Optimized language resources (deduplication)
-- Expanded the list of detectable malicious services
-- Added scanning of COM autostart components
-- SHA1 hashes of unsigned files are now recorded at all scanning stages
-- Fixed analysis error for files locked by other processes
-- Eliminated false positives on a legitimate system process (conhost)
+- Threats blocked by Windows Defender during the scan are now counted as neutralized and reported once: shown with a dedicated status, and the reboot prompt is no longer offered
+- Fixed the display of the number of threats skipped by the user
+- Fixed cleanup of malicious service libraries (removed on the first run)
+- Fixed removal of files detected by several checks at once (conflicting decisions no longer cancel deletion)
+- Eliminated false positives on legitimate files whose path contains the name of a known malicious directory
+- Improved rootkit detection
+- Added scanning of user cache directories for executable files
+- Fixed console crashes (window resize, redirected output)
+- Fixed a crash when scanning firewall rules with non-standard paths
+- Sped up scanning (parallel file analysis, caching of signature and process network checks)
 
 --------------------------------------------
 
