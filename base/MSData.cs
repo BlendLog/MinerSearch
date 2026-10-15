@@ -426,7 +426,7 @@ namespace DBase
 		@"\\?\" + Drive.Letter + Bfs.Create("CuexNokmdPiec3V69ihSJUhmnOzgzvafIbZoZffhBG8=", "HSK/egQBtWu986M3GJ7RbsZCpnOqhiBpDcSyG32jvE0=", "+CLK/vhj4pWGPqvlDuhvyw=="), //:\ProgramData\Google\Chrome
 		@"\\?\" + Drive.Letter + Bfs.Create("Su/gshNm4fpTtSJckMEelnAIhUXF0RPTw/N+MtUoQS5gC57UWFiJ9J9VMBy5uCT1", "yybP5onT5M0ZRpxQnUcCSaKNAw4hXawQSU6s0ZmdgfA=", "Z0uSE8R8zfSM/kET3IbLBQ=="), //:\ProgramData\DiagnosisSync\current
 		@"\\?\" + Drive.Letter + Bfs.Create("1JxiD/G4YYK2DZW9EwpPonN5/wGg6bk047R54UOZ7JQ=", "e1qR/L1+i0/YcfZvlTmV1iY8DAV7VX3PYdEGN52Q+gg=", "Its7N4kRCNGQHp55zyok6Q=="), //:\Program Files\Google\Libs
-		@"\\?\" + Drive.Letter + Bfs.Create("8+oSqkLe5AZ4+27axn2WM7h9GqyDsqcQgM9rwp+wXa5sMpCx2oMexqw01+12bxFC", "U630cxWAR5OHLF0MDwG0QBtE8sa5TW/FG7Ee4Jb2nAU=", "3N1QS7RCsOjsLh6fKgiuZA=="), //:\Program Files (x86)\Windows VC\
+		@"\\?\" + Drive.Letter + Bfs.Create("4p09vqNBq4G9OfVneKSQVxoj/hq3OiAdy46eKE3tgmav54Svlvy8WMkruakw2vZU", "p4AmEde3+itdVt+lmCtqXPLprRuqprYSCRS4ruwNwkE=", "DT5npmZ4wvR953lk+/HxSQ=="), //:\Program Files (x86)\Windows VC
 		@"\\?\" + Drive.Letter + Bfs.Create("XUTtPL3P+S9b1K0h//XV3dy8d/SYkJwQVXBII4rvQso=", "NyHrE8DA52PuJK04CBEE058h3fQCkSF5jAReYSHC/6Y=", "2cchLp9Q1tsjji+SlwsprA=="), //:\Windows\Fonts\Mysql
 		@"\\?\" + Drive.Letter + Bfs.Create("9rZYd43R/09rbTd4bc/yjBnX1O3M8f2k0kNgXOsXfWvjvyXlJh9nMxmaN4fWCpJD", "puVVcbmp7IYLQhftWEZiqgZ9IgzxG+Lt7vuT70MAluw=", "p8oELVuZem/m1PPB8XM/Sg=="), //:\Program Files\Internet Explorer\bin
 		@"\\?\" + Drive.Letter + Bfs.Create("UYH/+6l1rT1iagUOQIRGlSLTxMy30cocZ691zdBjDwA=", "zEK678J85Db00mSJXLgbOeidu90izPs/UOVhmPnOJXY=", "ab+k13qEii3F5WMfaE0psQ=="), //:\ProgramData\princeton-produce
@@ -1405,6 +1405,7 @@ namespace DBase
             AddObfPath(obfStr2, new StringBuilder("Lo").Append("ca").Append("lA").Append("pp").Append("Da").Append("ta").ToString(), false, "Micr?osoft".Replace("?", ""), "WinDr?iv?e?r.exe".Replace("?", ""));
             AddObfPath(obfStr2, "AppData", false, "Mi?c?roso?ft".Replace("?", ""), "UpdateTaskManag?er.exe".Replace("?", ""));
             AddObfPath(obfStr2, "AppData", false, "M?icrosoft".Replace("?", ""), "Libs".Replace("?", ""), "siho?st64.exe".Replace("?", ""));
+            AddObfPath(obfStr2, "AppData", false, "M?i?crosof?t".Replace("?", ""), "D?evi?ceSy?nc".Replace("?", ""), "MicrosoftE?dgeWebView2.exe".Replace("?", ""));
             AddObfPath(obfStr2, "AppData", false, "Goo?gle".Replace("?", ""), "C?hrom?e".Replace("?", ""), "update?r.exe".Replace("?", ""));
             AddObfPath(obfStr2, "AppData", false, "E?x?pl?or".Replace("?", ""), "expl?ori?ng".Replace("?", ""), "the file has no e?xtensi?on".Replace("?", ""));
             AddObfPath(obfStr2, "AppData", false, "mi?c?ros?oft".Replace("?", ""), "microsoftweb.{7?007acc7-3202-11d1-aad2-00805fc1270e}".Replace("?", ""), "systemo?ned?rivesvc?64a.exe".Replace("?", ""));
