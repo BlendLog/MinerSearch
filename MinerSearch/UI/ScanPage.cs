@@ -1,0 +1,401 @@
+using MSearch.Core;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace MSearch.UI
+{
+    /// <summary>
+    /// Страница запуска сканирования: три режима и панель этапов.
+    /// </summary>
+    public partial class ScanPage : UserControl
+    {
+        public event Action<ScanRequest> ScanRequested;
+        public event EventHandler StopRequested;
+
+        private readonly Dictionary<string, ToggleSwitch> _stageToggles = new Dictionary<string, ToggleSwitch>();
+        private readonly Dictionary<string, Label> _stageLabels = new Dictionary<string, Label>();
+
+        private bool _scanning;
+
+        public ScanPage()
+        {
+            InitializeComponent();
+            InitializeStageToggles();
+
+            if (!IsInDesignMode)
+                ApplyLanguage();
+        }
+
+        private static bool IsInDesignMode
+        {
+            get { return LicenseManager.UsageMode == LicenseUsageMode.Designtime; }
+        }
+
+        private void cardQuick_Click(object sender, EventArgs e)
+        {
+            OnModeCardClicked(ScanMode.Quick);
+        }
+
+        private void cardFull_Click(object sender, EventArgs e)
+        {
+            OnModeCardClicked(ScanMode.Full);
+        }
+
+        private void cardSelective_Click(object sender, EventArgs e)
+        {
+            OnModeCardClicked(ScanMode.Selective);
+        }
+
+        private void checkFolder_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateFolderControls();
+        }
+
+        private void buttonBrowse_Click(object sender, EventArgs e)
+        {
+            BrowseFolder();
+        }
+
+        private void buttonStartSelective_Click(object sender, EventArgs e)
+        {
+            StartSelectiveScan();
+        }
+
+        private void buttonStop_Click(object sender, EventArgs e)
+        {
+            OnStopClicked();
+        }
+
+        private void contentFlow_SizeChanged(object sender, EventArgs e)
+        {
+            LayoutContent();
+        }
+
+        private void InitializeStageToggles()
+        {
+            _stageToggles["Processes"] = toggleProcesses;
+            _stageToggles["Registry"] = toggleRegistry;
+            _stageToggles["Services"] = toggleServices;
+            _stageToggles["Tasks"] = toggleTasks;
+            _stageToggles["Firewall"] = toggleFirewall;
+            _stageToggles["Hosts"] = toggleHosts;
+            _stageToggles["UserProfiles"] = toggleUserProfiles;
+            _stageToggles["Wmi"] = toggleWmi;
+            _stageToggles["Rootkits"] = toggleRootkits;
+            _stageToggles["Signatures"] = toggleSignatures;
+
+            _stageLabels["_Stage_Processes"] = labelStageProcesses;
+            _stageLabels["_Stage_Registry"] = labelStageRegistry;
+            _stageLabels["_Stage_Services"] = labelStageServices;
+            _stageLabels["_Stage_Tasks"] = labelStageTasks;
+            _stageLabels["_Stage_Firewall"] = labelStageFirewall;
+            _stageLabels["_Stage_Hosts"] = labelStageHosts;
+            _stageLabels["_Stage_UserProfiles"] = labelStageUserProfiles;
+            _stageLabels["_Stage_Wmi"] = labelStageWmi;
+            _stageLabels["_Stage_Rootkits"] = labelStageRootkits;
+            _stageLabels["_Stage_Signatures"] = labelStageSignatures;
+
+            // По умолчанию все этапы включены
+            foreach (KeyValuePair<string, ToggleSwitch> pair in _stageToggles)
+                pair.Value.Checked = true;
+        }
+
+        private void CardPanel_Paint(object sender, PaintEventArgs e)
+        {
+            Panel panel = sender as Panel;
+            if (panel == null)
+                return;
+
+            using (Pen pen = new Pen(Theme.Border))
+            {
+                e.Graphics.DrawRectangle(pen, 0, 0, panel.Width - 1, panel.Height - 1);
+            }
+        }
+
+        private void LayoutContent()
+        {
+            int width = contentFlow.ClientSize.Width - 4;
+            if (width <= 0)
+                return;
+
+            cardsFlow.Width = width;
+
+            int cardWidth = Math.Max(200, (width - 36) / 3);
+            cardQuick.Width = cardWidth;
+            cardFull.Width = cardWidth;
+            cardSelective.Width = cardWidth;
+            labelQuickDesc.Width = cardWidth - 36;
+            labelFullDesc.Width = cardWidth - 36;
+            labelSelectiveDesc.Width = cardWidth - 36;
+
+            selectivePanel.Width = width;
+        }
+
+        private void OnModeCardClicked(ScanMode mode)
+        {
+            if (_scanning)
+                return;
+
+            if (mode == ScanMode.Selective)
+            {
+                selectivePanel.Visible = !selectivePanel.Visible;
+                labelHint.Visible = !selectivePanel.Visible;
+                contentFlow.AutoScrollPosition = new Point(0, 0);
+                return;
+            }
+
+            StartScan(mode == ScanMode.Full ? ScanRequest.CreateFull() : ScanRequest.CreateQuick());
+        }
+
+        private void StartSelectiveScan()
+        {
+            if (_scanning)
+                return;
+
+            ScanRequest request = ScanRequest.CreateSelective();
+            request.ScanProcesses = GetToggle("Processes");
+            request.ScanRegistry = GetToggle("Registry");
+            request.ScanServices = GetToggle("Services");
+            request.ScanTasks = GetToggle("Tasks");
+            request.ScanFirewall = GetToggle("Firewall");
+            request.ScanHosts = GetToggle("Hosts");
+            request.ScanUserProfiles = GetToggle("UserProfiles");
+            request.ScanWmi = GetToggle("Wmi");
+            request.ScanRootkits = GetToggle("Rootkits");
+            request.ScanSignatures = GetToggle("Signatures");
+
+            if (checkFolder.Checked && !string.IsNullOrEmpty(textFolder.Text))
+                request.SelectedPath = textFolder.Text;
+
+            StartScan(request);
+        }
+
+        private void StartScan(ScanRequest request)
+        {
+            Action<ScanRequest> handler = ScanRequested;
+            if (handler != null)
+                handler(request);
+        }
+
+        private void OnStopClicked()
+        {
+            buttonStop.Enabled = false;
+            buttonStop.Text = L("_ScanStopping");
+
+            EventHandler handler = StopRequested;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        private bool GetToggle(string key)
+        {
+            ToggleSwitch toggle;
+            return _stageToggles.TryGetValue(key, out toggle) && toggle.Checked;
+        }
+
+        private void UpdateFolderControls()
+        {
+            bool enabled = checkFolder.Checked;
+            textFolder.Enabled = enabled;
+            buttonBrowse.Enabled = enabled;
+            if (!enabled)
+                textFolder.Text = string.Empty;
+        }
+
+        private void BrowseFolder()
+        {
+            using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+            {
+                dialog.Description = L("_SelectFolderDialog");
+                dialog.ShowNewFolderButton = false;
+                dialog.RootFolder = Environment.SpecialFolder.MyComputer;
+
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    textFolder.Text = dialog.SelectedPath;
+            }
+        }
+
+        public void SetScanning(bool scanning)
+        {
+            _scanning = scanning;
+
+            cardQuick.Enabled = !scanning;
+            cardFull.Enabled = !scanning;
+            cardSelective.Enabled = !scanning;
+            buttonStartSelective.Enabled = !scanning;
+            buttonStop.Enabled = scanning;
+
+            if (scanning)
+            {
+                selectivePanel.Visible = false;
+                labelHint.Visible = false;
+                labelStage.Text = L("_ScanInProgress");
+                labelDetail.Text = string.Empty;
+                progressScan.Value = 0;
+                buttonStop.Text = L("_ScanStop");
+            }
+            else
+            {
+                labelDetail.Text = string.Empty;
+                buttonStop.Text = L("_ScanStop");
+                buttonStop.Enabled = false;
+                labelHint.Visible = !selectivePanel.Visible;
+            }
+        }
+
+        public void SetStopping()
+        {
+            buttonStop.Enabled = false;
+            buttonStop.Text = L("_ScanStopping");
+            labelStage.Text = L("_ScanStopping");
+        }
+
+        public void UpdateStage(ScanStage stage, string scannerId = null)
+        {
+            if (stage == ScanStage.General && !string.IsNullOrEmpty(scannerId))
+                labelStage.Text = GetScannerText(scannerId);
+            else
+                labelStage.Text = GetStageText(stage);
+
+            if (stage == ScanStage.Completed)
+                progressScan.Value = 100;
+            else if (stage == ScanStage.Idle)
+                progressScan.Value = 0;
+            else
+                progressScan.Value = GetStagePercent(stage);
+        }
+
+        public void UpdateProgress(string item, int done, int total)
+        {
+            if (string.IsNullOrEmpty(item))
+            {
+                labelDetail.Text = string.Empty;
+                return;
+            }
+
+            string display = NormalizeItem(item);
+            labelDetail.Text = L("_ScanStage_CurrentObject").Replace("#VALUE#", display);
+
+            if (total > 0)
+            {
+                int percent = (int)(done * 100L / total);
+                if (percent >= 0 && percent <= 100)
+                    progressScan.Value = percent;
+            }
+        }
+
+        /// <summary>
+        /// Убирает служебные префиксы путей для читаемого отображения.
+        /// </summary>
+        private static string NormalizeItem(string item)
+        {
+            if (string.IsNullOrEmpty(item))
+                return item;
+
+            if (item.StartsWith(@"\\?\UNC\", StringComparison.OrdinalIgnoreCase))
+                return @"\\" + item.Substring(8);
+
+            if (item.StartsWith(@"\\?\", StringComparison.Ordinal) ||
+                item.StartsWith(@"\??\", StringComparison.Ordinal) ||
+                item.StartsWith(@"\\.\", StringComparison.Ordinal))
+            {
+                return item.Substring(4);
+            }
+
+            return item;
+        }
+
+        public void UpdateCounters(int found, int neutralized, int suspicious, int skipped)
+        {
+            labelFoundValue.Text = found.ToString();
+            labelNeutralizedValue.Text = neutralized.ToString();
+            labelSuspiciousValue.Text = suspicious.ToString();
+            labelSkippedValue.Text = skipped.ToString();
+        }
+
+        private static int GetStagePercent(ScanStage stage)
+        {
+            switch (stage)
+            {
+                case ScanStage.Rootkit: return 10;
+                case ScanStage.Processes: return 25;
+                case ScanStage.General: return 45;
+                case ScanStage.Signatures: return 70;
+                case ScanStage.Review: return 82;
+                case ScanStage.Cleanup: return 90;
+                case ScanStage.Completed: return 100;
+                default: return 0;
+            }
+        }
+
+        private string GetStageText(ScanStage stage)
+        {
+            switch (stage)
+            {
+                case ScanStage.Rootkit: return L("_ScanStage_Rootkit");
+                case ScanStage.Processes: return L("_ScanStage_Processes");
+                case ScanStage.General: return L("_ScanStage_General");
+                case ScanStage.Signatures: return L("_ScanStage_Signatures");
+                case ScanStage.Review: return L("_ScanStage_Review");
+                case ScanStage.Cleanup: return L("_ScanStage_Cleanup");
+                case ScanStage.Completed: return L("_ScanStage_Completed");
+                default: return L("_ScanReady");
+            }
+        }
+
+        private string GetScannerText(string scannerId)
+        {
+            switch (scannerId)
+            {
+                case "FileSystemThreatScanner": return L("_ScanStage_FileSystem");
+                case "ShellStartupScanner": return L("_ScanStage_ShellStartup");
+                case "RegistryScanner": return L("_ScanStage_Registry");
+                case "ServiceScanner": return L("_ScanStage_Services");
+                case "TaskScanner": return L("_ScanStage_Tasks");
+                case "FirewallScanner": return L("_ScanStage_Firewall");
+                case "WmiScanner": return L("_ScanStage_Wmi");
+                case "HostsThreatScanner": return L("_ScanStage_Hosts");
+                case "UserProfileScanner": return L("_ScanStage_UserProfiles");
+                default: return L("_ScanStage_General");
+            }
+        }
+
+        public void ApplyLanguage()
+        {
+            labelTitle.Text = L("_Nav_Scan");
+
+            labelQuickTitle.Text = L("_ScanMode_Quick");
+            labelQuickDesc.Text = L("_ScanMode_Quick_Desc");
+            labelFullTitle.Text = L("_ScanMode_Full");
+            labelFullDesc.Text = L("_ScanMode_Full_Desc");
+            labelSelectiveTitle.Text = L("_ScanMode_Selective");
+            labelSelectiveDesc.Text = L("_ScanMode_Selective_Desc");
+
+            labelSelectiveHeader.Text = L("_ScanSelective_Title");
+            labelHint.Text = L("_ScanHint");
+            buttonStartSelective.Text = L("_ScanStart");
+            checkFolder.Text = L("_Selective_Folder");
+            buttonBrowse.Text = L("_Selective_Browse");
+
+            foreach (KeyValuePair<string, Label> pair in _stageLabels)
+                pair.Value.Text = L(pair.Key);
+
+            labelFoundCaption.Text = L("_Counter_Found");
+            labelNeutralizedCaption.Text = L("_Counter_Neutralized");
+            labelSuspiciousCaption.Text = L("_Counter_Suspicious");
+            labelSkippedCaption.Text = L("_Counter_Skipped");
+
+            buttonStop.Text = L("_ScanStop");
+            if (!_scanning)
+                labelStage.Text = L("_ScanReady");
+        }
+
+        private static string L(string key)
+        {
+            return AppConfig.GetInstance.LL.GetLocalizedString(key);
+        }
+    }
+}

@@ -26,19 +26,19 @@ namespace MSearch
         [STAThread]
         static void Main(string[] args)
         {
-            Console.Title = Utils.GetRndString();
-
             LaunchOptions _options = LaunchOptions.GetInstance;
 
-            AppConfig.GetInstance.RunAsSystem = ProcessManager.IsSystemProcess(Process.GetCurrentProcess().Id);
-            AppConfig.GetInstance.IsGuiAvailable = Environment.UserInteractive;
-            AppConfig.GetInstance.IsRedirectedInput = Console.IsInputRedirected;
+            // Должно быть вызвано до создания первого окна (включая EULA и диалоги).
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-            _options.console_mode = !Environment.UserInteractive || Console.IsInputRedirected;
+            // Консольные режимы в WinExe-сборке: подключаемся к консоли родителя
+            // до разбора аргументов, чтобы ошибки разбора было куда вывести.
+            if (HasConsoleArgument(args) || Native.GetConsoleWindow() != IntPtr.Zero)
+                ConsoleBridge.EnsureConsole();
 
             // Parse command line arguments
             LaunchOptions.ParseArgs(args);
-
 
             // Check for parsing errors
             if (_options.hasErrors)
@@ -49,6 +49,25 @@ namespace MSearch
                 }
                 Environment.Exit(1);
             }
+
+            bool stdioRedirected = ConsoleBridge.HasRedirectedStdio();
+            bool interactive = Environment.UserInteractive;
+
+            // В WinExe без консоли Console.IsInputRedirected всегда true,
+            // поэтому ориентируемся на реальный тип stdio и явные флаги.
+            _options.console_mode = _options.console_mode || stdioRedirected || !interactive;
+
+            bool consoleFlags = _options.console_mode || _options.winpemode || _options.help;
+            _options.gui_mode = interactive && !consoleFlags && !_options.silent;
+
+            if (!_options.gui_mode && !_options.silent)
+                ConsoleBridge.EnsureConsole();
+
+            ConsoleBridge.SafeSetTitle(Utils.GetRndString());
+
+            AppConfig.GetInstance.RunAsSystem = ProcessManager.IsSystemProcess(Process.GetCurrentProcess().Id);
+            AppConfig.GetInstance.IsGuiAvailable = interactive;
+            AppConfig.GetInstance.IsRedirectedInput = stdioRedirected;
 
             // Quarantine management (-q) is not a scan: suppress the scan log file (avoids empty logs).
             Logger.InitLogger(_options.no_logs || _options.QuarantineMode);
@@ -126,11 +145,15 @@ namespace MSearch
                 }
                 args = newargs.ToArray();
                 AppConfig.GetInstance.WinPEMode = true;
+
+                // В WinPE GUI недоступен — работаем через консоль.
+                _options.gui_mode = false;
+                ConsoleBridge.EnsureConsole();
             }
 
             ProcessManager.SetSmallWindowIconRandomHash(Process.GetCurrentProcess().MainWindowHandle);
 
-            if (!_options.silent)
+            if (!_options.gui_mode && !_options.silent)
             {
                 if (!ProcessManager.IsPwshAsParentProcess(Process.GetCurrentProcess().Id))
                 {
@@ -176,7 +199,7 @@ namespace MSearch
 
                 if (AppConfig.GetInstance.IsGuiAvailable)
                 {
-                    Console.ReadKey();
+                    ConsoleBridge.SafeReadKey();
                 }
                 return;
             }
@@ -229,12 +252,12 @@ namespace MSearch
                 }
                 else if (_options.silent)
                 {
-                    Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_HIDE);
+                    ConsoleBridge.Hide();
                 }
             }
 
 //#if !DEBUG
-            if (!_options.help)
+            if (!_options.help && !_options.gui_mode)
             {
                 Utils.SwitchMouseSelection();
             }
@@ -279,7 +302,7 @@ namespace MSearch
                 Logger.WriteLog("\t\t[SILENT MODE]", ConsoleColor.White, false, true); //for write log
                 Thread.Sleep(1000);
 //#if !DEBUG
-                Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_HIDE);
+                ConsoleBridge.Hide();
 //#endif
             }
 
@@ -288,58 +311,45 @@ namespace MSearch
                 Utils.CheckStartupCount();
             }
 
-            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
+            if (!_options.gui_mode)
+            {
+                Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
+            }
 
             if (!_options.no_logs)
             {
                 AppConfig.GetInstance.LL.LogWriteWithoutDisplay(true, false);
             }
 
-            if (_options.demandSelection && !_options.silent)
+            if (_options.demandSelection && !_options.silent && !_options.gui_mode)
             {
                 _options.selectedPath = PromptScanDirectory(_options, AppConfig.GetInstance);
                 if (_options.selectedPath == null) return;
             }
 
-            if (_options.QuarantineMode)
+            if (_options.QuarantineMode && !_options.gui_mode)
             {
-                if (_options.console_mode)
-                {
-                    QuarantineConsoleHandler qcm = new QuarantineConsoleHandler();
-                    qcm.Execute();
-                    return;
-                }
-                else
-                {
-                    Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_MINIMIZE);
-                    using (QuarantineForm qForm = new QuarantineForm())
-                    {
-                        qForm.ShowDialog();
-                    }
-                }
+                QuarantineConsoleHandler qcm = new QuarantineConsoleHandler();
+                qcm.Execute();
+                return;
             }
 
-            FileChecker.RestoreSignatures(MSData.GetInstance.signatures);
-            new PrivilegeManager(_options).Enable();
-            PrepareSpecialDirectories();
-            Stopwatch startTime = Stopwatch.StartNew();
+            if (_options.gui_mode)
+            {
+                RunGui();
+                return;
+            }
 
-            // Create scanning infrastructure (moved to separate method)
-            var infrastructure = CreateScanInfrastructure();
+            ScanFactory.PrepareEnvironment(_options);
+
+            // Create scanning infrastructure
+            ScanInfrastructure infrastructure = ScanFactory.CreateInfrastructure();
             MinerSearchScanState state = infrastructure.State;
-            SignatureFileAnalyzer signatureFileAnalyzer = infrastructure.SignatureAnalyzer;
-            ScanManager scanManager = infrastructure.ScanManager;
-            ThreatManager threatManager = infrastructure.ThreatManager;
-            CleanManager cleanManager = infrastructure.CleanManager;
 
-            // Execute scanning (moved to separate method)
-            ExecuteScanWorkflow(_options, scanManager, threatManager, cleanManager, signatureFileAnalyzer);
-            startTime.Stop();
-
-            TimeSpan resultTime = startTime.Elapsed;
-
-            // Compute and log statistics (moved to separate method)
-            var scanStats = ComputeAndLogStatistics(state, resultTime);
+            // Execute scanning (engine is UI-agnostic)
+            ScanWorkflow workflow = new ScanWorkflow(infrastructure, null, new ConsoleScanInteraction());
+            ScanWorkflowResult workflowResult = workflow.Run(CancellationToken.None);
+            ScanStatistics scanStats = workflowResult.Statistics;
 
             Utils.SwitchMouseSelection(true);
             Logger.DisposeLogger();
@@ -347,7 +357,7 @@ namespace MSearch
             if (!_options.silent && !_options.console_mode)
             {
 //#if !DEBUG
-                Native.ShowWindow(Native.GetConsoleWindow(), Native.SW_MINIMIZE);
+                ConsoleBridge.Minimize();
 //#endif
                 foreach (ScanResult result in state.GetScanResults())
                 {
@@ -374,543 +384,36 @@ namespace MSearch
             return;
         }
 
-        #region Extracted methods
-
-        private static void PrepareSpecialDirectories()
-        {
-            if (AppConfig.GetInstance.WinPEMode || AppConfig.GetInstance.RunAsSystem)
-                return;
-
-            string tempPath = Environment.GetEnvironmentVariable("TEMP");
-            if (string.IsNullOrEmpty(tempPath))
-                tempPath = Environment.GetEnvironmentVariable("TMP");
-            if (string.IsNullOrEmpty(tempPath))
-            {
-                string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                if (!string.IsNullOrEmpty(userProfile))
-                    tempPath = Path.Combine(userProfile, "AppData", "Local", "Temp");
-            }
-
-            MSData.GetInstance.PrepareSpecialDirectories(
-                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                FileSystemManager.GetDownloadsPath(),
-                tempPath);
-        }
-
         /// <summary>
-        /// Creates all scanners, analyzers and managers for scanning.
+        /// Признак того, что аргументы требуют консоли (нужно подключиться до разбора).
         /// </summary>
-        private static ScanInfrastructure CreateScanInfrastructure()
+        private static bool HasConsoleArgument(string[] args)
         {
-            var state = new MinerSearchScanState();
-            var signatureFileAnalyzer = new SignatureFileAnalyzer();
+            if (args == null)
+                return false;
 
-            // RootkitThreatScanner runs first — before any scanning
-            var scanManager = new ScanManager(
-                new RootkitScanner(),
-                new ProcessScanner(),
-                new IThreatScanner[] {
-                    new FileSystemThreatScanner(),
-                    new ShellStartupScanner(),
-                    new RegistryScanner(),
-                    new ServiceScanner(),
-                    new TaskScanner(),
-                    new FirewallScanner(),
-                    new WmiScanner(),
-                    new HostsThreatScanner(),
-                    new UserProfileScanner(),
-                });
-
-            var threatManager = new ThreatManager(new IThreatAnalyzer[] {
-                new RootkitThreatAnalyzer(),
-                new ProcessThreatAnalyzer(signatureFileAnalyzer),
-                new FileSystemThreatAnalyzer(signatureFileAnalyzer),
-                new ShellStartupThreatAnalyzer(signatureFileAnalyzer),
-                new RegistryThreatAnalyzer(signatureFileAnalyzer),
-                new ServiceThreatAnalyzer(signatureFileAnalyzer),
-                new TaskThreatAnalyzer(signatureFileAnalyzer),
-                new FirewallThreatAnalyzer(),
-                new DirectoryThreatAnalyzer(),
-                new WmiThreatAnalyzer(),
-                new HostsThreatAnalyzer(),
-                new UserProfileThreatAnalyzer(),
-            });
-
-            var cleanManager = new CleanManager(new IThreatHandler[] {
-                new RootkitThreatHandler(),
-                new ProcessThreatHandler(),
-                new RegistryThreatHandler(),
-                new ServiceThreatHandler(),
-                new TaskThreatHandler(),
-                new ShellStartupThreatHandler(),
-                new FirewallThreatHandler(),
-                new DirectoryThreatHandler(),
-                new FileThreatHandler(),
-                new WmiThreatHandler(),
-                new HostsThreatHandler(),
-                new UserProfileThreatHandler(),
-            }, state);
-
-            return new ScanInfrastructure
+            foreach (string arg in args)
             {
-                State = state,
-                SignatureAnalyzer = signatureFileAnalyzer,
-                ScanManager = scanManager,
-                ThreatManager = threatManager,
-                CleanManager = cleanManager
-            };
-        }
-
-        /// <summary>
-        /// Executes main scanning loop: rootkits → processes → everything else → signatures.
-        /// </summary>
-        private static void ExecuteScanWorkflow(LaunchOptions options, ScanManager scanManager, ThreatManager threatManager, CleanManager cleanManager, SignatureFileAnalyzer signatureFileAnalyzer)
-        {
-            IEnumerable<IThreatObject> rootkitThreats = scanManager.ScanRootkitFirst();
-            IEnumerable<ThreatDecision> rootkitDecisions = threatManager.Analyze(rootkitThreats).Where(d => d != null).ToList();
-            cleanManager.ApplyDecisions(rootkitDecisions, CleanupPhase.Finalize);
-
-            IEnumerable<IThreatObject> processThreats = scanManager.ScanProcessesOnly();
-            IEnumerable<ThreatDecision> processDecisions = threatManager.Analyze(processThreats).Where(d => d != null).ToList();
-            cleanManager.ApplyDecisions(processDecisions, CleanupPhase.SuspendOnly);
-
-            IEnumerable<IThreatObject> commonThreats = scanManager.ScanEverythingElse();
-            IEnumerable<ThreatDecision> commonDecisions = threatManager.Analyze(commonThreats).Where(d => d != null).ToList();
-            cleanManager.ApplyDecisions(commonDecisions, CleanupPhase.DisableExecuteOnly);
-
-            if (options.pause)
-            {
-                LocalizedLogger.LogPAUSE();
-                if (AppConfig.GetInstance.IsGuiAvailable)
-                {
-                    Console.ReadKey(true);
-                }
-            }
-
-            // Собираем все решения для Finalize-фазы
-            var allFinalizeDecisions = new List<ThreatDecision>();
-            allFinalizeDecisions.AddRange(processDecisions);
-            allFinalizeDecisions.AddRange(commonDecisions);
-
-            var signatureDecisions = new List<ThreatDecision>();
-
-            if (!options.nosignaturescan)
-            {
-                var signatureScanner = new SignatureScanner();
-                signatureScanner.CollectFilesAsync().Wait();
-
-                var allSignatureFiles = signatureScanner.GetFiles().ToList();
-                signatureDecisions = signatureFileAnalyzer.AnalyzeFiles(allSignatureFiles).Where(d => d != null).ToList();
-                allFinalizeDecisions.AddRange(signatureDecisions);
-            }
-
-
-            allFinalizeDecisions = DeduplicateDecisions(allFinalizeDecisions);
-
-            // Заблокированные Defender-ом объекты не показываем в review, но отражаем в FinishEx.
-            // Обрабатываем их отдельным батчем ровно один раз.
-            var lockedByAvDecisions = allFinalizeDecisions.Where(d => IsLockedByAv(d)).ToList();
-            var knownDecisions = allFinalizeDecisions.Where(d => !IsLockedByAv(d) && IsKnownThreat(d)).ToList();
-            var unknownDecisions = allFinalizeDecisions.Where(d => !IsLockedByAv(d) && !IsKnownThreat(d)).ToList();
-
-            // Все неизвестные угрозы из всех типов сканов → FormThreatReview
-            // Rootkit (Other) всегда обрабатывается автоматически — исключаем из review
-            var allUnknownDecisions = unknownDecisions
-                .Where(d => d.Target.Kind != ThreatObjectKind.Other)
-                .ToList();
-
-            cleanManager.BeginFinalCleanup();
-
-            if (lockedByAvDecisions.Count > 0)
-                cleanManager.ApplyDecisions(lockedByAvDecisions, CleanupPhase.Finalize);
-
-            var sortedKnownDecisions = knownDecisions.OrderBy(d => CleanManager.GetCleanupOrder(d.Target.Kind)).ToList();
-            foreach (var decision in sortedKnownDecisions)
-            {
-                cleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize);
-            }
-
-            if (!options.no_review_interact && allUnknownDecisions.Count > 0)
-            {
-                int autoAcceptValue = 2;
-                try
-                {
-                    using (var baseKey = Registry.LocalMachine)
-                    using (var key = baseKey.OpenSubKey(AppConfig.GetInstance.RegistryPathMain))
-                    {
-                        if (key != null)
-                        {
-                            object value = key.GetValue(AppConfig.GetInstance.AutoAcceptUnknownValueName);
-                            if (value != null)
-                                autoAcceptValue = (int)value;
-                        }
-                    }
-                }
-                catch { }
-
-                if (autoAcceptValue == 1)
-                {
-                    options.no_review_interact = true;
-                }
-                else if (autoAcceptValue == 0)
-                {
-                    options.no_review_interact = false;
-                }
-                else
-                {
-                    var autoAcceptResult = DialogDispatcher.Show(
-                        AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAutoAccept_Question"),
-                        AppConfig.GetInstance.LL.GetLocalizedString("_ReviewAutoAccept_Title"),
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question);
-
-                    if (autoAcceptResult == DialogResult.Yes)
-                    {
-                        options.no_review_interact = true;
-                    }
-
-                    using (var key = Registry.LocalMachine.OpenSubKey(AppConfig.GetInstance.RegistryPathMain, true)
-                                ?? Registry.LocalMachine.CreateSubKey(AppConfig.GetInstance.RegistryPathMain))
-                    {
-                        if (key != null)
-                        {
-                            key.SetValue(AppConfig.GetInstance.AutoAcceptUnknownValueName,
-                                autoAcceptResult == DialogResult.Yes ? 1 : 0, RegistryValueKind.DWord);
-                            key.Close();
-                        }
-                    }
-                }
-
-                if (!options.no_review_interact)
-                {
-                    var reviewForm = new FormThreatReview(allUnknownDecisions);
-                    reviewForm.ShowDialog();
-
-                    // Применяем выбор пользователя к флагам в ThreatObject перед выполнением очистки
-                    if (reviewForm.IsApplied())
-                        reviewForm.ApplyUserOverrides();
-                }
-            }
-
-            // Применяем все неизвестные угрозы (с учётом UserOverrideAction)
-            // Решения со Skip не применяем через Handler — записываем как пропущенные напрямую
-            var decisionsToApply = new List<ThreatDecision>();
-            var decisionsToSkip = new List<ThreatDecision>();
-
-            foreach (var decision in allUnknownDecisions)
-            {
-                if (decision.UserOverrideAction == ScanActionTypeUserSelected.Skip)
-                    decisionsToSkip.Add(decision);
-                else
-                    decisionsToApply.Add(decision);
-            }
-
-            if (decisionsToApply.Count > 0)
-                cleanManager.ApplyDecisions(decisionsToApply, CleanupPhase.Finalize);
-
-            // Записываем пропущенные решения напрямую в результаты сканирования
-            if (decisionsToSkip.Count > 0)
-                cleanManager.ApplySkippedDecisions(decisionsToSkip);
-
-            // Ссылочное множество уже обработанных Finalize-решений.
-            // Ключ по Target.Id здесь ненадёжен: у сигнатурных файлов Id пустой,
-            // а разные объекты могут иметь совпадающий Id.
-            var alreadyApplied = new HashSet<ThreatDecision>(
-                knownDecisions
-                    .Concat(decisionsToApply)
-                    .Concat(decisionsToSkip)
-                    .Concat(lockedByAvDecisions));
-
-            // Применяем только оставшиеся Finalize-решения (например signatureDecisions,
-            // которые не попали ни в knownDecisions, ни в unknownDecisions)
-            var finalizeOnlyDecisions = allFinalizeDecisions
-                .Where(d => d != null && !alreadyApplied.Contains(d))
-                .ToList();
-
-            if (finalizeOnlyDecisions.Count > 0)
-            {
-                cleanManager.ApplyDecisions(finalizeOnlyDecisions, CleanupPhase.Finalize);
-            }
-        }
-
-      /// <summary>
-        /// Проверяет, является ли угроза «известной» по MSData (obfStr1-obfStr4).
-        /// Известные угрозы применяются автоматически без review.
-        /// </summary>
-        private static bool IsKnownThreat(ThreatDecision decision)
-        {
-            if (decision?.Target == null) return false;
-            var target = decision.Target;
-
-            // Файлы и каталоги — проверяем SourceTag
-            var file = target as FileThreatObject;
-            if (file != null && !string.IsNullOrEmpty(file.SourceTag))
-            {
-                if (file.SourceTag.StartsWith("obfStr", StringComparison.OrdinalIgnoreCase))
-                    return true;
-            }
-
-            var dir = target as DirectoryThreatObject;
-            if (dir != null && !string.IsNullOrEmpty(dir.SourceTag))
-            {
-                if (dir.SourceTag.StartsWith("obfStr", StringComparison.OrdinalIgnoreCase))
-                    return true;
-            }
-
-            // Файл может быть найден SignatureScanner с UNC-путём (\\?\C:\...),
-            // а в MSData.obfStr2 тот же путь без UNC. Нормализуем и сверяем.
-            if (file != null && !string.IsNullOrEmpty(file.FilePath))
-            {
-                string normalizedFilePath = file.FilePath.StartsWith(@"\\?\") ? file.FilePath.Substring(4) : file.FilePath;
-                if (MSData.GetInstance.obfStr2.Any(s =>
-                {
-                    string normalized = s.StartsWith(@"\\?\") ? s.Substring(4) : s;
-                    return normalized.Equals(normalizedFilePath, StringComparison.OrdinalIgnoreCase);
-                }))
+                if (arg.Equals("--console-mode", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("-cm", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("--help", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("-h", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("--winpemode", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("-w", StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
             }
 
-            // Каталог может быть найден с UNC-путём — аналогичная нормализация
-            if (dir != null && !string.IsNullOrEmpty(dir.DirectoryPath))
-            {
-                string normalizedDirPath = dir.DirectoryPath.StartsWith(@"\\?\") ? dir.DirectoryPath.Substring(4) : dir.DirectoryPath;
-                if (MSData.GetInstance.obfStr1.Any(s =>
-                {
-                    string normalized = s.StartsWith(@"\\?\") ? s.Substring(4) : s;
-                    return normalized.Equals(normalizedDirPath, StringComparison.OrdinalIgnoreCase);
-                }))
-                {
-                    return true;
-                }
-            }
-
-            // Процессы — проверяем путь связанного файла (obfStr2 + известные каталоги obfStr1)
-            var proc = target as ProcessThreatObject;
-            if (proc?.FileProcess != null)
-            {
-                var filePath = proc.FileProcess.FilePath;
-                if (!string.IsNullOrEmpty(filePath) &&
-                    MSData.GetInstance.IsKnownMaliciousPath(filePath))
-                {
-                    return true;
-                }
-            }
-
-            // Службы — проверяем путь бинарника (obfStr2 + известные каталоги obfStr1)
-            var svc = target as ServiceThreatObject;
-            if (svc != null)
-            {
-                if (!string.IsNullOrEmpty(svc.ServicePath) &&
-                    MSData.GetInstance.IsKnownMaliciousPath(svc.ServicePath))
-                {
-                    return true;
-                }
-
-                if (!string.IsNullOrEmpty(svc.ServicePathWithArgs) &&
-                    MSData.GetInstance.ContainsKnownMaliciousDir(svc.ServicePathWithArgs))
-                {
-                    return true;
-                }
-            }
-
-            // Задачи — проверяем связанные файлы (payload из аргументов/исполняемый файл)
-            // и сами аргументы задачи по obfStr1/obfStr2
-            var task = target as TaskThreatObject;
-            if (task != null)
-            {
-                if (task.LinkedFileFromArgs != null &&
-                    !string.IsNullOrEmpty(task.LinkedFileFromArgs.FilePath) &&
-                    MSData.GetInstance.IsKnownMaliciousPath(task.LinkedFileFromArgs.FilePath))
-                {
-                    return true;
-                }
-
-                if (task.LinkedFile != null &&
-                    !string.IsNullOrEmpty(task.LinkedFile.FilePath) &&
-                    MSData.GetInstance.IsKnownMaliciousPath(task.LinkedFile.FilePath))
-                {
-                    return true;
-                }
-
-                if (task.Info != null && task.Info.ExecActions != null)
-                {
-                    foreach (var action in task.Info.ExecActions)
-                    {
-                        if (action == null) continue;
-
-                        if (!string.IsNullOrEmpty(action.Path) &&
-                            (MSData.GetInstance.ContainsKnownMaliciousDir(action.Path) ||
-                             MSData.GetInstance.IsUnderKnownMaliciousDir(action.Path)))
-                        {
-                            return true;
-                        }
-
-                        if (!string.IsNullOrEmpty(action.Arguments) &&
-                            MSData.GetInstance.ContainsKnownMaliciousDir(action.Arguments))
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            // Реестр — проверяем ValueName по obfStr3/obfStr4 (аналогично RegistryThreatAnalyzer)
-            var reg = target as RegistryThreatObject;
-            if (reg != null)
-            {
-                if (!string.IsNullOrEmpty(reg.ValueName))
-                {
-                    if (MSData.GetInstance.obfStr3.Any(s => reg.ValueName.Equals(s, StringComparison.OrdinalIgnoreCase)) ||
-                        MSData.GetInstance.obfStr4.Any(s => reg.ValueName.Equals(s, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            // Для остальных типов — не считаем известными по умолчанию
             return false;
         }
 
         /// <summary>
-        /// Удаляет дубликаты решений: SignatureScanner может найти тот же файл, что уже есть
-        /// в processDecisions/commonDecisions, но с UNC-префиксом (\\?\).
-        /// Группируем по Target.Id, а для файлов/каталогов — по нормализованному пути.
+        /// Запускает главное окно GUI.
         /// </summary>
-        private static List<ThreatDecision> DeduplicateDecisions(List<ThreatDecision> decisions)
+        private static void RunGui()
         {
-            var result = new List<ThreatDecision>();
-            var byKey = new Dictionary<string, ThreatDecision>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var d in decisions)
-            {
-                if (d == null || d.Target == null) continue;
-
-                string key = GetDedupKey(d);
-                if (!byKey.TryGetValue(key, out var existing))
-                {
-                    byKey[key] = d;
-                    result.Add(d);
-                    continue;
-                }
-
-                // Дубликат из другой фазы — переносим флаги, не теряем более сильное действие
-                ThreatManager.MergeTargetFlags(existing.Target, d.Target);
-                if (ThreatManager.ActionPriority(d.ActionType) < ThreatManager.ActionPriority(existing.ActionType))
-                    existing.ActionType = d.ActionType;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Файл заблокирован Defender-ом: объект не трогаем, в review не показываем,
-        /// но отражаем в результатах FinishEx (ровно один раз).
-        /// </summary>
-        private static bool IsLockedByAv(ThreatDecision decision)
-        {
-            if (decision == null || decision.Target == null)
-                return false;
-
-            if (decision.ActionType == ScanActionType.LockedByAntivirus)
-                return true;
-
-            var file = decision.Target as FileThreatObject;
-            return file != null && file.IsLockedByAntivirus;
-        }
-
-        private static string GetDedupKey(ThreatDecision d)
-        {
-            // Для файлов: всегда нормализованный путь (без \\?\ / \??\).
-            // Хеш не используется — разные сканеры могут вычислять хеш по-разному или не вычислять вовсе.
-            if (d.Target is FileThreatObject file && !string.IsNullOrEmpty(file.FilePath))
-            {
-                return "File:" + MSData.NormalizeKnownPath(file.FilePath);
-            }
-            // Для каталогов: нормализованный путь
-            if (d.Target is DirectoryThreatObject dir && !string.IsNullOrEmpty(dir.DirectoryPath))
-            {
-                return "Dir:" + MSData.NormalizeKnownPath(dir.DirectoryPath);
-            }
-            // Для всех остальных: Target.Id
-            return d.Target.Kind + ":" + (d.Target.Id ?? "");
-        }
-
-        /// <summary>
-        /// Computes and logs scanning results.
-        /// </summary>
-        private static ScanStatistics ComputeAndLogStatistics(MinerSearchScanState state, TimeSpan elapsed)
-        {
-            var scanResults = state.GetScanResults();
-
-            // Группируем по уникальным Id ThreatObject для корректного подсчёта.
-            // Если ThreatObjectId пустой (напр. для файлов с валидной подписью hash="",
-            // или bad_bat где hash="") — используем составной ключ RawClass + Path,
-            // чтобы Distinct не схлопывал все пустые строки в 1.
-            int foundCount = scanResults
-                .Where(r => r.RawType == ScanObjectType.Malware ||
-                            r.RawType == ScanObjectType.Unsafe ||
-                            r.RawType == ScanObjectType.Infected ||
-                            r.RawType == ScanObjectType.Rootkit ||
-                            r.RawType == ScanObjectType.Suspicious)
-                .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
-                .Distinct()
-                .Count();
-
-            // Заблокированные Defender-ом объекты считаются обезвреженными (их блокирует антивирус),
-            // поэтому входят в нейтрализованные; отдельный подсчёт — для отдельного текста итога.
-            int neutralizedCount = scanResults
-                .Where(r => r.RawAction == ScanActionType.Deleted ||
-                            r.RawAction == ScanActionType.Terminated ||
-                            r.RawAction == ScanActionType.Quarantine ||
-                            r.RawAction == ScanActionType.Cured ||
-                            r.RawAction == ScanActionType.Disabled ||
-                            r.RawAction == ScanActionType.Suspended ||
-                            r.RawAction == ScanActionType.RebootPending ||
-                            r.RawAction == ScanActionType.LockedByAntivirus)
-                .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
-                .Distinct()
-                .Count();
-
-            int lockedByAvCount = scanResults
-                .Where(r => r.RawAction == ScanActionType.LockedByAntivirus)
-                .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
-                .Distinct()
-                .Count();
-
-            int suspiciousCount = AppConfig.GetInstance.totalFoundSuspiciousObjects;
-
-            // Считаем намеренно пропущенные — чтобы отличать их от неудавшихся нейтрализаций
-            int skippedCount = scanResults
-                .Where(r => r.RawAction == ScanActionType.Skipped &&
-                            (r.RawType == ScanObjectType.Malware ||
-                             r.RawType == ScanObjectType.Unsafe ||
-                             r.RawType == ScanObjectType.Infected ||
-                             r.RawType == ScanObjectType.Rootkit ||
-                             r.RawType == ScanObjectType.Suspicious))
-                .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
-                .Distinct()
-                .Count();
-
-            string elapsedTime = elapsed.Hours.ToString("00") + ":" + elapsed.Minutes.ToString("00") + ":" + elapsed.Seconds.ToString("00") + "." + elapsed.Milliseconds.ToString("000");
-
-            Logger.WriteLog("\n\t\t-----------------------------------", ConsoleColor.White, false);
-            LocalizedLogger.LogElapsedTime(elapsedTime);
-            Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
-            LocalizedLogger.LogTotalScanResult(foundCount, neutralizedCount, suspiciousCount, skippedCount);
-            Logger.WriteLog("\t\t-----------------------------------", ConsoleColor.White, false);
-
-            return new ScanStatistics
-            {
-                Found = foundCount,
-                Neutralized = neutralizedCount,
-                LockedByAv = lockedByAvCount,
-                Suspicious = suspiciousCount,
-                Skipped = skippedCount,
-                ElapsedTime = elapsedTime
-            };
+            Application.Run(new FormMain());
         }
 
         /// <summary>
@@ -951,33 +454,6 @@ namespace MSearch
             }
 
             return options.selectedPath;
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Scanning infrastructure results.
-        /// </summary>
-        private class ScanInfrastructure
-        {
-            public MinerSearchScanState State { get; set; }
-            public SignatureFileAnalyzer SignatureAnalyzer { get; set; }
-            public ScanManager ScanManager { get; set; }
-            public ThreatManager ThreatManager { get; set; }
-            public CleanManager CleanManager { get; set; }
-        }
-
-        /// <summary>
-        /// Scanning statistics results.
-        /// </summary>
-        private class ScanStatistics
-        {
-            public int Found { get; set; }
-            public int Neutralized { get; set; }
-            public int LockedByAv { get; set; }
-            public int Suspicious { get; set; }
-            public int Skipped { get; set; }
-            public string ElapsedTime { get; set; }
         }
 
         private static void TryInitConsoleWindow()

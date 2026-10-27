@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9A4C3043-8FD0-4F41-B012-FAB8DE92CE0D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>MSearch</RootNamespace>
     <AssemblyName>MinerSearch</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
@@ -164,6 +164,7 @@
     <Compile Include="Core\ThreatObjects\HostsThreatObject.cs" />
     <Compile Include="Core\ThreatObjects\RootkitThreatObject.cs" />
     <Compile Include="Core\ThreatObjects\ThreatObjects.cs" />
+    <Compile Include="Infrastructure\ConsoleBridge.cs" />
     <Compile Include="Infrastructure\TaskParser.cs" />
     <Compile Include="UI\DataGridViewCheckBoxHeaderCell.cs" />
     <Compile Include="UI\DialogDispatcher.cs" />
@@ -173,11 +174,11 @@
     <Compile Include="UI\FormSettings.Designer.cs">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\FormThreatReview.cs">
-      <SubType>Form</SubType>
+    <Compile Include="UI\ThreatReviewPage.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\FormThreatReview.Designer.cs">
-      <DependentUpon>FormThreatReview.cs</DependentUpon>
+    <Compile Include="UI\ThreatReviewPage.Designer.cs">
+      <DependentUpon>ThreatReviewPage.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\MessageBoxCustom.cs">
       <SubType>Form</SubType>
@@ -187,6 +188,12 @@
     </Compile>
     <Compile Include="UI\PanelCustom.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\QuarantinePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\QuarantinePage.Designer.cs">
+      <DependentUpon>QuarantinePage.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\QuarantineConsoleHandler.cs" />
     <Compile Include="UI\QuarantineForm.cs">
@@ -224,6 +231,45 @@
     <Compile Include="Infrastructure\QuarantineManager.cs" />
     <Compile Include="Core\MinerSearch.cs" />
     <Compile Include="Core\Program.cs" />
+    <Compile Include="Core\ScanActivity.cs" />
+    <Compile Include="Core\ScanFactory.cs" />
+    <Compile Include="Core\ScanInfrastructure.cs" />
+    <Compile Include="Core\ScanOptions.cs" />
+    <Compile Include="Core\ScanStatistics.cs" />
+    <Compile Include="Core\ScanWorkflow.cs" />
+    <Compile Include="UI\ConsoleScanInteraction.cs" />
+    <Compile Include="UI\AboutPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\AboutPage.Designer.cs">
+      <DependentUpon>AboutPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\GuiScanInteraction.cs" />
+    <Compile Include="UI\ResultsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ResultsPage.Designer.cs">
+      <DependentUpon>ResultsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ScanPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ScanPage.Designer.cs">
+      <DependentUpon>ScanPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\SettingsPage.Designer.cs">
+      <DependentUpon>SettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Theme.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -257,8 +303,8 @@
     <EmbeddedResource Include="UI\FormSettings.resx">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\FormThreatReview.resx">
-      <DependentUpon>FormThreatReview.cs</DependentUpon>
+    <EmbeddedResource Include="UI\FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\MessageBoxCustom.resx">
       <DependentUpon>MessageBoxCustom.cs</DependentUpon>
@@ -284,6 +330,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ResultsPage.resx">
+      <DependentUpon>ResultsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ScanPage.resx">
+      <DependentUpon>ScanPage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

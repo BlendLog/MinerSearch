@@ -5091,6 +5091,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Сканирование остановлено пользователем.
+        /// </summary>
+        internal static string _ScanCanceled_RU {
+            get {
+                return ResourceManager.GetString("_ScanCanceled_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scan stopped by user.
+        /// </summary>
+        internal static string _ScanCanceled_EN {
+            get {
+                return ResourceManager.GetString("_ScanCanceled_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Scanning processes....
         /// </summary>
         internal static string _ScanProcesses_EN {
@@ -6575,5 +6593,869 @@ namespace MSearch.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        internal static string _Nav_Scan_RU {
+            get {
+                return ResourceManager.GetString("_Nav_Scan_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Nav_Scan_EN {
+            get {
+                return ResourceManager.GetString("_Nav_Scan_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanMode_Quick_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Quick_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanMode_Quick_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Quick_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanMode_Quick_Desc_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Quick_Desc_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanMode_Quick_Desc_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Quick_Desc_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanMode_Full_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Full_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanMode_Full_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Full_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanMode_Full_Desc_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Full_Desc_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanMode_Full_Desc_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Full_Desc_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanMode_Selective_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Selective_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanMode_Selective_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Selective_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanMode_Selective_Desc_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Selective_Desc_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanMode_Selective_Desc_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Selective_Desc_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanSelective_Title_RU {
+            get {
+                return ResourceManager.GetString("_ScanSelective_Title_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanSelective_Title_EN {
+            get {
+                return ResourceManager.GetString("_ScanSelective_Title_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Processes_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Processes_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Processes_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Processes_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Registry_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Registry_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Registry_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Registry_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Services_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Services_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Services_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Services_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Tasks_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Tasks_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Tasks_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Tasks_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Firewall_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Firewall_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Firewall_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Firewall_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Hosts_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Hosts_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Hosts_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Hosts_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_UserProfiles_RU {
+            get {
+                return ResourceManager.GetString("_Stage_UserProfiles_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_UserProfiles_EN {
+            get {
+                return ResourceManager.GetString("_Stage_UserProfiles_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Wmi_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Wmi_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Wmi_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Wmi_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Rootkits_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Rootkits_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Rootkits_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Rootkits_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Signatures_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Signatures_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Stage_Signatures_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Signatures_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Selective_Folder_RU {
+            get {
+                return ResourceManager.GetString("_Selective_Folder_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Selective_Folder_EN {
+            get {
+                return ResourceManager.GetString("_Selective_Folder_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Selective_Browse_RU {
+            get {
+                return ResourceManager.GetString("_Selective_Browse_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Selective_Browse_EN {
+            get {
+                return ResourceManager.GetString("_Selective_Browse_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStart_RU {
+            get {
+                return ResourceManager.GetString("_ScanStart_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStart_EN {
+            get {
+                return ResourceManager.GetString("_ScanStart_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStop_RU {
+            get {
+                return ResourceManager.GetString("_ScanStop_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStop_EN {
+            get {
+                return ResourceManager.GetString("_ScanStop_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStopping_RU {
+            get {
+                return ResourceManager.GetString("_ScanStopping_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStopping_EN {
+            get {
+                return ResourceManager.GetString("_ScanStopping_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanInProgress_RU {
+            get {
+                return ResourceManager.GetString("_ScanInProgress_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanInProgress_EN {
+            get {
+                return ResourceManager.GetString("_ScanInProgress_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanReady_RU {
+            get {
+                return ResourceManager.GetString("_ScanReady_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanReady_EN {
+            get {
+                return ResourceManager.GetString("_ScanReady_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Rootkit_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Rootkit_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Rootkit_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Rootkit_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Processes_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Processes_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Processes_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Processes_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_General_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_General_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_General_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_General_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Signatures_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Signatures_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Signatures_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Signatures_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Review_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Review_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Review_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Review_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Cleanup_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Cleanup_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Cleanup_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Cleanup_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Completed_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Completed_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Completed_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Completed_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_CurrentObject_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_CurrentObject_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_CurrentObject_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_CurrentObject_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Counter_Found_RU {
+            get {
+                return ResourceManager.GetString("_Counter_Found_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Counter_Found_EN {
+            get {
+                return ResourceManager.GetString("_Counter_Found_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Counter_Neutralized_RU {
+            get {
+                return ResourceManager.GetString("_Counter_Neutralized_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Counter_Neutralized_EN {
+            get {
+                return ResourceManager.GetString("_Counter_Neutralized_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Counter_Suspicious_RU {
+            get {
+                return ResourceManager.GetString("_Counter_Suspicious_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Counter_Suspicious_EN {
+            get {
+                return ResourceManager.GetString("_Counter_Suspicious_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Counter_Skipped_RU {
+            get {
+                return ResourceManager.GetString("_Counter_Skipped_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Counter_Skipped_EN {
+            get {
+                return ResourceManager.GetString("_Counter_Skipped_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Results_RU {
+            get {
+                return ResourceManager.GetString("_Results_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Results_EN {
+            get {
+                return ResourceManager.GetString("_Results_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Results_Empty_RU {
+            get {
+                return ResourceManager.GetString("_Results_Empty_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Results_Empty_EN {
+            get {
+                return ResourceManager.GetString("_Results_Empty_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Results_EmptyHint_RU {
+            get {
+                return ResourceManager.GetString("_Results_EmptyHint_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Results_EmptyHint_EN {
+            get {
+                return ResourceManager.GetString("_Results_EmptyHint_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Results_OpenLog_RU {
+            get {
+                return ResourceManager.GetString("_Results_OpenLog_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Results_OpenLog_EN {
+            get {
+                return ResourceManager.GetString("_Results_OpenLog_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Results_Reboot_RU {
+            get {
+                return ResourceManager.GetString("_Results_Reboot_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Results_Reboot_EN {
+            get {
+                return ResourceManager.GetString("_Results_Reboot_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_Language_RU {
+            get {
+                return ResourceManager.GetString("_Settings_Language_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_Language_EN {
+            get {
+                return ResourceManager.GetString("_Settings_Language_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_Statistics_RU {
+            get {
+                return ResourceManager.GetString("_Settings_Statistics_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_Statistics_EN {
+            get {
+                return ResourceManager.GetString("_Settings_Statistics_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_StatisticsHint_RU {
+            get {
+                return ResourceManager.GetString("_Settings_StatisticsHint_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_StatisticsHint_EN {
+            get {
+                return ResourceManager.GetString("_Settings_StatisticsHint_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_AutoAccept_RU {
+            get {
+                return ResourceManager.GetString("_Settings_AutoAccept_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_AutoAccept_EN {
+            get {
+                return ResourceManager.GetString("_Settings_AutoAccept_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_AutoAcceptHint_RU {
+            get {
+                return ResourceManager.GetString("_Settings_AutoAcceptHint_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_AutoAcceptHint_EN {
+            get {
+                return ResourceManager.GetString("_Settings_AutoAcceptHint_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_Eula_RU {
+            get {
+                return ResourceManager.GetString("_Settings_Eula_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_Eula_EN {
+            get {
+                return ResourceManager.GetString("_Settings_Eula_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_EulaOpen_RU {
+            get {
+                return ResourceManager.GetString("_Settings_EulaOpen_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Settings_EulaOpen_EN {
+            get {
+                return ResourceManager.GetString("_Settings_EulaOpen_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _About_RU {
+            get {
+                return ResourceManager.GetString("_About_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _About_EN {
+            get {
+                return ResourceManager.GetString("_About_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _About_Version_RU {
+            get {
+                return ResourceManager.GetString("_About_Version_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _About_Version_EN {
+            get {
+                return ResourceManager.GetString("_About_Version_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _About_DeviceId_RU {
+            get {
+                return ResourceManager.GetString("_About_DeviceId_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _About_DeviceId_EN {
+            get {
+                return ResourceManager.GetString("_About_DeviceId_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _About_Disclaimer_RU {
+            get {
+                return ResourceManager.GetString("_About_Disclaimer_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _About_Disclaimer_EN {
+            get {
+                return ResourceManager.GetString("_About_Disclaimer_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ExitDuringScan_RU {
+            get {
+                return ResourceManager.GetString("_ExitDuringScan_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ExitDuringScan_EN {
+            get {
+                return ResourceManager.GetString("_ExitDuringScan_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanHint_RU {
+            get {
+                return ResourceManager.GetString("_ScanHint_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanHint_EN {
+            get {
+                return ResourceManager.GetString("_ScanHint_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _Refresh_RU {
+            get {
+                return ResourceManager.GetString("_Refresh_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _Refresh_EN {
+            get {
+                return ResourceManager.GetString("_Refresh_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _QuarantineCount_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineCount_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _QuarantineCount_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineCount_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_FileSystem_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_FileSystem_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_FileSystem_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_FileSystem_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_ShellStartup_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_ShellStartup_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_ShellStartup_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_ShellStartup_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Registry_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Registry_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Registry_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Registry_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Services_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Services_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Services_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Services_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Tasks_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Tasks_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Tasks_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Tasks_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Firewall_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Firewall_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Firewall_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Firewall_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Wmi_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Wmi_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Wmi_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Wmi_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Hosts_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Hosts_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_Hosts_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Hosts_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_UserProfiles_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_UserProfiles_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ScanStage_UserProfiles_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_UserProfiles_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ReviewTitle_RU {
+            get {
+                return ResourceManager.GetString("_ReviewTitle_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ReviewTitle_EN {
+            get {
+                return ResourceManager.GetString("_ReviewTitle_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ReviewContinueBtn_RU {
+            get {
+                return ResourceManager.GetString("_ReviewContinueBtn_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ReviewContinueBtn_EN {
+            get {
+                return ResourceManager.GetString("_ReviewContinueBtn_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _ReviewSkipAllBtn_RU {
+            get {
+                return ResourceManager.GetString("_ReviewSkipAllBtn_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _ReviewSkipAllBtn_EN {
+            get {
+                return ResourceManager.GetString("_ReviewSkipAllBtn_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _LogFileNotFound_RU {
+            get {
+                return ResourceManager.GetString("_LogFileNotFound_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _LogFileNotFound_EN {
+            get {
+                return ResourceManager.GetString("_LogFileNotFound_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _QuarantineEmpty_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineEmpty_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _QuarantineEmpty_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineEmpty_EN", resourceCulture);
+            }
+        }
+        
+        internal static string _QuarantineRestorePrompt_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineRestorePrompt_RU", resourceCulture);
+            }
+        }
+        
+        internal static string _QuarantineRestorePrompt_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineRestorePrompt_EN", resourceCulture);
+            }
+        }
+        
     }
 }

@@ -129,6 +129,9 @@ namespace MSearch.Core
         /// <summary>--console-mode / -cm — console mode</summary>
         public bool console_mode { get; internal set; }
 
+        /// <summary>Режим GUI (главное окно, без консоли)</summary>
+        public bool gui_mode { get; internal set; }
+
         #endregion
 
         #region Values with arguments
@@ -168,6 +171,7 @@ namespace MSearch.Core
             RestoredWMI = verbose = demandSelection = false;
             no_check_hosts = no_firewall = no_logs = accept_eula = false;
             console_mode = false;
+            gui_mode = false;
             no_review_interact = false;
 
             maxSubfolders = 8;
@@ -504,7 +508,7 @@ namespace MSearch.Core
                 // Неизвестный аргумент
                 LocalizedLogger.LogUnknownCommand(arg);
                 inst.hasErrors = true;
-                Console.ReadKey();
+                ConsoleBridge.SafeReadKey();
                 return;
             }
 

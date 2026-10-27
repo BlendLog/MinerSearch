@@ -6,6 +6,9 @@ namespace MSearch
 {
     public partial class License : FormShadow
     {
+        /// <summary>Просмотр EULA из настроек: кнопки не завершают приложение.</summary>
+        public bool ViewMode { get; set; }
+
         protected override void WndProc(ref Message m)
         {
             const int WM_SYSCOMMAND = 0x0112;
@@ -26,11 +29,23 @@ namespace MSearch
 
         private void Exit_btn_Click(object sender, EventArgs e)
         {
+            if (ViewMode)
+            {
+                Close();
+                return;
+            }
+
             Environment.Exit(0);
         }
 
         private void Accept_btn_Click(object sender, EventArgs e)
         {
+            if (ViewMode)
+            {
+                Close();
+                return;
+            }
+
             const string registryKeyPath = @"Software\M1nerSearch";
             const string valueName = "acceptedEula";
             Registry.CurrentUser.CreateSubKey(registryKeyPath).SetValue(valueName, 1);
@@ -46,6 +61,12 @@ namespace MSearch
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (ViewMode)
+            {
+                Close();
+                return;
+            }
+
             Environment.Exit(0);
         }
     }

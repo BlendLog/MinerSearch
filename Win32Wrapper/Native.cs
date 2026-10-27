@@ -103,6 +103,24 @@ namespace Win32Wrapper
         [DllImport("kernel32.dll")]
         public static extern IntPtr GetConsoleWindow();
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool AttachConsole(int dwProcessId);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool AllocConsole();
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool FreeConsole();
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern uint GetFileType(IntPtr hFile);
+
+        public const int ATTACH_PARENT_PROCESS = -1;
+        public const uint FILE_TYPE_UNKNOWN = 0;
+        public const uint FILE_TYPE_DISK = 1;
+        public const uint FILE_TYPE_CHAR = 2;
+        public const uint FILE_TYPE_PIPE = 3;
+
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 

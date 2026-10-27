@@ -699,6 +699,9 @@ Press any key to continue...</value>
   <data name="_ScanOnlyMode_RU" xml:space="preserve">
     <value>Только проверка</value>
   </data>
+  <data name="_ScanCanceled_RU" xml:space="preserve">
+    <value>Сканирование остановлено пользователем</value>
+  </data>
   <data name="_NoThreats_EN" xml:space="preserve">
     <value>No threats found</value>
   </data>
@@ -2119,6 +2122,9 @@ Click \b Exit\b0  to exit.\par
   <data name="_ScanOnlyMode_EN" xml:space="preserve">
     <value>Scan only mode</value>
   </data>
+  <data name="_ScanCanceled_EN" xml:space="preserve">
+    <value>Scan stopped by user</value>
+  </data>
   <data name="_Q_CLI_InvlaidOptionSelection_EN" xml:space="preserve">
     <value>Simultaneous use of the delete and restore options is not allowed.</value>
   </data>
@@ -2482,5 +2488,441 @@ Do you want to continue?
   </data>
   <data name="_ExecutableInUserCaches_RU" xml:space="preserve">
     <value>Исполняемый файл в кэш-каталоге пользователя:</value>
+  </data>
+  <data name="_Nav_Scan_RU" xml:space="preserve">
+    <value>Сканирование</value>
+  </data>
+  <data name="_Nav_Scan_EN" xml:space="preserve">
+    <value>Scan</value>
+  </data>
+  <data name="_ScanMode_Quick_RU" xml:space="preserve">
+    <value>Быстрый</value>
+  </data>
+  <data name="_ScanMode_Quick_EN" xml:space="preserve">
+    <value>Quick</value>
+  </data>
+  <data name="_ScanMode_Quick_Desc_RU" xml:space="preserve">
+    <value>Стандартная проверка системы без дополнительных ключей</value>
+  </data>
+  <data name="_ScanMode_Quick_Desc_EN" xml:space="preserve">
+    <value>Standard system check without extra options</value>
+  </data>
+  <data name="_ScanMode_Full_RU" xml:space="preserve">
+    <value>Полный</value>
+  </data>
+  <data name="_ScanMode_Full_EN" xml:space="preserve">
+    <value>Full</value>
+  </data>
+  <data name="_ScanMode_Full_Desc_RU" xml:space="preserve">
+    <value>Все локальные диски, глубина сканирования 16</value>
+  </data>
+  <data name="_ScanMode_Full_Desc_EN" xml:space="preserve">
+    <value>All local drives, scan depth 16</value>
+  </data>
+  <data name="_ScanMode_Selective_RU" xml:space="preserve">
+    <value>Выборочный</value>
+  </data>
+  <data name="_ScanMode_Selective_EN" xml:space="preserve">
+    <value>Selective</value>
+  </data>
+  <data name="_ScanMode_Selective_Desc_RU" xml:space="preserve">
+    <value>Выбор этапов проверки и папки для сканирования</value>
+  </data>
+  <data name="_ScanMode_Selective_Desc_EN" xml:space="preserve">
+    <value>Choose scan stages and a folder to scan</value>
+  </data>
+  <data name="_ScanSelective_Title_RU" xml:space="preserve">
+    <value>Этапы проверки</value>
+  </data>
+  <data name="_ScanSelective_Title_EN" xml:space="preserve">
+    <value>Scan stages</value>
+  </data>
+  <data name="_Stage_Processes_RU" xml:space="preserve">
+    <value>Процессы</value>
+  </data>
+  <data name="_Stage_Processes_EN" xml:space="preserve">
+    <value>Processes</value>
+  </data>
+  <data name="_Stage_Registry_RU" xml:space="preserve">
+    <value>Реестр</value>
+  </data>
+  <data name="_Stage_Registry_EN" xml:space="preserve">
+    <value>Registry</value>
+  </data>
+  <data name="_Stage_Services_RU" xml:space="preserve">
+    <value>Службы</value>
+  </data>
+  <data name="_Stage_Services_EN" xml:space="preserve">
+    <value>Services</value>
+  </data>
+  <data name="_Stage_Tasks_RU" xml:space="preserve">
+    <value>Планировщик заданий</value>
+  </data>
+  <data name="_Stage_Tasks_EN" xml:space="preserve">
+    <value>Scheduled tasks</value>
+  </data>
+  <data name="_Stage_Firewall_RU" xml:space="preserve">
+    <value>Брандмауэр</value>
+  </data>
+  <data name="_Stage_Firewall_EN" xml:space="preserve">
+    <value>Firewall</value>
+  </data>
+  <data name="_Stage_Hosts_RU" xml:space="preserve">
+    <value>Файл hosts</value>
+  </data>
+  <data name="_Stage_Hosts_EN" xml:space="preserve">
+    <value>Hosts file</value>
+  </data>
+  <data name="_Stage_UserProfiles_RU" xml:space="preserve">
+    <value>Профили пользователей</value>
+  </data>
+  <data name="_Stage_UserProfiles_EN" xml:space="preserve">
+    <value>User profiles</value>
+  </data>
+  <data name="_Stage_Wmi_RU" xml:space="preserve">
+    <value>WMI</value>
+  </data>
+  <data name="_Stage_Wmi_EN" xml:space="preserve">
+    <value>WMI</value>
+  </data>
+  <data name="_Stage_Rootkits_RU" xml:space="preserve">
+    <value>Руткиты</value>
+  </data>
+  <data name="_Stage_Rootkits_EN" xml:space="preserve">
+    <value>Rootkits</value>
+  </data>
+  <data name="_Stage_Signatures_RU" xml:space="preserve">
+    <value>Сигнатуры</value>
+  </data>
+  <data name="_Stage_Signatures_EN" xml:space="preserve">
+    <value>Signatures</value>
+  </data>
+  <data name="_Selective_Folder_RU" xml:space="preserve">
+    <value>Сканировать выбранную папку</value>
+  </data>
+  <data name="_Selective_Folder_EN" xml:space="preserve">
+    <value>Scan selected folder</value>
+  </data>
+  <data name="_Selective_Browse_RU" xml:space="preserve">
+    <value>Обзор...</value>
+  </data>
+  <data name="_Selective_Browse_EN" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="_ScanStart_RU" xml:space="preserve">
+    <value>Начать проверку</value>
+  </data>
+  <data name="_ScanStart_EN" xml:space="preserve">
+    <value>Start scan</value>
+  </data>
+  <data name="_ScanStop_RU" xml:space="preserve">
+    <value>Стоп</value>
+  </data>
+  <data name="_ScanStop_EN" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="_ScanStopping_RU" xml:space="preserve">
+    <value>Остановка...</value>
+  </data>
+  <data name="_ScanStopping_EN" xml:space="preserve">
+    <value>Stopping...</value>
+  </data>
+  <data name="_ScanInProgress_RU" xml:space="preserve">
+    <value>Идёт проверка...</value>
+  </data>
+  <data name="_ScanInProgress_EN" xml:space="preserve">
+    <value>Scan in progress...</value>
+  </data>
+  <data name="_ScanReady_RU" xml:space="preserve">
+    <value>Готово к проверке</value>
+  </data>
+  <data name="_ScanReady_EN" xml:space="preserve">
+    <value>Ready to scan</value>
+  </data>
+  <data name="_ScanStage_Rootkit_RU" xml:space="preserve">
+    <value>Проверка руткитов</value>
+  </data>
+  <data name="_ScanStage_Rootkit_EN" xml:space="preserve">
+    <value>Rootkit check</value>
+  </data>
+  <data name="_ScanStage_Processes_RU" xml:space="preserve">
+    <value>Проверка процессов</value>
+  </data>
+  <data name="_ScanStage_Processes_EN" xml:space="preserve">
+    <value>Process check</value>
+  </data>
+  <data name="_ScanStage_General_RU" xml:space="preserve">
+    <value>Общая проверка</value>
+  </data>
+  <data name="_ScanStage_General_EN" xml:space="preserve">
+    <value>General check</value>
+  </data>
+  <data name="_ScanStage_Signatures_RU" xml:space="preserve">
+    <value>Проверка сигнатур</value>
+  </data>
+  <data name="_ScanStage_Signatures_EN" xml:space="preserve">
+    <value>Signature check</value>
+  </data>
+  <data name="_ScanStage_Review_RU" xml:space="preserve">
+    <value>Обзор угроз</value>
+  </data>
+  <data name="_ScanStage_Review_EN" xml:space="preserve">
+    <value>Threat review</value>
+  </data>
+  <data name="_ScanStage_Cleanup_RU" xml:space="preserve">
+    <value>Обезвреживание</value>
+  </data>
+  <data name="_ScanStage_Cleanup_EN" xml:space="preserve">
+    <value>Cleanup</value>
+  </data>
+  <data name="_ScanStage_Completed_RU" xml:space="preserve">
+    <value>Завершено</value>
+  </data>
+  <data name="_ScanStage_Completed_EN" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="_ScanStage_CurrentObject_RU" xml:space="preserve">
+    <value>Текущий объект: #VALUE#</value>
+  </data>
+  <data name="_ScanStage_CurrentObject_EN" xml:space="preserve">
+    <value>Current object: #VALUE#</value>
+  </data>
+  <data name="_Counter_Found_RU" xml:space="preserve">
+    <value>Найдено</value>
+  </data>
+  <data name="_Counter_Found_EN" xml:space="preserve">
+    <value>Found</value>
+  </data>
+  <data name="_Counter_Neutralized_RU" xml:space="preserve">
+    <value>Обезврежено</value>
+  </data>
+  <data name="_Counter_Neutralized_EN" xml:space="preserve">
+    <value>Neutralized</value>
+  </data>
+  <data name="_Counter_Suspicious_RU" xml:space="preserve">
+    <value>Подозрительных</value>
+  </data>
+  <data name="_Counter_Suspicious_EN" xml:space="preserve">
+    <value>Suspicious</value>
+  </data>
+  <data name="_Counter_Skipped_RU" xml:space="preserve">
+    <value>Пропущено</value>
+  </data>
+  <data name="_Counter_Skipped_EN" xml:space="preserve">
+    <value>Skipped</value>
+  </data>
+  <data name="_Results_RU" xml:space="preserve">
+    <value>Результаты</value>
+  </data>
+  <data name="_Results_EN" xml:space="preserve">
+    <value>Results</value>
+  </data>
+  <data name="_Results_Empty_RU" xml:space="preserve">
+    <value>Проверка ещё не выполнялась</value>
+  </data>
+  <data name="_Results_Empty_EN" xml:space="preserve">
+    <value>No scan has been run yet</value>
+  </data>
+  <data name="_Results_EmptyHint_RU" xml:space="preserve">
+    <value>Запустите проверку на вкладке «Сканирование»</value>
+  </data>
+  <data name="_Results_EmptyHint_EN" xml:space="preserve">
+    <value>Start a scan on the Scan tab</value>
+  </data>
+  <data name="_Results_OpenLog_RU" xml:space="preserve">
+    <value>Открыть лог</value>
+  </data>
+  <data name="_Results_OpenLog_EN" xml:space="preserve">
+    <value>Open log</value>
+  </data>
+  <data name="_Results_Reboot_RU" xml:space="preserve">
+    <value>Перезагрузить</value>
+  </data>
+  <data name="_Results_Reboot_EN" xml:space="preserve">
+    <value>Reboot</value>
+  </data>
+  <data name="_Settings_Language_RU" xml:space="preserve">
+    <value>Язык интерфейса</value>
+  </data>
+  <data name="_Settings_Language_EN" xml:space="preserve">
+    <value>Interface language</value>
+  </data>
+  <data name="_Settings_Statistics_RU" xml:space="preserve">
+    <value>Отправлять статистику сканирования</value>
+  </data>
+  <data name="_Settings_Statistics_EN" xml:space="preserve">
+    <value>Send scan statistics</value>
+  </data>
+  <data name="_Settings_StatisticsHint_RU" xml:space="preserve">
+    <value>Лог проверки, ID устройства и счётчики отправляются разработчику</value>
+  </data>
+  <data name="_Settings_StatisticsHint_EN" xml:space="preserve">
+    <value>Scan log, device ID and counters are sent to the developer</value>
+  </data>
+  <data name="_Settings_AutoAccept_RU" xml:space="preserve">
+    <value>Автоматически принимать неизвестные угрозы</value>
+  </data>
+  <data name="_Settings_AutoAccept_EN" xml:space="preserve">
+    <value>Auto-accept unknown threats</value>
+  </data>
+  <data name="_Settings_AutoAcceptHint_RU" xml:space="preserve">
+    <value>Не показывать окно обзора для неизвестных объектов</value>
+  </data>
+  <data name="_Settings_AutoAcceptHint_EN" xml:space="preserve">
+    <value>Do not show the review window for unknown objects</value>
+  </data>
+  <data name="_Settings_Eula_RU" xml:space="preserve">
+    <value>Лицензионное соглашение</value>
+  </data>
+  <data name="_Settings_Eula_EN" xml:space="preserve">
+    <value>License agreement</value>
+  </data>
+  <data name="_Settings_EulaOpen_RU" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="_Settings_EulaOpen_EN" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="_About_RU" xml:space="preserve">
+    <value>О программе</value>
+  </data>
+  <data name="_About_EN" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="_About_Version_RU" xml:space="preserve">
+    <value>Версия: #VERSION#</value>
+  </data>
+  <data name="_About_Version_EN" xml:space="preserve">
+    <value>Version: #VERSION#</value>
+  </data>
+  <data name="_About_DeviceId_RU" xml:space="preserve">
+    <value>ID устройства (нажмите, чтобы скопировать)</value>
+  </data>
+  <data name="_About_DeviceId_EN" xml:space="preserve">
+    <value>Device ID (click to copy)</value>
+  </data>
+  <data name="_About_Disclaimer_RU" xml:space="preserve">
+    <value>MinerSearch не является антивирусом и не заменяет его. Программа выполняет дополнительную проверку системы и может удалять файлы — используйте её осознанно.</value>
+  </data>
+  <data name="_About_Disclaimer_EN" xml:space="preserve">
+    <value>MinerSearch is not an antivirus and does not replace one. It performs an additional system check and may delete files — use it responsibly.</value>
+  </data>
+  <data name="_ExitDuringScan_RU" xml:space="preserve">
+    <value>Идёт проверка. Остановить её и закрыть программу?</value>
+  </data>
+  <data name="_ExitDuringScan_EN" xml:space="preserve">
+    <value>A scan is running. Stop it and close the program?</value>
+  </data>
+  <data name="_ScanHint_EN" xml:space="preserve">
+    <value>Choose a scan mode to start</value>
+  </data>
+  <data name="_ScanHint_RU" xml:space="preserve">
+    <value>Выберите режим проверки, чтобы начать</value>
+  </data>
+  <data name="_QuarantineCount_EN" xml:space="preserve">
+    <value>Quarantined objects: #COUNT#</value>
+  </data>
+  <data name="_QuarantineCount_RU" xml:space="preserve">
+    <value>Объектов в карантине: #COUNT#</value>
+  </data>
+  <data name="_Refresh_EN" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="_Refresh_RU" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="_ScanStage_FileSystem_RU" xml:space="preserve">
+    <value>Проверка файловой системы</value>
+  </data>
+  <data name="_ScanStage_FileSystem_EN" xml:space="preserve">
+    <value>File system check</value>
+  </data>
+  <data name="_ScanStage_ShellStartup_RU" xml:space="preserve">
+    <value>Автозагрузка</value>
+  </data>
+  <data name="_ScanStage_ShellStartup_EN" xml:space="preserve">
+    <value>Startup entries</value>
+  </data>
+  <data name="_ScanStage_Registry_RU" xml:space="preserve">
+    <value>Проверка реестра</value>
+  </data>
+  <data name="_ScanStage_Registry_EN" xml:space="preserve">
+    <value>Registry check</value>
+  </data>
+  <data name="_ScanStage_Services_RU" xml:space="preserve">
+    <value>Проверка служб</value>
+  </data>
+  <data name="_ScanStage_Services_EN" xml:space="preserve">
+    <value>Service check</value>
+  </data>
+  <data name="_ScanStage_Tasks_RU" xml:space="preserve">
+    <value>Планировщик заданий</value>
+  </data>
+  <data name="_ScanStage_Tasks_EN" xml:space="preserve">
+    <value>Scheduled tasks</value>
+  </data>
+  <data name="_ScanStage_Firewall_RU" xml:space="preserve">
+    <value>Брандмауэр</value>
+  </data>
+  <data name="_ScanStage_Firewall_EN" xml:space="preserve">
+    <value>Firewall</value>
+  </data>
+  <data name="_ScanStage_Wmi_RU" xml:space="preserve">
+    <value>WMI</value>
+  </data>
+  <data name="_ScanStage_Wmi_EN" xml:space="preserve">
+    <value>WMI</value>
+  </data>
+  <data name="_ScanStage_Hosts_RU" xml:space="preserve">
+    <value>Файл hosts</value>
+  </data>
+  <data name="_ScanStage_Hosts_EN" xml:space="preserve">
+    <value>Hosts file</value>
+  </data>
+  <data name="_ScanStage_UserProfiles_RU" xml:space="preserve">
+    <value>Профили пользователей</value>
+  </data>
+  <data name="_ScanStage_UserProfiles_EN" xml:space="preserve">
+    <value>User profiles</value>
+  </data>
+  <data name="_ReviewTitle_RU" xml:space="preserve">
+    <value>Обзор угроз</value>
+  </data>
+  <data name="_ReviewTitle_EN" xml:space="preserve">
+    <value>Threat review</value>
+  </data>
+  <data name="_ReviewContinueBtn_RU" xml:space="preserve">
+    <value>Продолжить с рекомендованными</value>
+  </data>
+  <data name="_ReviewContinueBtn_EN" xml:space="preserve">
+    <value>Continue with recommended</value>
+  </data>
+  <data name="_ReviewSkipAllBtn_RU" xml:space="preserve">
+    <value>Пропустить всё</value>
+  </data>
+  <data name="_ReviewSkipAllBtn_EN" xml:space="preserve">
+    <value>Skip all</value>
+  </data>
+  <data name="_LogFileNotFound_EN" xml:space="preserve">
+    <value>Log file not found</value>
+  </data>
+  <data name="_LogFileNotFound_RU" xml:space="preserve">
+    <value>Файл лога не найден</value>
+  </data>
+  <data name="_QuarantineRestorePrompt_EN" xml:space="preserve">
+    <value>Restore to the original location?
+Yes — original path
+No — choose a folder</value>
+  </data>
+  <data name="_QuarantineRestorePrompt_RU" xml:space="preserve">
+    <value>Восстановить в исходное место?
+Да — исходный путь
+Нет — выбрать папку</value>
+  </data>
+  <data name="_QuarantineEmpty_EN" xml:space="preserve">
+    <value>Quarantine is empty</value>
+  </data>
+  <data name="_QuarantineEmpty_RU" xml:space="preserve">
+    <value>Карантин пуст</value>
   </data>
 </root>
