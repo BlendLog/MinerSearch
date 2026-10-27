@@ -482,11 +482,11 @@ namespace MSearch
         private void OpenQuarantineBtn_Click(object sender, EventArgs e)
         {
             Hide();
-            QuarantineForm qForm = new QuarantineForm(this)
+            using (QuarantineForm qForm = new QuarantineForm())
             {
-                Owner = this
-            };
-            qForm.ShowDialog();
+                qForm.ShowDialog(this);
+            }
+            Show();
         }
 
         private void DonateBtn_Click(object sender, EventArgs e)

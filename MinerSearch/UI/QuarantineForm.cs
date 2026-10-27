@@ -13,9 +13,14 @@ namespace MSearch
 {
     public partial class QuarantineForm : FormShadow
     {
-        FinishEx FinishEx = null;
         int SELECTED_ROWS_COUNT = 0;
         const int MAX_SUMMARY_PATHS = 10;
+
+        /// <summary>Форма встроена в главное окно: без отдельного заголовка и выхода.</summary>
+        public bool EmbeddedMode { get; set; }
+
+        /// <summary>Количество объектов в карантине изменилось.</summary>
+        public event Action<int> CountChanged;
 
         readonly string REGISTRY_PATH_QUARANTINE = @"Software\M1nerSearch\Quarantine";
         readonly string REGISTRY_PATH_MAIN = @"Software\M1nerSearch";
@@ -26,22 +31,11 @@ namespace MSearch
             ConfigureDataGridView();
         }
 
-        public QuarantineForm(FinishEx _finishForm)
-        {
-            InitializeComponent();
-            ConfigureDataGridView();
-
-            FinishEx = _finishForm;
-        }
-
         void Finish()
         {
-            if (this.FinishEx == null)
-            {
-                Environment.Exit(0);
-            }
+            if (EmbeddedMode)
+                return;
 
-            this.FinishEx.Show();
             Close();
         }
 
@@ -67,7 +61,6 @@ namespace MSearch
         private void QuarantineForm_Load_1(object sender, EventArgs e)
         {
             string registryPathMain = @"Software\M1nerSearch";
-            string registryPath = @"Software\M1nerSearch\Quarantine";
             TranslateForm();
 
             if (UnlockObjectClass.IsRegistryKeyBlocked(registryPathMain))
@@ -80,15 +73,104 @@ namespace MSearch
                 UnlockObjectClass.UnblockRegistry(registryPathMain, RegistryHive.LocalMachine);
             }
 
-            UpdateQuarantineCount(registryPath);
+            if (EmbeddedMode)
+                ApplyEmbeddedStyle();
+
+            RefreshItems();
+        }
+
+        /// <summary>
+        /// Приводит встроенную форму к общему стилю GUI.
+        /// </summary>
+        private void ApplyEmbeddedStyle()
+        {
+            tableLayoutPanel1.BackColor = Color.White;
+            tableLayoutPanel1.RowStyles[0].Height = 0F;
+            tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Absolute;
+            tableLayoutPanel1.RowStyles[1].Height = 0F;
+            tableLayoutPanel1.RowStyles[2].SizeType = SizeType.Percent;
+            tableLayoutPanel1.RowStyles[2].Height = 100F;
+
+            panel1.Visible = false;
+            panel2.Visible = false;
+            finishBtn.Visible = false;
+            panel4.BackColor = Color.White;
+
+            dataGridQuarantineFiles.BackgroundColor = Color.White;
+            dataGridQuarantineFiles.GridColor = Color.FromArgb(236, 239, 243);
+            dataGridQuarantineFiles.BorderStyle = BorderStyle.None;
+            dataGridQuarantineFiles.ColumnHeadersHeight = 36;
+            dataGridQuarantineFiles.RowTemplate.Height = 30;
+            dataGridQuarantineFiles.DefaultCellStyle.Font = new Font("Segoe UI", 10F);
+            dataGridQuarantineFiles.DefaultCellStyle.BackColor = Color.White;
+            dataGridQuarantineFiles.DefaultCellStyle.SelectionBackColor = Color.FromArgb(232, 240, 254);
+            dataGridQuarantineFiles.DefaultCellStyle.SelectionForeColor = Color.FromArgb(31, 36, 45);
+            dataGridQuarantineFiles.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
+            {
+                BackColor = Color.FromArgb(248, 249, 251),
+                ForeColor = Color.FromArgb(112, 120, 132),
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                Alignment = DataGridViewContentAlignment.MiddleLeft
+            };
+
+            dataGridQuarantineFiles.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            foreach (DataGridViewColumn column in dataGridQuarantineFiles.Columns)
+            {
+                column.MinimumWidth = 5;
+                switch (column.Name)
+                {
+                    case "Selected":
+                        column.FillWeight = 12F;
+                        break;
+                    case "PathColumn":
+                        column.FillWeight = 40F;
+                        break;
+                    case "FileSizeColumn":
+                        column.FillWeight = 10F;
+                        break;
+                    case "TypeColumn":
+                        column.FillWeight = 14F;
+                        break;
+                    default:
+                        column.FillWeight = 30F;
+                        break;
+                }
+            }
+
+            StyleActionButton(RestoreSelectedBtn, Color.FromArgb(45, 108, 223));
+            StyleActionButton(DeleteSelectedBtn, Color.FromArgb(192, 48, 48));
+            RestoreSelectedBtn.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            DeleteSelectedBtn.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+        }
+
+        private static void StyleActionButton(RoundButton button, Color color)
+        {
+            button.BackColor = color;
+            button.ForeColor = Color.White;
+            button.FlatAppearance.BorderSize = 0;
+            button.FlatAppearance.MouseOverBackColor = ControlPaint.Light(color);
+            button.FlatAppearance.MouseDownBackColor = ControlPaint.Dark(color);
+        }
+
+        /// <summary>
+        /// Перечитывает список карантина из реестра.
+        /// </summary>
+        public void RefreshItems()
+        {
+            if (IsDisposed)
+                return;
+
+            dataGridQuarantineFiles.Rows.Clear();
+            UpdateQuarantineCount(REGISTRY_PATH_QUARANTINE);
 
             foreach (QuarantineItem item in QuarantineManager.List())
             {
                 int rowIndex = dataGridQuarantineFiles.Rows.Add(null, item.OriginalPath, item.FileSize, GetTypeLabel(item.ItemType), item.FileHash);
                 dataGridQuarantineFiles.Rows[rowIndex].Cells["TypeColumn"].Tag = item.ItemType;
             }
-            dataGridQuarantineFiles.ClearSelection();
 
+            dataGridQuarantineFiles.ClearSelection();
+            UpdateHeaderCheckBoxState();
         }
 
         static QuarantineItemType? GetRowType(DataGridViewRow row)
@@ -220,16 +302,32 @@ namespace MSearch
             dataGridQuarantineFiles.ClearSelection();
 
             UpdateUI(quarantineCount);
+
+            Action<int> handler = CountChanged;
+            if (handler != null)
+                handler(quarantineCount);
         }
 
         void UpdateUI(int quarantineCount)
         {
-            if (quarantineCount == 0)
+            bool hasItems = quarantineCount > 0;
+
+            RestoreSelectedBtn.Enabled = DeleteSelectedBtn.Enabled = dataGridQuarantineFiles.Enabled = hasItems;
+
+            if (EmbeddedMode)
             {
-                RestoreSelectedBtn.Enabled = DeleteSelectedBtn.Enabled = dataGridQuarantineFiles.Enabled = false;
-                RestoreSelectedBtn.ForeColor = DeleteSelectedBtn.ForeColor = dataGridQuarantineFiles.ColumnHeadersDefaultCellStyle.ForeColor = Color.Gray;
-                RestoreSelectedBtn.FlatAppearance.BorderColor = DeleteSelectedBtn.FlatAppearance.BorderColor = Color.Gray;
+                RestoreSelectedBtn.ForeColor = hasItems ? Color.White : Color.Gray;
+                RestoreSelectedBtn.BackColor = hasItems ? Color.FromArgb(45, 108, 223) : Color.FromArgb(224, 228, 234);
+                DeleteSelectedBtn.ForeColor = hasItems ? Color.White : Color.Gray;
+                DeleteSelectedBtn.BackColor = hasItems ? Color.FromArgb(192, 48, 48) : Color.FromArgb(224, 228, 234);
+                return;
             }
+
+            RestoreSelectedBtn.ForeColor = hasItems ? Color.RoyalBlue : Color.Gray;
+            RestoreSelectedBtn.FlatAppearance.BorderColor = hasItems ? Color.RoyalBlue : Color.Gray;
+            DeleteSelectedBtn.ForeColor = hasItems ? Color.Crimson : Color.Gray;
+            DeleteSelectedBtn.FlatAppearance.BorderColor = hasItems ? Color.Crimson : Color.Gray;
+            dataGridQuarantineFiles.ColumnHeadersDefaultCellStyle.ForeColor = hasItems ? SystemColors.WindowText : Color.Gray;
         }
 
         /// <summary>
