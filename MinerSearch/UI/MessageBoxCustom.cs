@@ -1,7 +1,6 @@
 ﻿using MSearch.Core;
 using MSearch.UI;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -9,76 +8,86 @@ namespace MSearch
 {
     public partial class MessageBoxCustom : FormShadow
     {
-        Dictionary<string, DialogResult> buttonMapping;
+        private const int ButtonHeight = 38;
+        private const int ButtonSpacing = 10;
+        private const int ButtonMinWidth = 92;
+        private const int MinClientHeight = 150;
 
         public MessageBoxCustom(string text, string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.None)
+            : this(text, title, Color.Empty, buttons, icon)
         {
-            InitializeComponent();
-            labelMessage.Text = text;
-            top.Text = title;
-            tableLayoutPanel1.BackColor = top.BackColor;
-            pictureBox1.Image = GetMessageBoxIcon(icon);
-            GenerateButtons(buttons);
-
-            if (pictureBox1.Size.Width == 1)
-            {
-                tableLayoutPanel2.ColumnStyles[0].SizeType = SizeType.Percent;
-                tableLayoutPanel2.ColumnStyles[0].Width = 0;
-                tableLayoutPanel2.ColumnStyles[1].SizeType = SizeType.Percent;
-                tableLayoutPanel2.ColumnStyles[1].Width = 100;
-            }
         }
 
         public MessageBoxCustom(string text, string title, Color titleColor, MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.None)
         {
             InitializeComponent();
+
             labelMessage.Text = text;
             top.Text = title;
-            top.BackColor = titleColor;
-            tableLayoutPanel1.BackColor = titleColor;
-            CloseBtn.BackColor = top.BackColor;
-            pictureBox1.Image = GetMessageBoxIcon(icon);
-            GenerateButtons(buttons);
 
-            if (pictureBox1.Size.Width == 1)
-            {
-                tableLayoutPanel2.ColumnStyles[0].SizeType = SizeType.Percent;
-                tableLayoutPanel2.ColumnStyles[0].Width = 0;
-                tableLayoutPanel2.ColumnStyles[1].SizeType = SizeType.Percent;
-                tableLayoutPanel2.ColumnStyles[1].Width = 100;
-            }
+            ApplyAccentColor(titleColor);
+            ApplyIcon(icon);
+            GenerateButtons(buttons);
+        }
+
+        /// <summary>
+        /// Цветной акцент слева в заголовке (для ошибок). Пустой цвет — обычный вид.
+        /// </summary>
+        private void ApplyAccentColor(Color color)
+        {
+            accentStrip.BackColor = color == Color.Empty ? Color.White : color;
+        }
+
+        private void ApplyIcon(MessageBoxIcon icon)
+        {
+            bool hasIcon = icon != MessageBoxIcon.None;
+            pictureBox1.Visible = hasIcon;
+            pictureBox1.Image = hasIcon ? GetMessageBoxIcon(icon) : null;
+
+            tableLayoutPanel2.ColumnStyles[0].SizeType = SizeType.Absolute;
+            tableLayoutPanel2.ColumnStyles[0].Width = hasIcon ? 64F : 8F;
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            ConstrainMessageWidth();
             AdjustHeightForMessage();
         }
 
         /// <summary>
-        /// Увеличивает высоту формы, чтобы сообщение помещалось целиком
-        /// (с учётом переноса длинных строк по ширине колонки).
+        /// Ограничивает ширину текста, чтобы длинные строки переносились с отступом от края.
+        /// </summary>
+        private void ConstrainMessageWidth()
+        {
+            int iconWidth = (int)tableLayoutPanel2.ColumnStyles[0].Width;
+            int availableWidth = tableLayoutPanel2.ClientSize.Width - iconWidth - labelMessage.Margin.Horizontal;
+
+            if (availableWidth < 100)
+                availableWidth = 100;
+
+            labelMessage.MaximumSize = new Size(availableWidth, 0);
+        }
+
+        /// <summary>
+        /// Подгоняет высоту формы под сообщение с учётом переноса длинных строк.
         /// </summary>
         private void AdjustHeightForMessage()
         {
-            const int nonMessageHeight = 97;
-            // Запас на округление/DPI, чтобы последняя строка не обрезалась
-            const int extraHeight = 6;
+            int chromeHeight = tableLayoutPanel1.Padding.Vertical + panel1.Height + panelButtons.Height;
+            int requiredHeight = chromeHeight + labelMessage.Height + labelMessage.Margin.Vertical + 2;
 
-            int requiredHeight = nonMessageHeight + labelMessage.Height + extraHeight;
-            if (requiredHeight <= ClientSize.Height)
-                return;
+            if (requiredHeight < MinClientHeight)
+                requiredHeight = MinClientHeight;
 
-            ClientSize = new Size(ClientSize.Width, requiredHeight);
-            tableLayoutPanel2.Height = requiredHeight - nonMessageHeight;
+            if (requiredHeight != ClientSize.Height)
+                ClientSize = new Size(ClientSize.Width, requiredHeight);
         }
 
-        private Image GetMessageBoxIcon(MessageBoxIcon icon)
+        private static Image GetMessageBoxIcon(MessageBoxIcon icon)
         {
             switch (icon)
             {
-                case MessageBoxIcon.None:
-                    return new Bitmap(1, 1);
                 case MessageBoxIcon.Question:
                     return SystemIcons.Question.ToBitmap();
                 case MessageBoxIcon.Exclamation:
@@ -87,85 +96,100 @@ namespace MSearch
                     return SystemIcons.Error.ToBitmap();
                 case MessageBoxIcon.Information:
                     return SystemIcons.Information.ToBitmap();
+                default:
+                    return null;
             }
-            return new Bitmap(1, 1);
         }
 
         private void GenerateButtons(MessageBoxButtons buttons)
         {
-            buttonMapping = new Dictionary<string, DialogResult>();
-            string[] buttonTexts = GetLocalizedButtonTexts(buttons);
+            DialogResult[] results = GetButtonResults(buttons);
+            bool first = true;
 
-            int buttonWidth = 84;
-            int buttonHeight = 35;
-            int spacing = 10;
-            int totalWidth = (buttonWidth + spacing) * buttonTexts.Length - spacing;
-            int startX = (panelButtons.ClientSize.Width - totalWidth) / 2;
-
-            for (int i = 0; i < buttonTexts.Length; i++)
+            // FlowDirection = RightToLeft: первый добавленный элемент встаёт справа,
+            // поэтому добавляем в обратном порядке — утвердительная кнопка остаётся слева.
+            for (int i = results.Length - 1; i >= 0; i--)
             {
-                Button btn = new RoundButton
+                DialogResult result = results[i];
+                bool isPrimary = result == DialogResult.OK || result == DialogResult.Yes;
+                string text = GetButtonText(result);
+
+                int width = TextRenderer.MeasureText(text, isPrimary ? Theme.BodyBold : Theme.Body).Width + 36;
+                if (width < ButtonMinWidth)
+                    width = ButtonMinWidth;
+
+                RoundButton button = new RoundButton
                 {
-                    Text = buttonTexts[i],
-                    Size = new Size(buttonWidth, buttonHeight),
-                    Location = new Point(startX + i * (buttonWidth + spacing), 7),
-                    BackColor = Color.Gainsboro,
-                    FlatStyle = FlatStyle.Flat,
-                    Font = new Font("Segoe UI", 11F),
-                    ForeColor = Color.Black,
+                    Text = text,
+                    Size = new Size(width, ButtonHeight),
+                    Margin = new Padding(first ? 0 : ButtonSpacing, 0, 0, 0),
+                    CornerRadius = 6,
+                    Cursor = Cursors.Hand,
+                    Font = isPrimary ? Theme.BodyBold : Theme.Body,
+                    ForeColor = isPrimary ? Color.White : Theme.Text,
+                    BackColor = isPrimary ? Theme.Accent : Color.FromArgb(235, 239, 245),
                     TextAlign = ContentAlignment.MiddleCenter,
-                    Anchor = AnchorStyles.Top
+                    TabStop = true
                 };
-                btn.FlatAppearance.BorderColor = Color.Black;
-                btn.FlatAppearance.MouseDownBackColor = Color.Navy;
-                btn.FlatAppearance.MouseOverBackColor = Color.RoyalBlue;
+                first = false;
 
-                btn.Click += (sender, e) =>
-                {
-                    this.DialogResult = buttonMapping[btn.Text];
-                    this.Close();
-                };
+                button.FlatAppearance.MouseOverBackColor = isPrimary ? Theme.AccentHover : Color.FromArgb(226, 231, 239);
+                button.FlatAppearance.MouseDownBackColor = isPrimary ? Color.FromArgb(30, 80, 175) : Color.FromArgb(214, 221, 231);
+                button.Tag = result;
+                button.Click += Button_Click;
 
-                panelButtons.Controls.Add(btn);
+                if (isPrimary)
+                    AcceptButton = button;
+
+                if (result == DialogResult.Cancel)
+                    CancelButton = button;
+
+                flowButtons.Controls.Add(button);
             }
         }
 
-        private string[] GetLocalizedButtonTexts(MessageBoxButtons buttons)
+        private static DialogResult[] GetButtonResults(MessageBoxButtons buttons)
         {
             switch (buttons)
             {
                 case MessageBoxButtons.OK:
-                    buttonMapping["OK"] = DialogResult.OK;
-                    return new[] { "OK" };
+                    return new[] { DialogResult.OK };
                 case MessageBoxButtons.OKCancel:
-                    buttonMapping["OK"] = DialogResult.OK;
-                    buttonMapping[AppConfig.GetInstance.LL.GetLocalizedString("_CancelBtn")] = DialogResult.Cancel;
-                    return new[]
-                    {
-                        AppConfig.GetInstance.LL.GetLocalizedString("OK"),
-                        AppConfig.GetInstance.LL.GetLocalizedString("_CancelBtn")
-                    };
+                    return new[] { DialogResult.OK, DialogResult.Cancel };
                 case MessageBoxButtons.YesNo:
-                    buttonMapping[AppConfig.GetInstance.LL.GetLocalizedString("_YesBtn")] = DialogResult.Yes;
-                    buttonMapping[AppConfig.GetInstance.LL.GetLocalizedString("_NoBtn")] = DialogResult.No;
-                    return new[]
-                    {
-                        AppConfig.GetInstance.LL.GetLocalizedString("_YesBtn"),
-                        AppConfig.GetInstance.LL.GetLocalizedString("_NoBtn")
-                    };
+                    return new[] { DialogResult.Yes, DialogResult.No };
                 case MessageBoxButtons.YesNoCancel:
-                    buttonMapping[AppConfig.GetInstance.LL.GetLocalizedString("_YesBtn")] = DialogResult.Yes;
-                    buttonMapping[AppConfig.GetInstance.LL.GetLocalizedString("_NoBtn")] = DialogResult.No;
-                    buttonMapping[AppConfig.GetInstance.LL.GetLocalizedString("_CancelBtn")] = DialogResult.Cancel;
-                    return new[]
-                    {
-                        AppConfig.GetInstance.LL.GetLocalizedString("_YesBtn"),
-                        AppConfig.GetInstance.LL.GetLocalizedString("_NoBtn"),
-                        AppConfig.GetInstance.LL.GetLocalizedString("_CancelBtn")
-                    };
+                    return new[] { DialogResult.Yes, DialogResult.No, DialogResult.Cancel };
                 default:
                     throw new ArgumentOutOfRangeException(nameof(buttons), buttons, null);
             }
+        }
+
+        private static string GetButtonText(DialogResult result)
+        {
+            switch (result)
+            {
+                case DialogResult.OK:
+                    return "OK";
+                case DialogResult.Yes:
+                    return L("_YesBtn");
+                case DialogResult.No:
+                    return L("_NoBtn");
+                case DialogResult.Cancel:
+                    return L("_CancelBtn");
+                default:
+                    return result.ToString();
+            }
+        }
+
+        private void Button_Click(object sender, EventArgs e)
+        {
+            RoundButton button = sender as RoundButton;
+            if (button == null)
+                return;
+
+            DialogResult = button.Tag is DialogResult ? (DialogResult)button.Tag : DialogResult.None;
+            Close();
         }
 
         public static DialogResult Show(string message)
@@ -227,6 +251,11 @@ namespace MSearch
             top.Capture = false;
             Message m = Message.Create(Handle, 0xA1, new IntPtr(2), IntPtr.Zero);
             base.WndProc(ref m);
+        }
+
+        private static string L(string key)
+        {
+            return AppConfig.GetInstance.LL.GetLocalizedString(key);
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Microsoft.Win32;
+using MSearch.Core;
+using MSearch.Properties;
 using System;
 using System.Windows.Forms;
 
@@ -14,7 +16,8 @@ namespace MSearch
             const int WM_SYSCOMMAND = 0x0112;
             const int SC_CLOSE = 0xF060;
 
-            if (m.Msg == WM_SYSCOMMAND && (int)m.WParam == SC_CLOSE)
+            // В режиме принятия EULA окно нельзя закрыть системной командой.
+            if (!ViewMode && m.Msg == WM_SYSCOMMAND && (int)m.WParam == SC_CLOSE)
             {
                 return;
             }
@@ -25,6 +28,41 @@ namespace MSearch
         public License()
         {
             InitializeComponent();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (!ViewMode)
+                return;
+
+            LoadContent();
+
+            Accept_btn.Text = L("_CloseBtn");
+            Exit_btn.Visible = false;
+            CancelButton = Accept_btn;
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            // Текст только для чтения: курсор в начале документа выглядит как артефакт.
+            ActiveControl = null;
+        }
+
+        /// <summary>
+        /// Заполняет окно текстом EULA и подписями кнопок для текущего языка.
+        /// </summary>
+        public void LoadContent()
+        {
+            bool russian = AppConfig.GetInstance.ActiveLanguage == "RU";
+
+            Label_LicenseCaption.Text = russian ? Resources._LicenseCaption_RU : Resources._LicenseCaption_EN;
+            richTextBox1.Rtf = russian ? Resources._License_RU : Resources._License_EN;
+            Accept_btn.Text = russian ? Resources._AcceptBtn_RU : Resources._AcceptBtn_EN;
+            Exit_btn.Text = russian ? Resources._ExitBtn_RU : Resources._ExitBtn_EN;
         }
 
         private void Exit_btn_Click(object sender, EventArgs e)
@@ -68,6 +106,11 @@ namespace MSearch
             }
 
             Environment.Exit(0);
+        }
+
+        private static string L(string key)
+        {
+            return AppConfig.GetInstance.LL.GetLocalizedString(key);
         }
     }
 }

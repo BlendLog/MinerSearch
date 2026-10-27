@@ -1897,6 +1897,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Close.
+        /// </summary>
+        internal static string _CloseBtn_EN {
+            get {
+                return ResourceManager.GetString("_CloseBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Закрыть.
+        /// </summary>
+        internal static string _CloseBtn_RU {
+            get {
+                return ResourceManager.GetString("_CloseBtn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Probably fake system task.
         /// </summary>
         internal static string _FakeSystemTask_EN {

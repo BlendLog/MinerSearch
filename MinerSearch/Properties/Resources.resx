@@ -280,6 +280,9 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_ExitBtn_EN" xml:space="preserve">
     <value>Exit</value>
   </data>
+  <data name="_CloseBtn_EN" xml:space="preserve">
+    <value>Close</value>
+  </data>
   <data name="_AnalyzingFile_RU" xml:space="preserve">
     <value>Анализ</value>
   </data>
@@ -1669,6 +1672,9 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_ExitBtn_RU" xml:space="preserve">
     <value>Выйти</value>
+  </data>
+  <data name="_CloseBtn_RU" xml:space="preserve">
+    <value>Закрыть</value>
   </data>
   <data name="_CertSubjectCertificateRevoked_RU" xml:space="preserve">
     <value>Сертификат субъекта был отозван</value>
