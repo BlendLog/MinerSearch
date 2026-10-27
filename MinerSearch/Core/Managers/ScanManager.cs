@@ -1,4 +1,5 @@
 using MSearch.Core.Scanners;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,6 +16,9 @@ namespace MSearch.Core.Managers
         private readonly ProcessScanner _processScanner;
         private readonly IEnumerable<IThreatScanner> _otherScanners;
         private readonly LaunchOptions _options;
+
+        /// <summary>Начат очередной сканер общего этапа (для отображения подэтапа в UI).</summary>
+        public event Action<IThreatScanner> ScannerStarted;
 
         public ScanManager(RootkitScanner rootkitScanner, ProcessScanner processScanner, IEnumerable<IThreatScanner> otherScanners)
         {
@@ -58,6 +62,10 @@ namespace MSearch.Core.Managers
                 if (scanner is WmiScanner && _options.no_scan_wmi) continue;
 
                 if (scanner is UserProfileScanner && _options.no_scan_users) continue;
+
+                Action<IThreatScanner> started = ScannerStarted;
+                if (started != null)
+                    started(scanner);
 
                 allThreats.AddRange(scanner.Scan());
             }

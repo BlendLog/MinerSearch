@@ -30,6 +30,8 @@ namespace MSearch.Core.Scanners
                 {
                     if (string.IsNullOrEmpty(rule.ApplicationName) || rule.ApplicationName.Equals("system", StringComparison.OrdinalIgnoreCase)) continue;                    
 
+                    ScanActivity.Report(rule.ApplicationName);
+
                     var direction = rule.Direction;
                     var action = rule.Action;
                     string protocol = rule.Protocol.ToString();

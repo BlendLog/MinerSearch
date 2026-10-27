@@ -31,6 +31,8 @@ namespace MSearch.Core.Scanners
                             string name = obj["Name"] as string ?? "";
                             string commandLine = obj["CommandLineTemplate"] as string ?? "";
 
+                            ScanActivity.Report(string.IsNullOrEmpty(commandLine) ? name : commandLine);
+
                             var wmiThreat = new WmiSubscriptionThreatObject(
                                 name,
                                 commandLine,

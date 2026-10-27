@@ -42,6 +42,7 @@ namespace MSearch.Core.Scanners
 
 
                     string servicePath = FileSystemManager.ExtractExecutableFromCommand(servicePathWithArgs);
+                    ScanActivity.Report(string.IsNullOrEmpty(servicePath) ? serviceName : servicePath);
                     NativeServiceController.ServiceStartMode startMode = ServiceHelper.GetStartTypeFromRegistryDirect(serviceName);
 
                     ServiceControllerStatus status = ServiceControllerStatus.Stopped;

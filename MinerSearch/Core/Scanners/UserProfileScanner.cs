@@ -32,6 +32,7 @@ namespace MSearch.Core.Scanners
             foreach (string userName in users)
             {
                 AppConfig.GetInstance.LL.LogMessage("[.]", "_Just_Username", userName, ConsoleColor.White);
+                ScanActivity.Report(userName);
 
                 bool isHidden = false;
                 string userRegistryPath = null;

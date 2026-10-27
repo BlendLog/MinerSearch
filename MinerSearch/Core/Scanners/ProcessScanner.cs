@@ -44,6 +44,8 @@ namespace MSearch.Core.Scanners
 
                     string processName = p.ProcessName;
 
+                    ScanActivity.Report(string.IsNullOrEmpty(filePath) ? processName : filePath);
+
                     int processId = p.Id;
                     long memorySize = p.PrivateMemorySize64;
                     TimeSpan cpuTime = p.TotalProcessorTime;

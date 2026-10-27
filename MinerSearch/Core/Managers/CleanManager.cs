@@ -34,6 +34,17 @@ namespace MSearch.Core.Managers
             _options = LaunchOptions.GetInstance;
         }
 
+        /// <summary>
+        /// Сбрасывает состояние между запусками сканирования в рамках одной сессии (GUI).
+        /// </summary>
+        public static void ResetSessionState()
+        {
+            lock (_headerLock)
+            {
+                _processingHeaderLogged = false;
+            }
+        }
+
         public void BeginFinalCleanup()
         {
             _recordedLockedPaths.Clear();

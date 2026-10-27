@@ -118,6 +118,8 @@ namespace MSearch.Core.ThreatAnalyzers
             string dialerPattern = MSData.GetInstance.SysFileName[17];
             foreach (Process process in ProcessManager.SafeGetProcesses())
             {
+                ScanActivity.Report(process.ProcessName);
+
                 if (!process.ProcessName.StartsWith(dialerPattern, StringComparison.OrdinalIgnoreCase)) continue;
                 try
                 {

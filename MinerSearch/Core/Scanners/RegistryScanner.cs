@@ -138,8 +138,14 @@ namespace MSearch.Core.Scanners
                         };
                         results.Add(regObj);
 
+                        if (ScanActivity.HasSubscribers)
+                            ScanActivity.Report(hive + "\\" + keyPath);
+
                         foreach (string valName in key.GetValueNames())
                         {
+                            if (ScanActivity.HasSubscribers)
+                                ScanActivity.Report(hive + "\\" + keyPath + "\\" + valName);
+
                             object rawValue = key.GetValue(valName);
                             if (rawValue != null)
                             {
@@ -251,6 +257,9 @@ namespace MSearch.Core.Scanners
                     {
                         foreach (string subKeyName in parentKey.GetSubKeyNames())
                         {
+                            if (ScanActivity.HasSubscribers)
+                                ScanActivity.Report(hive + "\\" + parentPath + "\\" + subKeyName);
+
                             var regObj = new RegistryThreatObject(hive, $@"{parentPath}\{subKeyName}", RegistryNodeType.Key, null, null, RegistryValueKind.Unknown, false, null)
                             {
                                 SectionName = sectionName
@@ -284,6 +293,10 @@ namespace MSearch.Core.Scanners
                         foreach (string subKeyName in parentKey.GetSubKeyNames())
                         {
                             string subKeyPath = $@"{parentPath}\{subKeyName}";
+
+                            if (ScanActivity.HasSubscribers)
+                                ScanActivity.Report(hive + "\\" + subKeyPath);
+
                             try
                             {
                                 using (RegistryKey subKey = baseReg.OpenSubKey(subKeyPath))
@@ -405,6 +418,9 @@ namespace MSearch.Core.Scanners
                 {
                     string guidPath = $@"{clsidPath}\{guidName}";
                     string inprocPath = $@"{guidPath}\{MSData.GetInstance.regValueNames[MSKeys.InprocServer32]}";
+
+                    if (ScanActivity.HasSubscribers)
+                        ScanActivity.Report(hive + "\\" + inprocPath);
 
                     try
                     {

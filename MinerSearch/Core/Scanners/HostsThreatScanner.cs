@@ -45,6 +45,8 @@ namespace MSearch.Core.Scanners
                     if (parts.Length < 2)
                         continue;
 
+                    ScanActivity.Report(content.Trim());
+
                     string ipAddress = parts[0].Trim();
 
                     // IPv6 пока не обрабатываем

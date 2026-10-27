@@ -24,6 +24,8 @@ namespace MSearch.Core.Scanners
             {
                 if (task.ExecActions.Count == 0) continue;
 
+                ScanActivity.Report(task.Name);
+
                 // Берем первое действие для упрощения (или можно делать объект на каждое действие)
                 var action = task.ExecActions[0];
 

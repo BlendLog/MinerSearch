@@ -42,6 +42,8 @@ namespace MSearch.Core.Scanners
                     {
                         foreach (string filePath in FileEnumerator.GetFiles(path, "*.exe", 0, LaunchOptions.GetInstance.maxSubfolders))
                         {
+                            ScanActivity.Report(filePath);
+
                             var fileThreat = CreateFileThreatObject(filePath);
                             if (fileThreat != null)
                             {

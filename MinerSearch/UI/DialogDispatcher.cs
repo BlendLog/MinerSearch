@@ -1,12 +1,23 @@
 ﻿using MSearch.Core;
 using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace MSearch.UI
 {
     public static class DialogDispatcher
     {
+        private static SynchronizationContext _uiContext;
+
+        /// <summary>
+        /// Задаёт UI-контекст главного окна: диалоги из фоновых потоков
+        /// будут выполняться в UI-потоке.
+        /// </summary>
+        public static void SetUiContext(SynchronizationContext context)
+        {
+            _uiContext = context;
+        }
         public static DialogResult Show(string message)
         {
             return Show(message, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.None, null);
@@ -38,6 +49,22 @@ namespace MSearch.UI
         }
 
         public static DialogResult Show(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, Color? color)
+        {
+            SynchronizationContext context = _uiContext;
+            if (context != null && SynchronizationContext.Current != context)
+            {
+                DialogResult result = DialogResult.None;
+                context.Send(delegate
+                {
+                    result = ShowCore(message, title, buttons, icon, color);
+                }, null);
+                return result;
+            }
+
+            return ShowCore(message, title, buttons, icon, color);
+        }
+
+        private static DialogResult ShowCore(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, Color? color)
         {
             if (LaunchOptions.GetInstance.console_mode)
             {

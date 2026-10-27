@@ -266,6 +266,9 @@ namespace MSearch.Core.ThreatAnalyzers
                 var fileThreat = fileList[i];
                 Interlocked.Increment(ref current);
 
+                if (ScanActivity.HasSubscribers)
+                    ScanActivity.Report(fileThreat.FilePath);
+
                 if (fileThreat.IsAlreadyAnalyzed)
                 {
                     if (LaunchOptions.GetInstance.verbose)

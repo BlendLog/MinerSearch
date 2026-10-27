@@ -95,6 +95,7 @@ namespace MSearch.Core.Scanners
         {
             foreach (string filePath in MSData.GetInstance.obfStr2)
             {
+                ScanActivity.Report(filePath);
                 if (File.Exists(filePath))
                 {
                     long fileSize = 0;
@@ -145,6 +146,7 @@ namespace MSearch.Core.Scanners
                     {
                         foreach (string file in Directory.EnumerateFiles(directory, "*.*", SearchOption.AllDirectories))
                         {
+                            ScanActivity.Report(file);
                             if (FileChecker.CalculateMD5(file).Equals("0c0195c48b6b8582fa6f6373032118da"))
                             {
                                 hasMaliciousFile = true;
@@ -215,6 +217,7 @@ namespace MSearch.Core.Scanners
 
             foreach (string file in Directory.EnumerateFiles(windir, "*.exe", SearchOption.TopDirectoryOnly))
             {
+                ScanActivity.Report(file);
                 if (FileChecker.IsFileSizeBloated(file))
                 {
                     MSData.GetInstance.obfStr2.Add(file); // Добавляем в базу
@@ -260,6 +263,7 @@ namespace MSearch.Core.Scanners
 
                 foreach (string file in batFiles)
                 {
+                    ScanActivity.Report(file);
                     if (FileSystemManager.IsReparsePoint(Path.GetDirectoryName(file)) || !FileSystemManager.IsAccessibleFile(file))
                     {
                         continue;
@@ -290,6 +294,7 @@ namespace MSearch.Core.Scanners
             {
                 foreach (string exeFile in FileEnumerator.GetFiles(_baseDirectory, "*.exe", 0, LaunchOptions.GetInstance.maxSubfolders))
                 {
+                    ScanActivity.Report(exeFile);
                     if (!FileChecker.IsSfxArchive(exeFile))
                         continue;
 
@@ -358,6 +363,7 @@ namespace MSearch.Core.Scanners
                 {
                     foreach (string filePath in Directory.EnumerateFiles(baseDir, "*.*", SearchOption.TopDirectoryOnly))
                     {
+                        ScanActivity.Report(filePath);
                         // Пропускаем репосты и недоступные файлы
                         if (FileSystemManager.IsReparsePoint(filePath) || !FileSystemManager.IsAccessibleFile(filePath))
                             continue;
@@ -416,6 +422,7 @@ namespace MSearch.Core.Scanners
                 {
                     foreach (string filePath in FileEnumerator.GetFiles(cachesDir, "*.*", 0, LaunchOptions.GetInstance.maxSubfolders))
                     {
+                        ScanActivity.Report(filePath);
                         if (!FileChecker.IsExecutable(filePath))
                             continue;
 
