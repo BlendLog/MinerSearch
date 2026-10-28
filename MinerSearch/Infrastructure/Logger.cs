@@ -7,8 +7,30 @@ namespace MSearch
 {
     public static class Logger
     {
-        internal static string logFileName = $"MinerSearch_{DateTime.Now:dd.MM.yyyy_HH-mm-ss}.log";
-        public static string LogsFolder = Path.Combine(AppConfig.GetInstance.drive_letter + ":\\", "_MinerSearchLogs");
+        private const string LogsFolderName = "_MinerSearchLogs";
+
+        static string _logsFolder;
+        static string _pendingLogWarning;
+
+        /// <summary>
+        /// Папка логов. Вычисляется лениво (drive_letter в WinPE задаётся позже старта),
+        /// создаётся только при начале сканирования.
+        /// </summary>
+        public static string LogsFolder
+        {
+            get { return _logsFolder ?? Path.Combine(AppConfig.GetInstance.drive_letter + ":\\", LogsFolderName); }
+            private set { _logsFolder = value; }
+        }
+
+        /// <summary>Путь к логу последнего сканирования; пусто, если сканов ещё не было.</summary>
+        public static string LogFilePath { get; private set; }
+
+        /// <summary>Есть ли готовый лог последнего скана (файл существует).</summary>
+        public static bool HasScanLog
+        {
+            get { return !string.IsNullOrEmpty(LogFilePath) && File.Exists(LogFilePath); }
+        }
+
 
         public static readonly ConsoleColor error = ConsoleColor.Red;
         public static readonly ConsoleColor success = ConsoleColor.Green;
@@ -25,54 +47,191 @@ namespace MSearch
         internal static readonly object _logLock = new object();
         static StreamWriter _writer;
 
+        /// <summary>
+        /// Настраивает логирование на сессию. Файл здесь НЕ создаётся:
+        /// лог открывается только на время сканирования (BeginScanLog/EndScanLog).
+        /// </summary>
         public static void InitLogger(bool logSupression)
         {
-            if (!Directory.Exists(Logger.LogsFolder))
+            _no_logs = logSupression;
+        }
+
+        /// <summary>
+        /// Открывает новый файл лога для очередного сканирования.
+        /// </summary>
+        public static void BeginScanLog()
+        {
+            if (_no_logs)
+                return;
+
+            lock (_logLock)
             {
+                CloseWriter();
+
+                LogFilePath = null;
+                _pendingLogWarning = null;
+                ResetDedup();
+
+                string path = CreateLogFile();
+                if (path == null)
+                    return;
+
                 try
                 {
-                    Directory.CreateDirectory(Logger.LogsFolder);
-                    File.SetAttributes(Logger.LogsFolder, FileAttributes.Normal);
+                    _writer = new StreamWriter(path, false, new System.Text.UTF8Encoding(false));
+                    _writer.AutoFlush = true;
+                    LogFilePath = path;
+                }
+                catch (Exception ex)
+                {
+                    CloseWriter();
+                    WarnNoLogFile(ex.Message);
+                    return;
+                }
+
+                WritePlainLine("[scan] MinerSearch " + AppConfig.GetInstance.CurrentVersion + " started " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                WritePlainLine("[scan] OS: " + OSExtensions.GetWindowsVersion() + " " + OSExtensions.GetPlatform());
+                WritePlainLine("[scan] Boot: " + AppConfig.GetInstance.bootMode + "; " + OSExtensions.GetUACState());
+                WritePlainLine("[scan] User: " + Environment.UserName + "@" + Environment.MachineName);
+                WritePlainLine("[scan] Command line: " + string.Join(" ", Environment.GetCommandLineArgs()));
+
+                if (!string.IsNullOrEmpty(_pendingLogWarning))
+                    WritePlainLine("[scan] Warning: " + _pendingLogWarning);
+
+                _pendingLogWarning = null;
+            }
+        }
+
+        /// <summary>
+        /// Закрывает файл лога по завершении сканирования. Путь остаётся доступен для просмотра.
+        /// </summary>
+        public static void EndScanLog()
+        {
+            lock (_logLock)
+            {
+                if (_writer == null)
+                    return;
+
+                try
+                {
+                    _writer.WriteLine($"[{DateTime.Now}]: [scan] log closed");
+                    _writer.Flush();
                 }
                 catch (Exception)
                 {
-                    Logger.LogsFolder += Utils.GetRndString(16);
-                    Directory.CreateDirectory(Logger.LogsFolder);
-                    File.SetAttributes(Logger.LogsFolder, FileAttributes.Normal);
-                }
-            }
-            else
-            {
-                bool resetAclSuccessful = UnlockObjectClass.ResetObjectACL(Logger.LogsFolder);
-                bool attributesSetSuccessful = false;
-
-                if (resetAclSuccessful)
-                {
-                    try
-                    {
-                        File.SetAttributes(Logger.LogsFolder, FileAttributes.Normal);
-                        attributesSetSuccessful = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Warning: Failed to reset attributes for {Logger.LogsFolder}. {ex.Message}");
-                    }
                 }
 
-                if (!resetAclSuccessful || !attributesSetSuccessful)
-                {
-                    Logger.LogsFolder += Utils.GetRndString(16);
-                    Directory.CreateDirectory(Logger.LogsFolder);
-                    File.SetAttributes(Logger.LogsFolder, FileAttributes.Normal);
-                }
-            }
-
-            if (!logSupression)
-            {
-                _writer = new StreamWriter(Path.Combine(LogsFolder, logFileName), true, new System.Text.UTF8Encoding(false));
-                _writer.AutoFlush = true;
+                CloseWriter();
             }
         }
+
+        /// <summary>
+        /// Готовит папку логов: основной диск (drive_letter), при неудаче — рядом с приложением.
+        /// </summary>
+        private static string PrepareLogsFolder()
+        {
+            string primary = Path.Combine(AppConfig.GetInstance.drive_letter + ":\\", LogsFolderName);
+
+            if (TryPrepareFolder(primary))
+            {
+                LogsFolder = primary;
+                return primary;
+            }
+
+            string fallback = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, LogsFolderName);
+            _pendingLogWarning = "log folder " + primary + " is unavailable; using " + fallback;
+
+            if (TryPrepareFolder(fallback))
+            {
+                LogsFolder = fallback;
+                return fallback;
+            }
+
+            WarnNoLogFile("log folder " + primary + " and fallback " + fallback + " are unavailable");
+            return null;
+        }
+
+        private static bool TryPrepareFolder(string folder)
+        {
+            try
+            {
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                    File.SetAttributes(folder, FileAttributes.Normal);
+                    return true;
+                }
+
+                if (!UnlockObjectClass.ResetObjectACL(folder))
+                    return false;
+
+                File.SetAttributes(folder, FileAttributes.Normal);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private static string CreateLogFile()
+        {
+            string folder = PrepareLogsFolder();
+            if (folder == null)
+                return null;
+
+            string baseName = "MinerSearch_" + DateTime.Now.ToString("dd.MM.yyyy_HH-mm-ss");
+            string path = Path.Combine(folder, baseName + ".log");
+
+            int suffix = 1;
+            while (File.Exists(path))
+            {
+                suffix++;
+                path = Path.Combine(folder, baseName + "_" + suffix + ".log");
+            }
+
+            return path;
+        }
+
+        private static void WarnNoLogFile(string reason)
+        {
+            string message = "Warning: scan log file is not created";
+            if (!string.IsNullOrEmpty(reason))
+                message += " (" + reason + ")";
+
+            WriteLog(message, warnMedium);
+        }
+
+        private static void WritePlainLine(string text)
+        {
+            if (_writer == null)
+                return;
+
+            _writer.WriteLine($"[{DateTime.Now}]: {text}");
+        }
+
+        private static void ResetDedup()
+        {
+            previousWhiteText = "";
+            previousNonWhiteText = "";
+        }
+
+        private static void CloseWriter()
+        {
+            if (_writer == null)
+                return;
+
+            try
+            {
+                _writer.Dispose();
+            }
+            catch (Exception)
+            {
+            }
+
+            _writer = null;
+        }
+
 
         public static void DisposeLogger()
         {

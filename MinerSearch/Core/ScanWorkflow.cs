@@ -156,6 +156,9 @@ namespace MSearch.Core
 
             _infrastructure.ScanManager.ScannerStarted += OnScannerStarted;
 
+            // Лог живёт ровно один скан: новый файл на каждый запуск.
+            Logger.BeginScanLog();
+
             try
             {
                 return RunCore(token);
@@ -166,6 +169,8 @@ namespace MSearch.Core
 
                 if (reportActivity)
                     ScanActivity.ObjectChanged -= OnScanActivity;
+
+                Logger.EndScanLog();
             }
         }
 

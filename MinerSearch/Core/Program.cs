@@ -69,8 +69,8 @@ namespace MSearch
             AppConfig.GetInstance.IsGuiAvailable = interactive;
             AppConfig.GetInstance.IsRedirectedInput = stdioRedirected;
 
-            // Quarantine management (-q) is not a scan: suppress the scan log file (avoids empty logs).
-            Logger.InitLogger(_options.no_logs || _options.QuarantineMode);
+            // Лог сканирования создаётся только в ScanWorkflow.Run(); здесь задаётся лишь запрет (-nl).
+            Logger.InitLogger(_options.no_logs);
 #if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(ExeptionHandler.HookExeption);
             AppConfig.GetInstance.ActiveLanguage = AppConfig.GetInstance.IsGuiAvailable ? LanguageManager.LoadLanguageSetting() : "EN";
