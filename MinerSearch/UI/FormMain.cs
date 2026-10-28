@@ -15,7 +15,7 @@ namespace MSearch.UI
     /// <summary>
     /// Главное окно: боковая навигация и рабочая область.
     /// </summary>
-    public partial class FormMain : Form
+    public partial class FormMain : FormShadow
     {
         private const int WM_NCHITTEST = 0x84;
         private const int WM_NCLBUTTONDOWN = 0xA1;
@@ -447,11 +447,14 @@ namespace MSearch.UI
 
         private async void SendStatistics(ScanStatistics statistics)
         {
+            // Фиксируем путь до фоновой выгрузки: следующий скан откроет новый лог.
+            string logPath = Logger.LogFilePath;
+
             try
             {
                 await Task.Run(delegate
                 {
-                    MinerSearch.SentLog(statistics.Found, statistics.Neutralized, statistics.Skipped);
+                    MinerSearch.SentLog(statistics.Found, statistics.Neutralized, statistics.Skipped, logPath);
                 });
             }
             catch (Exception ex)

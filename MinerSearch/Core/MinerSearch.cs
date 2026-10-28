@@ -53,9 +53,18 @@ namespace MSearch
 
     public class MinerSearch
     {
-        internal static void SentLog(int foundThreats, int neutralizedThreats, int skippedThreats)
+        internal static void SentLog(int foundThreats, int neutralizedThreats, int skippedThreats, string logPath = null)
         {
             if (OSExtensions.IsWindows7() || AppConfig.GetInstance.bootMode == BootMode.SafeMinimal)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(logPath))
+                logPath = Logger.LogFilePath;
+
+            // Скан мог быть запущен с -nl: файла нет, выгружать нечего.
+            if (string.IsNullOrEmpty(logPath) || !File.Exists(logPath))
             {
                 return;
             }
@@ -82,7 +91,7 @@ namespace MSearch
             }
 
             string DeviceId = DeviceIdProvider.GetDeviceId();
-            LogSender.UploadFile(Path.Combine(Logger.LogsFolder, Logger.logFileName), Convert.ToBase64String(Guid.Parse(DeviceId).ToByteArray()), $"{DeviceId}" +
+            LogSender.UploadFile(logPath, Convert.ToBase64String(Guid.Parse(DeviceId).ToByteArray()), $"{DeviceId}" +
                 $"\nv{AppConfig.GetInstance.CurrentVersion}" +
                 $"\nRuns: {AppConfig.GetInstance.RunCount}, Threats: {foundThreats}, Cured: {neutralizedThreats}, Skipped: {skippedThreats}");
         }

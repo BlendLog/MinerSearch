@@ -191,7 +191,7 @@ namespace MSearch.UI
             labelEmpty.Visible = true;
             dataGridResults.Visible = false;
             buttonReboot.Visible = false;
-            buttonOpenLog.Enabled = !LaunchOptions.GetInstance.no_logs;
+            buttonOpenLog.Enabled = Logger.HasScanLog;
         }
 
         public void ShowResults(ScanWorkflowResult result)
@@ -220,7 +220,7 @@ namespace MSearch.UI
             labelEmpty.Text = L("_NoThreats");
 
             UpdateSummary();
-            buttonOpenLog.Enabled = !LaunchOptions.GetInstance.no_logs;
+            buttonOpenLog.Enabled = Logger.HasScanLog;
         }
 
         private void UpdateSummary()
@@ -280,9 +280,9 @@ namespace MSearch.UI
 
         private void OpenLogFile()
         {
-            string path = Path.Combine(Logger.LogsFolder, Logger.logFileName);
+            string path = Logger.LogFilePath;
 
-            if (!File.Exists(path))
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
             {
                 MessageBoxCustom.Show(
                     L("_LogFileNotFound"),
@@ -313,10 +313,10 @@ namespace MSearch.UI
         {
             try
             {
-                string path = Path.Combine(Logger.LogsFolder, Logger.logFileName);
-                if (File.Exists(path))
+                string path = Logger.LogFilePath;
+                if (!string.IsNullOrEmpty(path) && File.Exists(path))
                     Process.Start(MSData.GetInstance.consts[MSKeys.ExplorerExe], "/select, \"" + path + "\"");
-                else
+                else if (Directory.Exists(Logger.LogsFolder))
                     Process.Start(MSData.GetInstance.consts[MSKeys.ExplorerExe], Logger.LogsFolder);
             }
             catch (Exception ex)

@@ -178,8 +178,8 @@ namespace MSearch
         {
             TopMost = false;
 
-            string logpath = Path.Combine(Logger.LogsFolder, Logger.logFileName);
-            if (!File.Exists(logpath))
+            string logpath = Logger.LogFilePath;
+            if (string.IsNullOrEmpty(logpath) || !File.Exists(logpath))
             {
                 return;
             }
@@ -469,9 +469,12 @@ namespace MSearch
                 return;
             }
 
-            string logpath = Path.Combine(Logger.LogsFolder, Logger.logFileName);
-            if (!File.Exists(logpath))
+            string logpath = Logger.LogFilePath;
+            if (string.IsNullOrEmpty(logpath) || !File.Exists(logpath))
             {
+                if (Directory.Exists(Logger.LogsFolder))
+                    Process.Start("explorer.exe", Logger.LogsFolder);
+
                 return;
             }
 
