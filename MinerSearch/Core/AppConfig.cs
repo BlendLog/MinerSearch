@@ -39,9 +39,6 @@ namespace MSearch.Core
         public bool IsGuiAvailable { get; set; }
         public bool IsRedirectedInput { get; set; }
 
-        public bool hasLockedObjectsByAV { get; set; }
-        public bool hasEmptyTasks { get; set; }
-
         public int totalFoundThreats { get; set; }
         public int totalFoundSuspiciousObjects { get; set; }
         public int totalNeutralizedThreats { get; set; }

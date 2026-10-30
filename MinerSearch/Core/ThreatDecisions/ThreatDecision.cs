@@ -21,7 +21,7 @@ namespace MSearch.Core.ThreatDecisions
         public string ApplyErrorMessage { get; internal set; }
 
         /// <summary>
-        /// Информативное примечание для колонки Note в FinishEx.
+        /// Информативное примечание для колонки Note в результатах сканирования.
         /// </summary>
         public string Note { get; internal set; }
 

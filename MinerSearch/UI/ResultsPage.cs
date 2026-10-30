@@ -49,16 +49,29 @@ namespace MSearch.UI
             dataGridResults.AutoGenerateColumns = false;
             dataGridResults.Columns.Clear();
 
-            _colType = CreateColumn("colType", "Type", 13F);
-            _colPath = CreateColumn("colPath", "Path", 44F);
-            _colClass = CreateColumn("colClass", "Class", 13F);
-            _colAction = CreateColumn("colAction", "Action", 15F);
-            _colNote = CreateColumn("colNote", "Note", 15F);
+            // Минимальные ширины дают горизонтальную прокрутку, когда колонки
+            // перестают помещаться в окно; на широком окне Fill растягивает их.
+            _colType = CreateColumn("colType", "Type", 13F, 160);
+            _colPath = CreateColumn("colPath", "Path", 44F, 500);
+            _colClass = CreateColumn("colClass", "Class", 13F, 130);
+            _colAction = CreateColumn("colAction", "Action", 15F, 190);
+            _colNote = CreateColumn("colNote", "Note", 15F, 150);
+
+            // Путь должен тянуться мышью: в Fill-режиме колонка не может стать
+            // шире окна, поэтому полный путь было не увидеть.
+            _colPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            _colPath.Width = 500;
+            _colPath.MinimumWidth = 300;
+            _colPath.Resizable = DataGridViewTriState.True;
+
+            dataGridResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
 
             dataGridResults.Columns.AddRange(new DataGridViewColumn[]
             {
                 _colType, _colPath, _colClass, _colAction, _colNote
             });
+
+            dataGridResults.ScrollBars = ScrollBars.Both;
 
             dataGridResults.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
             {
@@ -69,7 +82,7 @@ namespace MSearch.UI
             };
         }
 
-        private static DataGridViewTextBoxColumn CreateColumn(string name, string property, float weight)
+        private static DataGridViewTextBoxColumn CreateColumn(string name, string property, float weight, int minimumWidth)
         {
             return new DataGridViewTextBoxColumn
             {
@@ -77,6 +90,7 @@ namespace MSearch.UI
                 DataPropertyName = property,
                 ReadOnly = true,
                 FillWeight = weight,
+                MinimumWidth = minimumWidth,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 SortMode = DataGridViewColumnSortMode.NotSortable
             };
@@ -129,6 +143,10 @@ namespace MSearch.UI
             ScanResult result = row.DataBoundItem as ScanResult;
             if (result == null)
                 return;
+
+            // Полный путь по наведению независимо от ширины колонки.
+            if (_colPath != null && _colPath.Index >= 0 && _colPath.Index < row.Cells.Count)
+                row.Cells[_colPath.Index].ToolTipText = result.Path ?? string.Empty;
 
             switch (result.RawType)
             {

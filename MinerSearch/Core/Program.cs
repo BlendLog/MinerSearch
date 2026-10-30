@@ -1,21 +1,14 @@
 using DBase;
+using Microsoft.Win32;
 using MSearch.Core;
-using MSearch.Core.Handlers;
-using MSearch.Core.Managers;
-using MSearch.Core.Scanners;
-using MSearch.Core.ThreatAnalyzers;
-using MSearch.Core.ThreatDecisions;
-using MSearch.Core.ThreatHandlers;
-using MSearch.Core.ThreatObjects;
 using MSearch.Properties;
 using MSearch.UI;
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Win32Wrapper;
 
@@ -256,7 +249,7 @@ namespace MSearch
                 }
             }
 
-//#if !DEBUG
+            //#if !DEBUG
             if (!_options.help && !_options.gui_mode)
             {
                 Utils.SwitchMouseSelection();
@@ -267,8 +260,9 @@ namespace MSearch
                 AppConfig.GetInstance.LL.LogJustDisplayMessage("\t\t", $"_RelevantVer", "https://blendlog.github.io \n", ConsoleColor.White);
             }
 
-//#endif
-            Logger.WriteLog("  \t  \tID: " + DeviceIdProvider.GetDeviceId(), ConsoleColor.White, false, true);
+            //#endif
+            Logger.StartHeaderCapture();
+            Logger.WriteLog("  \t  \tID:\u00A0" + DeviceIdProvider.GetDeviceId(), ConsoleColor.White, false, true);
 
             if (!_options.help && !_options.silent)
             {
@@ -277,12 +271,12 @@ namespace MSearch
 
             AppConfig.GetInstance.LL.LogMessage("\t\t", "_Version", AppConfig.GetInstance.CurrentVersion, ConsoleColor.White, false);
 
-//if !DEBUG
+            //if !DEBUG
             if (!AppConfig.GetInstance.WinPEMode && !_options.QuarantineMode && !OSExtensions.IsWindows7())
             {
                 Utils.CheckLatestReleaseVersion();
             }
-//#endif
+            //#endif
 
             if (AppConfig.GetInstance.WinPEMode && _options.nosignaturescan)
             {
@@ -301,9 +295,9 @@ namespace MSearch
                 Console.WriteLine("\t\t[SILENT MODE]");
                 Logger.WriteLog("\t\t[SILENT MODE]", ConsoleColor.White, false, true); //for write log
                 Thread.Sleep(1000);
-//#if !DEBUG
+                //#if !DEBUG
                 ConsoleBridge.Hide();
-//#endif
+                //#endif
             }
 
             if (!_options.QuarantineMode)
@@ -344,7 +338,6 @@ namespace MSearch
 
             // Create scanning infrastructure
             ScanInfrastructure infrastructure = ScanFactory.CreateInfrastructure();
-            MinerSearchScanState state = infrastructure.State;
 
             // Execute scanning (engine is UI-agnostic)
             ScanWorkflow workflow = new ScanWorkflow(infrastructure, null, new ConsoleScanInteraction());
@@ -356,32 +349,131 @@ namespace MSearch
 
             if (!_options.silent && !_options.console_mode)
             {
-//#if !DEBUG
-                ConsoleBridge.Minimize();
-//#endif
-                foreach (ScanResult result in state.GetScanResults())
-                {
-                    if (result.RawAction == ScanActionType.LockedByAntivirus)
-                    {
-                        AppConfig.GetInstance.hasLockedObjectsByAV = true;
-                    }
-
-                    if (result.RawType == ScanObjectType.Unknown && result.RawAction == ScanActionType.Deleted)
-                    {
-                        AppConfig.GetInstance.hasEmptyTasks = true;
-                    }
-                }
-
-                using (FinishEx finish = new FinishEx(scanStats.Found, scanStats.Neutralized, scanStats.Suspicious, scanStats.ElapsedTime, state.GetScanResults(), scanStats.Skipped, scanStats.LockedByAv)
-                {
-                    TopMost = true
-                })
-                {
-                    finish.ShowDialog();
-                }
+                WriteConsoleFinish(scanStats);
             }
 
             return;
+        }
+
+        /// <summary>
+        /// Консольный финал: итоговый статус, путь к логу, запрос телеметрии
+        /// и ожидание клавиши в WinPE.
+        /// </summary>
+        private static void WriteConsoleFinish(ScanStatistics stats)
+        {
+            Logger.WriteLog(GetConsoleFinishStatus(stats), GetConsoleFinishColor(stats), false);
+
+            if (Logger.HasScanLog)
+                Logger.WriteLog("\t\t" + Logger.LogFilePath, ConsoleColor.Gray, false);
+
+            PromptConsoleTelemetry(stats);
+
+            if (AppConfig.GetInstance.WinPEMode)
+                ConsoleBridge.SafeReadKey();
+        }
+
+        private static string GetConsoleFinishStatus(ScanStatistics stats)
+        {
+            LocalizedLogger logger = AppConfig.GetInstance.LL;
+
+            if (LaunchOptions.GetInstance.ScanOnly)
+                return logger.GetLocalizedString("_ScanOnlyMode");
+
+            if (stats.Found == 0)
+                return logger.GetLocalizedString("_NoThreats");
+
+            int notNeutralized = stats.Found - stats.Neutralized - stats.Skipped;
+
+            if (stats.Neutralized == stats.Found)
+            {
+                return stats.LockedByAv > 0
+                    ? logger.GetLocalizedString("_FinishThreatsBlockedByAV").Replace("#COUNT#", stats.LockedByAv.ToString())
+                    : logger.GetLocalizedString("_FinishAllThreatsNeutralized");
+            }
+
+            if (stats.Skipped > 0 && notNeutralized <= 0)
+            {
+                return logger.GetLocalizedString("_FinishSomeThreatsSkipped").Replace("#COUNT#", stats.Skipped.ToString());
+            }
+
+            return logger.GetLocalizedString("_FinishNotAllThreatsNeutralized");
+        }
+
+        private static ConsoleColor GetConsoleFinishColor(ScanStatistics stats)
+        {
+            if (stats.Found > 0 && stats.Neutralized == stats.Found)
+                return ConsoleColor.Green;
+
+            if (stats.Skipped > 0 && stats.Found - stats.Neutralized - stats.Skipped <= 0)
+                return ConsoleColor.DarkYellow;
+
+            if (stats.Found > 0)
+                return ConsoleColor.Red;
+
+            return ConsoleColor.Gray;
+        }
+
+        /// <summary>
+        /// Запрос отправки лога в консольном режиме. Сохраняется для будущей доработки WinPE.
+        /// </summary>
+        private static void PromptConsoleTelemetry(ScanStatistics stats)
+        {
+            if (LaunchOptions.GetInstance.no_logs || !Logger.HasScanLog)
+                return;
+
+            try
+            {
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(AppConfig.GetInstance.RegistryPathMain, true)
+                            ?? Registry.CurrentUser.CreateSubKey(AppConfig.GetInstance.RegistryPathMain))
+                {
+                    if (key == null)
+                        return;
+
+                    object value = key.GetValue(AppConfig.GetInstance.StatisticsValueName);
+                    if (value == null)
+                    {
+                        key.SetValue(AppConfig.GetInstance.StatisticsValueName, 2, RegistryValueKind.DWord);
+                        value = key.GetValue(AppConfig.GetInstance.StatisticsValueName);
+                    }
+
+                    int allowStatistics = value is int ? (int)value : 0;
+                    if (allowStatistics == 2)
+                    {
+                        bool accepted = AskConsoleYesNo(AppConfig.GetInstance.LL.GetLocalizedString("_AllowSentStatistics"));
+                        key.SetValue(AppConfig.GetInstance.StatisticsValueName, accepted ? 1 : 0, RegistryValueKind.DWord);
+                        allowStatistics = accepted ? 1 : 0;
+                    }
+
+                    if (allowStatistics == 1)
+                    {
+                        // Task.Run: не блокируем поток с возможным WinForms SynchronizationContext.
+                        Task.Run(() => MinerSearch.SentLogAsync(stats.Found, stats.Neutralized, stats.Skipped))
+                            .GetAwaiter().GetResult();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
+            }
+        }
+
+        private static bool AskConsoleYesNo(string question)
+        {
+            try
+            {
+                Console.Write($"{question} [Y/N]: ");
+                string answer = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(answer))
+                    return false;
+
+                string normalized = answer.Trim().ToLowerInvariant();
+                return normalized == "y" || normalized == "yes" || normalized == "д" || normalized == "да";
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>

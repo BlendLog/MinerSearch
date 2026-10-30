@@ -392,7 +392,7 @@ namespace MSearch
                     var message = DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), latest, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                     if (message == DialogResult.Yes)
                     {
-                        Process.Start("explorer", "https://blendlog.github.io");
+                        OpenUrlInBrowser("https://blendlog.github.io");
                         return 1;
                     }
                     else

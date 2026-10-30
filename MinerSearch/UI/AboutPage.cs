@@ -1,7 +1,6 @@
 using MSearch.Core;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -16,13 +15,25 @@ namespace MSearch.UI
         {
             InitializeComponent();
 
+            panelCard.Resize += delegate { UpdateDisclaimerWidth(); };
+
             if (!IsInDesignMode)
             {
                 labelAppName.Text = AppConfig.GetInstance._title;
                 labelVersion.Text = L("_About_Version").Replace("#VERSION#", AppConfig.GetInstance.CurrentVersion);
                 linkDeviceId.Text = DeviceIdProvider.GetDeviceId();
+                UpdateDisclaimerWidth();
                 ApplyLanguage();
             }
+        }
+
+        /// <summary>
+        /// Держит текст дисклеймера в границах карточки при любой ширине окна.
+        /// </summary>
+        private void UpdateDisclaimerWidth()
+        {
+            int width = Math.Max(200, panelCard.ClientSize.Width - 48);
+            labelDisclaimer.MaximumSize = new Size(width, 0);
         }
 
         private static bool IsInDesignMode
@@ -60,14 +71,7 @@ namespace MSearch.UI
 
         private static void OpenUrl(string url)
         {
-            try
-            {
-                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
-            }
-            catch (Exception ex)
-            {
-                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
-            }
+            Utils.OpenUrlInBrowser(url);
         }
 
         public void ApplyLanguage()

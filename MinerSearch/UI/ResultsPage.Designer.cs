@@ -97,7 +97,7 @@ namespace MSearch.UI
             this.labelSummary.AutoSize = true;
             this.labelSummary.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold);
             this.labelSummary.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.labelSummary.Location = new System.Drawing.Point(3, 0);
+            this.labelSummary.Location = new System.Drawing.Point(0, 0);
             this.labelSummary.Name = "labelSummary";
             this.labelSummary.Size = new System.Drawing.Size(111, 25);
             this.labelSummary.TabIndex = 0;
@@ -190,7 +190,7 @@ namespace MSearch.UI
             this.buttonOpenLog.Location = new System.Drawing.Point(0, 8);
             this.buttonOpenLog.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
             this.buttonOpenLog.Name = "buttonOpenLog";
-            this.buttonOpenLog.Size = new System.Drawing.Size(160, 38);
+            this.buttonOpenLog.Size = new System.Drawing.Size(140, 38);
             this.buttonOpenLog.TabIndex = 0;
             this.buttonOpenLog.Text = "Открыть лог";
             this.buttonOpenLog.UseVisualStyleBackColor = false;
@@ -205,7 +205,7 @@ namespace MSearch.UI
             this.buttonLogsFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonLogsFolder.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.buttonLogsFolder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.buttonLogsFolder.Location = new System.Drawing.Point(170, 8);
+            this.buttonLogsFolder.Location = new System.Drawing.Point(150, 8);
             this.buttonLogsFolder.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
             this.buttonLogsFolder.Name = "buttonLogsFolder";
             this.buttonLogsFolder.Size = new System.Drawing.Size(210, 38);
@@ -223,10 +223,10 @@ namespace MSearch.UI
             this.buttonQuarantine.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonQuarantine.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.buttonQuarantine.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.buttonQuarantine.Location = new System.Drawing.Point(390, 8);
+            this.buttonQuarantine.Location = new System.Drawing.Point(370, 8);
             this.buttonQuarantine.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
             this.buttonQuarantine.Name = "buttonQuarantine";
-            this.buttonQuarantine.Size = new System.Drawing.Size(180, 38);
+            this.buttonQuarantine.Size = new System.Drawing.Size(160, 38);
             this.buttonQuarantine.TabIndex = 2;
             this.buttonQuarantine.Text = "Открыть карантин";
             this.buttonQuarantine.UseVisualStyleBackColor = false;
@@ -241,10 +241,10 @@ namespace MSearch.UI
             this.buttonReboot.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonReboot.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.buttonReboot.ForeColor = System.Drawing.Color.White;
-            this.buttonReboot.Location = new System.Drawing.Point(580, 8);
+            this.buttonReboot.Location = new System.Drawing.Point(540, 8);
             this.buttonReboot.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
             this.buttonReboot.Name = "buttonReboot";
-            this.buttonReboot.Size = new System.Drawing.Size(160, 38);
+            this.buttonReboot.Size = new System.Drawing.Size(150, 38);
             this.buttonReboot.TabIndex = 3;
             this.buttonReboot.Text = "Перезагрузить";
             this.buttonReboot.UseVisualStyleBackColor = false;

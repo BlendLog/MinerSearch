@@ -357,12 +357,43 @@ namespace MSearch.Core
             }
 
             if (decisionsToApply.Count > 0)
-                _infrastructure.CleanManager.ApplyDecisions(decisionsToApply, CleanupPhase.Finalize);
+            {
+                // Пакет из review применяем по одному в порядке очистки:
+                // это даёт прогресс в UI и возможность остановки между решениями,
+                // сохраняя требование "службы раньше файлов".
+                List<ThreatDecision> sortedToApply = decisionsToApply
+                    .OrderBy(d => d.Target != null ? CleanManager.GetCleanupOrder(d.Target.Kind) : int.MaxValue)
+                    .ToList();
+
+                int applyIndex = 0;
+                foreach (ThreatDecision decision in sortedToApply)
+                {
+                    if (token.IsCancellationRequested)
+                        return Cancel(result, stopwatch, null);
+
+                    _infrastructure.CleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize);
+                    RaiseCounters();
+
+                    applyIndex++;
+                    RaiseProgress(decision.Target != null ? decision.Target.Id : null, applyIndex, sortedToApply.Count);
+                }
+            }
 
             if (decisionsToSkip.Count > 0)
-                _infrastructure.CleanManager.ApplySkippedDecisions(decisionsToSkip);
+            {
+                int skipIndex = 0;
+                foreach (ThreatDecision decision in decisionsToSkip)
+                {
+                    if (token.IsCancellationRequested)
+                        return Cancel(result, stopwatch, null);
 
-            RaiseCounters();
+                    _infrastructure.CleanManager.ApplySkippedDecisions(new[] { decision });
+                    RaiseCounters();
+
+                    skipIndex++;
+                    RaiseProgress(decision.Target != null ? decision.Target.Id : null, skipIndex, decisionsToSkip.Count);
+                }
+            }
 
             // Ссылочное множество уже обработанных Finalize-решений.
             // Ключ по Target.Id здесь ненадёжен: у сигнатурных файлов Id пустой,
@@ -381,11 +412,22 @@ namespace MSearch.Core
 
             if (finalizeOnlyDecisions.Count > 0)
             {
-                if (token.IsCancellationRequested)
-                    return Cancel(result, stopwatch, null);
+                List<ThreatDecision> sortedRemaining = finalizeOnlyDecisions
+                    .OrderBy(d => d.Target != null ? CleanManager.GetCleanupOrder(d.Target.Kind) : int.MaxValue)
+                    .ToList();
 
-                _infrastructure.CleanManager.ApplyDecisions(finalizeOnlyDecisions, CleanupPhase.Finalize);
-                RaiseCounters();
+                int remainingIndex = 0;
+                foreach (ThreatDecision decision in sortedRemaining)
+                {
+                    if (token.IsCancellationRequested)
+                        return Cancel(result, stopwatch, null);
+
+                    _infrastructure.CleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize);
+                    RaiseCounters();
+
+                    remainingIndex++;
+                    RaiseProgress(decision.Target != null ? decision.Target.Id : null, remainingIndex, sortedRemaining.Count);
+                }
             }
 
             return Finish(result, stopwatch);
@@ -443,8 +485,6 @@ namespace MSearch.Core
             config.totalFoundSuspiciousObjects = 0;
             config.totalNeutralizedThreats = 0;
             config.userSkippedThreats = 0;
-            config.hasLockedObjectsByAV = false;
-            config.hasEmptyTasks = false;
 
             List<ScanResult> results = _state.GetScanResults();
             if (results != null)

@@ -1,5 +1,6 @@
 ﻿using MSearch.Core;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
@@ -8,9 +9,13 @@ namespace MSearch
     public static class Logger
     {
         private const string LogsFolderName = "_MinerSearchLogs";
+        private const int MaxStartupLogBufferChars = 512 * 1024;
 
         static string _logsFolder;
         static string _pendingLogWarning;
+        static readonly List<string> _startupLogLines = new List<string>();
+        static int _startupLogBufferChars;
+        static bool _captureStartupLog;
 
         /// <summary>
         /// Папка логов. Вычисляется лениво (drive_letter в WinPE задаётся позже старта),
@@ -57,15 +62,33 @@ namespace MSearch
         }
 
         /// <summary>
+        /// Буферизует заголовок старого сессионного лога до открытия первого лога сканирования.
+        /// </summary>
+        internal static void StartHeaderCapture()
+        {
+            lock (_logLock)
+            {
+                _startupLogLines.Clear();
+                _startupLogBufferChars = 0;
+                _captureStartupLog = !_no_logs;
+            }
+        }
+
+        /// <summary>
         /// Открывает новый файл лога для очередного сканирования.
         /// </summary>
         public static void BeginScanLog()
         {
             if (_no_logs)
+            {
+                lock (_logLock)
+                    _captureStartupLog = false;
                 return;
+            }
 
             lock (_logLock)
             {
+                _captureStartupLog = false;
                 CloseWriter();
 
                 LogFilePath = null;
@@ -80,6 +103,10 @@ namespace MSearch
                 {
                     _writer = new StreamWriter(path, false, new System.Text.UTF8Encoding(false));
                     _writer.AutoFlush = true;
+
+                    foreach (string startupLine in _startupLogLines)
+                        _writer.WriteLine(startupLine);
+
                     LogFilePath = path;
                 }
                 catch (Exception ex)
@@ -89,14 +116,8 @@ namespace MSearch
                     return;
                 }
 
-                WritePlainLine("[scan] MinerSearch " + AppConfig.GetInstance.CurrentVersion + " started " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                WritePlainLine("[scan] OS: " + OSExtensions.GetWindowsVersion() + " " + OSExtensions.GetPlatform());
-                WritePlainLine("[scan] Boot: " + AppConfig.GetInstance.bootMode + "; " + OSExtensions.GetUACState());
-                WritePlainLine("[scan] User: " + Environment.UserName + "@" + Environment.MachineName);
-                WritePlainLine("[scan] Command line: " + string.Join(" ", Environment.GetCommandLineArgs()));
-
                 if (!string.IsNullOrEmpty(_pendingLogWarning))
-                    WritePlainLine("[scan] Warning: " + _pendingLogWarning);
+                    WritePlainLine("Warning: " + _pendingLogWarning);
 
                 _pendingLogWarning = null;
             }
@@ -114,7 +135,6 @@ namespace MSearch
 
                 try
                 {
-                    _writer.WriteLine($"[{DateTime.Now}]: [scan] log closed");
                     _writer.Flush();
                 }
                 catch (Exception)
@@ -210,6 +230,30 @@ namespace MSearch
             _writer.WriteLine($"[{DateTime.Now}]: {text}");
         }
 
+        /// <summary>
+        /// Пишет в активный лог или буферизует строки заголовка до начала сканирования.
+        /// Вызывающий код должен удерживать _logLock.
+        /// </summary>
+        private static void WriteLogLine(string logMessage, bool force = false)
+        {
+            if (_writer != null)
+            {
+                if (!_no_logs || force)
+                    _writer.WriteLine(logMessage);
+                return;
+            }
+
+            if (_no_logs || !_captureStartupLog)
+                return;
+
+            int lineChars = logMessage.Length + Environment.NewLine.Length;
+            if (lineChars > MaxStartupLogBufferChars - _startupLogBufferChars)
+                return;
+
+            _startupLogLines.Add(logMessage);
+            _startupLogBufferChars += lineChars;
+        }
+
         private static void ResetDedup()
         {
             previousWhiteText = "";
@@ -280,10 +324,7 @@ namespace MSearch
                     }
 
 
-                    if (!_no_logs && _writer != null)
-                    {
-                        _writer.WriteLine(logMessage);
-                    }
+                    WriteLogLine(logMessage);
                 }
             }
             catch (Exception ex)
@@ -346,10 +387,7 @@ namespace MSearch
                         }
                     }
 
-                    if (!_no_logs && _writer != null)
-                    {
-                        _writer.WriteLine(logMessage);
-                    }
+                    WriteLogLine(logMessage);
                 }
             }
             catch (Exception ex)
@@ -411,10 +449,7 @@ namespace MSearch
                     }
 
 
-                    if (!_no_logs && _writer != null)
-                    {
-                        _writer.WriteLine(logMessage);
-                    }
+                    WriteLogLine(logMessage);
                 }
             }
             catch (Exception ex)
@@ -451,10 +486,7 @@ namespace MSearch
                         Console.ResetColor();
                     }
 
-                    if (!_no_logs && _writer != null)
-                    {
-                        _writer.WriteLine(logMessage);
-                    }
+                    WriteLogLine(logMessage);
                 }
             }
             catch (Exception ex)
@@ -489,10 +521,7 @@ namespace MSearch
                         Console.ResetColor();
                     }
 
-                    if ((!_no_logs || force) && _writer != null)
-                    {
-                        _writer.WriteLine(logMessage);
-                    }
+                    WriteLogLine(logMessage, force);
                 }
             }
             catch (Exception ex)

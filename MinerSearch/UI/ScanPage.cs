@@ -64,6 +64,15 @@ namespace MSearch.UI
             StartSelectiveScan();
         }
 
+        private void buttonClearSelection_Click(object sender, EventArgs e)
+        {
+            if (_scanning)
+                return;
+
+            foreach (KeyValuePair<string, ToggleSwitch> pair in _stageToggles)
+                pair.Value.Checked = false;
+        }
+
         private void buttonStop_Click(object sender, EventArgs e)
         {
             OnStopClicked();
@@ -117,21 +126,41 @@ namespace MSearch.UI
 
         private void LayoutContent()
         {
-            int width = contentFlow.ClientSize.Width - 4;
+            // ClientSize уже учитывает вертикальный скроллбар, поэтому берём
+            // полную ширину: правые края карточек и панелей статуса совпадают.
+            int width = contentFlow.ClientSize.Width;
             if (width <= 0)
                 return;
 
             cardsFlow.Width = width;
 
-            int cardWidth = Math.Max(200, (width - 36) / 3);
+            // Между карточками два отступа по 14 px: у последней карточки
+            // правого отступа нет, остаток ширины отдаём ей.
+            int cardWidth = Math.Max(200, (width - 28) / 3);
             cardQuick.Width = cardWidth;
             cardFull.Width = cardWidth;
-            cardSelective.Width = cardWidth;
+            cardSelective.Width = cardWidth + Math.Max(0, width - 28 - cardWidth * 3);
             labelQuickDesc.Width = cardWidth - 36;
             labelFullDesc.Width = cardWidth - 36;
             labelSelectiveDesc.Width = cardWidth - 36;
 
             selectivePanel.Width = width;
+            LayoutFolderRow();
+        }
+
+        /// <summary>
+        /// Ставит поле пути сразу после чекбокса: его подпись меняется
+        /// при смене языка, поэтому фиксированная координата даёт наложение.
+        /// </summary>
+        private void LayoutFolderRow()
+        {
+            int left = checkFolder.Right + 12;
+            int right = buttonBrowse.Left - 10;
+            if (right <= left)
+                return;
+
+            textFolder.Left = left;
+            textFolder.Width = right - left;
         }
 
         private void OnModeCardClicked(ScanMode mode)
@@ -144,6 +173,7 @@ namespace MSearch.UI
                 selectivePanel.Visible = !selectivePanel.Visible;
                 labelHint.Visible = !selectivePanel.Visible;
                 contentFlow.AutoScrollPosition = new Point(0, 0);
+                LayoutFolderRow();
                 return;
             }
 
@@ -226,7 +256,10 @@ namespace MSearch.UI
             cardFull.Enabled = !scanning;
             cardSelective.Enabled = !scanning;
             buttonStartSelective.Enabled = !scanning;
+            buttonClearSelection.Enabled = !scanning;
             buttonStop.Enabled = scanning;
+
+            SetIndeterminate(false);
 
             if (scanning)
             {
@@ -253,6 +286,20 @@ namespace MSearch.UI
             labelStage.Text = L("_ScanStopping");
         }
 
+        /// <summary>
+        /// Переключает индикатор в режим бегущей полосы: этап очистки может
+        /// занимать минуты на остановку служб и повторные попытки удаления.
+        /// </summary>
+        public void SetIndeterminate(bool indeterminate)
+        {
+            ProgressBarStyle style = indeterminate ? ProgressBarStyle.Marquee : ProgressBarStyle.Blocks;
+            if (progressScan.Style == style)
+                return;
+
+            progressScan.Style = style;
+            progressScan.MarqueeAnimationSpeed = indeterminate ? 30 : 0;
+        }
+
         public void UpdateStage(ScanStage stage, string scannerId = null)
         {
             if (stage == ScanStage.General && !string.IsNullOrEmpty(scannerId))
@@ -261,11 +308,24 @@ namespace MSearch.UI
                 labelStage.Text = GetStageText(stage);
 
             if (stage == ScanStage.Completed)
+            {
+                SetIndeterminate(false);
                 progressScan.Value = 100;
+            }
             else if (stage == ScanStage.Idle)
+            {
+                SetIndeterminate(false);
                 progressScan.Value = 0;
+            }
+            else if (stage == ScanStage.Cleanup)
+            {
+                SetIndeterminate(true);
+            }
             else
+            {
+                SetIndeterminate(false);
                 progressScan.Value = GetStagePercent(stage);
+            }
         }
 
         public void UpdateProgress(string item, int done, int total)
@@ -279,7 +339,7 @@ namespace MSearch.UI
             string display = NormalizeItem(item);
             labelDetail.Text = L("_ScanStage_CurrentObject").Replace("#VALUE#", display);
 
-            if (total > 0)
+            if (total > 0 && progressScan.Style != ProgressBarStyle.Marquee)
             {
                 int percent = (int)(done * 100L / total);
                 if (percent >= 0 && percent <= 100)
@@ -377,6 +437,7 @@ namespace MSearch.UI
             labelSelectiveHeader.Text = L("_ScanSelective_Title");
             labelHint.Text = L("_ScanHint");
             buttonStartSelective.Text = L("_ScanStart");
+            buttonClearSelection.Text = L("_Selective_ClearAll");
             checkFolder.Text = L("_Selective_Folder");
             buttonBrowse.Text = L("_Selective_Browse");
 
@@ -391,6 +452,8 @@ namespace MSearch.UI
             buttonStop.Text = L("_ScanStop");
             if (!_scanning)
                 labelStage.Text = L("_ScanReady");
+
+            LayoutFolderRow();
         }
 
         private static string L(string key)

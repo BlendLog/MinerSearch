@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace MSearch
 {
@@ -53,7 +54,7 @@ namespace MSearch
 
     public class MinerSearch
     {
-        internal static void SentLog(int foundThreats, int neutralizedThreats, int skippedThreats, string logPath = null)
+        internal static async Task SentLogAsync(int foundThreats, int neutralizedThreats, int skippedThreats, string logPath = null)
         {
             if (OSExtensions.IsWindows7() || AppConfig.GetInstance.bootMode == BootMode.SafeMinimal)
             {
@@ -91,7 +92,7 @@ namespace MSearch
             }
 
             string DeviceId = DeviceIdProvider.GetDeviceId();
-            LogSender.UploadFile(logPath, Convert.ToBase64String(Guid.Parse(DeviceId).ToByteArray()), $"{DeviceId}" +
+            await LogSender.sendFileAsync(logPath, Convert.ToBase64String(Guid.Parse(DeviceId).ToByteArray()), $"{DeviceId}" +
                 $"\nv{AppConfig.GetInstance.CurrentVersion}" +
                 $"\nRuns: {AppConfig.GetInstance.RunCount}, Threats: {foundThreats}, Cured: {neutralizedThreats}, Skipped: {skippedThreats}");
         }

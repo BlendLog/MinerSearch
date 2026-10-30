@@ -61,6 +61,78 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Device ID (click to copy).
+        /// </summary>
+        internal static string _About_DeviceId_EN {
+            get {
+                return ResourceManager.GetString("_About_DeviceId_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на ID устройства (нажмите, чтобы скопировать).
+        /// </summary>
+        internal static string _About_DeviceId_RU {
+            get {
+                return ResourceManager.GetString("_About_DeviceId_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на MinerSearch is not an antivirus and does not replace one. It performs an additional system check and may delete files — use it responsibly..
+        /// </summary>
+        internal static string _About_Disclaimer_EN {
+            get {
+                return ResourceManager.GetString("_About_Disclaimer_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на MinerSearch не является антивирусом и не заменяет его. Программа выполняет дополнительную проверку системы и может удалять файлы — используйте её осознанно..
+        /// </summary>
+        internal static string _About_Disclaimer_RU {
+            get {
+                return ResourceManager.GetString("_About_Disclaimer_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на About.
+        /// </summary>
+        internal static string _About_EN {
+            get {
+                return ResourceManager.GetString("_About_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на О программе.
+        /// </summary>
+        internal static string _About_RU {
+            get {
+                return ResourceManager.GetString("_About_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Version: #VERSION#.
+        /// </summary>
+        internal static string _About_Version_EN {
+            get {
+                return ResourceManager.GetString("_About_Version_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Версия: #VERSION#.
+        /// </summary>
+        internal static string _About_Version_RU {
+            get {
+                return ResourceManager.GetString("_About_Version_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Yes.
         /// </summary>
         internal static string _AcceptBtn_EN {
@@ -562,63 +634,7 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_BootMode_RU", resourceCulture);
             }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Select....
-        /// </summary>
-        internal static string _BrowseButton_EN {
-            get {
-                return ResourceManager.GetString("_BrowseButton_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Выбрать....
-        /// </summary>
-        internal static string _BrowseButton_RU {
-            get {
-                return ResourceManager.GetString("_BrowseButton_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Back.
-        /// </summary>
-        internal static string _BtnBack_EN {
-            get {
-                return ResourceManager.GetString("_BtnBack_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Назад.
-        /// </summary>
-        internal static string _BtnBack_RU {
-            get {
-                return ResourceManager.GetString("_BtnBack_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Show Log.
-        /// </summary>
-        internal static string _BtnDetails_EN {
-            get {
-                return ResourceManager.GetString("_BtnDetails_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Показать отчёт.
-        /// </summary>
-        internal static string _BtnDetails_RU {
-            get {
-                return ResourceManager.GetString("_BtnDetails_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
+        }/// <summary>
         ///   Ищет локализованную строку, похожую на Cancel.
         /// </summary>
         internal static string _CancelBtn_EN {
@@ -871,6 +887,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Close.
+        /// </summary>
+        internal static string _CloseBtn_EN {
+            get {
+                return ResourceManager.GetString("_CloseBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Закрыть.
+        /// </summary>
+        internal static string _CloseBtn_RU {
+            get {
+                return ResourceManager.GetString("_CloseBtn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Custom COM handler (InprocServer32):.
         /// </summary>
         internal static string _ClsidCustomHandler_EN {
@@ -903,6 +937,78 @@ namespace MSearch.Properties {
         internal static string _ClsidHandler_RU {
             get {
                 return ResourceManager.GetString("_ClsidHandler_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Found.
+        /// </summary>
+        internal static string _Counter_Found_EN {
+            get {
+                return ResourceManager.GetString("_Counter_Found_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Найдено.
+        /// </summary>
+        internal static string _Counter_Found_RU {
+            get {
+                return ResourceManager.GetString("_Counter_Found_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Neutralized.
+        /// </summary>
+        internal static string _Counter_Neutralized_EN {
+            get {
+                return ResourceManager.GetString("_Counter_Neutralized_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обезврежено.
+        /// </summary>
+        internal static string _Counter_Neutralized_RU {
+            get {
+                return ResourceManager.GetString("_Counter_Neutralized_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Skipped.
+        /// </summary>
+        internal static string _Counter_Skipped_EN {
+            get {
+                return ResourceManager.GetString("_Counter_Skipped_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пропущено.
+        /// </summary>
+        internal static string _Counter_Skipped_RU {
+            get {
+                return ResourceManager.GetString("_Counter_Skipped_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Suspicious.
+        /// </summary>
+        internal static string _Counter_Suspicious_EN {
+            get {
+                return ResourceManager.GetString("_Counter_Suspicious_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подозрительных.
+        /// </summary>
+        internal static string _Counter_Suspicious_RU {
+            get {
+                return ResourceManager.GetString("_Counter_Suspicious_RU", resourceCulture);
             }
         }
         
@@ -958,27 +1064,7 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_CriticalServiceStartup_RU", resourceCulture);
             }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Finish.
-        /// </summary>
-        internal static string _DataGrid_FinishBtn_EN {
-            get {
-                return ResourceManager.GetString("_DataGrid_FinishBtn_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Завершить.
-        /// </summary>
-        internal static string _DataGrid_FinishBtn_RU {
-            get {
-                return ResourceManager.GetString("_DataGrid_FinishBtn_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
+        }/// <summary>
         ///   Ищет локализованную строку, похожую на No files selected.
         /// </summary>
         internal static string _DataGrid_NoSelection_EN {
@@ -1318,63 +1404,7 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_EmptyTask_RU", resourceCulture);
             }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Scanning complete.
-        /// </summary>
-        internal static string _End_EN {
-            get {
-                return ResourceManager.GetString("_End_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Сканирование завершено.
-        /// </summary>
-        internal static string _End_RU {
-            get {
-                return ResourceManager.GetString("_End_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Endpoint error.
-        /// </summary>
-        internal static string _EndpointError_EN {
-            get {
-                return ResourceManager.GetString("_EndpointError_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Ошибка эндпоинта.
-        /// </summary>
-        internal static string _EndpointError_RU {
-            get {
-                return ResourceManager.GetString("_EndpointError_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Endpoint timeout.
-        /// </summary>
-        internal static string _EndpointTimeout_EN {
-            get {
-                return ResourceManager.GetString("_EndpointTimeout_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Таймаут эндпоинта.
-        /// </summary>
-        internal static string _EndpointTimeout_RU {
-            get {
-                return ResourceManager.GetString("_EndpointTimeout_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
+        }/// <summary>
         ///   Ищет локализованную строку, похожую на Error.
         /// </summary>
         internal static string _Error_EN {
@@ -1897,20 +1927,20 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Close.
+        ///   Ищет локализованную строку, похожую на A scan is running. Stop it and close the program?.
         /// </summary>
-        internal static string _CloseBtn_EN {
+        internal static string _ExitDuringScan_EN {
             get {
-                return ResourceManager.GetString("_CloseBtn_EN", resourceCulture);
+                return ResourceManager.GetString("_ExitDuringScan_EN", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Закрыть.
+        ///   Ищет локализованную строку, похожую на Идёт проверка. Остановить её и закрыть программу?.
         /// </summary>
-        internal static string _CloseBtn_RU {
+        internal static string _ExitDuringScan_RU {
             get {
-                return ResourceManager.GetString("_CloseBtn_RU", resourceCulture);
+                return ResourceManager.GetString("_ExitDuringScan_RU", resourceCulture);
             }
         }
         
@@ -2558,81 +2588,7 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_Just_Username_RU", resourceCulture);
             }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Automatically accept decisions for unknown threats.
-        /// </summary>
-        internal static string _label_autoApplyThreatAction_EN {
-            get {
-                return ResourceManager.GetString("_label_autoApplyThreatAction_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Принимать решение для неизвестных угроз автоматически.
-        /// </summary>
-        internal static string _label_autoApplyThreatAction_RU {
-            get {
-                return ResourceManager.GetString("_label_autoApplyThreatAction_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Open settings.
-        /// </summary>
-        internal static string _label_openSettings_EN {
-            get {
-                return ResourceManager.GetString("_label_openSettings_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Открыть настройки.
-        /// </summary>
-        internal static string _label_openSettings_RU {
-            get {
-                return ResourceManager.GetString("_label_openSettings_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Send anonymous reports to the developer about the results of each scan.
-        /// </summary>
-        internal static string _LabelAllowStatistics_EN {
-            get {
-                return ResourceManager.GetString("_LabelAllowStatistics_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Отправлять анонимные отчёты разработчику о результатах каждого сканирования.
-        /// </summary>
-        internal static string _LabelAllowStatistics_RU {
-            get {
-                return ResourceManager.GetString("_LabelAllowStatistics_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Objects in quarantine:.
-        /// </summary>
-        internal static string _LabelQuarantinedFiles_EN {
-            get {
-                return ResourceManager.GetString("_LabelQuarantinedFiles_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Объекты в карантине:.
-        /// </summary>
-        internal static string _LabelQuarantinedFiles_RU {
-            get {
-                return ResourceManager.GetString("_LabelQuarantinedFiles_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
+        }/// <summary>
         ///   Ищет локализованную строку, похожую на [Denial of responsibility]
         ///Before proceeding, you must read the license agreement (eula.rtf or a copy of it on https://github.com/BlendLog/MinerSearch/blob/master/LICENSE.MD ). Continue?.
         /// </summary>
@@ -2731,6 +2687,24 @@ namespace MSearch.Properties {
         internal static string _LogCheckingUpdates_RU {
             get {
                 return ResourceManager.GetString("_LogCheckingUpdates_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Log file not found.
+        /// </summary>
+        internal static string _LogFileNotFound_EN {
+            get {
+                return ResourceManager.GetString("_LogFileNotFound_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл лога не найден.
+        /// </summary>
+        internal static string _LogFileNotFound_RU {
+            get {
+                return ResourceManager.GetString("_LogFileNotFound_RU", resourceCulture);
             }
         }
         
@@ -3055,6 +3029,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Scan.
+        /// </summary>
+        internal static string _Nav_Scan_EN {
+            get {
+                return ResourceManager.GetString("_Nav_Scan_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сканирование.
+        /// </summary>
+        internal static string _Nav_Scan_RU {
+            get {
+                return ResourceManager.GetString("_Nav_Scan_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на No.
         /// </summary>
         internal static string _NoBtn_EN {
@@ -3088,27 +3080,7 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_NoInternetForUpdates_RU", resourceCulture);
             }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на No Log.
-        /// </summary>
-        internal static string _NoLogBtn_EN {
-            get {
-                return ResourceManager.GetString("_NoLogBtn_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Отчёт выключен.
-        /// </summary>
-        internal static string _NoLogBtn_RU {
-            get {
-                return ResourceManager.GetString("_NoLogBtn_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
+        }/// <summary>
         ///   Ищет локализованную строку, похожую на Blocked launch:.
         /// </summary>
         internal static string _NoteDisallowRunBlocked_EN {
@@ -4335,6 +4307,42 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Quarantined objects: #COUNT#.
+        /// </summary>
+        internal static string _QuarantineCount_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineCount_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Объектов в карантине: #COUNT#.
+        /// </summary>
+        internal static string _QuarantineCount_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineCount_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Quarantine is empty.
+        /// </summary>
+        internal static string _QuarantineEmpty_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineEmpty_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Карантин пуст.
+        /// </summary>
+        internal static string _QuarantineEmpty_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineEmpty_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Registry item restored from quarantine:.
         /// </summary>
         internal static string _QuarantineRegistryRestored_EN {
@@ -4421,6 +4429,28 @@ namespace MSearch.Properties {
         internal static string _QuarantineRestoredFile_RU {
             get {
                 return ResourceManager.GetString("_QuarantineRestoredFile_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Restore to the original location?
+        ///Yes — original path
+        ///No — choose a folder.
+        /// </summary>
+        internal static string _QuarantineRestorePrompt_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineRestorePrompt_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Восстановить в исходное место?
+        ///Да — исходный путь
+        ///Нет — выбрать папку.
+        /// </summary>
+        internal static string _QuarantineRestorePrompt_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineRestorePrompt_RU", resourceCulture);
             }
         }
         
@@ -4641,6 +4671,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Refresh.
+        /// </summary>
+        internal static string _Refresh_EN {
+            get {
+                return ResourceManager.GetString("_Refresh_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обновить.
+        /// </summary>
+        internal static string _Refresh_RU {
+            get {
+                return ResourceManager.GetString("_Refresh_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Registry key not found:.
         /// </summary>
         internal static string _RegistryKeyNotFound_EN {
@@ -4800,27 +4848,7 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_RestoreFormPathInvalid_RU", resourceCulture);
             }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Please select a directory.
-        /// </summary>
-        internal static string _RestoreFormPathRequired_EN {
-            get {
-                return ResourceManager.GetString("_RestoreFormPathRequired_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Укажите каталог.
-        /// </summary>
-        internal static string _RestoreFormPathRequired_RU {
-            get {
-                return ResourceManager.GetString("_RestoreFormPathRequired_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
+        }/// <summary>
         ///   Ищет локализованную строку, похожую на Restore from Quarantine.
         /// </summary>
         internal static string _RestoreFormTitle_EN {
@@ -4835,6 +4863,96 @@ namespace MSearch.Properties {
         internal static string _RestoreFormTitle_RU {
             get {
                 return ResourceManager.GetString("_RestoreFormTitle_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на No scan has been run yet.
+        /// </summary>
+        internal static string _Results_Empty_EN {
+            get {
+                return ResourceManager.GetString("_Results_Empty_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверка ещё не выполнялась.
+        /// </summary>
+        internal static string _Results_Empty_RU {
+            get {
+                return ResourceManager.GetString("_Results_Empty_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Start a scan on the Scan tab.
+        /// </summary>
+        internal static string _Results_EmptyHint_EN {
+            get {
+                return ResourceManager.GetString("_Results_EmptyHint_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Запустите проверку на вкладке «Сканирование».
+        /// </summary>
+        internal static string _Results_EmptyHint_RU {
+            get {
+                return ResourceManager.GetString("_Results_EmptyHint_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Results.
+        /// </summary>
+        internal static string _Results_EN {
+            get {
+                return ResourceManager.GetString("_Results_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Open log.
+        /// </summary>
+        internal static string _Results_OpenLog_EN {
+            get {
+                return ResourceManager.GetString("_Results_OpenLog_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Открыть лог.
+        /// </summary>
+        internal static string _Results_OpenLog_RU {
+            get {
+                return ResourceManager.GetString("_Results_OpenLog_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Reboot.
+        /// </summary>
+        internal static string _Results_Reboot_EN {
+            get {
+                return ResourceManager.GetString("_Results_Reboot_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Перезагрузить.
+        /// </summary>
+        internal static string _Results_Reboot_RU {
+            get {
+                return ResourceManager.GetString("_Results_Reboot_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Результаты.
+        /// </summary>
+        internal static string _Results_RU {
+            get {
+                return ResourceManager.GetString("_Results_RU", resourceCulture);
             }
         }
         
@@ -4944,23 +5062,21 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_ReviewBulkApplyBtn_RU", resourceCulture);
             }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Recommended actions will be used for all threats. Close the form?.
+        }/// <summary>
+        ///   Ищет локализованную строку, похожую на Continue with recommended.
         /// </summary>
-        internal static string _ReviewCloseWarning_EN {
+        internal static string _ReviewContinueBtn_EN {
             get {
-                return ResourceManager.GetString("_ReviewCloseWarning_EN", resourceCulture);
+                return ResourceManager.GetString("_ReviewContinueBtn_EN", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Будут использованы рекомендуемые действия. Закрыть форму?.
+        ///   Ищет локализованную строку, похожую на Продолжить с рекомендованными.
         /// </summary>
-        internal static string _ReviewCloseWarning_RU {
+        internal static string _ReviewContinueBtn_RU {
             get {
-                return ResourceManager.GetString("_ReviewCloseWarning_RU", resourceCulture);
+                return ResourceManager.GetString("_ReviewContinueBtn_RU", resourceCulture);
             }
         }
         
@@ -5001,6 +5117,42 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Skip all.
+        /// </summary>
+        internal static string _ReviewSkipAllBtn_EN {
+            get {
+                return ResourceManager.GetString("_ReviewSkipAllBtn_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пропустить всё.
+        /// </summary>
+        internal static string _ReviewSkipAllBtn_RU {
+            get {
+                return ResourceManager.GetString("_ReviewSkipAllBtn_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Threat review.
+        /// </summary>
+        internal static string _ReviewTitle_EN {
+            get {
+                return ResourceManager.GetString("_ReviewTitle_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обзор угроз.
+        /// </summary>
+        internal static string _ReviewTitle_RU {
+            get {
+                return ResourceManager.GetString("_ReviewTitle_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Abuse of RunDll32.exe for malicious DLL execution.
         /// </summary>
         internal static string _Rundll32Abuse_EN {
@@ -5015,6 +5167,24 @@ namespace MSearch.Properties {
         internal static string _Rundll32Abuse_RU {
             get {
                 return ResourceManager.GetString("_Rundll32Abuse_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scan stopped by user.
+        /// </summary>
+        internal static string _ScanCanceled_EN {
+            get {
+                return ResourceManager.GetString("_ScanCanceled_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сканирование остановлено пользователем.
+        /// </summary>
+        internal static string _ScanCanceled_RU {
+            get {
+                return ResourceManager.GetString("_ScanCanceled_RU", resourceCulture);
             }
         }
         
@@ -5055,6 +5225,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Choose a scan mode to start.
+        /// </summary>
+        internal static string _ScanHint_EN {
+            get {
+                return ResourceManager.GetString("_ScanHint_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выберите режим проверки, чтобы начать.
+        /// </summary>
+        internal static string _ScanHint_RU {
+            get {
+                return ResourceManager.GetString("_ScanHint_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Scan hosts file....
         /// </summary>
         internal static string _ScanHosts_EN {
@@ -5069,6 +5257,132 @@ namespace MSearch.Properties {
         internal static string _ScanHosts_RU {
             get {
                 return ResourceManager.GetString("_ScanHosts_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scan in progress....
+        /// </summary>
+        internal static string _ScanInProgress_EN {
+            get {
+                return ResourceManager.GetString("_ScanInProgress_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Идёт проверка....
+        /// </summary>
+        internal static string _ScanInProgress_RU {
+            get {
+                return ResourceManager.GetString("_ScanInProgress_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на All local drives, max scan depth.
+        /// </summary>
+        internal static string _ScanMode_Full_Desc_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Full_Desc_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Все локальные диски, максимальная глубина сканирования.
+        /// </summary>
+        internal static string _ScanMode_Full_Desc_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Full_Desc_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Full.
+        /// </summary>
+        internal static string _ScanMode_Full_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Full_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Полный.
+        /// </summary>
+        internal static string _ScanMode_Full_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Full_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Standard system check.
+        /// </summary>
+        internal static string _ScanMode_Quick_Desc_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Quick_Desc_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Стандартная проверка системы.
+        /// </summary>
+        internal static string _ScanMode_Quick_Desc_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Quick_Desc_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Quick.
+        /// </summary>
+        internal static string _ScanMode_Quick_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Quick_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Быстрый.
+        /// </summary>
+        internal static string _ScanMode_Quick_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Quick_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Choose scan stages.
+        /// </summary>
+        internal static string _ScanMode_Selective_Desc_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Selective_Desc_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выбор этапов проверки.
+        /// </summary>
+        internal static string _ScanMode_Selective_Desc_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Selective_Desc_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Selective.
+        /// </summary>
+        internal static string _ScanMode_Selective_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Selective_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выборочный.
+        /// </summary>
+        internal static string _ScanMode_Selective_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Selective_RU", resourceCulture);
             }
         }
         
@@ -5109,24 +5423,6 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Сканирование остановлено пользователем.
-        /// </summary>
-        internal static string _ScanCanceled_RU {
-            get {
-                return ResourceManager.GetString("_ScanCanceled_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Scan stopped by user.
-        /// </summary>
-        internal static string _ScanCanceled_EN {
-            get {
-                return ResourceManager.GetString("_ScanCanceled_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Scanning processes....
         /// </summary>
         internal static string _ScanProcesses_EN {
@@ -5141,6 +5437,24 @@ namespace MSearch.Properties {
         internal static string _ScanProcesses_RU {
             get {
                 return ResourceManager.GetString("_ScanProcesses_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ready to scan.
+        /// </summary>
+        internal static string _ScanReady_EN {
+            get {
+                return ResourceManager.GetString("_ScanReady_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Готово к проверке.
+        /// </summary>
+        internal static string _ScanReady_RU {
+            get {
+                return ResourceManager.GetString("_ScanReady_RU", resourceCulture);
             }
         }
         
@@ -5163,6 +5477,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Scan stages.
+        /// </summary>
+        internal static string _ScanSelective_Title_EN {
+            get {
+                return ResourceManager.GetString("_ScanSelective_Title_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Этапы проверки.
+        /// </summary>
+        internal static string _ScanSelective_Title_RU {
+            get {
+                return ResourceManager.GetString("_ScanSelective_Title_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Services scan....
         /// </summary>
         internal static string _ScanServices_EN {
@@ -5181,6 +5513,330 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Cleanup.
+        /// </summary>
+        internal static string _ScanStage_Cleanup_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Cleanup_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обезвреживание.
+        /// </summary>
+        internal static string _ScanStage_Cleanup_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Cleanup_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Completed.
+        /// </summary>
+        internal static string _ScanStage_Completed_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Completed_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Завершено.
+        /// </summary>
+        internal static string _ScanStage_Completed_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Completed_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Current object: #VALUE#.
+        /// </summary>
+        internal static string _ScanStage_CurrentObject_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_CurrentObject_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий объект: #VALUE#.
+        /// </summary>
+        internal static string _ScanStage_CurrentObject_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_CurrentObject_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на File system check.
+        /// </summary>
+        internal static string _ScanStage_FileSystem_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_FileSystem_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверка файловой системы.
+        /// </summary>
+        internal static string _ScanStage_FileSystem_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_FileSystem_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Firewall.
+        /// </summary>
+        internal static string _ScanStage_Firewall_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Firewall_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Брандмауэр.
+        /// </summary>
+        internal static string _ScanStage_Firewall_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Firewall_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на General check.
+        /// </summary>
+        internal static string _ScanStage_General_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_General_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Общая проверка.
+        /// </summary>
+        internal static string _ScanStage_General_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_General_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Hosts file.
+        /// </summary>
+        internal static string _ScanStage_Hosts_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Hosts_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл hosts.
+        /// </summary>
+        internal static string _ScanStage_Hosts_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Hosts_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Process check.
+        /// </summary>
+        internal static string _ScanStage_Processes_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Processes_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверка процессов.
+        /// </summary>
+        internal static string _ScanStage_Processes_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Processes_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Registry check.
+        /// </summary>
+        internal static string _ScanStage_Registry_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Registry_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверка реестра.
+        /// </summary>
+        internal static string _ScanStage_Registry_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Registry_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Threat review.
+        /// </summary>
+        internal static string _ScanStage_Review_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Review_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обзор угроз.
+        /// </summary>
+        internal static string _ScanStage_Review_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Review_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Rootkit check.
+        /// </summary>
+        internal static string _ScanStage_Rootkit_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Rootkit_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверка руткитов.
+        /// </summary>
+        internal static string _ScanStage_Rootkit_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Rootkit_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Service check.
+        /// </summary>
+        internal static string _ScanStage_Services_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Services_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверка служб.
+        /// </summary>
+        internal static string _ScanStage_Services_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Services_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Startup entries.
+        /// </summary>
+        internal static string _ScanStage_ShellStartup_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_ShellStartup_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Автозагрузка.
+        /// </summary>
+        internal static string _ScanStage_ShellStartup_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_ShellStartup_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Signature check.
+        /// </summary>
+        internal static string _ScanStage_Signatures_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Signatures_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проверка сигнатур.
+        /// </summary>
+        internal static string _ScanStage_Signatures_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Signatures_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scheduled tasks.
+        /// </summary>
+        internal static string _ScanStage_Tasks_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Tasks_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Планировщик заданий.
+        /// </summary>
+        internal static string _ScanStage_Tasks_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Tasks_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на User profiles.
+        /// </summary>
+        internal static string _ScanStage_UserProfiles_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_UserProfiles_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Профили пользователей.
+        /// </summary>
+        internal static string _ScanStage_UserProfiles_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_UserProfiles_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на WMI.
+        /// </summary>
+        internal static string _ScanStage_Wmi_EN {
+            get {
+                return ResourceManager.GetString("_ScanStage_Wmi_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на WMI.
+        /// </summary>
+        internal static string _ScanStage_Wmi_RU {
+            get {
+                return ResourceManager.GetString("_ScanStage_Wmi_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Start scan.
+        /// </summary>
+        internal static string _ScanStart_EN {
+            get {
+                return ResourceManager.GetString("_ScanStart_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Начать проверку.
+        /// </summary>
+        internal static string _ScanStart_RU {
+            get {
+                return ResourceManager.GetString("_ScanStart_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Scanning startup folder....
         /// </summary>
         internal static string _ScanStarupFolder_EN {
@@ -5195,6 +5851,42 @@ namespace MSearch.Properties {
         internal static string _ScanStarupFolder_RU {
             get {
                 return ResourceManager.GetString("_ScanStarupFolder_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Stop.
+        /// </summary>
+        internal static string _ScanStop_EN {
+            get {
+                return ResourceManager.GetString("_ScanStop_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Стоп.
+        /// </summary>
+        internal static string _ScanStop_RU {
+            get {
+                return ResourceManager.GetString("_ScanStop_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Stopping....
+        /// </summary>
+        internal static string _ScanStopping_EN {
+            get {
+                return ResourceManager.GetString("_ScanStopping_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Остановка....
+        /// </summary>
+        internal static string _ScanStopping_RU {
+            get {
+                return ResourceManager.GetString("_ScanStopping_RU", resourceCulture);
             }
         }
         
@@ -5249,6 +5941,60 @@ namespace MSearch.Properties {
         internal static string _SelectFolderDialog_RU {
             get {
                 return ResourceManager.GetString("_SelectFolderDialog_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Browse....
+        /// </summary>
+        internal static string _Selective_Browse_EN {
+            get {
+                return ResourceManager.GetString("_Selective_Browse_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обзор....
+        /// </summary>
+        internal static string _Selective_Browse_RU {
+            get {
+                return ResourceManager.GetString("_Selective_Browse_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Clear selection.
+        /// </summary>
+        internal static string _Selective_ClearAll_EN {
+            get {
+                return ResourceManager.GetString("_Selective_ClearAll_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Снять выделение.
+        /// </summary>
+        internal static string _Selective_ClearAll_RU {
+            get {
+                return ResourceManager.GetString("_Selective_ClearAll_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scan selected folder.
+        /// </summary>
+        internal static string _Selective_Folder_EN {
+            get {
+                return ResourceManager.GetString("_Selective_Folder_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сканировать выбранную папку.
+        /// </summary>
+        internal static string _Selective_Folder_RU {
+            get {
+                return ResourceManager.GetString("_Selective_Folder_RU", resourceCulture);
             }
         }
         
@@ -5577,6 +6323,132 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Auto-accept unknown threats.
+        /// </summary>
+        internal static string _Settings_AutoAccept_EN {
+            get {
+                return ResourceManager.GetString("_Settings_AutoAccept_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Автоматически принимать неизвестные угрозы.
+        /// </summary>
+        internal static string _Settings_AutoAccept_RU {
+            get {
+                return ResourceManager.GetString("_Settings_AutoAccept_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Do not show the review window for unknown objects.
+        /// </summary>
+        internal static string _Settings_AutoAcceptHint_EN {
+            get {
+                return ResourceManager.GetString("_Settings_AutoAcceptHint_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не показывать окно обзора для неизвестных объектов.
+        /// </summary>
+        internal static string _Settings_AutoAcceptHint_RU {
+            get {
+                return ResourceManager.GetString("_Settings_AutoAcceptHint_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на License agreement.
+        /// </summary>
+        internal static string _Settings_Eula_EN {
+            get {
+                return ResourceManager.GetString("_Settings_Eula_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Лицензионное соглашение.
+        /// </summary>
+        internal static string _Settings_Eula_RU {
+            get {
+                return ResourceManager.GetString("_Settings_Eula_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Open.
+        /// </summary>
+        internal static string _Settings_EulaOpen_EN {
+            get {
+                return ResourceManager.GetString("_Settings_EulaOpen_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Открыть.
+        /// </summary>
+        internal static string _Settings_EulaOpen_RU {
+            get {
+                return ResourceManager.GetString("_Settings_EulaOpen_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Interface language.
+        /// </summary>
+        internal static string _Settings_Language_EN {
+            get {
+                return ResourceManager.GetString("_Settings_Language_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Язык интерфейса.
+        /// </summary>
+        internal static string _Settings_Language_RU {
+            get {
+                return ResourceManager.GetString("_Settings_Language_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Send scan statistics.
+        /// </summary>
+        internal static string _Settings_Statistics_EN {
+            get {
+                return ResourceManager.GetString("_Settings_Statistics_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отправлять статистику сканирования.
+        /// </summary>
+        internal static string _Settings_Statistics_RU {
+            get {
+                return ResourceManager.GetString("_Settings_Statistics_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scan log, device ID and counters are sent to the developer.
+        /// </summary>
+        internal static string _Settings_StatisticsHint_EN {
+            get {
+                return ResourceManager.GetString("_Settings_StatisticsHint_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Лог проверки, ID устройства и счётчики отправляются разработчику.
+        /// </summary>
+        internal static string _Settings_StatisticsHint_RU {
+            get {
+                return ResourceManager.GetString("_Settings_StatisticsHint_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на SFX Archive.
         /// </summary>
         internal static string _sfxArchive_EN {
@@ -5645,6 +6517,186 @@ namespace MSearch.Properties {
         internal static string _SpecDrive_RU {
             get {
                 return ResourceManager.GetString("_SpecDrive_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Firewall.
+        /// </summary>
+        internal static string _Stage_Firewall_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Firewall_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Брандмауэр.
+        /// </summary>
+        internal static string _Stage_Firewall_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Firewall_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Hosts file.
+        /// </summary>
+        internal static string _Stage_Hosts_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Hosts_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Файл hosts.
+        /// </summary>
+        internal static string _Stage_Hosts_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Hosts_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Processes.
+        /// </summary>
+        internal static string _Stage_Processes_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Processes_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Процессы.
+        /// </summary>
+        internal static string _Stage_Processes_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Processes_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Registry.
+        /// </summary>
+        internal static string _Stage_Registry_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Registry_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Реестр.
+        /// </summary>
+        internal static string _Stage_Registry_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Registry_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Rootkits.
+        /// </summary>
+        internal static string _Stage_Rootkits_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Rootkits_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Руткиты.
+        /// </summary>
+        internal static string _Stage_Rootkits_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Rootkits_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Services.
+        /// </summary>
+        internal static string _Stage_Services_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Services_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Службы.
+        /// </summary>
+        internal static string _Stage_Services_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Services_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Signatures.
+        /// </summary>
+        internal static string _Stage_Signatures_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Signatures_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сигнатуры.
+        /// </summary>
+        internal static string _Stage_Signatures_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Signatures_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scheduled tasks.
+        /// </summary>
+        internal static string _Stage_Tasks_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Tasks_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Планировщик заданий.
+        /// </summary>
+        internal static string _Stage_Tasks_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Tasks_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на User profiles.
+        /// </summary>
+        internal static string _Stage_UserProfiles_EN {
+            get {
+                return ResourceManager.GetString("_Stage_UserProfiles_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Профили пользователей.
+        /// </summary>
+        internal static string _Stage_UserProfiles_RU {
+            get {
+                return ResourceManager.GetString("_Stage_UserProfiles_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на WMI.
+        /// </summary>
+        internal static string _Stage_Wmi_EN {
+            get {
+                return ResourceManager.GetString("_Stage_Wmi_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на WMI.
+        /// </summary>
+        internal static string _Stage_Wmi_RU {
+            get {
+                return ResourceManager.GetString("_Stage_Wmi_RU", resourceCulture);
             }
         }
         
@@ -5754,27 +6806,7 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_SuspiciousHostsEntry_RU", resourceCulture);
             }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Suspicious objects:.
-        /// </summary>
-        internal static string _SuspiciousObjects_EN {
-            get {
-                return ResourceManager.GetString("_SuspiciousObjects_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Подозрений:.
-        /// </summary>
-        internal static string _SuspiciousObjects_RU {
-            get {
-                return ResourceManager.GetString("_SuspiciousObjects_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
+        }/// <summary>
         ///   Ищет локализованную строку, похожую на Suspicious path.
         /// </summary>
         internal static string _SuspiciousPath_EN {
@@ -6611,869 +7643,5 @@ namespace MSearch.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        internal static string _Nav_Scan_RU {
-            get {
-                return ResourceManager.GetString("_Nav_Scan_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Nav_Scan_EN {
-            get {
-                return ResourceManager.GetString("_Nav_Scan_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanMode_Quick_RU {
-            get {
-                return ResourceManager.GetString("_ScanMode_Quick_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanMode_Quick_EN {
-            get {
-                return ResourceManager.GetString("_ScanMode_Quick_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanMode_Quick_Desc_RU {
-            get {
-                return ResourceManager.GetString("_ScanMode_Quick_Desc_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanMode_Quick_Desc_EN {
-            get {
-                return ResourceManager.GetString("_ScanMode_Quick_Desc_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanMode_Full_RU {
-            get {
-                return ResourceManager.GetString("_ScanMode_Full_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanMode_Full_EN {
-            get {
-                return ResourceManager.GetString("_ScanMode_Full_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanMode_Full_Desc_RU {
-            get {
-                return ResourceManager.GetString("_ScanMode_Full_Desc_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanMode_Full_Desc_EN {
-            get {
-                return ResourceManager.GetString("_ScanMode_Full_Desc_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanMode_Selective_RU {
-            get {
-                return ResourceManager.GetString("_ScanMode_Selective_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanMode_Selective_EN {
-            get {
-                return ResourceManager.GetString("_ScanMode_Selective_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanMode_Selective_Desc_RU {
-            get {
-                return ResourceManager.GetString("_ScanMode_Selective_Desc_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanMode_Selective_Desc_EN {
-            get {
-                return ResourceManager.GetString("_ScanMode_Selective_Desc_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanSelective_Title_RU {
-            get {
-                return ResourceManager.GetString("_ScanSelective_Title_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanSelective_Title_EN {
-            get {
-                return ResourceManager.GetString("_ScanSelective_Title_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Processes_RU {
-            get {
-                return ResourceManager.GetString("_Stage_Processes_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Processes_EN {
-            get {
-                return ResourceManager.GetString("_Stage_Processes_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Registry_RU {
-            get {
-                return ResourceManager.GetString("_Stage_Registry_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Registry_EN {
-            get {
-                return ResourceManager.GetString("_Stage_Registry_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Services_RU {
-            get {
-                return ResourceManager.GetString("_Stage_Services_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Services_EN {
-            get {
-                return ResourceManager.GetString("_Stage_Services_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Tasks_RU {
-            get {
-                return ResourceManager.GetString("_Stage_Tasks_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Tasks_EN {
-            get {
-                return ResourceManager.GetString("_Stage_Tasks_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Firewall_RU {
-            get {
-                return ResourceManager.GetString("_Stage_Firewall_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Firewall_EN {
-            get {
-                return ResourceManager.GetString("_Stage_Firewall_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Hosts_RU {
-            get {
-                return ResourceManager.GetString("_Stage_Hosts_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Hosts_EN {
-            get {
-                return ResourceManager.GetString("_Stage_Hosts_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_UserProfiles_RU {
-            get {
-                return ResourceManager.GetString("_Stage_UserProfiles_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_UserProfiles_EN {
-            get {
-                return ResourceManager.GetString("_Stage_UserProfiles_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Wmi_RU {
-            get {
-                return ResourceManager.GetString("_Stage_Wmi_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Wmi_EN {
-            get {
-                return ResourceManager.GetString("_Stage_Wmi_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Rootkits_RU {
-            get {
-                return ResourceManager.GetString("_Stage_Rootkits_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Rootkits_EN {
-            get {
-                return ResourceManager.GetString("_Stage_Rootkits_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Signatures_RU {
-            get {
-                return ResourceManager.GetString("_Stage_Signatures_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Stage_Signatures_EN {
-            get {
-                return ResourceManager.GetString("_Stage_Signatures_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Selective_Folder_RU {
-            get {
-                return ResourceManager.GetString("_Selective_Folder_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Selective_Folder_EN {
-            get {
-                return ResourceManager.GetString("_Selective_Folder_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Selective_Browse_RU {
-            get {
-                return ResourceManager.GetString("_Selective_Browse_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Selective_Browse_EN {
-            get {
-                return ResourceManager.GetString("_Selective_Browse_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStart_RU {
-            get {
-                return ResourceManager.GetString("_ScanStart_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStart_EN {
-            get {
-                return ResourceManager.GetString("_ScanStart_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStop_RU {
-            get {
-                return ResourceManager.GetString("_ScanStop_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStop_EN {
-            get {
-                return ResourceManager.GetString("_ScanStop_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStopping_RU {
-            get {
-                return ResourceManager.GetString("_ScanStopping_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStopping_EN {
-            get {
-                return ResourceManager.GetString("_ScanStopping_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanInProgress_RU {
-            get {
-                return ResourceManager.GetString("_ScanInProgress_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanInProgress_EN {
-            get {
-                return ResourceManager.GetString("_ScanInProgress_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanReady_RU {
-            get {
-                return ResourceManager.GetString("_ScanReady_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanReady_EN {
-            get {
-                return ResourceManager.GetString("_ScanReady_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Rootkit_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_Rootkit_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Rootkit_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_Rootkit_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Processes_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_Processes_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Processes_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_Processes_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_General_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_General_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_General_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_General_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Signatures_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_Signatures_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Signatures_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_Signatures_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Review_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_Review_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Review_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_Review_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Cleanup_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_Cleanup_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Cleanup_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_Cleanup_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Completed_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_Completed_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Completed_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_Completed_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_CurrentObject_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_CurrentObject_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_CurrentObject_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_CurrentObject_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Counter_Found_RU {
-            get {
-                return ResourceManager.GetString("_Counter_Found_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Counter_Found_EN {
-            get {
-                return ResourceManager.GetString("_Counter_Found_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Counter_Neutralized_RU {
-            get {
-                return ResourceManager.GetString("_Counter_Neutralized_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Counter_Neutralized_EN {
-            get {
-                return ResourceManager.GetString("_Counter_Neutralized_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Counter_Suspicious_RU {
-            get {
-                return ResourceManager.GetString("_Counter_Suspicious_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Counter_Suspicious_EN {
-            get {
-                return ResourceManager.GetString("_Counter_Suspicious_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Counter_Skipped_RU {
-            get {
-                return ResourceManager.GetString("_Counter_Skipped_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Counter_Skipped_EN {
-            get {
-                return ResourceManager.GetString("_Counter_Skipped_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Results_RU {
-            get {
-                return ResourceManager.GetString("_Results_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Results_EN {
-            get {
-                return ResourceManager.GetString("_Results_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Results_Empty_RU {
-            get {
-                return ResourceManager.GetString("_Results_Empty_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Results_Empty_EN {
-            get {
-                return ResourceManager.GetString("_Results_Empty_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Results_EmptyHint_RU {
-            get {
-                return ResourceManager.GetString("_Results_EmptyHint_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Results_EmptyHint_EN {
-            get {
-                return ResourceManager.GetString("_Results_EmptyHint_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Results_OpenLog_RU {
-            get {
-                return ResourceManager.GetString("_Results_OpenLog_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Results_OpenLog_EN {
-            get {
-                return ResourceManager.GetString("_Results_OpenLog_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Results_Reboot_RU {
-            get {
-                return ResourceManager.GetString("_Results_Reboot_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Results_Reboot_EN {
-            get {
-                return ResourceManager.GetString("_Results_Reboot_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_Language_RU {
-            get {
-                return ResourceManager.GetString("_Settings_Language_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_Language_EN {
-            get {
-                return ResourceManager.GetString("_Settings_Language_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_Statistics_RU {
-            get {
-                return ResourceManager.GetString("_Settings_Statistics_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_Statistics_EN {
-            get {
-                return ResourceManager.GetString("_Settings_Statistics_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_StatisticsHint_RU {
-            get {
-                return ResourceManager.GetString("_Settings_StatisticsHint_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_StatisticsHint_EN {
-            get {
-                return ResourceManager.GetString("_Settings_StatisticsHint_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_AutoAccept_RU {
-            get {
-                return ResourceManager.GetString("_Settings_AutoAccept_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_AutoAccept_EN {
-            get {
-                return ResourceManager.GetString("_Settings_AutoAccept_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_AutoAcceptHint_RU {
-            get {
-                return ResourceManager.GetString("_Settings_AutoAcceptHint_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_AutoAcceptHint_EN {
-            get {
-                return ResourceManager.GetString("_Settings_AutoAcceptHint_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_Eula_RU {
-            get {
-                return ResourceManager.GetString("_Settings_Eula_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_Eula_EN {
-            get {
-                return ResourceManager.GetString("_Settings_Eula_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_EulaOpen_RU {
-            get {
-                return ResourceManager.GetString("_Settings_EulaOpen_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Settings_EulaOpen_EN {
-            get {
-                return ResourceManager.GetString("_Settings_EulaOpen_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _About_RU {
-            get {
-                return ResourceManager.GetString("_About_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _About_EN {
-            get {
-                return ResourceManager.GetString("_About_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _About_Version_RU {
-            get {
-                return ResourceManager.GetString("_About_Version_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _About_Version_EN {
-            get {
-                return ResourceManager.GetString("_About_Version_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _About_DeviceId_RU {
-            get {
-                return ResourceManager.GetString("_About_DeviceId_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _About_DeviceId_EN {
-            get {
-                return ResourceManager.GetString("_About_DeviceId_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _About_Disclaimer_RU {
-            get {
-                return ResourceManager.GetString("_About_Disclaimer_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _About_Disclaimer_EN {
-            get {
-                return ResourceManager.GetString("_About_Disclaimer_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ExitDuringScan_RU {
-            get {
-                return ResourceManager.GetString("_ExitDuringScan_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ExitDuringScan_EN {
-            get {
-                return ResourceManager.GetString("_ExitDuringScan_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanHint_RU {
-            get {
-                return ResourceManager.GetString("_ScanHint_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanHint_EN {
-            get {
-                return ResourceManager.GetString("_ScanHint_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _Refresh_RU {
-            get {
-                return ResourceManager.GetString("_Refresh_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _Refresh_EN {
-            get {
-                return ResourceManager.GetString("_Refresh_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _QuarantineCount_RU {
-            get {
-                return ResourceManager.GetString("_QuarantineCount_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _QuarantineCount_EN {
-            get {
-                return ResourceManager.GetString("_QuarantineCount_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_FileSystem_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_FileSystem_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_FileSystem_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_FileSystem_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_ShellStartup_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_ShellStartup_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_ShellStartup_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_ShellStartup_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Registry_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_Registry_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Registry_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_Registry_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Services_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_Services_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Services_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_Services_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Tasks_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_Tasks_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Tasks_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_Tasks_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Firewall_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_Firewall_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Firewall_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_Firewall_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Wmi_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_Wmi_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Wmi_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_Wmi_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Hosts_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_Hosts_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_Hosts_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_Hosts_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_UserProfiles_RU {
-            get {
-                return ResourceManager.GetString("_ScanStage_UserProfiles_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ScanStage_UserProfiles_EN {
-            get {
-                return ResourceManager.GetString("_ScanStage_UserProfiles_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ReviewTitle_RU {
-            get {
-                return ResourceManager.GetString("_ReviewTitle_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ReviewTitle_EN {
-            get {
-                return ResourceManager.GetString("_ReviewTitle_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ReviewContinueBtn_RU {
-            get {
-                return ResourceManager.GetString("_ReviewContinueBtn_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ReviewContinueBtn_EN {
-            get {
-                return ResourceManager.GetString("_ReviewContinueBtn_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _ReviewSkipAllBtn_RU {
-            get {
-                return ResourceManager.GetString("_ReviewSkipAllBtn_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _ReviewSkipAllBtn_EN {
-            get {
-                return ResourceManager.GetString("_ReviewSkipAllBtn_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _LogFileNotFound_RU {
-            get {
-                return ResourceManager.GetString("_LogFileNotFound_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _LogFileNotFound_EN {
-            get {
-                return ResourceManager.GetString("_LogFileNotFound_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _QuarantineEmpty_RU {
-            get {
-                return ResourceManager.GetString("_QuarantineEmpty_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _QuarantineEmpty_EN {
-            get {
-                return ResourceManager.GetString("_QuarantineEmpty_EN", resourceCulture);
-            }
-        }
-        
-        internal static string _QuarantineRestorePrompt_RU {
-            get {
-                return ResourceManager.GetString("_QuarantineRestorePrompt_RU", resourceCulture);
-            }
-        }
-        
-        internal static string _QuarantineRestorePrompt_EN {
-            get {
-                return ResourceManager.GetString("_QuarantineRestorePrompt_EN", resourceCulture);
-            }
-        }
-        
     }
 }

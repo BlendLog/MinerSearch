@@ -147,14 +147,8 @@
   <data name="_RestoreFolderDialog_RU" xml:space="preserve">
     <value>Выберите каталог, в который следует восстановить файлы</value>
   </data>
-  <data name="_RestoreFormPathRequired_RU" xml:space="preserve">
-    <value>Укажите каталог</value>
-  </data>
   <data name="_SuspiciousFileSize_EN" xml:space="preserve">
     <value>Suspicious file size</value>
-  </data>
-  <data name="_BtnDetails_EN" xml:space="preserve">
-    <value>Show Log</value>
   </data>
   <data name="_Found_EN" xml:space="preserve">
     <value>Found:</value>
@@ -222,9 +216,6 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   </data>
   <data name="_AcceptBtn_EN" xml:space="preserve">
     <value>Yes</value>
-  </data>
-  <data name="_End_EN" xml:space="preserve">
-    <value>Scanning complete</value>
   </data>
   <data name="_Just_Service_EN" xml:space="preserve">
     <value>Service:</value>
@@ -295,9 +286,6 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_DataGridHeader_OriginalPath_RU" xml:space="preserve">
     <value>Исходный путь</value>
   </data>
-  <data name="_EndpointError_RU" xml:space="preserve">
-    <value>Ошибка эндпоинта</value>
-  </data>
   <data name="_FinishAllThreatsNeutralized_EN" xml:space="preserve">
     <value>All founded threats has been neutralized!</value>
   </data>
@@ -352,9 +340,6 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_RebootRequired_EN" xml:space="preserve">
     <value>Reboot is required</value>
   </data>
-  <data name="_SuspiciousObjects_RU" xml:space="preserve">
-    <value>Подозрений:</value>
-  </data>
   <data name="_BlockingProcessClosed_EN" xml:space="preserve">
     <value>Blocking process has been closed -</value>
   </data>
@@ -384,9 +369,6 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   </data>
   <data name="_ProbablyRAT_RU" xml:space="preserve">
     <value>Вероятно RAT-процесс (бэкдор):</value>
-  </data>
-  <data name="_BtnBack_RU" xml:space="preserve">
-    <value>Назад</value>
   </data>
   <data name="_Q_CLI_RestoreCommandSyntax_RU" xml:space="preserve">
     <value>Как использовать: --restore 1,2  ИЛИ  --delete 1</value>
@@ -624,9 +606,6 @@ Press any key to continue...</value>
   <data name="_CertDigsigDecode_RU" xml:space="preserve">
     <value>Ошибка при расшифровке ASN.1</value>
   </data>
-  <data name="_NoLogBtn_EN" xml:space="preserve">
-    <value>No Log</value>
-  </data>
   <data name="_ReviewApplyBtn_RU" xml:space="preserve">
     <value>Применить</value>
   </data>
@@ -753,9 +732,6 @@ Press any key to continue...</value>
   <data name="_CriticalServiceNotInstalled_RU" xml:space="preserve">
     <value>служба не установлена!</value>
   </data>
-  <data name="_DataGrid_FinishBtn_RU" xml:space="preserve">
-    <value>Завершить</value>
-  </data>
   <data name="_ProcessingShellStartup_EN" xml:space="preserve">
     <value>Processing startup folder files...</value>
   </data>
@@ -852,9 +828,6 @@ Press any key to continue...</value>
   <data name="_DefenderInactiveExclusionsSkipped_EN" xml:space="preserve">
     <value>Windows Defender is disabled - exclusions are skipped</value>
   </data>
-  <data name="_EndpointError_EN" xml:space="preserve">
-    <value>Endpoint error</value>
-  </data>
   <data name="_MessageNewVersion_RU" xml:space="preserve">
     <value>Доступна новая версия #LATEST#. Настоятельно рекомендуется использовать последнюю версию приложения для устранения новых угроз. Перейти на страницу загрузки?</value>
   </data>
@@ -890,9 +863,6 @@ Press any key to continue...</value>
   </data>
   <data name="_HostsFileRecovered_EN" xml:space="preserve">
     <value>Hosts file has been recovered. Affected strings:</value>
-  </data>
-  <data name="_DataGrid_FinishBtn_EN" xml:space="preserve">
-    <value>Finish</value>
   </data>
   <data name="_ThreatType_Suspicious_EN" xml:space="preserve">
     <value>Suspicious</value>
@@ -981,9 +951,6 @@ Press any key to continue...</value>
   <data name="_QuarantineRemovedFiles_RU" xml:space="preserve">
     <value>Файлы успешно удалены</value>
   </data>
-  <data name="_BtnDetails_RU" xml:space="preserve">
-    <value>Показать отчёт</value>
-  </data>
   <data name="_FileCopy_MarkedToMoveQuarantine_EN" xml:space="preserve">
     <value>File copy marked to move quarantine</value>
   </data>
@@ -1004,9 +971,6 @@ Press any key to continue...</value>
   </data>
   <data name="_Error_EN" xml:space="preserve">
     <value>Error</value>
-  </data>
-  <data name="_LabelQuarantinedFiles_RU" xml:space="preserve">
-    <value>Объекты в карантине:</value>
   </data>
   <data name="_ChekingR00tkit_EN" xml:space="preserve">
     <value>Checking rootkit present...</value>
@@ -1085,14 +1049,8 @@ Click \b Exit\b0  to exit.\par
   <data name="_ErrorNotFoundComponent_EN" xml:space="preserve">
     <value>Important components could not be loaded, as the archive was probably not fully extracted.</value>
   </data>
-  <data name="_BtnBack_EN" xml:space="preserve">
-    <value>Back</value>
-  </data>
   <data name="_Q_CLI_ForceRequired_EN" xml:space="preserve">
     <value>[Warning] This operation is potentially dangerous. Use --force if you are sure.</value>
-  </data>
-  <data name="_LabelAllowStatistics_RU" xml:space="preserve">
-    <value>Отправлять анонимные отчёты разработчику о результатах каждого сканирования</value>
   </data>
   <data name="_ServiceName_EN" xml:space="preserve">
     <value>Service name:</value>
@@ -1147,9 +1105,6 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_RestoreFormTitle_EN" xml:space="preserve">
     <value>Restore from Quarantine</value>
-  </data>
-  <data name="_LabelAllowStatistics_EN" xml:space="preserve">
-    <value>Send anonymous reports to the developer about the results of each scan</value>
   </data>
   <data name="_TotalSuspObjects_EN" xml:space="preserve">
     <value>Total suspcisious objects:</value>
@@ -1225,9 +1180,6 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_CriticalServiceStartup_EN" xml:space="preserve">
     <value>Startup type of the critical service has been restored</value>
-  </data>
-  <data name="_End_RU" xml:space="preserve">
-    <value>Сканирование завершено</value>
   </data>
   <data name="_ActionType_Cured_RU" xml:space="preserve">
     <value>Вылечен</value>
@@ -1364,9 +1316,6 @@ Click \b Exit\b0  to exit.\par
   <data name="_Q_CLI_EnterPath_RU" xml:space="preserve">
     <value>Введите путь для восстановления</value>
   </data>
-  <data name="_EndpointTimeout_RU" xml:space="preserve">
-    <value>Таймаут эндпоинта</value>
-  </data>
   <data name="_ShowFolderLogs_RU" xml:space="preserve">
     <value>Показать все отчёты в папке</value>
   </data>
@@ -1405,9 +1354,6 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_InvalidFile_EN" xml:space="preserve">
     <value>Invalid file</value>
-  </data>
-  <data name="_RestoreFormPathRequired_EN" xml:space="preserve">
-    <value>Please select a directory</value>
   </data>
   <data name="_DataGridHeader_Select_EN" xml:space="preserve">
     <value>Select</value>
@@ -1471,9 +1417,6 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_DataGridHeader_Class_RU" xml:space="preserve">
     <value>Класс</value>
-  </data>
-  <data name="_SuspiciousObjects_EN" xml:space="preserve">
-    <value>Suspicious objects:</value>
   </data>
   <data name="_ErrorCannotDeleteUser_EN" xml:space="preserve">
     <value>Unable to delete user profile</value>
@@ -1688,9 +1631,6 @@ Click \b Exit\b0  to exit.\par
   <data name="_ProcessRiskLevel_Medium_EN" xml:space="preserve">
     <value>middle</value>
   </data>
-  <data name="_BrowseButton_EN" xml:space="preserve">
-    <value>Select...</value>
-  </data>
   <data name="_ProcessingFirewall_EN" xml:space="preserve">
     <value>Processing firewall rules...</value>
   </data>
@@ -1840,9 +1780,6 @@ Click \b Exit\b0  to exit.\par
   <data name="_ErrorCannotRemove_EN" xml:space="preserve">
     <value>Can not remove</value>
   </data>
-  <data name="_LabelQuarantinedFiles_EN" xml:space="preserve">
-    <value>Objects in quarantine:</value>
-  </data>
   <data name="_ReviewInstructions_RU" xml:space="preserve">
     <value>Выберите действие для каждой угрозы. Оставьте без изменений для авто-применения.</value>
   </data>
@@ -1858,17 +1795,11 @@ Click \b Exit\b0  to exit.\par
   <data name="_CertDigsigEncode_RU" xml:space="preserve">
     <value>Ошибка при шифровании ASN.1</value>
   </data>
-  <data name="_EndpointTimeout_EN" xml:space="preserve">
-    <value>Endpoint timeout</value>
-  </data>
   <data name="_Q_CLI_RestoreOptionCustomDesc_RU" xml:space="preserve">
     <value>Каждый выбранный файл будет восстановлен в этот каталог</value>
   </data>
   <data name="_FinishNotAllThreatsNeutralized_RU" xml:space="preserve">
     <value>Не все найденные угрозы были устранены. Требуется перезагрузка и повторная проверка.</value>
-  </data>
-  <data name="_BrowseButton_RU" xml:space="preserve">
-    <value>Выбрать...</value>
   </data>
   <data name="_ServiceNotInstalled_EN" xml:space="preserve">
     <value>Specified service is not installed:</value>
@@ -2246,9 +2177,6 @@ Do you want to continue?
   <data name="_LockedDirectory_RU" xml:space="preserve">
     <value>Заблокированный каталог</value>
   </data>
-  <data name="_NoLogBtn_RU" xml:space="preserve">
-    <value>Отчёт выключен</value>
-  </data>
   <data name="_HiddenUserFound_EN" xml:space="preserve">
     <value>Hidden user found: {0}</value>
   </data>
@@ -2285,23 +2213,11 @@ Do you want to continue?
   <data name="_ReviewAutoAccept_Question_RU" xml:space="preserve">
     <value>Принимать решение для неизвестных угроз автоматически?</value>
   </data>
-  <data name="_label_openSettings_EN" xml:space="preserve">
-    <value>Open settings</value>
-  </data>
-  <data name="_label_openSettings_RU" xml:space="preserve">
-    <value>Открыть настройки</value>
-  </data>
   <data name="_FormSettings_Title_EN" xml:space="preserve">
     <value>Settings</value>
   </data>
   <data name="_FormSettings_Title_RU" xml:space="preserve">
     <value>Настройки</value>
-  </data>
-  <data name="_label_autoApplyThreatAction_EN" xml:space="preserve">
-    <value>Automatically accept decisions for unknown threats</value>
-  </data>
-  <data name="_label_autoApplyThreatAction_RU" xml:space="preserve">
-    <value>Принимать решение для неизвестных угроз автоматически</value>
   </data>
   <data name="_UnsignedExeInSystemLocation_EN" xml:space="preserve">
     <value>Unsigned executable found in system location:</value>
@@ -2398,12 +2314,6 @@ Do you want to continue?
   </data>
   <data name="_ReviewSetRecommendedBtn_RU" xml:space="preserve">
     <value>Задать рекомендуемые</value>
-  </data>
-  <data name="_ReviewCloseWarning_EN" xml:space="preserve">
-    <value>Recommended actions will be used for all threats. Close the form?</value>
-  </data>
-  <data name="_ReviewCloseWarning_RU" xml:space="preserve">
-    <value>Будут использованы рекомендуемые действия. Закрыть форму?</value>
   </data>
   <data name="_AndMoreItems_EN" xml:space="preserve">
     <value>...and #COUNT# more</value>
@@ -2508,10 +2418,10 @@ Do you want to continue?
     <value>Quick</value>
   </data>
   <data name="_ScanMode_Quick_Desc_RU" xml:space="preserve">
-    <value>Стандартная проверка системы без дополнительных ключей</value>
+    <value>Стандартная проверка системы</value>
   </data>
   <data name="_ScanMode_Quick_Desc_EN" xml:space="preserve">
-    <value>Standard system check without extra options</value>
+    <value>Standard system check</value>
   </data>
   <data name="_ScanMode_Full_RU" xml:space="preserve">
     <value>Полный</value>
@@ -2520,10 +2430,10 @@ Do you want to continue?
     <value>Full</value>
   </data>
   <data name="_ScanMode_Full_Desc_RU" xml:space="preserve">
-    <value>Все локальные диски, глубина сканирования 16</value>
+    <value>Все локальные диски, максимальная глубина сканирования</value>
   </data>
   <data name="_ScanMode_Full_Desc_EN" xml:space="preserve">
-    <value>All local drives, scan depth 16</value>
+    <value>All local drives, max scan depth</value>
   </data>
   <data name="_ScanMode_Selective_RU" xml:space="preserve">
     <value>Выборочный</value>
@@ -2532,10 +2442,10 @@ Do you want to continue?
     <value>Selective</value>
   </data>
   <data name="_ScanMode_Selective_Desc_RU" xml:space="preserve">
-    <value>Выбор этапов проверки и папки для сканирования</value>
+    <value>Выбор этапов проверки</value>
   </data>
   <data name="_ScanMode_Selective_Desc_EN" xml:space="preserve">
-    <value>Choose scan stages and a folder to scan</value>
+    <value>Choose scan stages</value>
   </data>
   <data name="_ScanSelective_Title_RU" xml:space="preserve">
     <value>Этапы проверки</value>
@@ -2614,6 +2524,12 @@ Do you want to continue?
   </data>
   <data name="_Selective_Browse_EN" xml:space="preserve">
     <value>Browse...</value>
+  </data>
+  <data name="_Selective_ClearAll_RU" xml:space="preserve">
+    <value>Снять выделение</value>
+  </data>
+  <data name="_Selective_ClearAll_EN" xml:space="preserve">
+    <value>Clear selection</value>
   </data>
   <data name="_ScanStart_RU" xml:space="preserve">
     <value>Начать проверку</value>

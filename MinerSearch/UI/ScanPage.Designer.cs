@@ -42,6 +42,7 @@ namespace MSearch.UI
             this.labelSelectiveDesc = new System.Windows.Forms.Label();
             this.selectivePanel = new System.Windows.Forms.Panel();
             this.labelSelectiveHeader = new System.Windows.Forms.Label();
+            this.buttonClearSelection = new MSearch.UI.RoundButton();
             this.stagesTable = new System.Windows.Forms.TableLayoutPanel();
             this.stageProcessesPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageProcesses = new System.Windows.Forms.Label();
@@ -142,7 +143,7 @@ namespace MSearch.UI
             this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 104F));
             this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 86F));
-            this.rootLayout.Size = new System.Drawing.Size(842, 634);
+            this.rootLayout.Size = new System.Drawing.Size(851, 634);
             this.rootLayout.TabIndex = 0;
             // 
             // labelTitle
@@ -153,7 +154,7 @@ namespace MSearch.UI
             this.labelTitle.Location = new System.Drawing.Point(0, 0);
             this.labelTitle.Margin = new System.Windows.Forms.Padding(0);
             this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(842, 54);
+            this.labelTitle.Size = new System.Drawing.Size(851, 54);
             this.labelTitle.TabIndex = 0;
             this.labelTitle.Text = "Сканирование";
             this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -170,9 +171,10 @@ namespace MSearch.UI
             this.contentFlow.Location = new System.Drawing.Point(0, 54);
             this.contentFlow.Margin = new System.Windows.Forms.Padding(0);
             this.contentFlow.Name = "contentFlow";
-            this.contentFlow.Size = new System.Drawing.Size(842, 390);
+            this.contentFlow.Size = new System.Drawing.Size(851, 390);
             this.contentFlow.TabIndex = 1;
             this.contentFlow.WrapContents = false;
+            this.contentFlow.SizeChanged += new System.EventHandler(this.contentFlow_SizeChanged);
             // 
             // cardsFlow
             // 
@@ -198,6 +200,8 @@ namespace MSearch.UI
             this.cardQuick.Name = "cardQuick";
             this.cardQuick.Size = new System.Drawing.Size(240, 108);
             this.cardQuick.TabIndex = 0;
+            this.cardQuick.Click += new System.EventHandler(this.cardQuick_Click);
+            this.cardQuick.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
             // labelQuickTitle
             // 
@@ -211,6 +215,7 @@ namespace MSearch.UI
             this.labelQuickTitle.Size = new System.Drawing.Size(93, 25);
             this.labelQuickTitle.TabIndex = 0;
             this.labelQuickTitle.Text = "Быстрый";
+            this.labelQuickTitle.Click += new System.EventHandler(this.cardQuick_Click);
             // 
             // labelQuickDesc
             // 
@@ -223,6 +228,7 @@ namespace MSearch.UI
             this.labelQuickDesc.Size = new System.Drawing.Size(204, 44);
             this.labelQuickDesc.TabIndex = 1;
             this.labelQuickDesc.Text = "Стандартная проверка";
+            this.labelQuickDesc.Click += new System.EventHandler(this.cardQuick_Click);
             // 
             // cardFull
             // 
@@ -235,6 +241,8 @@ namespace MSearch.UI
             this.cardFull.Name = "cardFull";
             this.cardFull.Size = new System.Drawing.Size(240, 108);
             this.cardFull.TabIndex = 1;
+            this.cardFull.Click += new System.EventHandler(this.cardFull_Click);
+            this.cardFull.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
             // labelFullTitle
             // 
@@ -248,6 +256,7 @@ namespace MSearch.UI
             this.labelFullTitle.Size = new System.Drawing.Size(85, 25);
             this.labelFullTitle.TabIndex = 0;
             this.labelFullTitle.Text = "Полный";
+            this.labelFullTitle.Click += new System.EventHandler(this.cardFull_Click);
             // 
             // labelFullDesc
             // 
@@ -260,6 +269,7 @@ namespace MSearch.UI
             this.labelFullDesc.Size = new System.Drawing.Size(204, 44);
             this.labelFullDesc.TabIndex = 1;
             this.labelFullDesc.Text = "Все локальные диски";
+            this.labelFullDesc.Click += new System.EventHandler(this.cardFull_Click);
             // 
             // cardSelective
             // 
@@ -268,10 +278,12 @@ namespace MSearch.UI
             this.cardSelective.Controls.Add(this.labelSelectiveDesc);
             this.cardSelective.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cardSelective.Location = new System.Drawing.Point(508, 0);
-            this.cardSelective.Margin = new System.Windows.Forms.Padding(0, 0, 14, 0);
+            this.cardSelective.Margin = new System.Windows.Forms.Padding(0);
             this.cardSelective.Name = "cardSelective";
-            this.cardSelective.Size = new System.Drawing.Size(240, 108);
+            this.cardSelective.Size = new System.Drawing.Size(252, 108);
             this.cardSelective.TabIndex = 2;
+            this.cardSelective.Click += new System.EventHandler(this.cardSelective_Click);
+            this.cardSelective.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
             // labelSelectiveTitle
             // 
@@ -285,6 +297,7 @@ namespace MSearch.UI
             this.labelSelectiveTitle.Size = new System.Drawing.Size(131, 25);
             this.labelSelectiveTitle.TabIndex = 0;
             this.labelSelectiveTitle.Text = "Выборочный";
+            this.labelSelectiveTitle.Click += new System.EventHandler(this.cardSelective_Click);
             // 
             // labelSelectiveDesc
             // 
@@ -297,19 +310,22 @@ namespace MSearch.UI
             this.labelSelectiveDesc.Size = new System.Drawing.Size(204, 44);
             this.labelSelectiveDesc.TabIndex = 1;
             this.labelSelectiveDesc.Text = "Выбор этапов проверки";
+            this.labelSelectiveDesc.Click += new System.EventHandler(this.cardSelective_Click);
             // 
             // selectivePanel
             // 
             this.selectivePanel.BackColor = System.Drawing.Color.White;
             this.selectivePanel.Controls.Add(this.labelSelectiveHeader);
+            this.selectivePanel.Controls.Add(this.buttonClearSelection);
             this.selectivePanel.Controls.Add(this.stagesTable);
             this.selectivePanel.Controls.Add(this.selectiveBottom);
             this.selectivePanel.Location = new System.Drawing.Point(0, 120);
             this.selectivePanel.Margin = new System.Windows.Forms.Padding(0, 4, 0, 8);
             this.selectivePanel.Name = "selectivePanel";
-            this.selectivePanel.Size = new System.Drawing.Size(760, 246);
+            this.selectivePanel.Size = new System.Drawing.Size(824, 262);
             this.selectivePanel.TabIndex = 1;
             this.selectivePanel.Visible = false;
+            this.selectivePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
             // labelSelectiveHeader
             // 
@@ -321,6 +337,24 @@ namespace MSearch.UI
             this.labelSelectiveHeader.Size = new System.Drawing.Size(157, 25);
             this.labelSelectiveHeader.TabIndex = 0;
             this.labelSelectiveHeader.Text = "Этапы проверки";
+            // 
+            // buttonClearSelection
+            // 
+            this.buttonClearSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonClearSelection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
+            this.buttonClearSelection.CornerRadius = 6;
+            this.buttonClearSelection.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
+            this.buttonClearSelection.FlatAppearance.BorderSize = 0;
+            this.buttonClearSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonClearSelection.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.buttonClearSelection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
+            this.buttonClearSelection.Location = new System.Drawing.Point(638, 10);
+            this.buttonClearSelection.Name = "buttonClearSelection";
+            this.buttonClearSelection.Size = new System.Drawing.Size(150, 30);
+            this.buttonClearSelection.TabIndex = 2;
+            this.buttonClearSelection.Text = "Снять выделение";
+            this.buttonClearSelection.UseVisualStyleBackColor = false;
+            this.buttonClearSelection.Click += new System.EventHandler(this.buttonClearSelection_Click);
             // 
             // stagesTable
             // 
@@ -348,7 +382,7 @@ namespace MSearch.UI
             this.stagesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.stagesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.stagesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.stagesTable.Size = new System.Drawing.Size(724, 150);
+            this.stagesTable.Size = new System.Drawing.Size(788, 150);
             this.stagesTable.TabIndex = 1;
             // 
             // stageProcessesPanel
@@ -365,7 +399,7 @@ namespace MSearch.UI
             this.stageProcessesPanel.Name = "stageProcessesPanel";
             this.stageProcessesPanel.RowCount = 1;
             this.stageProcessesPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.stageProcessesPanel.Size = new System.Drawing.Size(344, 30);
+            this.stageProcessesPanel.Size = new System.Drawing.Size(376, 30);
             this.stageProcessesPanel.TabIndex = 0;
             // 
             // labelStageProcesses
@@ -376,7 +410,7 @@ namespace MSearch.UI
             this.labelStageProcesses.Location = new System.Drawing.Point(0, 0);
             this.labelStageProcesses.Margin = new System.Windows.Forms.Padding(0);
             this.labelStageProcesses.Name = "labelStageProcesses";
-            this.labelStageProcesses.Size = new System.Drawing.Size(282, 30);
+            this.labelStageProcesses.Size = new System.Drawing.Size(314, 30);
             this.labelStageProcesses.TabIndex = 0;
             this.labelStageProcesses.Text = "Процессы";
             this.labelStageProcesses.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -384,7 +418,7 @@ namespace MSearch.UI
             // toggleProcesses
             // 
             this.toggleProcesses.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleProcesses.Location = new System.Drawing.Point(296, 4);
+            this.toggleProcesses.Location = new System.Drawing.Point(328, 4);
             this.toggleProcesses.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleProcesses.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleProcesses.Name = "toggleProcesses";
@@ -405,12 +439,12 @@ namespace MSearch.UI
             this.stageRegistryPanel.Controls.Add(this.labelStageRegistry, 0, 0);
             this.stageRegistryPanel.Controls.Add(this.toggleRegistry, 1, 0);
             this.stageRegistryPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stageRegistryPanel.Location = new System.Drawing.Point(362, 0);
+            this.stageRegistryPanel.Location = new System.Drawing.Point(394, 0);
             this.stageRegistryPanel.Margin = new System.Windows.Forms.Padding(0, 0, 18, 0);
             this.stageRegistryPanel.Name = "stageRegistryPanel";
             this.stageRegistryPanel.RowCount = 1;
             this.stageRegistryPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.stageRegistryPanel.Size = new System.Drawing.Size(344, 30);
+            this.stageRegistryPanel.Size = new System.Drawing.Size(376, 30);
             this.stageRegistryPanel.TabIndex = 1;
             // 
             // labelStageRegistry
@@ -421,7 +455,7 @@ namespace MSearch.UI
             this.labelStageRegistry.Location = new System.Drawing.Point(0, 0);
             this.labelStageRegistry.Margin = new System.Windows.Forms.Padding(0);
             this.labelStageRegistry.Name = "labelStageRegistry";
-            this.labelStageRegistry.Size = new System.Drawing.Size(282, 30);
+            this.labelStageRegistry.Size = new System.Drawing.Size(314, 30);
             this.labelStageRegistry.TabIndex = 0;
             this.labelStageRegistry.Text = "Реестр";
             this.labelStageRegistry.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -429,7 +463,7 @@ namespace MSearch.UI
             // toggleRegistry
             // 
             this.toggleRegistry.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleRegistry.Location = new System.Drawing.Point(296, 4);
+            this.toggleRegistry.Location = new System.Drawing.Point(328, 4);
             this.toggleRegistry.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleRegistry.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleRegistry.Name = "toggleRegistry";
@@ -455,7 +489,7 @@ namespace MSearch.UI
             this.stageServicesPanel.Name = "stageServicesPanel";
             this.stageServicesPanel.RowCount = 1;
             this.stageServicesPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.stageServicesPanel.Size = new System.Drawing.Size(344, 30);
+            this.stageServicesPanel.Size = new System.Drawing.Size(376, 30);
             this.stageServicesPanel.TabIndex = 2;
             // 
             // labelStageServices
@@ -466,7 +500,7 @@ namespace MSearch.UI
             this.labelStageServices.Location = new System.Drawing.Point(0, 0);
             this.labelStageServices.Margin = new System.Windows.Forms.Padding(0);
             this.labelStageServices.Name = "labelStageServices";
-            this.labelStageServices.Size = new System.Drawing.Size(282, 30);
+            this.labelStageServices.Size = new System.Drawing.Size(314, 30);
             this.labelStageServices.TabIndex = 0;
             this.labelStageServices.Text = "Службы";
             this.labelStageServices.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -474,7 +508,7 @@ namespace MSearch.UI
             // toggleServices
             // 
             this.toggleServices.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleServices.Location = new System.Drawing.Point(296, 4);
+            this.toggleServices.Location = new System.Drawing.Point(328, 4);
             this.toggleServices.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleServices.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleServices.Name = "toggleServices";
@@ -495,12 +529,12 @@ namespace MSearch.UI
             this.stageTasksPanel.Controls.Add(this.labelStageTasks, 0, 0);
             this.stageTasksPanel.Controls.Add(this.toggleTasks, 1, 0);
             this.stageTasksPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stageTasksPanel.Location = new System.Drawing.Point(362, 30);
+            this.stageTasksPanel.Location = new System.Drawing.Point(394, 30);
             this.stageTasksPanel.Margin = new System.Windows.Forms.Padding(0, 0, 18, 0);
             this.stageTasksPanel.Name = "stageTasksPanel";
             this.stageTasksPanel.RowCount = 1;
             this.stageTasksPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.stageTasksPanel.Size = new System.Drawing.Size(344, 30);
+            this.stageTasksPanel.Size = new System.Drawing.Size(376, 30);
             this.stageTasksPanel.TabIndex = 3;
             // 
             // labelStageTasks
@@ -511,7 +545,7 @@ namespace MSearch.UI
             this.labelStageTasks.Location = new System.Drawing.Point(0, 0);
             this.labelStageTasks.Margin = new System.Windows.Forms.Padding(0);
             this.labelStageTasks.Name = "labelStageTasks";
-            this.labelStageTasks.Size = new System.Drawing.Size(282, 30);
+            this.labelStageTasks.Size = new System.Drawing.Size(314, 30);
             this.labelStageTasks.TabIndex = 0;
             this.labelStageTasks.Text = "Планировщик заданий";
             this.labelStageTasks.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -519,7 +553,7 @@ namespace MSearch.UI
             // toggleTasks
             // 
             this.toggleTasks.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleTasks.Location = new System.Drawing.Point(296, 4);
+            this.toggleTasks.Location = new System.Drawing.Point(328, 4);
             this.toggleTasks.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleTasks.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleTasks.Name = "toggleTasks";
@@ -545,7 +579,7 @@ namespace MSearch.UI
             this.stageFirewallPanel.Name = "stageFirewallPanel";
             this.stageFirewallPanel.RowCount = 1;
             this.stageFirewallPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.stageFirewallPanel.Size = new System.Drawing.Size(344, 30);
+            this.stageFirewallPanel.Size = new System.Drawing.Size(376, 30);
             this.stageFirewallPanel.TabIndex = 4;
             // 
             // labelStageFirewall
@@ -556,7 +590,7 @@ namespace MSearch.UI
             this.labelStageFirewall.Location = new System.Drawing.Point(0, 0);
             this.labelStageFirewall.Margin = new System.Windows.Forms.Padding(0);
             this.labelStageFirewall.Name = "labelStageFirewall";
-            this.labelStageFirewall.Size = new System.Drawing.Size(282, 30);
+            this.labelStageFirewall.Size = new System.Drawing.Size(314, 30);
             this.labelStageFirewall.TabIndex = 0;
             this.labelStageFirewall.Text = "Брандмауэр";
             this.labelStageFirewall.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -564,7 +598,7 @@ namespace MSearch.UI
             // toggleFirewall
             // 
             this.toggleFirewall.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleFirewall.Location = new System.Drawing.Point(296, 4);
+            this.toggleFirewall.Location = new System.Drawing.Point(328, 4);
             this.toggleFirewall.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleFirewall.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleFirewall.Name = "toggleFirewall";
@@ -585,12 +619,12 @@ namespace MSearch.UI
             this.stageHostsPanel.Controls.Add(this.labelStageHosts, 0, 0);
             this.stageHostsPanel.Controls.Add(this.toggleHosts, 1, 0);
             this.stageHostsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stageHostsPanel.Location = new System.Drawing.Point(362, 60);
+            this.stageHostsPanel.Location = new System.Drawing.Point(394, 60);
             this.stageHostsPanel.Margin = new System.Windows.Forms.Padding(0, 0, 18, 0);
             this.stageHostsPanel.Name = "stageHostsPanel";
             this.stageHostsPanel.RowCount = 1;
             this.stageHostsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.stageHostsPanel.Size = new System.Drawing.Size(344, 30);
+            this.stageHostsPanel.Size = new System.Drawing.Size(376, 30);
             this.stageHostsPanel.TabIndex = 5;
             // 
             // labelStageHosts
@@ -601,7 +635,7 @@ namespace MSearch.UI
             this.labelStageHosts.Location = new System.Drawing.Point(0, 0);
             this.labelStageHosts.Margin = new System.Windows.Forms.Padding(0);
             this.labelStageHosts.Name = "labelStageHosts";
-            this.labelStageHosts.Size = new System.Drawing.Size(282, 30);
+            this.labelStageHosts.Size = new System.Drawing.Size(314, 30);
             this.labelStageHosts.TabIndex = 0;
             this.labelStageHosts.Text = "Файл hosts";
             this.labelStageHosts.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -609,7 +643,7 @@ namespace MSearch.UI
             // toggleHosts
             // 
             this.toggleHosts.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleHosts.Location = new System.Drawing.Point(296, 4);
+            this.toggleHosts.Location = new System.Drawing.Point(328, 4);
             this.toggleHosts.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleHosts.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleHosts.Name = "toggleHosts";
@@ -635,7 +669,7 @@ namespace MSearch.UI
             this.stageUserProfilesPanel.Name = "stageUserProfilesPanel";
             this.stageUserProfilesPanel.RowCount = 1;
             this.stageUserProfilesPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.stageUserProfilesPanel.Size = new System.Drawing.Size(344, 30);
+            this.stageUserProfilesPanel.Size = new System.Drawing.Size(376, 30);
             this.stageUserProfilesPanel.TabIndex = 6;
             // 
             // labelStageUserProfiles
@@ -646,7 +680,7 @@ namespace MSearch.UI
             this.labelStageUserProfiles.Location = new System.Drawing.Point(0, 0);
             this.labelStageUserProfiles.Margin = new System.Windows.Forms.Padding(0);
             this.labelStageUserProfiles.Name = "labelStageUserProfiles";
-            this.labelStageUserProfiles.Size = new System.Drawing.Size(282, 30);
+            this.labelStageUserProfiles.Size = new System.Drawing.Size(314, 30);
             this.labelStageUserProfiles.TabIndex = 0;
             this.labelStageUserProfiles.Text = "Профили пользователей";
             this.labelStageUserProfiles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -654,7 +688,7 @@ namespace MSearch.UI
             // toggleUserProfiles
             // 
             this.toggleUserProfiles.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleUserProfiles.Location = new System.Drawing.Point(296, 4);
+            this.toggleUserProfiles.Location = new System.Drawing.Point(328, 4);
             this.toggleUserProfiles.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleUserProfiles.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleUserProfiles.Name = "toggleUserProfiles";
@@ -675,12 +709,12 @@ namespace MSearch.UI
             this.stageWmiPanel.Controls.Add(this.labelStageWmi, 0, 0);
             this.stageWmiPanel.Controls.Add(this.toggleWmi, 1, 0);
             this.stageWmiPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stageWmiPanel.Location = new System.Drawing.Point(362, 90);
+            this.stageWmiPanel.Location = new System.Drawing.Point(394, 90);
             this.stageWmiPanel.Margin = new System.Windows.Forms.Padding(0, 0, 18, 0);
             this.stageWmiPanel.Name = "stageWmiPanel";
             this.stageWmiPanel.RowCount = 1;
             this.stageWmiPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.stageWmiPanel.Size = new System.Drawing.Size(344, 30);
+            this.stageWmiPanel.Size = new System.Drawing.Size(376, 30);
             this.stageWmiPanel.TabIndex = 7;
             // 
             // labelStageWmi
@@ -691,7 +725,7 @@ namespace MSearch.UI
             this.labelStageWmi.Location = new System.Drawing.Point(0, 0);
             this.labelStageWmi.Margin = new System.Windows.Forms.Padding(0);
             this.labelStageWmi.Name = "labelStageWmi";
-            this.labelStageWmi.Size = new System.Drawing.Size(282, 30);
+            this.labelStageWmi.Size = new System.Drawing.Size(314, 30);
             this.labelStageWmi.TabIndex = 0;
             this.labelStageWmi.Text = "WMI";
             this.labelStageWmi.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -699,7 +733,7 @@ namespace MSearch.UI
             // toggleWmi
             // 
             this.toggleWmi.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleWmi.Location = new System.Drawing.Point(296, 4);
+            this.toggleWmi.Location = new System.Drawing.Point(328, 4);
             this.toggleWmi.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleWmi.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleWmi.Name = "toggleWmi";
@@ -725,7 +759,7 @@ namespace MSearch.UI
             this.stageRootkitsPanel.Name = "stageRootkitsPanel";
             this.stageRootkitsPanel.RowCount = 1;
             this.stageRootkitsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.stageRootkitsPanel.Size = new System.Drawing.Size(344, 30);
+            this.stageRootkitsPanel.Size = new System.Drawing.Size(376, 30);
             this.stageRootkitsPanel.TabIndex = 8;
             // 
             // labelStageRootkits
@@ -736,7 +770,7 @@ namespace MSearch.UI
             this.labelStageRootkits.Location = new System.Drawing.Point(0, 0);
             this.labelStageRootkits.Margin = new System.Windows.Forms.Padding(0);
             this.labelStageRootkits.Name = "labelStageRootkits";
-            this.labelStageRootkits.Size = new System.Drawing.Size(282, 30);
+            this.labelStageRootkits.Size = new System.Drawing.Size(314, 30);
             this.labelStageRootkits.TabIndex = 0;
             this.labelStageRootkits.Text = "Руткиты";
             this.labelStageRootkits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -744,7 +778,7 @@ namespace MSearch.UI
             // toggleRootkits
             // 
             this.toggleRootkits.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleRootkits.Location = new System.Drawing.Point(296, 4);
+            this.toggleRootkits.Location = new System.Drawing.Point(328, 4);
             this.toggleRootkits.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleRootkits.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleRootkits.Name = "toggleRootkits";
@@ -765,12 +799,12 @@ namespace MSearch.UI
             this.stageSignaturesPanel.Controls.Add(this.labelStageSignatures, 0, 0);
             this.stageSignaturesPanel.Controls.Add(this.toggleSignatures, 1, 0);
             this.stageSignaturesPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stageSignaturesPanel.Location = new System.Drawing.Point(362, 120);
+            this.stageSignaturesPanel.Location = new System.Drawing.Point(394, 120);
             this.stageSignaturesPanel.Margin = new System.Windows.Forms.Padding(0, 0, 18, 0);
             this.stageSignaturesPanel.Name = "stageSignaturesPanel";
             this.stageSignaturesPanel.RowCount = 1;
             this.stageSignaturesPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.stageSignaturesPanel.Size = new System.Drawing.Size(344, 30);
+            this.stageSignaturesPanel.Size = new System.Drawing.Size(376, 30);
             this.stageSignaturesPanel.TabIndex = 9;
             // 
             // labelStageSignatures
@@ -781,7 +815,7 @@ namespace MSearch.UI
             this.labelStageSignatures.Location = new System.Drawing.Point(0, 0);
             this.labelStageSignatures.Margin = new System.Windows.Forms.Padding(0);
             this.labelStageSignatures.Name = "labelStageSignatures";
-            this.labelStageSignatures.Size = new System.Drawing.Size(282, 30);
+            this.labelStageSignatures.Size = new System.Drawing.Size(314, 30);
             this.labelStageSignatures.TabIndex = 0;
             this.labelStageSignatures.Text = "Сигнатуры";
             this.labelStageSignatures.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -789,7 +823,7 @@ namespace MSearch.UI
             // toggleSignatures
             // 
             this.toggleSignatures.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleSignatures.Location = new System.Drawing.Point(296, 4);
+            this.toggleSignatures.Location = new System.Drawing.Point(328, 4);
             this.toggleSignatures.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleSignatures.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleSignatures.Name = "toggleSignatures";
@@ -810,9 +844,9 @@ namespace MSearch.UI
             this.selectiveBottom.Controls.Add(this.textFolder);
             this.selectiveBottom.Controls.Add(this.buttonBrowse);
             this.selectiveBottom.Controls.Add(this.buttonStartSelective);
-            this.selectiveBottom.Location = new System.Drawing.Point(18, 196);
+            this.selectiveBottom.Location = new System.Drawing.Point(18, 212);
             this.selectiveBottom.Name = "selectiveBottom";
-            this.selectiveBottom.Size = new System.Drawing.Size(724, 44);
+            this.selectiveBottom.Size = new System.Drawing.Size(788, 44);
             this.selectiveBottom.TabIndex = 2;
             // 
             // checkFolder
@@ -826,6 +860,7 @@ namespace MSearch.UI
             this.checkFolder.TabIndex = 0;
             this.checkFolder.Text = "Сканировать папку";
             this.checkFolder.UseVisualStyleBackColor = true;
+            this.checkFolder.CheckedChanged += new System.EventHandler(this.checkFolder_CheckedChanged);
             // 
             // textFolder
             // 
@@ -836,7 +871,7 @@ namespace MSearch.UI
             this.textFolder.Location = new System.Drawing.Point(200, 9);
             this.textFolder.Name = "textFolder";
             this.textFolder.ReadOnly = true;
-            this.textFolder.Size = new System.Drawing.Size(224, 25);
+            this.textFolder.Size = new System.Drawing.Size(288, 25);
             this.textFolder.TabIndex = 1;
             // 
             // buttonBrowse
@@ -850,12 +885,13 @@ namespace MSearch.UI
             this.buttonBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonBrowse.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.buttonBrowse.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.buttonBrowse.Location = new System.Drawing.Point(434, 6);
+            this.buttonBrowse.Location = new System.Drawing.Point(498, 6);
             this.buttonBrowse.Name = "buttonBrowse";
             this.buttonBrowse.Size = new System.Drawing.Size(110, 32);
             this.buttonBrowse.TabIndex = 2;
             this.buttonBrowse.Text = "Обзор...";
             this.buttonBrowse.UseVisualStyleBackColor = false;
+            this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
             // 
             // buttonStartSelective
             // 
@@ -867,20 +903,21 @@ namespace MSearch.UI
             this.buttonStartSelective.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonStartSelective.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.buttonStartSelective.ForeColor = System.Drawing.Color.White;
-            this.buttonStartSelective.Location = new System.Drawing.Point(554, 2);
+            this.buttonStartSelective.Location = new System.Drawing.Point(618, 2);
             this.buttonStartSelective.Name = "buttonStartSelective";
             this.buttonStartSelective.Size = new System.Drawing.Size(170, 40);
             this.buttonStartSelective.TabIndex = 3;
             this.buttonStartSelective.Text = "Начать проверку";
             this.buttonStartSelective.UseVisualStyleBackColor = false;
+            this.buttonStartSelective.Click += new System.EventHandler(this.buttonStartSelective_Click);
             // 
             // labelHint
             // 
             this.labelHint.AutoSize = true;
             this.labelHint.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.labelHint.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(112)))), ((int)(((byte)(120)))), ((int)(((byte)(132)))));
-            this.labelHint.Location = new System.Drawing.Point(2, 388);
-            this.labelHint.Margin = new System.Windows.Forms.Padding(2, 14, 0, 0);
+            this.labelHint.Location = new System.Drawing.Point(0, 404);
+            this.labelHint.Margin = new System.Windows.Forms.Padding(0, 14, 0, 0);
             this.labelHint.Name = "labelHint";
             this.labelHint.Size = new System.Drawing.Size(277, 19);
             this.labelHint.TabIndex = 2;
@@ -897,8 +934,9 @@ namespace MSearch.UI
             this.statusPanel.Location = new System.Drawing.Point(0, 452);
             this.statusPanel.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.statusPanel.Name = "statusPanel";
-            this.statusPanel.Size = new System.Drawing.Size(842, 88);
+            this.statusPanel.Size = new System.Drawing.Size(851, 88);
             this.statusPanel.TabIndex = 2;
+            this.statusPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
             // labelStage
             // 
@@ -935,10 +973,10 @@ namespace MSearch.UI
             // buttonStop
             // 
             this.buttonStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonStop.BackColor = System.Drawing.Color.White;
+            this.buttonStop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
             this.buttonStop.CornerRadius = 6;
             this.buttonStop.Enabled = false;
-            this.buttonStop.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.buttonStop.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
             this.buttonStop.FlatAppearance.BorderSize = 0;
             this.buttonStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonStop.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -947,8 +985,9 @@ namespace MSearch.UI
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(130, 40);
             this.buttonStop.TabIndex = 3;
-            this.buttonStop.Text = "Стоп";
+            this.buttonStop.Text = "Stop";
             this.buttonStop.UseVisualStyleBackColor = false;
+            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
             // 
             // countersTable
             // 
@@ -968,7 +1007,7 @@ namespace MSearch.UI
             this.countersTable.Name = "countersTable";
             this.countersTable.RowCount = 1;
             this.countersTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.countersTable.Size = new System.Drawing.Size(842, 86);
+            this.countersTable.Size = new System.Drawing.Size(851, 86);
             this.countersTable.TabIndex = 3;
             // 
             // panelFound
@@ -980,8 +1019,9 @@ namespace MSearch.UI
             this.panelFound.Location = new System.Drawing.Point(0, 0);
             this.panelFound.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
             this.panelFound.Name = "panelFound";
-            this.panelFound.Size = new System.Drawing.Size(198, 86);
+            this.panelFound.Size = new System.Drawing.Size(200, 86);
             this.panelFound.TabIndex = 0;
+            this.panelFound.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
             // labelFoundValue
             // 
@@ -1011,11 +1051,12 @@ namespace MSearch.UI
             this.panelNeutralized.Controls.Add(this.labelNeutralizedValue);
             this.panelNeutralized.Controls.Add(this.labelNeutralizedCaption);
             this.panelNeutralized.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelNeutralized.Location = new System.Drawing.Point(210, 0);
+            this.panelNeutralized.Location = new System.Drawing.Point(212, 0);
             this.panelNeutralized.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
             this.panelNeutralized.Name = "panelNeutralized";
-            this.panelNeutralized.Size = new System.Drawing.Size(198, 86);
+            this.panelNeutralized.Size = new System.Drawing.Size(200, 86);
             this.panelNeutralized.TabIndex = 1;
+            this.panelNeutralized.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
             // labelNeutralizedValue
             // 
@@ -1045,11 +1086,12 @@ namespace MSearch.UI
             this.panelSuspicious.Controls.Add(this.labelSuspiciousValue);
             this.panelSuspicious.Controls.Add(this.labelSuspiciousCaption);
             this.panelSuspicious.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelSuspicious.Location = new System.Drawing.Point(420, 0);
+            this.panelSuspicious.Location = new System.Drawing.Point(424, 0);
             this.panelSuspicious.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
             this.panelSuspicious.Name = "panelSuspicious";
-            this.panelSuspicious.Size = new System.Drawing.Size(198, 86);
+            this.panelSuspicious.Size = new System.Drawing.Size(200, 86);
             this.panelSuspicious.TabIndex = 2;
+            this.panelSuspicious.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
             // labelSuspiciousValue
             // 
@@ -1079,11 +1121,12 @@ namespace MSearch.UI
             this.panelSkipped.Controls.Add(this.labelSkippedValue);
             this.panelSkipped.Controls.Add(this.labelSkippedCaption);
             this.panelSkipped.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelSkipped.Location = new System.Drawing.Point(630, 0);
+            this.panelSkipped.Location = new System.Drawing.Point(636, 0);
             this.panelSkipped.Margin = new System.Windows.Forms.Padding(0);
             this.panelSkipped.Name = "panelSkipped";
-            this.panelSkipped.Size = new System.Drawing.Size(212, 86);
+            this.panelSkipped.Size = new System.Drawing.Size(215, 86);
             this.panelSkipped.TabIndex = 3;
+            this.panelSkipped.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
             // labelSkippedValue
             // 
@@ -1106,32 +1149,6 @@ namespace MSearch.UI
             this.labelSkippedCaption.Size = new System.Drawing.Size(74, 15);
             this.labelSkippedCaption.TabIndex = 1;
             this.labelSkippedCaption.Text = "Пропущено";
-            this.cardQuick.Click += new System.EventHandler(this.cardQuick_Click);
-            this.labelQuickTitle.Click += new System.EventHandler(this.cardQuick_Click);
-            this.labelQuickDesc.Click += new System.EventHandler(this.cardQuick_Click);
-            this.cardFull.Click += new System.EventHandler(this.cardFull_Click);
-            this.labelFullTitle.Click += new System.EventHandler(this.cardFull_Click);
-            this.labelFullDesc.Click += new System.EventHandler(this.cardFull_Click);
-            this.cardSelective.Click += new System.EventHandler(this.cardSelective_Click);
-            this.labelSelectiveTitle.Click += new System.EventHandler(this.cardSelective_Click);
-            this.labelSelectiveDesc.Click += new System.EventHandler(this.cardSelective_Click);
-
-            this.cardQuick.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
-            this.cardFull.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
-            this.cardSelective.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
-            this.selectivePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
-            this.statusPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
-            this.panelFound.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
-            this.panelNeutralized.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
-            this.panelSuspicious.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
-            this.panelSkipped.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
-
-            this.checkFolder.CheckedChanged += new System.EventHandler(this.checkFolder_CheckedChanged);
-            this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
-            this.buttonStartSelective.Click += new System.EventHandler(this.buttonStartSelective_Click);
-            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
-            this.contentFlow.SizeChanged += new System.EventHandler(this.contentFlow_SizeChanged);
-
             // 
             // ScanPage
             // 
@@ -1234,6 +1251,7 @@ namespace MSearch.UI
         private System.Windows.Forms.TextBox textFolder;
         private MSearch.UI.RoundButton buttonBrowse;
         private MSearch.UI.RoundButton buttonStartSelective;
+        private MSearch.UI.RoundButton buttonClearSelection;
         private System.Windows.Forms.Label labelHint;
         private System.Windows.Forms.Panel statusPanel;
         private System.Windows.Forms.Label labelStage;

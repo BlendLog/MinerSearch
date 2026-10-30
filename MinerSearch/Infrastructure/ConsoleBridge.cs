@@ -74,20 +74,40 @@ namespace MSearch
                 return;
 
             // Console.Out/In могли быть закэшированы как пустые потоки до подключения.
+            // Кодировка — кодовая страница самой консоли: UTF-8 в OEM-консоли выводится как мусор.
             try
             {
-                StreamWriter stdout = new StreamWriter(Console.OpenStandardOutput(), Encoding.UTF8);
+                Encoding outputEncoding = GetConsoleEncoding(Native.GetConsoleOutputCP());
+                Encoding inputEncoding = GetConsoleEncoding(Native.GetConsoleCP());
+
+                StreamWriter stdout = new StreamWriter(Console.OpenStandardOutput(), outputEncoding);
                 stdout.AutoFlush = true;
                 Console.SetOut(stdout);
 
-                StreamWriter stderr = new StreamWriter(Console.OpenStandardError(), Encoding.UTF8);
+                StreamWriter stderr = new StreamWriter(Console.OpenStandardError(), outputEncoding);
                 stderr.AutoFlush = true;
                 Console.SetError(stderr);
 
-                StreamReader stdin = new StreamReader(Console.OpenStandardInput(), Encoding.UTF8);
+                StreamReader stdin = new StreamReader(Console.OpenStandardInput(), inputEncoding);
                 Console.SetIn(stdin);
             }
             catch { }
+        }
+
+        private static Encoding GetConsoleEncoding(uint codePage)
+        {
+            // Encoding.UTF8 записал бы BOM в начало вывода консоли.
+            if (codePage == 65001)
+                return new UTF8Encoding(false);
+
+            try
+            {
+                if (codePage != 0)
+                    return Encoding.GetEncoding((int)codePage);
+            }
+            catch { }
+
+            return Console.OutputEncoding;
         }
 
         public static void Hide()
@@ -95,13 +115,6 @@ namespace MSearch
             IntPtr handle = Native.GetConsoleWindow();
             if (handle != IntPtr.Zero)
                 Native.ShowWindow(handle, Native.SW_HIDE);
-        }
-
-        public static void Minimize()
-        {
-            IntPtr handle = Native.GetConsoleWindow();
-            if (handle != IntPtr.Zero)
-                Native.ShowWindow(handle, Native.SW_MINIMIZE);
         }
 
         public static void SafeSetTitle(string title)

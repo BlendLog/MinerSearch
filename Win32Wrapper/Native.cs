@@ -112,6 +112,12 @@ namespace Win32Wrapper
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool FreeConsole();
 
+        [DllImport("kernel32.dll")]
+        public static extern uint GetConsoleOutputCP();
+
+        [DllImport("kernel32.dll")]
+        public static extern uint GetConsoleCP();
+
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern uint GetFileType(IntPtr hFile);
 
@@ -671,6 +677,23 @@ namespace Win32Wrapper
         public const uint R77_SIGNATURE = 0x7277;
         public const uint R77_SERVICE_SIGNATURE = 0x7273;
         public const uint R77_HELPER_SIGNATURE = 0x7268;
+
+        // --- Определение монитора и его DPI (для адаптивного стартового размера GUI) ---
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MONITOR_POINT
+        {
+            public int X;
+            public int Y;
+        }
+
+        public const uint MONITOR_DEFAULTTONEAREST = 2;
+        public const int MDT_EFFECTIVE_DPI = 0;
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr MonitorFromPoint(MONITOR_POINT pt, uint dwFlags);
+
+        [DllImport("Shcore.dll")]
+        public static extern int GetDpiForMonitor(IntPtr hmonitor, int dpiType, out uint dpiX, out uint dpiY);
 
 
         public const int R77_HEADER_OFFSET = 0x28;

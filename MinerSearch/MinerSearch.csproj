@@ -168,12 +168,6 @@
     <Compile Include="Infrastructure\TaskParser.cs" />
     <Compile Include="UI\DataGridViewCheckBoxHeaderCell.cs" />
     <Compile Include="UI\DialogDispatcher.cs" />
-    <Compile Include="UI\FormSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FormSettings.Designer.cs">
-      <DependentUpon>FormSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\ThreatReviewPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -196,26 +190,8 @@
       <DependentUpon>QuarantinePage.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\QuarantineConsoleHandler.cs" />
-    <Compile Include="UI\QuarantineForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\QuarantineForm.Designer.cs">
-      <DependentUpon>QuarantineForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\QuarantineRestoreForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\QuarantineRestoreForm.Designer.cs">
-      <DependentUpon>QuarantineRestoreForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\RoundButton.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UI\FinishEx.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FinishEx.Designer.cs">
-      <DependentUpon>FinishEx.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\FormShadow.cs">
       <SubType>Form</SubType>
@@ -300,24 +276,11 @@
     <None Include="Resources\telegram_logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UI\FormSettings.resx">
-      <DependentUpon>FormSettings.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UI\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\MessageBoxCustom.resx">
       <DependentUpon>MessageBoxCustom.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\QuarantineForm.resx">
-      <DependentUpon>QuarantineForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\QuarantineRestoreForm.resx">
-      <DependentUpon>QuarantineRestoreForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\FinishEx.resx">
-      <DependentUpon>FinishEx.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\FormShadow.resx">
       <DependentUpon>FormShadow.cs</DependentUpon>
@@ -336,6 +299,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ScanPage.resx">
       <DependentUpon>ScanPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SettingsPage.resx">
+      <DependentUpon>SettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ThreatReviewPage.resx">
+      <DependentUpon>ThreatReviewPage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

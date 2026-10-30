@@ -69,7 +69,13 @@ namespace MSearch.UI
         {
             InitializeComponent();
 
+            ApplyAdaptiveWindowSize();
+
             Text = Utils.GetRndString();
+
+            // Логотип должен быть поверх панели навигации: она занимает всю
+            // высоту сайдбара и иначе закрывает его своим фоном.
+            labelLogo.BringToFront();
 
             _scanPage = new ScanPage();
             _resultsPage = new ResultsPage();
@@ -86,6 +92,63 @@ namespace MSearch.UI
 
             WirePageEvents();
             ShowPage(LaunchOptions.GetInstance.QuarantineMode ? "quarantine" : "scan");
+        }
+
+        /// <summary>
+        /// Подбирает стартовый размер окна под монитор, на котором находится курсор,
+        /// с учётом масштабирования дисплея. Приложение DPI-unaware, поэтому
+        /// рабочая область монитора переводится в его логические единицы.
+        /// </summary>
+        private void ApplyAdaptiveWindowSize()
+        {
+            Screen screen = Screen.FromPoint(Cursor.Position);
+            if (screen == null)
+                screen = Screen.PrimaryScreen;
+
+            Rectangle work = screen.WorkingArea;
+            float scale = GetMonitorScale(screen);
+
+            int logicalWidth = Math.Max(1, (int)Math.Round(work.Width / scale));
+            int logicalHeight = Math.Max(1, (int)Math.Round(work.Height / scale));
+
+            int width = Math.Max(MinimumSize.Width, Math.Min(1400, logicalWidth - 80));
+            int height = Math.Max(MinimumSize.Height, Math.Min(900, logicalHeight - 80));
+
+            ClientSize = new Size(width, height);
+
+            StartPosition = FormStartPosition.Manual;
+            int logicalLeft = (int)Math.Round(work.Left / scale);
+            int logicalTop = (int)Math.Round(work.Top / scale);
+            Location = new Point(
+                logicalLeft + Math.Max(0, (logicalWidth - width) / 2),
+                logicalTop + Math.Max(0, (logicalHeight - height) / 2));
+        }
+
+        private static float GetMonitorScale(Screen screen)
+        {
+            try
+            {
+                Native.MONITOR_POINT point = new Native.MONITOR_POINT
+                {
+                    X = screen.Bounds.Left + screen.Bounds.Width / 2,
+                    Y = screen.Bounds.Top + screen.Bounds.Height / 2
+                };
+
+                IntPtr monitor = Native.MonitorFromPoint(point, Native.MONITOR_DEFAULTTONEAREST);
+                uint dpiX;
+                uint dpiY;
+
+                if (monitor != IntPtr.Zero &&
+                    Native.GetDpiForMonitor(monitor, Native.MDT_EFFECTIVE_DPI, out dpiX, out dpiY) == 0 &&
+                    dpiX > 0)
+                {
+                    return dpiX / 96f;
+                }
+            }
+            catch (DllNotFoundException) { }
+            catch (EntryPointNotFoundException) { }
+
+            return 1f;
         }
 
         private void buttonNavScan_Click(object sender, EventArgs e)
@@ -170,30 +233,37 @@ namespace MSearch.UI
             panelContent.SuspendLayout();
             panelContent.Controls.Clear();
 
+            Control page;
             switch (key)
             {
                 case "results":
-                    panelContent.Controls.Add(_resultsPage);
+                    page = _resultsPage;
                     break;
                 case "review":
-                    panelContent.Controls.Add(_threatReviewPage);
+                    page = _threatReviewPage;
                     break;
                 case "quarantine":
-                    panelContent.Controls.Add(_quarantinePage);
-                    RefreshQuarantine();
+                    page = _quarantinePage;
                     break;
                 case "settings":
-                    panelContent.Controls.Add(_settingsPage);
+                    page = _settingsPage;
                     break;
                 case "about":
-                    panelContent.Controls.Add(_aboutPage);
+                    page = _aboutPage;
                     break;
                 default:
-                    panelContent.Controls.Add(_scanPage);
+                    page = _scanPage;
                     break;
             }
 
+            // Страницы должны растягиваться вместе с рабочей областью,
+            // иначе их содержимое обрезается при уменьшении окна.
+            page.Dock = DockStyle.Fill;
+            panelContent.Controls.Add(page);
             panelContent.ResumeLayout();
+
+            if (key == "quarantine")
+                RefreshQuarantine();
 
             foreach (KeyValuePair<string, Button> pair in _navButtons)
             {
@@ -452,9 +522,9 @@ namespace MSearch.UI
 
             try
             {
-                await Task.Run(delegate
+                await Task.Run(async delegate
                 {
-                    MinerSearch.SentLog(statistics.Found, statistics.Neutralized, statistics.Skipped, logPath);
+                    await MinerSearch.SentLogAsync(statistics.Found, statistics.Neutralized, statistics.Skipped, logPath);
                 });
             }
             catch (Exception ex)

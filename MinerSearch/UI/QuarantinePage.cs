@@ -13,7 +13,6 @@ namespace MSearch.UI
 {
     /// <summary>
     /// Страница карантина: список объектов, восстановление и удаление.
-    /// Заменяет отдельную форму QuarantineForm.
     /// </summary>
     public partial class QuarantinePage : UserControl
     {
@@ -70,14 +69,22 @@ namespace MSearch.UI
                 Name = ColPath,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 FillWeight = 42F,
+                MinimumWidth = 500,
                 SortMode = DataGridViewColumnSortMode.NotSortable
             });
+
+            DataGridViewColumn quarantinePathColumn = dataGridQuarantine.Columns[ColPath];
+            quarantinePathColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            quarantinePathColumn.Width = 500;
+            quarantinePathColumn.MinimumWidth = 300;
+            quarantinePathColumn.Resizable = DataGridViewTriState.True;
 
             dataGridQuarantine.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = ColSize,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 FillWeight = 10F,
+                MinimumWidth = 100,
                 SortMode = DataGridViewColumnSortMode.NotSortable
             });
 
@@ -86,6 +93,7 @@ namespace MSearch.UI
                 Name = ColType,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 FillWeight = 16F,
+                MinimumWidth = 130,
                 SortMode = DataGridViewColumnSortMode.NotSortable
             });
 
@@ -94,8 +102,11 @@ namespace MSearch.UI
                 Name = ColHash,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 FillWeight = 28F,
+                MinimumWidth = 180,
                 SortMode = DataGridViewColumnSortMode.NotSortable
             });
+
+            dataGridQuarantine.ScrollBars = ScrollBars.Both;
 
             dataGridQuarantine.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
             {

@@ -97,7 +97,8 @@ namespace MSearch.UI
                 DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox,
                 FlatStyle = FlatStyle.Flat,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 18F
+                FillWeight = 18F,
+                MinimumWidth = 170
             };
             dataGridReview.Columns.Add(colNewAction);
 
@@ -106,7 +107,8 @@ namespace MSearch.UI
                 Name = ColCurrentAction,
                 ReadOnly = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 18F
+                FillWeight = 18F,
+                MinimumWidth = 170
             });
 
             dataGridReview.Columns.Add(new DataGridViewTextBoxColumn
@@ -114,7 +116,8 @@ namespace MSearch.UI
                 Name = ColClass,
                 ReadOnly = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 13F
+                FillWeight = 13F,
+                MinimumWidth = 130
             });
 
             dataGridReview.Columns.Add(new DataGridViewTextBoxColumn
@@ -122,7 +125,8 @@ namespace MSearch.UI
                 Name = ColType,
                 ReadOnly = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 13F
+                FillWeight = 13F,
+                MinimumWidth = 150
             });
 
             dataGridReview.Columns.Add(new DataGridViewTextBoxColumn
@@ -130,8 +134,19 @@ namespace MSearch.UI
                 Name = ColPath,
                 ReadOnly = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 38F
+                FillWeight = 38F,
+                MinimumWidth = 500
             });
+
+            // Путь тянется мышью и может выйти за ширину окна (h-scroll),
+            // чтобы можно было прочитать полный путь.
+            DataGridViewColumn reviewPathColumn = dataGridReview.Columns[ColPath];
+            reviewPathColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            reviewPathColumn.Width = 500;
+            reviewPathColumn.MinimumWidth = 300;
+            reviewPathColumn.Resizable = DataGridViewTriState.True;
+
+            dataGridReview.ScrollBars = ScrollBars.Both;
 
             DataGridViewCellStyle headerStyle = new DataGridViewCellStyle
             {

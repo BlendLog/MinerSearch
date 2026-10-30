@@ -256,7 +256,7 @@ namespace MSearch.Core.Managers
             if (result == ApplyResult.Error && !string.IsNullOrEmpty(decision.ApplyErrorMessage))
                 note = string.IsNullOrEmpty(note) ? decision.ApplyErrorMessage : note + " | " + decision.ApplyErrorMessage;
 
-            // Удаление запланировано на перезагрузку — помечаем в столбце Note (FinishEx)
+            // Удаление запланировано на перезагрузку — помечаем в столбце Note
             if (actionType == ScanActionType.RebootPending)
             {
                 string rebootNote = AppConfig.GetInstance.LL.GetLocalizedString("_RebootPendingNote");
