@@ -145,7 +145,7 @@ namespace MSearch.UI
             this.dataGridResults.ReadOnly = true;
             this.dataGridResults.RowHeadersVisible = false;
             this.dataGridResults.RowTemplate.Height = 30;
-            this.dataGridResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridResults.Size = new System.Drawing.Size(840, 446);
             this.dataGridResults.TabIndex = 0;
             this.dataGridResults.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.Grid_RowsAdded);

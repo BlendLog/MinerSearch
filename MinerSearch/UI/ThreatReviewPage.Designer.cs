@@ -234,7 +234,7 @@ namespace MSearch.UI
             this.comboBulk.Location = new System.Drawing.Point(0, 3);
             this.comboBulk.Margin = new System.Windows.Forms.Padding(0, 3, 10, 0);
             this.comboBulk.Name = "comboBulk";
-            this.comboBulk.Size = new System.Drawing.Size(248, 25);
+            this.comboBulk.Size = new System.Drawing.Size(150, 25);
             this.comboBulk.TabIndex = 0;
             // 
             // btnBulkApply
@@ -246,7 +246,7 @@ namespace MSearch.UI
             this.btnBulkApply.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBulkApply.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnBulkApply.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.btnBulkApply.Location = new System.Drawing.Point(258, 0);
+            this.btnBulkApply.Location = new System.Drawing.Point(160, 0);
             this.btnBulkApply.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
             this.btnBulkApply.Name = "btnBulkApply";
             this.btnBulkApply.Size = new System.Drawing.Size(150, 34);
@@ -264,7 +264,7 @@ namespace MSearch.UI
             this.btnSetRecommended.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSetRecommended.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnSetRecommended.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.btnSetRecommended.Location = new System.Drawing.Point(418, 0);
+            this.btnSetRecommended.Location = new System.Drawing.Point(320, 0);
             this.btnSetRecommended.Margin = new System.Windows.Forms.Padding(0);
             this.btnSetRecommended.Name = "btnSetRecommended";
             this.btnSetRecommended.Size = new System.Drawing.Size(190, 34);

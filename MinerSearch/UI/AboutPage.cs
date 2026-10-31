@@ -11,6 +11,8 @@ namespace MSearch.UI
     /// </summary>
     public partial class AboutPage : UserControl
     {
+        private string _deviceId;
+
         public AboutPage()
         {
             InitializeComponent();
@@ -21,7 +23,8 @@ namespace MSearch.UI
             {
                 labelAppName.Text = AppConfig.GetInstance._title;
                 labelVersion.Text = L("_About_Version").Replace("#VERSION#", AppConfig.GetInstance.CurrentVersion);
-                linkDeviceId.Text = DeviceIdProvider.GetDeviceId();
+                _deviceId = DeviceIdProvider.GetDeviceId();
+                linkDeviceId.Text = _deviceId;
                 UpdateDisclaimerWidth();
                 ApplyLanguage();
             }
@@ -53,8 +56,8 @@ namespace MSearch.UI
         {
             try
             {
-                Clipboard.SetText(linkDeviceId.Text);
-                linkDeviceId.Text = L("_EventCopyText");
+                Clipboard.SetText(_deviceId);
+                linkDeviceId.LinkVisited = true;
             }
             catch { }
         }
@@ -62,11 +65,6 @@ namespace MSearch.UI
         private void linkTelegram_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             OpenUrl("https://t.me/MinerSearch_blog");
-        }
-
-        private void buttonDonate_Click(object sender, EventArgs e)
-        {
-            OpenUrl("https://blendlog.github.io/donate.html");
         }
 
         private static void OpenUrl(string url)
@@ -79,7 +77,6 @@ namespace MSearch.UI
             labelTitle.Text = L("_About");
             labelVersion.Text = L("_About_Version").Replace("#VERSION#", AppConfig.GetInstance.CurrentVersion);
             labelDeviceIdCaption.Text = L("_About_DeviceId");
-            buttonDonate.Text = L("_DonateBtn");
             labelDisclaimer.Text = L("_About_Disclaimer");
         }
 

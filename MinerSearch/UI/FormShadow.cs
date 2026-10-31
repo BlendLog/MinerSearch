@@ -32,8 +32,8 @@ namespace MSearch
             public int bottomHeight;
         }
 
-        private const int SHADOW_SIZE = 16;
-        private const int SHADOW_EXTRA = 32; // запас для размытия верхней тени
+        private const int SHADOW_SIZE = 8;
+        private const int SHADOW_EXTRA = 16; // запас для размытия верхней тени
         private const int CORNER_RADIUS = 8;
 
         private readonly static int[] _captionColors = { 45, 85, 205 }; // RoyalBlue

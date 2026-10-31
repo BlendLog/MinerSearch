@@ -35,7 +35,6 @@ namespace MSearch.UI
             this.labelDeviceIdCaption = new System.Windows.Forms.Label();
             this.linkDeviceId = new System.Windows.Forms.LinkLabel();
             this.linkTelegram = new System.Windows.Forms.LinkLabel();
-            this.buttonDonate = new MSearch.UI.RoundButton();
             this.labelDisclaimer = new System.Windows.Forms.Label();
             this.rootLayout.SuspendLayout();
             this.panelCard.SuspendLayout();
@@ -80,7 +79,6 @@ namespace MSearch.UI
             this.panelCard.Controls.Add(this.labelDeviceIdCaption);
             this.panelCard.Controls.Add(this.linkDeviceId);
             this.panelCard.Controls.Add(this.linkTelegram);
-            this.panelCard.Controls.Add(this.buttonDonate);
             this.panelCard.Controls.Add(this.labelDisclaimer);
             this.panelCard.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelCard.Location = new System.Drawing.Point(0, 54);
@@ -148,27 +146,13 @@ namespace MSearch.UI
             this.linkTelegram.TabStop = true;
             this.linkTelegram.Text = "t.me/MinerSearch_blog";
             // 
-            // buttonDonate
-            // 
-            this.buttonDonate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.buttonDonate.CornerRadius = 6;
-            this.buttonDonate.FlatAppearance.BorderSize = 0;
-            this.buttonDonate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonDonate.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.buttonDonate.ForeColor = System.Drawing.Color.White;
-            this.buttonDonate.Location = new System.Drawing.Point(24, 190);
-            this.buttonDonate.Name = "buttonDonate";
-            this.buttonDonate.Size = new System.Drawing.Size(180, 40);
-            this.buttonDonate.TabIndex = 5;
-            this.buttonDonate.Text = "Поддержать проект";
-            this.buttonDonate.UseVisualStyleBackColor = false;
             // 
             // labelDisclaimer
             // 
             this.labelDisclaimer.AutoSize = true;
             this.labelDisclaimer.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelDisclaimer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(112)))), ((int)(((byte)(120)))), ((int)(((byte)(132)))));
-            this.labelDisclaimer.Location = new System.Drawing.Point(24, 246);
+            this.labelDisclaimer.Location = new System.Drawing.Point(24, 200);
             this.labelDisclaimer.MaximumSize = new System.Drawing.Size(760, 0);
             this.labelDisclaimer.Name = "labelDisclaimer";
             this.labelDisclaimer.Size = new System.Drawing.Size(760, 30);
@@ -177,7 +161,6 @@ namespace MSearch.UI
             this.panelCard.Paint += new System.Windows.Forms.PaintEventHandler(this.panelCard_Paint);
             this.linkDeviceId.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkDeviceId_LinkClicked);
             this.linkTelegram.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkTelegram_LinkClicked);
-            this.buttonDonate.Click += new System.EventHandler(this.buttonDonate_Click);
             this.labelDisclaimer.Text = "MinerSearch не является антивирусом.";
             // 
             // AboutPage
@@ -204,7 +187,6 @@ namespace MSearch.UI
         private System.Windows.Forms.Label labelDeviceIdCaption;
         private System.Windows.Forms.LinkLabel linkDeviceId;
         private System.Windows.Forms.LinkLabel linkTelegram;
-        private MSearch.UI.RoundButton buttonDonate;
         private System.Windows.Forms.Label labelDisclaimer;
     }
 }

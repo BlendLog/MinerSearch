@@ -66,7 +66,7 @@
     </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <ApplicationIcon>MinerSearch.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -267,7 +267,7 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="favicon.ico" />
+    <Content Include="MinerSearch.ico" />
     <None Include="Resources\sber_logo.png" />
     <None Include="Resources\sbp_sber.png" />
     <None Include="Resources\tether-usdt-logo.png" />

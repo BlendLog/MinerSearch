@@ -75,7 +75,9 @@ namespace MSearch.UI
 
             // Логотип должен быть поверх панели навигации: она занимает всю
             // высоту сайдбара и иначе закрывает его своим фоном.
+            buttonDonateSidebar.BringToFront();
             labelLogo.BringToFront();
+            buttonDonateSidebar.Text = AppConfig.GetInstance.LL.GetLocalizedString("_DonateBtn");
 
             _scanPage = new ScanPage();
             _resultsPage = new ResultsPage();
@@ -174,6 +176,11 @@ namespace MSearch.UI
         private void buttonNavAbout_Click(object sender, EventArgs e)
         {
             ShowPage("about");
+        }
+
+        private void buttonDonateSidebar_Click(object sender, EventArgs e)
+        {
+            Utils.OpenUrlInBrowser("https://blendlog.github.io/donate.html");
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
@@ -278,6 +285,8 @@ namespace MSearch.UI
         {
             foreach (KeyValuePair<string, Button> pair in _navButtons)
                 pair.Value.Enabled = enabled;
+
+            buttonDonateSidebar.Enabled = enabled;
         }
 
         private async void RefreshQuarantine()
@@ -579,6 +588,8 @@ namespace MSearch.UI
 
         private void ApplyLanguage()
         {
+            buttonDonateSidebar.Text = AppConfig.GetInstance.LL.GetLocalizedString("_DonateBtn");
+
             foreach (KeyValuePair<string, Button> pair in _navButtons)
             {
                 string key = pair.Value.Tag as string;

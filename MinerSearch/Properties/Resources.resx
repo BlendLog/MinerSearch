@@ -1326,7 +1326,7 @@ Click \b Exit\b0  to exit.\par
     <value>Подозрительный путь</value>
   </data>
   <data name="_DonateBtn_RU" xml:space="preserve">
-    <value>Поддержать проект $$$</value>
+    <value>Отправить донат</value>
   </data>
   <data name="_ProcessInj3cti0n_EN" xml:space="preserve">
     <value>Process injection</value>
@@ -1539,7 +1539,7 @@ Click \b Exit\b0  to exit.\par
     <value>Analysis complete</value>
   </data>
   <data name="_DonateBtn_EN" xml:space="preserve">
-    <value>Donate $$$</value>
+    <value>Donate</value>
   </data>
   <data name="_CriticalServiceNotInstalled_EN" xml:space="preserve">
     <value>service is not installed!</value>

@@ -1357,7 +1357,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Donate $$$.
+        ///   Ищет локализованную строку, похожую на Donate.
         /// </summary>
         internal static string _DonateBtn_EN {
             get {
@@ -1366,7 +1366,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Поддержать проект $$$.
+        ///   Ищет локализованную строку, похожую на Отправить донат.
         /// </summary>
         internal static string _DonateBtn_RU {
             get {

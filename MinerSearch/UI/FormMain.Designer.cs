@@ -27,19 +27,21 @@ namespace MSearch.UI
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.panelMain = new System.Windows.Forms.Panel();
             this.panelContent = new System.Windows.Forms.Panel();
             this.panelHeader = new System.Windows.Forms.Panel();
             this.buttonClose = new System.Windows.Forms.Button();
             this.buttonMinimize = new System.Windows.Forms.Button();
             this.panelSidebar = new System.Windows.Forms.Panel();
+            this.labelLogo = new System.Windows.Forms.Label();
             this.panelNav = new System.Windows.Forms.Panel();
             this.buttonNavAbout = new System.Windows.Forms.Button();
             this.buttonNavSettings = new System.Windows.Forms.Button();
             this.buttonNavQuarantine = new System.Windows.Forms.Button();
             this.buttonNavResults = new System.Windows.Forms.Button();
             this.buttonNavScan = new System.Windows.Forms.Button();
-            this.labelLogo = new System.Windows.Forms.Label();
+            this.buttonDonateSidebar = new MSearch.UI.RoundButton();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
             this.panelSidebar.SuspendLayout();
@@ -79,6 +81,7 @@ namespace MSearch.UI
             this.panelHeader.Name = "panelHeader";
             this.panelHeader.Size = new System.Drawing.Size(910, 46);
             this.panelHeader.TabIndex = 0;
+            this.panelHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Header_MouseDown);
             // 
             // buttonClose
             // 
@@ -95,6 +98,9 @@ namespace MSearch.UI
             this.buttonClose.TabStop = false;
             this.buttonClose.Text = "✕";
             this.buttonClose.UseVisualStyleBackColor = false;
+            this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
+            this.buttonClose.MouseEnter += new System.EventHandler(this.WindowButton_MouseEnter);
+            this.buttonClose.MouseLeave += new System.EventHandler(this.WindowButton_MouseLeave);
             // 
             // buttonMinimize
             // 
@@ -111,10 +117,14 @@ namespace MSearch.UI
             this.buttonMinimize.TabStop = false;
             this.buttonMinimize.Text = "—";
             this.buttonMinimize.UseVisualStyleBackColor = false;
+            this.buttonMinimize.Click += new System.EventHandler(this.buttonMinimize_Click);
+            this.buttonMinimize.MouseEnter += new System.EventHandler(this.WindowButton_MouseEnter);
+            this.buttonMinimize.MouseLeave += new System.EventHandler(this.WindowButton_MouseLeave);
             // 
             // panelSidebar
             // 
             this.panelSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.panelSidebar.Controls.Add(this.buttonDonateSidebar);
             this.panelSidebar.Controls.Add(this.labelLogo);
             this.panelSidebar.Controls.Add(this.panelNav);
             this.panelSidebar.Dock = System.Windows.Forms.DockStyle.Left;
@@ -124,9 +134,36 @@ namespace MSearch.UI
             this.panelSidebar.Padding = new System.Windows.Forms.Padding(0, 14, 0, 0);
             this.panelSidebar.Size = new System.Drawing.Size(210, 720);
             this.panelSidebar.TabIndex = 1;
-            // 
+            // buttonDonateSidebar
+            this.buttonDonateSidebar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDonateSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.buttonDonateSidebar.CornerRadius = 6;
+            this.buttonDonateSidebar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.buttonDonateSidebar.FlatAppearance.BorderSize = 0;
+            this.buttonDonateSidebar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(92)))), ((int)(((byte)(194)))));
+            this.buttonDonateSidebar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDonateSidebar.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.buttonDonateSidebar.ForeColor = System.Drawing.Color.White;
+            this.buttonDonateSidebar.Location = new System.Drawing.Point(12, 664);
+            this.buttonDonateSidebar.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonDonateSidebar.Name = "buttonDonateSidebar";
+            this.buttonDonateSidebar.Size = new System.Drawing.Size(186, 42);
+            this.buttonDonateSidebar.TabIndex = 2;
+            this.buttonDonateSidebar.TabStop = false;
+            this.buttonDonateSidebar.Text = "Поддержать проект";
+            this.buttonDonateSidebar.UseVisualStyleBackColor = false;
+            this.buttonDonateSidebar.Click += new System.EventHandler(this.buttonDonateSidebar_Click);
+            // labelLogo
+            this.labelLogo.AutoSize = true;
+            this.labelLogo.BackColor = System.Drawing.Color.Transparent;
+            this.labelLogo.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.labelLogo.ForeColor = System.Drawing.Color.White;
+            this.labelLogo.Location = new System.Drawing.Point(24, 18);
+            this.labelLogo.Name = "labelLogo";
+            this.labelLogo.Size = new System.Drawing.Size(124, 25);
+            this.labelLogo.TabIndex = 0;
+            this.labelLogo.Text = "MinerSearch";
             // panelNav
-            // 
             this.panelNav.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.panelNav.Controls.Add(this.buttonNavAbout);
             this.panelNav.Controls.Add(this.buttonNavSettings);
@@ -161,6 +198,7 @@ namespace MSearch.UI
             this.buttonNavAbout.Text = "О программе";
             this.buttonNavAbout.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonNavAbout.UseVisualStyleBackColor = false;
+            this.buttonNavAbout.Click += new System.EventHandler(this.buttonNavAbout_Click);
             // 
             // buttonNavSettings
             // 
@@ -182,6 +220,7 @@ namespace MSearch.UI
             this.buttonNavSettings.Text = "Настройки";
             this.buttonNavSettings.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonNavSettings.UseVisualStyleBackColor = false;
+            this.buttonNavSettings.Click += new System.EventHandler(this.buttonNavSettings_Click);
             // 
             // buttonNavQuarantine
             // 
@@ -203,6 +242,7 @@ namespace MSearch.UI
             this.buttonNavQuarantine.Text = "Карантин";
             this.buttonNavQuarantine.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonNavQuarantine.UseVisualStyleBackColor = false;
+            this.buttonNavQuarantine.Click += new System.EventHandler(this.buttonNavQuarantine_Click);
             // 
             // buttonNavResults
             // 
@@ -224,6 +264,7 @@ namespace MSearch.UI
             this.buttonNavResults.Text = "Результаты";
             this.buttonNavResults.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonNavResults.UseVisualStyleBackColor = false;
+            this.buttonNavResults.Click += new System.EventHandler(this.buttonNavResults_Click);
             // 
             // buttonNavScan
             // 
@@ -245,31 +286,7 @@ namespace MSearch.UI
             this.buttonNavScan.Text = "Сканирование";
             this.buttonNavScan.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonNavScan.UseVisualStyleBackColor = false;
-            // 
-            // labelLogo
-            // 
-            this.labelLogo.AutoSize = true;
-            this.labelLogo.BackColor = System.Drawing.Color.Transparent;
-            this.labelLogo.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.labelLogo.ForeColor = System.Drawing.Color.White;
-            this.labelLogo.Location = new System.Drawing.Point(24, 18);
-            this.labelLogo.Name = "labelLogo";
-            this.labelLogo.Size = new System.Drawing.Size(121, 25);
-            this.labelLogo.TabIndex = 0;
-            this.labelLogo.Text = "MinerSearch";
-
             this.buttonNavScan.Click += new System.EventHandler(this.buttonNavScan_Click);
-            this.buttonNavResults.Click += new System.EventHandler(this.buttonNavResults_Click);
-            this.buttonNavQuarantine.Click += new System.EventHandler(this.buttonNavQuarantine_Click);
-            this.buttonNavSettings.Click += new System.EventHandler(this.buttonNavSettings_Click);
-            this.buttonNavAbout.Click += new System.EventHandler(this.buttonNavAbout_Click);
-            this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
-            this.buttonMinimize.Click += new System.EventHandler(this.buttonMinimize_Click);
-            this.buttonClose.MouseEnter += new System.EventHandler(this.WindowButton_MouseEnter);
-            this.buttonClose.MouseLeave += new System.EventHandler(this.WindowButton_MouseLeave);
-            this.buttonMinimize.MouseEnter += new System.EventHandler(this.WindowButton_MouseEnter);
-            this.buttonMinimize.MouseLeave += new System.EventHandler(this.WindowButton_MouseLeave);
-            this.panelHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Header_MouseDown);
             // 
             // FormMain
             // 
@@ -279,11 +296,10 @@ namespace MSearch.UI
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelSidebar);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(980, 640);
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MinerSearch";
             this.panelMain.ResumeLayout(false);
             this.panelHeader.ResumeLayout(false);
             this.panelSidebar.ResumeLayout(false);
@@ -308,5 +324,6 @@ namespace MSearch.UI
         private System.Windows.Forms.Button buttonNavResults;
         private System.Windows.Forms.Button buttonNavScan;
         private System.Windows.Forms.Label labelLogo;
+        private MSearch.UI.RoundButton buttonDonateSidebar;
     }
 }
