@@ -224,7 +224,7 @@ namespace MSearch.UI
 
             if (_activePageKey == key)
             {
-                if (key == "quarantine")
+                if (key == "quarantine" && IsHandleCreated)
                     RefreshQuarantine();
                 return;
             }
@@ -262,7 +262,7 @@ namespace MSearch.UI
             panelContent.Controls.Add(page);
             panelContent.ResumeLayout();
 
-            if (key == "quarantine")
+            if (key == "quarantine" && IsHandleCreated)
                 RefreshQuarantine();
 
             foreach (KeyValuePair<string, Button> pair in _navButtons)
@@ -280,9 +280,9 @@ namespace MSearch.UI
                 pair.Value.Enabled = enabled;
         }
 
-        private void RefreshQuarantine()
+        private async void RefreshQuarantine()
         {
-            _quarantinePage.RefreshItems();
+            await _quarantinePage.RefreshItemsAsync();
         }
 
         private void Header_MouseDown(object sender, MouseEventArgs e)
@@ -299,12 +299,23 @@ namespace MSearch.UI
             if (_scanning || request == null)
                 return;
 
+            if (_quarantinePage.IsBusy)
+            {
+                MessageBoxCustom.Show(
+                    AppConfig.GetInstance.LL.GetLocalizedString("_PleaseWaitMessage"),
+                    AppConfig.GetInstance._title,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
             _scanning = true;
             _cts = new CancellationTokenSource();
             CancellationToken token = _cts.Token;
 
             ShowPage("scan");
             _scanPage.SetScanning(true);
+            _quarantinePage.SetScanRunning(true);
 
             try
             {
@@ -343,6 +354,7 @@ namespace MSearch.UI
                     _cts = null;
                 }
 
+                _quarantinePage.SetScanRunning(false);
                 _scanPage.SetScanning(false);
 
                 if (_closeAfterScan)
@@ -588,8 +600,27 @@ namespace MSearch.UI
             DialogDispatcher.SetUiContext(SynchronizationContext.Current);
         }
 
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            if (_activePageKey == "quarantine")
+                RefreshQuarantine();
+        }
+
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            if (_quarantinePage.IsBusy)
+            {
+                MessageBoxCustom.Show(
+                    AppConfig.GetInstance.LL.GetLocalizedString("_PleaseWaitMessage"),
+                    AppConfig.GetInstance._title,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                e.Cancel = true;
+                return;
+            }
+
             // Закрытие во время обзора = «Продолжить с рекомендованными»,
             // затем обычный сценарий закрытия во время сканирования.
             if (_reviewActive)

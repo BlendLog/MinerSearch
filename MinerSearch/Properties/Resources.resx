@@ -2277,6 +2277,12 @@ Do you want to continue?
   <data name="_QuarantineTaskRestoreSafeMode_RU" xml:space="preserve">
     <value>Невозможно восстановить задание: система загружена в безопасном режиме, служба Планировщик заданий недоступна.</value>
   </data>
+  <data name="_QuarantineOperationFailed_EN" xml:space="preserve">
+    <value>Could not complete #COUNT# item(s).</value>
+  </data>
+  <data name="_QuarantineOperationFailed_RU" xml:space="preserve">
+    <value>Не удалось завершить обработку объектов: #COUNT#.</value>
+  </data>
   <data name="_QuarantineSaveFailed_EN" xml:space="preserve">
     <value>Failed to save item to quarantine, operation aborted:</value>
   </data>

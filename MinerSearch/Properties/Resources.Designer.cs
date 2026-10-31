@@ -4353,6 +4353,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Could not complete #COUNT# item(s)..
+        /// </summary>
+        internal static string _QuarantineOperationFailed_EN {
+            get {
+                return ResourceManager.GetString("_QuarantineOperationFailed_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось завершить обработку объектов: #COUNT#..
+        /// </summary>
+        internal static string _QuarantineOperationFailed_RU {
+            get {
+                return ResourceManager.GetString("_QuarantineOperationFailed_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Registry item restored from quarantine:.
         /// </summary>
         internal static string _QuarantineRegistryRestored_EN {

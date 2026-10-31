@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MSearch.UI
@@ -28,6 +29,26 @@ namespace MSearch.UI
         private readonly List<QuarantineItem> _items = new List<QuarantineItem>();
         private bool _registryUnblocked;
         private bool _loading;
+        private bool _busy;
+        private bool _scanRunning;
+
+        private sealed class QuarantineOperationSummary
+        {
+            public List<QuarantineItem> CompletedItems { get; private set; }
+            public List<string> AffectedPaths { get; private set; }
+            public int FailedCount { get; set; }
+
+            public QuarantineOperationSummary()
+            {
+                CompletedItems = new List<QuarantineItem>();
+                AffectedPaths = new List<string>();
+            }
+        }
+
+        public bool IsBusy
+        {
+            get { return _busy; }
+        }
 
         public QuarantinePage()
         {
@@ -141,40 +162,86 @@ namespace MSearch.UI
         /// <summary>
         /// Перечитывает список карантина из реестра.
         /// </summary>
-        public void RefreshItems()
+        public async Task RefreshItemsAsync()
         {
-            EnsureRegistryAccessible();
+            if (_busy || _scanRunning)
+                return;
 
-            _loading = true;
+            Exception refreshError = null;
+            SetBusy(true);
             try
             {
-                dataGridQuarantine.Rows.Clear();
-                _items.Clear();
-
-                foreach (QuarantineItem item in QuarantineManager.List())
+                List<QuarantineItem> items = await Task.Run(delegate
                 {
-                    if (item == null)
-                        continue;
+                    EnsureRegistryAccessible();
+                    return QuarantineManager.List();
+                });
 
-                    _items.Add(item);
+                _loading = true;
+                try
+                {
+                    dataGridQuarantine.Rows.Clear();
+                    _items.Clear();
 
-                    int index = dataGridQuarantine.Rows.Add(
-                        false,
-                        item.OriginalPath,
-                        item.FileSize,
-                        GetTypeLabel(item.ItemType),
-                        item.FileHash);
+                    foreach (QuarantineItem item in items)
+                    {
+                        if (item == null)
+                            continue;
 
-                    dataGridQuarantine.Rows[index].Tag = item;
+                        _items.Add(item);
+
+                        int index = dataGridQuarantine.Rows.Add(
+                            false,
+                            item.OriginalPath,
+                            item.FileSize,
+                            GetTypeLabel(item.ItemType),
+                            item.FileHash);
+
+                        dataGridQuarantine.Rows[index].Tag = item;
+                    }
                 }
+                finally
+                {
+                    _loading = false;
+                }
+
+                dataGridQuarantine.ClearSelection();
+                UpdateHeaderState();
+            }
+            catch (Exception ex)
+            {
+                refreshError = ex;
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
             }
             finally
             {
-                _loading = false;
+                SetBusy(false);
             }
 
-            dataGridQuarantine.ClearSelection();
-            UpdateHeaderState();
+            if (refreshError != null)
+            {
+                MessageBoxCustom.Show(
+                    L("_Error") + "\n\n" + refreshError.Message,
+                    L("_Quarantine"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        public void SetScanRunning(bool running)
+        {
+            _scanRunning = running;
+            dataGridQuarantine.Enabled = !_busy && !_scanRunning;
+            buttonRefresh.Enabled = !_busy && !_scanRunning;
+            UpdateUi();
+        }
+
+        private void SetBusy(bool busy)
+        {
+            _busy = busy;
+            UseWaitCursor = busy;
+            dataGridQuarantine.Enabled = !busy && !_scanRunning;
+            buttonRefresh.Enabled = !busy && !_scanRunning;
             UpdateUi();
         }
 
@@ -201,12 +268,15 @@ namespace MSearch.UI
         private void UpdateUi()
         {
             int count = _items.Count;
-            labelCount.Text = L("_QuarantineCount").Replace("#COUNT#", count.ToString());
+            labelCount.Text = _busy
+                ? L("_PleaseWaitMessage")
+                : L("_QuarantineCount").Replace("#COUNT#", count.ToString());
             labelEmpty.Visible = count == 0;
 
             int checkedCount = GetCheckedItems().Count;
-            buttonRestore.Enabled = checkedCount > 0;
-            buttonDelete.Enabled = checkedCount > 0;
+            bool canMutate = !_busy && !_scanRunning;
+            buttonRestore.Enabled = canMutate && checkedCount > 0;
+            buttonDelete.Enabled = canMutate && checkedCount > 0;
         }
 
         private List<QuarantineItem> GetCheckedItems()
@@ -279,8 +349,11 @@ namespace MSearch.UI
             dataGridQuarantine.InvalidateCell(header);
         }
 
-        private void buttonRestore_Click(object sender, EventArgs e)
+        private async void buttonRestore_Click(object sender, EventArgs e)
         {
+            if (_busy || _scanRunning)
+                return;
+
             List<QuarantineItem> selected = GetCheckedItems();
             if (selected.Count == 0)
             {
@@ -330,70 +403,16 @@ namespace MSearch.UI
                 }
             }
 
-            Cursor = Cursors.WaitCursor;
-            List<string> restored = new List<string>();
-
-            try
-            {
-                for (int i = dataGridQuarantine.Rows.Count - 1; i >= 0; i--)
-                {
-                    DataGridViewRow row = dataGridQuarantine.Rows[i];
-                    bool isChecked = row.Cells[ColSelect].Value is bool && (bool)row.Cells[ColSelect].Value;
-                    if (!isChecked)
-                        continue;
-
-                    QuarantineItem item = row.Tag as QuarantineItem;
-                    if (item == null)
-                        continue;
-
-                    string hash = item.FileHash;
-                    bool ok;
-                    string restoredPath = item.OriginalPath;
-
-                    switch (item.ItemType)
-                    {
-                        case QuarantineItemType.Service:
-                            ok = QuarantineManager.RestoreService(hash);
-                            break;
-                        case QuarantineItemType.Task:
-                            ok = QuarantineManager.RestoreTask(hash);
-                            break;
-                        case QuarantineItemType.Registry:
-                            ok = QuarantineManager.RestoreRegistry(hash);
-                            break;
-                        default:
-                            string targetPath = customFolder == null
-                                ? item.OriginalPath
-                                : Path.Combine(customFolder, Path.GetFileName(item.OriginalPath));
-
-                            targetPath = ResolveFileNameCollision(targetPath, hash);
-                            ok = QuarantineManager.RestoreFile(hash, targetPath);
-                            restoredPath = targetPath;
-                            break;
-                    }
-
-                    if (!ok)
-                        continue;
-
-                    dataGridQuarantine.Rows.RemoveAt(i);
-                    _items.Remove(item);
-                    restored.Add(restoredPath);
-                }
-            }
-            finally
-            {
-                Cursor = Cursors.Default;
-            }
-
-            UpdateHeaderState();
-            UpdateUi();
-
-            if (restored.Count > 0)
-                ShowOperationSummary("_QuarantineRestoredFile", restored);
+            await RunQuarantineOperationAsync(
+                delegate { return RestoreSelectedItems(selected, customFolder); },
+                "_QuarantineRestoredFile");
         }
 
-        private void buttonDelete_Click(object sender, EventArgs e)
+        private async void buttonDelete_Click(object sender, EventArgs e)
         {
+            if (_busy || _scanRunning)
+                return;
+
             List<QuarantineItem> selected = GetCheckedItems();
             if (selected.Count == 0)
             {
@@ -414,40 +433,155 @@ namespace MSearch.UI
             if (confirm != DialogResult.Yes)
                 return;
 
-            Cursor = Cursors.WaitCursor;
-            List<string> removed = new List<string>();
+            await RunQuarantineOperationAsync(
+                delegate { return DeleteSelectedItems(selected); },
+                "_QuarantineRemovedFiles");
+        }
 
+        private async Task RunQuarantineOperationAsync(Func<QuarantineOperationSummary> operation, string messageKey)
+        {
+            QuarantineOperationSummary summary = null;
+            Exception operationError = null;
+
+            SetBusy(true);
             try
             {
-                for (int i = dataGridQuarantine.Rows.Count - 1; i >= 0; i--)
-                {
-                    DataGridViewRow row = dataGridQuarantine.Rows[i];
-                    bool isChecked = row.Cells[ColSelect].Value is bool && (bool)row.Cells[ColSelect].Value;
-                    if (!isChecked)
-                        continue;
-
-                    QuarantineItem item = row.Tag as QuarantineItem;
-                    if (item == null)
-                        continue;
-
-                    if (!QuarantineManager.Delete(item.FileHash))
-                        continue;
-
-                    dataGridQuarantine.Rows.RemoveAt(i);
-                    _items.Remove(item);
-                    removed.Add(item.OriginalPath);
-                }
+                summary = await Task.Run(operation);
+                RemoveCompletedItems(summary.CompletedItems);
+            }
+            catch (Exception ex)
+            {
+                operationError = ex;
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
             }
             finally
             {
-                Cursor = Cursors.Default;
+                SetBusy(false);
             }
 
+            if (operationError != null)
+            {
+                MessageBoxCustom.Show(
+                    L("_Error") + "\n\n" + operationError.Message,
+                    L("_Quarantine"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            if (summary != null && (summary.AffectedPaths.Count > 0 || summary.FailedCount > 0))
+                ShowOperationSummary(messageKey, summary.AffectedPaths, summary.FailedCount);
+        }
+
+        private static QuarantineOperationSummary RestoreSelectedItems(List<QuarantineItem> selected, string customFolder)
+        {
+            QuarantineOperationSummary summary = new QuarantineOperationSummary();
+
+            foreach (QuarantineItem item in selected)
+            {
+                if (item == null)
+                    continue;
+
+                string restoredPath = item.OriginalPath;
+                bool restored;
+
+                try
+                {
+                    switch (item.ItemType)
+                    {
+                        case QuarantineItemType.Service:
+                            restored = QuarantineManager.RestoreService(item.FileHash);
+                            break;
+                        case QuarantineItemType.Task:
+                            restored = QuarantineManager.RestoreTask(item.FileHash);
+                            break;
+                        case QuarantineItemType.Registry:
+                            restored = QuarantineManager.RestoreRegistry(item.FileHash);
+                            break;
+                        default:
+                            string targetPath = customFolder == null
+                                ? item.OriginalPath
+                                : Path.Combine(customFolder, Path.GetFileName(item.OriginalPath));
+
+                            targetPath = ResolveFileNameCollision(targetPath, item.FileHash);
+                            restored = QuarantineManager.RestoreFile(item.FileHash, targetPath);
+                            restoredPath = targetPath;
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, item.OriginalPath);
+                    summary.FailedCount++;
+                    continue;
+                }
+
+                if (!restored)
+                {
+                    summary.FailedCount++;
+                    continue;
+                }
+
+                summary.CompletedItems.Add(item);
+                summary.AffectedPaths.Add(restoredPath);
+            }
+
+            return summary;
+        }
+
+        private static QuarantineOperationSummary DeleteSelectedItems(List<QuarantineItem> selected)
+        {
+            QuarantineOperationSummary summary = new QuarantineOperationSummary();
+
+            foreach (QuarantineItem item in selected)
+            {
+                if (item == null)
+                    continue;
+
+                bool deleted;
+                try
+                {
+                    deleted = QuarantineManager.Delete(item.FileHash);
+                }
+                catch (Exception ex)
+                {
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, item.OriginalPath);
+                    summary.FailedCount++;
+                    continue;
+                }
+
+                if (!deleted)
+                {
+                    summary.FailedCount++;
+                    continue;
+                }
+
+                summary.CompletedItems.Add(item);
+                summary.AffectedPaths.Add(item.OriginalPath);
+            }
+
+            return summary;
+        }
+
+        private void RemoveCompletedItems(List<QuarantineItem> completedItems)
+        {
+            if (completedItems == null || completedItems.Count == 0)
+                return;
+
+            HashSet<QuarantineItem> completed = new HashSet<QuarantineItem>(completedItems);
+            for (int i = dataGridQuarantine.Rows.Count - 1; i >= 0; i--)
+            {
+                QuarantineItem item = dataGridQuarantine.Rows[i].Tag as QuarantineItem;
+                if (item != null && completed.Contains(item))
+                {
+                    dataGridQuarantine.Rows.RemoveAt(i);
+                    _items.Remove(item);
+                }
+            }
+
+            dataGridQuarantine.ClearSelection();
             UpdateHeaderState();
             UpdateUi();
-
-            if (removed.Count > 0)
-                ShowOperationSummary("_QuarantineRemovedFiles", removed);
         }
 
         private static string ResolveFileNameCollision(string targetPath, string quarantineHash)
@@ -482,8 +616,21 @@ namespace MSearch.UI
             return collisionPath;
         }
 
-        private void ShowOperationSummary(string messageKey, List<string> affectedFiles)
+        private void ShowOperationSummary(string messageKey, List<string> affectedFiles, int failedCount = 0)
         {
+            if (affectedFiles == null)
+                affectedFiles = new List<string>();
+
+            if (affectedFiles.Count == 0)
+            {
+                MessageBoxCustom.Show(
+                    L("_QuarantineOperationFailed").Replace("#COUNT#", failedCount.ToString()),
+                    L("_Quarantine"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
             StringBuilder text = new StringBuilder(
                 L(messageKey).Replace("#FILESCOUNT#", affectedFiles.Count.ToString()) + "\n");
 
@@ -497,11 +644,17 @@ namespace MSearch.UI
                     .Replace("#COUNT#", (affectedFiles.Count - shown).ToString()));
             }
 
+            if (failedCount > 0)
+            {
+                text.Append("\n\n" + L("_QuarantineOperationFailed")
+                    .Replace("#COUNT#", failedCount.ToString()));
+            }
+
             MessageBoxCustom.Show(
                 text.ToString(),
                 L("_Quarantine"),
                 MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+                failedCount > 0 ? MessageBoxIcon.Warning : MessageBoxIcon.Information);
         }
 
         private string GetTypeLabel(QuarantineItemType type)
