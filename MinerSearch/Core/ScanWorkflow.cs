@@ -620,6 +620,11 @@ namespace MSearch.Core
             TaskThreatObject task = target as TaskThreatObject;
             if (task != null)
             {
+                // Пустая задача (executable отсутствует) удаляется сразу при RemoveEmptyTasks,
+                // а не показывается в review как неизвестная угроза.
+                if (string.Equals(task.DetectionReasonRes, "_EmptyTask", StringComparison.Ordinal))
+                    return true;
+
                 if (task.LinkedFileFromArgs != null &&
                     !string.IsNullOrEmpty(task.LinkedFileFromArgs.FilePath) &&
                     MSData.GetInstance.IsKnownMaliciousPath(task.LinkedFileFromArgs.FilePath))
