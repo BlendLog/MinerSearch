@@ -33,16 +33,6 @@ namespace MSearch
             // Parse command line arguments
             LaunchOptions.ParseArgs(args);
 
-            // Check for parsing errors
-            if (_options.hasErrors)
-            {
-                foreach (var error in _options.errors)
-                {
-                    DialogDispatcher.Show(error, AppConfig.GetInstance._title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                Environment.Exit(1);
-            }
-
             bool stdioRedirected = ConsoleBridge.HasRedirectedStdio();
             bool interactive = Environment.UserInteractive;
 
@@ -55,6 +45,16 @@ namespace MSearch
 
             if (!_options.gui_mode && !_options.silent)
                 ConsoleBridge.EnsureConsole();
+
+            // Режим известен до вывода ошибок: они уходят в консоль или в окно по gui_mode.
+            if (_options.hasErrors)
+            {
+                foreach (var error in _options.errors)
+                {
+                    DialogDispatcher.Show(error, AppConfig.GetInstance._title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                Environment.Exit(1);
+            }
 
             ConsoleBridge.SafeSetTitle(Utils.GetRndString());
 
@@ -234,7 +234,7 @@ namespace MSearch
             {
                 if (!_options.silent && !_options.Force)
                 {
-                    if (AppConfig.GetInstance.IsGuiAvailable)
+                    if (_options.gui_mode)
                     {
                         var msg = EnvironmentChecker.PromptRunAsSystemWarning(AppConfig.GetInstance, true);
                         if (msg != DialogResult.Yes)

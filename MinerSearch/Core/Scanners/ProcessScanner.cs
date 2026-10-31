@@ -36,7 +36,7 @@ namespace MSearch.Core.Scanners
 
                 // В GUI DialogDispatcher идёт через SynchronizationContext.Send:
                 // модальное окно останавливает поток скана и не даёт нажать Stop.
-                if (LaunchOptions.GetInstance.console_mode && !LaunchOptions.GetInstance.silent)
+                if (LaunchOptions.GetInstance.UseConsoleUi && !LaunchOptions.GetInstance.silent)
                 {
                     DialogDispatcher.Show(
                         AppConfig.GetInstance.LL.GetLocalizedString("_ErrorScanProcesses"),

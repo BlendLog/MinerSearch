@@ -66,7 +66,7 @@ namespace MSearch.UI
 
         private static DialogResult ShowCore(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, Color? color)
         {
-            if (LaunchOptions.GetInstance.console_mode)
+            if (LaunchOptions.GetInstance.UseConsoleUi)
             {
                 return ShowConsoleFallback(message, title, buttons, icon);
             }

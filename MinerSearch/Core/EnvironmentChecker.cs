@@ -143,40 +143,10 @@ namespace MSearch.Core
         {
             var config = AppConfig.GetInstance;
 
-            if (config.IsGuiAvailable)
+            if (LaunchOptions.GetInstance.UseConsoleUi)
             {
-                try
-                {
-                    using (License licenseForm = new License())
-                    {
-                        licenseForm.LoadContent();
-                        licenseForm.ShowDialog();
-                    }
-                }
-                catch (InvalidOperationException ioe)
-                {
-                    DialogDispatcher.Show(
-                        config.LL.GetLocalizedString("_Error") + $"\n\n{ioe.Message}",
-                        config._title,
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                if (LaunchOptions.GetInstance.silent)
                     return false;
-                }
-                catch (FileNotFoundException notfoundEx)
-                {
-                    DialogDispatcher.Show(
-                        config.LL.GetLocalizedString("_ErrorNotFoundComponent") + $"\n\n{notfoundEx.FileName}",
-                        config._title,
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-                    return false;
-                }
-            }
-            else
-            {
-#if DEBUG
-                Logger.WriteLog("[DBG] UserInteractive false, Console mode...", ConsoleColor.White);
-#endif
 
                 DialogResult agreementResult = DialogDispatcher.Show(
                     config.LL.GetLocalizedString("_License_console"),
@@ -184,21 +154,40 @@ namespace MSearch.Core
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Information);
 
-                if (agreementResult == DialogResult.Yes)
+                if (agreementResult != DialogResult.Yes)
+                    return false;
+
+                key.SetValue(registryValueName, 1);
+                return true;
+            }
+
+            try
+            {
+                using (License licenseForm = new License())
                 {
-                    key.SetValue(registryValueName, 1);
-                    return true;
+                    licenseForm.LoadContent();
+                    licenseForm.ShowDialog();
                 }
             }
-
-            // Если не консоль и форма закрыта без принятия — проверяем, был ли принят
-            if (!config.IsGuiAvailable || !Environment.UserInteractive)
+            catch (InvalidOperationException ioe)
             {
-                var newValue = key.GetValue(registryValueName);
-                return newValue != null && (int)newValue == 1;
+                DialogDispatcher.Show(
+                    config.LL.GetLocalizedString("_Error") + $"\n\n{ioe.Message}",
+                    config._title,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return false;
+            }
+            catch (FileNotFoundException notfoundEx)
+            {
+                DialogDispatcher.Show(
+                    config.LL.GetLocalizedString("_ErrorNotFoundComponent") + $"\n\n{notfoundEx.FileName}",
+                    config._title,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
             }
 
-            // Для GUI: проверяем после ShowDialog
             var finalValue = key.GetValue(registryValueName);
             return finalValue != null && (int)finalValue == 1;
         }

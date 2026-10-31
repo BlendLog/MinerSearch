@@ -387,7 +387,7 @@ namespace MSearch
 
             if (!UpdateChecker.IsLatestVersion(current, latest.StartsWith("v") ? latest.Substring(1).Replace(".", "") : latest.Replace(".", "")))
             {
-                if (AppConfig.GetInstance.IsGuiAvailable)
+                if (!LaunchOptions.GetInstance.UseConsoleUi)
                 {
                     var message = DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_MessageNewVersion").Replace("#LATEST#", latest), latest, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                     if (message == DialogResult.Yes)

@@ -132,6 +132,12 @@ namespace MSearch.Core
         /// <summary>Режим GUI (главное окно, без консоли)</summary>
         public bool gui_mode { get; internal set; }
 
+        /// <summary>UI должен быть консольным: главное окно не запускается</summary>
+        public bool UseConsoleUi
+        {
+            get { return !gui_mode; }
+        }
+
         #endregion
 
         #region Values with arguments
