@@ -25,6 +25,26 @@ namespace MSearch.Core.Scanners
             var portMap = AppConfig.GetInstance.bootMode != BootMode.SafeMinimal
                 ? ProcessManager.BuildPortMap()
                 : null;
+            bool processScanWarningReported = false;
+
+            Action<Exception> reportProcessScanError = delegate(Exception error)
+            {
+                if (processScanWarningReported) return;
+                processScanWarningReported = true;
+
+                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorScanProcesses", error);
+
+                // В GUI DialogDispatcher идёт через SynchronizationContext.Send:
+                // модальное окно останавливает поток скана и не даёт нажать Stop.
+                if (LaunchOptions.GetInstance.console_mode && !LaunchOptions.GetInstance.silent)
+                {
+                    DialogDispatcher.Show(
+                        AppConfig.GetInstance.LL.GetLocalizedString("_ErrorScanProcesses"),
+                        AppConfig.GetInstance._title,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
+            };
 
             foreach (Process p in procs.OrderBy(p => p.ProcessName).ToList())
             {
@@ -115,13 +135,16 @@ namespace MSearch.Core.Scanners
 #if DEBUG
                     //Console.WriteLine($"\t[DBG] {p.ProcessName} {w32e.Message}");
 #endif
+                    if (w32e.NativeErrorCode == 299 || w32e.HResult == unchecked((int)0x8007012B))
+                        reportProcessScanError(w32e);
                     continue;
                 }
-                catch (Exception ex) when (ex.HResult.Equals(unchecked((int)0x8007012B)))
+                catch (Exception ex)
                 {
-
-                    DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_ErrorScanProcesses"), AppConfig.GetInstance._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    Environment.Exit(1);
+                    // Ошибка чтения одного процесса не должна завершать приложение.
+                    // Пропускаем этот процесс и продолжаем проверку остальных.
+                    reportProcessScanError(ex);
+                    continue;
                 }
             }
 
