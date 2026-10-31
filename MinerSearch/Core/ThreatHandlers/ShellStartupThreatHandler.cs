@@ -22,7 +22,6 @@ namespace MSearch.Core.ThreatHandlers
 
             if (phase == CleanupPhase.DisableExecuteOnly)
             {
-                // Отключаем выполнение целевого файла ярлыка
                 if (shellFile.ShortcutTargetFile != null && shellFile.ShortcutTargetFile.ShouldDisableExecute)
                 {
                     return HandleDisableExecute(shellFile.ShortcutTargetFile.FilePath, decision);
@@ -33,13 +32,11 @@ namespace MSearch.Core.ThreatHandlers
 
             if (phase == CleanupPhase.Finalize)
             {
-                // Удаление файла из автозагрузки (ярлык или файл с cmd.exe /c, invisible chars, bad args)
                 if (shellFile.ShouldDeleteFile)
                 {
                     return HandleDeleteFile(shellFile.FilePath, decision);
                 }
 
-                // Карантин подозрительных файлов (SFX, hidden, high entropy .NET, обнаружено анализатором)
                 if (shellFile.ShouldMoveToQuarantine)
                 {
                     return HandleMoveToQuarantine(shellFile.FilePath, decision);

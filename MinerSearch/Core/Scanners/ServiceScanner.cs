@@ -97,7 +97,6 @@ namespace MSearch.Core.Scanners
                         linkedFile = new FileThreatObject(servicePath, Path.GetFileName(servicePath), fileSize, originalName, description, hash, trustResult);
                     }
 
-                    // Проверяем SafeBoot\Minimal и SafeBoot\Network
                     bool hasInMinimal = false;
                     bool hasInNetwork = false;
                     try

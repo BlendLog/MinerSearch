@@ -72,10 +72,9 @@ namespace MSearch.Core.ThreatAnalyzers
 
             int risk = 0;
             string args = action.Arguments ?? string.Empty;
-            string filePathFromTask = taskObj.LinkedFile?.FilePath ?? ""; // Путь к исполняемому файлу
+            string filePathFromTask = taskObj.LinkedFile?.FilePath ?? "";
 
             AppConfig.GetInstance.LL.LogMessage("[#]", "_Scanning", $"{taskObj.Info.Name} | {taskObj.Info.Path}", ConsoleColor.White);
-            // 1 Этап -----------------------------------------------------
 
             if (taskObj.Info.Name.StartsWith(MSData.GetInstance.SysFileName[17], StringComparison.Ordinal))
             {
@@ -127,7 +126,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 taskObj.DetectionReasonRes = "_Malic1ousTask";
             }
 
-            if (taskObj.ActionDeleteTask) //Задача вредоносна независимо от файла
+            if (taskObj.ActionDeleteTask)
             {
                 AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete", $"{taskObj.Info.Path}\\{taskObj.Info.Name}");
                 yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
@@ -165,7 +164,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
             }
 
-            // if exist 0x22<path>0x22 — обфускация кавычек
+            // if exist с hex-кавычками (обфускация пути)
             if (IfExistHexQuoteRegex.IsMatch(args))
             {
                 risk += 3;
@@ -201,9 +200,6 @@ namespace MSearch.Core.ThreatAnalyzers
 
                 yield return new ThreatDecision(taskObj, risk, ScanObjectType.Suspicious);
             }
-
-            // 2 Этап -------------------------------------------
-
 
             if (taskObj.LinkedFile != null)
             {
@@ -487,8 +483,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-
-            // 3 Этап -------------------------------------------
 
             if (filePathFromTask.IndexOf(MSData.GetInstance.hostNames[MSKeys.PowerShell], StringComparison.OrdinalIgnoreCase) >= 0)
             {
@@ -968,7 +962,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
             }
 
-            if (!string.IsNullOrEmpty(filePathFromTask) && _analysisResult.IsSuspicious) /* is sfx archive*/
+            if (!string.IsNullOrEmpty(filePathFromTask) && _analysisResult.IsSuspicious)
             {
                 // Любой SFX из планировщика задач — подозрителен
                 var sfxLevel = FileChecker.GetSfxTrustLevel(filePathFromTask);
@@ -1033,7 +1027,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 yield return new ThreatDecision(taskObj, risk, ScanObjectType.Unsafe);
             }
 
-            // Решения для связанных файлов (если есть флаги действия)
             if (taskObj.LinkedFile != null &&
                 (taskObj.LinkedFile.ShouldDeleteFile ||
                  taskObj.LinkedFile.ShouldMoveFileToQuarantine ||
@@ -1053,8 +1046,6 @@ namespace MSearch.Core.ThreatAnalyzers
             // SHA1 неподписанных файлов, извлечённых из аргументов задачи (независимо от детекта)
             FileChecker.LogUnsignedSha1(taskObj.LinkedFileFromArgs);
         }
-
-        // Вспомогательные методы внутри Анализатора ------------------------------
 
         FileThreatObject CreateFileObject(string path)
         {

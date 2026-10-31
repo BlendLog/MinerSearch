@@ -196,16 +196,6 @@ namespace MSearch
             }
         }
 
-        //internal static void DebugLog(string message)
-        //{
-        //    var stackTrace = new StackTrace(true);
-        //    var frame = stackTrace.GetFrame(1);
-        //    var lineNumber = frame.GetFileLineNumber();
-        //    var fileName = frame.GetFileName();
-
-        //    Console.WriteLine($"[DBG] FileName:{Path.GetFileName(fileName)} | Line:{lineNumber} | {message}");
-        //}
-
         internal static void RemoveDefenderExclusion(string type, string value)
         {
 
@@ -778,7 +768,6 @@ namespace MSearch
         static readonly int MAX_PATH_BUFFER = 4096;
         static readonly string[] netAssemblyNames = new string[] { "mscorlib.dll", "mscorlib.ni.dll", "mscoree.dll", "mscoreei.dll", "clrjit.dll" };
 
-        // Helper method to convert byte array to structure
         static T ByteArrayToStructure<T>(byte[] bytes) where T : struct
         {
             GCHandle handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
@@ -1203,9 +1192,6 @@ namespace MSearch
                     if (Native.OpenProcessToken(process.Handle, Native.TOKEN_QUERY, out tokenHandle))
                     {
                         identity = new WindowsIdentity(tokenHandle);
-#if DEBUG
-                        //Console.WriteLine("\t[DBG] Process owner {0}: {1}", processId, identity.Name);
-#endif
                         return identity.IsSystem;
                     }
                     else
@@ -1546,7 +1532,6 @@ namespace MSearch
 
             for (int i = 0; i <= length - sequenceLength; i += sequenceLength)
             {
-                // make 16 byte as 2 x ulong (128 bit)
                 ulong hash = ComputeSimpleHash(allBytes, i, sequenceLength);
                 if (hash == 0)
                     continue;
@@ -1578,7 +1563,6 @@ namespace MSearch
             if (maxCount < minOccurrences)
                 return false;
 
-            // restore sequence
             byte[] mostCommonSequence = FindMostCommonSequence(allBytes, sequenceLength, maxKey);
 
             if (mostCommonSequence == null)
@@ -1695,7 +1679,6 @@ namespace MSearch
                 result = (result << 8) | data[offset + i];
             }
 
-            // skips zeros
             for (int i = 0; i < length; i++)
             {
                 if (data[offset + i] != 0)
@@ -1776,7 +1759,7 @@ namespace MSearch
 
                         foreach (byte b in hashBytes)
                         {
-                            sb.Append(b.ToString("x2")); // Convert each byte to a hexadecimal string
+                            sb.Append(b.ToString("x2"));
                         }
 
                         return sb.ToString();
@@ -1832,7 +1815,7 @@ namespace MSearch
 
                         foreach (byte b in hashBytes)
                         {
-                            sb.Append(b.ToString("x2")); // Convert each byte to a hexadecimal string
+                            sb.Append(b.ToString("x2"));
                         }
 
                         return sb.ToString();

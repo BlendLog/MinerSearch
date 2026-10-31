@@ -12,7 +12,6 @@ namespace MSearch.UI
 {
     /// <summary>
     /// Промежуточная страница обзора неизвестных угроз.
-    /// Заменяет отдельное окно FormThreatReview.
     /// </summary>
     public partial class ThreatReviewPage : UserControl
     {

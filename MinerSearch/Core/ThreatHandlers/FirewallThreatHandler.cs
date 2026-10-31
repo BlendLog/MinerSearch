@@ -38,7 +38,6 @@ namespace MSearch.Core.ThreatHandlers
                 dynamic fwPolicy2 = Activator.CreateInstance(typeFWPolicy2);
                 INetFwRules rules = fwPolicy2.Rules;
 
-                // Ищем правило по имени и удаляем
                 foreach (INetFwRule existingRule in rules)
                 {
                     if (existingRule.Name.Equals(rule.RuleName, StringComparison.OrdinalIgnoreCase))

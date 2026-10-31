@@ -215,7 +215,6 @@ namespace MSearch.Core
             {
                 string arg = args[i];
 
-                // --help / -h
                 if (arg.Equals("--help", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-h", StringComparison.OrdinalIgnoreCase))
                 {
@@ -223,7 +222,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --accept-eula / -a
                 if (arg.Equals("--accept-eula", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-a", StringComparison.OrdinalIgnoreCase))
                 {
@@ -231,7 +229,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-logs / -nl
                 if (arg.Equals("--no-logs", StringComparison.OrdinalIgnoreCase) ||
                      arg.Equals("-nl", StringComparison.OrdinalIgnoreCase))
                 {
@@ -239,7 +236,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --force / -f
                 if (arg.Equals("--force", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-f", StringComparison.OrdinalIgnoreCase))
                 {
@@ -247,7 +243,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --silent / -si
                 if (arg.Equals("--silent", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-si", StringComparison.OrdinalIgnoreCase))
                 {
@@ -255,7 +250,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --console-mode / -cm
                 if (arg.Equals("--console-mode", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-cm", StringComparison.OrdinalIgnoreCase))
                 {
@@ -263,7 +257,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-scan-wmi / -nwmi
                 if (arg.Equals("--no-scan-wmi", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nwmi", StringComparison.OrdinalIgnoreCase))
                 {
@@ -271,7 +264,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-signature-scan / -nss
                 if (arg.Equals("--no-signature-scan", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nss", StringComparison.OrdinalIgnoreCase))
                 {
@@ -279,7 +271,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-runtime / -nr
                 if (arg.Equals("--no-runtime", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nr", StringComparison.OrdinalIgnoreCase))
                 {
@@ -287,7 +278,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-scan-registry / -nsr
                 if (arg.Equals("--no-scan-registry", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nsr", StringComparison.OrdinalIgnoreCase))
                 {
@@ -295,7 +285,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-scan-tasks / -nst
                 if (arg.Equals("--no-scan-tasks", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nst", StringComparison.OrdinalIgnoreCase))
                 {
@@ -303,7 +292,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-scan-users / -nsu
                 if (arg.Equals("--no-scan-users", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nsu", StringComparison.OrdinalIgnoreCase))
                 {
@@ -311,7 +299,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --pause / -p
                 if (arg.Equals("--pause", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-p", StringComparison.OrdinalIgnoreCase))
                 {
@@ -319,7 +306,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --remove-empty-tasks / -ret
                 if (arg.Equals("--remove-empty-tasks", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-ret", StringComparison.OrdinalIgnoreCase))
                 {
@@ -327,7 +313,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --depth= / -d=
                 if (arg.StartsWith("--depth=", StringComparison.OrdinalIgnoreCase) ||
                     arg.StartsWith("-d=", StringComparison.OrdinalIgnoreCase))
                 {
@@ -344,7 +329,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-rootkit-check / -nrc
                 if (arg.Equals("--no-rootkit-check", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nrc", StringComparison.OrdinalIgnoreCase))
                 {
@@ -352,7 +336,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-services / -nse
                 if (arg.Equals("--no-services", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nse", StringComparison.OrdinalIgnoreCase))
                 {
@@ -360,7 +343,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-file-system / -nfs
                 if (arg.Equals("--no-file-system", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nfs", StringComparison.OrdinalIgnoreCase))
                 {
@@ -368,7 +350,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-shell-startup / -nshs
                 if (arg.Equals("--no-shell-startup", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nshs", StringComparison.OrdinalIgnoreCase))
                 {
@@ -376,7 +357,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --scan-only / -so
                 if (arg.Equals("--scan-only", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-so", StringComparison.OrdinalIgnoreCase))
                 {
@@ -387,7 +367,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --full-scan / -fs
                 if (arg.Equals("--full-scan", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-fs", StringComparison.OrdinalIgnoreCase))
                 {
@@ -395,7 +374,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --open-quarantine / -q
                 if (arg.Equals("--open-quarantine", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-q", StringComparison.OrdinalIgnoreCase))
                 {
@@ -403,7 +381,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --winpemode / -w
                 if (arg.Equals("--winpemode", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-w", StringComparison.OrdinalIgnoreCase))
                 {
@@ -411,14 +388,12 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // -R
                 if (arg.Equals("-R", StringComparison.Ordinal))
                 {
                     inst.RestoredWMI = true;
                     continue;
                 }
 
-                // --verbose / -v
                 if (arg.Equals("--verbose", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-v", StringComparison.OrdinalIgnoreCase))
                 {
@@ -426,7 +401,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --select / -s (без значения)
                 if (arg.Equals("--select", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-s", StringComparison.OrdinalIgnoreCase))
                 {
@@ -434,7 +408,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --select= / -s= (с путём)
                 if (arg.Equals("--select=", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-s=", StringComparison.OrdinalIgnoreCase))
                 {
@@ -458,7 +431,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --restore= / -res=
                 if (arg.Equals("--restore=", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-res=", StringComparison.OrdinalIgnoreCase))
                 {
@@ -484,7 +456,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --delete= / -del=
                 if (arg.Equals("--delete=", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-del=", StringComparison.OrdinalIgnoreCase))
                 {
@@ -510,7 +481,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-check-hosts / -nch
                 if (arg.Equals("--no-check-hosts", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nch", StringComparison.OrdinalIgnoreCase))
                 {
@@ -518,7 +488,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-firewall / -nfw
                 if (arg.Equals("--no-firewall", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-nfw", StringComparison.OrdinalIgnoreCase))
                 {
@@ -526,7 +495,6 @@ namespace MSearch.Core
                     continue;
                 }
 
-                // --no-review-interact / -norev — skip review UI, apply actions automatically
                 if (arg.Equals("--no-review-interact", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-norev", StringComparison.OrdinalIgnoreCase))
                 {

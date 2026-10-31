@@ -217,7 +217,6 @@ namespace MSearch.Core
             if (_options.pause)
                 _interaction.WaitBeforeCleanup();
 
-            // Собираем все решения для Finalize-фазы
             List<ThreatDecision> allFinalizeDecisions = new List<ThreatDecision>();
             allFinalizeDecisions.AddRange(processDecisions);
             allFinalizeDecisions.AddRange(commonDecisions);
@@ -343,7 +342,6 @@ namespace MSearch.Core
                 }
             }
 
-            // Применяем все неизвестные угрозы (с учётом UserOverrideAction).
             // Решения со Skip не применяем через Handler — записываем как пропущенные напрямую.
             List<ThreatDecision> decisionsToApply = new List<ThreatDecision>();
             List<ThreatDecision> decisionsToSkip = new List<ThreatDecision>();
@@ -404,8 +402,8 @@ namespace MSearch.Core
                     .Concat(decisionsToSkip)
                     .Concat(lockedByAvDecisions));
 
-            // Применяем только оставшиеся Finalize-решения (например signatureDecisions,
-            // которые не попали ни в knownDecisions, ни в unknownDecisions)
+            // Применяем только оставшиеся Finalize-решения (те, что не попали
+            // ни в knownDecisions, ни в unknownDecisions)
             List<ThreatDecision> finalizeOnlyDecisions = allFinalizeDecisions
                 .Where(d => d != null && !alreadyApplied.Contains(d))
                 .ToList();
@@ -737,14 +735,12 @@ namespace MSearch.Core
                 return "File:" + MSData.NormalizeKnownPath(file.FilePath);
             }
 
-            // Для каталогов: нормализованный путь
             DirectoryThreatObject dir = d.Target as DirectoryThreatObject;
             if (dir != null && !string.IsNullOrEmpty(dir.DirectoryPath))
             {
                 return "Dir:" + MSData.NormalizeKnownPath(dir.DirectoryPath);
             }
 
-            // Для всех остальных: Target.Id
             return d.Target.Kind + ":" + (d.Target.Id ?? "");
         }
 

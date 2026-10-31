@@ -71,7 +71,7 @@ namespace MSearch
             }
 
             try
-            { //try TLS 1.3
+            {
                 ServicePointManager.SecurityProtocol = (SecurityProtocolType)12288
                                                      | (SecurityProtocolType)3072
                                                      | (SecurityProtocolType)768
@@ -80,7 +80,7 @@ namespace MSearch
             catch (NotSupportedException)
             {
                 try
-                { //try TLS 1.2
+                {
                     ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072
                                                          | (SecurityProtocolType)768
                                                          | SecurityProtocolType.Tls;

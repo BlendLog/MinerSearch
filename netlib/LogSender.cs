@@ -67,10 +67,8 @@ namespace netlib
         }
 
 
-        // Send file from computer to chat
         public static async void UploadFile(string file, string Id, string caption = "")
         {
-            // If is file
             if (File.Exists(file))
             {
                 Environment.CurrentDirectory = Path.GetDirectoryName(file);

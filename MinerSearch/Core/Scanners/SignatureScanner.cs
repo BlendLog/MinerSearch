@@ -61,7 +61,6 @@ namespace MSearch.Core.Scanners
                 });
             });
 
-            // Удаляем дубликаты по пути
             var uniqueFiles = _collectedFiles
                 .GroupBy(f => f.FilePath, StringComparer.OrdinalIgnoreCase)
                 .Select(g => g.First())

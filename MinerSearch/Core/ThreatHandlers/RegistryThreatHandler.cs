@@ -39,7 +39,7 @@ namespace MSearch.Core.ThreatHandlers
 
             try
             {
-                // 0. Взлом прав доступа (если приказал анализатор: IFEO, Tekt0nit)
+                // Взлом прав доступа (если приказал анализатор: IFEO, Tekt0nit)
                 if (regThreat.ActionUnlockFirst)
                 {
                     string unlockPath = $@"{hiveShort}\{regThreat.KeyPath}";
@@ -49,7 +49,7 @@ namespace MSearch.Core.ThreatHandlers
 
                 RegistryKey baseKey = regThreat.Hive == "HKEY_LOCAL_MACHINE" ? Registry.LocalMachine : Registry.CurrentUser;
 
-                // 0.1. Карантин (только по выбору пользователя): снимок обязан быть создан ДО удаления.
+                // Карантин (только по выбору пользователя): снимок обязан быть создан ДО удаления.
                 bool quarantined = false;
                 if (regThreat.ActionQuarantine &&
                     (regThreat.ActionDelete || regThreat.ActionDeleteParentKey))
@@ -70,7 +70,7 @@ namespace MSearch.Core.ThreatHandlers
                     quarantined = true;
                 }
 
-                // 1. Спец-удаление для Windows Defender: сначала штатный путь через WMI/PowerShell.
+                // Спец-удаление для Windows Defender: сначала штатный путь через WMI/PowerShell.
                 if (regThreat.ActionRemoveDefenderExclusion)
                 {
                     string subKey = GetKeyName(regThreat.KeyPath); // "Paths", "Processes" и т.д.
@@ -86,7 +86,7 @@ namespace MSearch.Core.ThreatHandlers
                     }
                 }
 
-                // 2. Удаление родительского ключа (для SilentExit и плохих параметров Tektonit)
+                // Удаление родительского ключа (для SilentExit и плохих параметров Tektonit)
                 if (regThreat.ActionDeleteParentKey)
                 {
                     string parentPath = GetParentPath(regThreat.KeyPath);
@@ -97,7 +97,7 @@ namespace MSearch.Core.ThreatHandlers
                         parent?.DeleteSubKeyTree(targetKeyName, throwOnMissingSubKey: false);
                     }
                 }
-                // 3. Стандартное удаление
+                // Стандартное удаление
                 else if (regThreat.ActionDelete)
                 {
                     if (regThreat.NodeType == RegistryNodeType.Key)
@@ -119,7 +119,7 @@ namespace MSearch.Core.ThreatHandlers
                     }
                 }
 
-                // 4. Восстановление исходного значения (Userinit, Shell)
+                // Восстановление исходного значения (Userinit, Shell)
                 if (regThreat.ActionSetData)
                 {
                     using (RegistryKey key = baseKey.OpenSubKey(regThreat.KeyPath, writable: true))
@@ -130,14 +130,13 @@ namespace MSearch.Core.ThreatHandlers
                     }
                 }
 
-                // 5. Создание/Корректировка соседнего параметра (RequireSignedAppInit_DLLs)
+                // Создание/Корректировка соседнего параметра (RequireSignedAppInit_DLLs)
                 if (regThreat.ActionSetSibling)
                 {
                     using (RegistryKey key = baseKey.OpenSubKey(regThreat.KeyPath, writable: true))
                     {
                         if (key != null)
                         {
-                            // Для DWord нужен тип int, парсим строку "1" в int
                             object valData = regThreat.SiblingKind == RegistryValueKind.DWord ?
                                 (object)int.Parse(regThreat.SiblingData) : regThreat.SiblingData;
 
@@ -146,7 +145,7 @@ namespace MSearch.Core.ThreatHandlers
                     }
                 }
 
-                // 6. Если в реестре была ссылка на вредоносный файл (Autorun) — блокируем скрипт/exe
+                // Если в реестре была ссылка на вредоносный файл (Autorun) — блокируем скрипт/exe
                 if (regThreat.LinkedFile != null &&
                     regThreat.LinkedFile.AnalysisResult != null &&
                     regThreat.LinkedFile.AnalysisResult.IsMalicious)
@@ -154,7 +153,6 @@ namespace MSearch.Core.ThreatHandlers
                     UnlockObjectClass.DisableExecute(regThreat.LinkedFile.FilePath);
                 }
 
-                // Определяем ActionType на основе выполненных действий
                 if (quarantined)
                 {
                     decision.ActionType = ScanActionType.Quarantine;

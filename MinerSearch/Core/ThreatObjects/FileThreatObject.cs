@@ -15,7 +15,6 @@ namespace MSearch.Core.ThreatObjects
         public string Hash { get; }
         public WinVerifyTrustResult TrustResult { get; internal set; }
 
-        // Специфичные признаки файла
         public bool IsValidSignature => TrustResult == WinVerifyTrustResult.Success;
         public FileContentAnalysisResult AnalysisResult { get; internal set; }
         public bool IsAlreadyAnalyzed { get; internal set; }

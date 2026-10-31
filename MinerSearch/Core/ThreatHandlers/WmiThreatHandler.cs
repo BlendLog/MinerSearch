@@ -15,10 +15,8 @@ namespace MSearch.Core.ThreatHandlers
             var wmi = decision.Target as WmiSubscriptionThreatObject;
             if (wmi == null) return ApplyResult.NotApplicable;
 
-            // WMI обрабатываем только в Finalize
             if (phase != CleanupPhase.Finalize) return ApplyResult.Skipped;
 
-            // ScanOnly — не выполняем действия
             if (LaunchOptions.GetInstance.ScanOnly) return ApplyResult.Skipped;
 
             return HandleDeleteWmi(wmi, decision);

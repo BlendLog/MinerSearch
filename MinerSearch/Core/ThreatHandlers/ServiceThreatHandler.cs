@@ -21,13 +21,11 @@ namespace MSearch.Core.Handlers
 
         public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase)
         {
-            // Только фаза Finalize
             if (phase != CleanupPhase.Finalize) return ApplyResult.NotApplicable;
 
             var svc = decision.Target as ServiceThreatObject;
             if (svc == null) return ApplyResult.NotApplicable;
 
-            // ScanOnly — не выполняем действия
             if (LaunchOptions.GetInstance.ScanOnly) return ApplyResult.Skipped;
 
             if (!svc.ShouldDisableService && !svc.ShouldDeleteService && !svc.ShouldQuarantineService && !svc.ShouldRestoreServiceDll && !svc.ShouldResetSddl && !svc.ShouldRemoveFromSafeMode)
@@ -37,7 +35,6 @@ namespace MSearch.Core.Handlers
 
             try
             {
-                // Сначала сбрасываем SDDL если требуется
                 if (svc.ShouldResetSddl)
                 {
                     HandleResetSddl(svc);
@@ -191,8 +188,8 @@ namespace MSearch.Core.Handlers
 
             string serviceName = svc.ServiceName;
 
-            // 1. Копируем конфиг в карантин СТРОГО до любых изменений службы.
-            //    Если копия не создана — ничего с службой не делаем.
+            // Копируем конфиг в карантин СТРОГО до любых изменений службы.
+            // Если копия не создана — ничего с службой не делаем.
             bool quarantined;
             try
             {
@@ -211,8 +208,8 @@ namespace MSearch.Core.Handlers
                 return ApplyResult.Failed;
             }
 
-            // 2. Отключаем автозапуск (best-effort): для registry-only записей, где SCM
-            //    не может открыть службу на запись, выставляем Start=4 прямо в реестре.
+            // Отключаем автозапуск (best-effort): для registry-only записей, где SCM
+            // не может открыть службу на запись, выставляем Start=4 прямо в реестре.
             if (svc.StartMode != NativeServiceController.ServiceStartMode.Disabled)
             {
                 try
@@ -226,9 +223,9 @@ namespace MSearch.Core.Handlers
                 }
             }
 
-            // 3. Останавливаем работающую службу, если запрошено или если её файлы
-            //    (ServiceDll / образ) должны быть удалены/карантинены: пока svchost
-            //    держит DLL, файл заблокирован и снимок карантина не снимается.
+            // Останавливаем работающую службу, если запрошено или если её файлы
+            // (ServiceDll / образ) должны быть удалены/карантинены: пока svchost
+            // держит DLL, файл заблокирован и снимок карантина не снимается.
             bool hasPendingLinkedFiles = HasPendingLinkedFileRemoval(svc);
             bool stopRequested = svc.ShouldStopService || hasPendingLinkedFiles;
 
@@ -249,8 +246,8 @@ namespace MSearch.Core.Handlers
                 }
             }
 
-            // 4. Удаляем службу: через SCM, а если он не может (registry-only/locked) —
-            //    сносим ветку ключа напрямую (конфиг уже сохранён в карантине).
+            // Удаляем службу: через SCM, а если он не может (registry-only/locked) —
+            // сносим ветку ключа напрямую (конфиг уже сохранён в карантине).
             bool scmRemoved = false;
             try
             {
@@ -428,7 +425,7 @@ namespace MSearch.Core.Handlers
         }
 
         /// <summary>
-        /// Registry-only запись при выбранном удалении (анализатор или пользователь в FormThreatReview):
+        /// Registry-only запись при выбранном удалении (анализатор или пользователь в обзоре угроз):
         /// карантин НЕ создаём — просто снимаем автозапуск и сносим ветку ключа.
         /// </summary>
         ApplyResult HandleDeleteRegistryOnlyService(ServiceThreatObject svc, ThreatDecision decision)
@@ -513,7 +510,6 @@ namespace MSearch.Core.Handlers
         {
             string serviceName = svc.ServiceName;
 
-            // 1. Отключаем сервис
             if (svc.StartMode != NativeServiceController.ServiceStartMode.Disabled)
             {
                 try
@@ -533,7 +529,7 @@ namespace MSearch.Core.Handlers
                 }
             }
 
-            // 2. Останавливаем если работает
+            // Останавливаем если работает
             if (svc.Status == ServiceControllerStatus.Running && svc.ShouldStopService)
             {
                 try
@@ -572,7 +568,6 @@ namespace MSearch.Core.Handlers
 
             Thread.Sleep(2000);
 
-            // 3. Проверяем результат
             var newStartMode = NativeServiceController.GetServiceStartType(serviceName);
             if (newStartMode != NativeServiceController.ServiceStartMode.Disabled)
             {
@@ -581,7 +576,6 @@ namespace MSearch.Core.Handlers
                 return ApplyResult.Failed;
             }
 
-            // 4. Удаляем сервис
             try
             {
                 ServiceHelper.Uninstall(serviceName);
@@ -624,7 +618,7 @@ namespace MSearch.Core.Handlers
 
             try
             {
-                // 1. Восстанавливаем путь к оригинальной библиотеке
+                // Восстанавливаем путь к оригинальной библиотеке
                 using (var key = Registry.LocalMachine.OpenSubKey(registryPath, true))
                 {
                     if (key != null)
@@ -640,7 +634,7 @@ namespace MSearch.Core.Handlers
                     }
                 }
 
-                // 2. Перезапускаем службу
+                // Перезапускаем службу
                 try
                 {
                     if (service.Status == ServiceControllerStatus.Running)
@@ -660,7 +654,6 @@ namespace MSearch.Core.Handlers
                     // Считаем успешным, так как путь восстановлен
                 }
 
-                // 3. Помечаем как вылеченную угрозу
                 decision.ObjectType = ScanObjectType.Infected;
                 decision.ActionType = ScanActionType.Cured;
 

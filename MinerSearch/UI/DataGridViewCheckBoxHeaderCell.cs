@@ -37,16 +37,13 @@ namespace MSearch.UI
                                       DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle,
                                       DataGridViewPaintParts paintParts)
         {
-            // Background
             if ((paintParts & DataGridViewPaintParts.Background) == DataGridViewPaintParts.Background)
                 using (var backBrush = new SolidBrush(cellStyle.BackColor))
                     graphics.FillRectangle(backBrush, cellBounds);
 
-            // Border
             if ((paintParts & DataGridViewPaintParts.Border) == DataGridViewPaintParts.Border)
                 PaintBorder(graphics, clipBounds, cellBounds, cellStyle, advancedBorderStyle);
 
-            // Checkbox rectangle
             _size = new Size(14, 14);
             _location = new Point(
                 cellBounds.X + 4,

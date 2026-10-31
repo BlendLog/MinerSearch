@@ -386,7 +386,6 @@ namespace MSearch
             }
         }
 
-        //-------------------------------------------------
         private static string Decode(string value)
         {
             return string.IsNullOrEmpty(value) ? value : value.Replace("?", "");
@@ -515,8 +514,6 @@ namespace MSearch
             return resourceManager.GetString(key) ?? $"[ResourceStringNotFound: {key}]";
         }
 
-
-        //--------------------------------------------------
 
         public static void LogElapsedTime(string elapsedTime)
         {

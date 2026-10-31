@@ -99,19 +99,16 @@ namespace MSearch.Core.ThreatAnalyzers
             string normalized = servicePathWithArgs.ToLowerInvariant();
             normalized = normalized.Replace("^|", "|").Replace("\\\"", "\"").Replace("'", "");
 
-            // 1. Download+Exec pattern (irm + iex)
             bool hasDownloadExec =
                 MSData.ContainsAnyMarker(normalized, MSData.GetInstance.markerSets[MSKeys.ExecCallMarkers]) &&
                 MSData.ContainsAnyMarker(normalized, MSData.GetInstance.markerSets[MSKeys.DownloadCallMarkers]) &&
                 Regex.IsMatch(normalized, MSData.GetInstance.regexPatterns[MSKeys.Url]);
 
-            // 2. Fileless persistence
             bool hasFilelessPersistence = MSData.ContainsAnyMarker(normalized, MSData.GetInstance.markerSets[MSKeys.FilelessMarkers]);
 
-            // 3. Malicious pattern
             bool hasMaliciousPattern = normalized.Contains(MSData.GetInstance.consts[MSKeys.ServiceGuestPattern]);
 
-            // 4. SDDL blocking pattern — реальный SACL-блок + подозрительный путь
+            // Реальный SACL-блок + подозрительный путь
             bool hasSddlBlocking = svc.SCMUnavailable &&
                                    (normalized.Contains(MSData.GetInstance.consts[MSKeys.ServiceCmdStart]) ||
                                     normalized.StartsWith(MSData.GetInstance.consts[MSKeys.SddlBlockPath], StringComparison.OrdinalIgnoreCase));
@@ -122,10 +119,10 @@ namespace MSearch.Core.ThreatAnalyzers
             // Random-named extensionless binary in a user-writable directory
             bool hasSuspiciousImagePath = IsSuspiciousServiceImagePath(svc);
 
-            // mshta в ImagePath (javascript:/vbscript:/remote .hta)
+            // mshta в ImagePath
             bool hasMshtaLauncher = normalized.Contains(MSData.GetInstance.SysFileName[39]);
 
-            // Путь службы из известного вредоносного каталога (MSData.obfStr1/obfStr2)
+            // Путь службы из известного вредоносного каталога
             bool hasKnownMaliciousPath =
                 MSData.GetInstance.ContainsKnownMaliciousDir(servicePathWithArgs) ||
                 MSData.GetInstance.IsUnderKnownMaliciousDir(svc.ServicePath);
@@ -223,7 +220,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 isMalicious = true;
             }
 
-            // 4. Анализ файла сервиса (подпись, имя, путь, сигнатуры)
             if (svc.LinkedServiceFile != null)
             {
                 var fileResult = _fileAnalyzer.Analyze(svc.LinkedServiceFile, false);
@@ -254,7 +250,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            // 5. DLL Hijacking — sideloadable DLLs без подписи
+            // DLL Hijacking: sideloadable DLL без подписи
             if (!string.IsNullOrEmpty(svc.ServicePath) && File.Exists(svc.ServicePath))
             {
                 string serviceDir = Path.GetDirectoryName(svc.ServicePath);
@@ -289,7 +285,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            // 6. ServiceDll без подписи
             CheckServiceDll(svc, ref risk, ref isMalicious);
 
             if (risk == 0)

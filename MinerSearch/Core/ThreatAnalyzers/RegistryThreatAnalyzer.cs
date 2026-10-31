@@ -33,7 +33,7 @@ namespace MSearch.Core.ThreatAnalyzers
         private static readonly HashSet<string> _loggedSections = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private static readonly object _sectionLock = new object();
 
-        // Mapping: подраздел_имня (из KeyPath) → default_value для App Paths, помеченных на удаление
+        // Mapping: подраздел (из KeyPath) → default_value для App Paths, помеченных на удаление
         private static readonly Dictionary<string, string> _appPathsMarked = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         private void LogSectionHeader(string sectionName)
@@ -69,7 +69,6 @@ namespace MSearch.Core.ThreatAnalyzers
 
             FileChecker.LogUnsignedSha1(reg.LinkedFile);
 
-            // Логирование файлов из Autorun для читаемости лога
             LogSectionHeader(reg.SectionName);
             if (reg.SectionName.Contains("Autorun"))
             {
@@ -89,56 +88,30 @@ namespace MSearch.Core.ThreatAnalyzers
             int risk = 0;
             bool isMalicious = false;
 
-            // 1. DisallowRun
             string disallowRunNote = AnalyzeDisallowRun(reg, ref risk);
 
-            // 2. Appinit_DLLs
             AnalyzeAppInit(reg, ref risk);
-
-            // 3. App Paths
             AnalyzeAppPaths(reg, ref risk, ref isMalicious);
-
-            // 4. IFEO и WOW6432 IFEO
             AnalyzeIfeo(reg, ref risk, ref isMalicious);
-
-            // 5. Silent Process Exit
             AnalyzeSilentExit(reg, ref risk);
-
-            // 6. System Policies
             AnalyzeSystemPolicies(reg, ref risk);
-
-            // 7. Winlogon (Userinit, Shell)
             AnalyzeWinlogon(reg, ref risk);
-
-            // 8. Tekt0nit (RMS)
             AnalyzeTektonit(reg, ref risk, ref isMalicious);
-
-            // 9. Applocker
             AnalyzeAppLocker(reg, ref risk);
-
-            // 10. Windows Defender
             AnalyzeDefenderExclusions(reg, ref risk);
-
-            // 11. Autorun (Run ключи)
             AnalyzeAutorun(reg, ref risk, ref isMalicious);
-
-            // 12. Lsa Authentication Packages
             AnalyzeLsaAuthenticationPackages(reg, ref risk, ref isMalicious);
-
-            // 13. Custom CLSIDs (пользовательские COM-обработчики, только вывод информации)
             AnalyzeCustomClsids(reg);
 
-            if (risk == 0) yield break; // Угрозы нет
+            if (risk == 0) yield break;
 
             ScanObjectType objType = isMalicious || risk >= 3 ? ScanObjectType.Malware : ScanObjectType.Suspicious;
 
-            // Решение для объекта реестра
             var decision = new ThreatDecision(reg, risk, objType);
             if (disallowRunNote != null)
                 decision.Note = disallowRunNote;
             yield return decision;
 
-            // Решение для связанного файла (если есть флаги действия)
             if (reg.LinkedFile != null &&
                 (reg.LinkedFile.ShouldDeleteFile ||
                  reg.LinkedFile.ShouldMoveFileToQuarantine ||
@@ -148,13 +121,10 @@ namespace MSearch.Core.ThreatAnalyzers
             }
         }
 
-        // --- ПРАВИЛА (Методы-помощники) ---
-
         private string AnalyzeDisallowRun(RegistryThreatObject reg, ref int risk)
         {
             if (reg.NodeType == RegistryNodeType.Value && reg.KeyPath.Equals(MSData.GetInstance.queries["ExplorerDisallowRun"], StringComparison.OrdinalIgnoreCase))
             {
-                // Проверка списка (common debloat targets)
                 string exeName = Path.GetFileName(reg.ValueData);
                 if (MSData.GetInstance.DisallowRunIgnoreList.Contains(exeName, StringComparer.OrdinalIgnoreCase))
                 {
@@ -180,7 +150,7 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.AppInitDlls], StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(reg.ValueData))
                 {
-                    risk += 2; // Присутствие DLL в AppInit — уже риск
+                    risk += 2;
 
                     // Требуем от обработчика создать/обновить соседа
                     reg.ActionSetSibling = true;
@@ -205,7 +175,6 @@ namespace MSearch.Core.ThreatAnalyzers
 
                 if (reg.NodeType == RegistryNodeType.Value)
                 {
-                    // Выводим все отладчики в лог
                     if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.Debugger], StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(reg.ValueData))
                     {
                         AppConfig.GetInstance.LL.LogMessage("[.]", "_DebuggerString", $"{reg.KeyPath.Split('\\').Last()} {reg.ValueData}", ConsoleColor.Gray);
@@ -238,7 +207,6 @@ namespace MSearch.Core.ThreatAnalyzers
                     // Cross-reference: если Debugger содержит путь, чей .exe совпадает с именем подраздела App Paths, помеченного на удаление
                     else if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.Debugger], StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(reg.ValueData))
                     {
-                        // Извлекаем последний компонент пути (имя .exe)
                         string exeName = ExtractLastComponent(reg.ValueData);
                         if (!string.IsNullOrEmpty(exeName) && _appPathsMarked.ContainsKey(exeName))
                         {
@@ -271,7 +239,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 if (reg.NodeType == RegistryNodeType.Value && reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.MonitorProcess], StringComparison.OrdinalIgnoreCase))
                 {
                     risk += 3;
-                    reg.ActionDeleteParentKey = true; // Нужно удалить раздел программы целиком
+                    reg.ActionDeleteParentKey = true;
                     AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", GetKeyName(reg.KeyPath));
                 }
             }
@@ -284,8 +252,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 if (reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.DisableTaskMgr], StringComparison.OrdinalIgnoreCase) ||
                     reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.DisableRegistryTools], StringComparison.OrdinalIgnoreCase))
                 {
-                    // Значение 0 или отсутствует — ограничений нет, не угроза.
-                    // Значение != 0 — ограничения включены, угроза.
                     if (int.TryParse(reg.ValueData, out int disableValue) && disableValue != 0)
                     {
                         risk += 3;
@@ -338,26 +304,25 @@ namespace MSearch.Core.ThreatAnalyzers
                     // Легитимный TektonIT не блокирует доступ - удаляем всегда
                     risk += 3;
                     isMalicious = true;
-                    reg.ActionDelete = true;       // Если ветка, то удалит всю ветку
-                    reg.ActionUnlockFirst = true; // Снимаем защиту вируса
+                    reg.ActionDelete = true;
+                    reg.ActionUnlockFirst = true;
                     AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", GetKeyName(reg.KeyPath));
                     return;
                 }
 
                 if (reg.NodeType == RegistryNodeType.Value)
                 {
-                    // Проверяем наличие JohnPatterns в ValueData
                     bool hasJohnPattern = MSData.GetInstance.JohnPatterns.Any(jp =>
                         reg.ValueData.IndexOf(jp, StringComparison.OrdinalIgnoreCase) >= 0);
 
                     if (!hasJohnPattern)
-                        return; // Не считаем угрозой без совпадения с JohnPatterns
+                        return;
 
                     if (Utils.ContainsNonAscii(reg.ValueName))
                     {
                         risk += 3;
                         isMalicious = true;
-                        reg.ActionDeleteParentKey = true; // Убиваем весь Tektonit из-за одного плохого параметра
+                        reg.ActionDeleteParentKey = true;
                         AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", GetKeyName(reg.KeyPath));
                     }
 
@@ -382,7 +347,7 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 if (reg.NodeType == RegistryNodeType.Key)
                 {
-                    string subKeyName = Path.GetFileName(reg.KeyPath); // Берем хвост пути
+                    string subKeyName = Path.GetFileName(reg.KeyPath);
                     if (MSData.GetInstance.badApplockerRules.Contains(subKeyName, StringComparer.OrdinalIgnoreCase))
                     {
                         risk += 3;
@@ -446,7 +411,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private static bool ComputeDefenderActive()
         {
-            // 1. Служба должна быть запущена
+            // Служба должна быть запущена
             try
             {
                 using (var service = new ServiceController(MSData.GetInstance.consts[MSKeys.WinDefendService]))
@@ -460,7 +425,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 return false;
             }
 
-            // 2. Read windefender flags
             var queries = MSData.GetInstance.queries;
             string[] baseKeys = { queries["WDBasePolicies"], queries["WDBaseLocal"] };
             string[] flagNames = queries["WDFlags"].Split('|');
@@ -522,7 +486,6 @@ namespace MSearch.Core.ThreatAnalyzers
                     }
                 }
 
-                // 1. Эвристика по строке
                 if (hasMinerCli ||
                     val.IndexOf(MSData.GetInstance.SysFileName[39], StringComparison.OrdinalIgnoreCase) >= 0 ||
                     MSData.ContainsAnyMarker(val, MSData.GetInstance.markerSets[MSKeys.ScriptMarkers]))
@@ -550,11 +513,9 @@ namespace MSearch.Core.ThreatAnalyzers
                     AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
                 }
 
-                // 2. Анализ привязанного файла, если он был найден сканером
                 if (reg.LinkedFile != null)
                 {
                     if (reg.LinkedFile.IsValidSignature) return;
-                    // Проверяем SFX-статус файла
                     bool isSfx = FileChecker.IsSfxArchive(reg.LinkedFile.FilePath);
                     
                     if (isSfx)
@@ -584,7 +545,6 @@ namespace MSearch.Core.ThreatAnalyzers
                         }
                     }
 
-                    // Статический анализ самого файла (SignatureFileAnalyzer)
                     var fileResult = _fileAnalyzer.Analyze(reg.LinkedFile, false);
                     if (fileResult.IsMalicious && !reg.ActionDelete)
                     {
@@ -602,7 +562,6 @@ namespace MSearch.Core.ThreatAnalyzers
                     }
                     else
                     {
-                        // Простые проверки фактов размера/подписи
                         if (reg.LinkedFile.FileSize >= reg.LinkedFile.MAX_FILE_SIZE)
                         {
                             AppConfig.GetInstance.LL.LogWarnMessage("_SuspiciousFileSize", FileChecker.GetFileSize(reg.LinkedFile.FileSize));
@@ -624,7 +583,6 @@ namespace MSearch.Core.ThreatAnalyzers
                     {
                         string msv10 = MSData.GetInstance.consts[MSKeys.Msv10];
 
-                        // Проверяем массив элементов: должен быть ровно ["msv1_0"]
                         if (reg.ValueDataArray == null || reg.ValueDataArray.Length != 1 || !reg.ValueDataArray[0].Equals(msv10, StringComparison.OrdinalIgnoreCase))
                         {
                             risk += 3;
@@ -634,7 +592,6 @@ namespace MSearch.Core.ThreatAnalyzers
                             reg.TargetKind = RegistryValueKind.MultiString;
                             AppConfig.GetInstance.LL.LogSuccessMessage("_WillBeRestoredToDefault", reg.ValueName);
 
-                            // Устанавливаем RunAsPPL = 1
                             reg.ActionSetSibling = true;
                             reg.SiblingName = MSData.GetInstance.regValueNames[MSKeys.RunAsPpl];
                             reg.SiblingData = "1";
@@ -673,14 +630,11 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private void AnalyzeAppPaths(RegistryThreatObject reg, ref int risk, ref bool isMalicious)
         {
-            // Проверяем что путь содержит App Paths
             if (!reg.KeyPath.Contains(MSData.GetInstance.queries["AppPaths"]))
                 return;
 
-            // Только для Key NodeType с (default) значением
             if (reg.NodeType == RegistryNodeType.Key && reg.ValueName.Equals(MSData.GetInstance.regValueNames[MSKeys.Default], StringComparison.OrdinalIgnoreCase))
             {
-                // Проверяем расширение ValueData
                 if (!string.IsNullOrEmpty(reg.ValueData) &&
                     MSData.GetInstance.batchExtensions.Any(ext => reg.ValueData.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
                 {
@@ -689,7 +643,6 @@ namespace MSearch.Core.ThreatAnalyzers
                     reg.ActionDelete = true;
                     AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.KeyPath);
 
-                    // Сохраняем mapping: имя_подразела → default_value для cross-reference с IFEO
                     string subKeyName = Path.GetFileName(Path.GetDirectoryName(reg.KeyPath));
                     if (!string.IsNullOrEmpty(subKeyName))
                     {
@@ -719,21 +672,17 @@ namespace MSearch.Core.ThreatAnalyzers
             if (string.IsNullOrEmpty(valueData))
                 return null;
 
-            // Убираем лидирующие/концевые пробелы и кавычки
             string trimmed = valueData.Trim().Trim('"');
 
-            // Если есть пробелы — берём последний токен
             if (trimmed.IndexOf(' ') >= 0)
             {
                 string[] parts = trimmed.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 string lastPart = parts.Last();
-                // Убираем кавычки если остались
                 lastPart = lastPart.Trim('"');
                 return lastPart;
             }
             else
             {
-                // Нет пробелов — весь trimmed это один компонент
                 return trimmed;
             }
         }

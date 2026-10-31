@@ -30,7 +30,6 @@ namespace MSearch.Core.ThreatAnalyzers
         private static bool _headerLogged = false;
         private static readonly object _headerLock = new object();
 
-        // ...\Microsoft\Windows\Caches\<8hex>\RuntimeHost.exe
         private static readonly Regex WindowsCachesRegex = new Regex(
             MSData.GetInstance.regexPatterns[MSKeys.WinCaches],
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -55,7 +54,6 @@ namespace MSearch.Core.ThreatAnalyzers
             int risk = 0;
             bool isMalicious = false;
 
-            // Логирование найденного файла
             if (file.IsShortcut)
             {
                 AppConfig.GetInstance.LL.LogMessage("[.]", "_Just_Shortcut", $"{file.FileName} --> {file.ShortcutTargetPath} {file.ShortcutTargetArgs}", ConsoleColor.Gray);
@@ -102,7 +100,6 @@ namespace MSearch.Core.ThreatAnalyzers
             // Решение для основного объекта (файл из автозагрузки)
             yield return new ThreatDecision(file, risk, objType);
 
-            // Решение для ShortcutTargetFile (цель ярлыка) — если есть флаги действия
             if (file.ShortcutTargetFile != null &&
                 (file.ShortcutTargetFile.ShouldDeleteFile ||
                  file.ShortcutTargetFile.ShouldMoveFileToQuarantine ||
@@ -117,7 +114,7 @@ namespace MSearch.Core.ThreatAnalyzers
         /// </summary>
         private void AnalyzeShortcut(ShellStartupFileThreatObject file, ref int risk, ref bool isMalicious)
         {
-            // 1. Явные маркеры: cmd.exe /c или невидимые символы в имени
+            // Явные маркеры: cmd.exe /c или невидимые символы в имени
             bool isCmdSlashC = file.ShortcutTargetPath?.EndsWith(MSData.GetInstance.hostNames[MSKeys.CmdExe], StringComparison.OrdinalIgnoreCase) == true
                                && file.ShortcutTargetArgs?.StartsWith(MSData.GetInstance.consts[MSKeys.SlashCArg], StringComparison.OrdinalIgnoreCase) == true;
 
@@ -140,7 +137,6 @@ namespace MSearch.Core.ThreatAnalyzers
                     file.ShortcutTargetFile.ShouldDeleteFile = true;
             }
 
-            // 2. Аргументы содержат вредоносные паттерны
             if (!string.IsNullOrEmpty(file.ShortcutTargetArgs))
             {
                 foreach (string badArg in MSData.GetInstance.badArgStrings)
@@ -156,12 +152,10 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            // 3. Анализ целевого файла ярлыка через SignatureFileAnalyzer
             if (file.ShortcutTargetFile != null)
             {
                 var fileResult = _fileAnalyzer.Analyze(file.ShortcutTargetFile, false);
 
-                // Логируем отсутствие подписи у цели
                 if (file.ShortcutTargetFile.TrustResult == WinVerifyTrustResult.FileNotSigned)
                 {
                     AppConfig.GetInstance.LL.LogWarnMessage("_CertFileNotSigned", file.ShortcutTargetFile.FilePath);
@@ -206,7 +200,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 file.ShouldMoveToQuarantine = true;
             }
 
-            // SFX — проверяем подпись для принятия решения
             if (file.IsSfx)
             {
                 var sfxLevel = FileChecker.GetSfxTrustLevel(file.FilePath);
@@ -242,7 +235,6 @@ namespace MSearch.Core.ThreatAnalyzers
                     file.ShouldMoveToQuarantine = true;
             }
 
-            // Прогоняем файл через SignatureFileAnalyzer для точного определения
             long fileSize = 0;
             var trustResult = WinVerifyTrustResult.ActionUnknown;
             try

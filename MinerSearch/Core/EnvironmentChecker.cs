@@ -57,14 +57,12 @@ namespace MSearch.Core
             const string registryKeyPath = @"Software\M1nerSearch";
             const string registryValueName = "acceptedEula";
 
-            // Проверка Windows 7
             if (OSExtensions.IsWindows7())
             {
                 DialogDispatcher.Show(config.LL.GetLocalizedString("_WarnOutdatedOS"), config._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
-            // --accept-eula / -a: принять соглашение без показа окна
             if (LaunchOptions.GetInstance.accept_eula)
             {
                 using (RegistryKey acceptKey = Registry.CurrentUser.CreateSubKey(registryKeyPath))
@@ -105,7 +103,6 @@ namespace MSearch.Core
 
         /// <summary>
         /// Запрашивает букву диска в режиме WinPE (через консоль).
-        /// Вместо goto используется цикл while.
         /// </summary>
         public static string PromptWinPEDriveLetter(AppConfig config)
         {

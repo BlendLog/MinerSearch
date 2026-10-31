@@ -74,7 +74,7 @@ namespace MSearch.Core.Scanners
 
                     string hash = string.Empty;
                     long fileSize = 0;
-                    WinVerifyTrustResult trustResult = WinVerifyTrustResult.Error; // Значение по умолчанию
+                    WinVerifyTrustResult trustResult = WinVerifyTrustResult.Error;
                     string originalFileName = null;
                     string fileDescription = null;
 
@@ -116,25 +116,16 @@ namespace MSearch.Core.Scanners
 
                     results.Add(processThreat);
                 }
-                catch (ArgumentException ae)
+                catch (ArgumentException)
                 {
-#if DEBUG
-                    //Console.WriteLine($"\t[DBG] {p.ProcessName} {ae.Message}");
-#endif
                     continue;
                 }
-                catch (InvalidOperationException ioe)
+                catch (InvalidOperationException)
                 {
-#if DEBUG
-                    // Console.WriteLine($"\t[DBG] {p.ProcessName} {ioe.Message}");
-#endif
                     continue;
                 }
                 catch (Win32Exception w32e)
                 {
-#if DEBUG
-                    //Console.WriteLine($"\t[DBG] {p.ProcessName} {w32e.Message}");
-#endif
                     if (w32e.NativeErrorCode == 299 || w32e.HResult == unchecked((int)0x8007012B))
                         reportProcessScanError(w32e);
                     continue;

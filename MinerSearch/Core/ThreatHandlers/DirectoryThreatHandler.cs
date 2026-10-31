@@ -100,7 +100,6 @@ namespace MSearch.Core.ThreatHandlers
 
             try
             {
-                // Сначала пытаемся разблокировать
                 if (UnlockObjectClass.IsLockedObject(checkPath))
                 {
                     if (UnlockObjectClass.ResetObjectACL(checkPath))

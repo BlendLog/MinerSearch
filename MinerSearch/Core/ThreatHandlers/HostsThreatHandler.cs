@@ -68,21 +68,18 @@ namespace MSearch.Core.ThreatHandlers
                     Utils.AddToQuarantine(hostsThreat.HostsFilePath, "", false);
                 }
 
-                // 2. Удаляем только глушилки. Redirect не трогаем (инфо-лог в анализаторе).
-                // Skip в review отсекается выше по пайплайну (Program.cs), сюда доходят только Cure/Delete.
+                // Удаляем только глушилки. Redirect не трогаем (инфо-лог в анализаторе).
+                // Skip отсекается выше по пайплайну — сюда доходят только Cure/Delete.
                 List<string> linesToRemove = new List<string>();
                 if (hostsThreat.ShouldRemoveBlockedLines && hostsThreat.BlockedLinesCount > 0)
                     linesToRemove.AddRange(hostsThreat.BlockedLines);
 
                 if (linesToRemove.Count > 0)
                 {
-                    // Снять атрибут ReadOnly
                     File.SetAttributes(hostsPath, FileAttributes.Normal);
-                    
-                    // Сбросить ACL
+
                     UnlockObjectClass.ResetObjectACL(hostsPath);
-                    
-                    // Создать временную копию в %Temp% со случайным именем
+
                     string tempPath = Path.Combine(Path.GetTempPath(), 
                         "hosts_" + Utils.GetRndString() + ".tmp");
                     
@@ -90,7 +87,6 @@ namespace MSearch.Core.ThreatHandlers
                     {
                         File.Copy(hostsPath, tempPath, true);
                         
-                        // Работаем с копией (очистка вредоносных записей)
                         List<string> allLines = File.ReadLines(tempPath).ToList();
                         HashSet<string> infectedSet = new HashSet<string>(linesToRemove, StringComparer.Ordinal);
 
@@ -109,12 +105,10 @@ namespace MSearch.Core.ThreatHandlers
                         }
 
                         File.WriteAllLines(tempPath, cleanedLines);
-                        
-                        // Восстановить атрибуты и ACL оригинала
+
                         File.SetAttributes(hostsPath, FileAttributes.Normal);
                         UnlockObjectClass.ResetObjectACL(hostsPath);
-                        
-                        // Заменить оригинал на обработанный
+
                         File.Copy(tempPath, hostsPath, true);
                         NativeFileOperations.DeleteFileWithRetry(tempPath);
 
@@ -125,7 +119,6 @@ namespace MSearch.Core.ThreatHandlers
                     }
                     catch
                     {
-                        // Очистить временный файл при ошибке
                         if (File.Exists(tempPath))
                         {
                             try { NativeFileOperations.DeleteFileWithRetry(tempPath); } catch { }

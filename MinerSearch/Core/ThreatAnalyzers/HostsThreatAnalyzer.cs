@@ -10,10 +10,8 @@ using System.Net.Sockets;
 namespace MSearch.Core.ThreatAnalyzers
 {
     /// <summary>
-    /// SRP: Анализирует записи hosts, принимает решения.
-    /// Угроза — только глушилки (127/8, 0/8, 8.8.8.8, 8.8.4.4, 255.255.255.255):
-    /// ScanObjectType.Infected. Внешний IP на AV-домен (Redirect) не трогаем —
-    /// только нейтральная строка в лог, без решения и без очистки.
+    /// Анализирует записи hosts. Угроза — только глушилки (ScanObjectType.Infected);
+    /// внешний IP на AV-домен (Redirect) не трогаем — только строка в лог.
     /// НЕ увеличивает счётчики — это делает CleanManager.
     /// </summary>
     public sealed class HostsThreatAnalyzer : IThreatAnalyzer
@@ -30,7 +28,6 @@ namespace MSearch.Core.ThreatAnalyzers
             if (hostsThreat == null)
                 yield break;
 
-            // Заголовок логируем один раз
             if (!_headerLogged)
             {
                 lock (_headerLock)
@@ -45,7 +42,6 @@ namespace MSearch.Core.ThreatAnalyzers
 
             if (hostsThreat.Entries == null || hostsThreat.Entries.Count == 0) yield break;
 
-            // Вердикт: матчим домены по базе, делим строки по IP
             foreach (HostsEntry entry in hostsThreat.Entries)
             {
                 if (entry == null || entry.Domains == null || entry.Domains.Count == 0)

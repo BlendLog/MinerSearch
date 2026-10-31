@@ -217,7 +217,6 @@ namespace MSearch
                     return false;
                 }
 
-                // Try HKCU first (legacy XOR-encrypted)
                 using (var hkcu = Registry.CurrentUser.OpenSubKey(QUARANTINE_PATH, true))
                 {
                     if (hkcu != null)
@@ -240,7 +239,6 @@ namespace MSearch
                     }
                 }
 
-                // Try HKLM (chunked)
                 using (var hklm = Registry.LocalMachine.OpenSubKey(QUARANTINE_PATH, true))
                 {
                     if (hklm == null) return false;
@@ -414,7 +412,6 @@ namespace MSearch
             {
                 EnsureRegistryAccessible();
 
-                // Read the XML bytes via Native.CreateFile (long path support)
                 byte[] xmlBytes = ReadAllBytesLongPath(info.XmlPath);
                 if (xmlBytes == null || xmlBytes.Length == 0) return false;
 
@@ -480,7 +477,6 @@ namespace MSearch
                         subKey.SetValue(QUARANTINED_AT, DateTime.Now.ToString("o"));
                         subKey.SetValue(ORIGINAL_PATH, serviceName, RegistryValueKind.String);
 
-                        // WasRunning flag
                         subKey.SetValue("WasRunning", (status == ServiceControllerStatus.Running) ? 1 : 0, RegistryValueKind.DWord);
 
                         // Read service config via QueryServiceConfig
@@ -537,7 +533,6 @@ namespace MSearch
                         }
                         catch { }
 
-                        // Description
                         try
                         {
                             string descRegPath = $"SYSTEM\\CurrentControlSet\\Services\\{serviceName}";
@@ -563,7 +558,6 @@ namespace MSearch
                         }
                         catch { }
 
-                        // SDDL
                         try
                         {
                             string sddl = ServiceHelper.GetServiceSddl(serviceName);
@@ -941,7 +935,6 @@ namespace MSearch
 
             try
             {
-                // Read XML from quarantine
                 byte[] xmlBytes = ReadChunkedFromHive(subKeyName);
                 if (xmlBytes == null || xmlBytes.Length == 0) return false;
 
@@ -953,7 +946,6 @@ namespace MSearch
                     xmlContent = sr.ReadToEnd();
                 }
 
-                // Read original task path
                 string taskPath = null;
                 using (var hklm = Registry.LocalMachine.OpenSubKey(QUARANTINE_PATH))
                 {
@@ -962,7 +954,6 @@ namespace MSearch
 
                 if (string.IsNullOrEmpty(taskPath)) return false;
 
-                // Use Task Scheduler COM to register the task
                 Type schedulerType = Type.GetTypeFromProgID("Schedule.Service");
                 if (schedulerType == null) return false;
 
@@ -1025,7 +1016,6 @@ namespace MSearch
                     System.Reflection.BindingFlags.InvokeMethod, null, targetFolder,
                     new object[] { taskName, xmlContent, 6, null, null, 0, null });
 
-                // Delete from quarantine
                 Delete(subKeyName);
 
                 AppConfig.GetInstance.LL.LogSuccessMessage("_QuarantineTaskRestored", taskPath);
@@ -1093,7 +1083,6 @@ namespace MSearch
 
                     CloseServiceHandle(svcHandle);
 
-                    // Write-back: Description
                     string description = hklm.GetValue("Description") as string;
                     if (description != null)
                     {
@@ -1123,19 +1112,15 @@ namespace MSearch
                         catch { }
                     }
 
-                    // Write-back: SDDL
                     string sddl = hklm.GetValue("Sddl") as string;
                     if (!string.IsNullOrEmpty(sddl))
                     {
                         ServiceHelper.SetSddl(serviceName, sddl);
                     }
 
-                    // Restore SafeBoot entries if they existed
-                    // (Not restored for malware services — by design)
-
+                    // SafeBoot для вредоносных служб намеренно не восстанавливаем
                 } // subkey handle closed before Delete (cf. RestoreTask)
 
-                // Delete from quarantine (was missing: counter stayed > 0 after service restore)
                 Delete(subKeyName);
 
                 AppConfig.GetInstance.LL.LogSuccessMessage("_QuarantineServiceRestored", serviceName);

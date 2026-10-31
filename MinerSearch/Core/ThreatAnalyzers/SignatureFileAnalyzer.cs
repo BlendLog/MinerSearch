@@ -122,7 +122,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 if (FileChecker.IsSfxArchive(fileThreat.FilePath))
                 {
                     AppConfig.GetInstance.LL.LogWarnMessage("_sfxArchive", fileThreat.FilePath);
-                    // SFX — проверяем тип подписи для принятия решения
                     var sfxLevel = FileChecker.GetSfxTrustLevel(fileThreat.FilePath);
                     
                     switch (sfxLevel)
@@ -299,7 +298,6 @@ namespace MSearch.Core.ThreatAnalyzers
                     var result = AnalyzeAndDisable(fileThreat, displayProgress: false);
                     fileThreat.AnalysisResult = result;
 
-                    // Генерируем ThreatDecision на основе результата анализа
                     if (result.IsMalicious)
                     {
                         fileThreat.ShouldMoveFileToQuarantine = true;

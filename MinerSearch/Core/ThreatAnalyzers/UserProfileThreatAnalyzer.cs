@@ -33,7 +33,6 @@ namespace MSearch.Core.ThreatAnalyzers
             int risk = 0;
             bool isMalicious = false;
 
-            // Проверяем точное совпадение имени "john" (case-insensitive)
             if (userProfile.UserName.Equals("john", StringComparison.OrdinalIgnoreCase))
             {
                 if (userProfile.IsHidden)

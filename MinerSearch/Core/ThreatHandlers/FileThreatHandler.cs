@@ -141,7 +141,6 @@ namespace MSearch.Core.ThreatHandlers
 
             try
             {
-                // Сбросить ACL перед удалением
                 UnlockObjectClass.ResetObjectACL(path);
 
                 int lastError = 0;
@@ -203,7 +202,6 @@ namespace MSearch.Core.ThreatHandlers
             try
             {
                 UnlockObjectClass.DisableExecute(path);
-                // Промежуточная фаза - не устанавливаем финальное действие
                 decision.ActionType = ScanActionType.Skipped;
                 return ApplyResult.Success;
             }

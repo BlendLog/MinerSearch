@@ -30,7 +30,6 @@ namespace MSearch
             if (HasConsoleArgument(args) || Native.GetConsoleWindow() != IntPtr.Zero)
                 ConsoleBridge.EnsureConsole();
 
-            // Parse command line arguments
             LaunchOptions.ParseArgs(args);
 
             bool stdioRedirected = ConsoleBridge.HasRedirectedStdio();
@@ -98,11 +97,9 @@ namespace MSearch
         {
             LaunchOptions _options = LaunchOptions.GetInstance;
 
-            // Create DeviceId-based mutexes
             Utils.mutex = new Mutex(false, Utils.GetDeviceIdLockName());
             Utils.rebootMtx = new Mutex(false, Utils.GetDeviceIdRebootName());
 
-            // Check environment (moved to EnvironmentChecker)
             var envResult = EnvironmentChecker.Check();
 
             if (!envResult.DotNetInstalled)
@@ -127,7 +124,6 @@ namespace MSearch
                 return;
             }
 
-            // WinPE: add --winpemode flag to arguments
             if (envResult.IsWinPE)
             {
                 List<string> newargs = new List<string> { "--winpemode" };
@@ -170,7 +166,6 @@ namespace MSearch
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(AppConfig.GetInstance.ExecutablePath));
 
-            // Apply flags from LaunchOptions
             if (_options.help)
             {
                 _options.help = true;
@@ -336,10 +331,8 @@ namespace MSearch
 
             ScanFactory.PrepareEnvironment(_options);
 
-            // Create scanning infrastructure
             ScanInfrastructure infrastructure = ScanFactory.CreateInfrastructure();
 
-            // Execute scanning (engine is UI-agnostic)
             ScanWorkflow workflow = new ScanWorkflow(infrastructure, null, new ConsoleScanInteraction());
             ScanWorkflowResult workflowResult = workflow.Run(CancellationToken.None);
             ScanStatistics scanStats = workflowResult.Statistics;

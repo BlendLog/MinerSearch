@@ -53,16 +53,14 @@ namespace MSearch.Core.Handlers
 
             try
             {
-                // 1. Удаляем Windows-службы руткита ($77svc / dialersvc): иначе после перезагрузки стагер поднимет её заново
+                // Удаляем Windows-службы руткита: иначе после перезагрузки стагер поднимет её заново
                 bool serviceRemoved = RemoveR77Services();
 
-                // 2. Graceful-detach core-инжектов и сервиса (сервис r77 1.8.x живёт внутри winlogon.exe)
+                // Graceful-detach core-инжектов и сервиса (сервис r77 1.8.x живёт внутри winlogon.exe)
                 DetachR77Processes(rootkit.R77Processes);
 
-                // 3. Терминируем dialer процессы (SilentCryptoMiner)
                 dialerTerminated = TerminateDialerProcesses(rootkit.DialerPids);
 
-                // 4. Удаляем значения стагера и конфигурацию
                 success = RemoveR77Config() || serviceRemoved;
             }
             catch (Exception ex)
@@ -173,10 +171,8 @@ namespace MSearch.Core.Handlers
             {
                 try
                 {
-                    // Снимаем защиту от завершения
                     UnProtect(pid);
 
-                    // Завершаем процесс
                     using (var p = Process.GetProcessById(pid))
                     {
                         string pname = p.ProcessName;

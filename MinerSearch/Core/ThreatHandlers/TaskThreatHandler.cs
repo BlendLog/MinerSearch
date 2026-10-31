@@ -37,7 +37,7 @@ namespace MSearch.Core.ThreatHandlers
             if (phase == CleanupPhase.Finalize)
             {
 
-                // Quarantine the task before deletion
+                // Карантин задачи создаётся до удаления
                 if (taskThreat.ActionQuarantineTask)
                 {
                     if (!QuarantineManager.AddTask(taskThreat.Info))

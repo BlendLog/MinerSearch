@@ -82,7 +82,6 @@ namespace MSearch.Core.ThreatAnalyzers
 
             if (fileThreat.SourceTag == "sfx_unsigned")
             {
-                // SFX без подписи — явно подозрительно, карантиним
                 AppConfig.GetInstance.LL.LogWarnMediumMessage("_SuspiciousFile", filePath);
                 fileThreat.ShouldMoveFileToQuarantine = true;
 
@@ -94,12 +93,10 @@ namespace MSearch.Core.ThreatAnalyzers
 
             if (fileThreat.SourceTag == "sfx_bad_cert")
             {
-                // SFX с проблемным сертификатом — проверяем расположение
                 bool isInSuspiciousLocation = IsInSuspiciousFileSystemPath(filePath);
 
                 if (isInSuspiciousLocation)
                 {
-                    // В подозрительной папке — карантин
                     AppConfig.GetInstance.LL.LogWarnMediumMessage("_SuspiciousFile", filePath);
                     fileThreat.ShouldMoveFileToQuarantine = true;
 
@@ -109,7 +106,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
                 else
                 {
-                    // В нормальной папке — просто помечаем как подозрительный для логов
                     AppConfig.GetInstance.LL.LogWarnMediumMessage("_sfxArchive", filePath);
 
                     var decision = new ThreatDecision(fileThreat, riskLevel: 1, ScanObjectType.Unsafe);

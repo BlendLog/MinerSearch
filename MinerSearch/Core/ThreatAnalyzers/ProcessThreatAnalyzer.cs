@@ -342,10 +342,9 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            // --- Маркирование файла: ОДНО действие (удаление ИЛИ карантин) ---
+            // ОДНО действие на файл: удаление ИЛИ карантин
             bool isKnownMalicious = IsKnownMaliciousFile(proc.FileProcess.FilePath);
 
-            // Проверка по obfStr2 (главный приоритет — удаление)
             if (isKnownMalicious)
             {
                 riskLevel += 3;
@@ -353,7 +352,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 proc.FileProcess.ShouldDisableExecute = true;
                 proc.FileProcess.ShouldDeleteFile = true;
             }
-            // Блок анализа содержимого файла (CPU/Memory эвристика)
             else if (proc.CpuTime > new TimeSpan(0, 1, 0) || (proc.UsedMemorySize / (1024 * 1024) >= 2048))
             {
                 if (File.Exists(proc.FileProcess.FilePath))
@@ -425,7 +423,6 @@ namespace MSearch.Core.ThreatAnalyzers
 
             if (proc.FileProcess.IsSuspiciousPath && riskLevel >= 3)
             {
-                // Карантин только если файл НЕ в obfStr2
                 if (!proc.FileProcess.ShouldDeleteFile)
                 {
                     proc.FileProcess.ShouldMoveFileToQuarantine = true;
@@ -448,13 +445,10 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            // Создаём ThreatDecision только для подозрительных процессов
             if (riskLevel >= 3)
             {
-                // Решение для процесса
                 yield return new ThreatDecision(threat, riskLevel, scanType);
 
-                // Решение для связанного файла (если есть флаги действия)
                 if (proc.FileProcess.ShouldDeleteFile ||
                     proc.FileProcess.ShouldMoveFileToQuarantine ||
                     proc.FileProcess.ShouldDisableExecute)

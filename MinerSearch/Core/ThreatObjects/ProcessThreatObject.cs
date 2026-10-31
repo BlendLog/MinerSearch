@@ -16,7 +16,6 @@ namespace MSearch.Core.ThreatObjects
         public bool IsDotnetProcess { get; }
         public bool HasSystemPrivilege { get; }
 
-        //Специфичные флаги процесса
         public int GPULibsCount { get; internal set; }
         public bool IsBadArgsPatternPresent { get; internal set; }
         public bool ShouldSuspend { get; internal set; }
@@ -24,7 +23,6 @@ namespace MSearch.Core.ThreatObjects
         public bool IsProcessHollowed { get; internal set; }
         public bool WasSuspended { get; internal set; }
 
-        //Связанный файл процесса
         public FileThreatObject FileProcess { get; }
 
         public ProcessThreatObject(

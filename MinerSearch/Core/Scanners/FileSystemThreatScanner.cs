@@ -22,31 +22,14 @@ namespace MSearch.Core.Scanners
         {
             var results = new List<IThreatObject>();
 
-            // 1. Известные вредоносные каталоги (obfStr1)
             ScanKnownDirectories(results);
-
-            // 2. Заблокированные/пустые каталоги (obfStr5)
             ScanLockedDirectories(results);
-
-            // 3. Известные вредоносные файлы (obfStr2)
             ScanKnownFiles(results);
-
-            // 4. Каталоги по паттерну (GUID в ProgramData)
             ScanPatternBasedDirectories(results);
-
-            // 5. Каталоги с двойной точкой на конце (вирусной трюк: logdata.., config..)
             ScanDoubleDotDirectories(results);
-
-            // 6. Bloated файлы в Windows
             ScanBloatedFiles(results);
-
-            // 7. Файлы в CommonApplicationData (bat + SFX)
             ScanCommonAppDataFiles(results);
-
-            // 8. Исполняемые файлы в корнях AppData/LocalAppData/Public
             ScanSpecificLocations(results);
-
-            // 9. Исполняемые файлы в кэш-каталоге
             ScanUserCaches(results);
 
             return results;
@@ -58,7 +41,6 @@ namespace MSearch.Core.Scanners
             {
                 if (Directory.Exists(dir))
                 {
-                    // SourceTag = "obfStr1" сообщает анализатору что это известный вредоносный каталог
                     var dirThreat = new DirectoryThreatObject(dir, Path.GetFileName(dir), sourceTag: "obfStr1");
                     results.Add(dirThreat);
                 }
@@ -75,7 +57,6 @@ namespace MSearch.Core.Scanners
                     {
                         bool isLocked = UnlockObjectClass.IsLockedObject(dir);
 
-                        // Удаляем каталог если он заблокирован
                         if (isLocked)
                         {
                             var dirThreat = new DirectoryThreatObject(dir, Path.GetFileName(dir), sourceTag: "locked");
@@ -113,7 +94,6 @@ namespace MSearch.Core.Scanners
                     } catch { }
                     try { hash = FileChecker.CalculateSHA1(filePath); } catch { }
 
-                    // SourceTag = "obfStr2" сообщает анализатору что это известный вредоносный файл
                     var fileThreat = new FileThreatObject(filePath, Path.GetFileName(filePath), fileSize, originalName, description, hash, trustResult)
                     {
                         SourceTag = "obfStr2"
@@ -140,7 +120,6 @@ namespace MSearch.Core.Scanners
 
                 if (regex.IsMatch(directoryName))
                 {
-                    // Проверяем есть ли файлы с известным malicious MD5
                     bool hasMaliciousFile = false;
                     try
                     {
@@ -158,9 +137,8 @@ namespace MSearch.Core.Scanners
 
                     if (hasMaliciousFile)
                     {
-                        MSData.GetInstance.obfStr1.Add(directory); // Добавляем в базу
+                        MSData.GetInstance.obfStr1.Add(directory);
 
-                        // SourceTag = "obfStr1" — теперь это известный вредоносный каталог
                         var dirThreat = new DirectoryThreatObject(directory, directoryName, sourceTag: "obfStr1");
                         results.Add(dirThreat);
                     }
@@ -169,8 +147,7 @@ namespace MSearch.Core.Scanners
         }
 
         /// <summary>
-        /// Ищет в ProgramData каталоги, имя которых заканчивается на ".."
-        /// Вирус создаёт такие имена (logdata.., config..) чтобы сделать их сложнее удалить.
+        /// Ищет в ProgramData каталоги с суффиксом "..".
         /// Для доступа используется UNC-формат с префиксом \\?\
         /// </summary>
         private void ScanDoubleDotDirectories(List<IThreatObject> results)
@@ -186,16 +163,12 @@ namespace MSearch.Core.Scanners
                 {
                     string directoryName = Path.GetFileName(directory);
 
-                    // Ищем имена, заканчивающиеся на ".."
                     if (directoryName.EndsWith("..", StringComparison.Ordinal))
                     {
-                        // Формируем путь в UNC-формате с префиксом \\?\
                         string uncPath = @"\\?\" + directory;
 
-                        // Проверяем существование через UNC-путь (на случай если Directory.Exists не работает с такими именами)
                         if (Directory.Exists(uncPath))
                         {
-                            // SourceTag = "double_dot_dir" — каталог с двойной точкой на конце
                             var dirThreat = new DirectoryThreatObject(uncPath, directoryName, sourceTag: "double_dot_dir");
                             results.Add(dirThreat);
                         }
@@ -220,7 +193,7 @@ namespace MSearch.Core.Scanners
                 ScanActivity.Report(file);
                 if (FileChecker.IsFileSizeBloated(file))
                 {
-                    MSData.GetInstance.obfStr2.Add(file); // Добавляем в базу
+                    MSData.GetInstance.obfStr2.Add(file);
 
                     long fileSize = 0;
                     string originalName = "";
@@ -237,7 +210,6 @@ namespace MSearch.Core.Scanners
                     } catch { }
                     try { hash = FileChecker.CalculateSHA1(file); } catch { }
 
-                    // SourceTag = "bloated" — анализатор решит что с этим делать
                     var fileThreat = new FileThreatObject(file, Path.GetFileName(file), fileSize, originalName, description, hash, trustResult)
                     {
                         SourceTag = "bloated"
@@ -274,7 +246,6 @@ namespace MSearch.Core.Scanners
                         long fileSize = 0;
                         try { fileSize = new FileInfo(file).Length; } catch { }
 
-                        // SourceTag = "bad_bat" — подозрительный bat файл
                         var fileThreat = new FileThreatObject(file, Path.GetFileName(file), fileSize, "", "", "", WinVerifyTrustResult.Error)
                         {
                             SourceTag = "bad_bat"
@@ -322,12 +293,12 @@ namespace MSearch.Core.Scanners
                     string sourceTag;
                     if (trustResult == WinVerifyTrustResult.FileNotSigned)
                     {
-                        sourceTag = "sfx_unsigned";     // Не подписан — явно подозрительно
+                        sourceTag = "sfx_unsigned";
                     }
                     else
                     {
-                        // SubjectCertExpired, UntrustedRoot, SignatureOrFileCorrupt и т.д.
-                        // Подписан, но сертификат проблемный — тоже подозрительно
+                        // SubjectCertExpired, UntrustedRoot, SignatureOrFileCorrupt и т.д. —
+                        // подписан, но сертификат проблемный, тоже подозрительно
                         sourceTag = "sfx_bad_cert";
                     }
 
@@ -364,18 +335,14 @@ namespace MSearch.Core.Scanners
                     foreach (string filePath in Directory.EnumerateFiles(baseDir, "*.*", SearchOption.TopDirectoryOnly))
                     {
                         ScanActivity.Report(filePath);
-                        // Пропускаем репосты и недоступные файлы
                         if (FileSystemManager.IsReparsePoint(filePath) || !FileSystemManager.IsAccessibleFile(filePath))
                             continue;
 
-                        // Проверяем, является ли файл исполняемым (MZ-подпись)
                         if (!FileChecker.IsExecutable(filePath))
                             continue;
 
-                        // Проверяем подпись
                         WinVerifyTrustResult trustResult = WinTrust.GetInstance.VerifyEmbeddedSignature(filePath);
 
-                        // Пропускаем файлы с валидной подписью
                         if (trustResult == WinVerifyTrustResult.Success)
                             continue;
 
@@ -395,7 +362,6 @@ namespace MSearch.Core.Scanners
                         try { hash = FileChecker.CalculateSHA1(filePath); }
                         catch { }
 
-                        // SourceTag = "specific_location_unsigned_exe" — анализатор решит что с этим делать
                         var fileThreat = new FileThreatObject(filePath, Path.GetFileName(filePath), fileSize, originalName, description, hash, trustResult)
                         {
                             SourceTag = "specific_location_unsigned_exe"

@@ -52,12 +52,10 @@ namespace MSearch
 
         private bool _isCompositionEnabled = false;
 
-        // Кэш: Bitmap с тенью + фоном (полная отрисовка)
         private Bitmap _cachedBitmap;
         private int _cachedW;
         private int _cachedH;
 
-        // Кэш GraphicsPath для скруглённого фона
         private GraphicsPath _cachedPath;
         private int _cachedPathW;
         private int _cachedPathH;
@@ -111,13 +109,11 @@ namespace MSearch
                 return;
             }
 
-            // Фон + тень — из кэша, один DrawImageUnscaled
             if (_cachedBitmap != null)
             {
                 e.Graphics.DrawImageUnscaled(_cachedBitmap, 0, 0);
             }
 
-            // Рисуем дочерние контролы поверх фона
             base.OnPaint(e);
         }
 
@@ -128,14 +124,11 @@ namespace MSearch
 
             if (w <= 0 || h <= 0) return;
 
-            // Если размер не изменился — ничего не перерисовываем
             if (_cachedBitmap != null && _cachedW == w && _cachedH == h)
                 return;
 
             _cachedBitmap?.Dispose();
 
-            // Bitmap с запасом для тени: тени рисуются за пределами ClientSize
-            // Но тень рисуется в координатах клиента — поэтому Bitmap = ClientSize
             _cachedBitmap = new Bitmap(w, h, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
             using (var g = Graphics.FromImage(_cachedBitmap))
@@ -153,27 +146,22 @@ namespace MSearch
 
         private void DrawShadow(Graphics g, int w, int h)
         {
-            // Верхняя тень — с запасом для размытия
             using (var brush = new LinearGradientBrush(new Point(0, 0), new Point(0, SHADOW_SIZE + SHADOW_EXTRA),
                 _shadowTopStart, _shadowTopEnd))
                 g.FillRectangle(brush, 0, 0, w, SHADOW_SIZE + SHADOW_EXTRA);
 
-            // Нижняя тень
             using (var brush = new LinearGradientBrush(new Point(0, h - SHADOW_SIZE), new Point(0, h),
                 _shadowBottomEnd, _shadowBottomStart))
                 g.FillRectangle(brush, 0, h - SHADOW_SIZE, w, SHADOW_SIZE);
 
-            // Левая тень
             using (var brush = new LinearGradientBrush(new Point(0, 0), new Point(SHADOW_SIZE, 0),
                 _shadowLeftStart, _shadowLeftEnd))
                 g.FillRectangle(brush, 0, 0, SHADOW_SIZE, h);
 
-            // Правая тень
             using (var brush = new LinearGradientBrush(new Point(w - SHADOW_SIZE, 0), new Point(w, 0),
                 _shadowRightEnd, _shadowRightStart))
                 g.FillRectangle(brush, w - SHADOW_SIZE, 0, SHADOW_SIZE, h);
 
-            // Углы тени
             int cr2 = CORNER_RADIUS * 2;
             using (var brush = new LinearGradientBrush(new Point(0, 0), new Point(CORNER_RADIUS, CORNER_RADIUS),
                 _cornerShadowStart, _cornerShadowEnd))

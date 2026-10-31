@@ -39,7 +39,7 @@ namespace MSearch.Core.ThreatAnalyzers
             if (string.IsNullOrEmpty(dirPath))
                 yield break;
 
-            // === РЕШЕНИЕ 1: Каталог из obfStr1 (100% вредоносный) ===
+            // === Каталог из obfStr1 (100% вредоносный) ===
             if (dirThreat.SourceTag == "obfStr1")
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_MaliciousDir", dirPath);
@@ -53,7 +53,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 yield break;
             }
 
-            // === РЕШЕНИЕ 2: Заблокированный каталог (нужно разблокировать и удалить) ===
+            // === Заблокированный каталог (нужно разблокировать и удалить) ===
             if (dirThreat.SourceTag == "locked")
             {
                 AppConfig.GetInstance.LL.LogWarnMessage("_LockedDirectory", dirPath);
@@ -67,7 +67,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 yield break;
             }
 
-            // === РЕШЕНИЕ 3: Каталог с двойной точкой на конце (вирусной трюк) — удалить ===
+            // === Каталог с двойной точкой на конце ===
             if (dirThreat.SourceTag == "double_dot_dir")
             {
                 AppConfig.GetInstance.LL.LogCautionMessage("_MaliciousDir", dirPath);

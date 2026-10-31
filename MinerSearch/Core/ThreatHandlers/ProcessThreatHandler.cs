@@ -8,7 +8,7 @@ using Win32Wrapper;
 namespace MSearch.Core.Handlers
 {
     /// <summary>
-    /// Используется для обработки процессов на этапе очистки
+    /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё РїСЂРѕС†РµСЃСЃРѕРІ РЅР° СЌС‚Р°РїРµ РѕС‡РёСЃС‚РєРё
     /// </summary>
     internal sealed class ProcessThreatHandler : IThreatHandler
     {

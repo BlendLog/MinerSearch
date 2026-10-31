@@ -31,7 +31,6 @@ namespace MSearch
                     throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
                 }
 
-                // Set empty DACL and enable inheritance
                 int result = Native.SetNamedSecurityInfo(
                     path,
                     Native.SE_FILE_OBJECT,

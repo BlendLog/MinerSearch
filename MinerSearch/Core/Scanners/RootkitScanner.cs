@@ -94,7 +94,7 @@ namespace MSearch.Core.Scanners
         }
 
         /// <summary>
-        /// Детачит инъекции R77 в процессах (версия с detachAddresses).
+        /// Детачит инъекции R77 в процессах по адресам из detachAddresses.
         /// </summary>
         private void DetachR77Processes(int[] processIds, uint[] signatures, ulong[] detachAddresses)
         {

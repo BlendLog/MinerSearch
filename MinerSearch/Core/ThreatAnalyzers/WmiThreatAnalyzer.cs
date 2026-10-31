@@ -18,7 +18,6 @@ namespace MSearch.Core.ThreatAnalyzers
             var wmi = threat as WmiSubscriptionThreatObject;
             if (wmi == null) yield break;
 
-            // Заголовок логируем один раз при первом объекте
             if (!_headerLogged)
             {
                 lock (_headerLock)
@@ -31,7 +30,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            // Пропускаем легитимные WMI события — проверяем на наличие `..\` в CommandLine
             if (!IsCommandLineSuspicious(wmi.CommandLineTemplate))
             {
                 yield break;
@@ -39,7 +37,6 @@ namespace MSearch.Core.ThreatAnalyzers
 
             AppConfig.GetInstance.LL.LogWarnMediumMessage("_WMIEvent", $"{wmi.Name} -> {wmi.CommandLineTemplate}");
 
-            // WMI Event Consumers с `..\` в CommandLine считаются вредоносными
             var decision = new ThreatDecision(wmi, riskLevel: 3, ScanObjectType.Malware);
             yield return decision;
         }

@@ -21,18 +21,17 @@ namespace MSearch
             {
                 Graphics g = e.Graphics;
 
-                // Draw border lines
                 if (ShowTopBorder)
-                    g.DrawLine(pen, 0, 0, this.Width, 0); // top
+                    g.DrawLine(pen, 0, 0, this.Width, 0);
 
                 if (ShowLeftBorder)
-                    g.DrawLine(pen, 0, 0, 0, this.Height); // left
+                    g.DrawLine(pen, 0, 0, 0, this.Height);
 
                 if (ShowRightBorder)
-                    g.DrawLine(pen, this.Width - BorderWidth, 0, this.Width - BorderWidth, this.Height); // right
+                    g.DrawLine(pen, this.Width - BorderWidth, 0, this.Width - BorderWidth, this.Height);
 
                 if (ShowBottomBorder)
-                    g.DrawLine(pen, 0, this.Height - BorderWidth, this.Width, this.Height - BorderWidth); // bottom
+                    g.DrawLine(pen, 0, this.Height - BorderWidth, this.Width, this.Height - BorderWidth);
             }
         }
 

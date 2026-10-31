@@ -28,10 +28,8 @@ namespace Win32Wrapper
             {
                 try
                 {
-                    // 1. Снять атрибуты
                     SetFileAttributes(path, FILE_ATTRIBUTE_NORMAL);
-                    
-                    // 2. Удалить файл через WinAPI
+
                     if (DeleteFile(path))
                     {
                         return true;
@@ -40,10 +38,9 @@ namespace Win32Wrapper
                     int lastError = Marshal.GetLastWin32Error();
                     if (lastError == 2) // ERROR_FILE_NOT_FOUND
                     {
-                        return true; // Файл уже удалён
+                        return true;
                     }
-                    
-                    // Подождать перед следующей попыткой
+
                     if (i < maxRetries - 1)
                     {
                         System.Threading.Thread.Sleep(100 * (i + 1));

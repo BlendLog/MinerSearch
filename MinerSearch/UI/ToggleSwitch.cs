@@ -133,25 +133,21 @@ namespace MSearch
             pevent.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             pevent.Graphics.Clear(this.Parent.BackColor);
 
-            if (this.Checked) //ON
+            if (this.Checked)
             {
-                //Draw the control surface
                 if (solidStyle)
                     pevent.Graphics.FillPath(new SolidBrush(onBackColor), GetFigurePath());
                 else
                     pevent.Graphics.DrawPath(new Pen(onBackColor, 2), GetFigurePath());
-                //Draw the toggle
                 pevent.Graphics.FillEllipse(new SolidBrush(onToggleColor),
                     new Rectangle(this.Width - this.Height + 1, 2, toggleSize, toggleSize));
             }
-            else //OFF
+            else
             {
-                //Draw the control surface
                 if (solidStyle)
                     pevent.Graphics.FillPath(new SolidBrush(offBackColor), GetFigurePath());
                 else
                     pevent.Graphics.DrawPath(new Pen(offBackColor, 2), GetFigurePath());
-                //Draw the toggle
                 pevent.Graphics.FillEllipse(new SolidBrush(offToggleColor),
                     new Rectangle(2, 2, toggleSize, toggleSize));
             }

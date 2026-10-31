@@ -109,7 +109,6 @@ namespace MSearch.Core.Managers
                 return;
             }
 
-            // Группируем решения по типу для раздельного логирования этапов
             var groupedByKind = decisions
                 .Where(d => d != null && d.Target != null)
                 .GroupBy(d => d.Target.Kind)
@@ -237,18 +236,15 @@ namespace MSearch.Core.Managers
 
         private void RecordResult(ThreatDecision decision, ApplyResult result)
         {
-            // Записываем в state только значимые результаты
             if (result == ApplyResult.NotApplicable || result == ApplyResult.Skipped)
                 return;
 
-            // Определяем ScanActionType на основе ApplyResult и фазы
             ScanActionType actionType = MapResultToActionType(result, decision);
 
             // Locked-by-AV отражаем один раз на объект (в т.ч. при разных спеллингах пути)
             if (actionType == ScanActionType.LockedByAntivirus && !_recordedLockedPaths.Add(GetLockedKey(decision)))
                 return;
 
-            // Формируем описание для лога
             string description = GetDescription(decision);
 
             // Если была ошибка — добавляем сообщение в примечание (к тексту от анализатора, если есть)
@@ -267,7 +263,6 @@ namespace MSearch.Core.Managers
                 }
             }
 
-            // Записываем в ScanResult
             _state.AddScanResult(new ScanResult(decision.ObjectType, description, actionType, note, decision.Target.Id, decision.Target.Kind));
 
             // Подсчёт обнаруженных угроз — увеличивается при ЛЮБОМ результате
@@ -276,7 +271,6 @@ namespace MSearch.Core.Managers
             else if (decision.ObjectType == ScanObjectType.Suspicious)
                 _state.IncrementFoundSuspicious();
 
-            // Neutralized threats: только при успешной обработке
             if (result == ApplyResult.Success)
             {
                 if (actionType == ScanActionType.Cured ||

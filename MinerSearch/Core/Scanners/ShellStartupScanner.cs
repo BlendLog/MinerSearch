@@ -43,12 +43,11 @@ namespace MSearch.Core.Scanners
 
             try
             {
-                // Файлы в текущей папке
                 foreach (string file in Directory.EnumerateFiles(folder, "*.*", SearchOption.TopDirectoryOnly))
                 {
                     string uncFile = FileSystemManager.NormalizeExtendedPath(file);
 
-                    // Пропускаем .ini файлы (как в оригинальном ScanShellStartup)
+                    // Пропускаем .ini файлы
                     if (string.Equals(Path.GetExtension(uncFile), ".ini", StringComparison.OrdinalIgnoreCase))
                         continue;
 
@@ -64,7 +63,6 @@ namespace MSearch.Core.Scanners
                     string shortcutTargetArgs = null;
                     FileThreatObject shortcutTargetFile = null;
 
-                    // Резолвим ярлык
                     bool isShortcut = string.Equals(extension, ".lnk", StringComparison.OrdinalIgnoreCase);
                     if (isShortcut)
                     {
@@ -72,7 +70,6 @@ namespace MSearch.Core.Scanners
                         shortcutTargetPath = shortcutInfo.TargetPath;
                         shortcutTargetArgs = shortcutInfo.Arguments;
 
-                        // Создаём FileThreatObject для цели ярлыка
                         if (!string.IsNullOrEmpty(shortcutTargetPath))
                         {
                             string resolvedPath = Environment.ExpandEnvironmentVariables(shortcutTargetPath.Replace("\"", ""));
@@ -148,7 +145,6 @@ namespace MSearch.Core.Scanners
                         shortcutTargetFile));
                 }
 
-                // Рекурсивно обходим подпапки
                 foreach (string subDir in Directory.EnumerateDirectories(folder, "*", SearchOption.TopDirectoryOnly))
                 {
                     if (FileSystemManager.IsReparsePoint(subDir)) continue;

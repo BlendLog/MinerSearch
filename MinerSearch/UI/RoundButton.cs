@@ -24,7 +24,7 @@ namespace MSearch.UI
 
 
 
-        // Если цвет кнопки меняется динамически — рамка остаётся невидимой
+        // Р•СЃР»Рё С†РІРµС‚ РєРЅРѕРїРєРё РјРµРЅСЏРµС‚СЃСЏ РґРёРЅР°РјРёС‡РµСЃРєРё вЂ” СЂР°РјРєР° РѕСЃС‚Р°С‘С‚СЃСЏ РЅРµРІРёРґРёРјРѕР№
         protected override void OnBackColorChanged(EventArgs e)
         {
             base.OnBackColorChanged(e);
