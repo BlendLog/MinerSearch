@@ -253,9 +253,6 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_ErrorNeutralizeRootkit_RU" xml:space="preserve">
     <value>Не удалось нейтрализовать руткит</value>
   </data>
-  <data name="_PCName_EN" xml:space="preserve">
-    <value>PC Name:</value>
-  </data>
   <data name="_ValidServiceDLLHijacking_EN" xml:space="preserve">
     <value>Service #SERVICENAME# loads fake DLL #DLLNAME#</value>
   </data>
@@ -306,9 +303,6 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   </data>
   <data name="_ErrorTerminateProcess_RU" xml:space="preserve">
     <value>Не удалось завершить вредоносный процесс:</value>
-  </data>
-  <data name="_PCName_RU" xml:space="preserve">
-    <value>Имя компьютера:</value>
   </data>
   <data name="_ActionType_LockedByAV_EN" xml:space="preserve">
     <value>Blocked by antivirus</value>
@@ -549,9 +543,6 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   </data>
   <data name="_ServiceResetSddl_EN" xml:space="preserve">
     <value>SDDL reset successfully for service</value>
-  </data>
-  <data name="_Just_Username_EN" xml:space="preserve">
-    <value>Username</value>
   </data>
   <data name="_PreparingToScan_RU" xml:space="preserve">
     <value>Подготовка сканирования, пожалуйста, подождите...</value>
@@ -1736,9 +1727,6 @@ Click \b Exit\b0  to exit.\par
   </data>
   <data name="_ObjectType_WmiSubscription_RU" xml:space="preserve">
     <value>WMI Подписка</value>
-  </data>
-  <data name="_Just_Username_RU" xml:space="preserve">
-    <value>Имя пользователя</value>
   </data>
   <data name="_Q_CLI_DestinationChoice_EN" xml:space="preserve">
     <value>Restore destination</value>

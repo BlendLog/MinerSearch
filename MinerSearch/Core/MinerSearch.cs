@@ -92,9 +92,22 @@ namespace MSearch
             }
 
             string DeviceId = DeviceIdProvider.GetDeviceId();
-            await LogSender.sendFileAsync(logPath, Convert.ToBase64String(Guid.Parse(DeviceId).ToByteArray()), $"{DeviceId}" +
-                $"\nv{AppConfig.GetInstance.CurrentVersion}" +
-                $"\nRuns: {AppConfig.GetInstance.RunCount}, Threats: {foundThreats}, Cured: {neutralizedThreats}, Skipped: {skippedThreats}");
+            string uploadPath = null;
+
+            try
+            {
+                uploadPath = LogAnonymizer.CreateUploadCopy(logPath);
+                if (uploadPath == null)
+                    return;
+
+                await LogSender.sendFileAsync(uploadPath, Convert.ToBase64String(Guid.Parse(DeviceId).ToByteArray()), $"{DeviceId}" +
+                    $"\nv{AppConfig.GetInstance.CurrentVersion}" +
+                    $"\nRuns: {AppConfig.GetInstance.RunCount}, Threats: {foundThreats}, Cured: {neutralizedThreats}, Skipped: {skippedThreats}");
+            }
+            finally
+            {
+                LogAnonymizer.TryDelete(uploadPath);
+            }
         }
     }
 }

@@ -29,21 +29,30 @@ namespace MSearch.Core.Scanners
             List<string> users = OSExtensions.GetUsers();
             string specialAccountsPath = MSData.GetInstance.queries["SpecialAccountsUserList"];
 
-            foreach (string userName in users)
+            RegistryKey userListKey = null;
+            try
             {
-                AppConfig.GetInstance.LL.LogMessage("[.]", "_Just_Username", userName, ConsoleColor.White);
-                ScanActivity.Report(userName);
+                userListKey = Registry.LocalMachine.OpenSubKey(specialAccountsPath);
+            }
+            catch (Exception ex)
+            {
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
+            }
 
-                bool isHidden = false;
-                string userRegistryPath = null;
-
-                try
+            try
+            {
+                foreach (string userName in users)
                 {
-                    using (RegistryKey userKey = Registry.LocalMachine.OpenSubKey(specialAccountsPath))
+                    ScanActivity.Report(userName);
+
+                    bool isHidden = false;
+                    string userRegistryPath = null;
+
+                    if (userListKey != null)
                     {
-                        if (userKey != null)
+                        try
                         {
-                            object value = userKey.GetValue(userName);
+                            object value = userListKey.GetValue(userName);
                             if (value != null)
                             {
                                 int dwordValue = Convert.ToInt32(value);
@@ -51,20 +60,21 @@ namespace MSearch.Core.Scanners
                                 {
                                     isHidden = true;
                                     userRegistryPath = $@"{specialAccountsPath}\{userName}";
-                                    string logMessage = string.Format(AppConfig.GetInstance.LL.GetLocalizedString("_HiddenUserFound"), userName);
-                                    Logger.WriteLog($"\t[!] {logMessage}", Logger.warnMedium);
                                 }
                             }
                         }
+                        catch (Exception ex)
+                        {
+                            AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, userName, "_Username");
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, userName, "_Username");
-                }
 
-                if (isHidden)
-                {
+                    if (!isHidden)
+                        continue;
+
+                    string logMessage = string.Format(AppConfig.GetInstance.LL.GetLocalizedString("_HiddenUserFound"), userName);
+                    Logger.WriteLog($"\t[!] {logMessage}", Logger.warnMedium);
+
                     yield return (IThreatObject)new UserProfileThreatObject
                     {
                         UserName = userName,
@@ -73,6 +83,11 @@ namespace MSearch.Core.Scanners
                         ShouldDelete = false
                     };
                 }
+            }
+            finally
+            {
+                if (userListKey != null)
+                    userListKey.Dispose();
             }
         }
     }

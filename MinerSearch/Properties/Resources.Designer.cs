@@ -2579,24 +2579,6 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Username.
-        /// </summary>
-        internal static string _Just_Username_EN {
-            get {
-                return ResourceManager.GetString("_Just_Username_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Имя пользователя.
-        /// </summary>
-        internal static string _Just_Username_RU {
-            get {
-                return ResourceManager.GetString("_Just_Username_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на [Denial of responsibility]
         ///Before proceeding, you must read the license agreement (eula.rtf or a copy of it on https://github.com/BlendLog/MinerSearch/blob/master/LICENSE.MD ). Continue?.
         /// </summary>
@@ -3431,24 +3413,6 @@ namespace MSearch.Properties {
         internal static string _PcaluaAbuse_RU {
             get {
                 return ResourceManager.GetString("_PcaluaAbuse_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на PC Name:.
-        /// </summary>
-        internal static string _PCName_EN {
-            get {
-                return ResourceManager.GetString("_PCName_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Имя компьютера:.
-        /// </summary>
-        internal static string _PCName_RU {
-            get {
-                return ResourceManager.GetString("_PCName_RU", resourceCulture);
             }
         }
         

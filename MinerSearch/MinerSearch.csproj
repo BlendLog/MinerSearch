@@ -204,6 +204,7 @@
     </Compile>
     <Compile Include="Infrastructure\LocalizedLogger.cs" />
     <Compile Include="Infrastructure\Logger.cs" />
+    <Compile Include="Infrastructure\LogAnonymizer.cs" />
     <Compile Include="Infrastructure\QuarantineManager.cs" />
     <Compile Include="Core\MinerSearch.cs" />
     <Compile Include="Core\Program.cs" />

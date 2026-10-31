@@ -14,31 +14,23 @@ namespace MSearch
         ResourceManager resourceManager = new ResourceManager("MSearch.Properties.Resources", Assembly.GetExecutingAssembly());
 
         #region TopRegion
-        internal static void LogPCInfo(string winver, string username, string pcname, BootMode bootmode, string uacState)
+        internal static void LogPCInfo(string winver, BootMode bootmode, string uacState)
         {
             string _winver = Resources._Winver_EN;
-            string _username = Resources._Username_EN;
-            string _pcname = Resources._PCName_EN;
             string _bootmode = Resources._BootMode_EN;
             switch (AppConfig.GetInstance.ActiveLanguage)
             {
                 case "RU":
                     _winver = Resources._Winver_RU;
-                    _username = Resources._Username_RU;
-                    _pcname = Resources._PCName_RU;
                     _bootmode = Resources._BootMode_RU;
                     break;
                 case "EN":
                     _winver = Resources._Winver_EN;
-                    _username = Resources._Username_EN;
-                    _pcname = Resources._PCName_EN;
                     _bootmode = Resources._BootMode_EN;
                     break;
             }
 
             Logger.WriteLog($"\t\t{Decode(_winver)} {winver}", ConsoleColor.DarkGray, false);
-            Logger.WriteLog($"\t\t{_username} {username}", ConsoleColor.DarkGray, false);
-            Logger.WriteLog($"\t\t{_pcname} {pcname}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_bootmode} {bootmode}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{uacState}\n", ConsoleColor.DarkGray, false);
         }

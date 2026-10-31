@@ -283,12 +283,12 @@ namespace MSearch
                 _options.silent = false;
             }
 
-            LocalizedLogger.LogPCInfo(OSExtensions.GetWindowsVersion() + " " + OSExtensions.GetPlatform(), Environment.UserName, Environment.MachineName, AppConfig.GetInstance.bootMode, OSExtensions.GetUACState());
+            LocalizedLogger.LogPCInfo(OSExtensions.GetWindowsVersion() + " " + OSExtensions.GetPlatform(), AppConfig.GetInstance.bootMode, OSExtensions.GetUACState());
 
             if (_options.silent)
             {
                 Console.WriteLine("\t\t[SILENT MODE]");
-                Logger.WriteLog("\t\t[SILENT MODE]", ConsoleColor.White, false, true); //for write log
+                Logger.WriteLog("\t\t[SILENT MODE]", ConsoleColor.White, false, true);
                 Thread.Sleep(1000);
                 //#if !DEBUG
                 ConsoleBridge.Hide();
