@@ -74,6 +74,16 @@ namespace MSearch.UI
             this.stageSignaturesPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageSignatures = new System.Windows.Forms.Label();
             this.toggleSignatures = new MSearch.ToggleSwitch();
+            this.stageFileSystemPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.labelStageFileSystem = new System.Windows.Forms.Label();
+            this.toggleFileSystem = new MSearch.ToggleSwitch();
+            this.stageShellStartupPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.labelStageShellStartup = new System.Windows.Forms.Label();
+            this.toggleShellStartup = new MSearch.ToggleSwitch();
+            this.labelDepth = new System.Windows.Forms.Label();
+            this.numericDepth = new System.Windows.Forms.NumericUpDown();
+            this.checkScanOnly = new System.Windows.Forms.CheckBox();
+            this.checkRemoveEmptyTasks = new System.Windows.Forms.CheckBox();
             this.selectiveBottom = new System.Windows.Forms.Panel();
             this.checkFolder = new System.Windows.Forms.CheckBox();
             this.textFolder = new System.Windows.Forms.TextBox();
@@ -116,6 +126,8 @@ namespace MSearch.UI
             this.stageWmiPanel.SuspendLayout();
             this.stageRootkitsPanel.SuspendLayout();
             this.stageSignaturesPanel.SuspendLayout();
+            this.stageFileSystemPanel.SuspendLayout();
+            this.stageShellStartupPanel.SuspendLayout();
             this.selectiveBottom.SuspendLayout();
             this.statusPanel.SuspendLayout();
             this.countersTable.SuspendLayout();
@@ -318,11 +330,15 @@ namespace MSearch.UI
             this.selectivePanel.Controls.Add(this.labelSelectiveHeader);
             this.selectivePanel.Controls.Add(this.buttonClearSelection);
             this.selectivePanel.Controls.Add(this.stagesTable);
+            this.selectivePanel.Controls.Add(this.labelDepth);
+            this.selectivePanel.Controls.Add(this.numericDepth);
+            this.selectivePanel.Controls.Add(this.checkScanOnly);
+            this.selectivePanel.Controls.Add(this.checkRemoveEmptyTasks);
             this.selectivePanel.Controls.Add(this.selectiveBottom);
             this.selectivePanel.Location = new System.Drawing.Point(0, 120);
             this.selectivePanel.Margin = new System.Windows.Forms.Padding(0, 4, 0, 8);
             this.selectivePanel.Name = "selectivePanel";
-            this.selectivePanel.Size = new System.Drawing.Size(824, 262);
+            this.selectivePanel.Size = new System.Drawing.Size(824, 320);
             this.selectivePanel.TabIndex = 1;
             this.selectivePanel.Visible = false;
             this.selectivePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
@@ -374,15 +390,18 @@ namespace MSearch.UI
             this.stagesTable.Controls.Add(this.stageWmiPanel, 1, 3);
             this.stagesTable.Controls.Add(this.stageRootkitsPanel, 0, 4);
             this.stagesTable.Controls.Add(this.stageSignaturesPanel, 1, 4);
+            this.stagesTable.Controls.Add(this.stageFileSystemPanel, 0, 5);
+            this.stagesTable.Controls.Add(this.stageShellStartupPanel, 1, 5);
             this.stagesTable.Location = new System.Drawing.Point(18, 42);
             this.stagesTable.Name = "stagesTable";
-            this.stagesTable.RowCount = 5;
+            this.stagesTable.RowCount = 6;
             this.stagesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.stagesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.stagesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.stagesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.stagesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.stagesTable.Size = new System.Drawing.Size(788, 150);
+            this.stagesTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.stagesTable.Size = new System.Drawing.Size(788, 180);
             this.stagesTable.TabIndex = 1;
             // 
             // stageProcessesPanel
@@ -835,6 +854,144 @@ namespace MSearch.UI
             this.toggleSignatures.TabIndex = 1;
             this.toggleSignatures.UseVisualStyleBackColor = true;
             // 
+            // stageFileSystemPanel
+            // 
+            this.stageFileSystemPanel.BackColor = System.Drawing.Color.White;
+            this.stageFileSystemPanel.ColumnCount = 2;
+            this.stageFileSystemPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.stageFileSystemPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 62F));
+            this.stageFileSystemPanel.Controls.Add(this.labelStageFileSystem, 0, 0);
+            this.stageFileSystemPanel.Controls.Add(this.toggleFileSystem, 1, 0);
+            this.stageFileSystemPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stageFileSystemPanel.Location = new System.Drawing.Point(0, 150);
+            this.stageFileSystemPanel.Margin = new System.Windows.Forms.Padding(0, 0, 18, 0);
+            this.stageFileSystemPanel.Name = "stageFileSystemPanel";
+            this.stageFileSystemPanel.RowCount = 1;
+            this.stageFileSystemPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.stageFileSystemPanel.Size = new System.Drawing.Size(376, 30);
+            this.stageFileSystemPanel.TabIndex = 10;
+            // 
+            // labelStageFileSystem
+            // 
+            this.labelStageFileSystem.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelStageFileSystem.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.labelStageFileSystem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
+            this.labelStageFileSystem.Location = new System.Drawing.Point(0, 0);
+            this.labelStageFileSystem.Margin = new System.Windows.Forms.Padding(0);
+            this.labelStageFileSystem.Name = "labelStageFileSystem";
+            this.labelStageFileSystem.Size = new System.Drawing.Size(314, 30);
+            this.labelStageFileSystem.TabIndex = 0;
+            this.labelStageFileSystem.Text = "Общесистемные каталоги";
+            this.labelStageFileSystem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // toggleFileSystem
+            // 
+            this.toggleFileSystem.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleFileSystem.Location = new System.Drawing.Point(328, 4);
+            this.toggleFileSystem.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleFileSystem.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleFileSystem.Name = "toggleFileSystem";
+            this.toggleFileSystem.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleFileSystem.OffToggleColor = System.Drawing.Color.White;
+            this.toggleFileSystem.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleFileSystem.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleFileSystem.Size = new System.Drawing.Size(48, 22);
+            this.toggleFileSystem.TabIndex = 1;
+            this.toggleFileSystem.UseVisualStyleBackColor = true;
+            // 
+            // stageShellStartupPanel
+            // 
+            this.stageShellStartupPanel.BackColor = System.Drawing.Color.White;
+            this.stageShellStartupPanel.ColumnCount = 2;
+            this.stageShellStartupPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.stageShellStartupPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 62F));
+            this.stageShellStartupPanel.Controls.Add(this.labelStageShellStartup, 0, 0);
+            this.stageShellStartupPanel.Controls.Add(this.toggleShellStartup, 1, 0);
+            this.stageShellStartupPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stageShellStartupPanel.Location = new System.Drawing.Point(394, 150);
+            this.stageShellStartupPanel.Margin = new System.Windows.Forms.Padding(0, 0, 18, 0);
+            this.stageShellStartupPanel.Name = "stageShellStartupPanel";
+            this.stageShellStartupPanel.RowCount = 1;
+            this.stageShellStartupPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.stageShellStartupPanel.Size = new System.Drawing.Size(376, 30);
+            this.stageShellStartupPanel.TabIndex = 11;
+            // 
+            // labelStageShellStartup
+            // 
+            this.labelStageShellStartup.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelStageShellStartup.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.labelStageShellStartup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
+            this.labelStageShellStartup.Location = new System.Drawing.Point(0, 0);
+            this.labelStageShellStartup.Margin = new System.Windows.Forms.Padding(0);
+            this.labelStageShellStartup.Name = "labelStageShellStartup";
+            this.labelStageShellStartup.Size = new System.Drawing.Size(314, 30);
+            this.labelStageShellStartup.TabIndex = 0;
+            this.labelStageShellStartup.Text = "Каталоги автозапуска";
+            this.labelStageShellStartup.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // toggleShellStartup
+            // 
+            this.toggleShellStartup.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleShellStartup.Location = new System.Drawing.Point(328, 4);
+            this.toggleShellStartup.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleShellStartup.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleShellStartup.Name = "toggleShellStartup";
+            this.toggleShellStartup.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleShellStartup.OffToggleColor = System.Drawing.Color.White;
+            this.toggleShellStartup.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleShellStartup.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleShellStartup.Size = new System.Drawing.Size(48, 22);
+            this.toggleShellStartup.TabIndex = 1;
+            this.toggleShellStartup.UseVisualStyleBackColor = true;
+            // 
+            // labelDepth
+            // 
+            this.labelDepth.AutoSize = true;
+            this.labelDepth.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.labelDepth.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
+            this.labelDepth.Location = new System.Drawing.Point(18, 232);
+            this.labelDepth.Name = "labelDepth";
+            this.labelDepth.Size = new System.Drawing.Size(61, 19);
+            this.labelDepth.TabIndex = 3;
+            this.labelDepth.Text = "Глубина:";
+            // 
+            // numericDepth
+            // 
+            this.numericDepth.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.numericDepth.Location = new System.Drawing.Point(100, 229);
+            this.numericDepth.Maximum = new decimal(new int[] { 16, 0, 0, 0 });
+            this.numericDepth.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            this.numericDepth.Name = "numericDepth";
+            this.numericDepth.Size = new System.Drawing.Size(60, 25);
+            this.numericDepth.TabIndex = 4;
+            this.numericDepth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numericDepth.Value = new decimal(new int[] { 8, 0, 0, 0 });
+            // 
+            // checkScanOnly
+            // 
+            this.checkScanOnly.AutoSize = true;
+            this.checkScanOnly.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.checkScanOnly.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
+            this.checkScanOnly.Location = new System.Drawing.Point(190, 232);
+            this.checkScanOnly.Name = "checkScanOnly";
+            this.checkScanOnly.Size = new System.Drawing.Size(120, 23);
+            this.checkScanOnly.TabIndex = 5;
+            this.checkScanOnly.Text = "Только проверка";
+            this.checkScanOnly.UseVisualStyleBackColor = true;
+            this.checkScanOnly.CheckedChanged += new System.EventHandler(this.checkScanOnly_CheckedChanged);
+            // 
+            // checkRemoveEmptyTasks
+            // 
+            this.checkRemoveEmptyTasks.AutoSize = true;
+            this.checkRemoveEmptyTasks.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.checkRemoveEmptyTasks.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
+            this.checkRemoveEmptyTasks.Location = new System.Drawing.Point(340, 232);
+            this.checkRemoveEmptyTasks.Name = "checkRemoveEmptyTasks";
+            this.checkRemoveEmptyTasks.Size = new System.Drawing.Size(200, 23);
+            this.checkRemoveEmptyTasks.TabIndex = 6;
+            this.checkRemoveEmptyTasks.Text = "Удалять пустые задачи";
+            this.checkRemoveEmptyTasks.UseVisualStyleBackColor = true;
+            // 
             // selectiveBottom
             // 
             this.selectiveBottom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -844,7 +1001,7 @@ namespace MSearch.UI
             this.selectiveBottom.Controls.Add(this.textFolder);
             this.selectiveBottom.Controls.Add(this.buttonBrowse);
             this.selectiveBottom.Controls.Add(this.buttonStartSelective);
-            this.selectiveBottom.Location = new System.Drawing.Point(18, 212);
+            this.selectiveBottom.Location = new System.Drawing.Point(18, 268);
             this.selectiveBottom.Name = "selectiveBottom";
             this.selectiveBottom.Size = new System.Drawing.Size(788, 44);
             this.selectiveBottom.TabIndex = 2;
@@ -1181,6 +1338,8 @@ namespace MSearch.UI
             this.stageWmiPanel.ResumeLayout(false);
             this.stageRootkitsPanel.ResumeLayout(false);
             this.stageSignaturesPanel.ResumeLayout(false);
+            this.stageFileSystemPanel.ResumeLayout(false);
+            this.stageShellStartupPanel.ResumeLayout(false);
             this.selectiveBottom.ResumeLayout(false);
             this.selectiveBottom.PerformLayout();
             this.statusPanel.ResumeLayout(false);
@@ -1246,6 +1405,16 @@ namespace MSearch.UI
         private System.Windows.Forms.TableLayoutPanel stageSignaturesPanel;
         private System.Windows.Forms.Label labelStageSignatures;
         private MSearch.ToggleSwitch toggleSignatures;
+        private System.Windows.Forms.TableLayoutPanel stageFileSystemPanel;
+        private System.Windows.Forms.Label labelStageFileSystem;
+        private MSearch.ToggleSwitch toggleFileSystem;
+        private System.Windows.Forms.TableLayoutPanel stageShellStartupPanel;
+        private System.Windows.Forms.Label labelStageShellStartup;
+        private MSearch.ToggleSwitch toggleShellStartup;
+        private System.Windows.Forms.Label labelDepth;
+        private System.Windows.Forms.NumericUpDown numericDepth;
+        private System.Windows.Forms.CheckBox checkScanOnly;
+        private System.Windows.Forms.CheckBox checkRemoveEmptyTasks;
         private System.Windows.Forms.Panel selectiveBottom;
         private System.Windows.Forms.CheckBox checkFolder;
         private System.Windows.Forms.TextBox textFolder;

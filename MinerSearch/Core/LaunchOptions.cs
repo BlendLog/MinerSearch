@@ -90,8 +90,17 @@ namespace MSearch.Core
         /// <summary>--no-services / -nse — skip service scanning</summary>
         public bool no_services { get; internal set; }
 
+        /// <summary>--no-file-system / -nfs — skip system-wide file/directory scanning</summary>
+        public bool no_scan_filesystem { get; internal set; }
+
+        /// <summary>--no-shell-startup / -nshs — skip shell startup scanning</summary>
+        public bool no_shell_startup { get; internal set; }
+
         /// <summary>--scan-only / -so — scan only, no cleanup</summary>
         public bool ScanOnly { get; internal set; }
+
+        /// <summary>True if ScanOnly came from the command line, not from a GUI session choice.</summary>
+        public bool ScanOnlyFromCli { get; internal set; }
 
         /// <summary>--full-scan / -fs — full disk scan</summary>
         public bool fullScan { get; internal set; }
@@ -173,7 +182,8 @@ namespace MSearch.Core
             help = Force = silent = no_scan_wmi = nosignaturescan = false;
             no_runtime = no_scan_registry = no_scan_tasks = pause = false;
             RemoveEmptyTasks = no_rootkit_check = no_services = false;
-            ScanOnly = fullScan = QuarantineMode = winpemode = false;
+            no_scan_filesystem = no_shell_startup = false;
+            ScanOnly = ScanOnlyFromCli = fullScan = QuarantineMode = winpemode = false;
             RestoredWMI = verbose = demandSelection = false;
             no_check_hosts = no_firewall = no_logs = accept_eula = false;
             console_mode = false;
@@ -350,11 +360,28 @@ namespace MSearch.Core
                     continue;
                 }
 
+                // --no-file-system / -nfs
+                if (arg.Equals("--no-file-system", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("-nfs", StringComparison.OrdinalIgnoreCase))
+                {
+                    inst.no_scan_filesystem = true;
+                    continue;
+                }
+
+                // --no-shell-startup / -nshs
+                if (arg.Equals("--no-shell-startup", StringComparison.OrdinalIgnoreCase) ||
+                    arg.Equals("-nshs", StringComparison.OrdinalIgnoreCase))
+                {
+                    inst.no_shell_startup = true;
+                    continue;
+                }
+
                 // --scan-only / -so
                 if (arg.Equals("--scan-only", StringComparison.OrdinalIgnoreCase) ||
                     arg.Equals("-so", StringComparison.OrdinalIgnoreCase))
                 {
                     inst.ScanOnly = true;
+                    inst.ScanOnlyFromCli = true;
                     inst.no_rootkit_check = true;
                     inst.RemoveEmptyTasks = false;
                     continue;

@@ -63,6 +63,10 @@ namespace MSearch.Core.Managers
 
                 if (scanner is UserProfileScanner && _options.no_scan_users) continue;
 
+                if (scanner is FileSystemThreatScanner && _options.no_scan_filesystem) continue;
+
+                if (scanner is ShellStartupScanner && _options.no_shell_startup) continue;
+
                 Action<IThreatScanner> started = ScannerStarted;
                 if (started != null)
                     started(scanner);

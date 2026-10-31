@@ -1572,6 +1572,8 @@ Click \b Exit\b0  to exit.\par
 -nrc   --no-rootkit-check     Disable the rootkit check
 -nch   --no-check-hosts       Skip checking the hosts file
 -nfw   --no-firewall          Skip scanning firewall rules
+-nfs   --no-file-system      Skip system-wide file and directory scanning
+-nshs  --no-shell-startup    Skip shell startup scanning
 -cm    --console-mode         Enable console mode (no dialog boxes)
 -p     --pause                Pause before cleanup
 -ret   --remove-empty-tasks   Remove a task from Task Scheduler if its executable file does not exist
@@ -2036,6 +2038,8 @@ Click \b Exit\b0  to exit.\par
 -nrc   --no-rootkit-check     Не проверять присутствие руткита
 -nch   --no-check-hosts       Пропустить проверку файла hosts
 -nfw   --no-firewall          Пропустить сканирование правил брандмауера
+-nfs   --no-file-system      Пропустить сканирование общесистемных каталогов и файлов
+-nshs  --no-shell-startup    Пропустить сканирование каталогов автозапуска
 -cm    --console-mode         Активировать консольный режим без диалоговых окон
 -p     --pause                Пауза перед очисткой
 -ret   --remove-empty-tasks   Удалять задачу из Планировщика задач, если файл приложения в ней не существует
@@ -2846,5 +2850,35 @@ No — choose a folder</value>
   </data>
   <data name="_QuarantineEmpty_RU" xml:space="preserve">
     <value>Карантин пуст</value>
+  </data>
+  <data name="_Stage_FileSystem_RU" xml:space="preserve">
+    <value>Общесистемные каталоги</value>
+  </data>
+  <data name="_Stage_FileSystem_EN" xml:space="preserve">
+    <value>System-wide directories</value>
+  </data>
+  <data name="_Stage_ShellStartup_RU" xml:space="preserve">
+    <value>Каталоги автозапуска</value>
+  </data>
+  <data name="_Stage_ShellStartup_EN" xml:space="preserve">
+    <value>Autostart directories</value>
+  </data>
+  <data name="_Selective_Depth_RU" xml:space="preserve">
+    <value>Глубина:</value>
+  </data>
+  <data name="_Selective_Depth_EN" xml:space="preserve">
+    <value>Depth:</value>
+  </data>
+  <data name="_Selective_ScanOnly_RU" xml:space="preserve">
+    <value>Только проверка</value>
+  </data>
+  <data name="_Selective_ScanOnly_EN" xml:space="preserve">
+    <value>Scan only</value>
+  </data>
+  <data name="_Selective_RemoveEmptyTasks_RU" xml:space="preserve">
+    <value>Удалять пустые задачи</value>
+  </data>
+  <data name="_Selective_RemoveEmptyTasks_EN" xml:space="preserve">
+    <value>Remove empty tasks</value>
   </data>
 </root>

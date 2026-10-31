@@ -634,7 +634,9 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_BootMode_RU", resourceCulture);
             }
-        }/// <summary>
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Cancel.
         /// </summary>
         internal static string _CancelBtn_EN {
@@ -1064,7 +1066,9 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_CriticalServiceStartup_RU", resourceCulture);
             }
-        }/// <summary>
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на No files selected.
         /// </summary>
         internal static string _DataGrid_NoSelection_EN {
@@ -1404,7 +1408,9 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_EmptyTask_RU", resourceCulture);
             }
-        }/// <summary>
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Error.
         /// </summary>
         internal static string _Error_EN {
@@ -2588,7 +2594,9 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_Just_Username_RU", resourceCulture);
             }
-        }/// <summary>
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на [Denial of responsibility]
         ///Before proceeding, you must read the license agreement (eula.rtf or a copy of it on https://github.com/BlendLog/MinerSearch/blob/master/LICENSE.MD ). Continue?.
         /// </summary>
@@ -3080,7 +3088,9 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_NoInternetForUpdates_RU", resourceCulture);
             }
-        }/// <summary>
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Blocked launch:.
         /// </summary>
         internal static string _NoteDisallowRunBlocked_EN {
@@ -4848,7 +4858,9 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_RestoreFormPathInvalid_RU", resourceCulture);
             }
-        }/// <summary>
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Restore from Quarantine.
         /// </summary>
         internal static string _RestoreFormTitle_EN {
@@ -5062,7 +5074,9 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_ReviewBulkApplyBtn_RU", resourceCulture);
             }
-        }/// <summary>
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Continue with recommended.
         /// </summary>
         internal static string _ReviewContinueBtn_EN {
@@ -5981,6 +5995,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Depth:.
+        /// </summary>
+        internal static string _Selective_Depth_EN {
+            get {
+                return ResourceManager.GetString("_Selective_Depth_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Глубина:.
+        /// </summary>
+        internal static string _Selective_Depth_RU {
+            get {
+                return ResourceManager.GetString("_Selective_Depth_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Scan selected folder.
         /// </summary>
         internal static string _Selective_Folder_EN {
@@ -5995,6 +6027,42 @@ namespace MSearch.Properties {
         internal static string _Selective_Folder_RU {
             get {
                 return ResourceManager.GetString("_Selective_Folder_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Remove empty tasks.
+        /// </summary>
+        internal static string _Selective_RemoveEmptyTasks_EN {
+            get {
+                return ResourceManager.GetString("_Selective_RemoveEmptyTasks_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удалять пустые задачи.
+        /// </summary>
+        internal static string _Selective_RemoveEmptyTasks_RU {
+            get {
+                return ResourceManager.GetString("_Selective_RemoveEmptyTasks_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scan only.
+        /// </summary>
+        internal static string _Selective_ScanOnly_EN {
+            get {
+                return ResourceManager.GetString("_Selective_ScanOnly_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Только проверка.
+        /// </summary>
+        internal static string _Selective_ScanOnly_RU {
+            get {
+                return ResourceManager.GetString("_Selective_ScanOnly_RU", resourceCulture);
             }
         }
         
@@ -6521,6 +6589,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на System-wide directories.
+        /// </summary>
+        internal static string _Stage_FileSystem_EN {
+            get {
+                return ResourceManager.GetString("_Stage_FileSystem_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Общесистемные каталоги.
+        /// </summary>
+        internal static string _Stage_FileSystem_RU {
+            get {
+                return ResourceManager.GetString("_Stage_FileSystem_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Firewall.
         /// </summary>
         internal static string _Stage_Firewall_EN {
@@ -6625,6 +6711,24 @@ namespace MSearch.Properties {
         internal static string _Stage_Services_RU {
             get {
                 return ResourceManager.GetString("_Stage_Services_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Autostart directories.
+        /// </summary>
+        internal static string _Stage_ShellStartup_EN {
+            get {
+                return ResourceManager.GetString("_Stage_ShellStartup_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Каталоги автозапуска.
+        /// </summary>
+        internal static string _Stage_ShellStartup_RU {
+            get {
+                return ResourceManager.GetString("_Stage_ShellStartup_RU", resourceCulture);
             }
         }
         
@@ -6806,7 +6910,9 @@ namespace MSearch.Properties {
             get {
                 return ResourceManager.GetString("_SuspiciousHostsEntry_RU", resourceCulture);
             }
-        }/// <summary>
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Suspicious path.
         /// </summary>
         internal static string _SuspiciousPath_EN {

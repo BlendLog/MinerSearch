@@ -30,6 +30,8 @@ namespace MSearch.Core
         public bool ScanWmi { get; set; }
         public bool ScanRootkits { get; set; }
         public bool ScanSignatures { get; set; }
+        public bool ScanFileSystem { get; set; }
+        public bool ScanShellStartup { get; set; }
 
         public bool FullScan { get; set; }
         public int MaxDepth { get; set; }
@@ -53,6 +55,8 @@ namespace MSearch.Core
             ScanWmi = true;
             ScanRootkits = true;
             ScanSignatures = true;
+            ScanFileSystem = true;
+            ScanShellStartup = true;
             MaxDepth = 8;
         }
 
@@ -102,13 +106,15 @@ namespace MSearch.Core
             options.no_check_hosts = !ScanHosts;
             options.no_scan_users = !ScanUserProfiles;
             options.no_scan_wmi = !ScanWmi;
+            options.no_scan_filesystem = !ScanFileSystem;
+            options.no_shell_startup = !ScanShellStartup;
 
             // --scan-only в CLI всегда отключает проверку руткитов и удаление пустых задач.
             // Если приложение запущено с -so, GUI-запуски тоже остаются «только проверкой».
-            bool effectiveScanOnly = options.ScanOnly || ScanOnly;
-            options.ScanOnly = effectiveScanOnly;
-            options.no_rootkit_check = !ScanRootkits || effectiveScanOnly;
-            options.RemoveEmptyTasks = RemoveEmptyTasks && !effectiveScanOnly;
+            // ScanOnlyFromCli отделяет флаг запуска от выбора текущей GUI-сессии.
+            options.ScanOnly = options.ScanOnlyFromCli || ScanOnly;
+            options.no_rootkit_check = !ScanRootkits || options.ScanOnly;
+            options.RemoveEmptyTasks = RemoveEmptyTasks && !options.ScanOnly;
 
             options.nosignaturescan = !ScanSignatures;
             options.pause = PauseBeforeCleanup;

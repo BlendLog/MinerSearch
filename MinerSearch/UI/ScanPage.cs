@@ -71,6 +71,18 @@ namespace MSearch.UI
 
             foreach (KeyValuePair<string, ToggleSwitch> pair in _stageToggles)
                 pair.Value.Checked = false;
+
+            UpdateOptionDependencies();
+        }
+
+        private void StageToggle_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateOptionDependencies();
+        }
+
+        private void checkScanOnly_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateOptionDependencies();
         }
 
         private void buttonStop_Click(object sender, EventArgs e)
@@ -95,6 +107,8 @@ namespace MSearch.UI
             _stageToggles["Wmi"] = toggleWmi;
             _stageToggles["Rootkits"] = toggleRootkits;
             _stageToggles["Signatures"] = toggleSignatures;
+            _stageToggles["FileSystem"] = toggleFileSystem;
+            _stageToggles["ShellStartup"] = toggleShellStartup;
 
             _stageLabels["_Stage_Processes"] = labelStageProcesses;
             _stageLabels["_Stage_Registry"] = labelStageRegistry;
@@ -106,10 +120,15 @@ namespace MSearch.UI
             _stageLabels["_Stage_Wmi"] = labelStageWmi;
             _stageLabels["_Stage_Rootkits"] = labelStageRootkits;
             _stageLabels["_Stage_Signatures"] = labelStageSignatures;
+            _stageLabels["_Stage_FileSystem"] = labelStageFileSystem;
+            _stageLabels["_Stage_ShellStartup"] = labelStageShellStartup;
 
             // По умолчанию все этапы включены
             foreach (KeyValuePair<string, ToggleSwitch> pair in _stageToggles)
                 pair.Value.Checked = true;
+
+            toggleTasks.CheckedChanged += StageToggle_CheckedChanged;
+            UpdateOptionDependencies();
         }
 
         private void CardPanel_Paint(object sender, PaintEventArgs e)
@@ -196,6 +215,12 @@ namespace MSearch.UI
             request.ScanWmi = GetToggle("Wmi");
             request.ScanRootkits = GetToggle("Rootkits");
             request.ScanSignatures = GetToggle("Signatures");
+            request.ScanFileSystem = GetToggle("FileSystem");
+            request.ScanShellStartup = GetToggle("ShellStartup");
+
+            request.MaxDepth = (int)numericDepth.Value;
+            request.ScanOnly = checkScanOnly.Checked;
+            request.RemoveEmptyTasks = checkRemoveEmptyTasks.Checked;
 
             if (checkFolder.Checked && !string.IsNullOrEmpty(textFolder.Text))
                 request.SelectedPath = textFolder.Text;
@@ -224,6 +249,22 @@ namespace MSearch.UI
         {
             ToggleSwitch toggle;
             return _stageToggles.TryGetValue(key, out toggle) && toggle.Checked;
+        }
+
+        /// <summary>
+        /// Согласует зависимые опции: ScanOnly отключает rootkit и удаление пустых задач;
+        /// удаление пустых задач доступно только при включённом сканировании задач.
+        /// </summary>
+        private void UpdateOptionDependencies()
+        {
+            bool scanOnly = checkScanOnly.Checked;
+            bool tasks = GetToggle("Tasks");
+
+            toggleRootkits.Enabled = !_scanning && !scanOnly;
+            if (scanOnly || !tasks)
+                checkRemoveEmptyTasks.Checked = false;
+
+            checkRemoveEmptyTasks.Enabled = !_scanning && tasks && !scanOnly;
         }
 
         private void UpdateFolderControls()
@@ -258,6 +299,10 @@ namespace MSearch.UI
             buttonStartSelective.Enabled = !scanning;
             buttonClearSelection.Enabled = !scanning;
             buttonStop.Enabled = scanning;
+
+            numericDepth.Enabled = !scanning;
+            checkScanOnly.Enabled = !scanning;
+            UpdateOptionDependencies();
 
             SetIndeterminate(false);
 
@@ -440,6 +485,9 @@ namespace MSearch.UI
             buttonClearSelection.Text = L("_Selective_ClearAll");
             checkFolder.Text = L("_Selective_Folder");
             buttonBrowse.Text = L("_Selective_Browse");
+            labelDepth.Text = L("_Selective_Depth");
+            checkScanOnly.Text = L("_Selective_ScanOnly");
+            checkRemoveEmptyTasks.Text = L("_Selective_RemoveEmptyTasks");
 
             foreach (KeyValuePair<string, Label> pair in _stageLabels)
                 pair.Value.Text = L(pair.Key);
