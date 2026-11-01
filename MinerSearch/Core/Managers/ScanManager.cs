@@ -1,7 +1,6 @@
 using MSearch.Core.Scanners;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MSearch.Core.Managers
 {
@@ -43,10 +42,12 @@ namespace MSearch.Core.Managers
             return _rootkitScanner.Scan();
         }
 
+        /// <summary>
+        /// Scans everything else, yielding each scanner's findings as soon as they are collected.
+        /// The workflow analyzes them between scanners, so the live counters grow during the stage.
+        /// </summary>
         public IEnumerable<IThreatObject> ScanEverythingElse()
         {
-            List<IThreatObject> allThreats = new List<IThreatObject>();
-
             foreach (var scanner in _otherScanners)
             {
                 if (scanner is RegistryScanner && _options.no_scan_registry) continue;
@@ -71,10 +72,9 @@ namespace MSearch.Core.Managers
                 if (started != null)
                     started(scanner);
 
-                allThreats.AddRange(scanner.Scan());
+                foreach (IThreatObject threat in scanner.Scan())
+                    yield return threat;
             }
-
-            return allThreats;
         }
     }
 }

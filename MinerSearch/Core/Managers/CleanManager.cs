@@ -95,15 +95,12 @@ namespace MSearch.Core.Managers
                     if (decision == null || decision.Target == null) continue;
                     if (phase != CleanupPhase.Finalize) continue;
 
-                    if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected || decision.ObjectType == ScanObjectType.Rootkit)
+                    // Заблокированные каталоги — служебные находки, в результаты они не попадают.
+                    if (IsLockedServiceDirectory(decision.Target)) continue;
+
+                    if (IsCountedThreatType(decision.ObjectType))
                     {
                         _state.AddScanResult(new ScanResult(decision.ObjectType, GetDescription(decision), ScanActionType.Skipped, decision.Note, decision.Target.Id, decision.Target.Kind));
-                        _state.IncrementFoundThreats();
-                    }
-                    else if (decision.ObjectType == ScanObjectType.Suspicious)
-                    {
-                        _state.AddScanResult(new ScanResult(decision.ObjectType, GetDescription(decision), ScanActionType.Skipped, decision.Note, decision.Target.Id, decision.Target.Kind));
-                        _state.IncrementFoundSuspicious();
                     }
                 }
                 return;
@@ -146,13 +143,7 @@ namespace MSearch.Core.Managers
                     }
 
                     if (phase == CleanupPhase.SuspendOnly || phase == CleanupPhase.DisableExecuteOnly) continue;
-                    if (decision.Target.Kind == ThreatObjectKind.Directory)
-                    {
-                        DirectoryThreatObject lockedDirTarget = decision.Target as DirectoryThreatObject;
-                        string dirTag = lockedDirTarget.SourceTag;
-
-                        if (dirTag.Equals("locked")) continue;
-                    }
+                    if (IsLockedServiceDirectory(decision.Target)) continue;
 
                     RecordResult(decision, result);
                 }
@@ -167,18 +158,37 @@ namespace MSearch.Core.Managers
             foreach (var decision in decisions)
             {
                 if (decision == null || decision.Target == null) continue;
+                if (IsLockedServiceDirectory(decision.Target)) continue;
 
                 string description = GetDescription(decision);
                 _state.AddScanResult(new ScanResult(decision.ObjectType, description, ScanActionType.Skipped, decision.Note, decision.Target.Id, decision.Target.Kind));
 
-                if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected || decision.ObjectType == ScanObjectType.Rootkit)
-                    _state.IncrementFoundThreats();
-                else if (decision.ObjectType == ScanObjectType.Suspicious)
-                    _state.IncrementFoundSuspicious();
+                if (IsCountedThreatType(decision.ObjectType))
+                    _state.IncrementSkippedThreats();
 
-                _state.IncrementSkippedThreats();
                 ResetFileAclForSkipped(decision.Target);
             }
+        }
+
+        /// <summary>
+        /// Types included in the Found/Neutralized/Skipped statistics.
+        /// </summary>
+        private static bool IsCountedThreatType(ScanObjectType type)
+        {
+            return type == ScanObjectType.Malware ||
+                   type == ScanObjectType.Unsafe ||
+                   type == ScanObjectType.Infected ||
+                   type == ScanObjectType.Rootkit ||
+                   type == ScanObjectType.Suspicious;
+        }
+
+        /// <summary>
+        /// Locked directories from obfStr5 are expected AV/service directories, not findings.
+        /// </summary>
+        private static bool IsLockedServiceDirectory(IThreatObject target)
+        {
+            DirectoryThreatObject dir = target as DirectoryThreatObject;
+            return dir != null && string.Equals(dir.SourceTag, "locked", StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -264,13 +274,10 @@ namespace MSearch.Core.Managers
 
             _state.AddScanResult(new ScanResult(decision.ObjectType, description, actionType, note, decision.Target.Id, decision.Target.Kind));
 
-            // Подсчёт обнаруженных угроз — увеличивается при ЛЮБОМ результате
-            if (decision.ObjectType == ScanObjectType.Malware || decision.ObjectType == ScanObjectType.Unsafe || decision.ObjectType == ScanObjectType.Infected || decision.ObjectType == ScanObjectType.Rootkit)
-                _state.IncrementFoundThreats();
-            else if (decision.ObjectType == ScanObjectType.Suspicious)
-                _state.IncrementFoundSuspicious();
+            // Found/Suspicious считаются в ScanWorkflow при обнаружении; здесь — только результат применения.
+            bool countedType = IsCountedThreatType(decision.ObjectType);
 
-            if (result == ApplyResult.Success)
+            if (result == ApplyResult.Success && countedType)
             {
                 if (actionType == ScanActionType.Cured ||
                     actionType == ScanActionType.Deleted ||
@@ -286,7 +293,7 @@ namespace MSearch.Core.Managers
 
             // Заблокированные Defender-ом объекты тоже считаются обезвреженными (их блокирует антивирус),
             // чтобы счётчики не расходились с итогом сканирования.
-            if (result == ApplyResult.LockedByAntivirus)
+            if (result == ApplyResult.LockedByAntivirus && countedType)
             {
                 _state.IncrementNeutralizedThreats();
             }

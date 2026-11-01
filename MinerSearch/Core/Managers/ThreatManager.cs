@@ -12,6 +12,9 @@ namespace MSearch.Core.Managers
         private readonly Dictionary<ThreatObjectKind, IThreatAnalyzer> _analyzers;
         private readonly Dictionary<string, ThreatDecision> _aggregatedDecisions;
 
+        /// <summary>A decision was produced by an analyzer for the current scan phase.</summary>
+        public event Action<ThreatDecision> DecisionDetected;
+
         private static bool _johnPatternsFound = false;
 
         // Приоритет действий: Deleted > Quarantine > Cured > Skipped
@@ -63,6 +66,10 @@ namespace MSearch.Core.Managers
                         {
                             if (decision != null)
                             {
+                                Action<ThreatDecision> detected = DecisionDetected;
+                                if (detected != null)
+                                    detected(decision);
+
                                 _AggregateDecision(decision);
                             }
                         }

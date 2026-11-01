@@ -249,6 +249,15 @@ namespace MSearch.Core.ThreatAnalyzers
 
         public IEnumerable<ThreatDecision> AnalyzeFiles(IEnumerable<FileThreatObject> fileThreats)
         {
+            return AnalyzeFiles(fileThreats, null);
+        }
+
+        /// <summary>
+        /// Analyzes files in parallel; <paramref name="onDecision"/> is called for every produced decision
+        /// (from worker threads) so progress counters can update while the stage is still running.
+        /// </summary>
+        public IEnumerable<ThreatDecision> AnalyzeFiles(IEnumerable<FileThreatObject> fileThreats, Action<ThreatDecision> onDecision)
+        {
             var fileList = fileThreats.ToList();
             int total = fileList.Count;
             int current = 0;
@@ -330,6 +339,10 @@ namespace MSearch.Core.ThreatAnalyzers
                         decision.ActionType = ScanActionType.Skipped;
                         decisionsByIndex[i] = decision;
                     }
+
+                    ThreatDecision detected = decisionsByIndex[i];
+                    if (detected != null && onDecision != null)
+                        onDecision(detected);
                 }
                 catch (Exception ex)
                 {

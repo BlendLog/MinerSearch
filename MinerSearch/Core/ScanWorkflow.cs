@@ -126,6 +126,10 @@ namespace MSearch.Core
         private readonly MinerSearchScanState _state;
         private ScanStage _currentStage;
 
+        private readonly object _detectedLock = new object();
+        private readonly HashSet<string> _detectedFoundKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> _detectedSuspiciousKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
         public event EventHandler<ScanStageEventArgs> StageChanged;
         public event EventHandler<ScanProgressEventArgs> ItemProgress;
         public event EventHandler<ScanCountersEventArgs> CountersChanged;
@@ -155,6 +159,7 @@ namespace MSearch.Core
                 ScanActivity.ObjectChanged += OnScanActivity;
 
             _infrastructure.ScanManager.ScannerStarted += OnScannerStarted;
+            _infrastructure.ThreatManager.DecisionDetected += OnDecisionDetected;
 
             // Лог живёт ровно один скан: новый файл на каждый запуск.
             Logger.BeginScanLog();
@@ -166,6 +171,7 @@ namespace MSearch.Core
             finally
             {
                 _infrastructure.ScanManager.ScannerStarted -= OnScannerStarted;
+                _infrastructure.ThreatManager.DecisionDetected -= OnDecisionDetected;
 
                 if (reportActivity)
                     ScanActivity.ObjectChanged -= OnScanActivity;
@@ -177,6 +183,59 @@ namespace MSearch.Core
         private void OnScanActivity(string value)
         {
             RaiseProgress(value, 0, 0);
+        }
+
+        /// <summary>
+        /// Counts found objects as soon as analyzers produce them, so the GUI counters
+        /// grow during scanning instead of only at cleanup.
+        /// </summary>
+        private void OnDecisionDetected(ThreatDecision decision)
+        {
+            if (decision == null || decision.Target == null)
+                return;
+
+            // Заблокированные каталоги из obfStr5 — служебные находки, в результаты они не попадают.
+            DirectoryThreatObject dir = decision.Target as DirectoryThreatObject;
+            if (dir != null && string.Equals(dir.SourceTag, "locked", StringComparison.Ordinal))
+                return;
+
+            if (!IsCountedType(decision.ObjectType))
+                return;
+
+            bool changed = false;
+            string key = GetDedupKey(decision);
+
+            lock (_detectedLock)
+            {
+                if (_detectedFoundKeys.Add(key))
+                {
+                    _state.IncrementFoundThreats();
+                    changed = true;
+                }
+
+                if (decision.ObjectType == ScanObjectType.Suspicious && _detectedSuspiciousKeys.Add(key))
+                {
+                    _state.IncrementFoundSuspicious();
+                    changed = true;
+                }
+            }
+
+            if (!changed)
+                return;
+
+            RaiseCounters();
+        }
+
+        /// <summary>
+        /// Types included in the Found/Neutralized/Skipped statistics.
+        /// </summary>
+        private static bool IsCountedType(ScanObjectType type)
+        {
+            return type == ScanObjectType.Malware ||
+                   type == ScanObjectType.Unsafe ||
+                   type == ScanObjectType.Infected ||
+                   type == ScanObjectType.Rootkit ||
+                   type == ScanObjectType.Suspicious;
         }
 
         private ScanWorkflowResult RunCore(CancellationToken token)
@@ -234,7 +293,7 @@ namespace MSearch.Core
                     return Cancel(result, stopwatch, processDecisions);
 
                 List<FileThreatObject> allSignatureFiles = signatureScanner.GetFiles().ToList();
-                signatureDecisions = _infrastructure.SignatureAnalyzer.AnalyzeFiles(allSignatureFiles)
+                signatureDecisions = _infrastructure.SignatureAnalyzer.AnalyzeFiles(allSignatureFiles, OnDecisionDetected)
                     .Where(d => d != null)
                     .ToList();
                 allFinalizeDecisions.AddRange(signatureDecisions);
@@ -460,6 +519,8 @@ namespace MSearch.Core
             result.Statistics = ComputeAndLogStatistics(_state, stopwatch.Elapsed);
             result.Results = _state.GetScanResults();
 
+            SyncCountersWithStatistics(result.Statistics);
+
             RaiseStage(ScanStage.Completed);
 
             EventHandler<ScanCompletedEventArgs> handler = Completed;
@@ -467,6 +528,23 @@ namespace MSearch.Core
                 handler(this, new ScanCompletedEventArgs(result));
 
             return result;
+        }
+
+        /// <summary>
+        /// Settles the live GUI counters on the statistics values so the scan page and the results page agree.
+        /// </summary>
+        private void SyncCountersWithStatistics(ScanStatistics statistics)
+        {
+            if (_request == null || statistics == null)
+                return;
+
+            AppConfig config = AppConfig.GetInstance;
+            config.totalFoundThreats = statistics.Found;
+            config.totalFoundSuspiciousObjects = statistics.Suspicious;
+            config.totalNeutralizedThreats = statistics.Neutralized;
+            config.userSkippedThreats = statistics.Skipped;
+
+            RaiseCounters();
         }
 
         private List<ThreatDecision> Analyze(IEnumerable<IThreatObject> threats)
@@ -487,6 +565,12 @@ namespace MSearch.Core
             List<ScanResult> results = _state.GetScanResults();
             if (results != null)
                 results.Clear();
+
+            lock (_detectedLock)
+            {
+                _detectedFoundKeys.Clear();
+                _detectedSuspiciousKeys.Clear();
+            }
 
             CleanManager.ResetSessionState();
         }
@@ -745,29 +829,35 @@ namespace MSearch.Core
         }
 
         /// <summary>
+        /// Key that identifies the result row object for statistics.
+        /// </summary>
+        private static string GetResultKey(ScanResult result)
+        {
+            return result.RawClass + "|" + result.Path;
+        }
+
+        /// <summary>
         /// Computes and logs scanning results.
         /// </summary>
         public static ScanStatistics ComputeAndLogStatistics(MinerSearchScanState state, TimeSpan elapsed)
         {
             List<ScanResult> scanResults = state.GetScanResults();
 
-            // Группируем по уникальным Id ThreatObject для корректного подсчёта.
-            // Если ThreatObjectId пустой (напр. для файлов с валидной подписью hash="",
-            // или bad_bat где hash="") — используем составной ключ RawClass + Path,
-            // чтобы Distinct не схлопывал все пустые строки в 1.
-            int foundCount = scanResults
-                .Where(r => r.RawType == ScanObjectType.Malware ||
-                            r.RawType == ScanObjectType.Unsafe ||
-                            r.RawType == ScanObjectType.Infected ||
-                            r.RawType == ScanObjectType.Rootkit ||
-                            r.RawType == ScanObjectType.Suspicious)
-                .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
+            // Ключ — класс объекта и его описание (путь/имя/PID), а не SHA1:
+            // одинаковые по содержимому файлы в разных местах — разные объекты,
+            // и Distinct не должен их схлопывать.
+            List<ScanResult> countedResults = scanResults
+                .Where(r => r != null && IsCountedType(r.RawType))
+                .ToList();
+
+            int foundCount = countedResults
+                .Select(GetResultKey)
                 .Distinct()
                 .Count();
 
             // Заблокированные Defender-ом объекты считаются обезвреженными (их блокирует антивирус),
             // поэтому входят в нейтрализованные; отдельный подсчёт — для отдельного текста итога.
-            int neutralizedCount = scanResults
+            int neutralizedCount = countedResults
                 .Where(r => r.RawAction == ScanActionType.Deleted ||
                             r.RawAction == ScanActionType.Terminated ||
                             r.RawAction == ScanActionType.Quarantine ||
@@ -776,27 +866,26 @@ namespace MSearch.Core
                             r.RawAction == ScanActionType.Suspended ||
                             r.RawAction == ScanActionType.RebootPending ||
                             r.RawAction == ScanActionType.LockedByAntivirus)
-                .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
+                .Select(GetResultKey)
                 .Distinct()
                 .Count();
 
-            int lockedByAvCount = scanResults
+            int lockedByAvCount = countedResults
                 .Where(r => r.RawAction == ScanActionType.LockedByAntivirus)
-                .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
+                .Select(GetResultKey)
                 .Distinct()
                 .Count();
 
-            int suspiciousCount = AppConfig.GetInstance.totalFoundSuspiciousObjects;
+            int suspiciousCount = countedResults
+                .Where(r => r.RawType == ScanObjectType.Suspicious)
+                .Select(GetResultKey)
+                .Distinct()
+                .Count();
 
             // Считаем намеренно пропущенные — чтобы отличать их от неудавшихся нейтрализаций
-            int skippedCount = scanResults
-                .Where(r => r.RawAction == ScanActionType.Skipped &&
-                            (r.RawType == ScanObjectType.Malware ||
-                             r.RawType == ScanObjectType.Unsafe ||
-                             r.RawType == ScanObjectType.Infected ||
-                             r.RawType == ScanObjectType.Rootkit ||
-                             r.RawType == ScanObjectType.Suspicious))
-                .Select(r => !string.IsNullOrEmpty(r.ThreatObjectId) ? r.ThreatObjectId : r.RawClass.ToString() + "|" + r.Path)
+            int skippedCount = countedResults
+                .Where(r => r.RawAction == ScanActionType.Skipped)
+                .Select(GetResultKey)
                 .Distinct()
                 .Count();
 
