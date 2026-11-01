@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace MSearch.UI
 {
     /// <summary>
-    /// Страница настроек: язык, статистика, авто-принятие неизвестных, EULA.
+    /// Settings page: language, statistics, auto-accept unknown threats, EULA.
     /// </summary>
     public partial class SettingsPage : UserControl
     {

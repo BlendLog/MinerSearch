@@ -31,7 +31,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Цветной акцент слева в заголовке (для ошибок). Пустой цвет — обычный вид.
+        /// Colored accent on the left of the header (for errors). Empty color — normal look.
         /// </summary>
         private void ApplyAccentColor(Color color)
         {
@@ -56,7 +56,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Ограничивает ширину текста, чтобы длинные строки переносились с отступом от края.
+        /// Limits the text width so long lines wrap with a margin from the edge.
         /// </summary>
         private void ConstrainMessageWidth()
         {
@@ -70,7 +70,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Подгоняет высоту формы под сообщение с учётом переноса длинных строк.
+        /// Adjusts the form height to the message, taking long-line wrapping into account.
         /// </summary>
         private void AdjustHeightForMessage()
         {

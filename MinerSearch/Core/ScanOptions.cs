@@ -1,7 +1,7 @@
 namespace MSearch.Core
 {
     /// <summary>
-    /// Режим сканирования, выбранный пользователем в главном окне.
+    /// Scan mode selected by the user in the main window.
     /// </summary>
     public enum ScanMode
     {
@@ -11,9 +11,9 @@ namespace MSearch.Core
     }
 
     /// <summary>
-    /// Настройки одного запуска сканирования.
-    /// Опции живут только в рамках сессии и не сохраняются: вредоносное ПО
-    /// не должно иметь возможности навсегда отключить этапы проверки.
+    /// Settings of one scan run.
+    /// Options live only for the session and are not persisted: malware
+    /// must not be able to disable scan stages permanently.
     /// </summary>
     public sealed class ScanRequest
     {
@@ -60,13 +60,13 @@ namespace MSearch.Core
             MaxDepth = 8;
         }
 
-        /// <summary>Обычное сканирование: все этапы, стандартная глубина.</summary>
+        /// <summary>Quick scan: all stages, standard depth.</summary>
         public static ScanRequest CreateQuick()
         {
             return new ScanRequest { Mode = ScanMode.Quick };
         }
 
-        /// <summary>Полное сканирование: все локальные диски, глубина 16.</summary>
+        /// <summary>Full scan: all local drives, depth 16.</summary>
         public static ScanRequest CreateFull()
         {
             return new ScanRequest
@@ -78,8 +78,8 @@ namespace MSearch.Core
         }
 
         /// <summary>
-        /// Выборочное сканирование: все этапы включены по умолчанию,
-        /// путь не задан — используется стандартный набор каталогов.
+        /// Selective scan: all stages enabled by default,
+        /// no path set — the default set of directories is used.
         /// </summary>
         public static ScanRequest CreateSelective()
         {
@@ -87,7 +87,7 @@ namespace MSearch.Core
         }
 
         /// <summary>
-        /// Переносит настройки запуска в глобальные опции, которые читают сканеры.
+        /// Applies the run settings to the global options read by scanners.
         /// </summary>
         public void Apply(LaunchOptions options)
         {

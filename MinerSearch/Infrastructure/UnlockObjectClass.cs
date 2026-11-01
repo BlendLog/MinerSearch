@@ -77,9 +77,9 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Разрешает сброс ACL (смена владельца/DACL) только для пользовательских и прикладных каталогов.
-        /// В системных и защищённых AV-деревьях отказ 0x80070005 ожидаем — там доступно только чтение.
-        /// Список запретов хранится в MSData (обфусцированные строки).
+        /// Allows ACL reset (ownership/DACL change) only for user and application directories.
+        /// In system and protected AV trees, access denied 0x80070005 is expected — only reads are available.
+        /// The deny list is stored in MSData (obfuscated strings).
         /// </summary>
         internal static bool IsFileAclResetAllowed(string filePath)
         {
@@ -132,9 +132,9 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Открывает файл на чтение в обход DACL через SeBackupPrivilege + FILE_FLAG_BACKUP_SEMANTICS.
-        /// Файл не изменяется. Возвращает null, если открыть не удалось.
-        /// share по умолчанию широкий; карантин передаёт FileShare.None, чтобы сохранить эксклюзивность снимка.
+        /// Opens a file for reading bypassing the DACL via SeBackupPrivilege + FILE_FLAG_BACKUP_SEMANTICS.
+        /// The file is not modified. Returns null if it could not be opened.
+        /// The default share is broad; quarantine passes FileShare.None to keep the snapshot exclusive.
         /// </summary>
         internal static FileStream OpenReadWithBackupSemantics(string filePath, FileShare share = FileShare.ReadWrite | FileShare.Delete)
         {
@@ -174,8 +174,8 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Крайняя мера для файлов с deny-ACL: забирает владение (SeTakeOwnershipPrivilege) и выставляет
-        /// разрешающий DACL (наследование включено, deny-ACE убраны), после чего файл снова читается.
+        /// Last resort for files with a deny ACL: takes ownership (SeTakeOwnershipPrivilege) and sets
+        /// an allowing DACL (inheritance enabled, deny ACEs removed), after which the file can be read again.
         /// </summary>
         internal static bool RestoreFileAclForRead(string filePath)
         {
@@ -352,8 +352,8 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Определяет корень реестра по префиксу пути ("HKLM\", "HKEY_LOCAL_MACHINE\", "HKCU\", "HKEY_CURRENT_USER\").
-        /// Без префикса — совместимость: HKEY_CURRENT_USER.
+        /// Resolves the registry root by path prefix ("HKLM\", "HKEY_LOCAL_MACHINE\", "HKCU\", "HKEY_CURRENT_USER\").
+        /// Without a prefix, HKEY_CURRENT_USER is assumed for compatibility.
         /// </summary>
         private static IntPtr ResolveRegistryRoot(string keyPath, out string subKeyPath)
         {
@@ -453,9 +453,9 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Создаёт собственные ключи настроек приложения (в HKCU и карантин в HKLM), если их ещё нет,
-        /// затем проверяет и восстанавливает доступ к ним: снимает Deny-ACE, а если отказа недостаточно —
-        /// забирает владение (WRITE_OWNER, при включённом SeTakeOwnershipPrivilege) и сбрасывает ACL через WRITE_DAC.
+        /// Creates the application's own settings keys (HKCU and the HKLM quarantine key) if missing,
+        /// then checks and restores access to them: removes deny ACEs and, if that is not enough,
+        /// takes ownership (WRITE_OWNER, with SeTakeOwnershipPrivilege enabled) and resets the ACL via WRITE_DAC.
         /// </summary>
         internal static void EnsureOwnSettingsKeyAccessible()
         {
@@ -498,7 +498,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Возвращает корневый дескриптор (HKEY_*) для заданного улья реестра.
+        /// Returns the root handle (HKEY_*) for the given registry hive.
         /// </summary>
         private static IntPtr GetHiveRoot(RegistryHive hive)
         {
@@ -514,8 +514,8 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Создаёт ключ (и промежуточные родительские) через RegCreateKeyEx, если его ещё нет.
-        /// Не бросает исключений: при отказе в доступе просто возвращает false.
+        /// Creates a key (and intermediate parents) via RegCreateKeyEx if it does not exist yet.
+        /// Does not throw: on access denied it simply returns false.
         /// </summary>
         private static bool EnsureKeyExists(string keyPath, RegistryHive hive)
         {

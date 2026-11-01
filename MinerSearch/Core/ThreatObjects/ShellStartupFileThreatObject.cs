@@ -1,8 +1,8 @@
 namespace MSearch.Core.ThreatObjects
 {
     /// <summary>
-    /// Представляет файл из папки автозагрузки Shell (User Startup + Common Startup).
-    /// Может быть обычным файлом (.exe, .bat, .vbs и т.д.) или ярлыком (.lnk).
+    /// Represents a file from the Shell startup folder (User Startup + Common Startup).
+    /// Can be a regular file (.exe, .bat, .vbs, etc.) or a shortcut (.lnk).
     /// </summary>
     public sealed class ShellStartupFileThreatObject : ThreatObject
     {

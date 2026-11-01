@@ -322,7 +322,7 @@ namespace MSearch.Core.Handlers
         }
 
         /// <summary>
-        /// Best-effort выставление Start=4 в ветке службы (когда SCM недоступен на запись).
+        /// Best-effort Start=4 assignment in the service key (when SCM is not writable).
         /// </summary>
         static bool TrySetStartDisabledInRegistry(string serviceName)
         {
@@ -386,8 +386,8 @@ namespace MSearch.Core.Handlers
         }
 
         /// <summary>
-        /// Registry-only служба: SCM её не знает (malware пишет ключ напрямую, Type=1, путь \??\C:\...).
-        /// Сначала карантин (data-loss guard), затем удаление ветки ключа.
+        /// Registry-only service: SCM does not know it because the key was written directly.
+        /// Quarantine first (data-loss guard), then delete the registry key.
         /// </summary>
         ApplyResult HandleRegistryOnlyService(ServiceThreatObject svc, ThreatDecision decision)
         {
@@ -425,8 +425,8 @@ namespace MSearch.Core.Handlers
         }
 
         /// <summary>
-        /// Registry-only запись при выбранном удалении (анализатор или пользователь в обзоре угроз):
-        /// карантин НЕ создаём — просто снимаем автозапуск и сносим ветку ключа.
+        /// Registry-only entry with deletion selected (by the analyzer or by the user in threat review):
+        /// no quarantine is created; autostart is disabled and the registry key is removed.
         /// </summary>
         ApplyResult HandleDeleteRegistryOnlyService(ServiceThreatObject svc, ThreatDecision decision)
         {
@@ -455,8 +455,8 @@ namespace MSearch.Core.Handlers
         }
 
         /// <summary>
-        /// Знает ли SCM эту службу. OpenService падает (E_FAIL / ERROR_SERVICE_DOES_NOT_EXIST)
-        /// для registry-only записей, которые malware создал напрямую в ветке Services.
+        /// Whether SCM knows this service. OpenService fails (E_FAIL / ERROR_SERVICE_DOES_NOT_EXIST)
+        /// for registry-only entries created directly under the Services key.
         /// </summary>
         static bool ScmKnowsService(string serviceName)
         {
@@ -529,7 +529,6 @@ namespace MSearch.Core.Handlers
                 }
             }
 
-            // Останавливаем если работает
             if (svc.Status == ServiceControllerStatus.Running && svc.ShouldStopService)
             {
                 try
@@ -704,7 +703,6 @@ namespace MSearch.Core.Handlers
                 }
             }
 
-            // Останавливаем если работает
             if (svc.Status == ServiceControllerStatus.Running && svc.ShouldStopService)
             {
                 try

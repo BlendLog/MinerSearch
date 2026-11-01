@@ -9,8 +9,8 @@ using System.IO;
 namespace MSearch.Core.Scanners
 {
     /// <summary>
-    /// Сканирует папки автозагрузки Shell (User Startup + Common Startup).
-    /// Создаёт ShellStartupFileThreatObject для каждого найденного файла.
+    /// Scans Shell startup folders (User Startup + Common Startup).
+    /// Creates a ShellStartupFileThreatObject for every discovered file.
     /// </summary>
     public class ShellStartupScanner : IThreatScanner
     {

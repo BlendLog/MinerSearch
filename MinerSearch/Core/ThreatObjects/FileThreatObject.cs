@@ -23,15 +23,15 @@ namespace MSearch.Core.ThreatObjects
         public bool ShouldDisableExecute { get; internal set; }
 
         /// <summary>
-        /// Файл заблокирован Windows Defender (ERROR_VIRUS_INFECTED): не трогаем его вообще —
-        /// ни чтения, ни карантин, ни удаление, ни Deny-Execute.
+        /// The file is locked by Windows Defender (ERROR_VIRUS_INFECTED): it is not touched at all —
+        /// no reads, no quarantine, no deletion, no Deny-Execute.
         /// </summary>
         public bool IsLockedByAntivirus { get; internal set; }
         
         /// <summary>
-        /// Тег источника обнаружения (заполняется сканером). 
-        /// Примеры: "obfStr2", "bloated", "bad_bat", "unsigned_sfx", "signature", "suspicious_path"
-        /// Анализатор использует этот тег для принятия решений.
+        /// Detection source tag (set by the scanner).
+        /// Examples: "obfStr2", "bloated", "bad_bat", "unsigned_sfx", "signature", "suspicious_path".
+        /// The analyzer uses this tag to make decisions.
         /// </summary>
         public string SourceTag { get; internal set; }
 

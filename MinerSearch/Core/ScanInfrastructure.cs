@@ -4,7 +4,7 @@ using MSearch.Core.ThreatAnalyzers;
 namespace MSearch.Core
 {
     /// <summary>
-    /// Набор сканеров, анализаторов и менеджеров, создаваемый на один запуск сканирования.
+    /// Set of scanners, analyzers and managers created for one scan run.
     /// </summary>
     public sealed class ScanInfrastructure
     {

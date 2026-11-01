@@ -11,7 +11,7 @@ using System.Windows.Forms;
 namespace MSearch.UI
 {
     /// <summary>
-    /// Промежуточная страница обзора неизвестных угроз.
+    /// Intermediate page for reviewing unknown threats.
     /// </summary>
     public partial class ThreatReviewPage : UserControl
     {
@@ -63,7 +63,7 @@ namespace MSearch.UI
         }
 
         /// <summary>
-        /// Заполняет страницу новым набором решений.
+        /// Fills the page with a new set of decisions.
         /// </summary>
         public void InitializeReview(List<ThreatDecision> decisions)
         {
@@ -593,7 +593,7 @@ namespace MSearch.UI
 
         #region Применение выбора
 
-        /// <summary>Сбрасывает ручной выбор пользователя во всех решениях.</summary>
+        /// <summary>Resets the user's manual choice in all decisions.</summary>
         public void ResetUserOverrides()
         {
             foreach (ThreatDecision decision in _decisions)
@@ -603,7 +603,7 @@ namespace MSearch.UI
             }
         }
 
-        /// <summary>Помечает все решения как «Пропустить».</summary>
+        /// <summary>Marks all decisions as "Skip".</summary>
         public void ApplySkipAll()
         {
             foreach (ThreatDecision decision in _decisions)
@@ -613,7 +613,7 @@ namespace MSearch.UI
             }
         }
 
-        /// <summary>Применяет выбор пользователя к флагам действий в каждом ThreatObject.</summary>
+        /// <summary>Applies the user's choice to the action flags of each ThreatObject.</summary>
         public void ApplyUserOverrides()
         {
             foreach (ThreatDecision decision in _decisions)

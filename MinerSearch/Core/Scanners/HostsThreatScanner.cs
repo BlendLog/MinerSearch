@@ -9,7 +9,7 @@ using System.Linq;
 namespace MSearch.Core.Scanners
 {
     /// <summary>
-    /// SRP: Только сбор значимых строк файла hosts (IP + домены).
+    /// SRP: collects only meaningful hosts-file lines (IP + domains).
     /// </summary>
     public class HostsThreatScanner : IThreatScanner
     {

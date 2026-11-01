@@ -13,7 +13,7 @@ using Win32Wrapper;
 namespace MSearch.UI
 {
     /// <summary>
-    /// Главное окно: боковая навигация и рабочая область.
+    /// Main window: side navigation and content area.
     /// </summary>
     public partial class FormMain : FormShadow
     {
@@ -98,9 +98,9 @@ namespace MSearch.UI
         }
 
         /// <summary>
-        /// Подбирает стартовый размер окна под монитор, на котором находится курсор,
-        /// с учётом масштабирования дисплея. Приложение DPI-unaware, поэтому
-        /// рабочая область монитора переводится в его логические единицы.
+        /// Picks the startup window size for the monitor under the cursor,
+        /// taking display scaling into account. The app is DPI-unaware, so the
+        /// monitor work area is converted to its logical units.
         /// </summary>
         private void ApplyAdaptiveWindowSize()
         {
@@ -453,7 +453,7 @@ namespace MSearch.UI
             catch (InvalidOperationException) { }
         }
 
-        /// <summary>Вызывается из движка сканирования (фоновый поток).</summary>
+        /// <summary>Called from the scan engine (background thread).</summary>
         public bool ConfirmAutoAcceptUnknown()
         {
             DialogResult result = DialogDispatcher.Show(
@@ -465,7 +465,7 @@ namespace MSearch.UI
             return result == DialogResult.Yes;
         }
 
-        /// <summary>Показывает промежуточную страницу обзора угроз (UI-поток).</summary>
+        /// <summary>Shows the intermediate threat review page (UI thread).</summary>
         public void BeginThreatReview(List<ThreatDecision> decisions, ManualResetEventSlim gate)
         {
             _reviewGate = gate;
@@ -491,7 +491,7 @@ namespace MSearch.UI
                 gate.Set();
         }
 
-        /// <summary>Вызывается из движка сканирования (фоновый поток).</summary>
+        /// <summary>Called from the scan engine (background thread).</summary>
         public void WaitBeforeCleanup()
         {
             MessageBoxCustom.Show(

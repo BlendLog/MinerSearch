@@ -4,7 +4,7 @@ using System.Windows.Forms;
 namespace MSearch.UI
 {
     /// <summary>
-    /// Палитра и базовые элементы оформления GUI.
+    /// GUI palette and base style elements.
     /// </summary>
     internal static class Theme
     {
@@ -80,7 +80,7 @@ namespace MSearch.UI
         }
 
         /// <summary>
-        /// Белая карточка с рамкой в один пиксель.
+        /// White card with a one-pixel border.
         /// </summary>
         public static Panel CardPanel()
         {

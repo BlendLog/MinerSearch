@@ -18,8 +18,8 @@ namespace MSearch
         static bool _captureStartupLog;
 
         /// <summary>
-        /// Папка логов. Вычисляется лениво (drive_letter в WinPE задаётся позже старта),
-        /// создаётся только при начале сканирования.
+        /// Logs folder. Computed lazily (drive_letter in WinPE is set after startup)
+        /// and created only when a scan starts.
         /// </summary>
         public static string LogsFolder
         {
@@ -27,10 +27,10 @@ namespace MSearch
             private set { _logsFolder = value; }
         }
 
-        /// <summary>Путь к логу последнего сканирования; пусто, если сканов ещё не было.</summary>
+        /// <summary>Path to the last scan log; empty if no scan has run yet.</summary>
         public static string LogFilePath { get; private set; }
 
-        /// <summary>Есть ли готовый лог последнего скана (файл существует).</summary>
+        /// <summary>Whether the last scan produced a log (the file exists).</summary>
         public static bool HasScanLog
         {
             get { return !string.IsNullOrEmpty(LogFilePath) && File.Exists(LogFilePath); }
@@ -53,8 +53,8 @@ namespace MSearch
         static StreamWriter _writer;
 
         /// <summary>
-        /// Настраивает логирование на сессию. Файл здесь НЕ создаётся:
-        /// лог открывается только на время сканирования (BeginScanLog/EndScanLog).
+        /// Configures logging for the session. No file is created here:
+        /// the log is opened only for the duration of a scan (BeginScanLog/EndScanLog).
         /// </summary>
         public static void InitLogger(bool logSupression)
         {
@@ -62,7 +62,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Буферизует заголовок старого сессионного лога до открытия первого лога сканирования.
+        /// Buffers the startup header until the first scan log is opened.
         /// </summary>
         internal static void StartHeaderCapture()
         {
@@ -75,7 +75,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Открывает новый файл лога для очередного сканирования.
+        /// Opens a new log file for the next scan.
         /// </summary>
         public static void BeginScanLog()
         {
@@ -124,7 +124,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Закрывает файл лога по завершении сканирования. Путь остаётся доступен для просмотра.
+        /// Closes the log file when the scan finishes. The path stays available for viewing.
         /// </summary>
         public static void EndScanLog()
         {
@@ -146,7 +146,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Готовит папку логов: основной диск (drive_letter), при неудаче — рядом с приложением.
+        /// Prepares the logs folder: the main drive (drive_letter), falling back to the app directory.
         /// </summary>
         private static string PrepareLogsFolder()
         {
@@ -231,8 +231,8 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Пишет в активный лог или буферизует строки заголовка до начала сканирования.
-        /// Вызывающий код должен удерживать _logLock.
+        /// Writes to the active log or buffers header lines before the scan starts.
+        /// The caller must hold _logLock.
         /// </summary>
         private static void WriteLogLine(string logMessage, bool force = false)
         {

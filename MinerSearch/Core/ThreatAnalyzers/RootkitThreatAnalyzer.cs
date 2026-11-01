@@ -10,9 +10,9 @@ using Native = Win32Wrapper.Native;
 namespace MSearch.Core.ThreatAnalyzers
 {
     /// <summary>
-    /// Анализатор для руткит-угроз.
-    /// Если RootkitThreatObject.IsRootkitPresent == true, сканирует все процессы
-    /// на наличие R77-подписей и заполняет ProcessIds, Signatures, DialerPids, DetachAddresses.
+    /// Analyzer for rootkit threats.
+    /// When RootkitThreatObject.IsRootkitPresent == true, scans all processes
+    /// for R77 signatures and fills ProcessIds, Signatures, DialerPids, DetachAddresses.
     /// </summary>
     internal sealed class RootkitThreatAnalyzer : IThreatAnalyzer
     {
@@ -38,7 +38,7 @@ namespace MSearch.Core.ThreatAnalyzers
         }
 
         /// <summary>
-        /// Сканирует все процессы на наличие R77-подписей, заполняет RootkitThreatObject.
+        /// Scans all processes for R77 signatures and fills RootkitThreatObject.
         /// </summary>
         private void ScanProcesses(RootkitThreatObject rootkit)
         {
@@ -70,7 +70,7 @@ namespace MSearch.Core.ThreatAnalyzers
                                 {
                                     if (Native.ReadProcessMemory(process, modules[j], moduleBytes, moduleBytes.Length, IntPtr.Zero))
                                     {
-                                        // r77 >= 1.8.0 — 0x28, r77 <= 1.7.x — legacy 0x40
+                                        // Newer r77 layout first, then the legacy one
                                         int headerOffset = Native.R77_HEADER_OFFSET;
                                         ushort signature = BitConverter.ToUInt16(moduleBytes, headerOffset);
                                         if (signature != Native.R77_SIGNATURE &&
@@ -92,8 +92,8 @@ namespace MSearch.Core.ThreatAnalyzers
                                                 DetachAddress = 0
                                             };
 
-                                            // Detach-адрес пишется и для сервисной сигнатуры
-                                            // (r77 сам читает его для R77_SIGNATURE и R77_SERVICE_SIGNATURE)
+                                            // The detach address is also written for the service signature;
+                                            // r77 reads it for both R77_SIGNATURE and R77_SERVICE_SIGNATURE
                                             if (signature == Native.R77_SIGNATURE ||
                                                 signature == Native.R77_SERVICE_SIGNATURE)
                                             {

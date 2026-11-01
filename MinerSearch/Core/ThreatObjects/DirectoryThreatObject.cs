@@ -6,9 +6,9 @@ namespace MSearch.Core.ThreatObjects
         public string DirectoryName { get; }
         
         /// <summary>
-        /// Тег источника обнаружения (заполняется сканером).
-        /// Примеры: "obfStr1" (известный вредоносный), "locked" (заблокирован вирусом)
-        /// Анализатор использует этот тег для принятия решений.
+        /// Detection source tag (set by the scanner).
+        /// Examples: "obfStr1" (known malicious), "locked" (blocked by malware).
+        /// The analyzer uses this tag to make decisions.
         /// </summary>
         public string SourceTag { get; }
 

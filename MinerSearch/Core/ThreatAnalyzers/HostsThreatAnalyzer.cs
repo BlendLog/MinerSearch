@@ -10,9 +10,9 @@ using System.Net.Sockets;
 namespace MSearch.Core.ThreatAnalyzers
 {
     /// <summary>
-    /// Анализирует записи hosts. Угроза — только глушилки (ScanObjectType.Infected);
-    /// внешний IP на AV-домен (Redirect) не трогаем — только строка в лог.
-    /// НЕ увеличивает счётчики — это делает CleanManager.
+    /// Analyzes hosts entries. Only blackhole entries are a threat (ScanObjectType.Infected);
+    /// an external IP for an AV domain (Redirect) is left alone and only logged.
+    /// Does NOT increment counters; CleanManager does that.
     /// </summary>
     public sealed class HostsThreatAnalyzer : IThreatAnalyzer
     {
@@ -97,7 +97,7 @@ namespace MSearch.Core.ThreatAnalyzers
         }
 
         /// <summary>
-        /// Сверка домена с MSData.hStrings через MD5-суффикс.
+        /// Matches a domain against MSData.hStrings by MD5 suffix.
         /// </summary>
         internal static bool IsAvDomain(string domain)
         {

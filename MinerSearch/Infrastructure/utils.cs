@@ -230,7 +230,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Поднимает winmgmt (тип запуска AutoStart + запуск), не трогая WMI-базу
+        /// Starts winmgmt (AutoStart start type + start) without touching the WMI database
         /// </summary>
         private static void EnsureWinmgmtRunning()
         {
@@ -493,8 +493,7 @@ namespace MSearch
                     {
                         if (me.ErrorCode == ManagementStatus.InvalidClass || me.ErrorCode == ManagementStatus.ProviderLoadFailure || me.ErrorCode == ManagementStatus.ProviderFailure)
                         {
-                            RestoreWMICorruption();
-                            if (!restartCheck)
+                            if (RestoreWMICorruption() && !restartCheck)
                             {
                                 CheckWMI(true);
                             }
@@ -524,11 +523,11 @@ namespace MSearch
 
         }
 
-        static void RestoreWMICorruption()
+        static bool RestoreWMICorruption()
         {
             if (LaunchOptions.GetInstance.RestoredWMI)
             {
-                throw new Exception("WMI_Corruption");
+                return false;
             }
 
             AppConfig.GetInstance.LL.LogMessage("\t\t[xxx]", "_WMICorruption", "", ConsoleColor.Red, false);
@@ -591,6 +590,7 @@ namespace MSearch
 
 
             Logger.WriteLog($"\t\t[OK]", Logger.success, false, true);
+            return true;
         }
 
         public static string WmiTestQuery(string serviceName)
@@ -863,7 +863,6 @@ namespace MSearch
 #endif
                     return "";
                 }
-
                 IntPtr rtlUserProcParamsPointer = (IntPtr.Size == 4) ? (IntPtr)BitConverter.ToInt32(buff, 0) : (IntPtr)BitConverter.ToInt64(buff, 0);
 
                 IntPtr commandLineOffset = (IntPtr.Size == 4) ? new IntPtr(0x40) : new IntPtr(0x70);
@@ -1111,9 +1110,9 @@ namespace MSearch
                 process.Close();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("SuspendProcess()"));
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
             }
         }
 
@@ -1194,11 +1193,11 @@ namespace MSearch
                         identity = new WindowsIdentity(tokenHandle);
                         return identity.IsSystem;
                     }
-                    else
-                    {
-                        throw new Exception("Unable open process token");
-                    }
                 }
+            }
+            catch (Win32Exception w32e)
+            {
+                AppConfig.GetInstance.LL.LogWarnMessage("_Error", w32e.Message);
             }
             catch (Exception ex)
             {
@@ -1355,7 +1354,7 @@ namespace MSearch
     }
 
     /// <summary>
-    /// Уровень доверия SFX-архива на основе цифровой подписи.
+    /// Digital-signature trust level of an SFX archive.
     /// </summary>
     internal enum SfxTrustLevel
     {
@@ -1371,11 +1370,11 @@ namespace MSearch
         static string batchSig = MSData.GetInstance.queries["Defender_AddExclusionPath"];
 
         /// <summary>
-        /// Открывает файл на чтение; при отказе в доступе (deny-ACL) сначала пробует backup-semantics
-        /// (без изменения файла/ACL), и только затем крайнюю меру — сброс ACL для разрешённых каталогов.
-        /// При ERROR_SHARING_VIOLATION (0x80070020) и allowBroadShareFallback ослабляет собственный
-        /// share-режим (файл удерживают майнер/Defender с write/delete-доступом) и пробует снова.
-        /// Для карантина broadening запрещён (allowBroadShareFallback: false) — иначе снимок может быть повреждён.
+        /// Opens a file for reading; on access denied (deny ACL) it first tries backup semantics
+        /// (without modifying the file or ACL) and only then the last resort — an ACL reset for allowed directories.
+        /// On ERROR_SHARING_VIOLATION (0x80070020) with allowBroadShareFallback it relaxes its own
+        /// share mode (the file is held by a miner/Defender with write/delete access) and retries.
+        /// Broadening is forbidden for quarantine (allowBroadShareFallback: false) — otherwise the snapshot could be corrupted.
         /// </summary>
         internal static FileStream OpenReadWithFallback(string filePath, FileShare share, int bufferSize = 4096, bool allowBroadShareFallback = true)
         {
@@ -2095,9 +2094,9 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Проверяет, что файл заблокирован Windows Defender (ERROR_VIRUS_INFECTED).
-        /// Читающее открытие с широким share-режимом не изменяет файл; при вирусном фильтре
-        /// Defender CreateFile сразу возвращает 0x800700E1.
+        /// Checks that the file is locked by Windows Defender (ERROR_VIRUS_INFECTED).
+        /// A read-only open with a broad share mode does not modify the file; with the virus filter
+        /// Defender returns 0x800700E1 from CreateFile immediately.
         /// </summary>
         internal static bool IsBlockedByDefender(string filePath)
         {
@@ -2299,7 +2298,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Определяет уровень доверия SFX-архива на основе цифровой подписи.
+        /// Determines the digital-signature trust level of an SFX archive.
         /// </summary>
         internal static SfxTrustLevel GetSfxTrustLevel(string path)
         {
@@ -2319,7 +2318,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Проверяет, находится ли файл в подозрительной директории (для планировщика задач).
+        /// Checks whether the file is in a suspicious directory (for the task scheduler).
         /// </summary>
         internal static bool IsInSuspiciousTaskPath(string filePath)
         {

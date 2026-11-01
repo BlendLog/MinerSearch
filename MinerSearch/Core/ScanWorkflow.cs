@@ -13,7 +13,7 @@ using System.Threading;
 namespace MSearch.Core
 {
     /// <summary>
-    /// Этапы сканирования. Используются для отображения прогресса в GUI.
+    /// Scan stages. Used to display progress in the GUI.
     /// </summary>
     public enum ScanStage
     {
@@ -31,7 +31,7 @@ namespace MSearch.Core
     {
         public ScanStage Stage { get; private set; }
 
-        /// <summary>Имя класса сканера для уточнения подэтапа (например, RegistryScanner).</summary>
+        /// <summary>Scanner class name for the sub-stage label (for example, RegistryScanner).</summary>
         public string ScannerId { get; private set; }
 
         public ScanStageEventArgs(ScanStage stage, string scannerId = null)
@@ -91,18 +91,18 @@ namespace MSearch.Core
     }
 
     /// <summary>
-    /// Взаимодействие с пользователем во время сканирования.
-    /// Движок не знает, консоль это или GUI.
+    /// User interaction during a scan.
+    /// The engine does not know whether it is a console or the GUI.
     /// </summary>
     public interface IScanInteraction
     {
-        /// <summary>Спросить, принимать ли неизвестные угрозы автоматически.</summary>
+        /// <summary>Ask whether unknown threats should be accepted automatically.</summary>
         bool ConfirmAutoAcceptUnknown();
 
-        /// <summary>Показать обзор неизвестных угроз и применить выбор пользователя.</summary>
+        /// <summary>Show the unknown-threat review and apply the user's choice.</summary>
         void ShowThreatReview(List<ThreatDecision> decisions);
 
-        /// <summary>Пауза перед очисткой (--pause).</summary>
+        /// <summary>Pause before cleanup (--pause).</summary>
         void WaitBeforeCleanup();
     }
 
@@ -114,8 +114,8 @@ namespace MSearch.Core
     }
 
     /// <summary>
-    /// Движок сканирования: руткиты → процессы → остальное → сигнатуры → очистка.
-    /// Не зависит от UI, прогресс отдаётся событиями.
+    /// Scan engine: rootkits → processes → everything else → signatures → cleanup.
+    /// UI-agnostic; progress is reported through events.
     /// </summary>
     public sealed class ScanWorkflow
     {
@@ -144,7 +144,7 @@ namespace MSearch.Core
         }
 
         /// <summary>
-        /// Выполняет полный цикл сканирования и очистки.
+        /// Runs the full scan and cleanup cycle.
         /// </summary>
         public ScanWorkflowResult Run(CancellationToken token)
         {
@@ -532,8 +532,8 @@ namespace MSearch.Core
         }
 
         /// <summary>
-        /// Проверяет, является ли угроза «известной» по MSData (obfStr1-obfStr4).
-        /// Известные угрозы применяются автоматически без review.
+        /// Checks whether the threat is "known" per MSData (obfStr1-obfStr4).
+        /// Known threats are applied automatically without review.
         /// </summary>
         public static bool IsKnownThreat(ThreatDecision decision)
         {
@@ -678,9 +678,9 @@ namespace MSearch.Core
         }
 
         /// <summary>
-        /// Удаляет дубликаты решений: SignatureScanner может найти тот же файл, что уже есть
-        /// в processDecisions/commonDecisions, но с UNC-префиксом (\\?\).
-        /// Группируем по Target.Id, а для файлов/каталогов — по нормализованному пути.
+        /// Removes duplicate decisions: SignatureScanner may find the same file that is already
+        /// in processDecisions/commonDecisions, but with a UNC prefix (\\?\).
+        /// Groups by Target.Id, and for files/directories by normalized path.
         /// </summary>
         public static List<ThreatDecision> DeduplicateDecisions(List<ThreatDecision> decisions)
         {
@@ -710,8 +710,8 @@ namespace MSearch.Core
         }
 
         /// <summary>
-        /// Файл заблокирован Defender-ом: объект не трогаем, в review не показываем,
-        /// но отражаем в результатах (ровно один раз).
+        /// The file is locked by Defender: the object is left alone, not shown in review,
+        /// but reflected in the results (exactly once).
         /// </summary>
         public static bool IsLockedByAv(ThreatDecision decision)
         {

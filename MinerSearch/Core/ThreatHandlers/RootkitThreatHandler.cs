@@ -13,9 +13,9 @@ using Native = Win32Wrapper.Native;
 namespace MSearch.Core.Handlers
 {
     /// <summary>
-    /// Обработчик для руткит-угроз.
-    /// Выполняет финальную очистку: завершает оставшиеся процессы R77,
-    /// удаляет конфигурацию из реестра.
+    /// Rootkit threat handler.
+    /// Performs final cleanup: terminates remaining R77 processes
+    /// and removes the registry configuration.
     /// </summary>
     internal sealed class RootkitThreatHandler : IThreatHandler
     {
@@ -84,7 +84,7 @@ namespace MSearch.Core.Handlers
         }
 
         /// <summary>
-        /// Graceful-detach инжектов R77: core (R77_SIGNATURE) и сервиса (R77_SERVICE_SIGNATURE).
+        /// Graceful detach of R77 injections: core (R77_SIGNATURE) and service (R77_SERVICE_SIGNATURE).
         /// </summary>
         private void DetachR77Processes(Native.R77_PROCESS[] r77Processes)
         {
@@ -157,9 +157,9 @@ namespace MSearch.Core.Handlers
         }
 
         /// <summary>
-        /// Завершает dialer процессы, которые были приостановлены в RootkitScanner.
+        /// Terminates dialer processes that were suspended in RootkitScanner.
         /// </summary>
-        /// <returns>true если хотя бы один dialer процесс был завершён успешно.</returns>
+        /// <returns>true if at least one dialer process was terminated successfully.</returns>
         private bool TerminateDialerProcesses(int[] dialerPids)
         {
             if (dialerPids == null || dialerPids.Length == 0)
@@ -208,7 +208,7 @@ namespace MSearch.Core.Handlers
         }
 
         /// <summary>
-        /// Снимает защиту процесса от завершения (аналогично ProcessThreatHandler.UnProtect).
+        /// Removes process kill protection (same as ProcessThreatHandler.UnProtect).
         /// </summary>
         private void UnProtect(int pid)
         {
@@ -242,7 +242,7 @@ namespace MSearch.Core.Handlers
         }
 
         /// <summary>
-        /// Удаляет Windows-службы руткита
+        /// Removes the rootkit's Windows services.
         /// </summary>
         private static bool RemoveR77Services()
         {
@@ -266,7 +266,7 @@ namespace MSearch.Core.Handlers
         }
 
         /// <summary>
-        /// Удаляет конфигурацию руткита из реестра.
+        /// Removes the rootkit configuration from the registry.
         /// </summary>
         private bool RemoveR77Config()
         {

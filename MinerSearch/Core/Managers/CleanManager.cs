@@ -35,7 +35,7 @@ namespace MSearch.Core.Managers
         }
 
         /// <summary>
-        /// Сбрасывает состояние между запусками сканирования в рамках одной сессии (GUI).
+        /// Resets per-session state between scan runs (GUI).
         /// </summary>
         public static void ResetSessionState()
         {
@@ -65,7 +65,7 @@ namespace MSearch.Core.Managers
         }
 
         /// <summary>
-        /// Порядок применения решений
+        /// Cleanup order of decisions
         /// </summary>
         internal static int GetCleanupOrder(ThreatObjectKind kind)
         {
@@ -160,8 +160,7 @@ namespace MSearch.Core.Managers
         }
 
         /// <summary>
-        /// Записывает решения со Skip в результаты сканирования без вызова Handler.
-        /// Вызывается из Program.cs для unknownDecisions, где пользователь выбрал "Пропустить".
+        /// Records skipped decisions in scan results without invoking a handler.
         /// </summary>
         public void ApplySkippedDecisions(IEnumerable<ThreatDecision> decisions)
         {
@@ -183,7 +182,7 @@ namespace MSearch.Core.Managers
         }
 
         /// <summary>
-        /// Сбрасывает ACL для всех файлов, связанных с пропущенной угрозой.
+        /// Resets the ACL of every file linked to a skipped threat.
         /// </summary>
         private void ResetFileAclForSkipped(IThreatObject target)
         {
@@ -208,8 +207,8 @@ namespace MSearch.Core.Managers
         }
 
         /// <summary>
-        /// Проверяет, был ли файл заблокирован через DisableExecute.
-        /// Блокировка происходит при ShouldDisableExecute или IsMalicious.
+        /// Checks whether the file was blocked through DisableExecute.
+        /// Blocking happens when ShouldDisableExecute or IsMalicious is set.
         /// </summary>
         private static bool FileNeedsAclReset(FileThreatObject file)
         {
@@ -294,7 +293,7 @@ namespace MSearch.Core.Managers
         }
 
         /// <summary>
-        /// Ключ для дедупликации строк LockedByAntivirus: нормализованный путь файла или Id объекта.
+        /// Deduplication key for LockedByAntivirus rows: normalized file path or object Id.
         /// </summary>
         private static string GetLockedKey(ThreatDecision decision)
         {
@@ -337,7 +336,7 @@ namespace MSearch.Core.Managers
         }
 
         /// <summary>
-        /// Маппит выбор пользователя (ScanActionTypeUserSelected) на финальный ScanActionType.
+        /// Maps the user's choice (ScanActionTypeUserSelected) to the final ScanActionType.
         /// </summary>
         private ScanActionType MapUserActionToScanAction(ScanActionTypeUserSelected userAction)
         {

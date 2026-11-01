@@ -6,8 +6,8 @@ using Win32Wrapper;
 namespace MSearch
 {
     /// <summary>
-    /// Мост к консоли для WinExe-сборки: подключается к родительской консоли,
-    /// создаёт новую при необходимости и переоткрывает стандартные потоки.
+    /// Console bridge for the WinExe build: attaches to the parent console,
+    /// creates a new one if needed and reopens the standard streams.
     /// </summary>
     internal static class ConsoleBridge
     {
@@ -16,8 +16,8 @@ namespace MSearch
         public static bool IsAttached { get; private set; }
 
         /// <summary>
-        /// Признак того, что stdin/stdout подключены к файлу или каналу,
-        /// а не к консоли (перенаправление ввода-вывода).
+        /// Whether stdin/stdout are connected to a file or pipe
+        /// rather than a console (I/O redirection).
         /// </summary>
         public static bool HasRedirectedStdio()
         {
@@ -34,7 +34,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Подключается к консоли родительского процесса или создаёт новую.
+        /// Attaches to the parent process console or creates a new one.
         /// </summary>
         public static void EnsureConsole()
         {

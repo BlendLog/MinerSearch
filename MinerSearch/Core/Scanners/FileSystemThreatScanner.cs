@@ -13,8 +13,8 @@ using System.Text.RegularExpressions;
 namespace MSearch.Core.Scanners
 {
     /// <summary>
-    /// SRP: Только обнаружение файлов и каталогов. НЕ принимает решений об удалении.
-    /// Возвращает найденные объекты с метаданными (SourceTag) для анализатора.
+    /// SRP: detection of files and directories only. Does NOT decide on removal.
+    /// Returns discovered objects with metadata (SourceTag) for the analyzer.
     /// </summary>
     public class FileSystemThreatScanner : IThreatScanner
     {
@@ -147,8 +147,8 @@ namespace MSearch.Core.Scanners
         }
 
         /// <summary>
-        /// Ищет в ProgramData каталоги с суффиксом "..".
-        /// Для доступа используется UNC-формат с префиксом \\?\
+        /// Finds ProgramData directories with a trailing "..".
+        /// Access uses the UNC form with the \\?\ prefix.
         /// </summary>
         private void ScanDoubleDotDirectories(List<IThreatObject> results)
         {
@@ -228,7 +228,6 @@ namespace MSearch.Core.Scanners
             if (!Directory.Exists(_baseDirectory))
                 return;
 
-            // Сканируем .bat файлы
             try
             {
                 IEnumerable<string> batFiles = FileEnumerator.GetFiles(_baseDirectory, "*.bat");
@@ -260,7 +259,6 @@ namespace MSearch.Core.Scanners
                 AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
             }
 
-            // Сканируем SFX архивы
             try
             {
                 foreach (string exeFile in FileEnumerator.GetFiles(_baseDirectory, "*.exe", 0, LaunchOptions.GetInstance.maxSubfolders))

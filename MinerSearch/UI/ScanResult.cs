@@ -3,8 +3,8 @@
 namespace MSearch
 {
     /// <summary>
-    /// Действия, которые анализатор автоматически определяет как результат сканирования/обработки.
-    /// Могут быть финальными (Cured, Deleted, Quarantine) или промежуточными/статусными (Active, Terminated, Inaccessible и т.д.).
+    /// Actions that the analyzer determines automatically as a scan/cleanup result.
+    /// Can be final (Cured, Deleted, Quarantine) or intermediate/status (Active, Terminated, Inaccessible, etc.).
     /// </summary>
     public enum ScanActionType
     {
@@ -23,8 +23,8 @@ namespace MSearch
     }
 
     /// <summary>
-    /// Действия, которые пользователь может выбрать вручную в review-UI.
-    /// Включает только осмысленные операции: удалить, поместить в карантин, пропустить, вылечить, завершить процесс.
+    /// Actions the user can choose manually in the threat review UI.
+    /// Contains only meaningful operations: delete, quarantine, skip, cure, terminate process.
     /// </summary>
     public enum ScanActionTypeUserSelected
     {
@@ -54,7 +54,7 @@ namespace MSearch
         public string Note { get; }
         public string Class { get; }
 
-        /// <summary>Уникальный Id ThreatObject для корректного подсчёта уникальных угроз</summary>
+        /// <summary>Unique ThreatObject Id for correct counting of unique threats</summary>
         public string ThreatObjectId { get; }
 
         public ScanObjectType RawType { get; }

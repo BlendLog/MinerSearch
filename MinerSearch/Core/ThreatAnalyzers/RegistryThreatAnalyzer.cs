@@ -604,9 +604,9 @@ namespace MSearch.Core.ThreatAnalyzers
         }
 
         /// <summary>
-        /// Разделы [Reg] HKU Custom CLSIDs / HKLM Custom CLSIDs: сбор информации о пользовательских
-        /// и общих InprocServer32. Неподписанные обработчики выводятся предупреждением, остальные —
-        /// только при --verbose. Решения не создаются: этап сбора данных, действия не применяются.
+        /// [Reg] HKU Custom CLSIDs / HKLM Custom CLSIDs sections: collects information about per-user
+        /// and machine-wide InprocServer32 handlers. Unsigned handlers are reported as warnings, the rest
+        /// only with --verbose. No decisions are made: data-collection stage, no actions applied.
         /// </summary>
         private void AnalyzeCustomClsids(RegistryThreatObject reg)
         {
@@ -664,8 +664,8 @@ namespace MSearch.Core.ThreatAnalyzers
         }
 
         /// <summary>
-        /// Извлекает последний компонент пути (имя .exe) из строки Debugger.
-        /// Обрабатывает пути с пробелами и без.
+        /// Extracts the last path component (.exe name) from a Debugger string.
+        /// Handles paths with and without spaces.
         /// </summary>
         private static string ExtractLastComponent(string valueData)
         {

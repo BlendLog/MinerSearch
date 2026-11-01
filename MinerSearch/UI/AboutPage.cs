@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace MSearch.UI
 {
     /// <summary>
-    /// Страница «О программе».
+    /// About page.
     /// </summary>
     public partial class AboutPage : UserControl
     {
@@ -31,7 +31,7 @@ namespace MSearch.UI
         }
 
         /// <summary>
-        /// Держит текст дисклеймера в границах карточки при любой ширине окна.
+        /// Keeps the disclaimer text inside the card at any window width.
         /// </summary>
         private void UpdateDisclaimerWidth()
         {

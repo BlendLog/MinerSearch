@@ -13,7 +13,7 @@ using System.Windows.Forms;
 namespace MSearch.UI
 {
     /// <summary>
-    /// Страница карантина: список объектов, восстановление и удаление.
+    /// Quarantine page: object list, restore and delete.
     /// </summary>
     public partial class QuarantinePage : UserControl
     {
@@ -160,7 +160,7 @@ namespace MSearch.UI
         }
 
         /// <summary>
-        /// Перечитывает список карантина из реестра.
+        /// Reloads the quarantine list from the registry.
         /// </summary>
         public async Task RefreshItemsAsync()
         {

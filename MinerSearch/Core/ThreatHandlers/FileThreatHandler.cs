@@ -65,8 +65,8 @@ namespace MSearch.Core.ThreatHandlers
         }
 
         /// <summary>
-        /// Страховка для файлов, не прошедших контент-анализ: пробуем открыть и ловим ERROR_VIRUS_INFECTED.
-        /// При срабатывании помечаем файл и запрещаем любые операции над ним.
+        /// Safety net for files that failed content analysis: tries to open them and catches ERROR_VIRUS_INFECTED.
+        /// When triggered, marks the file and forbids any operation on it.
         /// </summary>
         private static bool IsDefenderLocked(string path, ThreatDecision decision, bool log = true)
         {

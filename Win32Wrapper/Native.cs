@@ -416,7 +416,7 @@ namespace Win32Wrapper
                 int result = LsaOpenPolicy(ref objectAttributes, ref systemName, POLICY_ALL_ACCESS, out policyHandle);
                 if (result != 0)
                 {
-                    throw new Exception("Cannot open security descriptor: " + LsaNtStatusToWinError(result));
+                    return false;
                 }
 
                 int sidSize = 0;
@@ -429,7 +429,7 @@ namespace Win32Wrapper
 
                 if (!LookupAccountName(null, groupName, sid, ref sidSize, domainName, ref domainNameLength, out use))
                 {
-                    throw new Exception("Error getting admin group SID");
+                    return false;
                 }
 
                 UNICODE_STRING[] userRights = new Native.UNICODE_STRING[1];
@@ -443,7 +443,7 @@ namespace Win32Wrapper
                 result = LsaAddAccountRights(policyHandle, sid, userRights, userRights.Length);
                 if (result != 0)
                 {
-                    throw new Exception("Error assign privilege:" + LsaNtStatusToWinError(result));
+                    return false;
                 }
 
                 return true;
@@ -1132,9 +1132,9 @@ namespace Win32Wrapper
         }
 
         /// <summary>
-        /// Удаляет службу без попытки остановки: если процесс службы ещё запущен,
-        /// SCM завершит удаление, когда он остановится.
-        /// Возвращает false, если служба не найдена или удалить не удалось.
+        /// Deletes a service without trying to stop it: if the service process is still running,
+        /// SCM completes the deletion when it stops.
+        /// Returns false if the service was not found or could not be deleted.
         /// </summary>
         public static bool TryDelete(string serviceName)
         {

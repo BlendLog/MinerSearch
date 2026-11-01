@@ -1,7 +1,7 @@
 namespace MSearch.Core
 {
     /// <summary>
-    /// Итоговые счётчики одного сканирования.
+    /// Final counters of one scan run.
     /// </summary>
     public sealed class ScanStatistics
     {

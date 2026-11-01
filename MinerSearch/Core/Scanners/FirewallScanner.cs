@@ -9,8 +9,8 @@ using System.IO;
 namespace MSearch.Core.Scanners
 {
     /// <summary>
-    /// Сканирует ВСЕ правила брандмауэра Windows.
-    /// Фильтрация и маркировка — задача анализатора.
+    /// Scans ALL Windows Firewall rules.
+    /// Filtering and marking is the analyzer's job.
     /// </summary>
     public class FirewallScanner : IThreatScanner
     {

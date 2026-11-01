@@ -11,8 +11,8 @@ namespace MSearch.UI
         private static SynchronizationContext _uiContext;
 
         /// <summary>
-        /// Задаёт UI-контекст главного окна: диалоги из фоновых потоков
-        /// будут выполняться в UI-потоке.
+        /// Sets the main window UI context: dialogs from background threads
+        /// will run on the UI thread.
         /// </summary>
         public static void SetUiContext(SynchronizationContext context)
         {

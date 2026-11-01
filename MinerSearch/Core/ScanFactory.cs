@@ -10,13 +10,13 @@ using System.IO;
 namespace MSearch.Core
 {
     /// <summary>
-    /// Создание инфраструктуры сканирования и подготовка окружения.
+    /// Scan infrastructure creation and environment preparation.
     /// </summary>
     public static class ScanFactory
     {
         /// <summary>
-        /// Разовая подготовка окружения перед сканированием:
-        /// сигнатуры, привилегии, специальные каталоги.
+        /// One-time environment preparation before scanning:
+        /// signatures, privileges, special directories.
         /// </summary>
         public static void PrepareEnvironment(LaunchOptions options)
         {
@@ -26,14 +26,13 @@ namespace MSearch.Core
         }
 
         /// <summary>
-        /// Создаёт все сканеры, анализаторы и менеджеры для сканирования.
+        /// Creates all scanners, analyzers and managers for a scan.
         /// </summary>
         public static ScanInfrastructure CreateInfrastructure()
         {
             MinerSearchScanState state = new MinerSearchScanState();
             SignatureFileAnalyzer signatureFileAnalyzer = new SignatureFileAnalyzer();
 
-            // RootkitScanner runs first — before any scanning
             ScanManager scanManager = new ScanManager(
                 new RootkitScanner(),
                 new ProcessScanner(),

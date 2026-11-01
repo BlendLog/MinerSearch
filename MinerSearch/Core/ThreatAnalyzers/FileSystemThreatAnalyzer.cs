@@ -247,7 +247,7 @@ namespace MSearch.Core.ThreatAnalyzers
         }
 
         /// <summary>
-        /// Проверяет, находится ли файл в подозрительной директории.
+        /// Checks whether the file is in a suspicious directory.
         /// </summary>
         private static bool IsInSuspiciousFileSystemPath(string filePath)
         {

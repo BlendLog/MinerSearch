@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace MSearch.UI
 {
     /// <summary>
-    /// Консольная реализация IScanInteraction: сохраняет текущее поведение консольных режимов.
+    /// Console implementation of IScanInteraction: keeps the current behavior of console modes.
     /// </summary>
     internal sealed class ConsoleScanInteraction : IScanInteraction
     {

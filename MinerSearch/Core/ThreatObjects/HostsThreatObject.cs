@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace MSearch.Core.ThreatObjects
 {
     /// <summary>
-    /// SRP: Одна значимая (не комментарий/не пустая) строка файла hosts.
-    /// Сырьё от сканера: IP как в файле + нормализованные домены. Вердикт не содержит.
+    /// SRP: one meaningful hosts-file line (not a comment and not empty).
+    /// Raw scanner data: the IP as written plus normalized domains. Contains no verdict.
     /// </summary>
     public sealed class HostsEntry
     {
@@ -22,36 +22,36 @@ namespace MSearch.Core.ThreatObjects
     }
 
     /// <summary>
-    /// SRP: Представляет заражённый файл hosts.
-    /// Хранит путь к файлу, сырые записи от сканера и вердикт анализатора
-    /// (Blocked — точная глушилка, Redirect — внешний IP на AV-домен).
+    /// SRP: represents an infected hosts file.
+    /// Holds the file path, raw scanner entries and the analyzer verdict
+    /// (Blocked — exact blackhole, Redirect — external IP for an AV domain).
     /// </summary>
     public sealed class HostsThreatObject : ThreatObject
     {
         public string HostsFilePath { get; }
 
         /// <summary>
-        /// Все значимые строки файла (собирает сканер, оценивает анализатор).
+        /// All meaningful file lines (collected by the scanner, evaluated by the analyzer).
         /// </summary>
         public List<HostsEntry> Entries { get; }
 
         /// <summary>
-        /// Строки-глушилки: AV-домен на 127/8, 0/8, 8.8.8.8, 8.8.4.4, 255.255.255.255.
+        /// Blackhole entries: an AV domain resolved to a blocking address.
         /// </summary>
         public List<string> BlockedLines { get; }
 
         public int BlockedLinesCount => BlockedLines != null ? BlockedLines.Count : 0;
 
         /// <summary>
-        /// Строки-редиректы: AV-домен на прочий внешний IP. Не трогаем —
-        /// только нейтральный инфо-лог в анализаторе, в очистку не идут.
+        /// Redirect entries: an AV domain resolved to another external IP. Left alone —
+        /// only a neutral info log in the analyzer; they are not cleaned.
         /// </summary>
         public List<string> RedirectLines { get; }
 
         public int RedirectLinesCount => RedirectLines != null ? RedirectLines.Count : 0;
 
         /// <summary>
-        /// Совместимость: вредоносные строки = только глушилки.
+        /// Compatibility: malicious lines are blackhole entries only.
         /// </summary>
         public List<string> InfectedLines
         {
@@ -66,17 +66,17 @@ namespace MSearch.Core.ThreatObjects
         public int InfectedLinesCount => BlockedLinesCount;
 
         /// <summary>
-        /// Флаг: добавить файл hosts в карантин.
+        /// Flag: add the hosts file to quarantine.
         /// </summary>
         public bool ShouldQuarantineFile { get; internal set; }
 
         /// <summary>
-        /// Флаг: удалить строки-глушилки.
+        /// Flag: remove blackhole entries.
         /// </summary>
         public bool ShouldRemoveBlockedLines { get; internal set; }
 
         /// <summary>
-        /// Совместимость: удалить вредоносные строки (= глушилки).
+        /// Compatibility: remove malicious lines (= blackhole entries).
         /// </summary>
         public bool ShouldRemoveInfectedLines
         {

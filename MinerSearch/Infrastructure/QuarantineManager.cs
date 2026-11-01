@@ -361,8 +361,8 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Эксклюзивное открытие файла с ретраями: транзиентные блокировки (в т.ч. сканирование Defender)
-        /// обычно снимаются за доли секунды. Broad-share fallback отключён — снимок должен быть консистентным.
+        /// Exclusive file open with retries: transient locks (including Defender scans)
+        /// usually clear within fractions of a second. Broad-share fallback is disabled — the snapshot must be consistent.
         /// </summary>
         static FileStream OpenExclusiveWithRetry(string filePath, int attempts = 3)
         {
@@ -703,7 +703,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// пишется, когда подраздел не удалось открыть при снятии снимка.
+        /// Writes an empty stub node when a subkey could not be opened during the snapshot.
         /// </summary>
         static void WriteEmptyNode(BinaryWriter writer)
         {
@@ -754,7 +754,7 @@ namespace MSearch
         #region RestoreRegistry
 
         /// <summary>
-        /// Восстанавливает ветку/значение реестра из карантина.
+        /// Restores a registry key/value from quarantine.
         /// </summary>
         public static bool RestoreRegistry(string subKeyName)
         {
@@ -850,7 +850,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Пропускает узел-заглушку [valuesCount=0][subKeysCount=0] (см. WriteEmptyNode).
+        /// Skips an empty stub node [valuesCount=0][subKeysCount=0] (see WriteEmptyNode).
         /// </summary>
         static void SkipEmptyNode(BinaryReader reader)
         {
@@ -1230,7 +1230,7 @@ namespace MSearch
         static byte[] DecryptData(byte[] encryptedData, byte[] key)
         {
             if (encryptedData == null || encryptedData.Length == 0)
-                throw new ArgumentException("Decryption data is invalid");
+                throw new ArgumentException("Invalid quarantine data");
 
             byte[] decryptedData = new byte[encryptedData.Length];
             for (int i = 0; i < encryptedData.Length; i++)

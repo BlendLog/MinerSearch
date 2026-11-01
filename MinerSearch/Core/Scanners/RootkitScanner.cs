@@ -8,9 +8,9 @@ using Win32Wrapper;
 namespace MSearch.Core.Scanners
 {
     /// <summary>
-    /// Сканер руткитов R77 — работает мгновенно, до основного сканирования.
-    /// Проверка только текущего процесса на наличие R77-подписи.
-    /// При заражении — детачинг себя.
+    /// R77 rootkit scanner; runs before the main scan.
+    /// Checks only the current process for an R77 signature.
+    /// When infected, detaches itself.
     /// </summary>
     public sealed class RootkitScanner : IThreatScanner
     {
@@ -29,7 +29,7 @@ namespace MSearch.Core.Scanners
         }
 
         /// <summary>
-        /// Проверяет, заражён ли текущий процесс R77, и если да — детачит его.
+        /// Checks whether the current process is infected with R77 and detaches it if so.
         /// </summary>
         private void CheckCurrentProcess(ref bool isInfected)
         {
@@ -59,7 +59,7 @@ namespace MSearch.Core.Scanners
                                 moduleBytes.Length,
                                 IntPtr.Zero))
                             {
-                                // r77 >= 1.8.0 — 0x28, r77 <= 1.7.x — legacy 0x40
+                                // Newer r77 layout first, then the legacy one
                                 int headerOffset = Native.R77_HEADER_OFFSET;
                                 ushort signature = BitConverter.ToUInt16(moduleBytes, headerOffset);
                                 if (signature != Native.R77_SIGNATURE &&
@@ -94,7 +94,7 @@ namespace MSearch.Core.Scanners
         }
 
         /// <summary>
-        /// Детачит инъекции R77 в процессах по адресам из detachAddresses.
+        /// Detaches R77 injections in processes by the addresses from detachAddresses.
         /// </summary>
         private void DetachR77Processes(int[] processIds, uint[] signatures, ulong[] detachAddresses)
         {

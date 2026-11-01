@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace MSearch.UI
 {
     /// <summary>
-    /// Страница запуска сканирования: три режима и панель этапов.
+    /// Scan launch page: three modes and the stage panel.
     /// </summary>
     public partial class ScanPage : UserControl
     {
@@ -168,8 +168,8 @@ namespace MSearch.UI
         }
 
         /// <summary>
-        /// Ставит поле пути сразу после чекбокса: его подпись меняется
-        /// при смене языка, поэтому фиксированная координата даёт наложение.
+        /// Places the path field right after the checkbox: its caption changes
+        /// with the language, so a fixed coordinate causes overlap.
         /// </summary>
         private void LayoutFolderRow()
         {
@@ -252,8 +252,8 @@ namespace MSearch.UI
         }
 
         /// <summary>
-        /// Согласует зависимые опции: ScanOnly отключает rootkit и удаление пустых задач;
-        /// удаление пустых задач доступно только при включённом сканировании задач.
+        /// Keeps dependent options consistent: ScanOnly disables rootkits and empty-task removal;
+        /// empty-task removal is available only when task scanning is enabled.
         /// </summary>
         private void UpdateOptionDependencies()
         {
@@ -332,8 +332,8 @@ namespace MSearch.UI
         }
 
         /// <summary>
-        /// Переключает индикатор в режим бегущей полосы: этап очистки может
-        /// занимать минуты на остановку служб и повторные попытки удаления.
+        /// Switches the indicator to marquee mode: the cleanup stage can
+        /// take minutes to stop services and retry deletions.
         /// </summary>
         public void SetIndeterminate(bool indeterminate)
         {
@@ -393,7 +393,7 @@ namespace MSearch.UI
         }
 
         /// <summary>
-        /// Убирает служебные префиксы путей для читаемого отображения.
+        /// Strips service path prefixes for readable display.
         /// </summary>
         private static string NormalizeItem(string item)
         {

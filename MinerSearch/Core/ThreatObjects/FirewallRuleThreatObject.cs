@@ -3,7 +3,7 @@ using NetFwTypeLib;
 namespace MSearch.Core.ThreatObjects
 {
     /// <summary>
-    /// Представляет правило брандмауэра Windows, связанное с вредоносным файлом.
+    /// Represents a Windows Firewall rule associated with a malicious file.
     /// </summary>
     public sealed class FirewallRuleThreatObject : ThreatObject
     {

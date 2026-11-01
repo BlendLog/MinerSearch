@@ -11,7 +11,7 @@ using System.Windows.Forms;
 namespace MSearch.UI
 {
     /// <summary>
-    /// Страница результатов последнего сканирования.
+    /// Results page of the last scan.
     /// </summary>
     public partial class ResultsPage : UserControl
     {

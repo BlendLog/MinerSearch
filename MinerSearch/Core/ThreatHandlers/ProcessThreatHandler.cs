@@ -8,7 +8,7 @@ using Win32Wrapper;
 namespace MSearch.Core.Handlers
 {
     /// <summary>
-    /// Используется для обработки процессов на этапе очистки
+    /// Suspends malicious processes during the intermediate phase and terminates them in Finalize.
     /// </summary>
     internal sealed class ProcessThreatHandler : IThreatHandler
     {

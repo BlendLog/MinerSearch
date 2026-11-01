@@ -11,10 +11,10 @@ using Win32Wrapper;
 namespace MSearch.Core.ThreatHandlers
 {
     /// <summary>
-    /// SRP: Обрабатывает заражённый файл hosts.
-    /// - Копирует заражённый файл в карантин
-    /// - Удаляет строки-глушилки (Blocked); Redirect не трогаем
-    /// - Записывает очищенный файл обратно
+    /// SRP: handles an infected hosts file.
+    /// - Copies the infected file to quarantine
+    /// - Removes blackhole entries (Blocked); Redirect entries are left alone
+    /// - Writes the cleaned file back
     /// </summary>
     internal sealed class HostsThreatHandler : IThreatHandler
     {

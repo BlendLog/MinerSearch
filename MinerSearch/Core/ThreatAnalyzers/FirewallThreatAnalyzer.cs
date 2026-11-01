@@ -8,7 +8,7 @@ using System.Linq;
 namespace MSearch.Core.ThreatAnalyzers
 {
     /// <summary>
-    /// Анализирует правила брандмауэра.
+    /// Analyzes firewall rules.
     /// </summary>
     internal sealed class FirewallThreatAnalyzer : IThreatAnalyzer
     {

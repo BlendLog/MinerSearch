@@ -12,9 +12,9 @@ using System.Text.RegularExpressions;
 namespace MSearch.Core.ThreatAnalyzers
 {
     /// <summary>
-    /// Анализирует файлы из папки автозагрузки Shell.
-    /// Ярлыки: анализирует ShortcutTargetFile через SignatureFileAnalyzer.
-    /// Обычные файлы: прогоняет через SignatureFileAnalyzer для определения действия.
+    /// Analyzes files from the Shell startup folder.
+    /// Shortcuts: analyzes ShortcutTargetFile through SignatureFileAnalyzer.
+    /// Regular files: runs them through SignatureFileAnalyzer to determine the action.
     /// </summary>
     internal sealed class ShellStartupThreatAnalyzer : IThreatAnalyzer
     {
@@ -110,7 +110,7 @@ namespace MSearch.Core.ThreatAnalyzers
         }
 
         /// <summary>
-        /// Анализ ярлыка (.lnk). Проверяет целевой путь, аргументы и файл-цель.
+        /// Analyzes a shortcut (.lnk). Checks the target path, arguments and target file.
         /// </summary>
         private void AnalyzeShortcut(ShellStartupFileThreatObject file, ref int risk, ref bool isMalicious)
         {
@@ -186,8 +186,8 @@ namespace MSearch.Core.ThreatAnalyzers
         }
 
         /// <summary>
-        /// Анализ обычного файла (не ярлык). Проверяет подозрительные признаки,
-        /// затем прогоняет через SignatureFileAnalyzer для точного определения.
+        /// Analyzes a regular file (not a shortcut). Checks suspicious traits,
+        /// then runs it through SignatureFileAnalyzer for an exact verdict.
         /// </summary>
         private void AnalyzeRegularFile(ShellStartupFileThreatObject file, ref int risk, ref bool isMalicious)
         {

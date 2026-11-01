@@ -196,7 +196,7 @@ namespace MSearch
                 _options.RemoveEmptyTasks = false;
             }
 
-            // WinPE: drive letter input (moved to EnvironmentChecker)
+            // WinPE: prompt for the target drive letter
             if (_options.winpemode && !_options.console_mode)
             {
                 string driveLetter = EnvironmentChecker.PromptWinPEDriveLetter(AppConfig.GetInstance);
@@ -222,7 +222,7 @@ namespace MSearch
                 Drive.Letter = AppConfig.GetInstance.drive_letter;
             }
 
-            // RunAsSystem warning (moved to EnvironmentChecker)
+            // Warn when running as SYSTEM
             if (envResult.IsSystemProcess && !AppConfig.GetInstance.WinPEMode)
             {
                 if (!_options.silent && !_options.Force)
@@ -264,7 +264,7 @@ namespace MSearch
 
             AppConfig.GetInstance.LL.LogMessage("\t\t", "_Version", AppConfig.GetInstance.CurrentVersion, ConsoleColor.White, false);
 
-            //if !DEBUG
+            //#if !DEBUG
             if (!AppConfig.GetInstance.WinPEMode && !_options.QuarantineMode && !OSExtensions.IsWindows7())
             {
                 Utils.CheckLatestReleaseVersion();
@@ -347,8 +347,8 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Консольный финал: итоговый статус, путь к логу, запрос телеметрии
-        /// и ожидание клавиши в WinPE.
+        /// Console finish: final status, log path, telemetry prompt
+        /// and key wait in WinPE.
         /// </summary>
         private static void WriteConsoleFinish(ScanStatistics stats)
         {
@@ -405,7 +405,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Запрос отправки лога в консольном режиме. Сохраняется для будущей доработки WinPE.
+        /// Asks once whether the scan log may be uploaded (console mode).
         /// </summary>
         private static void PromptConsoleTelemetry(ScanStatistics stats)
         {
@@ -468,7 +468,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Признак того, что аргументы требуют консоли (нужно подключиться до разбора).
+        /// Whether the arguments require a console (must connect before parsing).
         /// </summary>
         private static bool HasConsoleArgument(string[] args)
         {
@@ -492,7 +492,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Запускает главное окно GUI.
+        /// Starts the GUI main window.
         /// </summary>
         private static void RunGui()
         {

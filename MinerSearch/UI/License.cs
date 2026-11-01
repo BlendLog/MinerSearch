@@ -8,7 +8,7 @@ namespace MSearch
 {
     public partial class License : FormShadow
     {
-        /// <summary>Просмотр EULA из настроек: кнопки не завершают приложение.</summary>
+        /// <summary>EULA viewing from settings: buttons do not exit the application.</summary>
         public bool ViewMode { get; set; }
 
         protected override void WndProc(ref Message m)
@@ -53,7 +53,7 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Заполняет окно текстом EULA и подписями кнопок для текущего языка.
+        /// Fills the window with the EULA text and button captions for the current language.
         /// </summary>
         public void LoadContent()
         {

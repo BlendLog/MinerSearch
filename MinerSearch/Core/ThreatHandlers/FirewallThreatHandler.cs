@@ -9,8 +9,8 @@ using System;
 namespace MSearch.Core.ThreatHandlers
 {
     /// <summary>
-    /// Обработчик правил брандмауэра Windows.
-    /// Удаляет правила, связанные с вредоносными файлами.
+    /// Windows Firewall rule handler.
+    /// Deletes rules associated with malicious files.
     /// </summary>
     internal sealed class FirewallThreatHandler : IThreatHandler
     {

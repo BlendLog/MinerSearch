@@ -167,7 +167,6 @@ namespace MSearch.Core.Scanners
                             }
                         }
 
-                        // Проверяем наличие вложенных ключей и записываем их тоже (нужно например для DisallowRun)
                         foreach (string subKeyName in key.GetSubKeyNames())
                         {
                             var subRegObj = new RegistryThreatObject(hive, $@"{keyPath}\{subKeyName}", RegistryNodeType.Key, null, null, RegistryValueKind.Unknown, false, null)
@@ -192,7 +191,7 @@ namespace MSearch.Core.Scanners
         }
 
         /// <summary>
-        /// Имена непосредственных подразделов ключа (для дедупликации shared-ключей WOW64).
+        /// Immediate subkey names (for deduplicating shared WOW64 keys).
         /// </summary>
         HashSet<string> GetSubKeyNames(string hive, string parentPath)
         {
@@ -228,7 +227,6 @@ namespace MSearch.Core.Scanners
                             if (skipNames != null && skipNames.Contains(subKeyName))
                                 continue;
 
-                            // Рекурсивно вызываем нашу же функцию для каждого дочернего элемента
                             CollectKeyAndValues(results, hive, $@"{parentPath}\{subKeyName}", false, sectionName);
                         }
                     }
@@ -303,11 +301,9 @@ namespace MSearch.Core.Scanners
                                 {
                                     if (subKey != null)
                                     {
-                                        // Читаем значение по умолчанию (null имя)
                                         object defaultValue = subKey.GetValue(null);
                                         string valueData = defaultValue?.ToString() ?? string.Empty;
 
-                                        // Добавляем Key-объект со значением для дальнейшего анализа
                                         var regObj = new RegistryThreatObject(hive, subKeyPath, RegistryNodeType.Key, MSData.GetInstance.regValueNames[MSKeys.Default], valueData, RegistryValueKind.Unknown, false, null)
                                         {
                                             SectionName = sectionName
@@ -343,9 +339,9 @@ namespace MSearch.Core.Scanners
         }
 
         /// <summary>
-        /// Пользовательские COM-обработчики (default-значение подраздела InprocServer32) из веток Classes
-        /// загруженных профилей: HKEY_USERS\&lt;SID&gt;_Classes\CLSID\&lt;GUID&gt;\InprocServer32.
-        /// HKCU\Software\Classes — merged-представление этих же данных, поэтому отдельно не сканируется.
+        /// Per-user COM handlers (the default value of the InprocServer32 subkey) from Classes branches
+        /// of loaded profiles: HKEY_USERS\&lt;SID&gt;_Classes\CLSID\&lt;GUID&gt;\InprocServer32.
+        /// HKCU\Software\Classes is a merged view of the same data, so it is not scanned separately.
         /// </summary>
         void CollectHkuClsidHandlers(List<IThreatObject> results, Dictionary<string, FileThreatObject> linkedFileCache)
         {
@@ -378,7 +374,7 @@ namespace MSearch.Core.Scanners
         }
 
         /// <summary>
-        /// Общие COM-обработчики из HKLM\SOFTWARE\Classes\CLSID (64-битное представление, без Wow6432Node).
+        /// Machine-wide COM handlers from HKLM\SOFTWARE\Classes\CLSID (64-bit view, no Wow6432Node).
         /// </summary>
         void CollectHklmClsidHandlers(List<IThreatObject> results, Dictionary<string, FileThreatObject> linkedFileCache)
         {
@@ -397,8 +393,8 @@ namespace MSearch.Core.Scanners
         }
 
         /// <summary>
-        /// Общий перебор CLSID\{GUID}\InprocServer32 под указанным корнем.
-        /// linkedFileCache исключает повторные WinTrust/SHA1/FileVersionInfo для одинаковых путей.
+        /// Enumerates CLSID\{GUID}\InprocServer32 under the given root.
+        /// linkedFileCache prevents repeated WinTrust/SHA1/FileVersionInfo calls for the same paths.
         /// </summary>
         void CollectClsidHandlers(
             List<IThreatObject> results,

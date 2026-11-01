@@ -8,8 +8,8 @@ using System.IO;
 namespace MSearch.Core.ThreatHandlers
 {
     /// <summary>
-    /// Обработчик файлов из папки автозагрузки Shell.
-    /// Удаляет/карантинит файл из автозагрузки, DisableExecute на ShortcutTargetFile.
+    /// Handler for files from the Shell startup folder.
+    /// Deletes/quarantines the startup file and sets DisableExecute on ShortcutTargetFile.
     /// </summary>
     internal sealed class ShellStartupThreatHandler : IThreatHandler
     {

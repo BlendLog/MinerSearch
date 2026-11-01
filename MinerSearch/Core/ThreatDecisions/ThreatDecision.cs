@@ -11,17 +11,17 @@ namespace MSearch.Core.ThreatDecisions
         public ScanActionType ActionType { get; internal set; } = ScanActionType.Skipped;
 
         /// <summary>
-        /// Действие, выбранное пользователем в review-UI.
+        /// Action selected by the user in the threat review UI.
         /// </summary>
         public ScanActionTypeUserSelected? UserOverrideAction { get; set; }
 
         /// <summary>
-        /// Сообщение об ошибке, возникшей при выполнении действия (Handler.Apply).
+        /// Error message produced while applying the action (Handler.Apply).
         /// </summary>
         public string ApplyErrorMessage { get; internal set; }
 
         /// <summary>
-        /// Информативное примечание для колонки Note в результатах сканирования.
+        /// Informative note for the Note column in scan results.
         /// </summary>
         public string Note { get; internal set; }
 

@@ -3,14 +3,14 @@ using System;
 namespace MSearch.Core
 {
     /// <summary>
-    /// Канал «текущий сканируемый объект». Сканеры сообщают сюда путь объекта,
-    /// подписчик (движок) пересылает его в UI. Логирование не затрагивается.
+    /// Current scanned object channel. Scanners report the object path here;
+    /// the subscriber (engine) forwards it to the UI. Logging is unaffected.
     /// </summary>
     public static class ScanActivity
     {
         public static event Action<string> ObjectChanged;
 
-        /// <summary>Есть ли подписчики: позволяет не собирать строки впустую.</summary>
+        /// <summary>Whether there are subscribers; avoids building strings in vain.</summary>
         public static bool HasSubscribers
         {
             get { return ObjectChanged != null; }

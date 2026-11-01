@@ -1,6 +1,7 @@
 using MSearch.UI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -9,7 +10,7 @@ using Win32Wrapper;
 namespace MSearch.Core.Managers
 {
     /// <summary>
-    /// Системные привилегии Windows
+    /// Windows system privileges
     /// </summary>
     public enum SystemPrivilege
     {
@@ -21,8 +22,8 @@ namespace MSearch.Core.Managers
     }
 
     /// <summary>
-    /// Управляет привилегиями токена текущего процесса.
-    /// Динамически включает только те привилегии, которые нужны для активного набора сканеров.
+    /// Manages the privileges of the current process token.
+    /// Enables only the privileges required by the active set of scanners.
     /// </summary>
     public sealed class PrivilegeManager
     {
@@ -52,7 +53,7 @@ namespace MSearch.Core.Managers
         }
 
         /// <summary>
-        /// Включает только необходимые привилегии на основе флагов LaunchOptions
+        /// Enables only the privileges required by LaunchOptions flags
         /// </summary>
         public void EnablePrivileges()
         {
@@ -95,7 +96,7 @@ namespace MSearch.Core.Managers
 
 
         /// <summary>
-        /// Проверяет наличие привилегии в токене
+        /// Checks whether the token holds the privilege
         /// </summary>
         public bool HasPrivilege(SystemPrivilege privilege)
         {
@@ -103,14 +104,14 @@ namespace MSearch.Core.Managers
             IntPtr hToken;
             if (!Native.OpenProcessToken(Native.GetCurrentProcess(), Native.TOKEN_QUERY, out hToken))
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("OpenProcessToken: Current process"));
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Win32Exception(Marshal.GetLastWin32Error()));
                 return false;
             }
             try
             {
                 if (!Native.LookupPrivilegeValue(null, privName, out Native.LUID luid))
                 {
-                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception($"LookupPrivilegeValue: {privName}"));
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Win32Exception(Marshal.GetLastWin32Error()));
                     return false;
                 }
                 Native.PRIVILEGE_SET privilegeSet = new Native.PRIVILEGE_SET
@@ -125,7 +126,7 @@ namespace MSearch.Core.Managers
                 };
                 if (!Native.PrivilegeCheck(hToken, ref privilegeSet, out bool hasPrivilege))
                 {
-                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("PrivilegeCheck"));
+                    AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Win32Exception(Marshal.GetLastWin32Error()));
                     return false;
                 }
                 return hasPrivilege;
@@ -137,7 +138,7 @@ namespace MSearch.Core.Managers
         }
 
         /// <summary>
-        /// Если привилегии нет, пытается назначить через LSA и предлагает перезагрузку
+        /// If the privilege is missing, tries to assign it through LSA and suggests a reboot
         /// </summary>
         public bool EnsurePrivilege(SystemPrivilege privilege)
         {
@@ -169,12 +170,6 @@ namespace MSearch.Core.Managers
             return false;
         }
 
-
-        /// <summary>
-        /// Возвращает список включённых привилегий (для DEBUG режима)
-        /// </summary>
-        public IEnumerable<SystemPrivilege> GetEnabledPrivileges() => _enabledPrivileges;
-
         private void _enablePrivilegesInternal(IEnumerable<SystemPrivilege> privileges)
         {
             var privilegeList = new List<SystemPrivilege>();
@@ -193,7 +188,7 @@ namespace MSearch.Core.Managers
             IntPtr hToken;
             if (!Native.OpenProcessToken(Native.GetCurrentProcess(), Native.TOKEN_ADJUST_PRIVILEGES | Native.TOKEN_QUERY, out hToken))
             {
-                AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception("OpenProcToken: Current process"));
+                AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Win32Exception(Marshal.GetLastWin32Error()));
                 return;
             }
 
@@ -205,7 +200,7 @@ namespace MSearch.Core.Managers
 
                     if (!Native.LookupPrivilegeValue(null, privName, out Native.LUID luid))
                     {
-                        AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception($"LookupPrivilegeValue({privName})"));
+                        AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Win32Exception(Marshal.GetLastWin32Error()));
                         continue;
                     }
 
@@ -223,7 +218,7 @@ namespace MSearch.Core.Managers
                     int error = Marshal.GetLastWin32Error();
                     if (error != 0)
                     {
-                        AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Exception($"AdjustTokenPriv failed with error code: {error}"));
+                        AppConfig.GetInstance.LL.LogErrorMessage("_Error", new Win32Exception(error));
                     }
                 }
             }

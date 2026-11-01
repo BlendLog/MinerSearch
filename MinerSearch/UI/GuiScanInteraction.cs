@@ -7,7 +7,7 @@ using System.Threading;
 namespace MSearch.UI
 {
     /// <summary>
-    /// Реализация IScanInteraction для GUI: все диалоги выполняются в UI-потоке.
+    /// IScanInteraction implementation for the GUI: all dialogs run on the UI thread.
     /// </summary>
     internal sealed class GuiScanInteraction : IScanInteraction
     {

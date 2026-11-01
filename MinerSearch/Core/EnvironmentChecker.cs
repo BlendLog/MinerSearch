@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace MSearch.Core
 {
     /// <summary>
-    /// Результаты проверки окружения приложения.
+    /// Application environment check results.
     /// </summary>
     public class EnvironmentResult
     {
@@ -21,15 +21,14 @@ namespace MSearch.Core
     }
 
     /// <summary>
-    /// Проверяет окружение и взаимодействует с пользователем при необходимости.
-    /// Вынесено из Program.Init() для соблюдения SRP и тестируемости.
+    /// Checks the environment and interacts with the user when necessary.
     /// </summary>
     public static class EnvironmentChecker
     {
         #region Основные проверки
 
         /// <summary>
-        /// Выполняет все проверки окружения и возвращает результат.
+        /// Runs all environment checks and returns the result.
         /// </summary>
         public static EnvironmentResult Check()
         {
@@ -49,8 +48,8 @@ namespace MSearch.Core
         #region EULA и предупреждения
 
         /// <summary>
-        /// Обрабатывает принятие EULA: диалоговое окно или консольный режим.
-        /// Возвращает false, если пользователь отменил действие.
+        /// Handles EULA acceptance: dialog window or console mode.
+        /// Returns false if the user cancelled.
         /// </summary>
         public static bool PromptEula(AppConfig config)
         {
@@ -86,7 +85,7 @@ namespace MSearch.Core
         }
 
         /// <summary>
-        /// Показывает предупреждение о запуске от имени SYSTEM.
+        /// Shows a warning about running as SYSTEM.
         /// </summary>
         public static DialogResult PromptRunAsSystemWarning(AppConfig config, bool isGuiAvailable)
         {
@@ -102,7 +101,7 @@ namespace MSearch.Core
         }
 
         /// <summary>
-        /// Запрашивает букву диска в режиме WinPE (через консоль).
+        /// Prompts for the drive letter in WinPE mode (via the console).
         /// </summary>
         public static string PromptWinPEDriveLetter(AppConfig config)
         {
@@ -134,7 +133,7 @@ namespace MSearch.Core
         #region Внутренние методы
 
         /// <summary>
-        /// Обрабатывает принятие EULA пользователем (форма или консоль).
+        /// Handles EULA acceptance by the user (form or console).
         /// </summary>
         private static bool ProcessEulaWithoutAccept(RegistryKey key, string registryValueName)
         {

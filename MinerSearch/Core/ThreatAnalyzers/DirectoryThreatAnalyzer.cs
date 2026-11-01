@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace MSearch.Core.ThreatAnalyzers
 {
     /// <summary>
-    /// SRP: Анализирует каталоги, принимает решения об удалении.
+    /// SRP: analyzes directories and decides on removal.
     /// </summary>
     public sealed class DirectoryThreatAnalyzer : IThreatAnalyzer
     {
@@ -21,7 +21,6 @@ namespace MSearch.Core.ThreatAnalyzers
             var dirThreat = threat as DirectoryThreatObject;
             if (dirThreat == null) yield break;
 
-            // Заголовок логируем один раз при первом каталоге
             if (!_headerLogged)
             {
                 lock (_headerLock)

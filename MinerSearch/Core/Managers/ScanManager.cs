@@ -17,7 +17,7 @@ namespace MSearch.Core.Managers
         private readonly IEnumerable<IThreatScanner> _otherScanners;
         private readonly LaunchOptions _options;
 
-        /// <summary>Начат очередной сканер общего этапа (для отображения подэтапа в UI).</summary>
+        /// <summary>Another scanner of the general stage has started (for the sub-stage label in the UI).</summary>
         public event Action<IThreatScanner> ScannerStarted;
 
         public ScanManager(RootkitScanner rootkitScanner, ProcessScanner processScanner, IEnumerable<IThreatScanner> otherScanners)
@@ -35,7 +35,7 @@ namespace MSearch.Core.Managers
         }
 
         /// <summary>
-        /// Сканнирует руткиты — выполняется первым, до любого другого сканирования.
+        /// Scans rootkits; runs first, before any other scan.
         /// </summary>
         public IEnumerable<IThreatObject> ScanRootkitFirst()
         {

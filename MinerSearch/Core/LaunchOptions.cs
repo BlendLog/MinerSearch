@@ -138,10 +138,10 @@ namespace MSearch.Core
         /// <summary>--console-mode / -cm — console mode</summary>
         public bool console_mode { get; internal set; }
 
-        /// <summary>Режим GUI (главное окно, без консоли)</summary>
+        /// <summary>GUI mode (main window, no console).</summary>
         public bool gui_mode { get; internal set; }
 
-        /// <summary>UI должен быть консольным: главное окно не запускается</summary>
+        /// <summary>The UI must be console-only: the main window is not started.</summary>
         public bool UseConsoleUi
         {
             get { return !gui_mode; }
