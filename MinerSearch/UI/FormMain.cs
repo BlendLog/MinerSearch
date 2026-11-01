@@ -345,7 +345,7 @@ namespace MSearch.UI
                     return workflow.Run(token);
                 });
 
-                _resultsPage.ShowResults(result);
+                _resultsPage.ShowResults(result, request.Mode);
                 ShowPage("results");
                 PromptStatistics(result.Statistics);
             }

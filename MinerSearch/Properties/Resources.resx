@@ -2439,6 +2439,24 @@ Do you want to continue?
   <data name="_ScanMode_Selective_Desc_EN" xml:space="preserve">
     <value>Choose scan stages</value>
   </data>
+  <data name="_ScanMode_Quick_Title_RU" xml:space="preserve">
+    <value>Быстрая проверка</value>
+  </data>
+  <data name="_ScanMode_Quick_Title_EN" xml:space="preserve">
+    <value>Quick scan</value>
+  </data>
+  <data name="_ScanMode_Full_Title_RU" xml:space="preserve">
+    <value>Полная проверка</value>
+  </data>
+  <data name="_ScanMode_Full_Title_EN" xml:space="preserve">
+    <value>Full scan</value>
+  </data>
+  <data name="_ScanMode_Selective_Title_RU" xml:space="preserve">
+    <value>Выборочная проверка</value>
+  </data>
+  <data name="_ScanMode_Selective_Title_EN" xml:space="preserve">
+    <value>Selective scan</value>
+  </data>
   <data name="_ScanSelective_Title_RU" xml:space="preserve">
     <value>Этапы проверки</value>
   </data>

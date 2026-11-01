@@ -19,6 +19,7 @@ namespace MSearch.UI
 
         private ScanStatistics _statistics;
         private bool _canceled;
+        private ScanMode? _scanMode;
 
         private DataGridViewTextBoxColumn _colType;
         private DataGridViewTextBoxColumn _colPath;
@@ -212,10 +213,13 @@ namespace MSearch.UI
             buttonOpenLog.Enabled = Logger.HasScanLog;
         }
 
-        public void ShowResults(ScanWorkflowResult result)
+        public void ShowResults(ScanWorkflowResult result, ScanMode mode)
         {
             if (result == null || result.Statistics == null)
                 return;
+
+            _scanMode = mode;
+            labelTitle.Text = BuildTitle();
 
             _statistics = result.Statistics;
             _canceled = result.Canceled;
@@ -372,7 +376,7 @@ namespace MSearch.UI
 
         public void ApplyLanguage()
         {
-            labelTitle.Text = L("_Results");
+            labelTitle.Text = BuildTitle();
 
             if (_colType != null) _colType.HeaderText = L("_DataGridHeader_ObjectType");
             if (_colPath != null) _colPath.HeaderText = L("_DataGridHeader_Path");
@@ -393,6 +397,27 @@ namespace MSearch.UI
             else
             {
                 UpdateSummary();
+            }
+        }
+
+        private string BuildTitle()
+        {
+            string title = L("_Results");
+            if (_scanMode.HasValue)
+                title += " | " + GetScanModeTitle(_scanMode.Value);
+            return title;
+        }
+
+        private static string GetScanModeTitle(ScanMode mode)
+        {
+            switch (mode)
+            {
+                case ScanMode.Full:
+                    return L("_ScanMode_Full_Title");
+                case ScanMode.Selective:
+                    return L("_ScanMode_Selective_Title");
+                default:
+                    return L("_ScanMode_Quick_Title");
             }
         }
 

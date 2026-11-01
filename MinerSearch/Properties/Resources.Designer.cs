@@ -5293,6 +5293,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Full scan.
+        /// </summary>
+        internal static string _ScanMode_Full_Title_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Full_Title_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Полная проверка.
+        /// </summary>
+        internal static string _ScanMode_Full_Title_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Full_Title_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Standard system check.
         /// </summary>
         internal static string _ScanMode_Quick_Desc_EN {
@@ -5329,6 +5347,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Quick scan.
+        /// </summary>
+        internal static string _ScanMode_Quick_Title_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Quick_Title_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Быстрая проверка.
+        /// </summary>
+        internal static string _ScanMode_Quick_Title_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Quick_Title_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Choose scan stages.
         /// </summary>
         internal static string _ScanMode_Selective_Desc_EN {
@@ -5361,6 +5397,24 @@ namespace MSearch.Properties {
         internal static string _ScanMode_Selective_RU {
             get {
                 return ResourceManager.GetString("_ScanMode_Selective_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Selective scan.
+        /// </summary>
+        internal static string _ScanMode_Selective_Title_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Selective_Title_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выборочная проверка.
+        /// </summary>
+        internal static string _ScanMode_Selective_Title_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Selective_Title_RU", resourceCulture);
             }
         }
         
