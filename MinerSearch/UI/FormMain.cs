@@ -94,6 +94,7 @@ namespace MSearch.UI
 
             WirePageEvents();
             ShowPage(LaunchOptions.GetInstance.QuarantineMode ? "quarantine" : "scan");
+            ApplyLanguage();
         }
 
         /// <summary>

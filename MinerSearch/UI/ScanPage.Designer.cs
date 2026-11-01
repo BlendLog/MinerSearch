@@ -168,7 +168,7 @@ namespace MSearch.UI
             this.labelTitle.Name = "labelTitle";
             this.labelTitle.Size = new System.Drawing.Size(851, 54);
             this.labelTitle.TabIndex = 0;
-            this.labelTitle.Text = "Сканирование";
+            this.labelTitle.Text = "labelTitle";
             this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // contentFlow
@@ -226,7 +226,7 @@ namespace MSearch.UI
             this.labelQuickTitle.Name = "labelQuickTitle";
             this.labelQuickTitle.Size = new System.Drawing.Size(93, 25);
             this.labelQuickTitle.TabIndex = 0;
-            this.labelQuickTitle.Text = "Быстрый";
+            this.labelQuickTitle.Text = "labelQuickTitle";
             this.labelQuickTitle.Click += new System.EventHandler(this.cardQuick_Click);
             // 
             // labelQuickDesc
@@ -239,7 +239,7 @@ namespace MSearch.UI
             this.labelQuickDesc.Name = "labelQuickDesc";
             this.labelQuickDesc.Size = new System.Drawing.Size(204, 44);
             this.labelQuickDesc.TabIndex = 1;
-            this.labelQuickDesc.Text = "Стандартная проверка";
+            this.labelQuickDesc.Text = "labelQuickDesc";
             this.labelQuickDesc.Click += new System.EventHandler(this.cardQuick_Click);
             // 
             // cardFull
@@ -267,7 +267,7 @@ namespace MSearch.UI
             this.labelFullTitle.Name = "labelFullTitle";
             this.labelFullTitle.Size = new System.Drawing.Size(85, 25);
             this.labelFullTitle.TabIndex = 0;
-            this.labelFullTitle.Text = "Полный";
+            this.labelFullTitle.Text = "labelFullTitle";
             this.labelFullTitle.Click += new System.EventHandler(this.cardFull_Click);
             // 
             // labelFullDesc
@@ -280,7 +280,7 @@ namespace MSearch.UI
             this.labelFullDesc.Name = "labelFullDesc";
             this.labelFullDesc.Size = new System.Drawing.Size(204, 44);
             this.labelFullDesc.TabIndex = 1;
-            this.labelFullDesc.Text = "Все локальные диски";
+            this.labelFullDesc.Text = "labelFullDesc";
             this.labelFullDesc.Click += new System.EventHandler(this.cardFull_Click);
             // 
             // cardSelective
@@ -308,7 +308,7 @@ namespace MSearch.UI
             this.labelSelectiveTitle.Name = "labelSelectiveTitle";
             this.labelSelectiveTitle.Size = new System.Drawing.Size(131, 25);
             this.labelSelectiveTitle.TabIndex = 0;
-            this.labelSelectiveTitle.Text = "Выборочный";
+            this.labelSelectiveTitle.Text = "labelSelectiveTitle";
             this.labelSelectiveTitle.Click += new System.EventHandler(this.cardSelective_Click);
             // 
             // labelSelectiveDesc
@@ -321,7 +321,7 @@ namespace MSearch.UI
             this.labelSelectiveDesc.Name = "labelSelectiveDesc";
             this.labelSelectiveDesc.Size = new System.Drawing.Size(204, 44);
             this.labelSelectiveDesc.TabIndex = 1;
-            this.labelSelectiveDesc.Text = "Выбор этапов проверки";
+            this.labelSelectiveDesc.Text = "labelSelectiveDesc";
             this.labelSelectiveDesc.Click += new System.EventHandler(this.cardSelective_Click);
             // 
             // selectivePanel
@@ -352,7 +352,7 @@ namespace MSearch.UI
             this.labelSelectiveHeader.Name = "labelSelectiveHeader";
             this.labelSelectiveHeader.Size = new System.Drawing.Size(157, 25);
             this.labelSelectiveHeader.TabIndex = 0;
-            this.labelSelectiveHeader.Text = "Этапы проверки";
+            this.labelSelectiveHeader.Text = "labelSelectiveHeader";
             // 
             // buttonClearSelection
             // 
@@ -368,7 +368,7 @@ namespace MSearch.UI
             this.buttonClearSelection.Name = "buttonClearSelection";
             this.buttonClearSelection.Size = new System.Drawing.Size(150, 30);
             this.buttonClearSelection.TabIndex = 2;
-            this.buttonClearSelection.Text = "Снять выделение";
+            this.buttonClearSelection.Text = "buttonClearSelection";
             this.buttonClearSelection.UseVisualStyleBackColor = false;
             this.buttonClearSelection.Click += new System.EventHandler(this.buttonClearSelection_Click);
             // 
@@ -431,7 +431,7 @@ namespace MSearch.UI
             this.labelStageProcesses.Name = "labelStageProcesses";
             this.labelStageProcesses.Size = new System.Drawing.Size(314, 30);
             this.labelStageProcesses.TabIndex = 0;
-            this.labelStageProcesses.Text = "Процессы";
+            this.labelStageProcesses.Text = "labelStageProcesses";
             this.labelStageProcesses.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toggleProcesses
@@ -476,7 +476,7 @@ namespace MSearch.UI
             this.labelStageRegistry.Name = "labelStageRegistry";
             this.labelStageRegistry.Size = new System.Drawing.Size(314, 30);
             this.labelStageRegistry.TabIndex = 0;
-            this.labelStageRegistry.Text = "Реестр";
+            this.labelStageRegistry.Text = "labelStageRegistry";
             this.labelStageRegistry.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toggleRegistry
@@ -521,7 +521,7 @@ namespace MSearch.UI
             this.labelStageServices.Name = "labelStageServices";
             this.labelStageServices.Size = new System.Drawing.Size(314, 30);
             this.labelStageServices.TabIndex = 0;
-            this.labelStageServices.Text = "Службы";
+            this.labelStageServices.Text = "labelStageServices";
             this.labelStageServices.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toggleServices
@@ -566,7 +566,7 @@ namespace MSearch.UI
             this.labelStageTasks.Name = "labelStageTasks";
             this.labelStageTasks.Size = new System.Drawing.Size(314, 30);
             this.labelStageTasks.TabIndex = 0;
-            this.labelStageTasks.Text = "Планировщик заданий";
+            this.labelStageTasks.Text = "labelStageTasks";
             this.labelStageTasks.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toggleTasks
@@ -611,7 +611,7 @@ namespace MSearch.UI
             this.labelStageFirewall.Name = "labelStageFirewall";
             this.labelStageFirewall.Size = new System.Drawing.Size(314, 30);
             this.labelStageFirewall.TabIndex = 0;
-            this.labelStageFirewall.Text = "Брандмауэр";
+            this.labelStageFirewall.Text = "labelStageFirewall";
             this.labelStageFirewall.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toggleFirewall
@@ -656,7 +656,7 @@ namespace MSearch.UI
             this.labelStageHosts.Name = "labelStageHosts";
             this.labelStageHosts.Size = new System.Drawing.Size(314, 30);
             this.labelStageHosts.TabIndex = 0;
-            this.labelStageHosts.Text = "Файл hosts";
+            this.labelStageHosts.Text = "labelStageHosts";
             this.labelStageHosts.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toggleHosts
@@ -701,7 +701,7 @@ namespace MSearch.UI
             this.labelStageUserProfiles.Name = "labelStageUserProfiles";
             this.labelStageUserProfiles.Size = new System.Drawing.Size(314, 30);
             this.labelStageUserProfiles.TabIndex = 0;
-            this.labelStageUserProfiles.Text = "Профили пользователей";
+            this.labelStageUserProfiles.Text = "labelStageUserProfiles";
             this.labelStageUserProfiles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toggleUserProfiles
@@ -746,7 +746,7 @@ namespace MSearch.UI
             this.labelStageWmi.Name = "labelStageWmi";
             this.labelStageWmi.Size = new System.Drawing.Size(314, 30);
             this.labelStageWmi.TabIndex = 0;
-            this.labelStageWmi.Text = "WMI";
+            this.labelStageWmi.Text = "labelStageWmi";
             this.labelStageWmi.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toggleWmi
@@ -791,7 +791,7 @@ namespace MSearch.UI
             this.labelStageRootkits.Name = "labelStageRootkits";
             this.labelStageRootkits.Size = new System.Drawing.Size(314, 30);
             this.labelStageRootkits.TabIndex = 0;
-            this.labelStageRootkits.Text = "Руткиты";
+            this.labelStageRootkits.Text = "labelStageRootkits";
             this.labelStageRootkits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toggleRootkits
@@ -836,7 +836,7 @@ namespace MSearch.UI
             this.labelStageSignatures.Name = "labelStageSignatures";
             this.labelStageSignatures.Size = new System.Drawing.Size(314, 30);
             this.labelStageSignatures.TabIndex = 0;
-            this.labelStageSignatures.Text = "Сигнатуры";
+            this.labelStageSignatures.Text = "labelStageSignatures";
             this.labelStageSignatures.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toggleSignatures
@@ -881,7 +881,7 @@ namespace MSearch.UI
             this.labelStageFileSystem.Name = "labelStageFileSystem";
             this.labelStageFileSystem.Size = new System.Drawing.Size(314, 30);
             this.labelStageFileSystem.TabIndex = 0;
-            this.labelStageFileSystem.Text = "Общесистемные каталоги";
+            this.labelStageFileSystem.Text = "labelStageFileSystem";
             this.labelStageFileSystem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toggleFileSystem
@@ -926,7 +926,7 @@ namespace MSearch.UI
             this.labelStageShellStartup.Name = "labelStageShellStartup";
             this.labelStageShellStartup.Size = new System.Drawing.Size(314, 30);
             this.labelStageShellStartup.TabIndex = 0;
-            this.labelStageShellStartup.Text = "Каталоги автозапуска";
+            this.labelStageShellStartup.Text = "labelStageShellStartup";
             this.labelStageShellStartup.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toggleShellStartup
@@ -953,7 +953,7 @@ namespace MSearch.UI
             this.labelDepth.Name = "labelDepth";
             this.labelDepth.Size = new System.Drawing.Size(61, 19);
             this.labelDepth.TabIndex = 3;
-            this.labelDepth.Text = "Глубина:";
+            this.labelDepth.Text = "labelDepth";
             // 
             // numericDepth
             // 
@@ -976,7 +976,7 @@ namespace MSearch.UI
             this.checkScanOnly.Name = "checkScanOnly";
             this.checkScanOnly.Size = new System.Drawing.Size(120, 23);
             this.checkScanOnly.TabIndex = 5;
-            this.checkScanOnly.Text = "Только проверка";
+            this.checkScanOnly.Text = "checkScanOnly";
             this.checkScanOnly.UseVisualStyleBackColor = true;
             this.checkScanOnly.CheckedChanged += new System.EventHandler(this.checkScanOnly_CheckedChanged);
             // 
@@ -989,7 +989,7 @@ namespace MSearch.UI
             this.checkRemoveEmptyTasks.Name = "checkRemoveEmptyTasks";
             this.checkRemoveEmptyTasks.Size = new System.Drawing.Size(200, 23);
             this.checkRemoveEmptyTasks.TabIndex = 6;
-            this.checkRemoveEmptyTasks.Text = "Удалять пустые задачи";
+            this.checkRemoveEmptyTasks.Text = "checkRemoveEmptyTasks";
             this.checkRemoveEmptyTasks.UseVisualStyleBackColor = true;
             // 
             // selectiveBottom
@@ -1015,7 +1015,7 @@ namespace MSearch.UI
             this.checkFolder.Name = "checkFolder";
             this.checkFolder.Size = new System.Drawing.Size(151, 23);
             this.checkFolder.TabIndex = 0;
-            this.checkFolder.Text = "Сканировать папку";
+            this.checkFolder.Text = "checkFolder";
             this.checkFolder.UseVisualStyleBackColor = true;
             this.checkFolder.CheckedChanged += new System.EventHandler(this.checkFolder_CheckedChanged);
             // 
@@ -1046,7 +1046,7 @@ namespace MSearch.UI
             this.buttonBrowse.Name = "buttonBrowse";
             this.buttonBrowse.Size = new System.Drawing.Size(110, 32);
             this.buttonBrowse.TabIndex = 2;
-            this.buttonBrowse.Text = "Обзор...";
+            this.buttonBrowse.Text = "buttonBrowse";
             this.buttonBrowse.UseVisualStyleBackColor = false;
             this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
             // 
@@ -1064,7 +1064,7 @@ namespace MSearch.UI
             this.buttonStartSelective.Name = "buttonStartSelective";
             this.buttonStartSelective.Size = new System.Drawing.Size(170, 40);
             this.buttonStartSelective.TabIndex = 3;
-            this.buttonStartSelective.Text = "Начать проверку";
+            this.buttonStartSelective.Text = "buttonStartSelective";
             this.buttonStartSelective.UseVisualStyleBackColor = false;
             this.buttonStartSelective.Click += new System.EventHandler(this.buttonStartSelective_Click);
             // 
@@ -1078,7 +1078,7 @@ namespace MSearch.UI
             this.labelHint.Name = "labelHint";
             this.labelHint.Size = new System.Drawing.Size(277, 19);
             this.labelHint.TabIndex = 2;
-            this.labelHint.Text = "Выберите режим проверки, чтобы начать";
+            this.labelHint.Text = "labelHint";
             // 
             // statusPanel
             // 
@@ -1104,7 +1104,7 @@ namespace MSearch.UI
             this.labelStage.Name = "labelStage";
             this.labelStage.Size = new System.Drawing.Size(140, 19);
             this.labelStage.TabIndex = 0;
-            this.labelStage.Text = "Готово к проверке";
+            this.labelStage.Text = "labelStage";
             // 
             // labelDetail
             // 
@@ -1142,7 +1142,7 @@ namespace MSearch.UI
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(130, 40);
             this.buttonStop.TabIndex = 3;
-            this.buttonStop.Text = "Stop";
+            this.buttonStop.Text = "buttonStop";
             this.buttonStop.UseVisualStyleBackColor = false;
             this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
             // 
@@ -1200,7 +1200,7 @@ namespace MSearch.UI
             this.labelFoundCaption.Name = "labelFoundCaption";
             this.labelFoundCaption.Size = new System.Drawing.Size(55, 15);
             this.labelFoundCaption.TabIndex = 1;
-            this.labelFoundCaption.Text = "Найдено";
+            this.labelFoundCaption.Text = "labelFoundCaption";
             // 
             // panelNeutralized
             // 
@@ -1235,7 +1235,7 @@ namespace MSearch.UI
             this.labelNeutralizedCaption.Name = "labelNeutralizedCaption";
             this.labelNeutralizedCaption.Size = new System.Drawing.Size(82, 15);
             this.labelNeutralizedCaption.TabIndex = 1;
-            this.labelNeutralizedCaption.Text = "Обезврежено";
+            this.labelNeutralizedCaption.Text = "labelNeutralizedCaption";
             // 
             // panelSuspicious
             // 
@@ -1270,7 +1270,7 @@ namespace MSearch.UI
             this.labelSuspiciousCaption.Name = "labelSuspiciousCaption";
             this.labelSuspiciousCaption.Size = new System.Drawing.Size(100, 15);
             this.labelSuspiciousCaption.TabIndex = 1;
-            this.labelSuspiciousCaption.Text = "Подозрительных";
+            this.labelSuspiciousCaption.Text = "labelSuspiciousCaption";
             // 
             // panelSkipped
             // 
@@ -1305,7 +1305,7 @@ namespace MSearch.UI
             this.labelSkippedCaption.Name = "labelSkippedCaption";
             this.labelSkippedCaption.Size = new System.Drawing.Size(74, 15);
             this.labelSkippedCaption.TabIndex = 1;
-            this.labelSkippedCaption.Text = "Пропущено";
+            this.labelSkippedCaption.Text = "labelSkippedCaption";
             // 
             // ScanPage
             // 

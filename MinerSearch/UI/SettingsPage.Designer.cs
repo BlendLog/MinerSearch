@@ -90,7 +90,7 @@ namespace MSearch.UI
             this.labelTitle.Name = "labelTitle";
             this.labelTitle.Size = new System.Drawing.Size(842, 54);
             this.labelTitle.TabIndex = 0;
-            this.labelTitle.Text = "Настройки";
+            this.labelTitle.Text = "labelTitle";
             this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panelCard
@@ -150,7 +150,7 @@ namespace MSearch.UI
             this.labelLanguage.Name = "labelLanguage";
             this.labelLanguage.Size = new System.Drawing.Size(130, 19);
             this.labelLanguage.TabIndex = 0;
-            this.labelLanguage.Text = "Язык интерфейса";
+            this.labelLanguage.Text = "labelLanguage";
             // 
             // panelLanguageControl
             // 
@@ -197,7 +197,7 @@ namespace MSearch.UI
             this.labelStatistics.Name = "labelStatistics";
             this.labelStatistics.Size = new System.Drawing.Size(230, 19);
             this.labelStatistics.TabIndex = 0;
-            this.labelStatistics.Text = "Отправлять статистику сканирования";
+            this.labelStatistics.Text = "labelStatistics";
             // 
             // labelStatisticsHint
             // 
@@ -209,7 +209,7 @@ namespace MSearch.UI
             this.labelStatisticsHint.Name = "labelStatisticsHint";
             this.labelStatisticsHint.Size = new System.Drawing.Size(560, 20);
             this.labelStatisticsHint.TabIndex = 1;
-            this.labelStatisticsHint.Text = "Лог проверки, ID устройства и счётчики отправляются разработчику";
+            this.labelStatisticsHint.Text = "labelStatisticsHint";
             // 
             // panelStatisticsControl
             // 
@@ -256,7 +256,7 @@ namespace MSearch.UI
             this.labelAutoAccept.Name = "labelAutoAccept";
             this.labelAutoAccept.Size = new System.Drawing.Size(300, 19);
             this.labelAutoAccept.TabIndex = 0;
-            this.labelAutoAccept.Text = "Автоматически принимать неизвестные угрозы";
+            this.labelAutoAccept.Text = "labelAutoAccept";
             // 
             // labelAutoAcceptHint
             // 
@@ -268,7 +268,7 @@ namespace MSearch.UI
             this.labelAutoAcceptHint.Name = "labelAutoAcceptHint";
             this.labelAutoAcceptHint.Size = new System.Drawing.Size(560, 20);
             this.labelAutoAcceptHint.TabIndex = 1;
-            this.labelAutoAcceptHint.Text = "Не показывать окно обзора для неизвестных объектов";
+            this.labelAutoAcceptHint.Text = "labelAutoAcceptHint";
             // 
             // panelAutoAcceptControl
             // 
@@ -314,7 +314,7 @@ namespace MSearch.UI
             this.labelEula.Name = "labelEula";
             this.labelEula.Size = new System.Drawing.Size(190, 19);
             this.labelEula.TabIndex = 0;
-            this.labelEula.Text = "Лицензионное соглашение";
+            this.labelEula.Text = "labelEula";
             // 
             // panelEulaControl
             // 
@@ -339,7 +339,7 @@ namespace MSearch.UI
             this.buttonEula.Name = "buttonEula";
             this.buttonEula.Size = new System.Drawing.Size(140, 34);
             this.buttonEula.TabIndex = 0;
-            this.buttonEula.Text = "Открыть";
+            this.buttonEula.Text = "buttonEula";
             this.buttonEula.UseVisualStyleBackColor = false;
 
             this.panelCard.Paint += new System.Windows.Forms.PaintEventHandler(this.panelCard_Paint);

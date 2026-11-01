@@ -44,8 +44,6 @@ namespace MSearch
                 return;
             }
 
-            // Перенаправленный вывод уже работает через унаследованные handles:
-            // не подменяем его консолью.
             if (HasRedirectedStdio())
             {
                 IsAttached = false;
@@ -73,8 +71,6 @@ namespace MSearch
             if (!IsAttached)
                 return;
 
-            // Console.Out/In могли быть закэшированы как пустые потоки до подключения.
-            // Кодировка — кодовая страница самой консоли: UTF-8 в OEM-консоли выводится как мусор.
             try
             {
                 Encoding outputEncoding = GetConsoleEncoding(Native.GetConsoleOutputCP());
@@ -96,7 +92,6 @@ namespace MSearch
 
         private static Encoding GetConsoleEncoding(uint codePage)
         {
-            // Encoding.UTF8 записал бы BOM в начало вывода консоли.
             if (codePage == 65001)
                 return new UTF8Encoding(false);
 

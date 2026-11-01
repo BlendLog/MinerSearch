@@ -80,7 +80,7 @@ namespace MSearch.UI
             this.labelTitle.Name = "labelTitle";
             this.labelTitle.Size = new System.Drawing.Size(842, 54);
             this.labelTitle.TabIndex = 0;
-            this.labelTitle.Text = "Обзор угроз";
+            this.labelTitle.Text = "labelTitle";
             this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelInstruction
@@ -94,7 +94,7 @@ namespace MSearch.UI
             this.labelInstruction.Name = "labelInstruction";
             this.labelInstruction.Size = new System.Drawing.Size(842, 44);
             this.labelInstruction.TabIndex = 1;
-            this.labelInstruction.Text = "Выберите действие для каждой угрозы.";
+            this.labelInstruction.Text = "labelInstruction";
             this.labelInstruction.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panelGridHost
@@ -173,7 +173,7 @@ namespace MSearch.UI
             this.btnSkipAll.Name = "btnSkipAll";
             this.btnSkipAll.Size = new System.Drawing.Size(150, 38);
             this.btnSkipAll.TabIndex = 2;
-            this.btnSkipAll.Text = "Пропустить всё";
+            this.btnSkipAll.Text = "btnSkipAll";
             this.btnSkipAll.UseVisualStyleBackColor = false;
             this.btnSkipAll.Click += new System.EventHandler(this.btnSkipAll_Click);
             // 
@@ -191,7 +191,7 @@ namespace MSearch.UI
             this.btnContinue.Name = "btnContinue";
             this.btnContinue.Size = new System.Drawing.Size(240, 38);
             this.btnContinue.TabIndex = 1;
-            this.btnContinue.Text = "Продолжить с рекомендованными";
+            this.btnContinue.Text = "btnContinue";
             this.btnContinue.UseVisualStyleBackColor = false;
             this.btnContinue.Click += new System.EventHandler(this.btnContinue_Click);
             // 
@@ -209,7 +209,7 @@ namespace MSearch.UI
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(140, 38);
             this.btnApply.TabIndex = 0;
-            this.btnApply.Text = "Применить";
+            this.btnApply.Text = "btnApply";
             this.btnApply.UseVisualStyleBackColor = false;
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
@@ -251,7 +251,7 @@ namespace MSearch.UI
             this.btnBulkApply.Name = "btnBulkApply";
             this.btnBulkApply.Size = new System.Drawing.Size(150, 34);
             this.btnBulkApply.TabIndex = 1;
-            this.btnBulkApply.Text = "Задать для всех";
+            this.btnBulkApply.Text = "btnBulkApply";
             this.btnBulkApply.UseVisualStyleBackColor = false;
             this.btnBulkApply.Click += new System.EventHandler(this.bulkApplyBtn_Click);
             // 
@@ -269,7 +269,7 @@ namespace MSearch.UI
             this.btnSetRecommended.Name = "btnSetRecommended";
             this.btnSetRecommended.Size = new System.Drawing.Size(190, 34);
             this.btnSetRecommended.TabIndex = 2;
-            this.btnSetRecommended.Text = "Задать рекомендуемые";
+            this.btnSetRecommended.Text = "btnSetRecommended";
             this.btnSetRecommended.UseVisualStyleBackColor = false;
             this.btnSetRecommended.Click += new System.EventHandler(this.btnSetRecommended_Click);
             // 

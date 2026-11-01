@@ -86,7 +86,7 @@ namespace MSearch.UI
             this.labelTitle.Name = "labelTitle";
             this.labelTitle.Size = new System.Drawing.Size(260, 54);
             this.labelTitle.TabIndex = 0;
-            this.labelTitle.Text = "Карантин";
+            this.labelTitle.Text = "labelTitle";
             this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelCount
@@ -98,7 +98,7 @@ namespace MSearch.UI
             this.labelCount.Name = "labelCount";
             this.labelCount.Size = new System.Drawing.Size(190, 20);
             this.labelCount.TabIndex = 1;
-            this.labelCount.Text = "Объектов в карантине: 0";
+            this.labelCount.Text = "labelCount";
             this.labelCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // buttonRefresh
@@ -114,7 +114,7 @@ namespace MSearch.UI
             this.buttonRefresh.Name = "buttonRefresh";
             this.buttonRefresh.Size = new System.Drawing.Size(120, 34);
             this.buttonRefresh.TabIndex = 2;
-            this.buttonRefresh.Text = "Обновить";
+            this.buttonRefresh.Text = "buttonRefresh";
             this.buttonRefresh.UseVisualStyleBackColor = false;
             this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
             // 
@@ -164,7 +164,7 @@ namespace MSearch.UI
             this.labelEmpty.Name = "labelEmpty";
             this.labelEmpty.Size = new System.Drawing.Size(840, 522);
             this.labelEmpty.TabIndex = 1;
-            this.labelEmpty.Text = "Карантин пуст";
+            this.labelEmpty.Text = "labelEmpty";
             this.labelEmpty.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // actionsPanel
@@ -192,7 +192,7 @@ namespace MSearch.UI
             this.buttonRestore.Name = "buttonRestore";
             this.buttonRestore.Size = new System.Drawing.Size(160, 38);
             this.buttonRestore.TabIndex = 0;
-            this.buttonRestore.Text = "Восстановить";
+            this.buttonRestore.Text = "buttonRestore";
             this.buttonRestore.UseVisualStyleBackColor = false;
             this.buttonRestore.Click += new System.EventHandler(this.buttonRestore_Click);
             // 
@@ -210,7 +210,7 @@ namespace MSearch.UI
             this.buttonDelete.Name = "buttonDelete";
             this.buttonDelete.Size = new System.Drawing.Size(160, 38);
             this.buttonDelete.TabIndex = 1;
-            this.buttonDelete.Text = "Удалить";
+            this.buttonDelete.Text = "buttonDelete";
             this.buttonDelete.UseVisualStyleBackColor = false;
             this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 

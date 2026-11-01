@@ -150,7 +150,7 @@ namespace MSearch.UI
             this.buttonDonateSidebar.Size = new System.Drawing.Size(186, 42);
             this.buttonDonateSidebar.TabIndex = 2;
             this.buttonDonateSidebar.TabStop = false;
-            this.buttonDonateSidebar.Text = "Поддержать проект";
+            this.buttonDonateSidebar.Text = "buttonDonateSidebar";
             this.buttonDonateSidebar.UseVisualStyleBackColor = false;
             this.buttonDonateSidebar.Click += new System.EventHandler(this.buttonDonateSidebar_Click);
             // labelLogo
@@ -195,7 +195,7 @@ namespace MSearch.UI
             this.buttonNavAbout.TabIndex = 4;
             this.buttonNavAbout.TabStop = false;
             this.buttonNavAbout.Tag = "_About";
-            this.buttonNavAbout.Text = "О программе";
+            this.buttonNavAbout.Text = "buttonNavAbout";
             this.buttonNavAbout.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonNavAbout.UseVisualStyleBackColor = false;
             this.buttonNavAbout.Click += new System.EventHandler(this.buttonNavAbout_Click);
@@ -217,7 +217,7 @@ namespace MSearch.UI
             this.buttonNavSettings.TabIndex = 3;
             this.buttonNavSettings.TabStop = false;
             this.buttonNavSettings.Tag = "_FormSettings_Title";
-            this.buttonNavSettings.Text = "Настройки";
+            this.buttonNavSettings.Text = "buttonNavSettings";
             this.buttonNavSettings.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonNavSettings.UseVisualStyleBackColor = false;
             this.buttonNavSettings.Click += new System.EventHandler(this.buttonNavSettings_Click);
@@ -239,7 +239,7 @@ namespace MSearch.UI
             this.buttonNavQuarantine.TabIndex = 2;
             this.buttonNavQuarantine.TabStop = false;
             this.buttonNavQuarantine.Tag = "_Quarantine";
-            this.buttonNavQuarantine.Text = "Карантин";
+            this.buttonNavQuarantine.Text = "buttonNavQuarantine";
             this.buttonNavQuarantine.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonNavQuarantine.UseVisualStyleBackColor = false;
             this.buttonNavQuarantine.Click += new System.EventHandler(this.buttonNavQuarantine_Click);
@@ -261,7 +261,7 @@ namespace MSearch.UI
             this.buttonNavResults.TabIndex = 1;
             this.buttonNavResults.TabStop = false;
             this.buttonNavResults.Tag = "_Results";
-            this.buttonNavResults.Text = "Результаты";
+            this.buttonNavResults.Text = "buttonNavResults";
             this.buttonNavResults.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonNavResults.UseVisualStyleBackColor = false;
             this.buttonNavResults.Click += new System.EventHandler(this.buttonNavResults_Click);
@@ -283,7 +283,7 @@ namespace MSearch.UI
             this.buttonNavScan.TabIndex = 0;
             this.buttonNavScan.TabStop = false;
             this.buttonNavScan.Tag = "_Nav_Scan";
-            this.buttonNavScan.Text = "Сканирование";
+            this.buttonNavScan.Text = "buttonNavScan";
             this.buttonNavScan.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonNavScan.UseVisualStyleBackColor = false;
             this.buttonNavScan.Click += new System.EventHandler(this.buttonNavScan_Click);

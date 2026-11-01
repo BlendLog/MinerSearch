@@ -110,7 +110,7 @@ namespace MSearch
             this.Label_LicenseCaption.Padding = new System.Windows.Forms.Padding(20, 0, 44, 0);
             this.Label_LicenseCaption.Size = new System.Drawing.Size(748, 48);
             this.Label_LicenseCaption.TabIndex = 1;
-            this.Label_LicenseCaption.Text = "Caption";
+            this.Label_LicenseCaption.Text = "Label_LicenseCaption";
             this.Label_LicenseCaption.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Label_LicenseCaption.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Label_LicenseCaption_MouseDown);
             // 
@@ -172,7 +172,7 @@ namespace MSearch
             this.Accept_btn.Name = "Accept_btn";
             this.Accept_btn.Size = new System.Drawing.Size(160, 38);
             this.Accept_btn.TabIndex = 0;
-            this.Accept_btn.Text = "Accept";
+            this.Accept_btn.Text = "Accept_btn";
             this.Accept_btn.UseVisualStyleBackColor = false;
             this.Accept_btn.Click += new System.EventHandler(this.Accept_btn_Click);
             // 
@@ -192,7 +192,7 @@ namespace MSearch
             this.Exit_btn.Name = "Exit_btn";
             this.Exit_btn.Size = new System.Drawing.Size(160, 38);
             this.Exit_btn.TabIndex = 1;
-            this.Exit_btn.Text = "Exit";
+            this.Exit_btn.Text = "Exit_btn";
             this.Exit_btn.UseVisualStyleBackColor = false;
             this.Exit_btn.Click += new System.EventHandler(this.Exit_btn_Click);
             // 

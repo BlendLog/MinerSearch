@@ -21,12 +21,9 @@ namespace MSearch
         {
             LaunchOptions _options = LaunchOptions.GetInstance;
 
-            // Должно быть вызвано до создания первого окна (включая EULA и диалоги).
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Консольные режимы в WinExe-сборке: подключаемся к консоли родителя
-            // до разбора аргументов, чтобы ошибки разбора было куда вывести.
             if (HasConsoleArgument(args) || Native.GetConsoleWindow() != IntPtr.Zero)
                 ConsoleBridge.EnsureConsole();
 
@@ -35,9 +32,12 @@ namespace MSearch
             bool stdioRedirected = ConsoleBridge.HasRedirectedStdio();
             bool interactive = Environment.UserInteractive;
 
-            // В WinExe без консоли Console.IsInputRedirected всегда true,
-            // поэтому ориентируемся на реальный тип stdio и явные флаги.
+
+#if DEBUG
+            _options.console_mode = _options.console_mode || !interactive;
+#else
             _options.console_mode = _options.console_mode || stdioRedirected || !interactive;
+#endif
 
             bool consoleFlags = _options.console_mode || _options.winpemode || _options.help;
             _options.gui_mode = interactive && !consoleFlags && !_options.silent;
@@ -45,7 +45,6 @@ namespace MSearch
             if (!_options.gui_mode && !_options.silent)
                 ConsoleBridge.EnsureConsole();
 
-            // Режим известен до вывода ошибок: они уходят в консоль или в окно по gui_mode.
             if (_options.hasErrors)
             {
                 foreach (var error in _options.errors)
@@ -61,7 +60,6 @@ namespace MSearch
             AppConfig.GetInstance.IsGuiAvailable = interactive;
             AppConfig.GetInstance.IsRedirectedInput = stdioRedirected;
 
-            // Лог сканирования создаётся только в ScanWorkflow.Run(); здесь задаётся лишь запрет (-nl).
             Logger.InitLogger(_options.no_logs);
 #if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(ExeptionHandler.HookExeption);

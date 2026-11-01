@@ -78,7 +78,7 @@ namespace MSearch.UI
             this.labelTitle.Name = "labelTitle";
             this.labelTitle.Size = new System.Drawing.Size(842, 54);
             this.labelTitle.TabIndex = 0;
-            this.labelTitle.Text = "Результаты";
+            this.labelTitle.Text = "labelTitle";
             this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panelSummary
@@ -101,7 +101,7 @@ namespace MSearch.UI
             this.labelSummary.Name = "labelSummary";
             this.labelSummary.Size = new System.Drawing.Size(111, 25);
             this.labelSummary.TabIndex = 0;
-            this.labelSummary.Text = "Результаты";
+            this.labelSummary.Text = "labelSummary";
             // 
             // labelDetails
             // 
@@ -159,7 +159,7 @@ namespace MSearch.UI
             this.labelEmpty.Name = "labelEmpty";
             this.labelEmpty.Size = new System.Drawing.Size(840, 446);
             this.labelEmpty.TabIndex = 1;
-            this.labelEmpty.Text = "Проверка ещё не выполнялась";
+            this.labelEmpty.Text = "labelEmpty";
             this.labelEmpty.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // buttonsFlow
@@ -192,7 +192,7 @@ namespace MSearch.UI
             this.buttonOpenLog.Name = "buttonOpenLog";
             this.buttonOpenLog.Size = new System.Drawing.Size(140, 38);
             this.buttonOpenLog.TabIndex = 0;
-            this.buttonOpenLog.Text = "Открыть лог";
+            this.buttonOpenLog.Text = "buttonOpenLog";
             this.buttonOpenLog.UseVisualStyleBackColor = false;
             this.buttonOpenLog.Click += new System.EventHandler(this.buttonOpenLog_Click);
             // 
@@ -210,7 +210,7 @@ namespace MSearch.UI
             this.buttonLogsFolder.Name = "buttonLogsFolder";
             this.buttonLogsFolder.Size = new System.Drawing.Size(210, 38);
             this.buttonLogsFolder.TabIndex = 1;
-            this.buttonLogsFolder.Text = "Показать все отчёты";
+            this.buttonLogsFolder.Text = "buttonLogsFolder";
             this.buttonLogsFolder.UseVisualStyleBackColor = false;
             this.buttonLogsFolder.Click += new System.EventHandler(this.buttonLogsFolder_Click);
             // 
@@ -228,7 +228,7 @@ namespace MSearch.UI
             this.buttonQuarantine.Name = "buttonQuarantine";
             this.buttonQuarantine.Size = new System.Drawing.Size(160, 38);
             this.buttonQuarantine.TabIndex = 2;
-            this.buttonQuarantine.Text = "Открыть карантин";
+            this.buttonQuarantine.Text = "buttonQuarantine";
             this.buttonQuarantine.UseVisualStyleBackColor = false;
             this.buttonQuarantine.Click += new System.EventHandler(this.buttonQuarantine_Click);
             // 
@@ -246,7 +246,7 @@ namespace MSearch.UI
             this.buttonReboot.Name = "buttonReboot";
             this.buttonReboot.Size = new System.Drawing.Size(150, 38);
             this.buttonReboot.TabIndex = 3;
-            this.buttonReboot.Text = "Перезагрузить";
+            this.buttonReboot.Text = "buttonReboot";
             this.buttonReboot.UseVisualStyleBackColor = false;
             this.buttonReboot.Visible = false;
             this.buttonReboot.Click += new System.EventHandler(this.buttonReboot_Click);

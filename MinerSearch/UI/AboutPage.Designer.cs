@@ -68,7 +68,7 @@ namespace MSearch.UI
             this.labelTitle.Name = "labelTitle";
             this.labelTitle.Size = new System.Drawing.Size(842, 54);
             this.labelTitle.TabIndex = 0;
-            this.labelTitle.Text = "О программе";
+            this.labelTitle.Text = "labelTitle";
             this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panelCard
@@ -107,7 +107,7 @@ namespace MSearch.UI
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.Size = new System.Drawing.Size(90, 19);
             this.labelVersion.TabIndex = 1;
-            this.labelVersion.Text = "Версия: 0.0.0";
+            this.labelVersion.Text = "labelVersion";
             // 
             // labelDeviceIdCaption
             // 
@@ -118,7 +118,7 @@ namespace MSearch.UI
             this.labelDeviceIdCaption.Name = "labelDeviceIdCaption";
             this.labelDeviceIdCaption.Size = new System.Drawing.Size(260, 15);
             this.labelDeviceIdCaption.TabIndex = 2;
-            this.labelDeviceIdCaption.Text = "ID устройства (нажмите, чтобы скопировать)";
+            this.labelDeviceIdCaption.Text = "labelDeviceIdCaption";
             // 
             // linkDeviceId
             // 
@@ -161,7 +161,7 @@ namespace MSearch.UI
             this.panelCard.Paint += new System.Windows.Forms.PaintEventHandler(this.panelCard_Paint);
             this.linkDeviceId.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkDeviceId_LinkClicked);
             this.linkTelegram.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkTelegram_LinkClicked);
-            this.labelDisclaimer.Text = "MinerSearch не является антивирусом.";
+            this.labelDisclaimer.Text = "labelDisclaimer";
             // 
             // AboutPage
                         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
