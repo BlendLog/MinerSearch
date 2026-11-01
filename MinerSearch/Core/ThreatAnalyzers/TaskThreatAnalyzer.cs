@@ -927,7 +927,7 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            if (!string.IsNullOrEmpty(filePathFromTask) && taskObj.LinkedFile != null && (taskObj.LinkedFile.FileSize >= taskObj.LinkedFile.MAX_FILE_SIZE || FileChecker.IsJarFile(filePathFromTask) || (FileChecker.IsDotNetAssembly(filePathFromTask) && FileSystemManager.HasHiddenAttribute(filePathFromTask))))
+            if (!string.IsNullOrEmpty(filePathFromTask) && taskObj.LinkedFile != null && ((taskObj.LinkedFile.FileSize >= taskObj.LinkedFile.MAX_FILE_SIZE && !taskObj.LinkedFile.IsValidSignature) || FileChecker.IsJarFile(filePathFromTask) || (FileChecker.IsDotNetAssembly(filePathFromTask) && FileSystemManager.HasHiddenAttribute(filePathFromTask))))
             {
                 if (!LaunchOptions.GetInstance.ScanOnly)
                 {
