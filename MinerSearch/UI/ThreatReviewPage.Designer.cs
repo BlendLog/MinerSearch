@@ -30,6 +30,9 @@ namespace MSearch.UI
             this.rootLayout = new System.Windows.Forms.TableLayoutPanel();
             this.labelTitle = new System.Windows.Forms.Label();
             this.labelInstruction = new System.Windows.Forms.Label();
+            this.leftFlow = new System.Windows.Forms.FlowLayoutPanel();
+            this.comboBulk = new System.Windows.Forms.ComboBox();
+            this.btnBulkApply = new MSearch.UI.RoundButton();
             this.panelGridHost = new System.Windows.Forms.Panel();
             this.dataGridReview = new System.Windows.Forms.DataGridView();
             this.bottomPanel = new System.Windows.Forms.Panel();
@@ -37,16 +40,12 @@ namespace MSearch.UI
             this.btnSkipAll = new MSearch.UI.RoundButton();
             this.btnContinue = new MSearch.UI.RoundButton();
             this.btnApply = new MSearch.UI.RoundButton();
-            this.leftFlow = new System.Windows.Forms.FlowLayoutPanel();
-            this.comboBulk = new System.Windows.Forms.ComboBox();
-            this.btnBulkApply = new MSearch.UI.RoundButton();
-            this.btnSetRecommended = new MSearch.UI.RoundButton();
             this.rootLayout.SuspendLayout();
+            this.leftFlow.SuspendLayout();
             this.panelGridHost.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridReview)).BeginInit();
             this.bottomPanel.SuspendLayout();
             this.rightFlow.SuspendLayout();
-            this.leftFlow.SuspendLayout();
             this.SuspendLayout();
             // 
             // rootLayout
@@ -56,17 +55,19 @@ namespace MSearch.UI
             this.rootLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.rootLayout.Controls.Add(this.labelTitle, 0, 0);
             this.rootLayout.Controls.Add(this.labelInstruction, 0, 1);
-            this.rootLayout.Controls.Add(this.panelGridHost, 0, 2);
-            this.rootLayout.Controls.Add(this.bottomPanel, 0, 3);
+            this.rootLayout.Controls.Add(this.leftFlow, 0, 2);
+            this.rootLayout.Controls.Add(this.panelGridHost, 0, 3);
+            this.rootLayout.Controls.Add(this.bottomPanel, 0, 4);
             this.rootLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rootLayout.Location = new System.Drawing.Point(26, 20);
             this.rootLayout.Margin = new System.Windows.Forms.Padding(0);
             this.rootLayout.Name = "rootLayout";
-            this.rootLayout.RowCount = 4;
+            this.rootLayout.RowCount = 5;
             this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 54F));
             this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+            this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
             this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 104F));
+            this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.rootLayout.Size = new System.Drawing.Size(842, 634);
             this.rootLayout.TabIndex = 0;
             // 
@@ -97,16 +98,59 @@ namespace MSearch.UI
             this.labelInstruction.Text = "labelInstruction";
             this.labelInstruction.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // leftFlow
+            // 
+            this.leftFlow.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.leftFlow.Controls.Add(this.comboBulk);
+            this.leftFlow.Controls.Add(this.btnBulkApply);
+            this.leftFlow.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.leftFlow.Location = new System.Drawing.Point(0, 98);
+            this.leftFlow.Margin = new System.Windows.Forms.Padding(0);
+            this.leftFlow.Name = "leftFlow";
+            this.leftFlow.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            this.leftFlow.Size = new System.Drawing.Size(842, 42);
+            this.leftFlow.TabIndex = 2;
+            this.leftFlow.WrapContents = false;
+            // 
+            // comboBulk
+            // 
+            this.comboBulk.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBulk.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.comboBulk.FormattingEnabled = true;
+            this.comboBulk.Location = new System.Drawing.Point(0, 8);
+            this.comboBulk.Margin = new System.Windows.Forms.Padding(0, 4, 10, 0);
+            this.comboBulk.Name = "comboBulk";
+            this.comboBulk.Size = new System.Drawing.Size(190, 25);
+            this.comboBulk.TabIndex = 0;
+            // 
+            // btnBulkApply
+            // 
+            this.btnBulkApply.BackColor = System.Drawing.Color.White;
+            this.btnBulkApply.CornerRadius = 6;
+            this.btnBulkApply.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.btnBulkApply.FlatAppearance.BorderSize = 0;
+            this.btnBulkApply.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBulkApply.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.btnBulkApply.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
+            this.btnBulkApply.Location = new System.Drawing.Point(200, 4);
+            this.btnBulkApply.Margin = new System.Windows.Forms.Padding(0);
+            this.btnBulkApply.Name = "btnBulkApply";
+            this.btnBulkApply.Size = new System.Drawing.Size(150, 34);
+            this.btnBulkApply.TabIndex = 1;
+            this.btnBulkApply.Text = "btnBulkApply";
+            this.btnBulkApply.UseVisualStyleBackColor = false;
+            this.btnBulkApply.Click += new System.EventHandler(this.bulkApplyBtn_Click);
+            // 
             // panelGridHost
             // 
             this.panelGridHost.BackColor = System.Drawing.Color.White;
             this.panelGridHost.Controls.Add(this.dataGridReview);
             this.panelGridHost.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelGridHost.Location = new System.Drawing.Point(0, 98);
+            this.panelGridHost.Location = new System.Drawing.Point(0, 140);
             this.panelGridHost.Margin = new System.Windows.Forms.Padding(0);
             this.panelGridHost.Name = "panelGridHost";
             this.panelGridHost.Padding = new System.Windows.Forms.Padding(1);
-            this.panelGridHost.Size = new System.Drawing.Size(842, 432);
+            this.panelGridHost.Size = new System.Drawing.Size(842, 434);
             this.panelGridHost.TabIndex = 2;
             this.panelGridHost.Paint += new System.Windows.Forms.PaintEventHandler(this.panelGridHost_Paint);
             // 
@@ -128,7 +172,7 @@ namespace MSearch.UI
             this.dataGridReview.RowHeadersVisible = false;
             this.dataGridReview.RowTemplate.Height = 30;
             this.dataGridReview.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridReview.Size = new System.Drawing.Size(840, 430);
+            this.dataGridReview.Size = new System.Drawing.Size(840, 432);
             this.dataGridReview.TabIndex = 0;
             this.dataGridReview.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridReview_CellValueChanged);
             this.dataGridReview.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridReview_CurrentCellDirtyStateChanged);
@@ -137,13 +181,12 @@ namespace MSearch.UI
             // bottomPanel
             // 
             this.bottomPanel.Controls.Add(this.rightFlow);
-            this.bottomPanel.Controls.Add(this.leftFlow);
             this.bottomPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bottomPanel.Location = new System.Drawing.Point(0, 530);
+            this.bottomPanel.Location = new System.Drawing.Point(0, 574);
             this.bottomPanel.Margin = new System.Windows.Forms.Padding(0);
             this.bottomPanel.Name = "bottomPanel";
-            this.bottomPanel.Size = new System.Drawing.Size(842, 104);
-            this.bottomPanel.TabIndex = 3;
+            this.bottomPanel.Size = new System.Drawing.Size(842, 60);
+            this.bottomPanel.TabIndex = 4;
             // 
             // rightFlow
             // 
@@ -152,10 +195,10 @@ namespace MSearch.UI
             this.rightFlow.Controls.Add(this.btnSkipAll);
             this.rightFlow.Controls.Add(this.btnContinue);
             this.rightFlow.Controls.Add(this.btnApply);
-            this.rightFlow.Location = new System.Drawing.Point(268, 56);
+            this.rightFlow.Location = new System.Drawing.Point(258, 12);
             this.rightFlow.Margin = new System.Windows.Forms.Padding(0);
             this.rightFlow.Name = "rightFlow";
-            this.rightFlow.Size = new System.Drawing.Size(560, 38);
+            this.rightFlow.Size = new System.Drawing.Size(570, 38);
             this.rightFlow.TabIndex = 1;
             this.rightFlow.WrapContents = false;
             // 
@@ -204,74 +247,14 @@ namespace MSearch.UI
             this.btnApply.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnApply.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnApply.ForeColor = System.Drawing.Color.White;
-            this.btnApply.Location = new System.Drawing.Point(410, 0);
-            this.btnApply.Margin = new System.Windows.Forms.Padding(0);
+            this.btnApply.Location = new System.Drawing.Point(420, 0);
+            this.btnApply.Margin = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(140, 38);
             this.btnApply.TabIndex = 0;
             this.btnApply.Text = "btnApply";
             this.btnApply.UseVisualStyleBackColor = false;
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
-            // 
-            // leftFlow
-            // 
-            this.leftFlow.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.leftFlow.Controls.Add(this.comboBulk);
-            this.leftFlow.Controls.Add(this.btnBulkApply);
-            this.leftFlow.Controls.Add(this.btnSetRecommended);
-            this.leftFlow.Location = new System.Drawing.Point(6, 12);
-            this.leftFlow.Margin = new System.Windows.Forms.Padding(0);
-            this.leftFlow.Name = "leftFlow";
-            this.leftFlow.Size = new System.Drawing.Size(822, 34);
-            this.leftFlow.TabIndex = 0;
-            this.leftFlow.WrapContents = false;
-            // 
-            // comboBulk
-            // 
-            this.comboBulk.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBulk.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.comboBulk.FormattingEnabled = true;
-            this.comboBulk.Location = new System.Drawing.Point(0, 3);
-            this.comboBulk.Margin = new System.Windows.Forms.Padding(0, 3, 10, 0);
-            this.comboBulk.Name = "comboBulk";
-            this.comboBulk.Size = new System.Drawing.Size(150, 25);
-            this.comboBulk.TabIndex = 0;
-            // 
-            // btnBulkApply
-            // 
-            this.btnBulkApply.BackColor = System.Drawing.Color.White;
-            this.btnBulkApply.CornerRadius = 6;
-            this.btnBulkApply.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.btnBulkApply.FlatAppearance.BorderSize = 0;
-            this.btnBulkApply.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBulkApply.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnBulkApply.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.btnBulkApply.Location = new System.Drawing.Point(160, 0);
-            this.btnBulkApply.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            this.btnBulkApply.Name = "btnBulkApply";
-            this.btnBulkApply.Size = new System.Drawing.Size(150, 34);
-            this.btnBulkApply.TabIndex = 1;
-            this.btnBulkApply.Text = "btnBulkApply";
-            this.btnBulkApply.UseVisualStyleBackColor = false;
-            this.btnBulkApply.Click += new System.EventHandler(this.bulkApplyBtn_Click);
-            // 
-            // btnSetRecommended
-            // 
-            this.btnSetRecommended.BackColor = System.Drawing.Color.White;
-            this.btnSetRecommended.CornerRadius = 6;
-            this.btnSetRecommended.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.btnSetRecommended.FlatAppearance.BorderSize = 0;
-            this.btnSetRecommended.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSetRecommended.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnSetRecommended.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.btnSetRecommended.Location = new System.Drawing.Point(320, 0);
-            this.btnSetRecommended.Margin = new System.Windows.Forms.Padding(0);
-            this.btnSetRecommended.Name = "btnSetRecommended";
-            this.btnSetRecommended.Size = new System.Drawing.Size(190, 34);
-            this.btnSetRecommended.TabIndex = 2;
-            this.btnSetRecommended.Text = "btnSetRecommended";
-            this.btnSetRecommended.UseVisualStyleBackColor = false;
-            this.btnSetRecommended.Click += new System.EventHandler(this.btnSetRecommended_Click);
             // 
             // ThreatReviewPage
             // 
@@ -282,11 +265,11 @@ namespace MSearch.UI
             this.Padding = new System.Windows.Forms.Padding(26, 20, 26, 20);
             this.Size = new System.Drawing.Size(894, 674);
             this.rootLayout.ResumeLayout(false);
+            this.leftFlow.ResumeLayout(false);
             this.panelGridHost.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridReview)).EndInit();
             this.bottomPanel.ResumeLayout(false);
             this.rightFlow.ResumeLayout(false);
-            this.leftFlow.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -306,6 +289,5 @@ namespace MSearch.UI
         private MSearch.UI.RoundButton btnContinue;
         private MSearch.UI.RoundButton btnSkipAll;
         private MSearch.UI.RoundButton btnBulkApply;
-        private MSearch.UI.RoundButton btnSetRecommended;
     }
 }

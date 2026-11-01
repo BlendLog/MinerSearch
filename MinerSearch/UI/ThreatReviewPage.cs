@@ -82,7 +82,6 @@ namespace MSearch.UI
             }
 
             dataGridReview.ClearSelection();
-            UpdateSetRecommendedButtonState();
         }
 
         private void SetupColumns()
@@ -167,7 +166,6 @@ namespace MSearch.UI
 
             btnApply.Text = L("_ReviewApplyBtn");
             btnBulkApply.Text = L("_ReviewBulkApplyBtn");
-            btnSetRecommended.Text = L("_ReviewSetRecommendedBtn");
             btnContinue.Text = L("_ReviewContinueBtn");
             btnSkipAll.Text = L("_ReviewSkipAllBtn");
 
@@ -270,8 +268,6 @@ namespace MSearch.UI
             ThreatDecision decision = row.Tag as ThreatDecision;
             if (decision != null && row.Cells[ColNewAction].Value != null)
                 decision.UserOverrideAction = GetUserActionFromRow(row);
-
-            UpdateSetRecommendedButtonState();
         }
 
         private void dataGridReview_CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -977,8 +973,6 @@ namespace MSearch.UI
                 row.Cells[ColNewAction].Value = GetLocalizedUserActionName(userAction);
                 decision.UserOverrideAction = userAction;
             }
-
-            UpdateSetRecommendedButtonState();
         }
 
         private void UpdateBulkComboBoxForSelectedRows()
@@ -1058,55 +1052,6 @@ namespace MSearch.UI
         {
             HashSet<T> otherSet = new HashSet<T>(other);
             target.RemoveAll(item => !otherSet.Contains(item));
-        }
-
-        #endregion
-
-        #region Рекомендуемые действия
-
-        private void UpdateSetRecommendedButtonState()
-        {
-            bool hasManualChanges = false;
-
-            foreach (DataGridViewRow row in dataGridReview.Rows)
-            {
-                ThreatDecision decision = row.Tag as ThreatDecision;
-                if (decision == null || decision.Target == null)
-                    continue;
-
-                if (GetUserActionFromRow(row) != GetDefaultUserActionFromFlags(decision))
-                {
-                    hasManualChanges = true;
-                    break;
-                }
-            }
-
-            btnSetRecommended.Enabled = hasManualChanges;
-        }
-
-        private void btnSetRecommended_Click(object sender, EventArgs e)
-        {
-            _suppressActionChanged = true;
-            try
-            {
-                foreach (DataGridViewRow row in dataGridReview.Rows)
-                {
-                    ThreatDecision decision = row.Tag as ThreatDecision;
-                    if (decision == null || decision.Target == null)
-                        continue;
-
-                    ScanActionTypeUserSelected recommended = GetDefaultUserActionFromFlags(decision);
-                    row.Cells[ColNewAction].Value = GetLocalizedUserActionName(recommended);
-                    decision.UserOverrideAction = null;
-                }
-            }
-            finally
-            {
-                _suppressActionChanged = false;
-            }
-
-            dataGridReview.RefreshEdit();
-            UpdateSetRecommendedButtonState();
         }
 
         #endregion

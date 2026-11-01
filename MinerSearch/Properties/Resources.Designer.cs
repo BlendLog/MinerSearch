@@ -5095,24 +5095,6 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Set recommended.
-        /// </summary>
-        internal static string _ReviewSetRecommendedBtn_EN {
-            get {
-                return ResourceManager.GetString("_ReviewSetRecommendedBtn_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Задать рекомендуемые.
-        /// </summary>
-        internal static string _ReviewSetRecommendedBtn_RU {
-            get {
-                return ResourceManager.GetString("_ReviewSetRecommendedBtn_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Skip all.
         /// </summary>
         internal static string _ReviewSkipAllBtn_EN {
