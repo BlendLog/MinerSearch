@@ -34,6 +34,7 @@ namespace MSearch.UI
             this.buttonClose = new System.Windows.Forms.Button();
             this.buttonMinimize = new System.Windows.Forms.Button();
             this.panelSidebar = new System.Windows.Forms.Panel();
+            this.buttonDonateSidebar = new MSearch.UI.RoundButton();
             this.labelLogo = new System.Windows.Forms.Label();
             this.panelNav = new System.Windows.Forms.Panel();
             this.buttonNavAbout = new System.Windows.Forms.Button();
@@ -41,7 +42,6 @@ namespace MSearch.UI
             this.buttonNavQuarantine = new System.Windows.Forms.Button();
             this.buttonNavResults = new System.Windows.Forms.Button();
             this.buttonNavScan = new System.Windows.Forms.Button();
-            this.buttonDonateSidebar = new MSearch.UI.RoundButton();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
             this.panelSidebar.SuspendLayout();
@@ -134,11 +134,15 @@ namespace MSearch.UI
             this.panelSidebar.Padding = new System.Windows.Forms.Padding(0, 14, 0, 0);
             this.panelSidebar.Size = new System.Drawing.Size(210, 720);
             this.panelSidebar.TabIndex = 1;
+            // 
             // buttonDonateSidebar
-            this.buttonDonateSidebar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.buttonDonateSidebar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDonateSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.buttonDonateSidebar.CornerRadius = 6;
             this.buttonDonateSidebar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.buttonDonateSidebar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.buttonDonateSidebar.FlatAppearance.BorderSize = 0;
             this.buttonDonateSidebar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(92)))), ((int)(((byte)(194)))));
             this.buttonDonateSidebar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -153,7 +157,9 @@ namespace MSearch.UI
             this.buttonDonateSidebar.Text = "buttonDonateSidebar";
             this.buttonDonateSidebar.UseVisualStyleBackColor = false;
             this.buttonDonateSidebar.Click += new System.EventHandler(this.buttonDonateSidebar_Click);
+            // 
             // labelLogo
+            // 
             this.labelLogo.AutoSize = true;
             this.labelLogo.BackColor = System.Drawing.Color.Transparent;
             this.labelLogo.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
@@ -163,7 +169,9 @@ namespace MSearch.UI
             this.labelLogo.Size = new System.Drawing.Size(124, 25);
             this.labelLogo.TabIndex = 0;
             this.labelLogo.Text = "MinerSearch";
+            // 
             // panelNav
+            // 
             this.panelNav.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.panelNav.Controls.Add(this.buttonNavAbout);
             this.panelNav.Controls.Add(this.buttonNavSettings);

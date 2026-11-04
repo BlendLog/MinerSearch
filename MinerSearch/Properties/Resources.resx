@@ -2536,7 +2536,7 @@ Do you want to continue?
     <value>Browse...</value>
   </data>
   <data name="_Selective_ClearAll_RU" xml:space="preserve">
-    <value>Снять выделение</value>
+    <value>Снять выбранное</value>
   </data>
   <data name="_Selective_ClearAll_EN" xml:space="preserve">
     <value>Clear selection</value>
@@ -2734,10 +2734,10 @@ Do you want to continue?
     <value>Device ID (click to copy)</value>
   </data>
   <data name="_About_Disclaimer_RU" xml:space="preserve">
-    <value>MinerSearch не является антивирусом и не заменяет его. Программа выполняет дополнительную проверку системы и может удалять файлы — используйте её осознанно.</value>
+    <value>MinerSearch не является полноценной заменой антивируса. Программа выполняет дополнительную проверку системы и может удалять файлы. Используйте её на свой страх и риск.</value>
   </data>
   <data name="_About_Disclaimer_EN" xml:space="preserve">
-    <value>MinerSearch is not an antivirus and does not replace one. It performs an additional system check and may delete files — use it responsibly.</value>
+    <value>MinerSearch is not a complete replacement for an antivirus. The program performs an additional system check and may delete files. Use it at your own risk.</value>
   </data>
   <data name="_ExitDuringScan_RU" xml:space="preserve">
     <value>Идёт проверка. Остановить её и закрыть программу?</value>

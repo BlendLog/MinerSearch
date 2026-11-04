@@ -15,9 +15,9 @@ namespace MSearch
         // DWM properties
         private const int DWMWA_WINDOW_CORNER_PREFERENCE = 33;
         private const int DWMWA_BORDER_COLOR = 34;
-        private const int DWMWA_COLOR_ONLY = 0;
         private const int DWMWA_CAPTION_COLOR = 35;
         private const int DWMWCP_ROUND = 2;
+        private const int DWMWA_COLOR_NONE = unchecked((int)0xFFFFFFFE);
 
         [DllImport("dwmapi.dll")]
         public static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
@@ -37,7 +37,6 @@ namespace MSearch
         private const int CORNER_RADIUS = 8;
 
         private readonly static int[] _captionColors = { 45, 85, 205 }; // RoyalBlue
-        private readonly static int[] _borderColors = { 30, 30, 30 };
 
         private readonly static Color _shadowTopStart = Color.FromArgb(50, 0, 0, 0);
         private readonly static Color _shadowTopEnd = Color.FromArgb(0, 0, 0, 0);
@@ -87,11 +86,9 @@ namespace MSearch
                 int captionColor = ColorTranslator.ToWin32(Color.FromArgb(_captionColors[0], _captionColors[1], _captionColors[2]));
                 DwmSetWindowAttribute(Handle, DWMWA_CAPTION_COLOR, ref captionColor, sizeof(int));
 
-                int borderColor = ColorTranslator.ToWin32(Color.FromArgb(_borderColors[0], _borderColors[1], _borderColors[2]));
+                // Рамку DWM не рисуем: системная тень окна от этого не зависит.
+                int borderColor = DWMWA_COLOR_NONE;
                 DwmSetWindowAttribute(Handle, DWMWA_BORDER_COLOR, ref borderColor, sizeof(int));
-
-                int colorOnly = DWMWA_COLOR_ONLY;
-                DwmSetWindowAttribute(Handle, DWMWA_COLOR_ONLY, ref colorOnly, sizeof(int));
             }
         }
 

@@ -79,7 +79,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на MinerSearch is not an antivirus and does not replace one. It performs an additional system check and may delete files — use it responsibly..
+        ///   Ищет локализованную строку, похожую на MinerSearch is not a complete replacement for an antivirus. The program performs an additional system check and may delete files. Use it at your own risk..
         /// </summary>
         internal static string _About_Disclaimer_EN {
             get {
@@ -88,7 +88,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на MinerSearch не является антивирусом и не заменяет его. Программа выполняет дополнительную проверку системы и может удалять файлы — используйте её осознанно..
+        ///   Ищет локализованную строку, похожую на MinerSearch не является полноценной заменой антивируса. Программа выполняет дополнительную проверку системы и может удалять файлы. Используйте её на свой страх и риск..
         /// </summary>
         internal static string _About_Disclaimer_RU {
             get {
@@ -6004,7 +6004,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Снять выделение.
+        ///   Ищет локализованную строку, похожую на Снять выбранное.
         /// </summary>
         internal static string _Selective_ClearAll_RU {
             get {

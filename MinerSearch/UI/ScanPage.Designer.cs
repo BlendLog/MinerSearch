@@ -128,6 +128,7 @@ namespace MSearch.UI
             this.stageSignaturesPanel.SuspendLayout();
             this.stageFileSystemPanel.SuspendLayout();
             this.stageShellStartupPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDepth)).BeginInit();
             this.selectiveBottom.SuspendLayout();
             this.statusPanel.SuspendLayout();
             this.countersTable.SuspendLayout();
@@ -155,7 +156,7 @@ namespace MSearch.UI
             this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 104F));
             this.rootLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 86F));
-            this.rootLayout.Size = new System.Drawing.Size(851, 634);
+            this.rootLayout.Size = new System.Drawing.Size(842, 634);
             this.rootLayout.TabIndex = 0;
             // 
             // labelTitle
@@ -166,7 +167,7 @@ namespace MSearch.UI
             this.labelTitle.Location = new System.Drawing.Point(0, 0);
             this.labelTitle.Margin = new System.Windows.Forms.Padding(0);
             this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(851, 54);
+            this.labelTitle.Size = new System.Drawing.Size(842, 54);
             this.labelTitle.TabIndex = 0;
             this.labelTitle.Text = "labelTitle";
             this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -183,7 +184,7 @@ namespace MSearch.UI
             this.contentFlow.Location = new System.Drawing.Point(0, 54);
             this.contentFlow.Margin = new System.Windows.Forms.Padding(0);
             this.contentFlow.Name = "contentFlow";
-            this.contentFlow.Size = new System.Drawing.Size(851, 390);
+            this.contentFlow.Size = new System.Drawing.Size(842, 390);
             this.contentFlow.TabIndex = 1;
             this.contentFlow.WrapContents = false;
             this.contentFlow.SizeChanged += new System.EventHandler(this.contentFlow_SizeChanged);
@@ -224,7 +225,7 @@ namespace MSearch.UI
             this.labelQuickTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.labelQuickTitle.Location = new System.Drawing.Point(18, 16);
             this.labelQuickTitle.Name = "labelQuickTitle";
-            this.labelQuickTitle.Size = new System.Drawing.Size(93, 25);
+            this.labelQuickTitle.Size = new System.Drawing.Size(140, 25);
             this.labelQuickTitle.TabIndex = 0;
             this.labelQuickTitle.Text = "labelQuickTitle";
             this.labelQuickTitle.Click += new System.EventHandler(this.cardQuick_Click);
@@ -265,7 +266,7 @@ namespace MSearch.UI
             this.labelFullTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.labelFullTitle.Location = new System.Drawing.Point(18, 16);
             this.labelFullTitle.Name = "labelFullTitle";
-            this.labelFullTitle.Size = new System.Drawing.Size(85, 25);
+            this.labelFullTitle.Size = new System.Drawing.Size(121, 25);
             this.labelFullTitle.TabIndex = 0;
             this.labelFullTitle.Text = "labelFullTitle";
             this.labelFullTitle.Click += new System.EventHandler(this.cardFull_Click);
@@ -306,7 +307,7 @@ namespace MSearch.UI
             this.labelSelectiveTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.labelSelectiveTitle.Location = new System.Drawing.Point(18, 16);
             this.labelSelectiveTitle.Name = "labelSelectiveTitle";
-            this.labelSelectiveTitle.Size = new System.Drawing.Size(131, 25);
+            this.labelSelectiveTitle.Size = new System.Drawing.Size(167, 25);
             this.labelSelectiveTitle.TabIndex = 0;
             this.labelSelectiveTitle.Text = "labelSelectiveTitle";
             this.labelSelectiveTitle.Click += new System.EventHandler(this.cardSelective_Click);
@@ -350,7 +351,7 @@ namespace MSearch.UI
             this.labelSelectiveHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.labelSelectiveHeader.Location = new System.Drawing.Point(18, 14);
             this.labelSelectiveHeader.Name = "labelSelectiveHeader";
-            this.labelSelectiveHeader.Size = new System.Drawing.Size(157, 25);
+            this.labelSelectiveHeader.Size = new System.Drawing.Size(191, 25);
             this.labelSelectiveHeader.TabIndex = 0;
             this.labelSelectiveHeader.Text = "labelSelectiveHeader";
             // 
@@ -364,7 +365,7 @@ namespace MSearch.UI
             this.buttonClearSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonClearSelection.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.buttonClearSelection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.buttonClearSelection.Location = new System.Drawing.Point(638, 10);
+            this.buttonClearSelection.Location = new System.Drawing.Point(638, 9);
             this.buttonClearSelection.Name = "buttonClearSelection";
             this.buttonClearSelection.Size = new System.Drawing.Size(150, 30);
             this.buttonClearSelection.TabIndex = 2;
@@ -951,7 +952,7 @@ namespace MSearch.UI
             this.labelDepth.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.labelDepth.Location = new System.Drawing.Point(18, 232);
             this.labelDepth.Name = "labelDepth";
-            this.labelDepth.Size = new System.Drawing.Size(61, 19);
+            this.labelDepth.Size = new System.Drawing.Size(75, 19);
             this.labelDepth.TabIndex = 3;
             this.labelDepth.Text = "labelDepth";
             // 
@@ -959,13 +960,25 @@ namespace MSearch.UI
             // 
             this.numericDepth.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.numericDepth.Location = new System.Drawing.Point(100, 229);
-            this.numericDepth.Maximum = new decimal(new int[] { 16, 0, 0, 0 });
-            this.numericDepth.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            this.numericDepth.Maximum = new decimal(new int[] {
+            16,
+            0,
+            0,
+            0});
+            this.numericDepth.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericDepth.Name = "numericDepth";
             this.numericDepth.Size = new System.Drawing.Size(60, 25);
             this.numericDepth.TabIndex = 4;
             this.numericDepth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numericDepth.Value = new decimal(new int[] { 8, 0, 0, 0 });
+            this.numericDepth.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
             // 
             // checkScanOnly
             // 
@@ -974,7 +987,7 @@ namespace MSearch.UI
             this.checkScanOnly.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.checkScanOnly.Location = new System.Drawing.Point(190, 232);
             this.checkScanOnly.Name = "checkScanOnly";
-            this.checkScanOnly.Size = new System.Drawing.Size(120, 23);
+            this.checkScanOnly.Size = new System.Drawing.Size(119, 23);
             this.checkScanOnly.TabIndex = 5;
             this.checkScanOnly.Text = "checkScanOnly";
             this.checkScanOnly.UseVisualStyleBackColor = true;
@@ -987,7 +1000,7 @@ namespace MSearch.UI
             this.checkRemoveEmptyTasks.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.checkRemoveEmptyTasks.Location = new System.Drawing.Point(340, 232);
             this.checkRemoveEmptyTasks.Name = "checkRemoveEmptyTasks";
-            this.checkRemoveEmptyTasks.Size = new System.Drawing.Size(200, 23);
+            this.checkRemoveEmptyTasks.Size = new System.Drawing.Size(181, 23);
             this.checkRemoveEmptyTasks.TabIndex = 6;
             this.checkRemoveEmptyTasks.Text = "checkRemoveEmptyTasks";
             this.checkRemoveEmptyTasks.UseVisualStyleBackColor = true;
@@ -1013,7 +1026,7 @@ namespace MSearch.UI
             this.checkFolder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.checkFolder.Location = new System.Drawing.Point(0, 12);
             this.checkFolder.Name = "checkFolder";
-            this.checkFolder.Size = new System.Drawing.Size(151, 23);
+            this.checkFolder.Size = new System.Drawing.Size(100, 23);
             this.checkFolder.TabIndex = 0;
             this.checkFolder.Text = "checkFolder";
             this.checkFolder.UseVisualStyleBackColor = true;
@@ -1073,10 +1086,10 @@ namespace MSearch.UI
             this.labelHint.AutoSize = true;
             this.labelHint.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.labelHint.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(112)))), ((int)(((byte)(120)))), ((int)(((byte)(132)))));
-            this.labelHint.Location = new System.Drawing.Point(0, 404);
+            this.labelHint.Location = new System.Drawing.Point(0, 462);
             this.labelHint.Margin = new System.Windows.Forms.Padding(0, 14, 0, 0);
             this.labelHint.Name = "labelHint";
-            this.labelHint.Size = new System.Drawing.Size(277, 19);
+            this.labelHint.Size = new System.Drawing.Size(63, 19);
             this.labelHint.TabIndex = 2;
             this.labelHint.Text = "labelHint";
             // 
@@ -1091,7 +1104,7 @@ namespace MSearch.UI
             this.statusPanel.Location = new System.Drawing.Point(0, 452);
             this.statusPanel.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.statusPanel.Name = "statusPanel";
-            this.statusPanel.Size = new System.Drawing.Size(851, 88);
+            this.statusPanel.Size = new System.Drawing.Size(842, 88);
             this.statusPanel.TabIndex = 2;
             this.statusPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
@@ -1102,7 +1115,7 @@ namespace MSearch.UI
             this.labelStage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
             this.labelStage.Location = new System.Drawing.Point(18, 14);
             this.labelStage.Name = "labelStage";
-            this.labelStage.Size = new System.Drawing.Size(140, 19);
+            this.labelStage.Size = new System.Drawing.Size(80, 19);
             this.labelStage.TabIndex = 0;
             this.labelStage.Text = "labelStage";
             // 
@@ -1115,7 +1128,7 @@ namespace MSearch.UI
             this.labelDetail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(112)))), ((int)(((byte)(120)))), ((int)(((byte)(132)))));
             this.labelDetail.Location = new System.Drawing.Point(18, 40);
             this.labelDetail.Name = "labelDetail";
-            this.labelDetail.Size = new System.Drawing.Size(600, 20);
+            this.labelDetail.Size = new System.Drawing.Size(591, 20);
             this.labelDetail.TabIndex = 1;
             // 
             // progressScan
@@ -1124,7 +1137,7 @@ namespace MSearch.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressScan.Location = new System.Drawing.Point(18, 68);
             this.progressScan.Name = "progressScan";
-            this.progressScan.Size = new System.Drawing.Size(806, 10);
+            this.progressScan.Size = new System.Drawing.Size(797, 10);
             this.progressScan.TabIndex = 2;
             // 
             // buttonStop
@@ -1138,7 +1151,7 @@ namespace MSearch.UI
             this.buttonStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonStop.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.buttonStop.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.buttonStop.Location = new System.Drawing.Point(694, 18);
+            this.buttonStop.Location = new System.Drawing.Point(685, 18);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(130, 40);
             this.buttonStop.TabIndex = 3;
@@ -1164,7 +1177,7 @@ namespace MSearch.UI
             this.countersTable.Name = "countersTable";
             this.countersTable.RowCount = 1;
             this.countersTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.countersTable.Size = new System.Drawing.Size(851, 86);
+            this.countersTable.Size = new System.Drawing.Size(842, 86);
             this.countersTable.TabIndex = 3;
             // 
             // panelFound
@@ -1176,7 +1189,7 @@ namespace MSearch.UI
             this.panelFound.Location = new System.Drawing.Point(0, 0);
             this.panelFound.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
             this.panelFound.Name = "panelFound";
-            this.panelFound.Size = new System.Drawing.Size(200, 86);
+            this.panelFound.Size = new System.Drawing.Size(198, 86);
             this.panelFound.TabIndex = 0;
             this.panelFound.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
@@ -1198,7 +1211,7 @@ namespace MSearch.UI
             this.labelFoundCaption.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(112)))), ((int)(((byte)(120)))), ((int)(((byte)(132)))));
             this.labelFoundCaption.Location = new System.Drawing.Point(18, 52);
             this.labelFoundCaption.Name = "labelFoundCaption";
-            this.labelFoundCaption.Size = new System.Drawing.Size(55, 15);
+            this.labelFoundCaption.Size = new System.Drawing.Size(108, 15);
             this.labelFoundCaption.TabIndex = 1;
             this.labelFoundCaption.Text = "labelFoundCaption";
             // 
@@ -1208,10 +1221,10 @@ namespace MSearch.UI
             this.panelNeutralized.Controls.Add(this.labelNeutralizedValue);
             this.panelNeutralized.Controls.Add(this.labelNeutralizedCaption);
             this.panelNeutralized.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelNeutralized.Location = new System.Drawing.Point(212, 0);
+            this.panelNeutralized.Location = new System.Drawing.Point(210, 0);
             this.panelNeutralized.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
             this.panelNeutralized.Name = "panelNeutralized";
-            this.panelNeutralized.Size = new System.Drawing.Size(200, 86);
+            this.panelNeutralized.Size = new System.Drawing.Size(198, 86);
             this.panelNeutralized.TabIndex = 1;
             this.panelNeutralized.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
@@ -1233,7 +1246,7 @@ namespace MSearch.UI
             this.labelNeutralizedCaption.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(112)))), ((int)(((byte)(120)))), ((int)(((byte)(132)))));
             this.labelNeutralizedCaption.Location = new System.Drawing.Point(18, 52);
             this.labelNeutralizedCaption.Name = "labelNeutralizedCaption";
-            this.labelNeutralizedCaption.Size = new System.Drawing.Size(82, 15);
+            this.labelNeutralizedCaption.Size = new System.Drawing.Size(134, 15);
             this.labelNeutralizedCaption.TabIndex = 1;
             this.labelNeutralizedCaption.Text = "labelNeutralizedCaption";
             // 
@@ -1243,10 +1256,10 @@ namespace MSearch.UI
             this.panelSuspicious.Controls.Add(this.labelSuspiciousValue);
             this.panelSuspicious.Controls.Add(this.labelSuspiciousCaption);
             this.panelSuspicious.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelSuspicious.Location = new System.Drawing.Point(424, 0);
+            this.panelSuspicious.Location = new System.Drawing.Point(420, 0);
             this.panelSuspicious.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
             this.panelSuspicious.Name = "panelSuspicious";
-            this.panelSuspicious.Size = new System.Drawing.Size(200, 86);
+            this.panelSuspicious.Size = new System.Drawing.Size(198, 86);
             this.panelSuspicious.TabIndex = 2;
             this.panelSuspicious.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
@@ -1268,7 +1281,7 @@ namespace MSearch.UI
             this.labelSuspiciousCaption.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(112)))), ((int)(((byte)(120)))), ((int)(((byte)(132)))));
             this.labelSuspiciousCaption.Location = new System.Drawing.Point(18, 52);
             this.labelSuspiciousCaption.Name = "labelSuspiciousCaption";
-            this.labelSuspiciousCaption.Size = new System.Drawing.Size(100, 15);
+            this.labelSuspiciousCaption.Size = new System.Drawing.Size(130, 15);
             this.labelSuspiciousCaption.TabIndex = 1;
             this.labelSuspiciousCaption.Text = "labelSuspiciousCaption";
             // 
@@ -1278,10 +1291,10 @@ namespace MSearch.UI
             this.panelSkipped.Controls.Add(this.labelSkippedValue);
             this.panelSkipped.Controls.Add(this.labelSkippedCaption);
             this.panelSkipped.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelSkipped.Location = new System.Drawing.Point(636, 0);
+            this.panelSkipped.Location = new System.Drawing.Point(630, 0);
             this.panelSkipped.Margin = new System.Windows.Forms.Padding(0);
             this.panelSkipped.Name = "panelSkipped";
-            this.panelSkipped.Size = new System.Drawing.Size(215, 86);
+            this.panelSkipped.Size = new System.Drawing.Size(212, 86);
             this.panelSkipped.TabIndex = 3;
             this.panelSkipped.Paint += new System.Windows.Forms.PaintEventHandler(this.CardPanel_Paint);
             // 
@@ -1303,7 +1316,7 @@ namespace MSearch.UI
             this.labelSkippedCaption.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(112)))), ((int)(((byte)(120)))), ((int)(((byte)(132)))));
             this.labelSkippedCaption.Location = new System.Drawing.Point(18, 52);
             this.labelSkippedCaption.Name = "labelSkippedCaption";
-            this.labelSkippedCaption.Size = new System.Drawing.Size(74, 15);
+            this.labelSkippedCaption.Size = new System.Drawing.Size(116, 15);
             this.labelSkippedCaption.TabIndex = 1;
             this.labelSkippedCaption.Text = "labelSkippedCaption";
             // 
@@ -1340,6 +1353,7 @@ namespace MSearch.UI
             this.stageSignaturesPanel.ResumeLayout(false);
             this.stageFileSystemPanel.ResumeLayout(false);
             this.stageShellStartupPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericDepth)).EndInit();
             this.selectiveBottom.ResumeLayout(false);
             this.selectiveBottom.PerformLayout();
             this.statusPanel.ResumeLayout(false);
