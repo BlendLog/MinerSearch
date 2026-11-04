@@ -228,7 +228,7 @@ namespace MSearch.UI
             this.toggleStatistics.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleStatistics.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleStatistics.Name = "toggleStatistics";
-            this.toggleStatistics.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleStatistics.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleStatistics.OffToggleColor = System.Drawing.Color.White;
             this.toggleStatistics.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleStatistics.Size = new System.Drawing.Size(48, 24);
@@ -287,7 +287,7 @@ namespace MSearch.UI
             this.toggleAutoAccept.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleAutoAccept.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleAutoAccept.Name = "toggleAutoAccept";
-            this.toggleAutoAccept.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleAutoAccept.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleAutoAccept.OffToggleColor = System.Drawing.Color.White;
             this.toggleAutoAccept.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleAutoAccept.Size = new System.Drawing.Size(48, 24);

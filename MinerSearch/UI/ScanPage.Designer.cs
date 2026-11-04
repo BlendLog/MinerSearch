@@ -441,7 +441,7 @@ namespace MSearch.UI
             this.toggleProcesses.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleProcesses.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleProcesses.Name = "toggleProcesses";
-            this.toggleProcesses.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleProcesses.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleProcesses.OffToggleColor = System.Drawing.Color.White;
             this.toggleProcesses.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleProcesses.OnToggleColor = System.Drawing.Color.WhiteSmoke;
@@ -486,7 +486,7 @@ namespace MSearch.UI
             this.toggleRegistry.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleRegistry.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleRegistry.Name = "toggleRegistry";
-            this.toggleRegistry.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleRegistry.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleRegistry.OffToggleColor = System.Drawing.Color.White;
             this.toggleRegistry.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleRegistry.OnToggleColor = System.Drawing.Color.WhiteSmoke;
@@ -531,7 +531,7 @@ namespace MSearch.UI
             this.toggleServices.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleServices.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleServices.Name = "toggleServices";
-            this.toggleServices.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleServices.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleServices.OffToggleColor = System.Drawing.Color.White;
             this.toggleServices.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleServices.OnToggleColor = System.Drawing.Color.WhiteSmoke;
@@ -576,7 +576,7 @@ namespace MSearch.UI
             this.toggleTasks.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleTasks.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleTasks.Name = "toggleTasks";
-            this.toggleTasks.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleTasks.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleTasks.OffToggleColor = System.Drawing.Color.White;
             this.toggleTasks.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleTasks.OnToggleColor = System.Drawing.Color.WhiteSmoke;
@@ -621,7 +621,7 @@ namespace MSearch.UI
             this.toggleFirewall.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleFirewall.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleFirewall.Name = "toggleFirewall";
-            this.toggleFirewall.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleFirewall.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleFirewall.OffToggleColor = System.Drawing.Color.White;
             this.toggleFirewall.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleFirewall.OnToggleColor = System.Drawing.Color.WhiteSmoke;
@@ -666,7 +666,7 @@ namespace MSearch.UI
             this.toggleHosts.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleHosts.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleHosts.Name = "toggleHosts";
-            this.toggleHosts.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleHosts.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleHosts.OffToggleColor = System.Drawing.Color.White;
             this.toggleHosts.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleHosts.OnToggleColor = System.Drawing.Color.WhiteSmoke;
@@ -711,7 +711,7 @@ namespace MSearch.UI
             this.toggleUserProfiles.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleUserProfiles.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleUserProfiles.Name = "toggleUserProfiles";
-            this.toggleUserProfiles.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleUserProfiles.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleUserProfiles.OffToggleColor = System.Drawing.Color.White;
             this.toggleUserProfiles.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleUserProfiles.OnToggleColor = System.Drawing.Color.WhiteSmoke;
@@ -756,7 +756,7 @@ namespace MSearch.UI
             this.toggleWmi.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleWmi.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleWmi.Name = "toggleWmi";
-            this.toggleWmi.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleWmi.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleWmi.OffToggleColor = System.Drawing.Color.White;
             this.toggleWmi.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleWmi.OnToggleColor = System.Drawing.Color.WhiteSmoke;
@@ -801,7 +801,7 @@ namespace MSearch.UI
             this.toggleRootkits.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleRootkits.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleRootkits.Name = "toggleRootkits";
-            this.toggleRootkits.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleRootkits.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleRootkits.OffToggleColor = System.Drawing.Color.White;
             this.toggleRootkits.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleRootkits.OnToggleColor = System.Drawing.Color.WhiteSmoke;
@@ -846,7 +846,7 @@ namespace MSearch.UI
             this.toggleSignatures.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleSignatures.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleSignatures.Name = "toggleSignatures";
-            this.toggleSignatures.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleSignatures.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleSignatures.OffToggleColor = System.Drawing.Color.White;
             this.toggleSignatures.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleSignatures.OnToggleColor = System.Drawing.Color.WhiteSmoke;
@@ -891,7 +891,7 @@ namespace MSearch.UI
             this.toggleFileSystem.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleFileSystem.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleFileSystem.Name = "toggleFileSystem";
-            this.toggleFileSystem.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleFileSystem.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleFileSystem.OffToggleColor = System.Drawing.Color.White;
             this.toggleFileSystem.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleFileSystem.OnToggleColor = System.Drawing.Color.WhiteSmoke;
@@ -936,7 +936,7 @@ namespace MSearch.UI
             this.toggleShellStartup.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
             this.toggleShellStartup.MinimumSize = new System.Drawing.Size(45, 22);
             this.toggleShellStartup.Name = "toggleShellStartup";
-            this.toggleShellStartup.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(202)))), ((int)(((byte)(212)))));
+            this.toggleShellStartup.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
             this.toggleShellStartup.OffToggleColor = System.Drawing.Color.White;
             this.toggleShellStartup.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
             this.toggleShellStartup.OnToggleColor = System.Drawing.Color.WhiteSmoke;

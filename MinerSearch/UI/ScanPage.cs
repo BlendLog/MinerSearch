@@ -19,6 +19,7 @@ namespace MSearch.UI
         private readonly Dictionary<string, Label> _stageLabels = new Dictionary<string, Label>();
 
         private bool _scanning;
+        private bool _canStartSelective;
 
         public ScanPage()
         {
@@ -61,6 +62,9 @@ namespace MSearch.UI
 
         private void buttonStartSelective_Click(object sender, EventArgs e)
         {
+            if (!_canStartSelective)
+                return;
+
             StartSelectiveScan();
         }
 
@@ -127,7 +131,10 @@ namespace MSearch.UI
             foreach (KeyValuePair<string, ToggleSwitch> pair in _stageToggles)
                 pair.Value.Checked = true;
 
-            toggleTasks.CheckedChanged += StageToggle_CheckedChanged;
+            // Подписка после инициализации: иначе каждый Checked = true дёргал бы зависимости.
+            foreach (KeyValuePair<string, ToggleSwitch> pair in _stageToggles)
+                pair.Value.CheckedChanged += StageToggle_CheckedChanged;
+
             UpdateOptionDependencies();
         }
 
@@ -265,6 +272,30 @@ namespace MSearch.UI
                 checkRemoveEmptyTasks.Checked = false;
 
             checkRemoveEmptyTasks.Enabled = !_scanning && tasks && !scanOnly;
+
+            UpdateStartSelectiveState();
+        }
+
+        private void UpdateStartSelectiveState()
+        {
+            bool anyStage = false;
+            foreach (ToggleSwitch toggle in _stageToggles.Values)
+            {
+                if (!toggle.Checked)
+                    continue;
+
+                anyStage = true;
+                break;
+            }
+
+            bool enabled = anyStage && !_scanning;
+            _canStartSelective = enabled;
+
+            // Enabled = false рисует текст собственным цветом WinForms (ForeColor
+            // игнорируется), поэтому блокируем логически и задаём цвета сами.
+            buttonStartSelective.BackColor = enabled ? Theme.Accent : Color.Gray;
+            buttonStartSelective.ForeColor = enabled ? Color.White : Color.DarkGray;
+            buttonStartSelective.FlatAppearance.MouseOverBackColor = enabled ? Color.Empty : Color.Gray;
         }
 
         private void UpdateFolderControls()
@@ -296,7 +327,6 @@ namespace MSearch.UI
             cardQuick.Enabled = !scanning;
             cardFull.Enabled = !scanning;
             cardSelective.Enabled = !scanning;
-            buttonStartSelective.Enabled = !scanning;
             buttonClearSelection.Enabled = !scanning;
             buttonStop.Enabled = scanning;
 
