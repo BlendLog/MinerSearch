@@ -4,6 +4,7 @@ using MSearch.Core.ThreatObjects;
 using MSearch.Infrastructure;
 using System;
 using System.IO;
+using System.Threading;
 
 namespace MSearch.Core.ThreatHandlers
 {
@@ -15,8 +16,10 @@ namespace MSearch.Core.ThreatHandlers
     {
         public ThreatObjectKind Kind => ThreatObjectKind.ShellStartupFile;
 
-        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase)
+        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             var shellFile = decision.Target as ShellStartupFileThreatObject;
             if (shellFile == null) return ApplyResult.NotApplicable;
 

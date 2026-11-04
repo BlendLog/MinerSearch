@@ -17,10 +17,15 @@ namespace MSearch.Core.Handlers
 {
     internal sealed class ServiceThreatHandler : IThreatHandler
     {
+        private CancellationToken _token;
+
         public ThreatObjectKind Kind => ThreatObjectKind.Service;
 
-        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase)
+        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase, CancellationToken token)
         {
+            _token = token;
+            token.ThrowIfCancellationRequested();
+
             if (phase != CleanupPhase.Finalize) return ApplyResult.NotApplicable;
 
             var svc = decision.Target as ServiceThreatObject;
@@ -85,6 +90,10 @@ namespace MSearch.Core.Handlers
                 if (svc.ShouldDisableService) return HandleDisableOnly(service, svc, decision);
 
                 return ApplyResult.NotApplicable;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -234,11 +243,15 @@ namespace MSearch.Core.Handlers
                 try
                 {
                     service.Stop();
-                    service.WaitForStatus(ServiceControllerStatus.Stopped, new TimeSpan(0, 0, 30));
+                    WaitForServiceStatus(service, ServiceControllerStatus.Stopped);
                     AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceStopped", serviceName);
 
                     if (hasPendingLinkedFiles)
                         WaitForLinkedFilesUnload(svc);
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
                 }
                 catch (Exception ex)
                 {
@@ -251,13 +264,17 @@ namespace MSearch.Core.Handlers
             bool scmRemoved = false;
             try
             {
-                ServiceHelper.Uninstall(serviceName);
+                ServiceHelper.Uninstall(serviceName, _token);
                 scmRemoved = true;
             }
             catch (Win32Exception win32Ex) when (win32Ex.NativeErrorCode == 1072 || win32Ex.NativeErrorCode == 1060)
             {
                 // ERROR_SERVICE_MARKED_FOR_DELETE / ERROR_SERVICE_DOES_NOT_EXIST — допустимо
                 scmRemoved = true;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -286,7 +303,7 @@ namespace MSearch.Core.Handlers
             return file != null && (file.ShouldDeleteFile || file.ShouldMoveFileToQuarantine);
         }
 
-        static void WaitForLinkedFilesUnload(ServiceThreatObject svc, int timeoutMs = 3000)
+        void WaitForLinkedFilesUnload(ServiceThreatObject svc, int timeoutMs = 3000)
         {
             var paths = new System.Collections.Generic.List<string>();
 
@@ -302,6 +319,8 @@ namespace MSearch.Core.Handlers
             Stopwatch sw = Stopwatch.StartNew();
             while (sw.ElapsedMilliseconds < timeoutMs)
             {
+                _token.ThrowIfCancellationRequested();
+
                 bool anyLoaded = false;
                 foreach (string path in paths)
                 {
@@ -317,7 +336,7 @@ namespace MSearch.Core.Handlers
                 }
 
                 if (!anyLoaded) return;
-                Thread.Sleep(200);
+                _token.WaitHandle.WaitOne(200);
             }
         }
 
@@ -353,7 +372,7 @@ namespace MSearch.Core.Handlers
 
             try
             {
-                ServiceHelper.Uninstall(svc.ServiceName);
+                ServiceHelper.Uninstall(svc.ServiceName, _token);
 
                 if (ServiceRegistryKeyExists(svc.ServiceName))
                     return HandleDeleteRegistryOnlyService(svc, decision);
@@ -372,6 +391,10 @@ namespace MSearch.Core.Handlers
                 AppConfig.GetInstance.LL.LogSuccessMessage("_MaliciousService", svc.ServiceName, "_Deleted");
                 decision.ActionType = ScanActionType.Deleted;
                 return ApplyResult.Success;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception)
             {
@@ -534,7 +557,7 @@ namespace MSearch.Core.Handlers
                 try
                 {
                     service.Stop();
-                    service.WaitForStatus(ServiceControllerStatus.Stopped, new TimeSpan(0, 0, 30));
+                    WaitForServiceStatus(service, ServiceControllerStatus.Stopped);
                     AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceStopped", serviceName);
                 }
                 catch (InvalidOperationException)
@@ -565,7 +588,7 @@ namespace MSearch.Core.Handlers
                 }
             }
 
-            Thread.Sleep(2000);
+            WaitOrCancel(2000);
 
             var newStartMode = NativeServiceController.GetServiceStartType(serviceName);
             if (newStartMode != NativeServiceController.ServiceStartMode.Disabled)
@@ -577,7 +600,7 @@ namespace MSearch.Core.Handlers
 
             try
             {
-                ServiceHelper.Uninstall(serviceName);
+                ServiceHelper.Uninstall(serviceName, _token);
                 AppConfig.GetInstance.LL.LogSuccessMessage("_MaliciousService", serviceName, "_Deleted");
             }
             catch (Win32Exception win32Ex) when (win32Ex.NativeErrorCode == 1072 || win32Ex.NativeErrorCode == 1060)
@@ -594,6 +617,10 @@ namespace MSearch.Core.Handlers
                 decision.ApplyErrorMessage = win32Ex.Message;
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorCannotRemove", win32Ex, serviceName, "_ObjectType_Service");
                 return ApplyResult.Failed;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -639,12 +666,16 @@ namespace MSearch.Core.Handlers
                     if (service.Status == ServiceControllerStatus.Running)
                     {
                         service.Stop();
-                        service.WaitForStatus(ServiceControllerStatus.Stopped, new TimeSpan(0, 0, 30));
+                        WaitForServiceStatus(service, ServiceControllerStatus.Stopped);
                     }
 
                     service.Start();
-                    service.WaitForStatus(ServiceControllerStatus.Running, new TimeSpan(0, 0, 30));
+                    WaitForServiceStatus(service, ServiceControllerStatus.Running);
                     AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceRestarted", serviceName);
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
                 }
                 catch (Exception ex)
                 {
@@ -657,6 +688,10 @@ namespace MSearch.Core.Handlers
                 decision.ActionType = ScanActionType.Cured;
 
                 return ApplyResult.Success;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -708,8 +743,12 @@ namespace MSearch.Core.Handlers
                 try
                 {
                     service.Stop();
-                    service.WaitForStatus(ServiceControllerStatus.Stopped, new TimeSpan(0, 0, 30));
+                    WaitForServiceStatus(service, ServiceControllerStatus.Stopped);
                     AppConfig.GetInstance.LL.LogSuccessMessage("_ServiceStopped", serviceName);
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
                 }
                 catch (Exception ex)
                 {
@@ -721,6 +760,23 @@ namespace MSearch.Core.Handlers
             return ApplyResult.Success;
         }
 
+        private void WaitForServiceStatus(ServiceController service, ServiceControllerStatus desired, int timeoutMs = 30000)
+        {
+            Stopwatch sw = Stopwatch.StartNew();
+            while (sw.ElapsedMilliseconds < timeoutMs)
+            {
+                _token.ThrowIfCancellationRequested();
+                service.Refresh();
+                if (service.Status == desired)
+                    return;
+                _token.WaitHandle.WaitOne(200);
+            }
+        }
 
+        private void WaitOrCancel(int milliseconds)
+        {
+            if (_token.WaitHandle.WaitOne(milliseconds))
+                _token.ThrowIfCancellationRequested();
+        }
     }
 }

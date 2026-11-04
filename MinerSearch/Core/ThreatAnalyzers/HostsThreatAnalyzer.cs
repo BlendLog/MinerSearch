@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace MSearch.Core.ThreatAnalyzers
 {
@@ -22,8 +23,10 @@ namespace MSearch.Core.ThreatAnalyzers
         private static readonly object _headerLock = new object();
         LaunchOptions _options = LaunchOptions.GetInstance;
 
-        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
+        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             var hostsThreat = threat as HostsThreatObject;
             if (hostsThreat == null)
                 yield break;
@@ -44,13 +47,15 @@ namespace MSearch.Core.ThreatAnalyzers
 
             foreach (HostsEntry entry in hostsThreat.Entries)
             {
+                token.ThrowIfCancellationRequested();
+
                 if (entry == null || entry.Domains == null || entry.Domains.Count == 0)
                     continue;
 
                 bool isAvEntry = false;
                 foreach (string domain in entry.Domains)
                 {
-                    if (IsAvDomain(domain))
+                    if (IsAvDomain(domain, token))
                     {
                         isAvEntry = true;
                         break;
@@ -80,6 +85,8 @@ namespace MSearch.Core.ThreatAnalyzers
             // Redirect не трогаем: только нейтральные строки в лог, без решения и очистки
             foreach (string redirectLine in hostsThreat.RedirectLines)
             {
+                token.ThrowIfCancellationRequested();
+
                 AppConfig.GetInstance.LL.LogMessage("[i]", "_SuspiciousHostsEntry", redirectLine, ConsoleColor.Gray);
             }
 
@@ -99,7 +106,7 @@ namespace MSearch.Core.ThreatAnalyzers
         /// <summary>
         /// Matches a domain against MSData.hStrings by MD5 suffix.
         /// </summary>
-        internal static bool IsAvDomain(string domain)
+        internal static bool IsAvDomain(string domain, CancellationToken token)
         {
             if (string.IsNullOrEmpty(domain))
                 return false;
@@ -110,6 +117,8 @@ namespace MSearch.Core.ThreatAnalyzers
 
             foreach (HashedString hLine in MSData.GetInstance.hStrings)
             {
+                token.ThrowIfCancellationRequested();
+
                 if (hLine.OriginalLength > d.Length)
                     continue;
 

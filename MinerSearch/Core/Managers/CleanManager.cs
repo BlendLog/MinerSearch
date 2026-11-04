@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace MSearch.Core.Managers
 {
@@ -86,12 +87,14 @@ namespace MSearch.Core.Managers
             }
         }
 
-        public void ApplyDecisions(IEnumerable<ThreatDecision> decisions, CleanupPhase phase)
+        public void ApplyDecisions(IEnumerable<ThreatDecision> decisions, CleanupPhase phase, CancellationToken token)
         {
             if (_options.ScanOnly)
             {
                 foreach (ThreatDecision decision in decisions)
                 {
+                    token.ThrowIfCancellationRequested();
+
                     if (decision == null || decision.Target == null) continue;
                     if (phase != CleanupPhase.Finalize) continue;
 
@@ -127,6 +130,8 @@ namespace MSearch.Core.Managers
 
                 foreach (ThreatDecision decision in group)
                 {
+                    token.ThrowIfCancellationRequested();
+
                     IThreatHandler handler;
                     if (!_handlers.TryGetValue(decision.Target.Kind, out handler))
                         continue;
@@ -134,7 +139,11 @@ namespace MSearch.Core.Managers
                     ApplyResult result;
                     try
                     {
-                        result = handler.Apply(decision, phase);
+                        result = handler.Apply(decision, phase, token);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        throw;
                     }
                     catch (Exception ex)
                     {
@@ -153,10 +162,12 @@ namespace MSearch.Core.Managers
         /// <summary>
         /// Records skipped decisions in scan results without invoking a handler.
         /// </summary>
-        public void ApplySkippedDecisions(IEnumerable<ThreatDecision> decisions)
+        public void ApplySkippedDecisions(IEnumerable<ThreatDecision> decisions, CancellationToken token)
         {
             foreach (var decision in decisions)
             {
+                token.ThrowIfCancellationRequested();
+
                 if (decision == null || decision.Target == null) continue;
                 if (IsLockedServiceDirectory(decision.Target)) continue;
 

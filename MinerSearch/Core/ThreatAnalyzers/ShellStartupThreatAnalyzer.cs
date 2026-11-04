@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace MSearch.Core.ThreatAnalyzers
 {
@@ -21,6 +22,7 @@ namespace MSearch.Core.ThreatAnalyzers
         public ThreatObjectKind Kind => ThreatObjectKind.ShellStartupFile;
 
         private readonly SignatureFileAnalyzer _fileAnalyzer;
+        private CancellationToken _token;
 
         public ShellStartupThreatAnalyzer(SignatureFileAnalyzer fileAnalyzer)
         {
@@ -34,8 +36,11 @@ namespace MSearch.Core.ThreatAnalyzers
             MSData.GetInstance.regexPatterns[MSKeys.WinCaches],
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
+        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat, CancellationToken token)
         {
+            _token = token;
+            token.ThrowIfCancellationRequested();
+
             if (!_headerLogged)
             {
                 lock (_headerLock)
@@ -141,6 +146,8 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 foreach (string badArg in MSData.GetInstance.badArgStrings)
                 {
+                    _token.ThrowIfCancellationRequested();
+
                     if (file.ShortcutTargetArgs.IndexOf(badArg, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         AppConfig.GetInstance.LL.LogCautionMessage("_Malici0usFile", file.FilePath);

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Native = Win32Wrapper.Native;
 
 namespace MSearch.Core.ThreatAnalyzers
@@ -18,8 +19,10 @@ namespace MSearch.Core.ThreatAnalyzers
     {
         public ThreatObjectKind Kind => ThreatObjectKind.Other;
 
-        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
+        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             var rootkit = threat as RootkitThreatObject;
             if (rootkit == null) yield break;
 
@@ -34,13 +37,13 @@ namespace MSearch.Core.ThreatAnalyzers
 
             yield return new ThreatDecision(threat, riskLevel, scanType);
 
-            ScanProcesses(rootkit);
+            ScanProcesses(rootkit, token);
         }
 
         /// <summary>
         /// Scans all processes for R77 signatures and fills RootkitThreatObject.
         /// </summary>
-        private void ScanProcesses(RootkitThreatObject rootkit)
+        private void ScanProcesses(RootkitThreatObject rootkit, CancellationToken token)
         {
             List<Native.R77_PROCESS> r77Processes = new List<Native.R77_PROCESS>();
             List<int> dialerPids = new List<int>();
@@ -57,6 +60,8 @@ namespace MSearch.Core.ThreatAnalyzers
 
                 for (int i = 0; i < processCount; i++)
                 {
+                    token.ThrowIfCancellationRequested();
+
                     IntPtr process = Native.OpenProcess(0x0410, false, (int)processes[i]);
                     if (process != IntPtr.Zero)
                     {
@@ -68,6 +73,8 @@ namespace MSearch.Core.ThreatAnalyzers
 
                                 for (uint j = 0; j < moduleCount; j++)
                                 {
+                                    token.ThrowIfCancellationRequested();
+
                                     if (Native.ReadProcessMemory(process, modules[j], moduleBytes, moduleBytes.Length, IntPtr.Zero))
                                     {
                                         // Newer r77 layout first, then the legacy one
@@ -118,6 +125,8 @@ namespace MSearch.Core.ThreatAnalyzers
             string dialerPattern = MSData.GetInstance.SysFileName[17];
             foreach (Process process in ProcessManager.SafeGetProcesses())
             {
+                token.ThrowIfCancellationRequested();
+
                 ScanActivity.Report(process.ProcessName);
 
                 if (!process.ProcessName.StartsWith(dialerPattern, StringComparison.OrdinalIgnoreCase)) continue;

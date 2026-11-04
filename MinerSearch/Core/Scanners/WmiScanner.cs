@@ -4,12 +4,13 @@ using MSearch.Core.ThreatObjects;
 using System;
 using System.Collections.Generic;
 using System.Management;
+using System.Threading;
 
 namespace MSearch.Core.Scanners
 {
     public class WmiScanner : IThreatScanner
     {
-        public IEnumerable<IThreatObject> Scan()
+        public IEnumerable<IThreatObject> Scan(CancellationToken token)
         {
             var results = new List<IThreatObject>();
 
@@ -28,6 +29,8 @@ namespace MSearch.Core.Scanners
                     {
                         foreach (ManagementObject obj in resultsCollection)
                         {
+                            token.ThrowIfCancellationRequested();
+
                             string name = obj["Name"] as string ?? "";
                             string commandLine = obj["CommandLineTemplate"] as string ?? "";
 
@@ -42,6 +45,10 @@ namespace MSearch.Core.Scanners
                         }
                     }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (ManagementException mex)
             {

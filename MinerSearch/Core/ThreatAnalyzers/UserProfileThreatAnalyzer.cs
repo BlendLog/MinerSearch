@@ -4,6 +4,7 @@ using MSearch.Core.ThreatObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace MSearch.Core.ThreatAnalyzers
 {
@@ -14,8 +15,10 @@ namespace MSearch.Core.ThreatAnalyzers
         private static bool _headerLogged = false;
         private static readonly object _headerLock = new object();
 
-        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
+        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             if (!_headerLogged)
             {
                 lock (_headerLock)

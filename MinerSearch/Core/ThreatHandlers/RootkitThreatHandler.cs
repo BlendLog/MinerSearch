@@ -7,6 +7,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Win32Wrapper;
 using Native = Win32Wrapper.Native;
 
@@ -21,8 +22,10 @@ namespace MSearch.Core.Handlers
     {
         public ThreatObjectKind Kind => ThreatObjectKind.Other;
 
-        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase)
+        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             var rootkit = decision.Target as RootkitThreatObject;
             if (rootkit == null) return ApplyResult.NotApplicable;
 
@@ -59,9 +62,13 @@ namespace MSearch.Core.Handlers
                 // Graceful-detach core-инжектов и сервиса (сервис r77 1.8.x живёт внутри winlogon.exe)
                 DetachR77Processes(rootkit.R77Processes);
 
-                dialerTerminated = TerminateDialerProcesses(rootkit.DialerPids);
+                dialerTerminated = TerminateDialerProcesses(rootkit.DialerPids, token);
 
                 success = RemoveR77Config() || serviceRemoved;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -160,7 +167,7 @@ namespace MSearch.Core.Handlers
         /// Terminates dialer processes that were suspended in RootkitScanner.
         /// </summary>
         /// <returns>true if at least one dialer process was terminated successfully.</returns>
-        private bool TerminateDialerProcesses(int[] dialerPids)
+        private bool TerminateDialerProcesses(int[] dialerPids, CancellationToken token)
         {
             if (dialerPids == null || dialerPids.Length == 0)
                 return false;
@@ -169,6 +176,8 @@ namespace MSearch.Core.Handlers
 
             foreach (int pid in dialerPids.Distinct())
             {
+                token.ThrowIfCancellationRequested();
+
                 try
                 {
                     UnProtect(pid);
@@ -180,7 +189,8 @@ namespace MSearch.Core.Handlers
                         if (!p.HasExited)
                         {
                             p.Kill();
-                            p.WaitForExit();
+                            while (!p.WaitForExit(200))
+                                token.ThrowIfCancellationRequested();
 
                             if (p.HasExited)
                             {
@@ -189,6 +199,10 @@ namespace MSearch.Core.Handlers
                             }
                         }
                     }
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
                 }
                 catch (ArgumentException)
                 {

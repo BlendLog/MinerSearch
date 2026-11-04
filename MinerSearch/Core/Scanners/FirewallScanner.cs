@@ -5,6 +5,7 @@ using NetFwTypeLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace MSearch.Core.Scanners
 {
@@ -14,7 +15,7 @@ namespace MSearch.Core.Scanners
     /// </summary>
     public class FirewallScanner : IThreatScanner
     {
-        public IEnumerable<IThreatObject> Scan()
+        public IEnumerable<IThreatObject> Scan(CancellationToken token)
         {
             List<IThreatObject> results = new List<IThreatObject>();
 
@@ -28,6 +29,8 @@ namespace MSearch.Core.Scanners
 
                 foreach (INetFwRule rule in rules)
                 {
+                    token.ThrowIfCancellationRequested();
+
                     if (string.IsNullOrEmpty(rule.ApplicationName) || rule.ApplicationName.Equals("system", StringComparison.OrdinalIgnoreCase)) continue;                    
 
                     ScanActivity.Report(rule.ApplicationName);
@@ -43,6 +46,10 @@ namespace MSearch.Core.Scanners
                         action,
                         protocol));
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception)
             {

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 namespace MSearch.Core.Scanners
 {
@@ -14,7 +15,7 @@ namespace MSearch.Core.Scanners
     /// </summary>
     public class ShellStartupScanner : IThreatScanner
     {
-        public IEnumerable<IThreatObject> Scan()
+        public IEnumerable<IThreatObject> Scan(CancellationToken token)
         {
             List<IThreatObject> results = new List<IThreatObject>();
 
@@ -26,18 +27,22 @@ namespace MSearch.Core.Scanners
 
             foreach (string wkFolder in wellKnownStartupFolders)
             {
+                token.ThrowIfCancellationRequested();
+
                 if (string.IsNullOrEmpty(wkFolder)) continue;
                 if (!Directory.Exists(wkFolder)) continue;
 
                 // Прямой перебор файлов — FileEnumerator может пропускать файлы с невидимыми символами
-                EnumerateFolder(results, wkFolder, 0, 3);
+                EnumerateFolder(results, wkFolder, 0, 3, token);
             }
 
             return results;
         }
 
-        private void EnumerateFolder(List<IThreatObject> results, string folder, int depth, int maxDepth)
+        private void EnumerateFolder(List<IThreatObject> results, string folder, int depth, int maxDepth, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             if (depth > maxDepth) return;
             if (!Directory.Exists(folder)) return;
 
@@ -45,6 +50,8 @@ namespace MSearch.Core.Scanners
             {
                 foreach (string file in Directory.EnumerateFiles(folder, "*.*", SearchOption.TopDirectoryOnly))
                 {
+                    token.ThrowIfCancellationRequested();
+
                     string uncFile = FileSystemManager.NormalizeExtendedPath(file);
 
                     // Пропускаем .ini файлы
@@ -147,9 +154,15 @@ namespace MSearch.Core.Scanners
 
                 foreach (string subDir in Directory.EnumerateDirectories(folder, "*", SearchOption.TopDirectoryOnly))
                 {
+                    token.ThrowIfCancellationRequested();
+
                     if (FileSystemManager.IsReparsePoint(subDir)) continue;
-                    EnumerateFolder(results, subDir, depth + 1, maxDepth);
+                    EnumerateFolder(results, subDir, depth + 1, maxDepth, token);
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (UnauthorizedAccessException) { }
             catch (Exception) { }

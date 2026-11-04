@@ -5,6 +5,7 @@ using MSearch.Core.ThreatObjects;
 using MSearch.Infrastructure;
 using NetFwTypeLib;
 using System;
+using System.Threading;
 
 namespace MSearch.Core.ThreatHandlers
 {
@@ -16,8 +17,10 @@ namespace MSearch.Core.ThreatHandlers
     {
         public ThreatObjectKind Kind => ThreatObjectKind.FirewallRule;
 
-        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase)
+        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             var fwRule = decision.Target as FirewallRuleThreatObject;
             if (fwRule == null) return ApplyResult.NotApplicable;
 
@@ -25,10 +28,10 @@ namespace MSearch.Core.ThreatHandlers
 
             if (!fwRule.ShouldDelete) return ApplyResult.Skipped;
 
-            return HandleDeleteRule(fwRule, decision);
+            return HandleDeleteRule(fwRule, decision, token);
         }
 
-        private ApplyResult HandleDeleteRule(FirewallRuleThreatObject rule, ThreatDecision decision)
+        private ApplyResult HandleDeleteRule(FirewallRuleThreatObject rule, ThreatDecision decision, CancellationToken token)
         {
             try
             {
@@ -40,6 +43,8 @@ namespace MSearch.Core.ThreatHandlers
 
                 foreach (INetFwRule existingRule in rules)
                 {
+                    token.ThrowIfCancellationRequested();
+
                     if (existingRule.Name.Equals(rule.RuleName, StringComparison.OrdinalIgnoreCase))
                     {
                         rules.Remove(rule.RuleName);
@@ -52,6 +57,10 @@ namespace MSearch.Core.ThreatHandlers
                 // Правило уже не существует
                 decision.ActionType = ScanActionType.Skipped;
                 return ApplyResult.NotApplicable;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {

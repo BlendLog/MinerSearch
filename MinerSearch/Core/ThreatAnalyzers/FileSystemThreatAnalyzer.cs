@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace MSearch.Core.ThreatAnalyzers
 {
@@ -19,8 +20,10 @@ namespace MSearch.Core.ThreatAnalyzers
             _fileAnalyzer = fileAnalyzer;
         }
 
-        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
+        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             if (threat is FileThreatObject fileThreat)
             {
                 foreach (var decision in AnalyzeFile(fileThreat))

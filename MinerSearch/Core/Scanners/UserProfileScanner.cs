@@ -4,6 +4,7 @@ using MSearch.Core.Managers;
 using MSearch.Core.ThreatObjects;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace MSearch.Core.Scanners
 {
@@ -12,8 +13,10 @@ namespace MSearch.Core.Scanners
         private static bool _headerLogged = false;
         private static readonly object _headerLock = new object();
 
-        public IEnumerable<IThreatObject> Scan()
+        public IEnumerable<IThreatObject> Scan(CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             if (!_headerLogged)
             {
                 lock (_headerLock)
@@ -43,6 +46,8 @@ namespace MSearch.Core.Scanners
             {
                 foreach (string userName in users)
                 {
+                    token.ThrowIfCancellationRequested();
+
                     ScanActivity.Report(userName);
 
                     bool isHidden = false;

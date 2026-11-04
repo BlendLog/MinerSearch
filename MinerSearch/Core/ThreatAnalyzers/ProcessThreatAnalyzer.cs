@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace MSearch.Core.ThreatAnalyzers
 {
@@ -25,8 +26,10 @@ namespace MSearch.Core.ThreatAnalyzers
         private static bool _headerLogged = false;
         private static readonly object _headerLock = new object();
 
-        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
+        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             if (!_headerLogged)
             {
                 lock (_headerLock)
@@ -99,6 +102,8 @@ namespace MSearch.Core.ThreatAnalyzers
 
             foreach (ProcessModule pMod in proc.ProcessModules)
             {
+                token.ThrowIfCancellationRequested();
+
                 proc.GPULibsCount += MSData.GetInstance._nvdlls.Count(name => pMod.ModuleName.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0);
             }
 
@@ -125,6 +130,8 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 foreach (int port in MSData.GetInstance._PortList)
                 {
+                    token.ThrowIfCancellationRequested();
+
                     if (proc.ProcessArgs.IndexOf($":{port}", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         riskLevel += 1;
@@ -181,6 +188,8 @@ namespace MSearch.Core.ThreatAnalyzers
                 {
                     foreach (ProcessModule pMod in proc.ProcessModules)
                     {
+                        token.ThrowIfCancellationRequested();
+
                         WinVerifyTrustResult pModSignature = WinTrust.GetInstance.VerifyEmbeddedSignature(pMod.FileName);
                         if (pModSignature != WinVerifyTrustResult.Success && pModSignature != WinVerifyTrustResult.Error)
                         {
@@ -225,6 +234,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
             for (int i = 0; i < MSData.GetInstance.SysFileName.Length; i++)
             {
+                token.ThrowIfCancellationRequested();
 
                 if (proc.ProcessName.Equals(MSData.GetInstance.SysFileName[i], StringComparison.OrdinalIgnoreCase))
                 {
@@ -232,6 +242,8 @@ namespace MSearch.Core.ThreatAnalyzers
                     bool inSystemPath = false;
                     foreach (string pathFragment in MSData.GetInstance.systemPathFragments)
                     {
+                        token.ThrowIfCancellationRequested();
+
                         if (fullPath.IndexOf(AppConfig.GetInstance.drive_letter + pathFragment, StringComparison.OrdinalIgnoreCase) != -1)
                         {
                             inSystemPath = true;

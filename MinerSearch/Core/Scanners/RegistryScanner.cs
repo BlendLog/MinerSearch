@@ -8,13 +8,19 @@ using System.Diagnostics;
 using System.IO;
 using System.Security;
 using System.Text;
+using System.Threading;
 
 namespace MSearch.Core.Scanners
 {
     public class RegistryScanner : IThreatScanner
     {
-        public IEnumerable<IThreatObject> Scan()
+        private CancellationToken _token;
+
+        public IEnumerable<IThreatObject> Scan(CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+            _token = token;
+
             const string HKLM = "HKEY_LOCAL_MACHINE";
             const string HKCU = "HKEY_CURRENT_USER";
 
@@ -125,6 +131,9 @@ namespace MSearch.Core.Scanners
 
         void CollectKeyAndValues(List<IThreatObject> results, string hive, string keyPath, bool attachFiles = false, string sectionName = null)
         {
+            if (_token.IsCancellationRequested)
+                return;
+
             RegistryKey baseReg = GetBaseHive(hive);
             try
             {
@@ -143,6 +152,9 @@ namespace MSearch.Core.Scanners
 
                         foreach (string valName in key.GetValueNames())
                         {
+                            if (_token.IsCancellationRequested)
+                                return;
+
                             if (ScanActivity.HasSubscribers)
                                 ScanActivity.Report(hive + "\\" + keyPath + "\\" + valName);
 
@@ -169,6 +181,9 @@ namespace MSearch.Core.Scanners
 
                         foreach (string subKeyName in key.GetSubKeyNames())
                         {
+                            if (_token.IsCancellationRequested)
+                                return;
+
                             var subRegObj = new RegistryThreatObject(hive, $@"{keyPath}\{subKeyName}", RegistryNodeType.Key, null, null, RegistryValueKind.Unknown, false, null)
                             {
                                 SectionName = sectionName
@@ -196,6 +211,9 @@ namespace MSearch.Core.Scanners
         HashSet<string> GetSubKeyNames(string hive, string parentPath)
         {
             var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (_token.IsCancellationRequested)
+                return names;
+
             try
             {
                 RegistryKey baseReg = GetBaseHive(hive);
@@ -204,7 +222,12 @@ namespace MSearch.Core.Scanners
                     if (parentKey != null)
                     {
                         foreach (string name in parentKey.GetSubKeyNames())
+                        {
+                            if (_token.IsCancellationRequested)
+                                return names;
+
                             names.Add(name);
+                        }
                     }
                 }
             }
@@ -214,6 +237,9 @@ namespace MSearch.Core.Scanners
 
         void CollectSubkeysAndTheirValues(List<IThreatObject> results, string hive, string parentPath, string sectionName, HashSet<string> skipNames = null)
         {
+            if (_token.IsCancellationRequested)
+                return;
+
             RegistryKey baseReg = GetBaseHive(hive);
             try
             {
@@ -223,6 +249,9 @@ namespace MSearch.Core.Scanners
                     {
                         foreach (string subKeyName in parentKey.GetSubKeyNames())
                         {
+                            if (_token.IsCancellationRequested)
+                                return;
+
                             // shared-ключи WOW64 (IFEO) уже отданы 64-битным проходом — не дублируем
                             if (skipNames != null && skipNames.Contains(subKeyName))
                                 continue;
@@ -246,6 +275,9 @@ namespace MSearch.Core.Scanners
 
         void CollectSubkeysOnly(List<IThreatObject> results, string hive, string parentPath, string sectionName)
         {
+            if (_token.IsCancellationRequested)
+                return;
+
             RegistryKey baseReg = GetBaseHive(hive);
             try
             {
@@ -255,6 +287,9 @@ namespace MSearch.Core.Scanners
                     {
                         foreach (string subKeyName in parentKey.GetSubKeyNames())
                         {
+                            if (_token.IsCancellationRequested)
+                                return;
+
                             if (ScanActivity.HasSubscribers)
                                 ScanActivity.Report(hive + "\\" + parentPath + "\\" + subKeyName);
 
@@ -281,6 +316,9 @@ namespace MSearch.Core.Scanners
 
         void CollectSubkeysAndSpecifiedValue(List<IThreatObject> results, string hive, string parentPath, string sectionName)
         {
+            if (_token.IsCancellationRequested)
+                return;
+
             RegistryKey baseReg = GetBaseHive(hive);
             try
             {
@@ -290,6 +328,9 @@ namespace MSearch.Core.Scanners
                     {
                         foreach (string subKeyName in parentKey.GetSubKeyNames())
                         {
+                            if (_token.IsCancellationRequested)
+                                return;
+
                             string subKeyPath = $@"{parentPath}\{subKeyName}";
 
                             if (ScanActivity.HasSubscribers)
@@ -347,6 +388,9 @@ namespace MSearch.Core.Scanners
         {
             const string sectionName = "HKU Custom CLSIDs";
 
+            if (_token.IsCancellationRequested)
+                return;
+
             try
             {
                 RegistryKey users = Registry.Users;
@@ -354,6 +398,9 @@ namespace MSearch.Core.Scanners
 
                 foreach (string sidKeyName in users.GetSubKeyNames())
                 {
+                    if (_token.IsCancellationRequested)
+                        return;
+
                     if (!sidKeyName.EndsWith("_Classes", StringComparison.OrdinalIgnoreCase))
                         continue;
 
@@ -381,6 +428,9 @@ namespace MSearch.Core.Scanners
             const string sectionName = "HKLM Custom CLSIDs";
             const string clsidPath = @"SOFTWARE\Classes\CLSID";
 
+            if (_token.IsCancellationRequested)
+                return;
+
             try
             {
                 CollectClsidHandlers(results, "HKEY_LOCAL_MACHINE", "HKLM", Registry.LocalMachine, clsidPath, sectionName, linkedFileCache);
@@ -405,6 +455,9 @@ namespace MSearch.Core.Scanners
             string sectionName,
             Dictionary<string, FileThreatObject> linkedFileCache)
         {
+            if (_token.IsCancellationRequested)
+                return;
+
             using (RegistryKey clsidKey = baseKey.OpenSubKey(clsidPath))
             {
                 if (clsidKey == null)
@@ -412,6 +465,9 @@ namespace MSearch.Core.Scanners
 
                 foreach (string guidName in clsidKey.GetSubKeyNames())
                 {
+                    if (_token.IsCancellationRequested)
+                        return;
+
                     string guidPath = $@"{clsidPath}\{guidName}";
                     string inprocPath = $@"{guidPath}\{MSData.GetInstance.regValueNames[MSKeys.InprocServer32]}";
 

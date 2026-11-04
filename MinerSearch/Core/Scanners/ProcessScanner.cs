@@ -7,13 +7,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace MSearch.Core.Scanners
 {
     public class ProcessScanner : IThreatScanner
     {
-        public IEnumerable<IThreatObject> Scan()
+        public IEnumerable<IThreatObject> Scan(CancellationToken token)
         {
             string myExePath = FileSystemManager.NormalizeExtendedPath(AppConfig.GetInstance.ExecutablePath);
 
@@ -48,6 +49,8 @@ namespace MSearch.Core.Scanners
 
             foreach (Process p in procs.OrderBy(p => p.ProcessName).ToList())
             {
+                token.ThrowIfCancellationRequested();
+
                 try
                 {
                     if (p.HasExited) continue;

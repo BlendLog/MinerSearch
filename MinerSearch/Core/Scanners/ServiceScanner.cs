@@ -10,13 +10,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.ServiceProcess;
+using System.Threading;
 using Win32Wrapper;
 
 namespace MSearch.Core.Scanners
 {
     public class ServiceScanner : IThreatScanner
     {
-        public IEnumerable<IThreatObject> Scan()
+        public IEnumerable<IThreatObject> Scan(CancellationToken token)
         {
             var results = new List<IThreatObject>();
 
@@ -25,6 +26,8 @@ namespace MSearch.Core.Scanners
 
             foreach (string serviceName in allRegistryServices.OrderBy(name => name))
             {
+                token.ThrowIfCancellationRequested();
+
                 try
                 {
 

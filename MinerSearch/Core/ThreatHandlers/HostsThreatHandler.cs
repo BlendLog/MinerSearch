@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Win32Wrapper;
 
 namespace MSearch.Core.ThreatHandlers
@@ -20,8 +21,10 @@ namespace MSearch.Core.ThreatHandlers
     {
         public ThreatObjectKind Kind => ThreatObjectKind.Hosts;
 
-        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase)
+        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             var hostsThreat = decision.Target as HostsThreatObject;
             if (hostsThreat == null)
                 return ApplyResult.NotApplicable;

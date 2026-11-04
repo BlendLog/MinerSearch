@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 
 namespace MSearch.Core.ThreatAnalyzers
 {
@@ -17,6 +18,8 @@ namespace MSearch.Core.ThreatAnalyzers
         public ThreatObjectKind Kind => ThreatObjectKind.RegistryObject;
 
         private readonly IFileContentAnalyzer _fileAnalyzer;
+
+        private CancellationToken _token;
 
         public RegistryThreatAnalyzer(IFileContentAnalyzer fileAnalyzer)
         {
@@ -50,8 +53,11 @@ namespace MSearch.Core.ThreatAnalyzers
             }
         }
 
-        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
+        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat, CancellationToken token)
         {
+            _token = token;
+            token.ThrowIfCancellationRequested();
+
             if (!_headerLogged)
             {
                 lock (_headerLock)
@@ -404,12 +410,12 @@ namespace MSearch.Core.ThreatAnalyzers
         {
             if (_defenderActive < 0)
             {
-                _defenderActive = ComputeDefenderActive() ? 1 : 0;
+                _defenderActive = ComputeDefenderActive(_token) ? 1 : 0;
             }
             return _defenderActive == 1;
         }
 
-        private static bool ComputeDefenderActive()
+        private static bool ComputeDefenderActive(CancellationToken token)
         {
             // Служба должна быть запущена
             try
@@ -431,12 +437,18 @@ namespace MSearch.Core.ThreatAnalyzers
 
             foreach (RegistryView view in new[] { RegistryView.Registry64, RegistryView.Registry32 })
             {
+                token.ThrowIfCancellationRequested();
+
                 using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, view))
                 {
                     foreach (string baseKey in baseKeys)
                     {
+                        token.ThrowIfCancellationRequested();
+
                         foreach (string flagName in flagNames)
                         {
+                            token.ThrowIfCancellationRequested();
+
                             if (IsDisabledFlag(hklm, baseKey, flagName)) return false;
                         }
                     }
@@ -479,6 +491,8 @@ namespace MSearch.Core.ThreatAnalyzers
                 bool hasMinerCli = false;
                 foreach (string minerMarker in MSData.GetInstance.badArgStrings)
                 {
+                    _token.ThrowIfCancellationRequested();
+
                     if (val.IndexOf(minerMarker, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         hasMinerCli = true;

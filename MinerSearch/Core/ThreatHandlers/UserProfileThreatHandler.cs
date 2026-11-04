@@ -2,6 +2,7 @@ using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
+using System.Threading;
 
 namespace MSearch.Core.Handlers
 {
@@ -9,8 +10,10 @@ namespace MSearch.Core.Handlers
     {
         public ThreatObjectKind Kind => ThreatObjectKind.UserProfile;
 
-        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase)
+        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             if (phase != CleanupPhase.Finalize) return ApplyResult.NotApplicable;
 
             var userProfile = decision.Target as UserProfileThreatObject;

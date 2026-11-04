@@ -3,6 +3,7 @@ using MSearch.Core.ThreatObjects;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using Win32Wrapper;
 
 namespace MSearch.Core.Scanners
@@ -14,14 +15,16 @@ namespace MSearch.Core.Scanners
     /// </summary>
     public sealed class RootkitScanner : IThreatScanner
     {
-        public IEnumerable<IThreatObject> Scan()
+        public IEnumerable<IThreatObject> Scan(CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             AppConfig.GetInstance.LL.LogHeadMessage("_ChekingR00tkit");
 
             bool isInfected = false;
 
             // Проверяем, заражён ли текущий процесс R77
-            CheckCurrentProcess(ref isInfected);
+            CheckCurrentProcess(ref isInfected, token);
 
             var rootkitThreat = new RootkitThreatObject(isInfected);
 
@@ -31,7 +34,7 @@ namespace MSearch.Core.Scanners
         /// <summary>
         /// Checks whether the current process is infected with R77 and detaches it if so.
         /// </summary>
-        private void CheckCurrentProcess(ref bool isInfected)
+        private void CheckCurrentProcess(ref bool isInfected, CancellationToken token)
         {
             try
             {
@@ -52,6 +55,8 @@ namespace MSearch.Core.Scanners
 
                         for (uint j = 0; j < moduleCount; j++)
                         {
+                            token.ThrowIfCancellationRequested();
+
                             if (Native.ReadProcessMemory(
                                 currentProcess.Handle,
                                 modules[j],
@@ -87,6 +92,10 @@ namespace MSearch.Core.Scanners
                         }
                     }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception)
             {

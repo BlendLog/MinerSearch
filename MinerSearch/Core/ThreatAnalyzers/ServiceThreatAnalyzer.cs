@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Win32Wrapper;
 
 namespace MSearch.Core.ThreatAnalyzers
@@ -40,8 +41,10 @@ namespace MSearch.Core.ThreatAnalyzers
             MSData.GetInstance.regexPatterns[MSKeys.WsclInTemp],
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
+        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             if (!_headerLogged)
             {
                 lock (_headerLock)
@@ -74,6 +77,8 @@ namespace MSearch.Core.ThreatAnalyzers
             string[] specialScan = { MSData.GetInstance.consts[MSKeys.TermServiceName] };
             foreach (string name in specialScan)
             {
+                token.ThrowIfCancellationRequested();
+
                 if (svc.ServiceName.Equals(name, StringComparison.OrdinalIgnoreCase))
                 {
                     var decision = CheckTermServiceSpecial(svc);
@@ -258,6 +263,8 @@ namespace MSearch.Core.ThreatAnalyzers
                 {
                     foreach (string dll in Directory.EnumerateFiles(serviceDir, "*.dll"))
                     {
+                        token.ThrowIfCancellationRequested();
+
                         string dllName = Path.GetFileName(dll);
                         if (MSData.GetInstance.sideloadableDlls.Any(s => dllName.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0))
                         {

@@ -242,6 +242,7 @@ namespace MSearch.Core
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
             ScanWorkflowResult result = new ScanWorkflowResult();
+            List<ThreatDecision> processDecisions = null;
 
             if (_request != null)
             {
@@ -249,29 +250,41 @@ namespace MSearch.Core
                 _request.Apply(_options);
             }
 
+            try
+            {
+                return RunScan(result, stopwatch, token, ref processDecisions);
+            }
+            catch (OperationCanceledException)
+            {
+                return Cancel(result, stopwatch, processDecisions);
+            }
+        }
+
+        private ScanWorkflowResult RunScan(ScanWorkflowResult result, Stopwatch stopwatch, CancellationToken token, ref List<ThreatDecision> processDecisions)
+        {
             RaiseStage(ScanStage.Rootkit);
-            List<ThreatDecision> rootkitDecisions = Analyze(_infrastructure.ScanManager.ScanRootkitFirst());
-            _infrastructure.CleanManager.ApplyDecisions(rootkitDecisions, CleanupPhase.Finalize);
+            List<ThreatDecision> rootkitDecisions = Analyze(_infrastructure.ScanManager.ScanRootkitFirst(token), token);
+            token.ThrowIfCancellationRequested();
+            _infrastructure.CleanManager.ApplyDecisions(rootkitDecisions, CleanupPhase.Finalize, token);
             RaiseCounters();
 
-            if (token.IsCancellationRequested)
-                return Cancel(result, stopwatch, null);
+            token.ThrowIfCancellationRequested();
 
             RaiseStage(ScanStage.Processes);
-            List<ThreatDecision> processDecisions = Analyze(_infrastructure.ScanManager.ScanProcessesOnly());
-            _infrastructure.CleanManager.ApplyDecisions(processDecisions, CleanupPhase.SuspendOnly);
+            processDecisions = Analyze(_infrastructure.ScanManager.ScanProcessesOnly(token), token);
+            token.ThrowIfCancellationRequested();
+            _infrastructure.CleanManager.ApplyDecisions(processDecisions, CleanupPhase.SuspendOnly, token);
             RaiseCounters();
 
-            if (token.IsCancellationRequested)
-                return Cancel(result, stopwatch, processDecisions);
+            token.ThrowIfCancellationRequested();
 
             RaiseStage(ScanStage.General);
-            List<ThreatDecision> commonDecisions = Analyze(_infrastructure.ScanManager.ScanEverythingElse());
-            _infrastructure.CleanManager.ApplyDecisions(commonDecisions, CleanupPhase.DisableExecuteOnly);
+            List<ThreatDecision> commonDecisions = Analyze(_infrastructure.ScanManager.ScanEverythingElse(token), token);
+            token.ThrowIfCancellationRequested();
+            _infrastructure.CleanManager.ApplyDecisions(commonDecisions, CleanupPhase.DisableExecuteOnly, token);
             RaiseCounters();
 
-            if (token.IsCancellationRequested)
-                return Cancel(result, stopwatch, processDecisions);
+            token.ThrowIfCancellationRequested();
 
             if (_options.pause)
                 _interaction.WaitBeforeCleanup();
@@ -287,20 +300,18 @@ namespace MSearch.Core
                 RaiseStage(ScanStage.Signatures);
 
                 SignatureScanner signatureScanner = new SignatureScanner();
-                signatureScanner.CollectFilesAsync().Wait();
+                signatureScanner.CollectFilesAsync(token).GetAwaiter().GetResult();
 
-                if (token.IsCancellationRequested)
-                    return Cancel(result, stopwatch, processDecisions);
+                token.ThrowIfCancellationRequested();
 
                 List<FileThreatObject> allSignatureFiles = signatureScanner.GetFiles().ToList();
-                signatureDecisions = _infrastructure.SignatureAnalyzer.AnalyzeFiles(allSignatureFiles, OnDecisionDetected)
+                signatureDecisions = _infrastructure.SignatureAnalyzer.AnalyzeFiles(allSignatureFiles, OnDecisionDetected, token)
                     .Where(d => d != null)
                     .ToList();
                 allFinalizeDecisions.AddRange(signatureDecisions);
                 RaiseCounters();
 
-                if (token.IsCancellationRequested)
-                    return Cancel(result, stopwatch, processDecisions);
+                token.ThrowIfCancellationRequested();
             }
 
             allFinalizeDecisions = DeduplicateDecisions(allFinalizeDecisions);
@@ -317,13 +328,12 @@ namespace MSearch.Core
                 .Where(d => d.Target.Kind != ThreatObjectKind.Other)
                 .ToList();
 
-            if (token.IsCancellationRequested)
-                return Cancel(result, stopwatch, processDecisions);
+            token.ThrowIfCancellationRequested();
 
             _infrastructure.CleanManager.BeginFinalCleanup();
 
             if (lockedByAvDecisions.Count > 0)
-                _infrastructure.CleanManager.ApplyDecisions(lockedByAvDecisions, CleanupPhase.Finalize);
+                _infrastructure.CleanManager.ApplyDecisions(lockedByAvDecisions, CleanupPhase.Finalize, token);
 
             RaiseStage(ScanStage.Cleanup);
 
@@ -334,10 +344,9 @@ namespace MSearch.Core
             int knownIndex = 0;
             foreach (ThreatDecision decision in sortedKnownDecisions)
             {
-                if (token.IsCancellationRequested)
-                    return Cancel(result, stopwatch, null);
+                token.ThrowIfCancellationRequested();
 
-                _infrastructure.CleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize);
+                _infrastructure.CleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize, token);
                 RaiseCounters();
 
                 knownIndex++;
@@ -390,14 +399,12 @@ namespace MSearch.Core
 
                 if (!_options.no_review_interact)
                 {
-                    if (token.IsCancellationRequested)
-                        return Cancel(result, stopwatch, null);
+                    token.ThrowIfCancellationRequested();
 
                     RaiseStage(ScanStage.Review);
                     _interaction.ShowThreatReview(allUnknownDecisions);
 
-                    if (token.IsCancellationRequested)
-                        return Cancel(result, stopwatch, null);
+                    token.ThrowIfCancellationRequested();
                 }
             }
 
@@ -425,10 +432,9 @@ namespace MSearch.Core
                 int applyIndex = 0;
                 foreach (ThreatDecision decision in sortedToApply)
                 {
-                    if (token.IsCancellationRequested)
-                        return Cancel(result, stopwatch, null);
+                    token.ThrowIfCancellationRequested();
 
-                    _infrastructure.CleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize);
+                    _infrastructure.CleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize, token);
                     RaiseCounters();
 
                     applyIndex++;
@@ -441,10 +447,9 @@ namespace MSearch.Core
                 int skipIndex = 0;
                 foreach (ThreatDecision decision in decisionsToSkip)
                 {
-                    if (token.IsCancellationRequested)
-                        return Cancel(result, stopwatch, null);
+                    token.ThrowIfCancellationRequested();
 
-                    _infrastructure.CleanManager.ApplySkippedDecisions(new[] { decision });
+                    _infrastructure.CleanManager.ApplySkippedDecisions(new[] { decision }, token);
                     RaiseCounters();
 
                     skipIndex++;
@@ -476,10 +481,9 @@ namespace MSearch.Core
                 int remainingIndex = 0;
                 foreach (ThreatDecision decision in sortedRemaining)
                 {
-                    if (token.IsCancellationRequested)
-                        return Cancel(result, stopwatch, null);
+                    token.ThrowIfCancellationRequested();
 
-                    _infrastructure.CleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize);
+                    _infrastructure.CleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize, token);
                     RaiseCounters();
 
                     remainingIndex++;
@@ -500,7 +504,7 @@ namespace MSearch.Core
             {
                 try
                 {
-                    _infrastructure.CleanManager.ApplyDecisions(suspendedProcesses, CleanupPhase.Finalize);
+                    _infrastructure.CleanManager.ApplyDecisions(suspendedProcesses, CleanupPhase.Finalize, CancellationToken.None);
                 }
                 catch (Exception ex)
                 {
@@ -547,9 +551,9 @@ namespace MSearch.Core
             RaiseCounters();
         }
 
-        private List<ThreatDecision> Analyze(IEnumerable<IThreatObject> threats)
+        private List<ThreatDecision> Analyze(IEnumerable<IThreatObject> threats, CancellationToken token)
         {
-            return _infrastructure.ThreatManager.Analyze(threats)
+            return _infrastructure.ThreatManager.Analyze(threats, token)
                 .Where(d => d != null)
                 .ToList();
         }

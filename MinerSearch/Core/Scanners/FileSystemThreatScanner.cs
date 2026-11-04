@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace MSearch.Core.Scanners
 {
@@ -18,27 +19,29 @@ namespace MSearch.Core.Scanners
     /// </summary>
     public class FileSystemThreatScanner : IThreatScanner
     {
-        public IEnumerable<IThreatObject> Scan()
+        public IEnumerable<IThreatObject> Scan(CancellationToken token)
         {
             var results = new List<IThreatObject>();
 
-            ScanKnownDirectories(results);
-            ScanLockedDirectories(results);
-            ScanKnownFiles(results);
-            ScanPatternBasedDirectories(results);
-            ScanDoubleDotDirectories(results);
-            ScanBloatedFiles(results);
-            ScanCommonAppDataFiles(results);
-            ScanSpecificLocations(results);
-            ScanUserCaches(results);
+            ScanKnownDirectories(results, token);
+            ScanLockedDirectories(results, token);
+            ScanKnownFiles(results, token);
+            ScanPatternBasedDirectories(results, token);
+            ScanDoubleDotDirectories(results, token);
+            ScanBloatedFiles(results, token);
+            ScanCommonAppDataFiles(results, token);
+            ScanSpecificLocations(results, token);
+            ScanUserCaches(results, token);
 
             return results;
         }
 
-        private void ScanKnownDirectories(List<IThreatObject> results)
+        private void ScanKnownDirectories(List<IThreatObject> results, CancellationToken token)
         {
             foreach (string dir in MSData.GetInstance.obfStr1)
             {
+                token.ThrowIfCancellationRequested();
+
                 if (Directory.Exists(dir))
                 {
                     var dirThreat = new DirectoryThreatObject(dir, Path.GetFileName(dir), sourceTag: "obfStr1");
@@ -47,10 +50,12 @@ namespace MSearch.Core.Scanners
             }
         }
 
-        private void ScanLockedDirectories(List<IThreatObject> results)
+        private void ScanLockedDirectories(List<IThreatObject> results, CancellationToken token)
         {
             foreach (string dir in MSData.GetInstance.obfStr5)
             {
+                token.ThrowIfCancellationRequested();
+
                 if (Directory.Exists(dir))
                 {
                     try
@@ -72,10 +77,12 @@ namespace MSearch.Core.Scanners
             }
         }
 
-        private void ScanKnownFiles(List<IThreatObject> results)
+        private void ScanKnownFiles(List<IThreatObject> results, CancellationToken token)
         {
             foreach (string filePath in MSData.GetInstance.obfStr2)
             {
+                token.ThrowIfCancellationRequested();
+
                 ScanActivity.Report(filePath);
                 if (File.Exists(filePath))
                 {
@@ -104,7 +111,7 @@ namespace MSearch.Core.Scanners
             }
         }
 
-        private void ScanPatternBasedDirectories(List<IThreatObject> results)
+        private void ScanPatternBasedDirectories(List<IThreatObject> results, CancellationToken token)
         {
             string baseDirectory = AppConfig.GetInstance.drive_letter + @":\ProgramData";
             
@@ -116,6 +123,8 @@ namespace MSearch.Core.Scanners
 
             foreach (string directory in Directory.EnumerateDirectories(baseDirectory))
             {
+                token.ThrowIfCancellationRequested();
+
                 string directoryName = Path.GetFileName(directory);
 
                 if (regex.IsMatch(directoryName))
@@ -125,6 +134,8 @@ namespace MSearch.Core.Scanners
                     {
                         foreach (string file in Directory.EnumerateFiles(directory, "*.*", SearchOption.AllDirectories))
                         {
+                            token.ThrowIfCancellationRequested();
+
                             ScanActivity.Report(file);
                             if (FileChecker.CalculateMD5(file).Equals("0c0195c48b6b8582fa6f6373032118da"))
                             {
@@ -132,6 +143,10 @@ namespace MSearch.Core.Scanners
                                 break;
                             }
                         }
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        throw;
                     }
                     catch { }
 
@@ -150,7 +165,7 @@ namespace MSearch.Core.Scanners
         /// Finds ProgramData directories with a trailing "..".
         /// Access uses the UNC form with the \\?\ prefix.
         /// </summary>
-        private void ScanDoubleDotDirectories(List<IThreatObject> results)
+        private void ScanDoubleDotDirectories(List<IThreatObject> results, CancellationToken token)
         {
             string baseDirectory = AppConfig.GetInstance.drive_letter + @":\ProgramData";
 
@@ -161,6 +176,8 @@ namespace MSearch.Core.Scanners
             {
                 foreach (string directory in Directory.EnumerateDirectories(baseDirectory))
                 {
+                    token.ThrowIfCancellationRequested();
+
                     string directoryName = Path.GetFileName(directory);
 
                     if (directoryName.EndsWith("..", StringComparison.Ordinal))
@@ -175,13 +192,17 @@ namespace MSearch.Core.Scanners
                     }
                 }
             }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
             }
         }
 
-        private void ScanBloatedFiles(List<IThreatObject> results)
+        private void ScanBloatedFiles(List<IThreatObject> results, CancellationToken token)
         {
             string windir = AppConfig.GetInstance.drive_letter + @":\Windows";
             
@@ -190,6 +211,8 @@ namespace MSearch.Core.Scanners
 
             foreach (string file in Directory.EnumerateFiles(windir, "*.exe", SearchOption.TopDirectoryOnly))
             {
+                token.ThrowIfCancellationRequested();
+
                 ScanActivity.Report(file);
                 if (FileChecker.IsFileSizeBloated(file))
                 {
@@ -220,7 +243,7 @@ namespace MSearch.Core.Scanners
             }
         }
 
-        private void ScanCommonAppDataFiles(List<IThreatObject> results)
+        private void ScanCommonAppDataFiles(List<IThreatObject> results, CancellationToken token)
         {
             string _baseDirectory = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
                 .Replace("x:", $@"{AppConfig.GetInstance.drive_letter}:");
@@ -230,10 +253,12 @@ namespace MSearch.Core.Scanners
 
             try
             {
-                IEnumerable<string> batFiles = FileEnumerator.GetFiles(_baseDirectory, "*.bat");
+                IEnumerable<string> batFiles = FileEnumerator.GetFiles(_baseDirectory, "*.bat", 0, 3, token);
 
                 foreach (string file in batFiles)
                 {
+                    token.ThrowIfCancellationRequested();
+
                     ScanActivity.Report(file);
                     if (FileSystemManager.IsReparsePoint(Path.GetDirectoryName(file)) || !FileSystemManager.IsAccessibleFile(file))
                     {
@@ -254,6 +279,10 @@ namespace MSearch.Core.Scanners
                     }
                 }
             }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
@@ -261,8 +290,10 @@ namespace MSearch.Core.Scanners
 
             try
             {
-                foreach (string exeFile in FileEnumerator.GetFiles(_baseDirectory, "*.exe", 0, LaunchOptions.GetInstance.maxSubfolders))
+                foreach (string exeFile in FileEnumerator.GetFiles(_baseDirectory, "*.exe", 0, LaunchOptions.GetInstance.maxSubfolders, token))
                 {
+                    token.ThrowIfCancellationRequested();
+
                     ScanActivity.Report(exeFile);
                     if (!FileChecker.IsSfxArchive(exeFile))
                         continue;
@@ -308,13 +339,17 @@ namespace MSearch.Core.Scanners
                     results.Add(fileThreat);
                 }
             }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
             }
         }
 
-        internal void ScanSpecificLocations(List<IThreatObject> results)
+        internal void ScanSpecificLocations(List<IThreatObject> results, CancellationToken token)
         {
             var specificDirs = new[]
             {
@@ -325,6 +360,8 @@ namespace MSearch.Core.Scanners
 
             foreach (var baseDir in specificDirs)
             {
+                token.ThrowIfCancellationRequested();
+
                 if (string.IsNullOrEmpty(baseDir))
                     continue;
 
@@ -332,6 +369,8 @@ namespace MSearch.Core.Scanners
                 {
                     foreach (string filePath in Directory.EnumerateFiles(baseDir, "*.*", SearchOption.TopDirectoryOnly))
                     {
+                        token.ThrowIfCancellationRequested();
+
                         ScanActivity.Report(filePath);
                         if (FileSystemManager.IsReparsePoint(filePath) || !FileSystemManager.IsAccessibleFile(filePath))
                             continue;
@@ -368,6 +407,10 @@ namespace MSearch.Core.Scanners
                         results.Add(fileThreat);
                     }
                 }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
                 catch (Exception ex)
                 {
                     AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
@@ -375,17 +418,21 @@ namespace MSearch.Core.Scanners
             }
         }
 
-        private void ScanUserCaches(List<IThreatObject> results)
+        private void ScanUserCaches(List<IThreatObject> results, CancellationToken token)
         {
             foreach (string cachesDir in MSData.GetInstance.exeForbiddenDirs)
             {
+                token.ThrowIfCancellationRequested();
+
                 if (string.IsNullOrEmpty(cachesDir) || !Directory.Exists(cachesDir))
                     continue;
 
                 try
                 {
-                    foreach (string filePath in FileEnumerator.GetFiles(cachesDir, "*.*", 0, LaunchOptions.GetInstance.maxSubfolders))
+                    foreach (string filePath in FileEnumerator.GetFiles(cachesDir, "*.*", 0, LaunchOptions.GetInstance.maxSubfolders, token))
                     {
+                        token.ThrowIfCancellationRequested();
+
                         ScanActivity.Report(filePath);
                         if (!FileChecker.IsExecutable(filePath))
                             continue;
@@ -417,6 +464,10 @@ namespace MSearch.Core.Scanners
 
                         results.Add(fileThreat);
                     }
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
                 }
                 catch (Exception ex)
                 {

@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 using Win32Wrapper;
 
 namespace MSearch.Core.ThreatHandlers
@@ -13,8 +14,10 @@ namespace MSearch.Core.ThreatHandlers
     {
         public ThreatObjectKind Kind => ThreatObjectKind.File;
 
-        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase)
+        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             var fileThreat = decision.Target as FileThreatObject;
             if (fileThreat == null) return ApplyResult.NotApplicable;
 

@@ -1094,17 +1094,19 @@ namespace Win32Wrapper
                 throw new ApplicationException("Unable to start service");
         }
 
-        private static void StopService(IntPtr service)
+        private static void StopService(IntPtr service, CancellationToken token)
         {
             SERVICE_STATUS status = new SERVICE_STATUS();
             ControlService(service, ServiceControl.Stop, status);
-            var changedStatus = WaitForServiceStatus(service, ServiceState.StopPending, ServiceState.Stopped);
+            var changedStatus = WaitForServiceStatus(service, ServiceState.StopPending, ServiceState.Stopped, token);
             if (!changedStatus)
                 throw new ApplicationException("Unable to stop service");
         }
 
-        public static void Uninstall(string serviceName)
+        public static void Uninstall(string serviceName, CancellationToken token = default(CancellationToken))
         {
+            token.ThrowIfCancellationRequested();
+
             IntPtr scm = OpenSCManager(ScmAccessRights.AllAccess);
 
             try
@@ -1115,7 +1117,7 @@ namespace Win32Wrapper
 
                 try
                 {
-                    StopService(service);
+                    StopService(service, token);
 
                     if (!DeleteService(service))
                         throw new ApplicationException("Could not delete service " + Marshal.GetLastWin32Error());
@@ -1206,7 +1208,7 @@ namespace Win32Wrapper
             return null;
         }
 
-        private static bool WaitForServiceStatus(IntPtr service, ServiceState waitStatus, ServiceState desiredStatus)
+        private static bool WaitForServiceStatus(IntPtr service, ServiceState waitStatus, ServiceState desiredStatus, CancellationToken token = default(CancellationToken))
         {
             SERVICE_STATUS status = new SERVICE_STATUS();
 
@@ -1218,13 +1220,15 @@ namespace Win32Wrapper
 
             while (status.dwCurrentState == waitStatus)
             {
+                token.ThrowIfCancellationRequested();
 
                 int dwWaitTime = status.dwWaitHint / 10;
 
                 if (dwWaitTime < 1000) dwWaitTime = 1000;
                 else if (dwWaitTime > 10000) dwWaitTime = 10000;
 
-                Thread.Sleep(dwWaitTime);
+                if (token.WaitHandle.WaitOne(dwWaitTime))
+                    token.ThrowIfCancellationRequested();
 
                 // Check the status again.
 

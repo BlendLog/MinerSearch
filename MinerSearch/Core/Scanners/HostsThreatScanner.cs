@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace MSearch.Core.Scanners
 {
@@ -13,7 +14,7 @@ namespace MSearch.Core.Scanners
     /// </summary>
     public class HostsThreatScanner : IThreatScanner
     {
-        public IEnumerable<IThreatObject> Scan()
+        public IEnumerable<IThreatObject> Scan(CancellationToken token)
         {
             string hostsPath_full = $"{AppConfig.GetInstance.drive_letter}{MSData.GetInstance.queries["h0sts"]}";
 
@@ -30,6 +31,8 @@ namespace MSearch.Core.Scanners
 
                 foreach (string line in lines)
                 {
+                    token.ThrowIfCancellationRequested();
+
                     // BOM первой строки + ведущие пробелы: комментарий может быть с отступом
                     string trimmed = line.TrimStart('\uFEFF', ' ', '\t');
                     if (trimmed.Length == 0)
@@ -72,6 +75,10 @@ namespace MSearch.Core.Scanners
                 {
                     return new List<IThreatObject> { new HostsThreatObject(hostsPath_full, entries) };
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (UnauthorizedAccessException ex)
             {

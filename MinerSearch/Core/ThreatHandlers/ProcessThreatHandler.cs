@@ -3,6 +3,7 @@ using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
 using System.Diagnostics;
+using System.Threading;
 using Win32Wrapper;
 
 namespace MSearch.Core.Handlers
@@ -14,8 +15,10 @@ namespace MSearch.Core.Handlers
     {
         public ThreatObjectKind Kind => ThreatObjectKind.Process;
 
-        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase)
+        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             var proc = decision.Target as ProcessThreatObject;
             if (proc == null) return ApplyResult.NotApplicable;
             if (decision.RiskLevel < 3) return ApplyResult.Skipped;

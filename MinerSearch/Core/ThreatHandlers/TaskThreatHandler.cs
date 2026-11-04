@@ -5,6 +5,7 @@ using MSearch.Core.ThreatObjects;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 using Win32Wrapper;
 
 namespace MSearch.Core.ThreatHandlers
@@ -13,8 +14,10 @@ namespace MSearch.Core.ThreatHandlers
     {
         public ThreatObjectKind Kind => ThreatObjectKind.ScheduledTask;
 
-        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase)
+        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             var taskThreat = decision.Target as TaskThreatObject;
             if (taskThreat == null) return ApplyResult.NotApplicable;
 

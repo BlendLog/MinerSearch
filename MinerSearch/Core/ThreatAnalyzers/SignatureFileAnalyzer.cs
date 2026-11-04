@@ -16,7 +16,7 @@ namespace MSearch.Core.ThreatAnalyzers
     public interface IFileContentAnalyzer
     {
         FileContentAnalysisResult Analyze(FileThreatObject fileThreat, bool displayProgress);
-        IEnumerable<ThreatDecision> AnalyzeFiles(IEnumerable<FileThreatObject> fileThreats);
+        IEnumerable<ThreatDecision> AnalyzeFiles(IEnumerable<FileThreatObject> fileThreats, CancellationToken token);
         FileContentAnalysisResult AnalyzeAndDisable(FileThreatObject fileThreat, bool displayProgress);
     }
 
@@ -247,16 +247,16 @@ namespace MSearch.Core.ThreatAnalyzers
             return result;
         }
 
-        public IEnumerable<ThreatDecision> AnalyzeFiles(IEnumerable<FileThreatObject> fileThreats)
+        public IEnumerable<ThreatDecision> AnalyzeFiles(IEnumerable<FileThreatObject> fileThreats, CancellationToken token)
         {
-            return AnalyzeFiles(fileThreats, null);
+            return AnalyzeFiles(fileThreats, null, token);
         }
 
         /// <summary>
         /// Analyzes files in parallel; <paramref name="onDecision"/> is called for every produced decision
         /// (from worker threads) so progress counters can update while the stage is still running.
         /// </summary>
-        public IEnumerable<ThreatDecision> AnalyzeFiles(IEnumerable<FileThreatObject> fileThreats, Action<ThreatDecision> onDecision)
+        public IEnumerable<ThreatDecision> AnalyzeFiles(IEnumerable<FileThreatObject> fileThreats, Action<ThreatDecision> onDecision, CancellationToken token)
         {
             var fileList = fileThreats.ToList();
             int total = fileList.Count;
@@ -269,8 +269,11 @@ namespace MSearch.Core.ThreatAnalyzers
 
             var decisionsByIndex = new ThreatDecision[total];
 
-            Parallel.For(0, total, i =>
+            ParallelOptions parallelOptions = new ParallelOptions { CancellationToken = token };
+            Parallel.For(0, total, parallelOptions, i =>
             {
+                token.ThrowIfCancellationRequested();
+
                 var fileThreat = fileList[i];
                 Interlocked.Increment(ref current);
 
@@ -343,6 +346,10 @@ namespace MSearch.Core.ThreatAnalyzers
                     ThreatDecision detected = decisionsByIndex[i];
                     if (detected != null && onDecision != null)
                         onDecision(detected);
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
                 }
                 catch (Exception ex)
                 {

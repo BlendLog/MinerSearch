@@ -1,6 +1,7 @@
 using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace MSearch.Core
 {
@@ -29,13 +30,13 @@ namespace MSearch.Core
     public interface IThreatAnalyzer
     {
         ThreatObjectKind Kind { get; }
-        IEnumerable<ThreatDecision> Analyze(IThreatObject threat);
+        IEnumerable<ThreatDecision> Analyze(IThreatObject threat, CancellationToken token);
     }
 
     public interface IThreatHandler
     {
         ThreatObjectKind Kind { get; }
-        ApplyResult Apply(ThreatDecision decision, CleanupPhase phase);
+        ApplyResult Apply(ThreatDecision decision, CleanupPhase phase, CancellationToken token);
     }
 
     public abstract class ThreatObject : IThreatObject

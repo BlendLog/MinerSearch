@@ -3,6 +3,7 @@ using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
 using System.IO;
+using System.Threading;
 
 namespace MSearch.Core.ThreatHandlers
 {
@@ -10,8 +11,10 @@ namespace MSearch.Core.ThreatHandlers
     {
         public ThreatObjectKind Kind => ThreatObjectKind.Directory;
 
-        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase)
+        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             var dirThreat = decision.Target as DirectoryThreatObject;
             if (dirThreat == null) return ApplyResult.NotApplicable;
 

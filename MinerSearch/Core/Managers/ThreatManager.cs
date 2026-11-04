@@ -4,6 +4,7 @@ using MSearch.Core.ThreatObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace MSearch.Core.Managers
 {
@@ -45,13 +46,15 @@ namespace MSearch.Core.Managers
             return _johnPatternsFound;
         }
 
-        public IEnumerable<ThreatDecision> Analyze(IEnumerable<IThreatObject> threats)
+        public IEnumerable<ThreatDecision> Analyze(IEnumerable<IThreatObject> threats, CancellationToken token)
         {
             _aggregatedDecisions.Clear();
             ResetJohnPatternsFlag();
 
             foreach (var threat in threats)
             {
+                token.ThrowIfCancellationRequested();
+
                 if (threat == null) continue;
                 
                 // Сбор JohnPatterns из каждого ThreatObject
@@ -59,11 +62,13 @@ namespace MSearch.Core.Managers
                 
                 if (_analyzers.TryGetValue(threat.Kind, out var analyzer))
                 {
-                    var decisions = analyzer.Analyze(threat);
+                    var decisions = analyzer.Analyze(threat, token);
                     if (decisions != null)
                     {
                         foreach (var decision in decisions)
                         {
+                            token.ThrowIfCancellationRequested();
+
                             if (decision != null)
                             {
                                 Action<ThreatDecision> detected = DecisionDetected;

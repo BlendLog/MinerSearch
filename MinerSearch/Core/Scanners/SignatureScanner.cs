@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MSearch.Core.Scanners
@@ -19,7 +20,7 @@ namespace MSearch.Core.Scanners
 
         private ConcurrentBag<FileThreatObject> _collectedFiles = new ConcurrentBag<FileThreatObject>();
 
-        public async Task CollectFilesAsync()
+        public async Task CollectFilesAsync(CancellationToken token)
         {
             AppConfig.GetInstance.LL.LogHeadMessage("_PreparingFileAnalysis");
 
@@ -33,15 +34,19 @@ namespace MSearch.Core.Scanners
 
             await Task.Run(() =>
             {
-                Parallel.ForEach(scanPaths, path =>
+                ParallelOptions parallelOptions = new ParallelOptions { CancellationToken = token };
+                Parallel.ForEach(scanPaths, parallelOptions, path =>
                 {
+                    token.ThrowIfCancellationRequested();
+
                     if (!Directory.Exists(path))
                         return;
 
                     try
                     {
-                        foreach (string filePath in FileEnumerator.GetFiles(path, "*.exe", 0, LaunchOptions.GetInstance.maxSubfolders))
+                        foreach (string filePath in FileEnumerator.GetFiles(path, "*.exe", 0, LaunchOptions.GetInstance.maxSubfolders, token))
                         {
+                            token.ThrowIfCancellationRequested();
                             ScanActivity.Report(filePath);
 
                             var fileThreat = CreateFileThreatObject(filePath);
@@ -51,6 +56,10 @@ namespace MSearch.Core.Scanners
                             }
                         }
                     }
+                    catch (OperationCanceledException)
+                    {
+                        throw;
+                    }
                     catch (Exception ex)
                     {
                         if (LaunchOptions.GetInstance.verbose)
@@ -59,7 +68,7 @@ namespace MSearch.Core.Scanners
                         }
                     }
                 });
-            });
+            }, token);
 
             var uniqueFiles = _collectedFiles
                 .GroupBy(f => f.FilePath, StringComparer.OrdinalIgnoreCase)
@@ -79,9 +88,9 @@ namespace MSearch.Core.Scanners
         }
 
         [Obsolete("Use CollectFilesAsync() + GetFiles() instead")]
-        public IEnumerable<IThreatObject> Scan()
+        public IEnumerable<IThreatObject> Scan(CancellationToken token)
         {
-            CollectFilesAsync().Wait();
+            CollectFilesAsync(token).GetAwaiter().GetResult();
             return _collectedFiles.Cast<IThreatObject>();
         }
 

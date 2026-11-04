@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Xml.Linq;
 using Win32Wrapper;
 
@@ -17,7 +18,7 @@ namespace MSearch.Infrastructure
         private const string TASK_CACHE_TREE_REG_PATH = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree";
         private const string TASK_CACHE_TASKS_REG_PATH = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks";
 
-        public List<ScheduledTaskInfo> GetAllTasks()
+        public List<ScheduledTaskInfo> GetAllTasks(CancellationToken token)
         {
             var allTasks = new List<ScheduledTaskInfo>();
             try
@@ -26,9 +27,13 @@ namespace MSearch.Infrastructure
                 {
                     if (rootKey != null)
                     {
-                        ParseTaskTree(rootKey, "\\", allTasks);
+                        ParseTaskTree(rootKey, "\\", allTasks, token);
                     }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -37,10 +42,12 @@ namespace MSearch.Infrastructure
             return allTasks;
         }
 
-        void ParseTaskTree(RegistryKey currentFolderKey, string currentLogicalPath, List<ScheduledTaskInfo> taskList)
+        void ParseTaskTree(RegistryKey currentFolderKey, string currentLogicalPath, List<ScheduledTaskInfo> taskList, CancellationToken token)
         {
             foreach (var subKeyName in currentFolderKey.GetSubKeyNames())
             {
+                token.ThrowIfCancellationRequested();
+
                 using (var subKey = currentFolderKey.OpenSubKey(subKeyName))
                 {
                     if (subKey == null) continue;
@@ -55,7 +62,7 @@ namespace MSearch.Infrastructure
                     else
                     {
                         string nextPath = Path.Combine(currentLogicalPath, subKeyName).Replace(System.IO.Path.DirectorySeparatorChar, '\\');
-                        ParseTaskTree(subKey, nextPath, taskList);
+                        ParseTaskTree(subKey, nextPath, taskList, token);
                     }
                 }
             }

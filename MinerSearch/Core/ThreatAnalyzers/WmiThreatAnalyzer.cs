@@ -2,6 +2,7 @@ using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace MSearch.Core.ThreatAnalyzers
 {
@@ -13,8 +14,10 @@ namespace MSearch.Core.ThreatAnalyzers
         private static bool _headerLogged = false;
         private static readonly object _headerLock = new object();
 
-        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
+        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             var wmi = threat as WmiSubscriptionThreatObject;
             if (wmi == null) yield break;
 

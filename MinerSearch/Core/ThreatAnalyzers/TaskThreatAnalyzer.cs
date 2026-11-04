@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace MSearch.Core.ThreatAnalyzers
 {
@@ -17,6 +18,7 @@ namespace MSearch.Core.ThreatAnalyzers
         public ThreatObjectKind Kind => ThreatObjectKind.ScheduledTask;
         readonly IFileContentAnalyzer _fileAnalyzer;
         FileContentAnalysisResult _analysisResult = FileContentAnalysisResult.Error();
+        private CancellationToken _token;
 
         readonly string[] checkDirectories =
         {
@@ -50,8 +52,11 @@ namespace MSearch.Core.ThreatAnalyzers
         private static bool _headerLogged = false;
         private static readonly object _headerLock = new object();
 
-        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat)
+        public IEnumerable<ThreatDecision> Analyze(IThreatObject threat, CancellationToken token)
         {
+            _token = token;
+            token.ThrowIfCancellationRequested();
+
             if (!_headerLogged)
             {
                 lock (_headerLock)
@@ -85,6 +90,8 @@ namespace MSearch.Core.ThreatAnalyzers
 
             foreach (string a in MSData.GetInstance.badArgStrings)
             {
+                _token.ThrowIfCancellationRequested();
+
                 if (args.IndexOf(a, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     risk += 3;
@@ -223,6 +230,8 @@ namespace MSearch.Core.ThreatAnalyzers
 
                         foreach (string arg in argsList)
                         {
+                            _token.ThrowIfCancellationRequested();
+
                             if (!arg.StartsWith("/"))
                             {
                                 dllPathCandidate = arg;
@@ -295,6 +304,8 @@ namespace MSearch.Core.ThreatAnalyzers
                             {
                                 foreach (string checkDir in checkDirectories)
                                 {
+                                    _token.ThrowIfCancellationRequested();
+
                                     string combinedPath = Path.Combine(checkDir, fileFromArgs);
                                     if (File.Exists(combinedPath))
                                     {
@@ -614,6 +625,8 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 foreach (string argsPart in args.Split(' '))
                 {
+                    _token.ThrowIfCancellationRequested();
+
                     if (argsPart.StartsWith("/", StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
@@ -1007,6 +1020,8 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 foreach (string file in Directory.EnumerateFiles(Path.GetDirectoryName(filePathFromTask), "*.*", SearchOption.TopDirectoryOnly))
                 {
+                    _token.ThrowIfCancellationRequested();
+
                     filesCount++;
                 }
             }
@@ -1110,6 +1125,8 @@ namespace MSearch.Core.ThreatAnalyzers
 
             foreach (string dir in MSData.GetInstance.suspiciousUserDirs)
             {
+                _token.ThrowIfCancellationRequested();
+
                 if (!string.IsNullOrEmpty(dir) && filePath.IndexOf(dir, StringComparison.OrdinalIgnoreCase) >= 0)
                     return true;
             }
@@ -1126,6 +1143,8 @@ namespace MSearch.Core.ThreatAnalyzers
 
             foreach (string _fileName in MSData.GetInstance.SysFileName)
             {
+                _token.ThrowIfCancellationRequested();
+
                 if (!string.IsNullOrEmpty(_fileName))
                 {
                     sysFileNamesHashset.Add(_fileName.Trim() + ".exe");
@@ -1170,6 +1189,8 @@ namespace MSearch.Core.ThreatAnalyzers
             var matches = Regex.Matches(commandLine, MSData.GetInstance.regexPatterns[MSKeys.ArgsSplit]);
             foreach (Match match in matches)
             {
+                _token.ThrowIfCancellationRequested();
+
                 args.Add(match.Value.Trim('"'));
             }
             return args;
@@ -1211,6 +1232,8 @@ namespace MSearch.Core.ThreatAnalyzers
 
             foreach (string fragment in MSData.GetInstance.systemDirFragments)
             {
+                _token.ThrowIfCancellationRequested();
+
                 if (path.StartsWith(windows + fragment, StringComparison.Ordinal))
                     return true;
             }
@@ -1232,12 +1255,18 @@ namespace MSearch.Core.ThreatAnalyzers
 
                         foreach (string name in MSData.GetInstance.SysFileName)
                         {
+                            if (_token.IsCancellationRequested)
+                                return false;
+
                             if (!string.IsNullOrEmpty(name))
                                 names.Add(name.Trim());
                         }
 
                         foreach (string name in MSData.GetInstance.MasqueradeBinaryNames)
                         {
+                            if (_token.IsCancellationRequested)
+                                return false;
+
                             if (!string.IsNullOrEmpty(name))
                                 names.Add(name.Trim());
                         }

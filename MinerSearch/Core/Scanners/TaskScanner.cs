@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace MSearch.Core.Scanners
 {
@@ -13,15 +14,17 @@ namespace MSearch.Core.Scanners
     {
         private readonly TaskParser _parser = new TaskParser();
 
-        public IEnumerable<IThreatObject> Scan()
+        public IEnumerable<IThreatObject> Scan(CancellationToken token)
         {
-            var allTasks = _parser.GetAllTasks();
+            var allTasks = _parser.GetAllTasks(token);
             List<IThreatObject> threatTasks = new List<IThreatObject>();
 
             if (allTasks == null) return threatTasks;
 
             foreach (var task in allTasks.OrderBy(t => t.Name))
             {
+                token.ThrowIfCancellationRequested();
+
                 if (task.ExecActions.Count == 0) continue;
 
                 ScanActivity.Report(task.Name);

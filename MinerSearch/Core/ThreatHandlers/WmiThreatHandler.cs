@@ -3,6 +3,7 @@ using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
 using System.Management;
+using System.Threading;
 
 namespace MSearch.Core.ThreatHandlers
 {
@@ -10,8 +11,10 @@ namespace MSearch.Core.ThreatHandlers
     {
         public ThreatObjectKind Kind => ThreatObjectKind.WmiSubscription;
 
-        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase)
+        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             var wmi = decision.Target as WmiSubscriptionThreatObject;
             if (wmi == null) return ApplyResult.NotApplicable;
 

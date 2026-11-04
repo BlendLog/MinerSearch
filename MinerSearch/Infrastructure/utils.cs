@@ -2343,8 +2343,10 @@ namespace MSearch
     @"^(\\\\\?\\)?[a-fA-F]:\\ProgramData\\Microsoft\\Windows\\Containers\\Layers\\[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
     RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        internal static IEnumerable<string> GetFiles(string path, string pattern, int currentDepth = 0, int maxDepth = 3)
+        internal static IEnumerable<string> GetFiles(string path, string pattern, int currentDepth = 0, int maxDepth = 3, CancellationToken token = default(CancellationToken))
         {
+            token.ThrowIfCancellationRequested();
+
             if (currentDepth > maxDepth)
             {
                 yield break;
@@ -2352,17 +2354,20 @@ namespace MSearch
 
             foreach (var file in SafeEnumerateFiles(path, pattern))
             {
+                token.ThrowIfCancellationRequested();
                 yield return file;
             }
 
             foreach (var directory in SafeEnumerateDirectories(path))
             {
+                token.ThrowIfCancellationRequested();
+
                 if (ShouldSkipDirectory(directory))
                 {
                     continue;
                 }
 
-                foreach (var file in GetFiles(directory, pattern, currentDepth + 1, maxDepth))
+                foreach (var file in GetFiles(directory, pattern, currentDepth + 1, maxDepth, token))
                 {
                     yield return file;
                 }

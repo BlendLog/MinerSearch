@@ -5,6 +5,7 @@ using MSearch.Core.ThreatObjects;
 using MSearch.Infrastructure;
 using System;
 using System.Security;
+using System.Threading;
 
 namespace MSearch.Core.ThreatHandlers
 {
@@ -12,8 +13,10 @@ namespace MSearch.Core.ThreatHandlers
     {
         public ThreatObjectKind Kind => ThreatObjectKind.RegistryObject;
 
-        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase)
+        public ApplyResult Apply(ThreatDecision decision, CleanupPhase phase, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             var regThreat = decision.Target as RegistryThreatObject;
 
             // Реестр всегда лечим/удаляем только в финальной стадии.
