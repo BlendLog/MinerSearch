@@ -40,6 +40,8 @@ namespace MSearch.UI
         private readonly AboutPage _aboutPage;
         private readonly QuarantinePage _quarantinePage;
         private readonly ThreatReviewPage _threatReviewPage;
+        private readonly Font _closeButtonFont;
+        private readonly Font _closeButtonFontRegular;
 
         private readonly Dictionary<string, Button> _navButtons = new Dictionary<string, Button>();
         private string _activePageKey;
@@ -68,6 +70,10 @@ namespace MSearch.UI
         public FormMain()
         {
             InitializeComponent();
+
+            // Отключённая «X» отличается от активной только начертанием и цветом.
+            _closeButtonFont = buttonClose.Font;
+            _closeButtonFontRegular = new Font(buttonClose.Font, FontStyle.Regular);
 
             ApplyAdaptiveWindowSize();
 
@@ -197,7 +203,9 @@ namespace MSearch.UI
         private void WindowButton_MouseEnter(object sender, EventArgs e)
         {
             Control control = sender as Control;
-            if (control != null)
+
+            // Недоступная «X» не должна подсвечиваться.
+            if (control != null && !(_reviewActive && control == buttonClose))
                 control.BackColor = Theme.Track;
         }
 
@@ -285,9 +293,32 @@ namespace MSearch.UI
         private void SetNavigationEnabled(bool enabled)
         {
             foreach (KeyValuePair<string, Button> pair in _navButtons)
-                pair.Value.Enabled = enabled;
+            {
+                bool active = pair.Key == _activePageKey;
+
+                // Enabled = false заставляет WinForms рисовать текст своим цветом
+                // (ForeColor игнорируется), поэтому недоступность вкладок визуальная:
+                // переход всё равно отсекает ShowPage при _reviewActive.
+                pair.Value.ForeColor = enabled
+                    ? (active ? Color.White : Theme.SidebarText)
+                    : Color.FromArgb(64, 64, 64);
+
+                pair.Value.FlatAppearance.MouseOverBackColor = enabled
+                    ? (active ? Theme.SidebarActive : Theme.SidebarHover)
+                    : Theme.Sidebar;
+            }
 
             buttonDonateSidebar.Enabled = enabled;
+        }
+
+        private void SetCloseButtonEnabled(bool enabled)
+        {
+            // Enabled = false тоже рисует текст своим цветом, поэтому блокируем
+            // логически: закрытие отменяет OnFormClosing при _reviewActive.
+            buttonClose.Font = enabled ? _closeButtonFont : _closeButtonFontRegular;
+            buttonClose.ForeColor = enabled ? Theme.Sidebar : Color.Silver;
+            // Сброс hover-подсветки: у недоступной кнопки она не нужна.
+            buttonClose.BackColor = Theme.Background;
         }
 
         private async void RefreshQuarantine()
@@ -472,8 +503,12 @@ namespace MSearch.UI
             _reviewActive = true;
 
             _threatReviewPage.InitializeReview(decisions);
-            SetNavigationEnabled(false);
+
+            // Сначала страница, потом недоступность: ShowPage перекрашивает вкладки.
             ShowPage("review");
+            SetNavigationEnabled(false);
+            SetCloseButtonEnabled(false);
+            buttonDonateSidebar.Visible = false;
         }
 
         private void CompleteThreatReview()
@@ -483,6 +518,8 @@ namespace MSearch.UI
 
             _reviewActive = false;
             SetNavigationEnabled(true);
+            SetCloseButtonEnabled(true);
+            buttonDonateSidebar.Visible = true;
             ShowPage("scan");
 
             ManualResetEventSlim gate = _reviewGate;
@@ -633,12 +670,12 @@ namespace MSearch.UI
                 return;
             }
 
-            // Закрытие во время обзора = «Продолжить с рекомендованными»,
-            // затем обычный сценарий закрытия во время сканирования.
+            // Закрытие во время обзора запрещено: выйти можно только кнопками
+            // страницы (Применить / Продолжить с рекомендованными / Пропустить все).
             if (_reviewActive)
             {
-                _threatReviewPage.ResetUserOverrides();
-                CompleteThreatReview();
+                e.Cancel = true;
+                return;
             }
 
             if (_scanning && !_closeAfterScan)
