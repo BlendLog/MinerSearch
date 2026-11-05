@@ -316,6 +316,10 @@ namespace MSearch.Core
 
             allFinalizeDecisions = DeduplicateDecisions(allFinalizeDecisions);
 
+            // Один знаменатель для всей обработки: после dedup список решений фиксирован.
+            int processingTotal = allFinalizeDecisions.Count;
+            int processedDecisions = 0;
+
             // Заблокированные Defender-ом объекты не показываем в review,
             // но отражаем в результатах. Обрабатываем их отдельным батчем ровно один раз.
             List<ThreatDecision> lockedByAvDecisions = allFinalizeDecisions.Where(d => IsLockedByAv(d)).ToList();
@@ -331,17 +335,19 @@ namespace MSearch.Core
             token.ThrowIfCancellationRequested();
 
             _infrastructure.CleanManager.BeginFinalCleanup();
+            RaiseStage(ScanStage.Cleanup);
 
             if (lockedByAvDecisions.Count > 0)
+            {
                 _infrastructure.CleanManager.ApplyDecisions(lockedByAvDecisions, CleanupPhase.Finalize, token);
-
-            RaiseStage(ScanStage.Cleanup);
+                processedDecisions += lockedByAvDecisions.Count;
+                RaiseProgress(null, processedDecisions, processingTotal);
+            }
 
             List<ThreatDecision> sortedKnownDecisions = knownDecisions
                 .OrderBy(d => CleanManager.GetCleanupOrder(d.Target.Kind))
                 .ToList();
 
-            int knownIndex = 0;
             foreach (ThreatDecision decision in sortedKnownDecisions)
             {
                 token.ThrowIfCancellationRequested();
@@ -349,8 +355,8 @@ namespace MSearch.Core
                 _infrastructure.CleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize, token);
                 RaiseCounters();
 
-                knownIndex++;
-                RaiseProgress(decision.Target != null ? decision.Target.Id : null, knownIndex, sortedKnownDecisions.Count);
+                processedDecisions++;
+                RaiseProgress(decision.Target != null ? decision.Target.Id : null, processedDecisions, processingTotal);
             }
 
             if (!_options.no_review_interact && allUnknownDecisions.Count > 0)
@@ -405,6 +411,9 @@ namespace MSearch.Core
                     _interaction.ShowThreatReview(allUnknownDecisions);
 
                     token.ThrowIfCancellationRequested();
+
+                    // После обзора возвращаем лейбл и блоки-бар очистки.
+                    RaiseStage(ScanStage.Cleanup);
                 }
             }
 
@@ -429,7 +438,6 @@ namespace MSearch.Core
                     .OrderBy(d => d.Target != null ? CleanManager.GetCleanupOrder(d.Target.Kind) : int.MaxValue)
                     .ToList();
 
-                int applyIndex = 0;
                 foreach (ThreatDecision decision in sortedToApply)
                 {
                     token.ThrowIfCancellationRequested();
@@ -437,14 +445,13 @@ namespace MSearch.Core
                     _infrastructure.CleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize, token);
                     RaiseCounters();
 
-                    applyIndex++;
-                    RaiseProgress(decision.Target != null ? decision.Target.Id : null, applyIndex, sortedToApply.Count);
+                    processedDecisions++;
+                    RaiseProgress(decision.Target != null ? decision.Target.Id : null, processedDecisions, processingTotal);
                 }
             }
 
             if (decisionsToSkip.Count > 0)
             {
-                int skipIndex = 0;
                 foreach (ThreatDecision decision in decisionsToSkip)
                 {
                     token.ThrowIfCancellationRequested();
@@ -452,8 +459,8 @@ namespace MSearch.Core
                     _infrastructure.CleanManager.ApplySkippedDecisions(new[] { decision }, token);
                     RaiseCounters();
 
-                    skipIndex++;
-                    RaiseProgress(decision.Target != null ? decision.Target.Id : null, skipIndex, decisionsToSkip.Count);
+                    processedDecisions++;
+                    RaiseProgress(decision.Target != null ? decision.Target.Id : null, processedDecisions, processingTotal);
                 }
             }
 
@@ -478,7 +485,6 @@ namespace MSearch.Core
                     .OrderBy(d => d.Target != null ? CleanManager.GetCleanupOrder(d.Target.Kind) : int.MaxValue)
                     .ToList();
 
-                int remainingIndex = 0;
                 foreach (ThreatDecision decision in sortedRemaining)
                 {
                     token.ThrowIfCancellationRequested();
@@ -486,8 +492,8 @@ namespace MSearch.Core
                     _infrastructure.CleanManager.ApplyDecisions(new[] { decision }, CleanupPhase.Finalize, token);
                     RaiseCounters();
 
-                    remainingIndex++;
-                    RaiseProgress(decision.Target != null ? decision.Target.Id : null, remainingIndex, sortedRemaining.Count);
+                    processedDecisions++;
+                    RaiseProgress(decision.Target != null ? decision.Target.Id : null, processedDecisions, processingTotal);
                 }
             }
 

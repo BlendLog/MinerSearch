@@ -2619,6 +2619,12 @@ Do you want to continue?
   <data name="_ScanStage_CurrentObject_EN" xml:space="preserve">
     <value>Current object: #VALUE#</value>
   </data>
+  <data name="_ScanProcessingProgress_RU" xml:space="preserve">
+    <value>Обработано #DONE# / #TOTAL#</value>
+  </data>
+  <data name="_ScanProcessingProgress_EN" xml:space="preserve">
+    <value>Processed #DONE# / #TOTAL#</value>
+  </data>
   <data name="_Counter_Found_RU" xml:space="preserve">
     <value>Найдено</value>
   </data>

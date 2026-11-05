@@ -5599,6 +5599,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Processed #DONE# / #TOTAL#.
+        /// </summary>
+        internal static string _ScanProcessingProgress_EN {
+            get {
+                return ResourceManager.GetString("_ScanProcessingProgress_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обработано #DONE# / #TOTAL#.
+        /// </summary>
+        internal static string _ScanProcessingProgress_RU {
+            get {
+                return ResourceManager.GetString("_ScanProcessingProgress_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на File system check.
         /// </summary>
         internal static string _ScanStage_FileSystem_EN {

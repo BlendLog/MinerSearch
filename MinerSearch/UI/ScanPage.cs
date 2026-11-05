@@ -433,32 +433,41 @@ namespace MSearch.UI
             }
             else if (stage == ScanStage.Cleanup)
             {
-                SetIndeterminate(true);
+                // Дальше прогресс идёт по количеству обработанных решений.
+                SetIndeterminate(false);
+            }
+            else if (stage == ScanStage.Review)
+            {
+                // Обзор перекрывает страницу скана: бар не трогаем.
             }
             else
             {
-                SetIndeterminate(false);
-                progressScan.Value = GetStagePercent(stage);
+                // Во время сканирования конечное число объектов неизвестно.
+                SetIndeterminate(true);
             }
         }
 
         public void UpdateProgress(string item, int done, int total)
         {
-            if (string.IsNullOrEmpty(item))
-            {
-                labelDetail.Text = string.Empty;
-                return;
-            }
-
-            string display = NormalizeItem(item);
-            labelDetail.Text = L("_ScanStage_CurrentObject").Replace("#VALUE#", display);
+            string display = string.IsNullOrEmpty(item) ? null : NormalizeItem(item);
 
             if (total > 0 && progressScan.Style != ProgressBarStyle.Marquee)
             {
                 int percent = (int)(done * 100L / total);
                 if (percent >= 0 && percent <= 100)
                     progressScan.Value = percent;
+
+                string counter = L("_ScanProcessingProgress")
+                    .Replace("#DONE#", done.ToString())
+                    .Replace("#TOTAL#", total.ToString());
+
+                labelDetail.Text = display == null ? counter : counter + " · " + display;
+                return;
             }
+
+            labelDetail.Text = display == null
+                ? string.Empty
+                : L("_ScanStage_CurrentObject").Replace("#VALUE#", display);
         }
 
         /// <summary>
@@ -488,21 +497,6 @@ namespace MSearch.UI
             labelNeutralizedValue.Text = neutralized.ToString();
             labelSuspiciousValue.Text = suspicious.ToString();
             labelSkippedValue.Text = skipped.ToString();
-        }
-
-        private static int GetStagePercent(ScanStage stage)
-        {
-            switch (stage)
-            {
-                case ScanStage.Rootkit: return 10;
-                case ScanStage.Processes: return 25;
-                case ScanStage.General: return 45;
-                case ScanStage.Signatures: return 70;
-                case ScanStage.Review: return 82;
-                case ScanStage.Cleanup: return 90;
-                case ScanStage.Completed: return 100;
-                default: return 0;
-            }
         }
 
         private string GetStageText(ScanStage stage)

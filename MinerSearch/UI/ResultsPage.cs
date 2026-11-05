@@ -65,6 +65,12 @@ namespace MSearch.UI
             _colPath.MinimumWidth = 300;
             _colPath.Resizable = DataGridViewTriState.True;
 
+            // Примечание тоже должно читаться целиком — фиксированная ширина и перетаскивание.
+            _colNote.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            _colNote.Width = 300;
+            _colNote.MinimumWidth = 120;
+            _colNote.Resizable = DataGridViewTriState.True;
+
             dataGridResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
 
             dataGridResults.Columns.AddRange(new DataGridViewColumn[]
@@ -148,6 +154,11 @@ namespace MSearch.UI
             // Полный путь по наведению независимо от ширины колонки.
             if (_colPath != null && _colPath.Index >= 0 && _colPath.Index < row.Cells.Count)
                 row.Cells[_colPath.Index].ToolTipText = result.Path ?? string.Empty;
+
+            // Примечание может не влезть в ячейку — показываем его целиком в подсказке.
+            if (!string.IsNullOrEmpty(result.Note) && _colNote != null &&
+                _colNote.Index >= 0 && _colNote.Index < row.Cells.Count)
+                row.Cells[_colNote.Index].ToolTipText = result.Note;
 
             switch (result.RawType)
             {
