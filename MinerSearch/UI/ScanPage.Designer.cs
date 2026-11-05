@@ -42,59 +42,44 @@ namespace MSearch.UI
             this.labelSelectiveDesc = new System.Windows.Forms.Label();
             this.selectivePanel = new System.Windows.Forms.Panel();
             this.labelSelectiveHeader = new System.Windows.Forms.Label();
-            this.buttonClearSelection = new MSearch.UI.RoundButton();
             this.stagesTable = new System.Windows.Forms.TableLayoutPanel();
             this.stageProcessesPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageProcesses = new System.Windows.Forms.Label();
-            this.toggleProcesses = new MSearch.ToggleSwitch();
             this.stageRegistryPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageRegistry = new System.Windows.Forms.Label();
-            this.toggleRegistry = new MSearch.ToggleSwitch();
             this.stageServicesPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageServices = new System.Windows.Forms.Label();
-            this.toggleServices = new MSearch.ToggleSwitch();
             this.stageTasksPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageTasks = new System.Windows.Forms.Label();
-            this.toggleTasks = new MSearch.ToggleSwitch();
             this.stageFirewallPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageFirewall = new System.Windows.Forms.Label();
-            this.toggleFirewall = new MSearch.ToggleSwitch();
             this.stageHostsPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageHosts = new System.Windows.Forms.Label();
-            this.toggleHosts = new MSearch.ToggleSwitch();
             this.stageUserProfilesPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageUserProfiles = new System.Windows.Forms.Label();
-            this.toggleUserProfiles = new MSearch.ToggleSwitch();
             this.stageWmiPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageWmi = new System.Windows.Forms.Label();
-            this.toggleWmi = new MSearch.ToggleSwitch();
             this.stageRootkitsPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageRootkits = new System.Windows.Forms.Label();
-            this.toggleRootkits = new MSearch.ToggleSwitch();
             this.stageSignaturesPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageSignatures = new System.Windows.Forms.Label();
-            this.toggleSignatures = new MSearch.ToggleSwitch();
             this.stageFileSystemPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageFileSystem = new System.Windows.Forms.Label();
-            this.toggleFileSystem = new MSearch.ToggleSwitch();
             this.stageShellStartupPanel = new System.Windows.Forms.TableLayoutPanel();
             this.labelStageShellStartup = new System.Windows.Forms.Label();
-            this.toggleShellStartup = new MSearch.ToggleSwitch();
             this.labelDepth = new System.Windows.Forms.Label();
             this.numericDepth = new System.Windows.Forms.NumericUpDown();
             this.checkScanOnly = new System.Windows.Forms.CheckBox();
             this.checkRemoveEmptyTasks = new System.Windows.Forms.CheckBox();
+            this.checkScanAllDrives = new System.Windows.Forms.CheckBox();
             this.selectiveBottom = new System.Windows.Forms.Panel();
             this.checkFolder = new System.Windows.Forms.CheckBox();
             this.textFolder = new System.Windows.Forms.TextBox();
-            this.buttonBrowse = new MSearch.UI.RoundButton();
-            this.buttonStartSelective = new MSearch.UI.RoundButton();
             this.labelHint = new System.Windows.Forms.Label();
             this.statusPanel = new System.Windows.Forms.Panel();
             this.labelStage = new System.Windows.Forms.Label();
             this.labelDetail = new System.Windows.Forms.Label();
             this.progressScan = new System.Windows.Forms.ProgressBar();
-            this.buttonStop = new MSearch.UI.RoundButton();
             this.countersTable = new System.Windows.Forms.TableLayoutPanel();
             this.panelFound = new System.Windows.Forms.Panel();
             this.labelFoundValue = new System.Windows.Forms.Label();
@@ -108,6 +93,22 @@ namespace MSearch.UI
             this.panelSkipped = new System.Windows.Forms.Panel();
             this.labelSkippedValue = new System.Windows.Forms.Label();
             this.labelSkippedCaption = new System.Windows.Forms.Label();
+            this.buttonClearSelection = new MSearch.UI.RoundButton();
+            this.toggleProcesses = new MSearch.ToggleSwitch();
+            this.toggleRegistry = new MSearch.ToggleSwitch();
+            this.toggleServices = new MSearch.ToggleSwitch();
+            this.toggleTasks = new MSearch.ToggleSwitch();
+            this.toggleFirewall = new MSearch.ToggleSwitch();
+            this.toggleHosts = new MSearch.ToggleSwitch();
+            this.toggleUserProfiles = new MSearch.ToggleSwitch();
+            this.toggleWmi = new MSearch.ToggleSwitch();
+            this.toggleRootkits = new MSearch.ToggleSwitch();
+            this.toggleSignatures = new MSearch.ToggleSwitch();
+            this.toggleFileSystem = new MSearch.ToggleSwitch();
+            this.toggleShellStartup = new MSearch.ToggleSwitch();
+            this.buttonBrowse = new MSearch.UI.RoundButton();
+            this.buttonStartSelective = new MSearch.UI.RoundButton();
+            this.buttonStop = new MSearch.UI.RoundButton();
             this.rootLayout.SuspendLayout();
             this.contentFlow.SuspendLayout();
             this.cardsFlow.SuspendLayout();
@@ -335,6 +336,7 @@ namespace MSearch.UI
             this.selectivePanel.Controls.Add(this.numericDepth);
             this.selectivePanel.Controls.Add(this.checkScanOnly);
             this.selectivePanel.Controls.Add(this.checkRemoveEmptyTasks);
+            this.selectivePanel.Controls.Add(this.checkScanAllDrives);
             this.selectivePanel.Controls.Add(this.selectiveBottom);
             this.selectivePanel.Location = new System.Drawing.Point(0, 120);
             this.selectivePanel.Margin = new System.Windows.Forms.Padding(0, 4, 0, 8);
@@ -354,24 +356,6 @@ namespace MSearch.UI
             this.labelSelectiveHeader.Size = new System.Drawing.Size(191, 25);
             this.labelSelectiveHeader.TabIndex = 0;
             this.labelSelectiveHeader.Text = "labelSelectiveHeader";
-            // 
-            // buttonClearSelection
-            // 
-            this.buttonClearSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonClearSelection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
-            this.buttonClearSelection.CornerRadius = 6;
-            this.buttonClearSelection.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
-            this.buttonClearSelection.FlatAppearance.BorderSize = 0;
-            this.buttonClearSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonClearSelection.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.buttonClearSelection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.buttonClearSelection.Location = new System.Drawing.Point(638, 9);
-            this.buttonClearSelection.Name = "buttonClearSelection";
-            this.buttonClearSelection.Size = new System.Drawing.Size(150, 30);
-            this.buttonClearSelection.TabIndex = 2;
-            this.buttonClearSelection.Text = "buttonClearSelection";
-            this.buttonClearSelection.UseVisualStyleBackColor = false;
-            this.buttonClearSelection.Click += new System.EventHandler(this.buttonClearSelection_Click);
             // 
             // stagesTable
             // 
@@ -435,21 +419,6 @@ namespace MSearch.UI
             this.labelStageProcesses.Text = "labelStageProcesses";
             this.labelStageProcesses.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // toggleProcesses
-            // 
-            this.toggleProcesses.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleProcesses.Location = new System.Drawing.Point(328, 4);
-            this.toggleProcesses.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.toggleProcesses.MinimumSize = new System.Drawing.Size(45, 22);
-            this.toggleProcesses.Name = "toggleProcesses";
-            this.toggleProcesses.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
-            this.toggleProcesses.OffToggleColor = System.Drawing.Color.White;
-            this.toggleProcesses.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.toggleProcesses.OnToggleColor = System.Drawing.Color.WhiteSmoke;
-            this.toggleProcesses.Size = new System.Drawing.Size(48, 22);
-            this.toggleProcesses.TabIndex = 1;
-            this.toggleProcesses.UseVisualStyleBackColor = true;
-            // 
             // stageRegistryPanel
             // 
             this.stageRegistryPanel.BackColor = System.Drawing.Color.White;
@@ -479,21 +448,6 @@ namespace MSearch.UI
             this.labelStageRegistry.TabIndex = 0;
             this.labelStageRegistry.Text = "labelStageRegistry";
             this.labelStageRegistry.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // toggleRegistry
-            // 
-            this.toggleRegistry.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleRegistry.Location = new System.Drawing.Point(328, 4);
-            this.toggleRegistry.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.toggleRegistry.MinimumSize = new System.Drawing.Size(45, 22);
-            this.toggleRegistry.Name = "toggleRegistry";
-            this.toggleRegistry.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
-            this.toggleRegistry.OffToggleColor = System.Drawing.Color.White;
-            this.toggleRegistry.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.toggleRegistry.OnToggleColor = System.Drawing.Color.WhiteSmoke;
-            this.toggleRegistry.Size = new System.Drawing.Size(48, 22);
-            this.toggleRegistry.TabIndex = 1;
-            this.toggleRegistry.UseVisualStyleBackColor = true;
             // 
             // stageServicesPanel
             // 
@@ -525,21 +479,6 @@ namespace MSearch.UI
             this.labelStageServices.Text = "labelStageServices";
             this.labelStageServices.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // toggleServices
-            // 
-            this.toggleServices.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleServices.Location = new System.Drawing.Point(328, 4);
-            this.toggleServices.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.toggleServices.MinimumSize = new System.Drawing.Size(45, 22);
-            this.toggleServices.Name = "toggleServices";
-            this.toggleServices.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
-            this.toggleServices.OffToggleColor = System.Drawing.Color.White;
-            this.toggleServices.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.toggleServices.OnToggleColor = System.Drawing.Color.WhiteSmoke;
-            this.toggleServices.Size = new System.Drawing.Size(48, 22);
-            this.toggleServices.TabIndex = 1;
-            this.toggleServices.UseVisualStyleBackColor = true;
-            // 
             // stageTasksPanel
             // 
             this.stageTasksPanel.BackColor = System.Drawing.Color.White;
@@ -569,21 +508,6 @@ namespace MSearch.UI
             this.labelStageTasks.TabIndex = 0;
             this.labelStageTasks.Text = "labelStageTasks";
             this.labelStageTasks.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // toggleTasks
-            // 
-            this.toggleTasks.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleTasks.Location = new System.Drawing.Point(328, 4);
-            this.toggleTasks.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.toggleTasks.MinimumSize = new System.Drawing.Size(45, 22);
-            this.toggleTasks.Name = "toggleTasks";
-            this.toggleTasks.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
-            this.toggleTasks.OffToggleColor = System.Drawing.Color.White;
-            this.toggleTasks.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.toggleTasks.OnToggleColor = System.Drawing.Color.WhiteSmoke;
-            this.toggleTasks.Size = new System.Drawing.Size(48, 22);
-            this.toggleTasks.TabIndex = 1;
-            this.toggleTasks.UseVisualStyleBackColor = true;
             // 
             // stageFirewallPanel
             // 
@@ -615,21 +539,6 @@ namespace MSearch.UI
             this.labelStageFirewall.Text = "labelStageFirewall";
             this.labelStageFirewall.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // toggleFirewall
-            // 
-            this.toggleFirewall.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleFirewall.Location = new System.Drawing.Point(328, 4);
-            this.toggleFirewall.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.toggleFirewall.MinimumSize = new System.Drawing.Size(45, 22);
-            this.toggleFirewall.Name = "toggleFirewall";
-            this.toggleFirewall.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
-            this.toggleFirewall.OffToggleColor = System.Drawing.Color.White;
-            this.toggleFirewall.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.toggleFirewall.OnToggleColor = System.Drawing.Color.WhiteSmoke;
-            this.toggleFirewall.Size = new System.Drawing.Size(48, 22);
-            this.toggleFirewall.TabIndex = 1;
-            this.toggleFirewall.UseVisualStyleBackColor = true;
-            // 
             // stageHostsPanel
             // 
             this.stageHostsPanel.BackColor = System.Drawing.Color.White;
@@ -659,21 +568,6 @@ namespace MSearch.UI
             this.labelStageHosts.TabIndex = 0;
             this.labelStageHosts.Text = "labelStageHosts";
             this.labelStageHosts.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // toggleHosts
-            // 
-            this.toggleHosts.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleHosts.Location = new System.Drawing.Point(328, 4);
-            this.toggleHosts.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.toggleHosts.MinimumSize = new System.Drawing.Size(45, 22);
-            this.toggleHosts.Name = "toggleHosts";
-            this.toggleHosts.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
-            this.toggleHosts.OffToggleColor = System.Drawing.Color.White;
-            this.toggleHosts.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.toggleHosts.OnToggleColor = System.Drawing.Color.WhiteSmoke;
-            this.toggleHosts.Size = new System.Drawing.Size(48, 22);
-            this.toggleHosts.TabIndex = 1;
-            this.toggleHosts.UseVisualStyleBackColor = true;
             // 
             // stageUserProfilesPanel
             // 
@@ -705,21 +599,6 @@ namespace MSearch.UI
             this.labelStageUserProfiles.Text = "labelStageUserProfiles";
             this.labelStageUserProfiles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // toggleUserProfiles
-            // 
-            this.toggleUserProfiles.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleUserProfiles.Location = new System.Drawing.Point(328, 4);
-            this.toggleUserProfiles.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.toggleUserProfiles.MinimumSize = new System.Drawing.Size(45, 22);
-            this.toggleUserProfiles.Name = "toggleUserProfiles";
-            this.toggleUserProfiles.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
-            this.toggleUserProfiles.OffToggleColor = System.Drawing.Color.White;
-            this.toggleUserProfiles.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.toggleUserProfiles.OnToggleColor = System.Drawing.Color.WhiteSmoke;
-            this.toggleUserProfiles.Size = new System.Drawing.Size(48, 22);
-            this.toggleUserProfiles.TabIndex = 1;
-            this.toggleUserProfiles.UseVisualStyleBackColor = true;
-            // 
             // stageWmiPanel
             // 
             this.stageWmiPanel.BackColor = System.Drawing.Color.White;
@@ -749,21 +628,6 @@ namespace MSearch.UI
             this.labelStageWmi.TabIndex = 0;
             this.labelStageWmi.Text = "labelStageWmi";
             this.labelStageWmi.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // toggleWmi
-            // 
-            this.toggleWmi.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleWmi.Location = new System.Drawing.Point(328, 4);
-            this.toggleWmi.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.toggleWmi.MinimumSize = new System.Drawing.Size(45, 22);
-            this.toggleWmi.Name = "toggleWmi";
-            this.toggleWmi.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
-            this.toggleWmi.OffToggleColor = System.Drawing.Color.White;
-            this.toggleWmi.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.toggleWmi.OnToggleColor = System.Drawing.Color.WhiteSmoke;
-            this.toggleWmi.Size = new System.Drawing.Size(48, 22);
-            this.toggleWmi.TabIndex = 1;
-            this.toggleWmi.UseVisualStyleBackColor = true;
             // 
             // stageRootkitsPanel
             // 
@@ -795,21 +659,6 @@ namespace MSearch.UI
             this.labelStageRootkits.Text = "labelStageRootkits";
             this.labelStageRootkits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // toggleRootkits
-            // 
-            this.toggleRootkits.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleRootkits.Location = new System.Drawing.Point(328, 4);
-            this.toggleRootkits.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.toggleRootkits.MinimumSize = new System.Drawing.Size(45, 22);
-            this.toggleRootkits.Name = "toggleRootkits";
-            this.toggleRootkits.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
-            this.toggleRootkits.OffToggleColor = System.Drawing.Color.White;
-            this.toggleRootkits.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.toggleRootkits.OnToggleColor = System.Drawing.Color.WhiteSmoke;
-            this.toggleRootkits.Size = new System.Drawing.Size(48, 22);
-            this.toggleRootkits.TabIndex = 1;
-            this.toggleRootkits.UseVisualStyleBackColor = true;
-            // 
             // stageSignaturesPanel
             // 
             this.stageSignaturesPanel.BackColor = System.Drawing.Color.White;
@@ -839,21 +688,6 @@ namespace MSearch.UI
             this.labelStageSignatures.TabIndex = 0;
             this.labelStageSignatures.Text = "labelStageSignatures";
             this.labelStageSignatures.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // toggleSignatures
-            // 
-            this.toggleSignatures.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleSignatures.Location = new System.Drawing.Point(328, 4);
-            this.toggleSignatures.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.toggleSignatures.MinimumSize = new System.Drawing.Size(45, 22);
-            this.toggleSignatures.Name = "toggleSignatures";
-            this.toggleSignatures.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
-            this.toggleSignatures.OffToggleColor = System.Drawing.Color.White;
-            this.toggleSignatures.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.toggleSignatures.OnToggleColor = System.Drawing.Color.WhiteSmoke;
-            this.toggleSignatures.Size = new System.Drawing.Size(48, 22);
-            this.toggleSignatures.TabIndex = 1;
-            this.toggleSignatures.UseVisualStyleBackColor = true;
             // 
             // stageFileSystemPanel
             // 
@@ -885,21 +719,6 @@ namespace MSearch.UI
             this.labelStageFileSystem.Text = "labelStageFileSystem";
             this.labelStageFileSystem.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // toggleFileSystem
-            // 
-            this.toggleFileSystem.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleFileSystem.Location = new System.Drawing.Point(328, 4);
-            this.toggleFileSystem.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.toggleFileSystem.MinimumSize = new System.Drawing.Size(45, 22);
-            this.toggleFileSystem.Name = "toggleFileSystem";
-            this.toggleFileSystem.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
-            this.toggleFileSystem.OffToggleColor = System.Drawing.Color.White;
-            this.toggleFileSystem.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.toggleFileSystem.OnToggleColor = System.Drawing.Color.WhiteSmoke;
-            this.toggleFileSystem.Size = new System.Drawing.Size(48, 22);
-            this.toggleFileSystem.TabIndex = 1;
-            this.toggleFileSystem.UseVisualStyleBackColor = true;
-            // 
             // stageShellStartupPanel
             // 
             this.stageShellStartupPanel.BackColor = System.Drawing.Color.White;
@@ -929,21 +748,6 @@ namespace MSearch.UI
             this.labelStageShellStartup.TabIndex = 0;
             this.labelStageShellStartup.Text = "labelStageShellStartup";
             this.labelStageShellStartup.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // toggleShellStartup
-            // 
-            this.toggleShellStartup.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.toggleShellStartup.Location = new System.Drawing.Point(328, 4);
-            this.toggleShellStartup.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.toggleShellStartup.MinimumSize = new System.Drawing.Size(45, 22);
-            this.toggleShellStartup.Name = "toggleShellStartup";
-            this.toggleShellStartup.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
-            this.toggleShellStartup.OffToggleColor = System.Drawing.Color.White;
-            this.toggleShellStartup.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.toggleShellStartup.OnToggleColor = System.Drawing.Color.WhiteSmoke;
-            this.toggleShellStartup.Size = new System.Drawing.Size(48, 22);
-            this.toggleShellStartup.TabIndex = 1;
-            this.toggleShellStartup.UseVisualStyleBackColor = true;
             // 
             // labelDepth
             // 
@@ -1005,6 +809,19 @@ namespace MSearch.UI
             this.checkRemoveEmptyTasks.Text = "checkRemoveEmptyTasks";
             this.checkRemoveEmptyTasks.UseVisualStyleBackColor = true;
             // 
+            // checkScanAllDrives
+            // 
+            this.checkScanAllDrives.AutoSize = true;
+            this.checkScanAllDrives.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.checkScanAllDrives.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
+            this.checkScanAllDrives.Location = new System.Drawing.Point(540, 232);
+            this.checkScanAllDrives.Name = "checkScanAllDrives";
+            this.checkScanAllDrives.Size = new System.Drawing.Size(181, 23);
+            this.checkScanAllDrives.TabIndex = 7;
+            this.checkScanAllDrives.Text = "checkScanAllDrives";
+            this.checkScanAllDrives.UseVisualStyleBackColor = true;
+            this.checkScanAllDrives.CheckedChanged += new System.EventHandler(this.checkScanAllDrives_CheckedChanged);
+            // 
             // selectiveBottom
             // 
             this.selectiveBottom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -1043,43 +860,6 @@ namespace MSearch.UI
             this.textFolder.ReadOnly = true;
             this.textFolder.Size = new System.Drawing.Size(288, 25);
             this.textFolder.TabIndex = 1;
-            // 
-            // buttonBrowse
-            // 
-            this.buttonBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonBrowse.BackColor = System.Drawing.Color.White;
-            this.buttonBrowse.CornerRadius = 6;
-            this.buttonBrowse.Enabled = false;
-            this.buttonBrowse.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.buttonBrowse.FlatAppearance.BorderSize = 0;
-            this.buttonBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonBrowse.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.buttonBrowse.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
-            this.buttonBrowse.Location = new System.Drawing.Point(498, 6);
-            this.buttonBrowse.Name = "buttonBrowse";
-            this.buttonBrowse.Size = new System.Drawing.Size(110, 32);
-            this.buttonBrowse.TabIndex = 2;
-            this.buttonBrowse.Text = "buttonBrowse";
-            this.buttonBrowse.UseVisualStyleBackColor = false;
-            this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
-            // 
-            // buttonStartSelective
-            // 
-            this.buttonStartSelective.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonStartSelective.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.buttonStartSelective.CornerRadius = 6;
-            this.buttonStartSelective.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
-            this.buttonStartSelective.FlatAppearance.BorderSize = 0;
-            this.buttonStartSelective.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonStartSelective.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.buttonStartSelective.ForeColor = System.Drawing.Color.White;
-            this.buttonStartSelective.Location = new System.Drawing.Point(618, 2);
-            this.buttonStartSelective.Name = "buttonStartSelective";
-            this.buttonStartSelective.Size = new System.Drawing.Size(170, 40);
-            this.buttonStartSelective.TabIndex = 3;
-            this.buttonStartSelective.Text = "buttonStartSelective";
-            this.buttonStartSelective.UseVisualStyleBackColor = false;
-            this.buttonStartSelective.Click += new System.EventHandler(this.buttonStartSelective_Click);
             // 
             // labelHint
             // 
@@ -1139,25 +919,6 @@ namespace MSearch.UI
             this.progressScan.Name = "progressScan";
             this.progressScan.Size = new System.Drawing.Size(797, 10);
             this.progressScan.TabIndex = 2;
-            // 
-            // buttonStop
-            // 
-            this.buttonStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonStop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
-            this.buttonStop.CornerRadius = 6;
-            this.buttonStop.Enabled = false;
-            this.buttonStop.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
-            this.buttonStop.FlatAppearance.BorderSize = 0;
-            this.buttonStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonStop.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.buttonStop.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.buttonStop.Location = new System.Drawing.Point(685, 18);
-            this.buttonStop.Name = "buttonStop";
-            this.buttonStop.Size = new System.Drawing.Size(130, 40);
-            this.buttonStop.TabIndex = 3;
-            this.buttonStop.Text = "buttonStop";
-            this.buttonStop.UseVisualStyleBackColor = false;
-            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
             // 
             // countersTable
             // 
@@ -1320,6 +1081,260 @@ namespace MSearch.UI
             this.labelSkippedCaption.TabIndex = 1;
             this.labelSkippedCaption.Text = "labelSkippedCaption";
             // 
+            // buttonClearSelection
+            // 
+            this.buttonClearSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonClearSelection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
+            this.buttonClearSelection.CornerRadius = 6;
+            this.buttonClearSelection.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
+            this.buttonClearSelection.FlatAppearance.BorderSize = 0;
+            this.buttonClearSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonClearSelection.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.buttonClearSelection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
+            this.buttonClearSelection.Location = new System.Drawing.Point(638, 9);
+            this.buttonClearSelection.Name = "buttonClearSelection";
+            this.buttonClearSelection.Size = new System.Drawing.Size(150, 30);
+            this.buttonClearSelection.TabIndex = 2;
+            this.buttonClearSelection.Text = "buttonClearSelection";
+            this.buttonClearSelection.UseVisualStyleBackColor = false;
+            this.buttonClearSelection.Click += new System.EventHandler(this.buttonClearSelection_Click);
+            // 
+            // toggleProcesses
+            // 
+            this.toggleProcesses.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleProcesses.Location = new System.Drawing.Point(328, 4);
+            this.toggleProcesses.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleProcesses.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleProcesses.Name = "toggleProcesses";
+            this.toggleProcesses.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.toggleProcesses.OffToggleColor = System.Drawing.Color.White;
+            this.toggleProcesses.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleProcesses.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleProcesses.Size = new System.Drawing.Size(48, 22);
+            this.toggleProcesses.TabIndex = 1;
+            this.toggleProcesses.UseVisualStyleBackColor = true;
+            // 
+            // toggleRegistry
+            // 
+            this.toggleRegistry.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleRegistry.Location = new System.Drawing.Point(328, 4);
+            this.toggleRegistry.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleRegistry.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleRegistry.Name = "toggleRegistry";
+            this.toggleRegistry.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.toggleRegistry.OffToggleColor = System.Drawing.Color.White;
+            this.toggleRegistry.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleRegistry.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleRegistry.Size = new System.Drawing.Size(48, 22);
+            this.toggleRegistry.TabIndex = 1;
+            this.toggleRegistry.UseVisualStyleBackColor = true;
+            // 
+            // toggleServices
+            // 
+            this.toggleServices.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleServices.Location = new System.Drawing.Point(328, 4);
+            this.toggleServices.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleServices.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleServices.Name = "toggleServices";
+            this.toggleServices.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.toggleServices.OffToggleColor = System.Drawing.Color.White;
+            this.toggleServices.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleServices.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleServices.Size = new System.Drawing.Size(48, 22);
+            this.toggleServices.TabIndex = 1;
+            this.toggleServices.UseVisualStyleBackColor = true;
+            // 
+            // toggleTasks
+            // 
+            this.toggleTasks.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleTasks.Location = new System.Drawing.Point(328, 4);
+            this.toggleTasks.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleTasks.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleTasks.Name = "toggleTasks";
+            this.toggleTasks.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.toggleTasks.OffToggleColor = System.Drawing.Color.White;
+            this.toggleTasks.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleTasks.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleTasks.Size = new System.Drawing.Size(48, 22);
+            this.toggleTasks.TabIndex = 1;
+            this.toggleTasks.UseVisualStyleBackColor = true;
+            // 
+            // toggleFirewall
+            // 
+            this.toggleFirewall.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleFirewall.Location = new System.Drawing.Point(328, 4);
+            this.toggleFirewall.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleFirewall.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleFirewall.Name = "toggleFirewall";
+            this.toggleFirewall.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.toggleFirewall.OffToggleColor = System.Drawing.Color.White;
+            this.toggleFirewall.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleFirewall.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleFirewall.Size = new System.Drawing.Size(48, 22);
+            this.toggleFirewall.TabIndex = 1;
+            this.toggleFirewall.UseVisualStyleBackColor = true;
+            // 
+            // toggleHosts
+            // 
+            this.toggleHosts.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleHosts.Location = new System.Drawing.Point(328, 4);
+            this.toggleHosts.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleHosts.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleHosts.Name = "toggleHosts";
+            this.toggleHosts.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.toggleHosts.OffToggleColor = System.Drawing.Color.White;
+            this.toggleHosts.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleHosts.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleHosts.Size = new System.Drawing.Size(48, 22);
+            this.toggleHosts.TabIndex = 1;
+            this.toggleHosts.UseVisualStyleBackColor = true;
+            // 
+            // toggleUserProfiles
+            // 
+            this.toggleUserProfiles.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleUserProfiles.Location = new System.Drawing.Point(328, 4);
+            this.toggleUserProfiles.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleUserProfiles.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleUserProfiles.Name = "toggleUserProfiles";
+            this.toggleUserProfiles.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.toggleUserProfiles.OffToggleColor = System.Drawing.Color.White;
+            this.toggleUserProfiles.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleUserProfiles.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleUserProfiles.Size = new System.Drawing.Size(48, 22);
+            this.toggleUserProfiles.TabIndex = 1;
+            this.toggleUserProfiles.UseVisualStyleBackColor = true;
+            // 
+            // toggleWmi
+            // 
+            this.toggleWmi.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleWmi.Location = new System.Drawing.Point(328, 4);
+            this.toggleWmi.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleWmi.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleWmi.Name = "toggleWmi";
+            this.toggleWmi.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.toggleWmi.OffToggleColor = System.Drawing.Color.White;
+            this.toggleWmi.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleWmi.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleWmi.Size = new System.Drawing.Size(48, 22);
+            this.toggleWmi.TabIndex = 1;
+            this.toggleWmi.UseVisualStyleBackColor = true;
+            // 
+            // toggleRootkits
+            // 
+            this.toggleRootkits.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleRootkits.Location = new System.Drawing.Point(328, 4);
+            this.toggleRootkits.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleRootkits.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleRootkits.Name = "toggleRootkits";
+            this.toggleRootkits.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.toggleRootkits.OffToggleColor = System.Drawing.Color.White;
+            this.toggleRootkits.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleRootkits.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleRootkits.Size = new System.Drawing.Size(48, 22);
+            this.toggleRootkits.TabIndex = 1;
+            this.toggleRootkits.UseVisualStyleBackColor = true;
+            // 
+            // toggleSignatures
+            // 
+            this.toggleSignatures.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleSignatures.Location = new System.Drawing.Point(328, 4);
+            this.toggleSignatures.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleSignatures.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleSignatures.Name = "toggleSignatures";
+            this.toggleSignatures.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.toggleSignatures.OffToggleColor = System.Drawing.Color.White;
+            this.toggleSignatures.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleSignatures.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleSignatures.Size = new System.Drawing.Size(48, 22);
+            this.toggleSignatures.TabIndex = 1;
+            this.toggleSignatures.UseVisualStyleBackColor = true;
+            // 
+            // toggleFileSystem
+            // 
+            this.toggleFileSystem.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleFileSystem.Location = new System.Drawing.Point(328, 4);
+            this.toggleFileSystem.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleFileSystem.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleFileSystem.Name = "toggleFileSystem";
+            this.toggleFileSystem.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.toggleFileSystem.OffToggleColor = System.Drawing.Color.White;
+            this.toggleFileSystem.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleFileSystem.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleFileSystem.Size = new System.Drawing.Size(48, 22);
+            this.toggleFileSystem.TabIndex = 1;
+            this.toggleFileSystem.UseVisualStyleBackColor = true;
+            // 
+            // toggleShellStartup
+            // 
+            this.toggleShellStartup.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.toggleShellStartup.Location = new System.Drawing.Point(328, 4);
+            this.toggleShellStartup.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.toggleShellStartup.MinimumSize = new System.Drawing.Size(45, 22);
+            this.toggleShellStartup.Name = "toggleShellStartup";
+            this.toggleShellStartup.OffBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.toggleShellStartup.OffToggleColor = System.Drawing.Color.White;
+            this.toggleShellStartup.OnBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.toggleShellStartup.OnToggleColor = System.Drawing.Color.WhiteSmoke;
+            this.toggleShellStartup.Size = new System.Drawing.Size(48, 22);
+            this.toggleShellStartup.TabIndex = 1;
+            this.toggleShellStartup.UseVisualStyleBackColor = true;
+            // 
+            // buttonBrowse
+            // 
+            this.buttonBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonBrowse.BackColor = System.Drawing.Color.White;
+            this.buttonBrowse.CornerRadius = 6;
+            this.buttonBrowse.Enabled = false;
+            this.buttonBrowse.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.buttonBrowse.FlatAppearance.BorderSize = 0;
+            this.buttonBrowse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonBrowse.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.buttonBrowse.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(36)))), ((int)(((byte)(45)))));
+            this.buttonBrowse.Location = new System.Drawing.Point(498, 6);
+            this.buttonBrowse.Name = "buttonBrowse";
+            this.buttonBrowse.Size = new System.Drawing.Size(110, 32);
+            this.buttonBrowse.TabIndex = 2;
+            this.buttonBrowse.Text = "buttonBrowse";
+            this.buttonBrowse.UseVisualStyleBackColor = false;
+            this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
+            // 
+            // buttonStartSelective
+            // 
+            this.buttonStartSelective.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonStartSelective.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.buttonStartSelective.CornerRadius = 6;
+            this.buttonStartSelective.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(108)))), ((int)(((byte)(223)))));
+            this.buttonStartSelective.FlatAppearance.BorderSize = 0;
+            this.buttonStartSelective.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonStartSelective.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.buttonStartSelective.ForeColor = System.Drawing.Color.White;
+            this.buttonStartSelective.Location = new System.Drawing.Point(618, 2);
+            this.buttonStartSelective.Name = "buttonStartSelective";
+            this.buttonStartSelective.Size = new System.Drawing.Size(170, 40);
+            this.buttonStartSelective.TabIndex = 3;
+            this.buttonStartSelective.Text = "buttonStartSelective";
+            this.buttonStartSelective.UseVisualStyleBackColor = false;
+            this.buttonStartSelective.Click += new System.EventHandler(this.buttonStartSelective_Click);
+            // 
+            // buttonStop
+            // 
+            this.buttonStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonStop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
+            this.buttonStop.CornerRadius = 6;
+            this.buttonStop.Enabled = false;
+            this.buttonStop.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(246)))), ((int)(((byte)(249)))));
+            this.buttonStop.FlatAppearance.BorderSize = 0;
+            this.buttonStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonStop.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.buttonStop.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.buttonStop.Location = new System.Drawing.Point(685, 18);
+            this.buttonStop.Name = "buttonStop";
+            this.buttonStop.Size = new System.Drawing.Size(130, 40);
+            this.buttonStop.TabIndex = 3;
+            this.buttonStop.Text = "buttonStop";
+            this.buttonStop.UseVisualStyleBackColor = false;
+            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
+            // 
             // ScanPage
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1429,6 +1444,7 @@ namespace MSearch.UI
         private System.Windows.Forms.NumericUpDown numericDepth;
         private System.Windows.Forms.CheckBox checkScanOnly;
         private System.Windows.Forms.CheckBox checkRemoveEmptyTasks;
+        private System.Windows.Forms.CheckBox checkScanAllDrives;
         private System.Windows.Forms.Panel selectiveBottom;
         private System.Windows.Forms.CheckBox checkFolder;
         private System.Windows.Forms.TextBox textFolder;

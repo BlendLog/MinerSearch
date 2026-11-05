@@ -52,7 +52,18 @@ namespace MSearch.UI
 
         private void checkFolder_CheckedChanged(object sender, EventArgs e)
         {
-            UpdateFolderControls();
+            UpdateOptionDependencies();
+        }
+
+        private void checkScanAllDrives_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkScanAllDrives.Checked && checkFolder.Checked)
+            {
+                checkScanAllDrives.Checked = false;
+                return;
+            }
+
+            UpdateOptionDependencies();
         }
 
         private void buttonBrowse_Click(object sender, EventArgs e)
@@ -74,13 +85,24 @@ namespace MSearch.UI
                 return;
 
             foreach (KeyValuePair<string, ToggleSwitch> pair in _stageToggles)
+            {
+                if (checkScanAllDrives.Checked && pair.Key == "Signatures")
+                    continue;
+
                 pair.Value.Checked = false;
+            }
 
             UpdateOptionDependencies();
         }
 
         private void StageToggle_CheckedChanged(object sender, EventArgs e)
         {
+            if (checkScanAllDrives.Checked && !GetToggle("Signatures"))
+            {
+                toggleSignatures.Checked = true;
+                return;
+            }
+
             UpdateOptionDependencies();
         }
 
@@ -203,7 +225,7 @@ namespace MSearch.UI
                 return;
             }
 
-            StartScan(mode == ScanMode.Full ? ScanRequest.CreateFull() : ScanRequest.CreateQuick());
+            RaiseScanRequested(mode == ScanMode.Full ? ScanRequest.CreateFull() : ScanRequest.CreateQuick());
         }
 
         private void StartSelectiveScan()
@@ -224,6 +246,7 @@ namespace MSearch.UI
             request.ScanSignatures = GetToggle("Signatures");
             request.ScanFileSystem = GetToggle("FileSystem");
             request.ScanShellStartup = GetToggle("ShellStartup");
+            request.FullScan = checkScanAllDrives.Checked;
 
             request.MaxDepth = (int)numericDepth.Value;
             request.ScanOnly = checkScanOnly.Checked;
@@ -232,10 +255,10 @@ namespace MSearch.UI
             if (checkFolder.Checked && !string.IsNullOrEmpty(textFolder.Text))
                 request.SelectedPath = textFolder.Text;
 
-            StartScan(request);
+            RaiseScanRequested(request);
         }
 
-        private void StartScan(ScanRequest request)
+        private void RaiseScanRequested(ScanRequest request)
         {
             Action<ScanRequest> handler = ScanRequested;
             if (handler != null)
@@ -260,12 +283,23 @@ namespace MSearch.UI
 
         /// <summary>
         /// Keeps dependent options consistent: ScanOnly disables rootkits and empty-task removal;
-        /// empty-task removal is available only when task scanning is enabled.
+        /// empty-task removal is available only when task scanning is enabled; all-drives is
+        /// mutually exclusive with a folder and forces signature scanning on.
         /// </summary>
         private void UpdateOptionDependencies()
         {
             bool scanOnly = checkScanOnly.Checked;
             bool tasks = GetToggle("Tasks");
+            bool scanAllDrives = checkScanAllDrives.Checked;
+
+            if (scanAllDrives && !GetToggle("Signatures"))
+                toggleSignatures.Checked = true;
+
+            if (scanAllDrives)
+                checkFolder.Checked = false;
+
+            if (scanOnly && toggleRootkits.Checked)
+                toggleRootkits.Checked = false;
 
             toggleRootkits.Enabled = !_scanning && !scanOnly;
             if (scanOnly || !tasks)
@@ -273,6 +307,11 @@ namespace MSearch.UI
 
             checkRemoveEmptyTasks.Enabled = !_scanning && tasks && !scanOnly;
 
+            checkFolder.Enabled = !_scanning && !scanAllDrives;
+            checkScanAllDrives.Enabled = !_scanning && !checkFolder.Checked;
+            toggleSignatures.Enabled = !scanAllDrives;
+
+            UpdateFolderControls();
             UpdateStartSelectiveState();
         }
 
@@ -300,7 +339,7 @@ namespace MSearch.UI
 
         private void UpdateFolderControls()
         {
-            bool enabled = checkFolder.Checked;
+            bool enabled = checkFolder.Checked && !checkScanAllDrives.Checked;
             textFolder.Enabled = enabled;
             buttonBrowse.Enabled = enabled;
             if (!enabled)
@@ -518,6 +557,7 @@ namespace MSearch.UI
             labelDepth.Text = L("_Selective_Depth");
             checkScanOnly.Text = L("_Selective_ScanOnly");
             checkRemoveEmptyTasks.Text = L("_Selective_RemoveEmptyTasks");
+            checkScanAllDrives.Text = L("_Selective_ScanAllDrives");
 
             foreach (KeyValuePair<string, Label> pair in _stageLabels)
                 pair.Value.Text = L(pair.Key);

@@ -218,7 +218,7 @@ namespace MSearch.UI
 
         private void WirePageEvents()
         {
-            _scanPage.ScanRequested += StartScan;
+            _scanPage.ScanRequested += OnScanRequested;
             _scanPage.StopRequested += delegate
             {
                 if (_cts != null && !_cts.IsCancellationRequested)
@@ -335,7 +335,7 @@ namespace MSearch.UI
             Native.SendMessage(Handle, WM_NCLBUTTONDOWN, (IntPtr)HTCAPTION, IntPtr.Zero);
         }
 
-        private async void StartScan(ScanRequest request)
+        private async void OnScanRequested(ScanRequest request)
         {
             if (_scanning || request == null)
                 return;

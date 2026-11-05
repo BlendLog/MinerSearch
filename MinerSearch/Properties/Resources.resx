@@ -2887,4 +2887,10 @@ No — choose a folder</value>
   <data name="_Selective_RemoveEmptyTasks_EN" xml:space="preserve">
     <value>Remove empty tasks</value>
   </data>
+  <data name="_Selective_ScanAllDrives_RU" xml:space="preserve">
+    <value>Все локальные диски</value>
+  </data>
+  <data name="_Selective_ScanAllDrives_EN" xml:space="preserve">
+    <value>All local drives</value>
+  </data>
 </root>

@@ -100,15 +100,12 @@ namespace MSearch.Core.Scanners
 
             if (LaunchOptions.GetInstance.fullScan)
             {
-                DriveInfo[] allDrives = DriveInfo.GetDrives();
-                IEnumerable<DriveInfo> localDrives = allDrives.Where(drive =>
-                    drive.DriveType == DriveType.Fixed &&
-                    !drive.Name.Contains(Environment.SystemDirectory.Substring(0, 2)));
-
-                foreach (DriveInfo drive in localDrives)
+                foreach (DriveInfo drive in DriveInfo.GetDrives())
                 {
-                    paths.Add(drive.Name);
+                    if (drive.DriveType == DriveType.Fixed)
+                        paths.Add(drive.Name);
                 }
+
                 return paths;
             }
 

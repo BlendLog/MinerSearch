@@ -6067,6 +6067,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All local drives.
+        /// </summary>
+        internal static string _Selective_ScanAllDrives_EN {
+            get {
+                return ResourceManager.GetString("_Selective_ScanAllDrives_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string for the RU scan-all-drives label.
+        /// </summary>
+        internal static string _Selective_ScanAllDrives_RU {
+            get {
+                return ResourceManager.GetString("_Selective_ScanAllDrives_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Scan only.
         /// </summary>
         internal static string _Selective_ScanOnly_EN {
