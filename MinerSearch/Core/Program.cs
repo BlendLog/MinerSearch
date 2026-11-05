@@ -19,6 +19,27 @@ namespace MSearch
         [STAThread]
         static void Main(string[] args)
         {
+#if !DEBUG
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(ExeptionHandler.HookExeption);
+            Application.ThreadException += new ThreadExceptionEventHandler(ExeptionHandler.HookThreadException);
+            try
+            {
+                Run(args);
+            }
+            catch (FileNotFoundException notfoundEx)
+            {
+                ShowMissingDependencyError(notfoundEx.FileName);
+                Environment.Exit(1);
+            }
+#else
+            Run(args);
+#endif
+        }
+
+        static void Run(string[] args)
+        {
+            CheckDependencies();
+
             LaunchOptions _options = LaunchOptions.GetInstance;
 
             Application.EnableVisualStyles();
@@ -62,7 +83,6 @@ namespace MSearch
 
             Logger.InitLogger(_options.no_logs);
 #if !DEBUG
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(ExeptionHandler.HookExeption);
             AppConfig.GetInstance.ActiveLanguage = AppConfig.GetInstance.IsGuiAvailable ? LanguageManager.LoadLanguageSetting() : "EN";
 
             if (!File.Exists(LanguageManager.CfgFile))
@@ -70,15 +90,7 @@ namespace MSearch
                 LanguageManager.SaveLanguageSetting(AppConfig.GetInstance.ActiveLanguage);
             }
 
-            try
-            {
-                Init(args);
-            }
-            catch (FileNotFoundException notfoundEx)
-            {
-                DialogDispatcher.Show(AppConfig.GetInstance.LL.GetLocalizedString("_ErrorNotFoundComponent") + $"\n\n{notfoundEx.FileName}", AppConfig.GetInstance._title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                Environment.Exit(1);
-            }
+            Init(args);
 #else
 
             AppConfig.GetInstance.ActiveLanguage = LanguageManager.LoadLanguageSetting();
@@ -89,6 +101,54 @@ namespace MSearch
             Init(args);
 
 #endif
+        }
+
+        static void CheckDependencies()
+        {
+            string[] required = { "dbase.dll", "netlib.dll", "Win32Wrapper.dll" };
+            string directory = AppDomain.CurrentDomain.BaseDirectory;
+
+            foreach (string file in required)
+            {
+                if (!File.Exists(Path.Combine(directory, file)))
+                    throw new FileNotFoundException(null, file);
+            }
+        }
+
+        static void ShowMissingDependencyError(string fileName)
+        {
+            string message;
+            try
+            {
+                string language = "EN";
+                try
+                {
+                    if (File.Exists(LanguageManager.CfgFile))
+                    {
+                        string code = File.ReadAllText(LanguageManager.CfgFile).Trim();
+                        if (code == "RU" || code == "EN")
+                            language = code;
+                    }
+                }
+                catch { }
+
+                message = language == "RU" ? Resources._ErrorNotFoundComponent_RU : Resources._ErrorNotFoundComponent_EN;
+            }
+            catch
+            {
+                message = "Required application component is missing";
+            }
+
+            message += "\n\n" + fileName;
+
+            try
+            {
+                if (Environment.UserInteractive)
+                    MessageBox.Show(message, "MinerSearch", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                else
+                    Console.WriteLine(message);
+            }
+            catch { }
         }
 
         static void Init(string[] args)

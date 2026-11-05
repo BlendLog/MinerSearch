@@ -43,6 +43,12 @@ namespace MSearch
             Exception e = (Exception)args?.ExceptionObject;
             DialogDispatcher.Show(e.Message + "\n" + e.StackTrace, AppConfig.GetInstance.LL.GetLocalizedString("_ExeptionTitle"), Color.Salmon, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+
+        public static void HookThreadException(object sender, ThreadExceptionEventArgs args)
+        {
+            Exception e = args?.Exception;
+            DialogDispatcher.Show(e.Message + "\n" + e.StackTrace, AppConfig.GetInstance.LL.GetLocalizedString("_ExeptionTitle"), Color.Salmon, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     public class Utils
@@ -235,7 +241,7 @@ namespace MSearch
         {
             try
             {
-                string serviceName = "wi~nm~gm~t".Replace("~", "");
+                string serviceName = "winmgmt";
                 if (!ServiceIsInstalled(serviceName)) return;
 
                 var serviceInfo = GetServiceInfo(serviceName);
@@ -2603,7 +2609,8 @@ namespace MSearch
                     File.SetAttributes(entry, FileAttributes.Normal);
                 }
             }
-            catch (Exception) { };
+            catch (Exception) {}
+            
 
         }
 
@@ -2624,6 +2631,16 @@ namespace MSearch
 
         internal static string GetDownloadsPath()
         {
+#if DEBUG
+            string testPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            if (Directory.Exists(testPath))
+            {
+                return testPath;
+            }
+
+            return "";
+#endif
+
             IntPtr pathPtr = IntPtr.Zero;
 
             try
