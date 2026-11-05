@@ -146,7 +146,7 @@ namespace MSearch.UI
             this.buttonDonateSidebar.FlatAppearance.BorderSize = 0;
             this.buttonDonateSidebar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(92)))), ((int)(((byte)(194)))));
             this.buttonDonateSidebar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonDonateSidebar.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.buttonDonateSidebar.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.buttonDonateSidebar.ForeColor = System.Drawing.Color.White;
             this.buttonDonateSidebar.Location = new System.Drawing.Point(12, 664);
             this.buttonDonateSidebar.Margin = new System.Windows.Forms.Padding(0);

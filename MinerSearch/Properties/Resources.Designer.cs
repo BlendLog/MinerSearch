@@ -6157,6 +6157,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Detailed log.
+        /// </summary>
+        internal static string _Selective_VerboseLog_EN {
+            get {
+                return ResourceManager.GetString("_Selective_VerboseLog_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подробный лог.
+        /// </summary>
+        internal static string _Selective_VerboseLog_RU {
+            get {
+                return ResourceManager.GetString("_Selective_VerboseLog_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Svchost Hijacking module:.
         /// </summary>
         internal static string _ServiceDcomAbusing_EN {

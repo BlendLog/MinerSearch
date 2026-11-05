@@ -251,6 +251,7 @@ namespace MSearch.UI
             request.MaxDepth = (int)numericDepth.Value;
             request.ScanOnly = checkScanOnly.Checked;
             request.RemoveEmptyTasks = checkRemoveEmptyTasks.Checked;
+            request.Verbose = checkVerboseLog.Checked;
 
             if (checkFolder.Checked && !string.IsNullOrEmpty(textFolder.Text))
                 request.SelectedPath = textFolder.Text;
@@ -371,6 +372,7 @@ namespace MSearch.UI
 
             numericDepth.Enabled = !scanning;
             checkScanOnly.Enabled = !scanning;
+            checkVerboseLog.Enabled = !scanning;
             UpdateOptionDependencies();
 
             SetIndeterminate(false);
@@ -550,6 +552,7 @@ namespace MSearch.UI
             buttonBrowse.Text = L("_Selective_Browse");
             labelDepth.Text = L("_Selective_Depth");
             checkScanOnly.Text = L("_Selective_ScanOnly");
+            checkVerboseLog.Text = L("_Selective_VerboseLog");
             checkRemoveEmptyTasks.Text = L("_Selective_RemoveEmptyTasks");
             checkScanAllDrives.Text = L("_Selective_ScanAllDrives");
 

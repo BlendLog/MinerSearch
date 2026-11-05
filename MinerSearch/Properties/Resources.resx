@@ -2907,4 +2907,10 @@ No — choose a folder</value>
   <data name="_Selective_ScanAllDrives_EN" xml:space="preserve">
     <value>All local drives</value>
   </data>
+  <data name="_Selective_VerboseLog_RU" xml:space="preserve">
+    <value>Подробный лог</value>
+  </data>
+  <data name="_Selective_VerboseLog_EN" xml:space="preserve">
+    <value>Detailed log</value>
+  </data>
 </root>
