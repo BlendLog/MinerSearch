@@ -359,7 +359,7 @@ namespace MSearch.Core
                 RaiseProgress(decision.Target != null ? decision.Target.Id : null, processedDecisions, processingTotal);
             }
 
-            if (!_options.no_review_interact && allUnknownDecisions.Count > 0)
+            if (!_options.ScanOnly && !_options.no_review_interact && allUnknownDecisions.Count > 0)
             {
                 int autoAcceptValue = 2;
                 try
