@@ -2,7 +2,6 @@ using MSearch.Core;
 using MSearch.Properties;
 using System;
 using System.IO;
-using System.Reflection;
 using System.Resources;
 using System.Text;
 
@@ -10,43 +9,42 @@ namespace MSearch
 {
     public class LocalizedLogger
     {
-        
-        ResourceManager resourceManager = new ResourceManager("MSearch.Properties.Resources", Assembly.GetExecutingAssembly());
+
+        ResourceManager resourceManager = Resources.ResourceManager;
 
         #region TopRegion
-        internal static void LogPCInfo(string winver, BootMode bootmode, string uacState)
+        static string L(string key)
         {
-            string _winver = Resources._Winver_EN;
-            string _bootmode = Resources._BootMode_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    _winver = Resources._Winver_RU;
-                    _bootmode = Resources._BootMode_RU;
-                    break;
-                case "EN":
-                    _winver = Resources._Winver_EN;
-                    _bootmode = Resources._BootMode_EN;
-                    break;
-            }
+            return AppConfig.GetInstance.LL.GetLocalizedString(key);
+        }
+
+        internal static void LogSystemHeader(string winver, BootMode bootmode, string uacState, string scanMode)
+        {
+            string _winver = L("_Winver");
+            string _bootmode = L("_BootMode");
 
             Logger.WriteLog($"\t\t{Decode(_winver)} {winver}", ConsoleColor.DarkGray, false);
+            Logger.WriteLog($"\t\t{uacState}", ConsoleColor.DarkGray, false);
             Logger.WriteLog($"\t\t{_bootmode} {bootmode}", ConsoleColor.DarkGray, false);
-            Logger.WriteLog($"\t\t{uacState}\n", ConsoleColor.DarkGray, false);
+            Logger.WriteLog($"\t\t{L("_ScanMode")} {scanMode}\n", ConsoleColor.DarkGray, false);
+        }
+
+        internal static string GetScanModeTitle(ScanMode mode)
+        {
+            switch (mode)
+            {
+                case ScanMode.Full:
+                    return L("_ScanMode_Full_Title");
+                case ScanMode.Selective:
+                    return L("_ScanMode_Selective_Title");
+                default:
+                    return L("_ScanMode_Quick_Title");
+            }
         }
 
         internal static void LogStartupCount(int count)
         {
-            string message = Resources._StartupCount_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._StartupCount_RU;
-                    break;
-                case "EN":
-                    message = Resources._StartupCount_EN;
-                    break;
-            }
+            string message = L("_StartupCount");
 
             Logger.WriteLog($"\t\t{message}: [{count}]", ConsoleColor.White, false);
 
@@ -58,31 +56,13 @@ namespace MSearch
         #region Errors
         public static void LogError_СriticalServiceNotInstalled()
         {
-            string message = Resources._CriticalServiceNotInstalled_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._CriticalServiceNotInstalled_RU;
-                    break;
-                case "EN":
-                    message = Resources._CriticalServiceNotInstalled_EN;
-                    break;
-            }
+            string message = L("_CriticalServiceNotInstalled");
             Logger.WriteLog($"\t[xxx] {new StringBuilder("wi").Append("nmg").Append("mt")}: {message}", Logger.error);
         }
 
         public static void LogInvalidFile(string filePath)
         {
-            string message = Resources._InvalidFile_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._InvalidFile_RU;
-                    break;
-                case "EN":
-                    message = Resources._InvalidFile_EN;
-                    break;
-            }
+            string message = L("_InvalidFile");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"\n\t[x] {message}: {filePath}");
             Console.ResetColor();
@@ -91,16 +71,7 @@ namespace MSearch
 
         public static void LogR00TkitPresent()
         {
-            string message = Resources._R00tkitPresent_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._R00tkitPresent_RU;
-                    break;
-                case "EN":
-                    message = Resources._R00tkitPresent_EN;
-                    break;
-            }
+            string message = L("_R00tkitPresent");
 
             Console.BackgroundColor = ConsoleColor.DarkMagenta;
             Logger.WriteLog($"\t\t[!!!!] {Decode(message)}", ConsoleColor.White, false);
@@ -110,16 +81,7 @@ namespace MSearch
 
         public static void LogScanning(string processName, string processArgs = "")
         {
-            string message = Resources._Scanning_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._Scanning_RU;
-                    break;
-                case "EN":
-                    message = Resources._Scanning_EN;
-                    break;
-            }
+            string message = L("_Scanning");
 
             if (!LaunchOptions.GetInstance.verbose)
             {
@@ -132,47 +94,20 @@ namespace MSearch
 
         public static void LogNoThreatsFound()
         {
-            string message = Resources._NoThreats_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._NoThreats_RU;
-                    break;
-                case "EN":
-                    message = Resources._NoThreats_EN;
-                    break;
-            }
+            string message = L("_NoThreats");
             Logger.WriteLog($"\t[#] {message}", ConsoleColor.Blue);
         }
 
         public static void LogSpecifyDrive()
         {
-            string message = Resources._SpecDrive_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._SpecDrive_RU;
-                    break;
-                case "EN":
-                    message = Resources._SpecDrive_EN;
-                    break;
-            }
+            string message = L("_SpecDrive");
             Console.Write($"\n\t\t{message} ");
 
         }
 
         public static void LogIncorrectDrive(string driveletter)
         {
-            string message = Resources._IncorrectDrive_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._IncorrectDrive_RU;
-                    break;
-                case "EN":
-                    message = Resources._IncorrectDrive_EN;
-                    break;
-            }
+            string message = L("_IncorrectDrive");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"\t[x] {message}: {driveletter}");
             Console.ResetColor();
@@ -180,64 +115,28 @@ namespace MSearch
 
         public static void LogWinPEMode(string driveletter)
         {
-            string message = Resources._WinPEMode_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._WinPEMode_RU;
-                    break;
-                case "EN":
-                    message = Resources._WinPEMode_EN;
-                    break;
-            }
+            string message = L("_WinPEMode");
             Console.WriteLine($"\t\t[&] {message} {driveletter}:\\");
 
         }
 
         public static void LogUnknownCommand(string command)
         {
-            string message = Resources._UnknownCommand_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._UnknownCommand_RU;
-                    break;
-                case "EN":
-                    message = Resources._UnknownCommand_EN;
-                    break;
-            }
+            string message = L("_UnknownCommand");
             Console.WriteLine($"\n{message} {command}");
 
         }
 
         public static void LogHelpHint()
         {
-            string message = Resources._HelpHint_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._HelpHint_RU;
-                    break;
-                case "EN":
-                    message = Resources._HelpHint_EN;
-                    break;
-            }
+            string message = L("_HelpHint");
             Console.WriteLine($"\t\t{message}");
 
         }
 
         public static void LogPAUSE()
         {
-            string message = Resources._PAUSE_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._PAUSE_RU;
-                    break;
-                case "EN":
-                    message = Resources._PAUSE_EN;
-                    break;
-            }
+            string message = L("_PAUSE");
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Blue;
             Console.WriteLine(message);
@@ -247,31 +146,13 @@ namespace MSearch
 
         public static void LogScanOnlyMode()
         {
-            string message = Resources._ScanOnlyMode_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._ScanOnlyMode_RU;
-                    break;
-                case "EN":
-                    message = Resources._ScanOnlyMode_EN;
-                    break;
-            }
+            string message = L("_ScanOnlyMode");
             Logger.WriteLog($"\t[i] {message}", ConsoleColor.Blue);
         }
 
         public static void LogAnalyzingFile(string file)
         {
-            string message = Resources._AnalyzingFile_EN;
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._AnalyzingFile_RU;
-                    break;
-                case "EN":
-                    message = Resources._AnalyzingFile_EN;
-                    break;
-            }
+            string message = L("_AnalyzingFile");
 
             lock (Logger._logLock)
             {
@@ -358,16 +239,7 @@ namespace MSearch
                     displayName = "..." + displayName.Substring(displayName.Length - 57);
                 }
 
-                string skippedLabel = Resources._ActionType_Skipped_EN;
-                switch (AppConfig.GetInstance.ActiveLanguage)
-                {
-                    case "RU":
-                        skippedLabel = Resources._ActionType_Skipped_RU;
-                        break;
-                    case "EN":
-                        skippedLabel = Resources._ActionType_Skipped_EN;
-                        break;
-                }
+                string skippedLabel = L("_ActionType_Skipped");
 
                 WriteInPlaceConsoleProgress($"[~ {current,5}/{total}] {displayName,-60} ({skippedLabel})", ConsoleColor.Gray);
 
@@ -509,42 +381,16 @@ namespace MSearch
 
         public static void LogElapsedTime(string elapsedTime)
         {
-            string message = Resources._Elapse_EN;
-
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    message = Resources._Elapse_RU;
-                    break;
-                case "EN":
-                    message = Resources._Elapse_EN;
-                    break;
-            }
+            string message = L("_Elapse");
             Logger.WriteLog($"\t\t[$] {message} {elapsedTime}", ConsoleColor.White, false);
         }
 
         public static void LogTotalScanResult(int _totalThreats, int _neutralizedThreats, int _suspObjects, int _skippedThreats)
         {
-            string totalThreats = Resources._TotalThreatsFound_EN;
-            string neutralizedThreats = Resources._TotalNeutralizedThreats_EN;
-            string totalSuspObj = Resources._TotalSuspObjects_EN;
-            string skippedThreats = Resources._TotalSkippedThreats_EN;
-
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    totalThreats = Resources._TotalThreatsFound_RU;
-                    neutralizedThreats = Resources._TotalNeutralizedThreats_RU;
-                    totalSuspObj = Resources._TotalSuspObjects_RU;
-                    skippedThreats = Resources._TotalSkippedThreats_RU;
-                    break;
-                case "EN":
-                    totalThreats = Resources._TotalThreatsFound_EN;
-                    neutralizedThreats = Resources._TotalNeutralizedThreats_EN;
-                    totalSuspObj = Resources._TotalSuspObjects_EN;
-                    skippedThreats = Resources._TotalSkippedThreats_EN;
-                    break;
-            }
+            string totalThreats = L("_TotalThreatsFound");
+            string neutralizedThreats = L("_TotalNeutralizedThreats");
+            string totalSuspObj = L("_TotalSuspObjects");
+            string skippedThreats = L("_TotalSkippedThreats");
 
             ConsoleColor color = ConsoleColor.White;
 
@@ -564,17 +410,7 @@ namespace MSearch
 
         public void LogWriteWithoutDisplay(bool NoDisplay, bool DisplayTime)
         {
-            string text = Resources._LogLegend_EN;
-
-            switch (AppConfig.GetInstance.ActiveLanguage)
-            {
-                case "RU":
-                    text = Resources._LogLegend_RU;
-                    break;
-                case "EN":
-                    text = Resources._LogLegend_EN;
-                    break;
-            }
+            string text = GetLocalizedString("_LogLegend");
 
             Logger.WriteLog("\n\n" + text, NoDisplay, DisplayTime);
         }

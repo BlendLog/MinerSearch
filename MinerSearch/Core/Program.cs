@@ -281,8 +281,6 @@ namespace MSearch
                 _options.silent = false;
             }
 
-            LocalizedLogger.LogPCInfo(OSExtensions.GetWindowsVersion() + " " + OSExtensions.GetPlatform(), AppConfig.GetInstance.bootMode, OSExtensions.GetUACState());
-
             if (_options.silent)
             {
                 Console.WriteLine("\t\t[SILENT MODE]");
@@ -295,17 +293,12 @@ namespace MSearch
 
             if (!_options.QuarantineMode)
             {
-                Utils.CheckStartupCount();
+                Utils.IncrementStartupCount();
             }
 
             if (!_options.gui_mode)
             {
                 Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.RealTime;
-            }
-
-            if (!_options.no_logs)
-            {
-                AppConfig.GetInstance.LL.LogWriteWithoutDisplay(true, false);
             }
 
             if (_options.demandSelection && !_options.silent && !_options.gui_mode)

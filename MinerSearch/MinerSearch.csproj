@@ -269,12 +269,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MinerSearch.ico" />
-    <None Include="Resources\sber_logo.png" />
-    <None Include="Resources\sbp_sber.png" />
-    <None Include="Resources\tether-usdt-logo.png" />
-    <None Include="Resources\ton_png.png" />
-    <None Include="Resources\quarantine_logo.png" />
-    <None Include="Resources\telegram_logo.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\FormMain.resx">
@@ -347,6 +341,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Release\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -75,7 +75,7 @@ namespace MSearch
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.NewGuid().ToString())).Remove(len);
         }
 
-        internal static void CheckStartupCount()
+        internal static int IncrementStartupCount()
         {
             string KeyPath = AppConfig.GetInstance.RegistryPathMain;
             string valueName = AppConfig.GetInstance.LaunchCountValueName;
@@ -106,9 +106,8 @@ namespace MSearch
 
                                 oldKey.DeleteValue(valueName, false);
 
-                                LocalizedLogger.LogStartupCount(runCount);
                                 AppConfig.GetInstance.RunCount = runCount;
-                                return;
+                                return runCount;
                             }
                         }
                     }
@@ -129,8 +128,8 @@ namespace MSearch
                 runCount = IncrementFallbackHKCU();
             }
 
-            LocalizedLogger.LogStartupCount(runCount);
             AppConfig.GetInstance.RunCount = runCount;
+            return runCount;
         }
 
         static int IncrementFallbackHKCU()

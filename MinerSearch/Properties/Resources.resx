@@ -556,10 +556,6 @@ Before proceeding, you must read the license agreement (eula.rtf or a copy of it
   <data name="_PrivilegeRequiresReboot_RU" xml:space="preserve">
     <value>Привилегия '{0}' требует перезагрузки для применения. Перезагрузить сейчас?</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="quarantine_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\quarantine_logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="_PAUSE_EN" xml:space="preserve">
     <value>PAUSE BEFORE CLEANUP
 Press any key to continue...</value>
@@ -2456,6 +2452,18 @@ Do you want to continue?
   </data>
   <data name="_ScanMode_Selective_Title_EN" xml:space="preserve">
     <value>Selective scan</value>
+  </data>
+  <data name="_ScanMode_RU" xml:space="preserve">
+    <value>Режим сканирования:</value>
+  </data>
+  <data name="_ScanMode_EN" xml:space="preserve">
+    <value>Scan mode:</value>
+  </data>
+  <data name="_ScanMode_Console_RU" xml:space="preserve">
+    <value>Консольный</value>
+  </data>
+  <data name="_ScanMode_Console_EN" xml:space="preserve">
+    <value>Console</value>
   </data>
   <data name="_ScanSelective_Title_RU" xml:space="preserve">
     <value>Этапы проверки</value>

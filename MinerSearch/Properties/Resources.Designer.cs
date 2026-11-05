@@ -5257,6 +5257,33 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Console.
+        /// </summary>
+        internal static string _ScanMode_Console_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_Console_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Консольный.
+        /// </summary>
+        internal static string _ScanMode_Console_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_Console_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scan mode:.
+        /// </summary>
+        internal static string _ScanMode_EN {
+            get {
+                return ResourceManager.GetString("_ScanMode_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на All local drives, max scan depth.
         /// </summary>
         internal static string _ScanMode_Full_Desc_EN {
@@ -5365,6 +5392,15 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Режим сканирования:.
+        /// </summary>
+        internal static string _ScanMode_RU {
+            get {
+                return ResourceManager.GetString("_ScanMode_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Choose scan stages.
         /// </summary>
         internal static string _ScanMode_Selective_Desc_EN {
@@ -5469,6 +5505,24 @@ namespace MSearch.Properties {
         internal static string _ScanProcesses_RU {
             get {
                 return ResourceManager.GetString("_ScanProcesses_RU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Processed #DONE# / #TOTAL#.
+        /// </summary>
+        internal static string _ScanProcessingProgress_EN {
+            get {
+                return ResourceManager.GetString("_ScanProcessingProgress_EN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обработано #DONE# / #TOTAL#.
+        /// </summary>
+        internal static string _ScanProcessingProgress_RU {
+            get {
+                return ResourceManager.GetString("_ScanProcessingProgress_RU", resourceCulture);
             }
         }
         
@@ -5595,24 +5649,6 @@ namespace MSearch.Properties {
         internal static string _ScanStage_CurrentObject_RU {
             get {
                 return ResourceManager.GetString("_ScanStage_CurrentObject_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Processed #DONE# / #TOTAL#.
-        /// </summary>
-        internal static string _ScanProcessingProgress_EN {
-            get {
-                return ResourceManager.GetString("_ScanProcessingProgress_EN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Обработано #DONE# / #TOTAL#.
-        /// </summary>
-        internal static string _ScanProcessingProgress_RU {
-            get {
-                return ResourceManager.GetString("_ScanProcessingProgress_RU", resourceCulture);
             }
         }
         
@@ -6085,7 +6121,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to All local drives.
+        ///   Ищет локализованную строку, похожую на All local drives.
         /// </summary>
         internal static string _Selective_ScanAllDrives_EN {
             get {
@@ -6094,7 +6130,7 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string for the RU scan-all-drives label.
+        ///   Ищет локализованную строку, похожую на Все локальные диски.
         /// </summary>
         internal static string _Selective_ScanAllDrives_RU {
             get {
@@ -7791,16 +7827,6 @@ namespace MSearch.Properties {
         internal static string _YesBtn_RU {
             get {
                 return ResourceManager.GetString("_YesBtn_RU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap quarantine_logo {
-            get {
-                object obj = ResourceManager.GetObject("quarantine_logo", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

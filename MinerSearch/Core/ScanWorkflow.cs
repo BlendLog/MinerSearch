@@ -163,6 +163,7 @@ namespace MSearch.Core
 
             // Лог живёт ровно один скан: новый файл на каждый запуск.
             Logger.BeginScanLog();
+            LogScanHeader();
 
             try
             {
@@ -178,6 +179,25 @@ namespace MSearch.Core
 
                 Logger.EndScanLog();
             }
+        }
+
+        /// <summary>
+        /// System header at the top of each scan log: Windows, UAC, boot mode,
+        /// scan mode, startup count and the legend. Written after BeginScanLog,
+        /// so repeated scans in one session each get a fresh header.
+        /// </summary>
+        private void LogScanHeader()
+        {
+            LocalizedLogger.LogSystemHeader(OSExtensions.GetWindowsVersion() + " " + OSExtensions.GetPlatform(), AppConfig.GetInstance.bootMode, OSExtensions.GetUACState(), GetScanModeText());
+            LocalizedLogger.LogStartupCount(AppConfig.GetInstance.RunCount);
+            AppConfig.GetInstance.LL.LogWriteWithoutDisplay(true, false);
+        }
+
+        private string GetScanModeText()
+        {
+            if (_request == null)
+                return AppConfig.GetInstance.LL.GetLocalizedString("_ScanMode_Console");
+            return LocalizedLogger.GetScanModeTitle(_request.Mode);
         }
 
         private void OnScanActivity(string value)
