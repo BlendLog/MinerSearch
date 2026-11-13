@@ -943,6 +943,24 @@ namespace MSearch.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Elevated conhost --headless task:.
+        /// </summary>
+        internal static string _ConhostHeadlessElevatedTask_EN {
+            get {
+                return ResourceManager.GetString("_ConhostHeadlessElevatedTask_EN", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Задача conhost --headless с повышенными правами:.
+        /// </summary>
+        internal static string _ConhostHeadlessElevatedTask_RU {
+            get {
+                return ResourceManager.GetString("_ConhostHeadlessElevatedTask_RU", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Found.
         /// </summary>
         internal static string _Counter_Found_EN {

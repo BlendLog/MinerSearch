@@ -142,6 +142,14 @@ namespace MSearch.Infrastructure
                         }
                     }
 
+                    XElement principalNode = GetActionPrincipal(doc, ns, actionsNode);
+                    if (principalNode != null)
+                    {
+                        taskInfo.PrincipalUserId = principalNode.Element(ns + "UserId")?.Value?.Trim();
+                        taskInfo.PrincipalGroupId = principalNode.Element(ns + "GroupId")?.Value?.Trim();
+                        taskInfo.PrincipalRunLevel = principalNode.Element(ns + "RunLevel")?.Value?.Trim();
+                    }
+
                     return taskInfo;
                 }
             }
@@ -161,6 +169,19 @@ namespace MSearch.Infrastructure
             }
         }
 
+        private static XElement GetActionPrincipal(XDocument doc, XNamespace ns, XElement actionsNode)
+        {
+            string context = actionsNode?.Attribute("Context")?.Value;
+            if (!string.IsNullOrEmpty(context))
+            {
+                XElement matched = doc.Descendants(ns + "Principal")
+                    .FirstOrDefault(p => string.Equals((string)p.Attribute("id"), context, StringComparison.OrdinalIgnoreCase));
+                if (matched != null)
+                    return matched;
+            }
+
+            return doc.Descendants(ns + "Principal").FirstOrDefault();
+        }
 
     }
 }

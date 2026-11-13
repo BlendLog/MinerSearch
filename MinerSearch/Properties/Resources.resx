@@ -2375,6 +2375,12 @@ Do you want to continue?
   <data name="_TempBinaryTask_RU" xml:space="preserve">
     <value>Задача запускает файл из %TEMP%:</value>
   </data>
+  <data name="_ConhostHeadlessElevatedTask_EN" xml:space="preserve">
+    <value>Elevated conhost --headless task:</value>
+  </data>
+  <data name="_ConhostHeadlessElevatedTask_RU" xml:space="preserve">
+    <value>Задача conhost --headless с повышенными правами:</value>
+  </data>
   <data name="_ServiceMshtaLauncher_EN" xml:space="preserve">
     <value>Service launches mshta:</value>
   </data>

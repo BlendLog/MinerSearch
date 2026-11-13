@@ -3019,6 +3019,12 @@ namespace MSearch
 
         }
 
+        internal static bool IsUACDisabled()
+        {
+            var enableLua = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["SystemPolicies"])?.GetValue("EnableLUA");
+            return enableLua != null && Convert.ToInt32(enableLua) == 0;
+        }
+
         internal static string GetUACState()
         {
             var enableLua = Registry.LocalMachine.OpenSubKey(MSData.GetInstance.queries["SystemPolicies"])?.GetValue("EnableLUA");

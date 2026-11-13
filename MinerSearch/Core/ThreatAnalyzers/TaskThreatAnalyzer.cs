@@ -79,7 +79,7 @@ namespace MSearch.Core.ThreatAnalyzers
             string args = action.Arguments ?? string.Empty;
             string filePathFromTask = taskObj.LinkedFile?.FilePath ?? "";
 
-            AppConfig.GetInstance.LL.LogMessage("[#]", "_Scanning", $"{taskObj.Info.Name} | {taskObj.Info.Path}", ConsoleColor.White);
+            AppConfig.GetInstance.LL.LogMessage("[#]", "_Scanning", $"{taskObj.Info.Name} | {taskObj.Info.Path} | {GetPrincipalLogText(taskObj.Info)}", ConsoleColor.White);
 
             if (taskObj.Info.Name.StartsWith(MSData.GetInstance.SysFileName[17], StringComparison.Ordinal))
             {
@@ -731,17 +731,40 @@ namespace MSearch.Core.ThreatAnalyzers
                     args.IndexOf(MSData.GetInstance.conhostPatterns["policy-bp"], StringComparison.OrdinalIgnoreCase) >= 0 ||
                     MSData.ContainsAnyMarker(args, conhostArgMarkers))
                 {
-
-                    if (!LaunchOptions.GetInstance.ScanOnly)
+                    if (IsSystemPrincipal(taskObj.Info))
                     {
-                        taskObj.ActionDeleteTask = true;
-                        MarkFileForAction(taskObj.LinkedFile);
-                        AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete", $"{taskObj.Info.Path}\\{taskObj.Info.Name}");
+                        if (!LaunchOptions.GetInstance.ScanOnly)
+                        {
+                            taskObj.ActionDeleteTask = true;
+                            MarkFileForAction(taskObj.LinkedFile);
+                            AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToDelete", $"{taskObj.Info.Path}\\{taskObj.Info.Name}");
 
+                        }
+
+                        taskObj.DetectionReasonRes = "_Malic1ousTask";
+                        yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
                     }
+                    else if (IsHighestRunLevel(taskObj.Info) && !IsServiceAccountPrincipal(taskObj.Info))
+                    {
+                        risk += 2;
+                        taskObj.DetectionReasonRes = "_ConhostHeadlessElevatedTask";
 
-                    taskObj.DetectionReasonRes = "_Malic1ousTask";
-                    yield return new ThreatDecision(taskObj, risk, ScanObjectType.Malware);
+                        if (OSExtensions.IsUACDisabled())
+                        {
+                            if (!LaunchOptions.GetInstance.ScanOnly)
+                            {
+                                taskObj.ActionQuarantineTask = true;
+                                taskObj.ActionDeleteTask = true;
+                                AppConfig.GetInstance.LL.LogSuccessMessage("_TaskMarkedToQuarantine", $"{taskObj.Info.Path}\\{taskObj.Info.Name}");
+                            }
+                        }
+                        else
+                        {
+                            AppConfig.GetInstance.LL.LogWarnMediumMessage("_ConhostHeadlessElevatedTask", $"{taskObj.Info.Path}\\{taskObj.Info.Name}");
+                        }
+
+                        yield return new ThreatDecision(taskObj, risk, ScanObjectType.Suspicious);
+                    }
                 }
             }
 
@@ -1216,6 +1239,57 @@ namespace MSearch.Core.ThreatAnalyzers
         {
             string path = taskObj.Info?.Path;
             return string.IsNullOrEmpty(path) || path.Trim() == "\\";
+        }
+
+        static bool IsSystemPrincipal(ScheduledTaskInfo info)
+        {
+            string userId = info?.PrincipalUserId;
+            if (string.IsNullOrEmpty(userId))
+                return false;
+
+            userId = userId.Trim();
+            return userId.Equals("S-1-5-18", StringComparison.OrdinalIgnoreCase) ||
+                   userId.Equals("SYSTEM", StringComparison.OrdinalIgnoreCase) ||
+                   userId.Equals(@"NT AUTHORITY\SYSTEM", StringComparison.OrdinalIgnoreCase) ||
+                   userId.Equals("LocalSystem", StringComparison.OrdinalIgnoreCase);
+        }
+
+        static bool IsHighestRunLevel(ScheduledTaskInfo info)
+        {
+            return string.Equals(info?.PrincipalRunLevel?.Trim(), "HighestAvailable", StringComparison.OrdinalIgnoreCase);
+        }
+
+        static bool IsServiceAccountPrincipal(ScheduledTaskInfo info)
+        {
+            string userId = info?.PrincipalUserId;
+            if (string.IsNullOrEmpty(userId))
+                return false;
+
+            userId = userId.Trim();
+            return userId.Equals("S-1-5-19", StringComparison.OrdinalIgnoreCase) ||
+                   userId.Equals("S-1-5-20", StringComparison.OrdinalIgnoreCase) ||
+                   userId.Equals("LOCAL SERVICE", StringComparison.OrdinalIgnoreCase) ||
+                   userId.Equals("NETWORK SERVICE", StringComparison.OrdinalIgnoreCase) ||
+                   userId.Equals(@"NT AUTHORITY\LOCAL SERVICE", StringComparison.OrdinalIgnoreCase) ||
+                   userId.Equals(@"NT AUTHORITY\NETWORK SERVICE", StringComparison.OrdinalIgnoreCase) ||
+                   userId.StartsWith("S-1-5-80-", StringComparison.OrdinalIgnoreCase) ||
+                   userId.StartsWith(@"NT SERVICE\", StringComparison.OrdinalIgnoreCase);
+        }
+
+        static string GetPrincipalLogText(ScheduledTaskInfo info)
+        {
+            string principal;
+            if (IsSystemPrincipal(info))
+                principal = "SYSTEM";
+            else if (IsServiceAccountPrincipal(info))
+                principal = "service";
+            else if (!string.IsNullOrEmpty(info?.PrincipalUserId) || !string.IsNullOrEmpty(info?.PrincipalGroupId))
+                principal = "user";
+            else
+                principal = "unknown";
+
+            string runLevel = IsHighestRunLevel(info) ? "HighestAvailable" : "LeastPrivilege";
+            return "principal=" + principal + ", runLevel=" + runLevel;
         }
 
         bool IsInSystemLocation(string filePath)

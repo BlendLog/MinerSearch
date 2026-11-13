@@ -11,6 +11,9 @@ namespace MSearch.Core.ThreatObjects
         public string XmlPath { get; set; }
 
         public bool IsEnabled { get; set; }
+        public string PrincipalUserId { get; set; }
+        public string PrincipalGroupId { get; set; }
+        public string PrincipalRunLevel { get; set; }
         public List<ExecActionInfo> ExecActions { get; set; } = new List<ExecActionInfo>();
     }
 
