@@ -349,7 +349,7 @@ namespace MSearch.Core
             // Все неизвестные угрозы из всех типов сканов → обзор.
             // Rootkit (Other) всегда обрабатывается автоматически — исключаем из review.
             List<ThreatDecision> allUnknownDecisions = unknownDecisions
-                .Where(d => d.Target.Kind != ThreatObjectKind.Other)
+                .Where(d => !IsLockedServiceDirectory(d) && d.Target.Kind != ThreatObjectKind.Other)
                 .ToList();
 
             token.ThrowIfCancellationRequested();
@@ -837,6 +837,12 @@ namespace MSearch.Core
 
             FileThreatObject file = decision.Target as FileThreatObject;
             return file != null && file.IsLockedByAntivirus;
+        }
+
+        private static bool IsLockedServiceDirectory(ThreatDecision decision)
+        {
+            DirectoryThreatObject dir = decision != null ? decision.Target as DirectoryThreatObject : null;
+            return dir != null && string.Equals(dir.SourceTag, "locked", StringComparison.Ordinal);
         }
 
         private static string GetDedupKey(ThreatDecision d)
