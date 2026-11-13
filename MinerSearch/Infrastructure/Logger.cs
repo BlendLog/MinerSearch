@@ -18,12 +18,12 @@ namespace MSearch
         static bool _captureStartupLog;
 
         /// <summary>
-        /// Logs folder. Computed lazily (drive_letter in WinPE is set after startup)
+        /// Logs folder. Resolved lazily (the WinPE drive is selected after startup)
         /// and created only when a scan starts.
         /// </summary>
         public static string LogsFolder
         {
-            get { return _logsFolder ?? Path.Combine(AppConfig.GetInstance.drive_letter + ":\\", LogsFolderName); }
+            get { return _logsFolder ?? GetDefaultLogsFolder(); }
             private set { _logsFolder = value; }
         }
 
@@ -146,11 +146,35 @@ namespace MSearch
         }
 
         /// <summary>
-        /// Prepares the logs folder: the main drive (drive_letter), falling back to the app directory.
+        /// Logs folder for the current drive, falling back to the system drive
+        /// when the configured drive letter is missing or invalid.
+        /// </summary>
+        private static string GetDefaultLogsFolder()
+        {
+            string root = GetDriveRoot(AppConfig.GetInstance.drive_letter)
+                          ?? Path.GetPathRoot(Environment.SystemDirectory);
+
+            if (string.IsNullOrEmpty(root))
+                root = AppDomain.CurrentDomain.BaseDirectory;
+
+            return Path.Combine(root, LogsFolderName);
+        }
+
+        private static string GetDriveRoot(string driveLetter)
+        {
+            if (string.IsNullOrEmpty(driveLetter) || !char.IsLetter(driveLetter[0]))
+                return null;
+
+            string root = char.ToUpperInvariant(driveLetter[0]) + ":\\";
+            return Directory.Exists(root) ? root : null;
+        }
+
+        /// <summary>
+        /// Prepares the logs folder, falling back to the app directory.
         /// </summary>
         private static string PrepareLogsFolder()
         {
-            string primary = Path.Combine(AppConfig.GetInstance.drive_letter + ":\\", LogsFolderName);
+            string primary = GetDefaultLogsFolder();
 
             if (TryPrepareFolder(primary))
             {

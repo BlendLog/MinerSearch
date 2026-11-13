@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -44,7 +45,7 @@ namespace MSearch.Core
         public int totalNeutralizedThreats { get; set; }
         public int userSkippedThreats { get; set; }
 
-        public string drive_letter { get; set; } = "C";
+        public string drive_letter { get; set; } = GetSystemDriveLetter();
         public string ActiveLanguage { get; set; } = "EN";
         public string _title { get; } = new StringBuilder("Mi").Append("ner").Append("Sea").Append("rch").ToString();
         public BootMode bootMode { get; } = OSExtensions.GetBootMode();
@@ -67,6 +68,19 @@ namespace MSearch.Core
                 ExecutablePath = p.MainModule.FileName;
                 CurrentVersion = FileVersionInfo.GetVersionInfo(ExecutablePath).ProductVersion;
             }
+        }
+
+        internal static string GetSystemDriveLetter()
+        {
+            string systemDrive = Environment.GetEnvironmentVariable("SYSTEMDRIVE");
+            if (!string.IsNullOrEmpty(systemDrive) && char.IsLetter(systemDrive[0]))
+                return char.ToUpperInvariant(systemDrive[0]).ToString();
+
+            string root = Path.GetPathRoot(Environment.SystemDirectory);
+            if (!string.IsNullOrEmpty(root) && char.IsLetter(root[0]))
+                return char.ToUpperInvariant(root[0]).ToString();
+
+            return "C";
         }
     }
 }

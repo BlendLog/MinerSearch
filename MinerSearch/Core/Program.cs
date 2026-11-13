@@ -4,7 +4,6 @@ using MSearch.Core;
 using MSearch.Properties;
 using MSearch.UI;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -90,7 +89,7 @@ namespace MSearch
                 LanguageManager.SaveLanguageSetting(AppConfig.GetInstance.ActiveLanguage);
             }
 
-            Init(args);
+            Init();
 #else
 
             AppConfig.GetInstance.ActiveLanguage = LanguageManager.LoadLanguageSetting();
@@ -98,7 +97,7 @@ namespace MSearch
             {
                 LanguageManager.SaveLanguageSetting(AppConfig.GetInstance.ActiveLanguage);
             }
-            Init(args);
+            Init();
 
 #endif
         }
@@ -151,7 +150,7 @@ namespace MSearch
             catch { }
         }
 
-        static void Init(string[] args)
+        static void Init()
         {
             LaunchOptions _options = LaunchOptions.GetInstance;
 
@@ -184,13 +183,7 @@ namespace MSearch
 
             if (envResult.IsWinPE)
             {
-                List<string> newargs = new List<string> { "--winpemode" };
-                if (args.Length > 0)
-                {
-                    foreach (string arg in args)
-                        newargs.Add(arg);
-                }
-                args = newargs.ToArray();
+                _options.winpemode = true;
                 AppConfig.GetInstance.WinPEMode = true;
 
                 // В WinPE GUI недоступен — работаем через консоль.
@@ -261,7 +254,6 @@ namespace MSearch
             {
                 string driveLetter = EnvironmentChecker.PromptWinPEDriveLetter(AppConfig.GetInstance);
                 AppConfig.GetInstance.drive_letter = driveLetter;
-                Drive.Letter = driveLetter;
                 _options.no_runtime = true;
                 _options.no_rootkit_check = true;
                 _options.no_services = true;
@@ -277,10 +269,9 @@ namespace MSearch
             }
 
             if (!AppConfig.GetInstance.WinPEMode)
-            {
-                AppConfig.GetInstance.drive_letter = Environment.GetEnvironmentVariable("SYSTEMDRIVE").Remove(1);
-                Drive.Letter = AppConfig.GetInstance.drive_letter;
-            }
+                AppConfig.GetInstance.drive_letter = AppConfig.GetSystemDriveLetter();
+
+            Drive.Letter = AppConfig.GetInstance.drive_letter;
 
             // Warn when running as SYSTEM
             if (envResult.IsSystemProcess && !AppConfig.GetInstance.WinPEMode)
