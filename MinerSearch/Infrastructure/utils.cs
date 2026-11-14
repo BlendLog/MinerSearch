@@ -1833,6 +1833,53 @@ namespace MSearch
             }
         }
 
+        private static readonly ConcurrentDictionary<string, string> _sha256SessionCache =
+            new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        internal static string CalculateSHA256(string filePath)
+        {
+            string cacheKey = MSData.NormalizeKnownPath(filePath);
+            if (cacheKey.Length == 0)
+                cacheKey = null;
+
+            string cachedHash;
+            if (cacheKey != null && _sha256SessionCache.TryGetValue(cacheKey, out cachedHash))
+                return cachedHash;
+
+            string hash = CalculateSHA256Uncached(filePath);
+
+            if (cacheKey != null && hash != "N/A")
+                _sha256SessionCache[cacheKey] = hash;
+
+            return hash;
+        }
+
+        private static string CalculateSHA256Uncached(string filePath)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                try
+                {
+                    using (var stream = OpenReadWithFallback(filePath, FileShare.Read))
+                    {
+                        byte[] hashBytes = sha256.ComputeHash(stream);
+                        StringBuilder sb = new StringBuilder();
+
+                        foreach (byte b in hashBytes)
+                        {
+                            sb.Append(b.ToString("x2"));
+                        }
+
+                        return sb.ToString();
+                    }
+                }
+                catch (Exception)
+                {
+                    return "N/A";
+                }
+            }
+        }
+
         internal static void LogUnsignedSha1(FileThreatObject file)
         {
             try

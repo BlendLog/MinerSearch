@@ -28,6 +28,8 @@ namespace MSearch.Core.ThreatAnalyzers
 
         private static bool _headerLogged = false;
         private static readonly object _headerLock = new object();
+        private static HashSet<string> _knownUnsignedServiceDlls;
+        private static readonly object _knownUnsignedServiceDllsLock = new object();
 
         private static readonly Regex EncodedCommandRegex = new Regex(
             MSData.GetInstance.regexPatterns[MSKeys.EncodedCommand],
@@ -448,6 +450,25 @@ namespace MSearch.Core.ThreatAnalyzers
             return space > 0 ? raw.Substring(0, space) : raw;
         }
 
+        private static bool IsKnownUnsignedServiceDll(string serviceDll)
+        {
+            if (_knownUnsignedServiceDlls == null)
+            {
+                lock (_knownUnsignedServiceDllsLock)
+                {
+                    if (_knownUnsignedServiceDlls == null)
+                    {
+                        _knownUnsignedServiceDlls = new HashSet<string>(
+                            MSData.GetInstance.legitServiceDllHashes,
+                            StringComparer.OrdinalIgnoreCase);
+                    }
+                }
+            }
+
+            string hash = FileChecker.CalculateSHA256(serviceDll);
+            return hash != "N/A" && _knownUnsignedServiceDlls.Contains(hash);
+        }
+
         private void CheckServiceDll(ServiceThreatObject svc, ref int risk, ref bool isMalicious)
         {
             string registryPath = MSData.GetInstance.queries["ServicesBase"];
@@ -477,6 +498,9 @@ namespace MSearch.Core.ThreatAnalyzers
                         dllSignature != WinVerifyTrustResult.SubjectCertExpired &&
                         dllSignature != WinVerifyTrustResult.Error)
                     {
+                        if (IsKnownUnsignedServiceDll(serviceDll))
+                            return;
+
                         AppConfig.GetInstance.LL.LogCautionMessage("_Found", $"{svc.ServiceName} {serviceDll}");
 
                         svc.HasUnsignedServiceDll = true;
