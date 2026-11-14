@@ -104,7 +104,7 @@ namespace MSearch.Core.ThreatAnalyzers
         }
 
         /// <summary>
-        /// Matches a domain against MSData.hStrings by MD5 suffix.
+        /// Matches a host name against MSData.hStrings by exact domain.
         /// </summary>
         internal static bool IsAvDomain(string domain, CancellationToken token)
         {
@@ -115,19 +115,13 @@ namespace MSearch.Core.ThreatAnalyzers
             if (d.StartsWith("www."))
                 d = d.Substring(4);
 
+            string hash = Utils.StringMD5(d);
             foreach (HashedString hLine in MSData.GetInstance.hStrings)
             {
                 token.ThrowIfCancellationRequested();
 
-                if (hLine.OriginalLength > d.Length)
-                    continue;
-
-                string tail = d.Substring(d.Length - hLine.OriginalLength);
-                if (!Utils.StringMD5(tail).Equals(hLine.Hash, StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                // Граница домена
-                if (tail.Length == d.Length || d[d.Length - tail.Length - 1] == '.')
+                if (hLine.OriginalLength == d.Length &&
+                    hash.Equals(hLine.Hash, StringComparison.OrdinalIgnoreCase))
                     return true;
             }
 
