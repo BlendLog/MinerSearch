@@ -10,7 +10,7 @@ It is an auxiliary tool for searching suspicious files, directories, processes, 
 
 ## Update news is now on Telegram!
 ## https://t.me/MinerSearch_blog
-## ⬇ ![Download latest version](https://github.com/BlendLog/MinerSearch/releases/latest)
+## ⬇ [Download latest version](https://github.com/BlendLog/MinerSearch/releases/latest)
 ### NET Framework 4.8 is required
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
