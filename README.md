@@ -1,6 +1,6 @@
 # Miner Search
 
-[Русский](README.ru.md) | English | [Chinese](README.cn.md)
+[Русский](README.ru.md) | English | [Chinese](README.cn.md) [Español](README.es.md)
 
 This program is designed to find and destroy hidden miners.
 It is an auxiliary tool for searching suspicious files, directories, processes, etc. and is NOT an antivirus.
