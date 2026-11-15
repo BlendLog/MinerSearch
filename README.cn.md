@@ -10,7 +10,7 @@
 
 ## 更新新闻现在在 Telegram 上！
 ## https://t.me/MinerSearch_blog
-## ⬇ ![下载最新版本](https://github.com/BlendLog/MinerSearch/releases/latest)
+## ⬇ [下载最新版本](https://github.com/BlendLog/MinerSearch/releases/latest)
 ### 需要 NET Framework 4.8
 
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/BlendLog/MinerSearch/latest/total?logoColor=AA00F0&color=Navy)
