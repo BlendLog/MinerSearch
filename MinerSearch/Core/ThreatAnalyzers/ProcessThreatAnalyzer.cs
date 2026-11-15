@@ -383,47 +383,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 }
             }
 
-            if (proc.FileProcess.FilePath.Contains(@":\Windows\Microsoft.NET\Framework"))
-            {
-                try
-                {
-                    int processParentId = ProcessManager.GetParentProcessId(proc.ProcessId);
-                    if (processParentId == 0)
-                    {
-                        riskLevel += 1;
-                    }
-                    else
-                    {
-                        Process parentProcess = Process.GetProcessById(processParentId);
-                        if (parentProcess != null)
-                        {
-                            if (parentProcess.ProcessName.Equals(MSData.GetInstance.SysFileName[9], StringComparison.OrdinalIgnoreCase))
-                            {
-                                riskLevel -= 1;
-                            }
-
-                            try
-                            {
-                                _ = parentProcess.MainModule.FileName;
-                                riskLevel += 1;
-                            }
-                            catch (Win32Exception) { }
-                        }
-                    }
-
-                }
-                catch (Exception)
-                {
-                    riskLevel += 1;
-                }
-
-
-                if (proc.CpuTime <= new TimeSpan(0, 0, 15) && (proc.UsedMemorySize / (1024 * 1024) <= 100))
-                {
-                    riskLevel += 3;
-                }
-            }
-
             proc.IsProcessHollowed = ProcessManager.IsProcessHollowed(proc.ProcessId);
             if (proc.IsProcessHollowed)
             {
