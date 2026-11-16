@@ -2085,15 +2085,15 @@ namespace MSearch
 
         internal static bool IsUpxPacked(string filePath)
         {
-            const int MaxCheckBytes = 1024;
+            const int MaxCheckBytes = 8192;
             byte[] buffer = new byte[MaxCheckBytes];
 
             try
             {
-                using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var fs = OpenReadWithFallback(filePath, FileShare.Read))
                 {
                     int bytesRead = fs.Read(buffer, 0, MaxCheckBytes);
-                    for (int i = 0; i < bytesRead - 2; i++)
+                    for (int i = 0; i <= bytesRead - 4; i++)
                     {
                         if (buffer[i] == (byte)'U' &&
                             buffer[i + 1] == (byte)'P' &&
@@ -2617,6 +2617,13 @@ namespace MSearch
         {
             FileAttributes attributes = File.GetAttributes(path);
             FileAttributes targetAttributes = FileAttributes.Hidden;
+            return (attributes & targetAttributes) == targetAttributes;
+        }
+
+        internal static bool HasHiddenAndSystemAttributes(string path)
+        {
+            FileAttributes attributes = File.GetAttributes(path);
+            FileAttributes targetAttributes = FileAttributes.Hidden | FileAttributes.System;
             return (attributes & targetAttributes) == targetAttributes;
         }
 

@@ -307,6 +307,23 @@ namespace MSearch.Core.ThreatAnalyzers
                         FileChecker.LogUnsignedSha1(fileThreat);
                     }
 
+                    if (IsHiddenUpx(fileThreat))
+                    {
+                        fileThreat.IsAlreadyAnalyzed = true;
+                        fileThreat.AnalysisResult = FileContentAnalysisResult.Malicious();
+                        fileThreat.ShouldMoveFileToQuarantine = true;
+                        AppConfig.GetInstance.LL.LogCautionMessage("_Malici0usFile", fileThreat.FilePath);
+
+                        var upxDecision = new ThreatDecision(fileThreat, riskLevel: 3, ScanObjectType.Malware);
+                        upxDecision.ActionType = ScanActionType.Quarantine;
+                        decisionsByIndex[i] = upxDecision;
+
+                        if (onDecision != null)
+                            onDecision(upxDecision);
+
+                        return;
+                    }
+
                     var result = AnalyzeAndDisable(fileThreat, displayProgress: false);
                     fileThreat.AnalysisResult = result;
 
@@ -362,6 +379,27 @@ namespace MSearch.Core.ThreatAnalyzers
             Logger.WriteLog($"[#] {completeMessage}", ConsoleColor.White, true);
 
             return decisionsByIndex.Where(decision => decision != null).ToList();
+        }
+
+        private static bool IsHiddenUpx(FileThreatObject fileThreat)
+        {
+            if (fileThreat.TrustResult == WinVerifyTrustResult.Success)
+                return false;
+
+            if (!fileThreat.FilePath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            try
+            {
+                if (!FileSystemManager.HasHiddenAndSystemAttributes(fileThreat.FilePath))
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
+
+            return FileChecker.IsUpxPacked(fileThreat.FilePath);
         }
     }
 }
