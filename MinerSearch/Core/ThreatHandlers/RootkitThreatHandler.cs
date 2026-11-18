@@ -180,7 +180,7 @@ namespace MSearch.Core.Handlers
 
                 try
                 {
-                    UnProtect(pid);
+                    ProcessManager.UnProtect(pid);
 
                     using (var p = Process.GetProcessById(pid))
                     {
@@ -219,40 +219,6 @@ namespace MSearch.Core.Handlers
             }
 
             return anyTerminated;
-        }
-
-        /// <summary>
-        /// Removes process kill protection (same as ProcessThreatHandler.UnProtect).
-        /// </summary>
-        private void UnProtect(int pid)
-        {
-            int _pid = 0;
-            int isCritical = 0;
-            int BreakOnTermination = 0x1D;
-
-            if (pid == 0 || pid == -1)
-                return;
-
-            try
-            {
-                _pid = pid;
-                IntPtr handle = Native.OpenProcess(0x001F0FFF, false, pid);
-                Native.NtSetInformationProcess(handle, BreakOnTermination, ref isCritical, sizeof(int));
-                Native.CloseHandle(handle);
-            }
-            catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
-            {
-                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {_pid}");
-            }
-            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80131509)))
-            {
-                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", _pid.ToString());
-            }
-            catch (System.ComponentModel.Win32Exception) { }
-            catch (Exception e)
-            {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorTerminateProcess", e);
-            }
         }
 
         /// <summary>

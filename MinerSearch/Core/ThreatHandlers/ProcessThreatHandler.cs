@@ -52,7 +52,7 @@ namespace MSearch.Core.Handlers
 
                     if (!LaunchOptions.GetInstance.ScanOnly)
                     {
-                        UnProtect(p.Id);
+                        ProcessManager.UnProtect(p.Id);
                         p.Kill();
 
                         if (p.HasExited)
@@ -90,40 +90,6 @@ namespace MSearch.Core.Handlers
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorTerminateProcess", ex);
                 return ApplyResult.Error;
             }
-        }
-
-        void UnProtect(int pid)
-        {
-            int _pid = 0;
-            int isCritical = 0;
-            int BreakOnTermination = 0x1D;
-
-            if (pid == 0 || pid == -1)
-            {
-                return;
-            }
-
-            try
-            {
-                _pid = pid;
-                IntPtr handle = Native.OpenProcess(0x001F0FFF, false, pid);
-                Native.NtSetInformationProcess(handle, BreakOnTermination, ref isCritical, sizeof(int));
-                Native.CloseHandle(handle);
-            }
-            catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
-            {
-                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", $"PID: {_pid}");
-            }
-            catch (Exception e) when (e.HResult.Equals(unchecked((int)0x80131509)))
-            {
-                AppConfig.GetInstance.LL.LogWarnMessage("_ProcessNotRunning", _pid.ToString());
-            }
-            catch (System.ComponentModel.Win32Exception) { }
-            catch (Exception e)
-            {
-                AppConfig.GetInstance.LL.LogErrorMessage("_ErrorTerminateProcess", e);
-            }
-
         }
     }
 }

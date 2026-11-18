@@ -1030,26 +1030,34 @@ namespace MSearch
 
         internal static void UnProtect(int[] pids)
         {
-            int _pid = 0;
+            if (pids == null || pids.Length == 0)
+            {
+                return;
+            }
 
-            if (pids.Length == 0)
+            foreach (int pid in pids)
+            {
+                UnProtect(pid);
+            }
+        }
+
+        internal static void UnProtect(int pid)
+        {
+            int _pid = 0;
+            int isCritical = 0;
+            int BreakOnTermination = 0x1D;
+
+            if (pid == 0 || pid == -1)
             {
                 return;
             }
 
             try
             {
-
-                foreach (int pid in pids)
-                {
-                    _pid = pid;
-                    int isCritical = 0;
-                    int BreakOnTermination = 0x1D;
-
-                    IntPtr handle = Native.OpenProcess(0x001F0FFF, false, pid);
-                    Native.NtSetInformationProcess(handle, BreakOnTermination, ref isCritical, sizeof(int));
-                    Native.CloseHandle(handle);
-                }
+                _pid = pid;
+                IntPtr handle = Native.OpenProcess(0x001F0FFF, false, pid);
+                Native.NtSetInformationProcess(handle, BreakOnTermination, ref isCritical, sizeof(int));
+                Native.CloseHandle(handle);
             }
             catch (InvalidOperationException ioe) when (ioe.HResult.Equals(unchecked((int)0x80070057)))
             {
@@ -1064,7 +1072,6 @@ namespace MSearch
             {
                 AppConfig.GetInstance.LL.LogErrorMessage("_ErrorTerminateProcess", e);
             }
-
         }
 
         internal static void SuspendProcess(int PID)
