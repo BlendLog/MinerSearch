@@ -568,7 +568,7 @@ namespace MSearch.Core.ThreatAnalyzers
                         AppConfig.GetInstance.LL.LogSuccessMessage("_MarkedForRemoval", reg.ValueName);
                         reg.LinkedFile.AnalysisResult = FileContentAnalysisResult.Malicious();
 
-                        if (IsKnownMaliciousFile(reg.LinkedFile.FilePath))
+                        if (MSData.GetInstance.IsKnownMaliciousPath(reg.LinkedFile.FilePath))
                             reg.LinkedFile.ShouldDeleteFile = true;
                         else
                             reg.LinkedFile.ShouldMoveFileToQuarantine = true;
@@ -665,11 +665,6 @@ namespace MSearch.Core.ThreatAnalyzers
                     }
                 }
             }
-        }
-
-        bool IsKnownMaliciousFile(string filePath)
-        {
-            return MSData.GetInstance.IsKnownMaliciousPath(filePath);
         }
 
         private static string GetKeyName(string keyPath)

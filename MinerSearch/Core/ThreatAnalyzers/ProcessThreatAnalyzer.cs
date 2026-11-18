@@ -355,7 +355,7 @@ namespace MSearch.Core.ThreatAnalyzers
             }
 
             // ОДНО действие на файл: удаление ИЛИ карантин
-            bool isKnownMalicious = IsKnownMaliciousFile(proc.FileProcess.FilePath);
+            bool isKnownMalicious = MSData.GetInstance.IsKnownMaliciousPath(proc.FileProcess.FilePath);
 
             if (isKnownMalicious)
             {
@@ -427,11 +427,6 @@ namespace MSearch.Core.ThreatAnalyzers
                     yield return new ThreatDecision(proc.FileProcess, riskLevel, scanType);
                 }
             }
-        }
-
-        bool IsKnownMaliciousFile(string filePath)
-        {
-            return MSData.GetInstance.IsKnownMaliciousPath(filePath);
         }
     }
 }

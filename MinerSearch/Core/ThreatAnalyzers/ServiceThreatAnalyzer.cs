@@ -595,7 +595,7 @@ namespace MSearch.Core.ThreatAnalyzers
         {
             if (file == null) return;
 
-            if (IsKnownMaliciousFile(file.FilePath))
+            if (MSData.GetInstance.IsKnownMaliciousPath(file.FilePath))
             {
                 file.ShouldDeleteFile = true;
             }
@@ -603,11 +603,6 @@ namespace MSearch.Core.ThreatAnalyzers
             {
                 file.ShouldMoveFileToQuarantine = true;
             }
-        }
-
-        private bool IsKnownMaliciousFile(string filePath)
-        {
-            return MSData.GetInstance.IsKnownMaliciousPath(filePath);
         }
     }
 }

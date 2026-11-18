@@ -271,7 +271,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
                 // Файл определён как вредоносный → удаляем (если известен по obfStr2) или карантин
 
-                if (IsKnownMaliciousFile(file.FilePath))
+                if (MSData.GetInstance.IsKnownMaliciousPath(file.FilePath))
                 {
                     file.ShouldDeleteFile = true;
                 }
@@ -280,11 +280,6 @@ namespace MSearch.Core.ThreatAnalyzers
                     file.ShouldMoveToQuarantine = true;
                 }
             }
-        }
-
-        private bool IsKnownMaliciousFile(string filePath)
-        {
-            return MSData.GetInstance.IsKnownMaliciousPath(filePath);
         }
 
         private static bool IsMshtaShortcut(ShellStartupFileThreatObject file, out string htaPayload)

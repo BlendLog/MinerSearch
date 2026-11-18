@@ -393,7 +393,7 @@ namespace MSearch.Core.ThreatAnalyzers
 
                             if (normalizedPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                             {
-                                bool isKnownMalicious = IsKnownMaliciousFile(normalizedPath);
+                                bool isKnownMalicious = MSData.GetInstance.IsKnownMaliciousPath(normalizedPath);
 
                                 if (isKnownMalicious)
                                 {
@@ -1358,7 +1358,7 @@ namespace MSearch.Core.ThreatAnalyzers
         {
             if (file == null) return;
 
-            if (IsKnownMaliciousFile(file.FilePath))
+            if (MSData.GetInstance.IsKnownMaliciousPath(file.FilePath))
             {
                 file.ShouldDeleteFile = true;
             }
@@ -1367,11 +1367,6 @@ namespace MSearch.Core.ThreatAnalyzers
                 file.ShouldMoveFileToQuarantine = true;
             }
             // Если файл подписан — не трогаем его (это может быть системный файл)
-        }
-
-        bool IsKnownMaliciousFile(string filePath)
-        {
-            return MSData.GetInstance.IsKnownMaliciousPath(filePath);
         }
 
         string ExtractFirstAbsolutePath(string arguments)

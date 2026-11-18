@@ -40,7 +40,7 @@ namespace MSearch.Core.ThreatAnalyzers
             int risk = 0;
             bool isMalicious = false;
 
-            if (IsKnownMaliciousFile(rule.ApplicationName))
+            if (MSData.GetInstance.IsKnownMaliciousPath(rule.ApplicationName))
             {
                 AppConfig.GetInstance.LL.LogMessage("[.]", "_FirewallRule_Matched", $"{rule.RuleName} → {rule.ApplicationName}", ConsoleColor.Gray);
                 risk += 3;
@@ -53,11 +53,6 @@ namespace MSearch.Core.ThreatAnalyzers
             ScanObjectType objType = isMalicious ? ScanObjectType.Malware : ScanObjectType.Suspicious;
 
             yield return new ThreatDecision(rule, risk, objType);
-        }
-
-        private bool IsKnownMaliciousFile(string filePath)
-        {
-            return MSData.GetInstance.IsKnownMaliciousPath(filePath);
         }
     }
 }
