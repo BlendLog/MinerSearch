@@ -161,7 +161,7 @@ namespace MSearch
         {
             using (MD5 md5 = MD5.Create())
             {
-                byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+                byte[] inputBytes = Encoding.UTF8.GetBytes(input ?? string.Empty);
                 byte[] hashBytes = md5.ComputeHash(inputBytes);
 
                 StringBuilder builder = new StringBuilder();

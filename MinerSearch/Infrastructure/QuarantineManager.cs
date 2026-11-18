@@ -617,7 +617,7 @@ namespace MSearch
                         ? $@"{reg.Hive}\{reg.KeyPath}\{reg.ValueName}"
                         : $@"{reg.Hive}\{reg.KeyPath}";
 
-                    string subKeyName = ComputeMd5Hex($"{reg.Hive}|{reg.KeyPath}|{reg.ValueName}");
+                    string subKeyName = Utils.StringMD5($"{reg.Hive}|{reg.KeyPath}|{reg.ValueName}");
 
                     using (var baseQuarantine = Registry.LocalMachine.CreateSubKey(QUARANTINE_PATH))
                     {
@@ -907,18 +907,6 @@ namespace MSearch
                 key.SetValue(name ?? string.Empty, value, writeKind);
             }
             catch { }
-        }
-
-        static string ComputeMd5Hex(string input)
-        {
-            using (var md5 = MD5.Create())
-            {
-                byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input ?? string.Empty));
-                var sb = new StringBuilder(hash.Length * 2);
-                foreach (byte b in hash)
-                    sb.Append(b.ToString("x2"));
-                return sb.ToString();
-            }
         }
 
         #endregion
