@@ -6,6 +6,7 @@ using MSearch.Core;
 using System;
 using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
+using Win32Wrapper;
 
 namespace MSearch
 {
@@ -267,12 +268,6 @@ namespace MSearch
         }
 
         #region Native
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern IntPtr CreateFile(string lpFileName, int dwDesiredAccess, int dwShareMode, IntPtr lpSecurityAttributes, int dwCreationDisposition, int dwFlagsAndAttributes, IntPtr hTemplateFile);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool CloseHandle(IntPtr hObject);
-
         [DllImport("WinTrust", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool CryptCATAdminReleaseCatalogContext(IntPtr hCatAdmin, IntPtr hCatInfo, int dwFlags);
 
@@ -432,7 +427,7 @@ namespace MSearch
 
             try
             {
-                hFile = CreateFile(fileName, 0x20000 | 0x80 | 1, 1 | 2 | 4, IntPtr.Zero, 3, 0x80, IntPtr.Zero);
+                hFile = Native.CreateFile(fileName, 0x20000 | 0x80 | 1, 1 | 2 | 4, IntPtr.Zero, 3, 0x80, IntPtr.Zero);
                 if (hFile == INVALID_HANDLE_VALUE) return WinVerifyTrustResult.Error;
 
                 bool isWin7 = Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 1;
@@ -510,7 +505,7 @@ namespace MSearch
             {
                 if (catInfo != IntPtr.Zero) CryptCATAdminReleaseCatalogContext(hCatAdmin, catInfo, 0);
                 if (hCatAdmin != IntPtr.Zero) CryptCATAdminReleaseContext(hCatAdmin, 0);
-                if (hFile != IntPtr.Zero && hFile != INVALID_HANDLE_VALUE) CloseHandle(hFile);
+                if (hFile != IntPtr.Zero && hFile != INVALID_HANDLE_VALUE) Native.CloseHandle(hFile);
             }
         }
     }
