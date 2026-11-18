@@ -191,7 +191,7 @@ namespace MSearch.UI
 
                 string type = GetLocalizedObjectType(decision.ObjectType);
                 string path = BuildDescription(decision);
-                string @class = GetLocalizedClassName(decision.Target.Kind);
+                string @class = LocalizedLogger.GetObjectTypeName(decision.Target.Kind);
 
                 ScanActionTypeUserSelected defaultUserAction = GetDefaultUserActionFromFlags(decision);
                 string defaultActionText = GetLocalizedUserActionName(defaultUserAction);
@@ -489,39 +489,6 @@ namespace MSearch.UI
                     return L("_Action_Skip");
                 default:
                     return action.ToString();
-            }
-        }
-
-        private string GetLocalizedClassName(ThreatObjectKind kind)
-        {
-            switch (kind)
-            {
-                case ThreatObjectKind.Process:
-                    return L("_ObjectType_Process");
-                case ThreatObjectKind.RegistryObject:
-                    return L("_ObjectType_RegistryObject");
-                case ThreatObjectKind.File:
-                    return L("_ObjectType_File");
-                case ThreatObjectKind.Directory:
-                    return L("_ObjectType_Directory");
-                case ThreatObjectKind.FirewallRule:
-                    return L("_ObjectType_FirewallRule");
-                case ThreatObjectKind.UserProfile:
-                    return L("_ObjectType_UserProfile");
-                case ThreatObjectKind.WmiSubscription:
-                    return L("_ObjectType_WmiSubscription");
-                case ThreatObjectKind.ScheduledTask:
-                    return L("_ObjectType_ScheduledTask");
-                case ThreatObjectKind.Service:
-                    return L("_ObjectType_Service");
-                case ThreatObjectKind.ShellStartupFile:
-                    return L("_ObjectType_ShellStartupFile");
-                case ThreatObjectKind.Hosts:
-                    return L("_ObjectType_Hosts");
-                case ThreatObjectKind.Other:
-                    return L("_ObjectType_Other");
-                default:
-                    return L("_ObjectType_Unknown");
             }
         }
 

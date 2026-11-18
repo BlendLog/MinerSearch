@@ -68,7 +68,7 @@ namespace MSearch
             Path = _Path;
             Note = note;
             ThreatObjectId = threatObjectId;
-            Class = GetLocalizedClass(@class);
+            Class = LocalizedLogger.GetObjectTypeName(@class);
             RawType = _type;
             RawAction = actionType;
             RawClass = @class;
@@ -118,39 +118,6 @@ namespace MSearch
                     return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_RebootPending");
                 default:
                     return AppConfig.GetInstance.LL.GetLocalizedString("_ActionType_Skipped");
-            }
-        }
-
-        static string GetLocalizedClass(ThreatObjectKind kind)
-        {
-            switch (kind)
-            {
-                case ThreatObjectKind.Process:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Process");
-                case ThreatObjectKind.RegistryObject:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_RegistryObject");
-                case ThreatObjectKind.File:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_File");
-                case ThreatObjectKind.Directory:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Directory");
-                case ThreatObjectKind.FirewallRule:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_FirewallRule");
-                case ThreatObjectKind.UserProfile:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_UserProfile");
-                case ThreatObjectKind.WmiSubscription:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_WmiSubscription");
-                case ThreatObjectKind.ScheduledTask:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_ScheduledTask");
-                case ThreatObjectKind.Service:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Service");
-                case ThreatObjectKind.ShellStartupFile:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_ShellStartupFile");
-                case ThreatObjectKind.Hosts:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Hosts");
-                case ThreatObjectKind.Other:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Other");
-                default:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Unknown");
             }
         }
     }

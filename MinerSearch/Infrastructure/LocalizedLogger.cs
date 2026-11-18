@@ -1,4 +1,5 @@
 using MSearch.Core;
+using MSearch.Core.ThreatObjects;
 using MSearch.Properties;
 using System;
 using System.IO;
@@ -39,6 +40,39 @@ namespace MSearch
                     return L("_ScanMode_Selective_Title");
                 default:
                     return L("_ScanMode_Quick_Title");
+            }
+        }
+
+        internal static string GetObjectTypeName(ThreatObjectKind kind)
+        {
+            switch (kind)
+            {
+                case ThreatObjectKind.Process:
+                    return L("_ObjectType_Process");
+                case ThreatObjectKind.RegistryObject:
+                    return L("_ObjectType_RegistryObject");
+                case ThreatObjectKind.File:
+                    return L("_ObjectType_File");
+                case ThreatObjectKind.Directory:
+                    return L("_ObjectType_Directory");
+                case ThreatObjectKind.FirewallRule:
+                    return L("_ObjectType_FirewallRule");
+                case ThreatObjectKind.UserProfile:
+                    return L("_ObjectType_UserProfile");
+                case ThreatObjectKind.WmiSubscription:
+                    return L("_ObjectType_WmiSubscription");
+                case ThreatObjectKind.ScheduledTask:
+                    return L("_ObjectType_ScheduledTask");
+                case ThreatObjectKind.Service:
+                    return L("_ObjectType_Service");
+                case ThreatObjectKind.ShellStartupFile:
+                    return L("_ObjectType_ShellStartupFile");
+                case ThreatObjectKind.Hosts:
+                    return L("_ObjectType_Hosts");
+                case ThreatObjectKind.Other:
+                    return L("_ObjectType_Other");
+                default:
+                    return L("_ObjectType_Unknown");
             }
         }
 
