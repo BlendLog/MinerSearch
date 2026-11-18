@@ -2239,47 +2239,6 @@ namespace MSearch
             }
         }
 
-        internal static bool IsShortcut(string filePath)
-        {
-            FileInfo fileInfo = new FileInfo(filePath);
-            long fileLength = fileInfo.Length;
-            if (fileLength > 4096) return false;
-
-
-            byte[] shortcutSignature = { 0x4D, 0x01, 0x01, 0x01, 0x02, 0x15 };
-
-            for (int i = 0; i < shortcutSignature.Length; i++)
-            {
-                shortcutSignature[i] -= (byte)1;
-            }
-
-            try
-            {
-                byte[] fileBytes = File.ReadAllBytes(filePath);
-
-                if (fileLength >= filePath.Length)
-                {
-                    bool match = true;
-                    for (int j = 0; j < shortcutSignature.Length; j++)
-                    {
-                        if (fileBytes[j] != shortcutSignature[j])
-                        {
-                            match = false;
-                            break;
-                        }
-                    }
-
-                    return match;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex, filePath);
-                return false;
-            }
-        }
-
         internal static string GetFileSize(long CountBytes)
         {
             string[] type = { "B", "KB", "MB", "GB" };
@@ -2376,25 +2335,6 @@ namespace MSearch
 
             // SubjectCertExpired, UntrustedRoot, SignatureOrFileCorrupt и др. — подписан, но сертификат проблемный
             return SfxTrustLevel.BadCert;
-        }
-
-        /// <summary>
-        /// Checks whether the file is in a suspicious directory (for the task scheduler).
-        /// </summary>
-        internal static bool IsInSuspiciousTaskPath(string filePath)
-        {
-            if (string.IsNullOrEmpty(filePath)) return false;
-
-            var suspiciousPaths = new[]
-            {
-                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), // %ProgramData%
-                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),           // %userprofile%
-                $@"{Environment.GetEnvironmentVariable("SystemRoot")}\System32\config\systemprofile"
-            };
-
-            return suspiciousPaths.Any(p =>
-                !string.IsNullOrEmpty(p) &&
-                filePath.IndexOf(p, StringComparison.OrdinalIgnoreCase) >= 0);
         }
     }
 
