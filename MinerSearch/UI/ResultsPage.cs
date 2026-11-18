@@ -415,21 +415,8 @@ namespace MSearch.UI
         {
             string title = L("_Results");
             if (_scanMode.HasValue)
-                title += " | " + GetScanModeTitle(_scanMode.Value);
+                title += " | " + LocalizedLogger.GetScanModeTitle(_scanMode.Value);
             return title;
-        }
-
-        private static string GetScanModeTitle(ScanMode mode)
-        {
-            switch (mode)
-            {
-                case ScanMode.Full:
-                    return L("_ScanMode_Full_Title");
-                case ScanMode.Selective:
-                    return L("_ScanMode_Selective_Title");
-                default:
-                    return L("_ScanMode_Quick_Title");
-            }
         }
 
         private static string L(string key)
