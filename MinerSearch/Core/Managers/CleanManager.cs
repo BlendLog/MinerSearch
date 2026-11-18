@@ -196,7 +196,7 @@ namespace MSearch.Core.Managers
         /// <summary>
         /// Locked directories from obfStr5 are expected AV/service directories, not findings.
         /// </summary>
-        private static bool IsLockedServiceDirectory(IThreatObject target)
+        internal static bool IsLockedServiceDirectory(IThreatObject target)
         {
             DirectoryThreatObject dir = target as DirectoryThreatObject;
             return dir != null && string.Equals(dir.SourceTag, "locked", StringComparison.Ordinal);
