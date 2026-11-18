@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -81,6 +82,38 @@ namespace MSearch.Core
                 return char.ToUpperInvariant(root[0]).ToString();
 
             return "C";
+        }
+
+        internal static int ReadDword(RegistryKey hive, string path, string valueName)
+        {
+            try
+            {
+                using (RegistryKey key = hive.OpenSubKey(path))
+                {
+                    if (key == null)
+                        return -1;
+
+                    object value = key.GetValue(valueName);
+                    return value == null ? -1 : (int)value;
+                }
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
+        internal static void WriteDword(RegistryKey hive, string path, string valueName, int value)
+        {
+            try
+            {
+                using (RegistryKey key = hive.OpenSubKey(path, true) ?? hive.CreateSubKey(path))
+                {
+                    if (key != null)
+                        key.SetValue(valueName, value, RegistryValueKind.DWord);
+                }
+            }
+            catch { }
         }
     }
 }

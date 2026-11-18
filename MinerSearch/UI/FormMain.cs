@@ -540,11 +540,11 @@ namespace MSearch.UI
                 return;
 
             const int ask = 2;
-            int value = ReadDword(Registry.CurrentUser, AppConfig.GetInstance.RegistryPathMain, AppConfig.GetInstance.StatisticsValueName);
+            int value = AppConfig.ReadDword(Registry.CurrentUser, AppConfig.GetInstance.RegistryPathMain, AppConfig.GetInstance.StatisticsValueName);
 
             if (value == -1)
             {
-                WriteDword(Registry.CurrentUser, AppConfig.GetInstance.RegistryPathMain, AppConfig.GetInstance.StatisticsValueName, ask);
+                AppConfig.WriteDword(Registry.CurrentUser, AppConfig.GetInstance.RegistryPathMain, AppConfig.GetInstance.StatisticsValueName, ask);
                 value = ask;
             }
 
@@ -563,7 +563,7 @@ namespace MSearch.UI
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
-            WriteDword(Registry.CurrentUser, AppConfig.GetInstance.RegistryPathMain,
+            AppConfig.WriteDword(Registry.CurrentUser, AppConfig.GetInstance.RegistryPathMain,
                 AppConfig.GetInstance.StatisticsValueName, result == DialogResult.Yes ? 1 : 0);
 
             if (result == DialogResult.Yes)
@@ -585,38 +585,6 @@ namespace MSearch.UI
             {
                 AppConfig.GetInstance.LL.LogErrorMessage("_Error", ex);
             }
-        }
-
-        private static int ReadDword(RegistryKey hive, string path, string valueName)
-        {
-            try
-            {
-                using (RegistryKey key = hive.OpenSubKey(path))
-                {
-                    if (key == null)
-                        return -1;
-
-                    object value = key.GetValue(valueName);
-                    return value == null ? -1 : (int)value;
-                }
-            }
-            catch
-            {
-                return -1;
-            }
-        }
-
-        private static void WriteDword(RegistryKey hive, string path, string valueName, int value)
-        {
-            try
-            {
-                using (RegistryKey key = hive.OpenSubKey(path, true) ?? hive.CreateSubKey(path))
-                {
-                    if (key != null)
-                        key.SetValue(valueName, value, RegistryValueKind.DWord);
-                }
-            }
-            catch { }
         }
 
         private void ApplyLanguage()

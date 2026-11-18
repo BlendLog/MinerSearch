@@ -111,48 +111,13 @@ namespace MSearch.UI
             try
             {
                 comboLanguage.SelectedIndex = AppConfig.GetInstance.ActiveLanguage == "RU" ? 0 : 1;
-                toggleStatistics.Checked = ReadDword(Registry.CurrentUser, AppConfig.GetInstance.RegistryPathMain, AppConfig.GetInstance.StatisticsValueName) == 1;
-                toggleAutoAccept.Checked = ReadDword(Registry.LocalMachine, AppConfig.GetInstance.RegistryPathMain, AppConfig.GetInstance.AutoAcceptUnknownValueName) == 1;
+                toggleStatistics.Checked = AppConfig.ReadDword(Registry.CurrentUser, AppConfig.GetInstance.RegistryPathMain, AppConfig.GetInstance.StatisticsValueName) == 1;
+                toggleAutoAccept.Checked = AppConfig.ReadDword(Registry.LocalMachine, AppConfig.GetInstance.RegistryPathMain, AppConfig.GetInstance.AutoAcceptUnknownValueName) == 1;
             }
             finally
             {
                 _loading = false;
             }
-        }
-
-        private static int ReadDword(RegistryKey hive, string path, string valueName)
-        {
-            try
-            {
-                using (RegistryKey key = hive.OpenSubKey(path))
-                {
-                    if (key == null)
-                        return -1;
-
-                    object value = key.GetValue(valueName);
-                    if (value == null)
-                        return -1;
-
-                    return (int)value;
-                }
-            }
-            catch
-            {
-                return -1;
-            }
-        }
-
-        private static void WriteDword(RegistryKey hive, string path, string valueName, int value)
-        {
-            try
-            {
-                using (RegistryKey key = hive.OpenSubKey(path, true) ?? hive.CreateSubKey(path))
-                {
-                    if (key != null)
-                        key.SetValue(valueName, value, RegistryValueKind.DWord);
-                }
-            }
-            catch { }
         }
 
         private void LanguageBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -180,7 +145,7 @@ namespace MSearch.UI
             if (_loading)
                 return;
 
-            WriteDword(Registry.CurrentUser, AppConfig.GetInstance.RegistryPathMain,
+            AppConfig.WriteDword(Registry.CurrentUser, AppConfig.GetInstance.RegistryPathMain,
                 AppConfig.GetInstance.StatisticsValueName, toggleStatistics.Checked ? 1 : 0);
         }
 
@@ -189,7 +154,7 @@ namespace MSearch.UI
             if (_loading)
                 return;
 
-            WriteDword(Registry.LocalMachine, AppConfig.GetInstance.RegistryPathMain,
+            AppConfig.WriteDword(Registry.LocalMachine, AppConfig.GetInstance.RegistryPathMain,
                 AppConfig.GetInstance.AutoAcceptUnknownValueName, toggleAutoAccept.Checked ? 1 : 0);
         }
 
