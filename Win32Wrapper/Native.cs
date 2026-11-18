@@ -274,16 +274,6 @@ namespace Win32Wrapper
             ref int ReturnLength);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool DuplicateHandle(
-            IntPtr hSourceProcessHandle,
-            IntPtr hSourceHandle,
-            IntPtr hTargetProcessHandle,
-            out IntPtr lpTargetHandle,
-            uint dwDesiredAccess,
-            bool bInheritHandle,
-            uint dwOptions);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr OpenProcess(uint processAccess, bool bInheritHandle, int processId);
 
         [StructLayout(LayoutKind.Sequential)]
@@ -578,11 +568,11 @@ namespace Win32Wrapper
 
         public const int PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
         public const int PROCESS_QUERY_INFORMATION = 0x0400;
+        public const int PROCESS_SET_INFORMATION = 0x0200;
         public const uint PROCESS_CREATE_THREAD = 0x0002;
         public const uint PROCESS_VM_OPERATION = 0x0008;
         public const int PROCESS_VM_READ = 0x0010;
         public const uint PROCESS_VM_WRITE = 0x0020;
-        public const uint PROCESS_DUP_HANDLE = 0x0040;
 
         public const uint THREAD_QUERY_INFORMATION = 0x0040;
 

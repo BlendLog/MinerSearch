@@ -1055,7 +1055,9 @@ namespace MSearch
             try
             {
                 _pid = pid;
-                IntPtr handle = Native.OpenProcess(0x001F0FFF, false, pid);
+                IntPtr handle = Native.OpenProcess(Native.PROCESS_SET_INFORMATION, false, pid);
+                if (handle == IntPtr.Zero)
+                    return;
                 Native.NtSetInformationProcess(handle, BreakOnTermination, ref isCritical, sizeof(int));
                 Native.CloseHandle(handle);
             }
