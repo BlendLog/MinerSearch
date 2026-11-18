@@ -71,7 +71,6 @@ namespace MSearch.UI
         {
             InitializeComponent();
 
-            // Отключённая «X» отличается от активной только начертанием и цветом.
             _closeButtonFont = buttonClose.Font;
             _closeButtonFontRegular = new Font(buttonClose.Font, FontStyle.Regular);
 
@@ -79,8 +78,6 @@ namespace MSearch.UI
 
             Text = Utils.GetRndString();
 
-            // Логотип должен быть поверх панели навигации: она занимает всю
-            // высоту сайдбара и иначе закрывает его своим фоном.
             buttonDonateSidebar.BringToFront();
             labelLogo.BringToFront();
             buttonDonateSidebar.Text = AppConfig.GetInstance.LL.GetLocalizedString("_DonateBtn");
@@ -204,7 +201,6 @@ namespace MSearch.UI
         {
             Control control = sender as Control;
 
-            // Недоступная «X» не должна подсвечиваться.
             if (control != null && !(_reviewActive && control == buttonClose))
                 control.BackColor = Theme.Track;
         }
@@ -576,7 +572,6 @@ namespace MSearch.UI
 
         private async void SendStatistics(ScanStatistics statistics)
         {
-            // Фиксируем путь до фоновой выгрузки: следующий скан откроет новый лог.
             string logPath = Logger.LogFilePath;
 
             try
@@ -670,8 +665,6 @@ namespace MSearch.UI
                 return;
             }
 
-            // Закрытие во время обзора запрещено: выйти можно только кнопками
-            // страницы (Применить / Продолжить с рекомендованными / Пропустить все).
             if (_reviewActive)
             {
                 e.Cancel = true;

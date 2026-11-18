@@ -124,7 +124,6 @@ namespace MSearch.UI
             // panelSidebar
             // 
             this.panelSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
-            this.panelSidebar.Controls.Add(this.buttonDonateSidebar);
             this.panelSidebar.Controls.Add(this.labelLogo);
             this.panelSidebar.Controls.Add(this.panelNav);
             this.panelSidebar.Dock = System.Windows.Forms.DockStyle.Left;
@@ -148,7 +147,7 @@ namespace MSearch.UI
             this.buttonDonateSidebar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonDonateSidebar.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.buttonDonateSidebar.ForeColor = System.Drawing.Color.White;
-            this.buttonDonateSidebar.Location = new System.Drawing.Point(12, 664);
+            this.buttonDonateSidebar.Location = new System.Drawing.Point(12, 645);
             this.buttonDonateSidebar.Margin = new System.Windows.Forms.Padding(0);
             this.buttonDonateSidebar.Name = "buttonDonateSidebar";
             this.buttonDonateSidebar.Size = new System.Drawing.Size(186, 42);
@@ -173,6 +172,7 @@ namespace MSearch.UI
             // panelNav
             // 
             this.panelNav.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(32)))), ((int)(((byte)(44)))));
+            this.panelNav.Controls.Add(this.buttonDonateSidebar);
             this.panelNav.Controls.Add(this.buttonNavAbout);
             this.panelNav.Controls.Add(this.buttonNavSettings);
             this.panelNav.Controls.Add(this.buttonNavQuarantine);

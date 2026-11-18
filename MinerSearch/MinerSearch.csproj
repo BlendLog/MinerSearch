@@ -326,6 +326,10 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="bin\Release\" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\base\dbase.csproj">
       <Project>{b623bf11-5fdd-4d88-856f-233f94c8647d}</Project>
       <Name>dbase</Name>
@@ -338,10 +342,6 @@
       <Project>{82691cb5-8b20-4659-8657-31efd70f92a7}</Project>
       <Name>Win32Wrapper</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="bin\Release\" />
-    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
