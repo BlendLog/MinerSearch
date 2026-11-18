@@ -4,6 +4,7 @@ using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using MSearch.Infrastructure;
 using System;
+using System.IO;
 using System.Security;
 using System.Threading;
 
@@ -257,8 +258,7 @@ namespace MSearch.Core.ThreatHandlers
 
         private string GetKeyName(string fullKeyPath)
         {
-            int lastSlash = fullKeyPath.LastIndexOf('\\');
-            return lastSlash >= 0 ? fullKeyPath.Substring(lastSlash + 1) : fullKeyPath;
+            return Path.GetFileName(fullKeyPath) ?? fullKeyPath;
         }
     }
 }
