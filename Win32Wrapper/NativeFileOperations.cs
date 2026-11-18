@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Win32Wrapper
@@ -8,19 +9,9 @@ namespace Win32Wrapper
     {
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool DeleteFile(string lpFileName);
-
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool MoveFileExW(string lpExistingFileName, string lpNewFileName, uint dwFlags);
 
         private const uint MOVEFILE_DELAY_UNTIL_REBOOT = 0x4;
-
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool SetFileAttributes(string lpFileName, uint dwFileAttributes);
-
-        private const uint FILE_ATTRIBUTE_NORMAL = 0x80;
 
         public static bool DeleteFileWithRetry(string path, int maxRetries = 3)
         {
@@ -28,9 +19,9 @@ namespace Win32Wrapper
             {
                 try
                 {
-                    SetFileAttributes(path, FILE_ATTRIBUTE_NORMAL);
+                    Native.SetFileAttributes(path, FileAttributes.Normal);
 
-                    if (DeleteFile(path))
+                    if (Native.DeleteFile(path))
                     {
                         return true;
                     }
