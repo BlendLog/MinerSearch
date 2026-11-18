@@ -1,5 +1,6 @@
 using DBase;
 using MSearch.Core;
+using MSearch.Core.Managers;
 using MSearch.Core.ThreatDecisions;
 using MSearch.Core.ThreatObjects;
 using System;
@@ -655,35 +656,16 @@ namespace MSearch.UI
                     ApplyOverrideToFirewall(decision.Target as FirewallRuleThreatObject, userAction);
                     break;
                 case ThreatObjectKind.WmiSubscription:
-                    decision.ActionType = MapUserActionToScanAction(userAction);
+                    decision.ActionType = CleanManager.MapUserActionToScanAction(userAction);
                     break;
                 case ThreatObjectKind.Hosts:
-                    decision.ActionType = MapUserActionToScanAction(userAction);
+                    decision.ActionType = CleanManager.MapUserActionToScanAction(userAction);
                     break;
                 case ThreatObjectKind.UserProfile:
-                    decision.ActionType = MapUserActionToScanAction(userAction);
+                    decision.ActionType = CleanManager.MapUserActionToScanAction(userAction);
                     break;
                 default:
                     break;
-            }
-        }
-
-        private static ScanActionType MapUserActionToScanAction(ScanActionTypeUserSelected action)
-        {
-            switch (action)
-            {
-                case ScanActionTypeUserSelected.Cure:
-                    return ScanActionType.Cured;
-                case ScanActionTypeUserSelected.Quarantine:
-                    return ScanActionType.Quarantine;
-                case ScanActionTypeUserSelected.Delete:
-                    return ScanActionType.Deleted;
-                case ScanActionTypeUserSelected.Terminate:
-                    return ScanActionType.Terminated;
-                case ScanActionTypeUserSelected.Disable:
-                    return ScanActionType.Disabled;
-                default:
-                    return ScanActionType.Skipped;
             }
         }
 

@@ -356,7 +356,7 @@ namespace MSearch.Core.Managers
         /// <summary>
         /// Maps the user's choice (ScanActionTypeUserSelected) to the final ScanActionType.
         /// </summary>
-        private ScanActionType MapUserActionToScanAction(ScanActionTypeUserSelected userAction)
+        internal static ScanActionType MapUserActionToScanAction(ScanActionTypeUserSelected userAction)
         {
             switch (userAction)
             {
