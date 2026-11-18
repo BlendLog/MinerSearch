@@ -40,13 +40,16 @@ namespace MSearch
     {
         public static void HookExeption(object sender, UnhandledExceptionEventArgs args)
         {
-            Exception e = (Exception)args?.ExceptionObject;
-            DialogDispatcher.Show(e.Message + "\n" + e.StackTrace, AppConfig.GetInstance.LL.GetLocalizedString("_ExeptionTitle"), Color.Salmon, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            ShowException((Exception)args?.ExceptionObject);
         }
 
         public static void HookThreadException(object sender, ThreadExceptionEventArgs args)
         {
-            Exception e = args?.Exception;
+            ShowException(args?.Exception);
+        }
+
+        private static void ShowException(Exception e)
+        {
             DialogDispatcher.Show(e.Message + "\n" + e.StackTrace, AppConfig.GetInstance.LL.GetLocalizedString("_ExeptionTitle"), Color.Salmon, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
