@@ -194,7 +194,7 @@ namespace MSearch.UI
                             false,
                             item.OriginalPath,
                             item.FileSize,
-                            GetTypeLabel(item.ItemType),
+                            QuarantineItem.GetLocalizedTypeName(item.ItemType),
                             item.FileHash);
 
                         dataGridQuarantine.Rows[index].Tag = item;
@@ -657,21 +657,6 @@ namespace MSearch.UI
                 failedCount > 0 ? MessageBoxIcon.Warning : MessageBoxIcon.Information);
         }
 
-        private string GetTypeLabel(QuarantineItemType type)
-        {
-            switch (type)
-            {
-                case QuarantineItemType.Service:
-                    return L("_ObjectType_Service");
-                case QuarantineItemType.Task:
-                    return L("_ObjectType_ScheduledTask");
-                case QuarantineItemType.Registry:
-                    return L("_ObjectType_RegistryObject");
-                default:
-                    return L("_ObjectType_File");
-            }
-        }
-
         public void ApplyLanguage()
         {
             labelTitle.Text = L("_Quarantine");
@@ -696,7 +681,7 @@ namespace MSearch.UI
             {
                 QuarantineItem item = row.Tag as QuarantineItem;
                 if (item != null)
-                    row.Cells[ColType].Value = GetTypeLabel(item.ItemType);
+                    row.Cells[ColType].Value = QuarantineItem.GetLocalizedTypeName(item.ItemType);
             }
 
             UpdateUi();

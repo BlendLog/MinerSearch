@@ -75,7 +75,7 @@ namespace MSearch.UI
             for (int i = 0; i < entries.Count; i++)
             {
                 var e = entries[i];
-                string typeLabel = GetTypeLabel(e.ItemType);
+                string typeLabel = QuarantineItem.GetLocalizedTypeName(e.ItemType);
                 Console.WriteLine(string.Format("{0,5} | {1,-35} | {2}... | {3,-8} | {4}", i + 1, Shorten(e.OriginalPath, 35), e.FileHash.Substring(0, 6), e.FileSize, typeLabel));
             }
         }
@@ -348,21 +348,6 @@ namespace MSearch.UI
             if (Environment.UserInteractive)
             {
                 Console.ReadLine();
-            }
-        }
-
-        string GetTypeLabel(QuarantineItemType type)
-        {
-            switch (type)
-            {
-                case QuarantineItemType.Service:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_Service");
-                case QuarantineItemType.Task:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_ScheduledTask");
-                case QuarantineItemType.Registry:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_RegistryObject");
-                default:
-                    return AppConfig.GetInstance.LL.GetLocalizedString("_ObjectType_File");
             }
         }
 
