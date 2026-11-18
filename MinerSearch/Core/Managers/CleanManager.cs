@@ -366,6 +366,10 @@ namespace MSearch.Core.Managers
                     return ScanActionType.Quarantine;
                 case ScanActionTypeUserSelected.Delete:
                     return ScanActionType.Deleted;
+                case ScanActionTypeUserSelected.Terminate:
+                    return ScanActionType.Terminated;
+                case ScanActionTypeUserSelected.Disable:
+                    return ScanActionType.Disabled;
                 case ScanActionTypeUserSelected.Skip:
                     return ScanActionType.Skipped;
                 default:
