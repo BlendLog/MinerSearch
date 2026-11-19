@@ -1,6 +1,6 @@
 # Miner Search
 
-[Русский](README.ru.md) | [English](README.md) | 中文
+[Русский](README.ru.md) | [English](README.md) | 中文 [Español](README.es.md)
 
 本程序旨在查找并销毁隐藏的挖矿程序。
 它是一个用于搜索可疑文件、目录、进程等的辅助工具，**不是**杀毒软件。
